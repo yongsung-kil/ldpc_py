@@ -1,5 +1,19 @@
 # DONE — 완료 이력 (2_LDPC_light)
 
+### 2026-09-30 위키 첫 실행: `_wiki/`에 결정, 시도, 자산, 기술 문서 75편
+wiki 스킬 1단계(첫 실행)로 프로파일, 결정 기록, 완료 태스크, 실험과 탐색 문서, 리뷰 기록을
+훑어 위키 75편을 만들고 갈래 MOC 4개와 최상위 MOC, `_tracker.md`를 채웠다
+- **배경**: 온보딩 뒤 결정의 이유, 접은 시도의 교훈, 코드 동작 설명이 `_pm/`과 리뷰 기록에
+  흩어져 있어 AI와 사람이 다시 쓸 자리가 없었다
+- **변경**:
+  - ㉮ decisions 25편(Proposed 3편 포함), trials 7편, assets 22편, tech 21편
+  - ㉯ 중복 검사: 반복 절 6건 축약, 모순 7건 교정(머리말 날짜 5건, 5단계 셈, syndrome 재계산
+    주어, 인과 순서, 파일명 ch 자리 등), `_pm/tasks/` 링크 3곳 제거
+  - ㉰ tech 인용 693건을 코드와 대조: 실제 어긋남 1건(idx_active dtype) 교정, 파일 이름이
+    빠져 귀속이 모호한 `:N` 인용 60여 건 보강, 백틱 경로 158곳을 마크다운 링크로 통일
+  - ㉱ manual.md에 예시 LLR의 FER 1.0 안내와 미결 판정(Proposed 3건) 입구 추가
+- **파일**: `_wiki/` 전체 (MOC.md, manual.md, _tracker.md, decisions/, trials/, assets/, tech/)
+
 ### 2026-08-14 — minsum_dual_clip 원인 규명 정정과 환경 대조, 실험 로그 신설
 클리핑 악화 원인을 dv별 로그와 LLR 파일 실값으로 확정하고, 환경 대조로 논문
 delta의 유효 조건을 재현. workspace 공통 실험 로그와 슬롯 config 체계 신설
