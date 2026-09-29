@@ -1,6 +1,6 @@
-# TODO — 2_LDPC_base (Project 2: 경량 Python 시뮬레이터)
+# TODO: 2_LDPC_base (Project 2: 경량 Python 시뮬레이터)
 
-> Claude 마지막 확인: 2026-08-13 16:23:33
+> Claude 마지막 확인: 2026-09-30 03:06:08
 
 > 목표: 외부의 H-matrix와 최적화된 파라미터를 넣어도 동작하게 만들고, 외부에서 pull하여 성능을 확인한다.
 > py는 아이디어 상대 비교 전용이다 (`docs/plan.md` §4).
@@ -39,6 +39,12 @@
   - 3-bit internal precision 잔여 갭은 소실된 HW TH/CH 값 없이는 추정 튜닝 한계. 값을 받으면 재검증
   - 교체 후 minsum_dual_clip(ieee:9496601) 최종 판정은 3_LDPC_ideas TODO가 관리 (`3_LDPC_ideas/001_minsum_dual_clip/` 참조)
 - [ ] mpi_runner 슈퍼컴 이관 (재설계 완료 후)
+- [ ] 온보딩 후속: 프로파일 검토 (사용자가 `docs/profile/` 다섯 문서를 읽고 틀린 곳 표시) (2026-09-30)
+  - 상세: `_pm/tasks/20260930_explore_프로젝트전체/`
+  - [x] 프로젝트 전체 탐색 (explorer 4명 + 검증 4명), 최종 문서 `docs/explore/프로젝트전체.md` (2026-09-30)
+  - [x] 프로파일 다섯 문서, `CLAUDE.md`, `docs/adr/`, `_pm/tasks/_template/` 작성 (2026-09-30)
+  - [ ] 판정요청 3건 답: `_pm/tasks/20260930_explore_프로젝트전체/판정요청_시험장사본_260930.md` (변형 디코더 실행 경로, 이력 문서의 개인 경로, 입력 파일 출처 규칙)
+  - [ ] 프로파일 검토 뒤 후속 후보 선택: 문서와 코드 어긋남 수정, `.gitignore` 추가, `workspace/matrix_sel_1_HD/README.md` 작성 (목록은 태스크 문서 "후속 작업 후보" 절)
 
 ## 새 작업 추가
 
