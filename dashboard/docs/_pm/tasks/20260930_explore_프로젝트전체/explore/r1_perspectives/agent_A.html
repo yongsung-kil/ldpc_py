@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>탐색 A 보고: 아키텍처 (폴더, 모듈 분리, 계층, 진입점, 빌드, 교체 지점)</title>
+<link rel="stylesheet" href="../../../../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<button id="nav-toggle" class="icon-btn" type="button" title="사이드바 접기와 펴기" aria-label="사이드바 접기와 펴기"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="9" y1="4" x2="9" y2="20"/></svg></button>
+<a class="brand" href="../../../../../../index.html">ldpc_py</a>
+<div class="search-wrap"><svg class="lens" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="20" y1="20" x2="16.5" y2="16.5"/></svg><input id="search" type="search" placeholder="검색 (제목과 본문, Ctrl K)" autocomplete="off">
+<div id="search-results" hidden></div></div>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout">
+<nav class="sidebar">
+<div class="nav-top">
+<a href="../../../../../../index.html"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="3" width="8" height="8" rx="1.5"/><rect x="3" y="13" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/></svg><span class="lbl">대시보드</span></a>
+<a href="../../../../../../changelog.html"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><polyline points="12 7 12 12 15.5 14"/></svg><span class="lbl">변경 이력</span></a>
+</div>
+<details class="nav-l1" open><summary><span><span class="lbl">온보딩</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l2"><a href="../../../../../README.html"><span class="lbl">2_LDPC_base: 경량 QC-LDPC 시뮬레이터</span></a></li>
+<li class="nav-l2"><a href="../../../../../CLAUDE.html"><span class="lbl">CLAUDE.md: AI 작업 진입점</span></a></li>
+<li class="nav-l2"><a href="../../../../../docs/adr/README.html"><span class="lbl">설계 기록</span></a></li>
+<li><details class="nav-l2"><summary><span><span class="lbl">탐색 결과</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../docs/explore/%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%A0%84%EC%B2%B4.html"><span class="lbl">프로젝트 전체 탐색 결과</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2"><summary><a href="../../../../../docs/profile/README.html"><span class="lbl">프로파일</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../docs/profile/overview.html"><span class="lbl">프로젝트 개요</span></a></li>
+<li class="nav-l3"><a href="../../../../../docs/profile/replacement_points.html"><span class="lbl">교체 지점</span></a></li>
+<li class="nav-l3"><a href="../../../../../docs/profile/structure.html"><span class="lbl">구조</span></a></li>
+<li class="nav-l3"><a href="../../../../../docs/profile/techniques.html"><span class="lbl">보유 기법</span></a></li>
+<li class="nav-l3"><a href="../../../../../docs/profile/constraints.html"><span class="lbl">제약과 용어</span></a></li>
+</ul></details></li>
+</ul></details>
+<details class="nav-l1" open><summary><span><span class="lbl">작업 관리</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l2"><a href="../../../../TODO.html"><span class="lbl">TODO: 2_LDPC_base (Project 2: 경량 Python 시뮬레이터)</span></a></li>
+<li class="nav-l2"><a href="../../../../DONE.html"><span class="lbl">DONE — 완료 이력 (2_LDPC_light)</span></a></li>
+<li><details class="nav-l2"><summary><span><span class="lbl">완료 작업</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260730_review</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li><details class="nav-l4"><summary><span><span class="lbl">r1_round1_lv1_perspectives</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r1_round1_lv1_perspectives/agent_1.html"><span class="lbl">2_LDPC_light 계획 문서 리뷰 — Round 1 관점 도출 (agent_1)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r1_round1_lv1_perspectives/agent_2.html"><span class="lbl">Round 1 — 리뷰 관점 도출 (agent_2)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r1_round1_lv1_perspectives/report.html"><span class="lbl">Round 1 결과: 관점 리스트업 (라이트 리뷰 — plan.md)</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r2_round2_lv1_analysis</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r2_round2_lv1_analysis/agent_B.html"><span class="lbl">Agent B — 기술적 타당성 검토 (라이트 리뷰 Round 2, lv1)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r2_round2_lv1_analysis/agent_A.html"><span class="lbl">Round 2 (lv1) — 축 A: 사실 정확성·정합성</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r2_round2_lv1_analysis/agent_C.html"><span class="lbl">Round 2 — 축 C: 실행 가능성 · 범위 완전성</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260730_review/r2_round2_lv1_analysis/report.html"><span class="lbl">Round 2 결과: 분석 + 메인 최종 검증 (라이트 리뷰 종료)</span></a></li>
+</ul></details></li>
+</ul></details></li>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260806_review</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li><details class="nav-l4"><summary><span><span class="lbl">r1_round1_lv1_perspectives</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r1_round1_lv1_perspectives/agent_1.html"><span class="lbl">2_LDPC_light 개정본(`_test/20260806_setup_구성_실험/LDPC_base/`) 리뷰 — Round 1 관점 도출 (agent_1)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r1_round1_lv1_perspectives/agent_2.html"><span class="lbl">Round 1 / agent_2 — 리뷰 관점 도출</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r1_round1_lv1_perspectives/report.html"><span class="lbl">Round 1 결과: 관점 리스트업</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r2_round2_lv1_analysis</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_1.html"><span class="lbl">Round 2 / agent_1 — [V1. C++ 대조: syndrome-aided 디코더] 분석</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_2.html"><span class="lbl">Round 2 / agent_2 — [V2. C++ 대조 — 채널 3종] 분석</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_3.html"><span class="lbl">Round 2 / agent_3 — [V3. LLR_MATRIX 파서와 row 선택] 검토 결과</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_4.html"><span class="lbl">Round 2 / agent_4 — V4. 디코더 자체 정확성 (3경로 일관성, 배치 압축, 뷰/사본, dtype)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_5.html"><span class="lbl">Round 2 / agent_5 — V5. 실행 흐름·설정·인터페이스 계약</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/agent_6.html"><span class="lbl">Round 2 / agent_6 — V6. 본체 반영 파손 범위, 스코프, 문서 일치</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r2_round2_lv1_analysis/report.html"><span class="lbl">Round 2 결과: 분석</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r3_round3_lv2_verification</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/team_a_verification.html"><span class="lbl">Round 3 / team_a — 채널·실행 검증 (F1, F3, F19)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_a_1.html"><span class="lbl">Round 3 / worker A-1 — F1 (channel.py argpartition 순서 편향) 증거 검증</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_a_2.html"><span class="lbl">Round 3 / worker A-2 — F3 (run 하위 키 조용한 무시) 검증</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_a_3.html"><span class="lbl">Round 3 / worker A-3 — F19 (`batch&lt;=0` hang) 심각도 재평가 검증</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_b_3.html"><span class="lbl">Round 3 / worker B-3 — F11 검증 (`_validate` 제약 4종)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_b_1.html"><span class="lbl">Round 3 / worker_b_1. F2 (HIGH) 검증: matrix 경로 dv=2 영구 미정정의 원인 판정</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_b_2.html"><span class="lbl">Round 3 / worker_b_2 검증 보고</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/report.html"><span class="lbl">Round 3 결과: 검증</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/context.html"><span class="lbl">Verification Context</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/team_b_verification.html"><span class="lbl">team_b: 디코더, 데이터 검증 (Round 3, lv2)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/team_c_verification.html"><span class="lbl">team_c — 본체 반영 검증 (Round 3, lv2)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_c_1.html"><span class="lbl">worker_c_1 — 독립 전수 수색 (개정본 반영 시 본체 잔여 파일 파손 조사)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_c_2.html"><span class="lbl">worker_c_2 — 자산 소실 경로 검증 + 반영 순서 처방 검증 (F7)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r3_round3_lv2_verification/worker_c_3.html"><span class="lbl">worker_c_3 — F23 (llr_tables 의존 목록) 정확성·전수성 검증</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r4_round2_lv1_fix_review</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r4_round2_lv1_fix_review/agent_2.html"><span class="lbl">agent_2 — 통합 정합, 잔재, 문서 일치 (라이트 재리뷰)</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r4_round2_lv1_fix_review/agent_1.html"><span class="lbl">수정 후 라이트 재리뷰 — agent_1 [수정 정확성·회귀]</span></a></li>
+<li class="nav-l5"><a href="../../../../done/20260806_review/r4_round2_lv1_fix_review/report.html"><span class="lbl">재리뷰 결과 (라이트, 2026-08-07 후속 수정분)</span></a></li>
+</ul></details></li>
+</ul></details></li>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260807_가독성리팩토링</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../../done/20260807_%EA%B0%80%EB%8F%85%EC%84%B1%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81/20260806_%EA%B0%80%EB%8F%85%EC%84%B1%EB%A6%AC%ED%8C%A9%ED%86%A0%EB%A7%81.html"><span class="lbl">LDPC_base 변수명·가독성 리팩토링</span></a></li>
+</ul></details></li>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260807_출력폴더_로그기능</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../../done/20260807_%EC%B6%9C%EB%A0%A5%ED%8F%B4%EB%8D%94_%EB%A1%9C%EA%B7%B8%EA%B8%B0%EB%8A%A5/20260806_%EC%B6%9C%EB%A0%A5%ED%8F%B4%EB%8D%94_%EB%A1%9C%EA%B7%B8%EA%B8%B0%EB%8A%A5.html"><span class="lbl">LDPC_base 결과 폴더 구조화 + 분석 로그 출력 기능</span></a></li>
+</ul></details></li>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260808_의견1_반영</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../../done/20260808_%EC%9D%98%EA%B2%AC1_%EB%B0%98%EC%98%81/%EC%9D%98%EA%B2%AC1.html"><span class="lbl">의견1</span></a></li>
+</ul></details></li>
+<li class="nav-l3"><a href="../../../../done/20260810_workspace%EC%A0%84%ED%99%98/20260810_workspace%EC%A0%84%ED%99%98.html"><span class="lbl">20260810_workspace전환</span></a></li>
+<li><details class="nav-l3"><summary><a href="../../../../done/20260809_2SD3SD%EA%B5%AC%ED%98%84/20260809_2SD3SD%EA%B5%AC%ED%98%84.html"><span class="lbl">2SD/3SD 디코딩 구현</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../../done/20260809_2SD3SD%EA%B5%AC%ED%98%84/cpp_sd_analysis.html"><span class="lbl">C++ 원본의 2SD/3SD 디코딩 경로 분석</span></a></li>
+</ul></details></li>
+<li class="nav-l3"><a href="../../../../done/20260813_minsum_dual_clip/20260813_minsum_dual_clip.html"><span class="lbl">minsum_dual_clip: CNU min1/min2 이중 상한 클리핑 (ieee:9496601)</span></a></li>
+<li class="nav-l3"><a href="../../../../done/20260807_%EB%A6%AC%EB%B7%B0%ED%9B%84%EC%86%8D%EC%88%98%EC%A0%95/20260807_%EB%A6%AC%EB%B7%B0%ED%9B%84%EC%86%8D%EC%88%98%EC%A0%95.html"><span class="lbl">리뷰 후속 수정 (딥 리뷰 2026-08-06 결과의 사용자 확정 반영)</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2" open><summary><span><span class="lbl">진행 중 작업</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li><details class="nav-l3"><summary><span><span class="lbl">20260808_review</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../20260808_review/%EC%A2%85%ED%95%A9%EB%B3%B4%EA%B3%A0.html"><span class="lbl">딥 리뷰 종합 보고 — 상황 설명과 조치 방향</span></a></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r1_round1_lv1_perspectives</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../20260808_review/r1_round1_lv1_perspectives/report.html"><span class="lbl">Round 1 결과: 관점 리스트업</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r1_round1_lv1_perspectives/agent_1.html"><span class="lbl">Round 1 관점 도출 (에이전트 1)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r1_round1_lv1_perspectives/agent_2.html"><span class="lbl">r4 이후 변경분 리뷰 — Round 1 관점 도출 (agent_2)</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r2_round2_lv2_analysis</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/context.html"><span class="lbl">Review Context</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/team_b_summary.html"><span class="lbl">Round 2 / 팀 B (config_run) 종합</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_b_2.html"><span class="lbl">Round 2 / 팀 B / 워커 2 — config 스키마 검증부와 실제 소비부의 일치</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_b_3.html"><span class="lbl">Round 2 / 팀 B / 워커 3 — 의견1 이름 수정의 완결성 + 요약 출력의 사실 정확성</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_b_1.html"><span class="lbl">Round 2 / 팀 B 워커 1 — `use_input_llr_matrix` 분기, setup 파일 생성 부작용, 재현성</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_c_3.html"><span class="lbl">Round 2 / 팀 C (refactor_exec) / 워커 3 — 동적 실행 검증</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/team_c_summary.html"><span class="lbl">Round 2 / 팀 C (refactor_exec) 종합</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_d_2.html"><span class="lbl">Round 2 / 팀 D 워커 2 — 관점 H 전반부 (문서와 코드의 사실 일치)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/team_a_summary.html"><span class="lbl">Round 2 · 팀 A (uniform_numeric) 종합</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_a_1.html"><span class="lbl">Round 2 · 팀 A 워커 1 — 관점 A (균일 양자화 수치 규약 + 저장/로드 왕복)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/report.html"><span class="lbl">Round 2 결과: 분석 (lv2, 4팀)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_a_2.html"><span class="lbl">Worker A-2 — 관점 B: `_vnu_quantize` 캐스케이드 일반화의 정확성 + 정수성 전제</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_a_3.html"><span class="lbl">Worker A-3 — 관점 B 후반: magnitude 0 레벨 도입의 디코더 파급 + RESET 변화</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_c_1.html"><span class="lbl">worker_c_1 — 정적 분석: 단계별 함수 추출 리팩토링의 동작 보존</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_c_2.html"><span class="lbl">worker_c_2 — 정적 분석: 패키지 경계, 임포트 체인, 실행 진입점</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_d_1.html"><span class="lbl">worker_d_1 — 팀 D 워커 1, 관점 G (데이터 파일 무결성)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/worker_d_3.html"><span class="lbl">worker_d_3 — 팀 D(data_docs) 워커 3: 문장 규칙 자기 적용 + 구 코드 유실과 TODO 정합</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r2_round2_lv2_analysis/team_d_summary.html"><span class="lbl">팀 D (data_docs) — Round 2 종합</span></a></li>
+</ul></details></li>
+<li><details class="nav-l4"><summary><span><span class="lbl">r3_round3_lv2_verification</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/team_b_verification.html"><span class="lbl">Round 3 / 검증팀 b (config_exec) 종합</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/team_a_verification.html"><span class="lbl">Round 3 검증 · 팀 a (numeric) — 수치 발견과 처방의 독립 재확인</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_a_2.html"><span class="lbl">Round 3 검증 — 팀 a 워커 2 (A-2 / A-3 / A-4)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_a_3.html"><span class="lbl">Round 3 검증 — 팀 a 워커 3 (A-11 재실험, A-6 처방 검증)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_c_2.html"><span class="lbl">Round 3 검증 보고 — 검증팀 c(docs_data) 워커 2</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_b_1.html"><span class="lbl">Round 3 검증 워커 b_1 — B-1 (frames_per_batch가 난수 실현값을 바꾼다)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_b_2.html"><span class="lbl">Round 3 검증 워커 b_2 결과</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_b_3.html"><span class="lbl">Round 3 검증 워커 b_3 — Input/LLR 오염 계열 3처방 검증</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_a_1.html"><span class="lbl">Round 3 검증팀 a / 워커 1 — A-1(공명), A-5(mag 0의 min1 점유), &quot;0 레벨 제거&quot; 처방</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/report.html"><span class="lbl">Round 3 결과: 검증 (lv2, 3팀)</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/context.html"><span class="lbl">Verification Context</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/team_c_verification.html"><span class="lbl">검증팀 c (docs_data) — Round 3 검증 결과</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_c_3.html"><span class="lbl">검증팀 c (docs_data) 워커 3 — TD-7 / TD-8 / TD-9 독립 재확인</span></a></li>
+<li class="nav-l5"><a href="../../../20260808_review/r3_round3_lv2_verification/worker_c_1.html"><span class="lbl">검증팀 c 워커 1 — TD-1, TD-2 독립 재확인</span></a></li>
+</ul></details></li>
+</ul></details></li>
+<li><details class="nav-l3" open><summary><a href="../../20260930_explore_%ED%94%84%EB%A1%9C%EC%A0%9D%ED%8A%B8%EC%A0%84%EC%B2%B4.html"><span class="lbl">20260930_explore_프로젝트전체: 온보딩 (프로파일 다섯 문서 작성)</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../%ED%8C%90%EC%A0%95%EC%9A%94%EC%B2%AD_%EC%8B%9C%ED%97%98%EC%9E%A5%EC%82%AC%EB%B3%B8_260930.html"><span class="lbl">판정요청: 시험장 사본에서 드러난 결정거리 세 가지</span> <span class="badge warn">미답 3</span></a></li>
+<li><details class="nav-l4" open><summary><span><span class="lbl">탐색 결과</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l5"><a href="../EXPLORATION.html"><span class="lbl">프로젝트 전체 탐색 결과</span></a></li>
+<li><details class="nav-l5" open><summary><span><span class="lbl">r1_perspectives</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l6"><a class="current" href="agent_A.html"><span class="lbl">탐색 A 보고: 아키텍처 (폴더, 모듈 분리, 계층, 진입점, 빌드, 교체 지점)</span></a></li>
+<li class="nav-l6"><a href="agent_B.html"><span class="lbl">탐색 B 보고: 데이터 흐름과 보유 기법</span></a></li>
+<li class="nav-l6"><a href="agent_C.html"><span class="lbl">탐색 C 보고: 컨벤션과 패턴, 제약 (이름 규칙, 오류 처리, 로그, 설정, 테스트 구조, 변경 금지 대상)</span></a></li>
+<li class="nav-l6"><a href="agent_D.html"><span class="lbl">탐색 D 보고: 의존성 (라이브러리, 외부 연동, 버전 제약, 형제 프로젝트 참조)</span></a></li>
+<li class="nav-l6"><a href="%EC%B7%A8%ED%95%A9.html"><span class="lbl">프로젝트 전체 탐색 취합 (r1)</span></a></li>
+</ul></details></li>
+<li><details class="nav-l5"><summary><span><span class="lbl">r2_verify</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l6"><a href="../r2_verify/verify_A.html"><span class="lbl">검증 A 보고: 사실 검증 (문서의 주장이 실제 코드와 맞는가, 표본 대조)</span></a></li>
+<li class="nav-l6"><a href="../r2_verify/verify_B.html"><span class="lbl">검증 B 보고: 누락 탐색 (중요한데 빠진 것, 폴더와 파일 목록 대조)</span></a></li>
+<li class="nav-l6"><a href="../r2_verify/verify_C.html"><span class="lbl">검증 C 보고: 관계 검증 (모듈 사이 관계와 의존 설명, import와 호출 추적)</span></a></li>
+<li class="nav-l6"><a href="../r2_verify/verify_D.html"><span class="lbl">검증 D 보고: 실용성 (목적에 비춰 취합 문서로 프로파일 다섯 문서를 채울 수 있는가, 더 봐야 할 것은)</span></a></li>
+</ul></details></li>
+</ul></details></li>
+</ul></details></li>
+<li><details class="nav-l3"><summary><a href="../../../_template/README.html"><span class="lbl">양식</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l4"><a href="../../../_template/task.html"><span class="lbl">(작업 제목)</span></a></li>
+<li class="nav-l4"><a href="../../../_template/decision_request.html"><span class="lbl">판정요청: (주제)</span></a></li>
+</ul></details></li>
+</ul></details></li>
+</ul></details>
+<details class="nav-l1" open><summary><span><span class="lbl">위키</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l2"><a href="../../../../../_wiki/manual.html"><span class="lbl">매뉴얼</span></a></li>
+<li class="nav-l2"><a href="../../../../../_wiki/MOC.html"><span class="lbl">위키 지도 (MOC)</span></a></li>
+<li class="nav-l2"><a href="../../../../../_wiki/_tracker.html"><span class="lbl">_tracker</span></a></li>
+<li><details class="nav-l2"><summary><a href="../../../../../_wiki/decisions/MOC-decisions.html"><span class="lbl">결정</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260729_scope-relative-comparison-simplified-form.html"><span class="lbl">20260729_scope-relative-comparison-simplified-form</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260730_genie-check-and-all-zero-codeword.html"><span class="lbl">20260730_genie-check-and-all-zero-codeword</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260730_input-files-external-supply.html"><span class="lbl">20260730_input-files-external-supply</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260730_sim-policy-max-iter-120-no-numba.html"><span class="lbl">20260730_sim-policy-max-iter-120-no-numba</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260806_analysis-log-core-set.html"><span class="lbl">20260806_analysis-log-core-set</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_channel-config-list-restored.html"><span class="lbl">20260807_channel-config-list-restored</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_config-keymap-fail-fast.html"><span class="lbl">20260807_config-keymap-fail-fast</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_legacy-deleted-not-repaired.html"><span class="lbl">20260807_legacy-deleted-not-repaired</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_llr-file-interpretation-rules.html"><span class="lbl">20260807_llr-file-interpretation-rules</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_purpose-is-the-name.html"><span class="lbl">20260807_purpose-is-the-name</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_replacement-point-cpp-function-boundary.html"><span class="lbl">20260807_replacement-point-cpp-function-boundary</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_single-seed-derived-streams.html"><span class="lbl">20260807_single-seed-derived-streams</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260807_strong-error-two-stage-extraction.html"><span class="lbl">20260807_strong-error-two-stage-extraction</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260808_rewrite-not-patch-positive-rules.html"><span class="lbl">20260808_rewrite-not-patch-positive-rules</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260808_uniform-llr-file-then-load.html"><span class="lbl">20260808_uniform-llr-file-then-load</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260809_fer-one-no-action-example-data.html"><span class="lbl">20260809_fer-one-no-action-example-data</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260809_sd-decoding-decisions.html"><span class="lbl">20260809_sd-decoding-decisions</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260809_uniform-min-level-one.html"><span class="lbl">20260809_uniform-min-level-one</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260810_avg-iteration-and-realtime-summary.html"><span class="lbl">20260810_avg-iteration-and-realtime-summary</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260810_decoder-class-single-switch-registry-removed.html"><span class="lbl">20260810_decoder-class-single-switch-registry-removed</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260813_config-slots-and-flags.html"><span class="lbl">20260813_config-slots-and-flags</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260813_edge-quantization-bits-max-split.html"><span class="lbl">20260813_edge-quantization-bits-max-split</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260930_history-docs-personal-path.html"><span class="lbl">20260930_history-docs-personal-path</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260930_input-source-notation-rule.html"><span class="lbl">20260930_input-source-notation-rule</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/decisions/20260930_variant-decoder-run-path.html"><span class="lbl">20260930_variant-decoder-run-path</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2"><summary><a href="../../../../../_wiki/tech/MOC-tech.html"><span class="lbl">기술</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260807_flip-condition-ch-le-7dv.html"><span class="lbl">20260807_flip-condition-ch-le-7dv</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_channel-models.html"><span class="lbl">20260930_channel-models</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_channels-section-and-experiment-loop.html"><span class="lbl">20260930_channels-section-and-experiment-loop</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_cnu-min1-min2-update.html"><span class="lbl">20260930_cnu-min1-min2-update</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_config-validation-rules.html"><span class="lbl">20260930_config-validation-rules</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_decoder-stages-and-state.html"><span class="lbl">20260930_decoder-stages-and-state</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_diff-from-cpp-original.html"><span class="lbl">20260930_diff-from-cpp-original</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_fer-point-loop-and-metrics.html"><span class="lbl">20260930_fer-point-loop-and-metrics</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_genie-check-and-batch-compress.html"><span class="lbl">20260930_genie-check-and-batch-compress</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_llr-matrix-file-format-and-loader.html"><span class="lbl">20260930_llr-matrix-file-format-and-loader</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_qccode-and-h-file.html"><span class="lbl">20260930_qccode-and-h-file</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_replacement-points-six.html"><span class="lbl">20260930_replacement-points-six</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_run-dir-and-output-files.html"><span class="lbl">20260930_run-dir-and-output-files</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_run-main-flow.html"><span class="lbl">20260930_run-main-flow</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_sd-region-and-pre-stage.html"><span class="lbl">20260930_sd-region-and-pre-stage</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_setup-llr-supply-paths.html"><span class="lbl">20260930_setup-llr-supply-paths</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_syndrome-aided-column-step.html"><span class="lbl">20260930_syndrome-aided-column-step</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_table-row-select-and-restart.html"><span class="lbl">20260930_table-row-select-and-restart</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_testbed-copy-vs-original-layout.html"><span class="lbl">20260930_testbed-copy-vs-original-layout</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_uniform-llr-matrix-synthesis.html"><span class="lbl">20260930_uniform-llr-matrix-synthesis</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/tech/20260930_vnu-quantize-cascade.html"><span class="lbl">20260930_vnu-quantize-cascade</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2"><summary><a href="../../../../../_wiki/trials/MOC-trials.html"><span class="lbl">시도</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260803_three-bit-precision-tuning-trial.html"><span class="lbl">20260803_three-bit-precision-tuning-trial</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260806_rejected-unification-and-relaxation.html"><span class="lbl">20260806_rejected-unification-and-relaxation</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260807_deferred-log-items.html"><span class="lbl">20260807_deferred-log-items</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260808_prescriptions-revised-for-side-effects.html"><span class="lbl">20260808_prescriptions-revised-for-side-effects</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260809_toy-sd-values-source-lost.html"><span class="lbl">20260809_toy-sd-values-source-lost</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260813_minsum-dual-clip-trial.html"><span class="lbl">20260813_minsum-dual-clip-trial</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/trials/20260818_matrix-sel-1-hd-probe.html"><span class="lbl">20260818_matrix-sel-1-hd-probe</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2"><summary><span><span class="lbl">양식</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../_wiki/_templates/asset.html"><span class="lbl">asset</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/_templates/decision.html"><span class="lbl">decision</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/_templates/tech.html"><span class="lbl">tech</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/_templates/trial.html"><span class="lbl">trial</span></a></li>
+</ul></details></li>
+<li><details class="nav-l2"><summary><a href="../../../../../_wiki/assets/MOC-assets.html"><span class="lbl">자산</span></a><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260806_set-uniform-vs-order-uniform.html"><span class="lbl">20260806_set-uniform-vs-order-uniform</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260806_silent-fallback-config-and-import.html"><span class="lbl">20260806_silent-fallback-config-and-import</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260806_task-document-template-usage.html"><span class="lbl">20260806_task-document-template-usage</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260807_fixed-input-array-regression.html"><span class="lbl">20260807_fixed-input-array-regression</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260807_function-extraction-refactoring.html"><span class="lbl">20260807_function-extraction-refactoring</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_decision-bit-array-count-outside-loop.html"><span class="lbl">20260808_decision-bit-array-count-outside-loop</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_deep-review-operating-rules.html"><span class="lbl">20260808_deep-review-operating-rules</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_equivalence-verification-methods.html"><span class="lbl">20260808_equivalence-verification-methods</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_optional-output-before-required-record.html"><span class="lbl">20260808_optional-output-before-required-record</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_replacement-point-contract-protection.html"><span class="lbl">20260808_replacement-point-contract-protection</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_shared-rng-batch-dependence.html"><span class="lbl">20260808_shared-rng-batch-dependence</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_user-review-note-handling.html"><span class="lbl">20260808_user-review-note-handling</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260808_zero-level-not-in-original.html"><span class="lbl">20260808_zero-level-not-in-original</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260809_antipattern-filename-decides-semantics.html"><span class="lbl">20260809_antipattern-filename-decides-semantics</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260809_cpp-static-analysis-procedure.html"><span class="lbl">20260809_cpp-static-analysis-procedure</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260813_clip-at-reconstruct-not-stored-state.html"><span class="lbl">20260813_clip-at-reconstruct-not-stored-state</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260813_refactor-regression-by-worktree.html"><span class="lbl">20260813_refactor-regression-by-worktree</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260814_fix-misquoted-cause-with-logged-values.html"><span class="lbl">20260814_fix-misquoted-cause-with-logged-values</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260814_slot-config-and-pq-scan.html"><span class="lbl">20260814_slot-config-and-pq-scan</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260930_doc-code-drift-checklist.html"><span class="lbl">20260930_doc-code-drift-checklist</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260930_reusable-code-patterns.html"><span class="lbl">20260930_reusable-code-patterns</span></a></li>
+<li class="nav-l3"><a href="../../../../../_wiki/assets/20260813_paper-idea-single-override-procedure.html"><span class="lbl">workspace/{실험}/decoder.py</span></a></li>
+</ul></details></li>
+</ul></details>
+<details class="nav-l1" open><summary><span><span class="lbl">기타 문서</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li><details class="nav-l2"><summary><span><span class="lbl">docs</span></span><svg class="chev" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 6 15 12 9 18"/></svg></summary>
+<ul>
+<li class="nav-l3"><a href="../../../../../docs/%EC%B0%A8%EC%9D%B4.html"><span class="lbl">original decoder와 .py decoder의 로직 차이</span></a></li>
+</ul></details></li>
+<li class="nav-l2"><a href="../../../../../workspace/README.html"><span class="lbl">workspace: 기준 실험 공간</span></a></li>
+</ul></details>
+</nav>
+<main class="content">
+<h1 id="탐색-a-보고-아키텍처-폴더-모듈-분리-계층-진입점-빌드-교체-지점">탐색 A 보고: 아키텍처 (폴더, 모듈 분리, 계층, 진입점, 빌드, 교체 지점)</h1>
+<blockquote><p>작성: 2026-09-30 (explorer 에이전트 보고 원문, 메인이 저장)</p></blockquote>
+<h2 id="확인한-것">확인한 것</h2>
+<h3 id="1-최상위-폴더와-역할-readme-대조">1. 최상위 폴더와 역할, README 대조</h3>
+<p>루트 <code>testbed/ldpc_py</code> 의 실제 구성:</p>
+<table><thead><tr><th>경로</th><th>실제 내용</th><th>README 설명과의 차이</th></tr></thead><tbody><tr><td><code>README.md</code></td><td>프로젝트 설명 (225줄)</td><td>제목이 "2_LDPC_base" (README.md:1). 실제 폴더명은 <code>ldpc_py</code></td></tr><tr><td><code>requirements.txt</code></td><td><code>numpy</code>, <code>matplotlib</code> 두 줄, 버전 고정 없음</td><td>일치</td></tr><tr><td><code>__init__.py</code></td><td>docstring 5줄만 (<code>__init__.py:1-5</code>)</td><td>README 언급 없음</td></tr><tr><td><code>src/</code></td><td>pcm, encoder, channel, decoder, llr_matrix, sim, run, <code>__init__</code> 8개</td><td>일치 (README.md:11)</td></tr><tr><td><code>workspace/</code></td><td><code>README.md</code>, <code>_template/</code>, <code>base_run/</code>, <code>test/</code>, <code>matrix_sel_1_HD/</code>, <code>matrix_sel_1_HD_fixed/</code></td><td>README.md:165-172 구조도에는 <code>_template</code>와 <code>base_run</code>만 그려져 있음. <code>test</code>, <code>matrix_sel_1_HD*</code> 3개는 미기재</td></tr><tr><td><code>Input/H_matrix/</code></td><td><code>example_18x147_z256.qc</code>, <code>matrix_sel_1.txt</code></td><td>README.md:13은 파일명 미기재. 둘 다 Ref-C 헤더 확인 (아래 6절)</td></tr><tr><td><code>Input/LLR/</code></td><td><code>LLR_MATRIX_HD_0.txt</code>, <code>HD_1</code>, <code>2SD_toy0</code>, <code>3SD_toy0</code>, <code>LLR_MATRIX_HD_matrix_sel_1.txt</code></td><td>README.md:14는 앞 4개만 기재. <code>HD_matrix_sel_1</code>은 미기재</td></tr><tr><td><code>docs/</code></td><td><code>차이.md</code> 하나</td><td>README.md:15 "차이.md, review/(리뷰 기록)" 중 <code>review/</code>는 없음</td></tr><tr><td><code>_pm/</code></td><td><code>TODO.md</code>, <code>DONE.md</code>, <code>tasks/</code>, <code>done/</code></td><td>작업 관리 (깊이 읽지 않음)</td></tr><tr><td><code>.gitignore</code></td><td><strong>없음</strong> (Read 실패로 확인)</td><td>README.md:104, 170은 <code>_generated/</code>와 <code>Sim_Output/</code>을 "git 무시 영역"이라 함. 이 사본에는 그 규칙 파일이 없음</td></tr></tbody></table>
+<p>저장소 밖 참조 (이 사본에 없는 것): <code>3_LDPC_ideas/새논문적용규칙.md</code> (README.md:163, workspace/README.md:5, base_run/README.md:24), <code>4_H_matrix_tool/</code> (README.md:39), <code>0_LDPC_original</code>, <code>1_LDPC_revised</code> (docs/차이.md:6). 그리고 <code>src/decoder.py:46</code>은 같은 정본 문서를 <code>docs/새논문적용규칙.md</code>라고 다른 경로로 적고 있어 README와 서로 어긋난다. 두 경로 모두 존재하지 않는다.</p>
+<h3 id="2-src-모듈-8개-역할-공개-심볼-import-관계">2. src 모듈 8개: 역할, 공개 심볼, import 관계</h3>
+<table><thead><tr><th>모듈</th><th>역할</th><th>공개 함수와 클래스 (줄)</th><th>내부 import</th></tr></thead><tbody><tr><td><code>src/pcm.py</code></td><td>QC-LDPC 부호 표현, Ref-C 포맷 파일 입출력</td><td><code>QCCode</code> :23. <code>__init__(base, z)</code> :24, 속성 <code>M_b N_b z N M K rate edge_row edge_col edge_shift E col_edges row_deg col_deg</code> :31-46, <code>save</code> :49, <code>load</code> :58, <code>syndrome</code> :85, <code>count_cycles4</code> :94, <code>summary</code> :112</td><td>numpy만</td></tr><tr><td><code>src/encoder.py</code></td><td>메시지 생성과 인코딩 자리</td><td><code>generate_message(code, batch, rng)</code> :13, <code>encode(msg, code)</code> :18 (all-zero 반환 임시)</td><td>numpy만</td></tr><tr><td><code>src/channel.py</code></td><td>채널 3종</td><td><code>qfunc_inv</code> :24, <code>dev_from_rber</code> :37, <code>rber_channel</code> :43, <code>fixed_error_channel</code> :78, <code>strong_error_channel</code> :91, 레지스트리 <code>CHANNELS</code> :138, <code>CHANNEL_MODES</code> :145. 출력은 dict <code>{"mode","hd","sd","cc"}</code></td><td>numpy만</td></tr><tr><td><code>src/llr_matrix.py</code></td><td>DAO LLR_MATRIX 로더, 균일 합성, iteration/CSW별 row 선택</td><td><code>MODE_CH_LEN</code> :45, <code>uniform_edge_mag</code> :51, <code>edge_quantization_levels</code> :60, <code>LLRMatrix</code> :123 (<code>load</code> :230, <code>make_internal_uniform_matrix</code> :286, <code>save</code> :318, <code>col_dv_idx</code> :347, <code>is_restart</code> :359, <code>row_index</code> :369, <code>has_uniform_levels</code> :389, <code>needs_csw</code> :403, <code>summary</code> :408)</td><td>numpy, os, re, warnings. <code>code</code>는 인자로 받고 pcm을 import하지 않음</td></tr><tr><td><code>src/decoder.py</code></td><td>배치 벡터화 syndrome-aided min-sum 디코더</td><td><code>LOG_ITEMS</code> :51, <code>_DecodeState</code> :54, <code>BaseDecoder</code> :99, 진입 <code>decoder_main</code> :475</td><td>numpy만</td></tr><tr><td><code>src/sim.py</code></td><td>FER 측정 루프 (한 포인트)</td><td><code>run_fer_point</code> :29, <code>save_csv</code> :170</td><td><code>.decoder</code> (BaseDecoder 타입 힌트, LOG_ITEMS 검증) :9</td></tr><tr><td><code>src/run.py</code></td><td>설정 로드와 검증, 구성, 실험 루프, 출력 저장, CLI</td><td><code>load_config</code> :270, <code>setup</code> :393, <code>print_experiment_summary</code> :496, <code>run_experiment</code> :548, <code>create_run_dir</code> :715, <code>report</code> :736, <code>main</code> :780</td><td><code>.channel</code>, <code>.encoder</code>, <code>.decoder</code>, <code>.llr_matrix</code>, <code>.pcm</code>, <code>.sim</code> :91-96. matplotlib은 <code>_plot_fer_curves</code> 안에서 지연 import :694-696</td></tr><tr><td><code>src/__init__.py</code></td><td>공개 API</td><td><code>QCCode</code>, <code>BaseDecoder</code>, <code>channel</code>, <code>encoder</code>, <code>sim</code> :6-10. <code>run</code>과 <code>llr_matrix</code>는 <code>__all__</code>에 없음</td><td></td></tr></tbody></table>
+<p>import 방향 (화살표는 부르는 쪽에서 불리는 쪽):</p>
+<ul><li>㉮ <code>run</code> → <code>channel</code>, <code>encoder</code>, <code>decoder</code>, <code>llr_matrix</code>, <code>pcm</code>, <code>sim</code></li><li>㉯ <code>sim</code> → <code>decoder</code></li><li>㉰ <code>__init__</code> → <code>pcm</code>, <code>decoder</code>, <code>channel</code>, <code>encoder</code>, <code>sim</code></li><li>㉱ <code>pcm</code>, <code>encoder</code>, <code>channel</code>, <code>llr_matrix</code>, <code>decoder</code> 다섯은 서로를 import하지 않는 잎 모듈 (numpy 표준만). <code>decoder</code>는 <code>code</code>와 <code>llr_matrix</code> 객체를 생성자 인자로 받고, <code>llr_matrix.col_dv_idx(code)</code>도 인자 전달로 결합 (decoder.py:113). 순환 없음</li></ul>
+<h3 id="3-진입점">3. 진입점</h3>
+<p><code>src/run.py main(argv=None, decoder_class=None)</code> :780-791</p>
+<ul><li>argv[0] 하나만 config 경로로 쓴다 (:785, :788). 없으면 <code>usage: python -m src.run &lt;config.json&gt;</code> 종료 :783</li><li><code>decoder_class</code>는 <code>setup</code>에 그대로 전달 :786. None이면 <code>BaseDecoder</code> (setup :443-444)</li></ul>
+<p>workspace 런처 <code>run.py</code> 5개 (<code>_template</code>, <code>base_run</code>, <code>test</code>, <code>matrix_sel_1_HD</code>, <code>matrix_sel_1_HD_fixed</code>)는 34줄 내용이 완전히 동일:</p>
+<ul><li>㉮ src 탐색: <code>EXPERIMENT_DIR</code>에서 시작해 부모로 올라가며 <code>&lt;조상&gt;/2_LDPC_base/src</code> 디렉토리가 있는지 검사 (run.py:11-17). 드라이브 루트까지 없으면 <code>SystemExit("상위 폴더에서 2_LDPC_base/src를 찾지 못함 ...")</code> :15. 찾으면 <code>&lt;조상&gt;/2_LDPC_base</code>를 <code>sys.path[0]</code>에 넣고 <code>from src.run import main</code> :18-22</li><li>㉯ 디코더 선택: 모듈 상수 <code>DECODER_CLASS = None</code> :24. 주석 :25-28이 "이 폴더의 decoder.py에 BaseDecoder 자식을 만들고 <code>from decoder import MyDecoder; DECODER_CLASS = MyDecoder</code>"로 지정하라고 안내</li><li>㉰ config 인자: <code>sys.argv[1:]</code>가 있으면 그 파일들을 순서대로, 없으면 형제 <code>config.json</code> 하나 (:31). 각 config마다 <code>main([config_path], decoder_class=DECODER_CLASS)</code> 호출 (:32-33)</li></ul>
+<p><strong>이 사본에서 런처는 동작하지 않는다.</strong> <code>2_LDPC_base/src</code>를 저장소 루트 <code>ldpc_py</code>부터 드라이브 루트까지 조상 폴더 여섯 단계에서 Glob으로 찾았으나 모두 없음. 루트에서 <code>python -m src.run workspace/base_run/config.json</code>으로 부르는 경로만 살아 있다 (config의 상대경로 <code>../../Input/...</code>는 config 파일 위치 기준이라 폴더명과 무관: run.py:277, :155).</p>
+<p>workspace 폴더별 내용:</p>
+<table><thead><tr><th>폴더</th><th>파일</th><th>특징</th></tr></thead><tbody><tr><td><code>_template/</code></td><td><code>run.py</code>, <code>config.json</code>, <code>README.md</code></td><td>config는 모든 키와 <code>_desc</code> 설명을 담은 풀버전 (label "실험이름"). README는 목적/바꾼 것/결과/결론 빈 틀</td></tr><tr><td><code>base_run/</code></td><td><code>run.py</code>, <code>config.json</code>, <code>README.md</code></td><td>최소 키 config: <code>example_18x147_z256.qc</code> + <code>LLR_MATRIX_HD_1.txt</code>, fixed_error [200, 300], log 전부 on, label base_run. README:6-8 "decoder.py가 없다. 재정의 0개가 곧 본체와 같다는 보증"</td></tr><tr><td><code>test/</code></td><td><code>run.py</code>, <code>config.json</code>, <code>README.md</code></td><td>파이프라인 동작 확인 스크래치 (README:7-8). fixed_error [100,200,300], log off</td></tr><tr><td><code>matrix_sel_1_HD/</code></td><td><code>run.py</code>, <code>config.json</code>, <code>_probe.json</code>, <code>_probe/</code> 결과 2개</td><td><code>matrix_sel_1.txt</code> + <code>LLR_MATRIX_HD_matrix_sel_1.txt</code>, fixed_error [390,380,370], max_frame_errors 20, max_frames 200000, log on. <strong>README.md 없음</strong>. <code>_probe.json</code>은 output.dir "_probe", fixed_error [500,460,440,420,400], frames_per_batch 512. <code>_probe/260818_225547_probe/summary.txt</code>: 커밋 <code>ecec8ae+dirty</code>, decoder <code>src.decoder.BaseDecoder</code>, code base 15x145 z=256 N=37120 K=33280, E=380에서 128프레임 0에러. <code>_probe/260818_225612_probe_sweep/summary.txt</code>: E=500에서 512/512 FER 1.0 후 중단</td></tr><tr><td><code>matrix_sel_1_HD_fixed/</code></td><td><code>run.py</code>, <code>config.json</code>, <code>README.md</code></td><td>같은 입력, max_frame_errors 15, max_frames 2000000, log off. README.md:8, 14는 "max_frame_errors=20, max_frames=200000"이라 적어 config(15, 2000000)와 어긋남. 결과 표는 빈칸</td></tr></tbody></table>
+<p><code>workspace/**/decoder.py</code>는 어느 폴더에도 없음 (Glob 확인). 재정의 예시 부재.</p>
+<h3 id="4-계층과-호출-순서">4. 계층과 호출 순서</h3>
+<table><thead><tr><th>계층</th><th>위치</th><th>호출 순서</th></tr></thead><tbody><tr><td>설정 로드와 검증</td><td><code>run.py load_config</code> :270-390</td><td>키맵 <code>_check_keys</code> :125, 필수 <code>_require</code> :133, 경로 결합 <code>_path_pair</code> :147, 채널 정규화 <code>_check_channels</code> :183-247, edge 양자화 <code>_check_edge_quantization</code> :250, log 평탄화 :384-387</td></tr><tr><td>구성</td><td><code>run.py setup</code> :393-446</td><td><code>QCCode.load</code> :405 → LLR 경로 결정 (파일 :406-411 또는 <code>LLRMatrix.make_internal_uniform_matrix</code> + <code>save</code> :412-440) → <code>LLRMatrix.load</code> :441 → <code>decoder_class(code, llr_matrix=...)</code> :445</td></tr><tr><td>출력 폴더</td><td><code>run.py create_run_dir</code> :715-733</td><td><code>YYMMDD_HHMMSS_{label}</code> 생성, config 사본, summary.txt 머리 (<code>_git_commit_hash</code> :603, <code>_experiment_summary_lines</code> :458)</td></tr><tr><td>실험 루프</td><td><code>run.py run_experiment</code> :548-600</td><td>전 채널 모드 사전 확인 <code>_check_channel_mode</code> :568-569 → 채널별 라벨 중복 처리 :577-583 → 포인트별 <code>np.random.default_rng([seed, channel_index, int(1e6*point)])</code> :586 → <code>_make_channel_fn</code> :587 → <code>sim.run_fer_point</code> :588 → <code>stop_below_fer</code> 판단 :597</td></tr><tr><td>채널 함수</td><td><code>run.py _make_channel_fn</code> :515-530</td><td><code>encoder.generate_message</code> → <code>encoder.encode</code> → <code>chan.CHANNELS[type](code, cw, point, rng, mode=..., **extra)</code> :524-528</td></tr><tr><td>시뮬레이션 루프</td><td><code>sim.py run_fer_point</code> :29-167</td><td>while :95 → <code>decoder.decoder_main(channel_fn(batch, rng), log=...)</code> :97 → 집계 :99-119 → 진행 줄 갱신 (콘솔 <code>\r</code> + summary.txt 꼬리 재작성 <code>_rewrite_file_tail</code> :21) :121-137 → 결과 dict :142-161</td></tr><tr><td>디코더</td><td><code>decoder.py decoder_main</code> :475-508</td><td><code>_read_channel_input</code> :501 → <code>_init_state</code> :502 → iteration 1..max_iter: <code>_run_iteration</code> :504 → <code>_record_iteration</code> :505 → <code>_check_errors</code> :506 (성공 프레임 배치 압축) → <code>_build_result</code> :508</td></tr><tr><td>출력 저장</td><td><code>run.py report</code> :736-777</td><td><code>sim.save_csv</code> :746 → <code>_write_iter_log</code> :752, <code>_write_iter_hist_log</code> :756, <code>_write_fail_log</code> :761 → LLR 사본 :764-768 → <code>_plot_fer_curves</code> :772 (실패해도 계속)</td></tr></tbody></table>
+<p><code>_run_iteration</code> :336-370 내부: <code>_is_edge_clear_iter</code> :342 → CN 상태 클리어 :344-349 → SD restart면 <code>_seed_channel_magnitudes</code> 후 return :350-359 → <code>llr_matrix.row_index(iteration, prev_csw)</code> :360 → <code>for col in _column_order(iteration)</code> :365 → <code>_process_column</code> :366 → <code>_collect_error_metrics</code> :368 → <code>prev_csw</code> :370. <code>_process_column</code> :372-413 내부: edge마다 <code>_c2v_reconstruct</code> :392 → roll → sum_t 누적 :396-398 → <code>_vn_decide</code> :400 → <code>decision_bits</code> :403 → edge마다 <code>_vnu_quantize</code> :408 → roll → <code>_cnu_update</code> :412.</p>
+<p>모드 정합 검사는 두 곳: <code>run.py _check_channel_mode</code> :504-512 (사전), <code>decoder.py _read_channel_input</code> :230-232 (채널 dict의 mode와 llr_matrix.mode 불일치 시 에러).</p>
+<h3 id="5-교체-지점-basedecoder에서-자식이-재정의하도록-설계된-함수">5. 교체 지점 (BaseDecoder에서 자식이 재정의하도록 설계된 함수)</h3>
+<p><code>src/decoder.py:40-46</code> 모듈 docstring이 "교체 단위 = 원본 C++ 함수 경계"이며 6개 함수라고 명시하고, :136에 섹션 헤더 <code># ---------- 논문 아이디어 교체 지점 ----------</code>가 있다. 각 docstring 첫 줄에 <code>[교체 지점: C++ 함수 대응]</code> 표지가 붙어 있다.</p>
+<table><thead><tr><th>함수 (줄)</th><th>인자</th><th>반환</th><th>호출 위치</th><th>C++ 대응</th></tr></thead><tbody><tr><td><code>_is_edge_clear_iter(self, iteration)</code> :137-144</td><td>iteration 번호</td><td>bool</td><td><code>_run_iteration</code> :342</td><td>Is_Iter_Type_Edge_Clear</td></tr><tr><td><code>_column_order(self, iteration)</code> :146-148</td><td>iteration 번호 (Pre 단계는 0)</td><td>column block 인덱스 iterable</td><td><code>_run_iteration</code> :365, <code>_seed_channel_magnitudes</code> :303</td><td>메인 루프 스케줄</td></tr><tr><td><code>_c2v_reconstruct(self, iteration, edge, min1_row, min2_row, min1_pos_row, syndrome_row, check_sum_row, edge_sgn_row)</code> :150-157</td><td>CN row block 슬라이스 (num_active_frames, z)</td><td>부호 있는 C2V (CN 정렬)</td><td><code>_process_column</code> :392</td><td>C2V_Cal</td></tr><tr><td><code>_vn_decide(self, sum_t)</code> :159-162</td><td>sum_t (num_active_frames, z)</td><td>bool 배열 (반전 여부)</td><td><code>_process_column</code> :400</td><td>VN_Cal_HD 판정부</td></tr><tr><td><code>_vnu_quantize(self, raw, vnu_in, th)</code> :164-187</td><td>raw = sum_t − vnu_in, th (num_active_frames, th 개수)</td><td>부호 있는 양자화 값</td><td><code>_process_column</code> :408</td><td>VN_Cal_HD 양자화부</td></tr><tr><td><code>_cnu_update(self, edge, edge_clear, new_sgn, new_mag, row_blk, min1, min2, min1_pos, check_sum, edge_sgn)</code> :197-220</td><td>새 메시지와 CN 상태 배열 전체</td><td><strong>None. 받은 배열을 제자리에서 고침</strong></td><td><code>_process_column</code> :412, <code>_seed_channel_magnitudes</code> :310</td><td>CNU_Remove_Old_Sgn / CNU_Update_New_Mag</td></tr></tbody></table>
+<p>코드에 적힌 경계 규칙:</p>
+<ul><li>㉮ <code>_cnu_update</code> docstring :202-203 "재정의할 때도 받은 배열을 제자리에서 직접 고쳐야 한다 (반환값은 쓰이지 않는다)"</li><li>㉯ <code>_uniform_saturate</code> :189-195는 표지 없는 보조 함수지만 docstring이 "교체 지점 재정의로 비정수 raw가 생기면 이 함수를 함께 재정의하거나 캐스케이드 경로를 쓸 것"이라 함께 손댈 대상으로 지정</li><li>㉰ <code>_collect_error_metrics</code> docstring :316-320 "column 루프 안에서 세지 않으므로 <code>_column_order</code>가 일부 column만 방문해도 미방문 column의 에러가 집계에 남는다" (부분 스케줄 재정의를 전제로 한 안전장치)</li><li>㉱ 생성자 시그니처: <code>setup</code>이 <code>decoder_class(code, llr_matrix=llr_matrix)</code>로 호출 (run.py:445)하므로 자식은 이 두 인자를 받아야 함 (코드로 확인, 문서화된 규칙은 미확인)</li><li>㉲ README.md:161-162 "src를 고치지 않고 BaseDecoder를 상속한 자식 클래스에서 교체용 함수만 재정의한다". 단계별 함수 7개(<code>_read_channel_input</code>, <code>_init_state</code>, <code>_run_iteration</code>, <code>_process_column</code>, <code>_record_iteration</code>, <code>_check_errors</code>, <code>_build_result</code>)에는 표지가 없어 경계 밖으로 읽히지만, 재정의를 금지하는 문구는 코드에 없음</li><li>㉳ 실행 요약에 디코더 클래스가 <code>module.ClassName</code>으로 기록됨 (run.py:483, summary.txt "decoder src.decoder.BaseDecoder")</li></ul>
+<p>재정의 예시 decoder.py는 workspace 어디에도 없음.</p>
+<h3 id="6-빌드와-실행">6. 빌드와 실행</h3>
+<ul><li>㉮ <code>requirements.txt</code>: numpy, matplotlib. matplotlib은 <code>log.items.fer_curve_png</code>가 true일 때만 import (run.py:694-696)</li><li>㉯ 패키지: setup.py, pyproject.toml 없음. 루트 <code>__init__.py</code>는 docstring만. <code>src/__init__.py</code>가 공개 API. <code>python -m src.run</code>은 루트를 cwd로 요구 (run.py:12)</li><li>㉰ 테스트: <code>tests/</code>, <code>_test/</code>, pytest 설정 없음. <code>workspace/test/</code>는 pytest가 아니라 실험 스크래치 (workspace/test/README.md:7)</li><li>㉱ 실행 명령: 루트에서 <code>python -m src.run &lt;config.json&gt;</code> (동작 가능), 실험 폴더에서 <code>python run.py [config...]</code> (이 사본에서는 3절대로 SystemExit)</li><li>㉲ Git: 브랜치 main, 커밋 1개 <code>0394b81 시험장 사본</code>. <code>.gitignore</code> 없음</li><li>㉳ 산출물 폴더 <code>Sim_Output/</code>은 어느 실험 폴더에도 없음. 결과물은 <code>matrix_sel_1_HD/_probe/</code> 2건만 (2026-08-18, 커밋 ecec8ae 시점)</li><li>㉴ Input 헤더 확인: <code>example_18x147_z256.qc:1-3</code> = <code>147 18 / 4 31 / 256</code> (N_b=147, M_b=18, J=4, K=31, z=256, README.md:222 기준 치수와 일치). <code>matrix_sel_1.txt:1-3</code> = <code>145 15 / 11 52 / 256</code> (탭 구분, N_b=145, M_b=15). <code>LLR_MATRIX_HD_1.txt</code>: num_param 4, num_dv 4, dv [11,4,3,2], 그룹 2개(각 1 row, type CSW), restart 0, 마지막 iter_end 20 (README.md:14 "restart 없는 20-iter" 일치). dv=2 열의 ch=28은 <code>_pm/TODO.md:31</code>이 위반으로 기록한 값</li></ul>
+<h2 id="관계와-흐름">관계와 흐름</h2>
+<pre><code>workspace/{실험}/run.py (런처, 이 사본에서는 2_LDPC_base 부재로 정지)
+   └─ DECODER_CLASS ──▶ src/run.py main(argv, decoder_class)
+                            ├─ load_config      (검증, 경로 결합, 채널 정규화, log 평탄화)
+                            ├─ setup            pcm.QCCode.load ─┐
+                            │                   llr_matrix.LLRMatrix.load / make_internal_uniform_matrix+save ─┤
+                            │                   decoder_class(code, llr_matrix) ◀──────────────────────────────┘
+                            ├─ create_run_dir   실행 폴더 + config 사본 + summary.txt 머리
+                            ├─ run_experiment   채널 × 포인트 루프, rng 파생
+                            │     └─ sim.run_fer_point (배치 while)
+                            │           ├─ channel_fn = encoder.generate_message → encoder.encode → channel.CHANNELS[type]
+                            │           └─ decoder.decoder_main
+                            │                 ├─ _read_channel_input, _init_state
+                            │                 └─ iteration 루프: _run_iteration → _record_iteration → _check_errors
+                            │                       └─ _process_column: [_c2v_reconstruct] → [_vn_decide] → [_vnu_quantize] → [_cnu_update]
+                            │                          (대괄호 = 교체 지점, 여기에 [_is_edge_clear_iter], [_column_order]가 iteration 단위로 더 있음)
+                            └─ report           save_csv, 로그 CSV 3종, LLR 사본, fer_curves.png</code></pre>
+<ul><li>데이터 계약: 채널 → 디코더는 dict <code>{"mode","hd","sd","cc"}</code> (channel.py:9, decoder.py:223-247). 디코더 → sim은 dict <code>success, decode_success_iteration, final_err_bits, final_info_err_bits (+log_*)</code> (decoder.py:482-494, sim.py:99-119). sim → run은 point_result dict (sim.py:142-161). 디코딩 모드와 max_iter는 config가 아니라 <code>LLRMatrix</code>가 결정 (decoder.py:112, llr_matrix.py:162, :237-241)</li><li>디코더 변형은 config가 아니라 런처의 클래스 주입 한 곳에서만 갈아끼움 (README.md:108-109, run.py:14-15). config는 파라미터 전용</li><li>설정 파일의 상대경로 해석 기준은 config 파일 위치 (run.py:277)이고, 출력 폴더도 config 위치 하위 <code>Sim_Output</code> 기본 (run.py:343-345)이라 실험 폴더 단위로 입력과 결과가 자기완결적</li></ul>
+<h2 id="못-본-것과-추정">못 본 것과 추정</h2>
+<ul><li>㉮ 실행 검증 미실시 (도구 제한). "런처 SystemExit"는 코드(run.py:11-17)와 조상 폴더 6단계 Glob 부재에 근거한 판단이며, <code>D:\</code> 최상위 Glob의 완전성은 도구 특성상 미확인</li><li>㉯ git 추적 상태 미확인: <code>_probe/</code> 결과물이 커밋에 포함됐는지, 전역 gitignore가 있는지 (추정: 저장소에 <code>.gitignore</code>가 없으므로 "시험장 사본" 커밋에 <code>_probe/</code>가 포함됐을 가능성)</li><li>㉰ <code>_pm/done/</code>, <code>_pm/DONE.md</code>, <code>_pm/tasks/20260808_review/</code> 안 읽음. <code>_pm/TODO.md</code>만 읽어 미구현 항목(후순위 로그 7종, mpi_runner 재설계, config checker 확장)을 확인</li><li>㉱ Input LLR 파일 중 <code>HD_0</code>, <code>2SD_toy0</code>, <code>3SD_toy0</code>, <code>HD_matrix_sel_1</code> 내용 미확인. <code>_probe/*/fer_fixed_error.csv</code> 미확인</li><li>㉲ 교체 지점의 정본 문서(새논문적용규칙.md)가 저장소에 없어 "공식" 상속 경계 규칙(예: 상태 필드 접근 허용 범위, 생성자 확장 허용 여부)은 코드 docstring 수준으로만 파악. 정본과의 일치 여부 미확인</li><li>㉳ 상위 <code>AI_Assisted_Dev/CLAUDE.md</code>는 plugin과 pytest를 전제한 다른 저장소의 규칙으로 읽힘. 이 프로젝트 전용 CLAUDE.md는 없음 (추정: 폴더 트리상 부모 파일이 함께 로드된 것)</li></ul>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h2"><a href="#확인한-것">확인한 것</a></li><li class="h3"><a href="#1-최상위-폴더와-역할-readme-대조">1. 최상위 폴더와 역할, README 대조</a></li><li class="h3"><a href="#2-src-모듈-8개-역할-공개-심볼-import-관계">2. src 모듈 8개: 역할, 공개 심볼, import 관계</a></li><li class="h3"><a href="#3-진입점">3. 진입점</a></li><li class="h3"><a href="#4-계층과-호출-순서">4. 계층과 호출 순서</a></li><li class="h3"><a href="#5-교체-지점-basedecoder에서-자식이-재정의하도록-설계된-함수">5. 교체 지점 (BaseDecoder에서 자식이 재정의하도록 설계된 함수)</a></li><li class="h3"><a href="#6-빌드와-실행">6. 빌드와 실행</a></li><li class="h2"><a href="#관계와-흐름">관계와 흐름</a></li><li class="h2"><a href="#못-본-것과-추정">못 본 것과 추정</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 12:23:38</footer>
+<script>window.DASH_PREFIX = "../../../../../../";</script>
+<script src="../../../../../../assets/search.js"></script>
+<script src="../../../../../../assets/app.js"></script>
+</body>
+</html>
