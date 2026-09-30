@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10728061</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10728061---fpga-verification-of-generalized-ldpc-convolutional-codes-with-hamming-code-2024-cleo">ieee:10728061 - FPGA Verification of Generalized LDPC Convolutional Codes with Hamming Code (2024, CLEO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Hamming(15,11) 로컬코드 기반 hybrid-check GLDPC 컨볼루션코드(29% overhead)를 FPGA로 검증, 소수 GC노드로는 error floor를 10⁻¹⁵까지 낮추지 못함을 실측 확인</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>광통신(optical) 타깃 컨볼루션 코드이며 GC노드는 BCJR(turbo-like) 알고리즘으로 min-sum과 이질적, 결과 자체도 negative(LDPC-CC 대비 뚜렷한 이득 없음)</td></tr><tr><td>추가확인</td><td>early-exit(hard decision check, Lapr/Lapp) 메커니즘의 정확한 트리거 조건 및 전력 절감 수치</td></tr></tbody></table>
+<blockquote><p>총평: SPC 노드는 min-sum(조기종료·hard decision check 포함)이라 부분적으로 이식 아이디어(early-exit 위치 최적화)가 있으나, GC 노드의 BCJR/JPSP 연산과 컨볼루션 구조는 Prime ECC의 QC-LDPC block 구조와 달라 실질 이식성은 제한적이며 논문 결론 자체가 "뚜렷한 이점 없음"으로 부정적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 29% overhead 컨볼루션 GLDPC 코드(GLDPC-CC), 기저는 regular (3,15) QC-LDPC block 코드에서 unwrapping으로 얻은 LDPC convolutional code, 광통신(optical) 채널 타깃.</li><li>문제: 기존 SPC(single parity check)만 쓰는 LDPC-CC는 error floor가 상대적으로 높음; GC(generalized check) 노드로 일부 SPC를 대체하면 최소거리·트래핑셋 특성이 개선되어 error floor를 낮출 수 있는지 FPGA로 실측 검증.</li><li>가정: 매 24행 중 첫 행을 GC 노드(Hamming(15,11) 로컬코드)로, 나머지 23행은 SPC 노드로 구성(5z VN, z/24 GC노드, 23z/24 SPC노드).</li><li>핵심 기법: layered 디코딩에서 SPC 노드는 revised min-sum, GC 노드는 BCJR 알고리즘을 각각 적용하는 hybrid-check 구조; GC 노드의 연산량을 줄이기 위해 JPSP(joint path and state pruning) 갱신 규칙 사용.</li><li>핵심 식/구조: JPSP는 BCJR과 동일하게 initialization→forward recursion→backward recursion→external info update 4단계로 구성되나, 기본 연산 유닛을 enable신호 있는 add-compare-select(ENACSU)로 대체해 연산 전력을 절감.</li><li>확장: 전력 절감을 위해 hard decision check 기반 early exit 추가 — 동일 코드블록이 3회 연속 hard decision을 통과하면 다음 iteration에서 해당 블록 디코딩을 생략.</li><li>부수 트릭: hard decision check 위치를 2가지로 비교 — 디코딩 시작 전 LLR이 체크를 만족하는 <code>Lapp</code>, C2V 정보를 뺀 후 LLR이 체크를 만족하는 <code>Lapr</code>; 성능·전력을 종합하면 <code>Lapr</code>가 우수.</li><li>학습/최적화: 없음(구성/구조 논문, ML 없음).</li><li>결과: LDPC-CC의 error floor는 10⁻¹³, GLDPC-CC는 10⁻¹²로 오히려 다소 높음; 출력 BER 10⁻¹¹ 기준 요구 입력 BER은 GLDPC-CC 4.18e-2 vs LDPC-CC 3.99e-2로 GLDPC-CC가 뚜렷한 이점 없음; early exit 적용 시 평균 iteration은 Lapr 33.98회, Lapp 31.73회.</li><li>한계: 논문 결론 자체가 "hybrid GLDPC-CC가 LDPC-CC 대비 성능·지연·전력에서 뚜렷한 이점 없고 error floor를 10⁻¹⁵까지 낮추지 못함"이라는 negative 결과, gatecount/throughput 등 정량 HW 스펙 본문에 없음, 광통신向 컨볼루션 구조로 NAND 직접 적용 어려움.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPC 노드 revised min-sum 갱신</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 계열이라 알고리즘적으로 유사하나 이미 보유한 기법이라 신규성 낮음</td></tr><tr><td>GC 노드 BCJR/JPSP(ENACSU) 연산</td><td>대응 없음</td><td>turbo-like BCJR은 프로파일 §5 판정 필터상 "대응 없음" 계열(turbo/polar 유사)</td></tr><tr><td>hard decision check 기반 early exit (Lapr/Lapp)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료 메커니즘 개념은 유사하나 CRC가 아닌 parity/Hamming 체크 기반이라 구현 상이</td></tr><tr><td>layered 디코딩 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>이미 보유한 layered 스케줄과 유사, 신규성 낮음</td></tr><tr><td>GLDPC-CC 부호 구조(convolutional, hybrid check)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC-LDPC block 구조가 아닌 컨볼루션 구조라 재검증 부담 큰 편(높음)</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — SPC min-sum 부분은 이미 보유 기법과 중복이고, 핵심 신규 요소(GC/BCJR, 컨볼루션 구조)는 대응 모듈이 없거나 이식 난이도가 높으며, 논문 결과 자체도 negative.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10728061",
+  "title": "FPGA Verification of Generalized LDPC Convolutional Codes with Hamming Code",
+  "year": 2024,
+  "venue": "CLEO",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Hamming(15,11) 로컬코드 기반 hybrid-check GLDPC 컨볼루션코드(29% overhead)를 FPGA로 검증, 소수 GC노드로는 error floor를 10^-15까지 낮추지 못함을 실측 확인",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "광통신 타깃 컨볼루션 코드이며 GC노드는 BCJR(turbo-like) 알고리즘으로 min-sum과 이질적, 결과 자체도 negative",
+  "todo_check": "early-exit(hard decision check, Lapr/Lapp) 메커니즘의 정확한 트리거 조건 및 전력 절감 수치"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10728061---fpga-verification-of-generalized-ldpc-convolutional-codes-with-hamming-code-2024-cleo">ieee:10728061 - FPGA Verification of Generalized LDPC Convolutional Codes with Hamming Code (2024, CLEO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

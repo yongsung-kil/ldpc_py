@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9597529</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9597529---an-early-life-nand-flash-endurance-prediction-system-2021-ieee-access">ieee:9597529 - An Early-Life NAND Flash Endurance Prediction System (2021, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.92</td></tr><tr><td>부호length</td><td>2kB(user)+188B(parity)</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>초기수명 측정(섹터에러·program/erase 시간)+섹터주소로 EOL RBER pass/fail을 gradient boosting으로 예측, 튜닝으로 false-negative 0(100% sensitivity) 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC(LDPC/BCH)는 배경일 뿐 기여는 ML 수명예측; 디코더·부호설계·HW 요소가 없어 Prime ECC 이식 요소 없음</td></tr><tr><td>추가확인</td><td>soft-read 비용 절감·CWER 관점에서 우리 시뮬 정책과 연계 가치가 있는지(별개 시스템 레이어)만 참고</td></tr></tbody></table>
+<blockquote><p>총평: NAND 신뢰성에 직접 밀착한 실측 연구지만 기여는 gradient boosting 기반 섹터 수명예측 시스템으로, LDPC 디코더/부호설계/HW를 전혀 건드리지 않아 Prime ECC 이식 대상이 아니다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 19nm planar MLC NAND(2,096 blocks×512 pages, 페이지당 8 섹터), 섹터=2kB user + 234B spare, ECC는 100-bit BCH(code rate <code>0.92</code>, parity 188B) 가정.</li><li>풀려는 문제: 섹터별 endurance(P-E cycle 한계) 편차가 커서 최악값 기준 보수적 스펙 → 섹터별 true endurance를 초기수명에 예측해 더 단순·저가 ECC 사용과 수명연장을 노림.</li><li>가정/모델: 일부 셀은 process variation으로 charge trap이 심한 <code>weak cell</code>이고, 섹터 EOL 에러는 weak cell 비율에 상관, 이 특성은 초기수명 측정으로 식별 가능하다는 가설.</li><li>데이터: 45개 device·6,675 blocks·2,700만+ 섹터를 Raspberry Pi 기반 커스텀 테스터로 가속시험(81°C, 500h cycling + 18h retention bake), 6k~15k cycle 10단계.</li><li>초기수명 예측 피처: 섹터 에러수, page program time, block erase time + page number + cycling level (Table 2).</li><li>핵심 발견: CWER은 mean RBER이 아니라 RBER 분포 tail이 결정(15k가 mean 최고이나 8k tail이 더 높음); 실패 섹터의 57~79%가 소수 page(page 1,7 등 LSB/MSB even 첫 워드라인)에 집중.</li><li>ML 기법: gradient boosting(R <code>gbm</code>, n.trees=400, depth=3, shrinkage=0.09)으로 pre/post-retention 이진분류(pass/fail), 심한 클래스 불균형(&gt;99.9% pass)은 undersampling으로 완화.</li><li>최적화: SMOTE 변형 synthetic oversampling이 duplication보다 우수(specificity 98.95%, sensitivity 99.61%, AUC 0.9993).</li><li>튜닝(핵심 신규): 학습은 80-bit decision boundary로, 테스트는 100-bit로 두고 pass/fail 확률 임계값을 0.45로 낮춰 false-negative 0(100% sensitivity, guardband 포함) 달성 → 데이터 손실 없이 수명연장/단순 ECC 허용.</li><li>한계: 디코더·부호설계·HW를 다루지 않는 시스템/ML 레이어 연구이며 planar MLC 특정 device·gatecount/throughput 등 ECC HW 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<p>대상이 <code>other</code>(섹터 수명예측 ML 시스템)로, LDPC 디코더/부호설계/HW 어느 것도 개선하지 않아 코드 모듈 대응이 사실상 없다.</p>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>gradient boosting 섹터 endurance 예측</td><td>대응 없음</td><td>컨트롤러/펌웨어 레이어 ML로 디코더 시뮬과 무관</td></tr><tr><td>RBER/CWER·weak cell·retention 에러 모델</td><td>channel.cpp <code>Set_R_Offset()</code> (RBER 주입)</td><td>채널 에러 통계 관점에서만 개념적 연관, 기법 이식 아님</td></tr><tr><td>ECC threshold(100-bit)·code rate 0.92 가정</td><td>ecc_top.cpp <code>Load_PCM()</code> (고rate 코드 스펙)</td><td>고rate NAND ECC 문맥만 공유, 부호 자체 기여 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND 신뢰성에 직접 관련되나 기여가 섹터 수명예측 ML 시스템 레이어라, binary QC-LDPC 디코더/부호설계/HW를 다루는 Prime ECC에 떼어 쓸 알고리즘 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9597529",
+  "title": "An Early-Life NAND Flash Endurance Prediction System",
+  "year": 2021,
+  "venue": "IEEE Access",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.92,
+  "code_length": "2kB(user)+188B(parity)",
+  "soft_quant": "무관",
+  "key_contribution": "초기수명 측정(섹터에러·program/erase 시간)+섹터주소로 EOL RBER pass/fail을 gradient boosting으로 예측, 튜닝으로 false-negative 0(100% sensitivity) 달성",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC(LDPC/BCH)는 배경일 뿐 기여는 ML 수명예측; 디코더·부호설계·HW 요소가 없어 Prime ECC 이식 요소 없음",
+  "todo_check": "soft-read 비용 절감·CWER 관점에서 우리 시뮬 정책과 연계 가치가 있는지(별개 시스템 레이어)만 참고"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9597529---an-early-life-nand-flash-endurance-prediction-system-2021-ieee-access">ieee:9597529 - An Early-Life NAND Flash Endurance Prediction System (2021, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

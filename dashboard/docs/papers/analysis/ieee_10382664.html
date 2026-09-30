@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10382664</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10382664---ebdn-entropy-based-double-nonuniform-sensing-algorithm-for-ldpc-decoding-in-tlc-nand-flash-memory-2024-ieee-transactions-on-computer-aided-design-of-integrated-circuits-and-systems">ieee:10382664 - EBDN: Entropy-Based Double Nonuniform Sensing Algorithm for LDPC Decoding in TLC NAND Flash Memory (2024, IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>8/9</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>intrastate(중첩영역 내)와 interstate(중첩영역 간) RBER 비균일성을 엔트로피로 정량화해 sensing level을 선택적으로 배치, 필요한 soft sensing 수를 줄임</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>특정 Micron B16A 칩 실측 기반 offline 테이블(Table I, Search 1-4) 구축이 전제이며 타 칩/공정 이식 시 재보정 필요, HW 미설계(순수 알고리즘+실측 검증)</td></tr><tr><td>추가확인</td><td>오프라인 테이블 생성 비용(측정 소요 시간)과 Prime ECC의 기존 적응형 LLR threshold 테이블(PARAM_LLR) 대비 실제 sensing 횟수 감소 폭 비교</td></tr></tbody></table>
+<blockquote><p>총평: NAND read threshold 배치 최적화(soft-read 비용 절감) 기법으로 Prime ECC의 channel.cpp LLR 양자화/threshold 설계에 직접 이식 가능성이 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>TLC NAND(3bit/cell, 7개 state 경계)에서 soft decision LDPC 복호를 위한 sensing level 배치를 최적화하는 문제, 목표는 read latency 감소.</li><li>기존 nonuniform sensing 기법들은 state 간 차이(interstate)만 고려하거나 균등 간격을 유지해 state 내부(intrastate) 비균일성을 반영하지 못함.</li><li>threshold voltage 분포를 Gaussian으로 가정하고 인접 state 중첩영역의 경계값 <code>vl_i</code>, <code>vr_i</code>를 두 분포 교점 조건 <code>f(i)(v)/f(i+1)(v)=R</code>로 계산.</li><li>엔트로피 <code>H(v) = -Σ P(state=i|v) log2 P(state=i|v)</code> 로 중첩영역 내부 위치별 혼란도(intrastate)를 정량화 — 중첩영역 중심에서 최대, 경계에서 최소.</li><li>엔트로피가 클수록(중심부) sensing level을 촘촘히, 경계부는 성기게 배치(EBISN, intrastate 비균일 sensing).</li><li>7개 중첩영역 각각의 면적 <code>S(j)</code>을 적분해 영역별 엔트로피 <code>H(S)</code>를 계산, 엔트로피 순위(예: 3&gt;6&gt;1&gt;2&gt;5&gt;4&gt;0)로 sensing 우선순위·횟수를 영역별 차등 배분(EBDN, interstate 비균일 sensing).</li><li>두 기법을 결합한 EBDN: 엔트로피 상위 2개 영역만 soft sensing(2회) 적용, 나머지는 hard decision만 사용해 총 sensing 횟수 축소.</li><li>P/E cycle·retention time 구간별 offline 테이블(Table I, Search 1-4)을 사전 구축(측정+피팅), 실제 read 시엔 룩업만 수행해 latency 오버헤드 없음.</li><li>결과: min-sum LDPC(rate 8/9, max 30 iter) 기준 기존 nonuniform sensing 대비 반복횟수 약 70% 감소, read latency 34.52% 감소, 저장 오버헤드 110 bytes(256Gb 칩 대비 무시 가능).</li><li>한계: Micron B16A 칩 실측 데이터 기반이라 타 공정/제조사 이식 시 재보정 필요, decoder HW 자체는 변경 없이 sensing 정책만 개선(디코더 알고리즘 미설계).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>엔트로피 기반 sensing level 배치(intrastate/interstate)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold 위치 결정 로직으로 기존 LLR threshold 테이블 설계에 직접 대체·보강 가능</td></tr><tr><td>P/E cycle·retention별 offline 테이블(Table I, Search 1-4)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>iteration/조건별 LLR 파라미터 테이블 구조와 유사한 형태로 P/E·retention 축 추가 이식 가능</td></tr><tr><td>min-sum LDPC 복호 및 iteration 카운트</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>개선된 soft-read 결과가 입력되는 대상 디코더 루프, 알고리즘 자체는 변경 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — NAND read 비용(soft sensing 횟수·latency) 직접 절감 기법이며 기존 LLR threshold 테이블 구조에 부합해 이식 난이도가 낮음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10382664",
+  "title": "EBDN: Entropy-Based Double Nonuniform Sensing Algorithm for LDPC Decoding in TLC NAND Flash Memory",
+  "year": 2024,
+  "venue": "IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.889,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "intrastate(중첩영역 내)와 interstate(중첩영역 간) RBER 비균일성을 엔트로피로 정량화해 sensing level을 선택적으로 배치, 필요한 soft sensing 수를 줄임",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "특정 Micron B16A 칩 실측 기반 offline 테이블(Table I, Search 1-4) 구축이 전제이며 타 칩/공정 이식 시 재보정 필요, HW 미설계(순수 알고리즘+실측 검증)",
+  "todo_check": "오프라인 테이블 생성 비용(측정 소요 시간)과 Prime ECC의 기존 적응형 LLR threshold 테이블(PARAM_LLR) 대비 실제 sensing 횟수 감소 폭 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10382664---ebdn-entropy-based-double-nonuniform-sensing-algorithm-for-ldpc-decoding-in-tlc-nand-flash-memory-2024-ieee-transactions-on-computer-aided-design-of-integrated-circuits-and-systems">ieee:10382664 - EBDN: Entropy-Based Double Nonuniform Sensing Algorithm for LDPC Decoding in TLC NAND Flash Memory (2024, IEEE Transactions on Computer-Aided Design of Integrated Circuits and Systems)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

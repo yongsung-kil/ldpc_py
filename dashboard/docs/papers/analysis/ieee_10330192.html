@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10330192</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10330192---about-the-joint-correcting-of-error-bursts-and-independent-errors-using-ldpc-codes-2023-redundancy">ieee:10330192 - About the Joint Correcting of Error Bursts and Independent Errors Using LDPC Codes (2023, REDUNDANCY)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.3~0.5</td></tr><tr><td>부호length</td><td>44~100</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>block-permutation LDPC용 슬라이딩윈도우 리스트 복호기로 단일 버스트+독립오류 동시 정정, majority-logic(벡터 f) 기반 리스트 크기 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>syndrome/coset 기반 hard-decision 윈도우 리스트 복호로 Prime ECC의 soft min-sum message-passing과 원리가 다르며, 짧은 부호·버스트 채널 특화</td></tr><tr><td>추가확인</td><td>NAND read의 실제 오류가 버스트형인지(대개 독립/셀 열화), 고rate long QC-LDPC로의 확장 및 리스트 크기 폭증 문제</td></tr></tbody></table>
+<blockquote><p>총평: Gilbert-Elliott형 버스트+독립오류 채널을 겨냥한 짧은 block-permutation LDPC의 hard-decision 리스트 복호 연구로, NAND용 고rate soft min-sum QC-LDPC 엔진(Prime ECC)과는 채널모델·복호원리가 달라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 짧은 binary LDPC(block-permutation <code>H</code>, PEG, 랜덤; 길이 44~100, rate≈0.3~0.5)로, 통신·저장 시스템에서 버스트와 독립오류를 함께 정정하는 문제.</li><li>문제: 채널이 memory를 가져 good/bad 상태로 버스트가 생기는데, 기존 LDPC 복호는 독립오류 위주라 긴 버스트에서 성능 급락, 버스트+독립 동시정정 연구는 희소.</li><li>모델: 길이 n 코드워드에 길이 b 단일 버스트(시작위치 균일분포)와 버스트 밖 t개 독립오류; 정정능력을 쌍 <code>(b_max, t_max)</code>로 정의(예: Code A (44,13), d0=10, t_max=4, b_max=10).</li><li>핵심 1단(Alg.1): 윈도우 슬라이딩 단일버스트 복호 — 각 시작위치 i에서 부분행렬 <code>H_b,i</code>와 syndrome <code>S=yH^T</code>로 <code>decode_burst</code>([3]) 수행, 성공 시 반환.</li><li>핵심 식: <code>e A^T = S</code>의 해를 윈도우 내에서 구해 <code>â=y+e</code>; 윈도우가 버스트보다 크면 정정능력 초과분도 일부 정정.</li><li>핵심 2단(Alg.2): Chase형 리스트 확장 — 윈도우 밖 독립오류를 covering vector 집합 L로 덮어 각 후보를 단일버스트 복호에 투입, 유일 성공 시만 채택.</li><li>리스트 크기 <code>L=Σ C(nG,i)</code>(nG=n-b)로 t 증가 시 급증 → majority-logic 원리로 축소.</li><li>축소 휴리스틱: <code>f=yH^T</code>(십진 계산)를 신뢰도 지표로 보고 f 최대값 위치들만 covering에 사용(랜덤 대비 소폭 개선, 리스트 축소 시 오류확률 급증).</li><li>결과: 버스트 밖 독립오류가 1개만 생겨도 정정가능 버스트 길이가 크게 감소; 고정 길이·rate에서 3-stripe(γ=3) 구성이 동시정정에 유리(단일버스트만은 γ=2 유리).</li><li>한계: HW 미설계·시뮬만, hard-decision·짧은 부호 전제, 버스트 위치 미지 시 리스트 폭증(복잡도·latency 악화).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>syndrome 기반 윈도우 버스트 복호</td><td>대응 없음</td><td>Prime ECC는 iterative soft min-sum, syndrome-list 복호기 없음</td></tr><tr><td>Chase형 리스트 복호</td><td>대응 없음</td><td>리스트/covering vector 개념 없음</td></tr><tr><td>벡터 f 신뢰도 휴리스틱</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>HD 신뢰도 착안점만 미미하게 유사, 구조 상이</td></tr><tr><td>block-permutation 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC-LDPC와 형태 유사하나 버스트 특화 소블록 구성이라 재설계 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 버스트 채널·hard-decision 리스트 복호·짧은 부호가 NAND용 soft min-sum 고rate QC-LDPC와 부합하지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10330192",
+  "title": "About the Joint Correcting of Error Bursts and Independent Errors Using LDPC Codes",
+  "year": 2023,
+  "venue": "REDUNDANCY",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.3~0.5",
+  "code_length": "44~100",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "block-permutation LDPC용 슬라이딩윈도우 리스트 복호기로 단일 버스트+독립오류 동시 정정, majority-logic(벡터 f) 기반 리스트 크기 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "syndrome/coset 기반 hard-decision 윈도우 리스트 복호로 Prime ECC의 soft min-sum message-passing과 원리가 다르며, 짧은 부호·버스트 채널 특화",
+  "todo_check": "NAND read의 실제 오류가 버스트형인지(대개 독립/셀 열화), 고rate long QC-LDPC로의 확장 및 리스트 크기 폭증 문제"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10330192---about-the-joint-correcting-of-error-bursts-and-independent-errors-using-ldpc-codes-2023-redundancy">ieee:10330192 - About the Joint Correcting of Error Bursts and Independent Errors Using LDPC Codes (2023, REDUNDANCY)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6376044</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6376044---turbo-adaptive-threshold-bit-flipping-for-ldpc-decoding-2013-ieee-wireless-communications-letters">ieee:6376044 - Turbo Adaptive Threshold Bit Flipping For LDPC Decoding (2013, IEEE Wireless Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>block-wise min 연산 제거한 bit-local threshold BF + turbo(layered) 업데이트로 평균 iteration 절반 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BF 계열이라 MGDBF 대비 정정성능은 유사~열세 가능, MinSum(SP) 대비 성능 gap, HW 미설계, error-floor 관찰됨</td></tr><tr><td>추가확인</td><td>Prime ECC는 min-sum 기반이라 BF로 대체는 부적합; turbo(layered) 스케줄과 min-free critical path 아이디어만 발췌 검토</td></tr></tbody></table>
+<blockquote><p>총평: global-min을 제거해 throughput을 높인 layered bit-flipping 복호기로, min-sum 기반 Prime ECC에 직접 대체는 아니지만 critical path 단축·layered 스케줄 관점은 참고 가치가 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: circulant permutation sub-matrix + zero sub-matrix로 구성된 layered(QC) LDPC, 예제 코드 <code>PEGReg504x1008</code>(rate <code>1/2</code>, regular (3,6)) 및 irregular, AWGN/BPSK.</li><li>문제: SP(sum-product)는 성능 우수하나 복잡도↑ throughput↓; 기존 BF/GDBF는 block 전체 min 연산이 필요해 <code>log2(N)</code> 비교단으로 ASIC critical path 지연.</li><li>기법 배경: GDBF inversion function <code>Δk^GD(x)=xk·yk + Σ_{i∈M(k)} Π_{j∈N(i)} xj</code> (hard decision + soft value 상관항).</li><li>핵심 기법: TATBF — bit-local 음수 threshold <code>λk</code>와 대조, <code>Δ&lt;λ</code>면 bit flip 후 관련 check 방정식 즉시 갱신, 아니면 <code>λk=θλk</code>로 스케일 → global min 불필요.</li><li>turbo 원리: TDMP(layered)처럼 방금 갱신된 값을 같은 iteration 내 재사용, <code>D=M/Z</code> layer를 순차 처리, 각 layer의 <code>Z</code> row 동시 복호 → 평균 iteration 대폭 감소.</li><li>확장(ITATBF): 목적함수 <code>f(x)=Σ xi·yi + Σ_i Π_{j∈N(i)} xj</code>의 local maximum 탈출 위해 perturbation(<code>λk=θ2+α</code>, <code>α</code>~N(0,σ)) 후 1 iteration 수행하는 escape 절차.</li><li>파라미터: ITATBF <code>λ0=-20, θ=0.9, θ2=0.1, σ=1.2</code>, 최대 iteration 100.</li><li>HW 친화 포인트: block-wise min 제거로 critical path 단축, 목적함수 계산의 <code>O(log2(N))</code> 지연을 부분집합 합산으로 회피.</li><li>결과: ITATBF가 모든 BF 중 최소 iteration + 최고 정정성능, MGDBF+escape 대비 평균 iteration 적음; TATBF는 ATBF/single-GDBF 대비 iteration 유의미 감소(그림상 약 절반).</li><li>한계: BF 계열이라 SP 대비 BER gap, irregular 코드에서 error-floor 접근, HW 미구현(gatecount/throughput 수치 없음), MGDBF 대비 약 0.5dB 열세 구간 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flipping 복호 알고리즘 전체(TATBF)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 이터레이션 루프; BF로 전면 대체는 성능상 부적합, 알고리즘 컨셉만 참조</td></tr><tr><td>block-wise min 제거 / bit-local threshold</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>Prime ECC min-sum의 min1/min2 연산 critical path 관점과 대비 참고</td></tr><tr><td>layered(turbo) 스케줄, layer당 Z row 동시 처리</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC의 row 단위 병렬(z_sb=32)/Dual-Update 스케줄과 정합 검토 가능</td></tr><tr><td>iteration별 threshold 스케일 <code>λk=θλk</code></td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR/threshold 테이블 개념과 유사, 단 BF용이라 직접 대응은 약함</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-free critical path 단축과 layered/turbo 조기수렴 아이디어는 유용하나, min-sum 기반 Prime ECC를 BF로 대체하면 정정성능 손실이 커 부분 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6376044",
+  "title": "Turbo Adaptive Threshold Bit Flipping For LDPC Decoding",
+  "year": 2013,
+  "venue": "IEEE Wireless Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "block-wise min 연산 제거한 bit-local threshold BF + turbo(layered) 업데이트로 평균 iteration 절반 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BF 계열이라 MGDBF 대비 정정성능은 유사~열세 가능, MinSum(SP) 대비 성능 gap, HW 미설계, error-floor 관찰됨",
+  "todo_check": "Prime ECC는 min-sum 기반이라 BF로 대체는 부적합; turbo(layered) 스케줄과 min-free critical path 아이디어만 발췌 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6376044---turbo-adaptive-threshold-bit-flipping-for-ldpc-decoding-2013-ieee-wireless-communications-letters">ieee:6376044 - Turbo Adaptive Threshold Bit Flipping For LDPC Decoding (2013, IEEE Wireless Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

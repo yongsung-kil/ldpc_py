@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8617981</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8617981---hardware-design-of-euclidean-projection-modules-for-admm-ldpc-decoding-2018-ieee-icecs">ieee:8617981 - Hardware design of Euclidean Projection modules for ADMM LDPC decoding (2018, IEEE ICECS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>ADMM-LP 디코더의 Euclidean Projection(EEP/IEP/LEP) 3종 HW 구현·합성 비교, 근사 EP가 정확 EEP보다 비경쟁적임을 입증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM/LP 디코딩(BP 대안) 전용 - Prime ECC의 min-sum BP와 알고리즘 계열이 다름, EP 모듈은 이식 불가</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: ADMM-LP 디코더의 Euclidean Projection HW 설계 비교 논문으로, Prime ECC의 min-sum BP 계열과 무관한 별도 디코딩 패러다임이라 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC LP(선형계획) 디코딩을 ADMM으로 분해한 iterative message-passing 디코더의 HW 구현 연구 (부호 스펙 미명시, d∈{6,16} check degree).</li><li>문제: ADMM 디코딩의 병목인 Euclidean Projection(EP) 모듈이 throughput을 낮추고 실리콘 비용을 크게 증가시킴.</li><li>핵심 대상은 parity polytope <code>PPd</code>(짝수 무게 길이-d 이진벡터의 convex hull)로의 유클리드 사영 연산.</li><li>EEP(Exact EP): FID(facet 식별)→ST(similarity transform)→SP(simplex projection, 내림차순 정렬+prefix sum 지배)→UHP, 정렬이 복잡도 지배.</li><li>정렬이 CN 실행시간 60%까지 차지하므로 근사 EP 2종을 HW로 구현·비교.</li><li>LEP(LUT-based): 입력 양자화(L=10 레벨)+테이블 룩업, 정렬을 log2(L) bit-width로 축소하나 BRAM 대량 소모(d=6에서 30030 elements), MSE 92.8로 오차 큼.</li><li>IEP(Iterative): 정렬 제거 위해 SP를 DCE(차이계수 추정, Imax=30)로 대체, MSE 0.13로 정확하나 반복 특성이 latency 악화.</li><li>각 EP를 A1(순차/저비용)·A2(파이프라인)·A3(완전병렬 I/O) 3가지 아키텍처로 Vivado HLS+SystemC로 RTL 생성.</li><li>결과(Virtex7): A3가 최저 latency·최고 주파수이나 LR 최대 5.7% 소모, EEP가 latency-자원 동적 트레이드로 가장 실용적, 최적화 EEP는 [9] 대비 latency 절감·throughput 2배.</li><li>한계: LEP/IEP는 code·ADMM 목적함수 종속 파라미터라 확장성 부족, 통신용 LDPC 대상, NAND/SSD·부호설계 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 디코딩 알고리즘</td><td>대응 없음</td><td>Prime ECC는 min-sum BP 계열, LP/ADMM 패러다임 미보유·별개</td></tr><tr><td>Euclidean Projection(EEP/IEP/LEP) 모듈</td><td>대응 없음</td><td>BP의 CN(min-sum) 연산에 대응 요소 없음</td></tr><tr><td>A1/A2/A3 병렬 HW 아키텍처</td><td>디코더 HW 모델 (z=32)</td><td>병렬화 개념만 유사, EP 전용 구조라 직접 이식 불가</td></tr><tr><td>Vivado HLS/SystemC 생성</td><td>대응 없음</td><td>Prime ECC는 bit-exact C++ 시뮬, HLS 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - ADMM/LP 디코딩은 Prime ECC의 min-sum belief-propagation과 근본적으로 다른 디코딩 패러다임이고, EP 모듈은 우리 CN/VN 연산에 대응이 없어 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8617981",
+  "title": "Hardware design of Euclidean Projection modules for ADMM LDPC decoding",
+  "year": 2018,
+  "venue": "IEEE ICECS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "무관",
+  "key_contribution": "ADMM-LP 디코더의 Euclidean Projection(EEP/IEP/LEP) 3종 HW 구현·합성 비교, 근사 EP가 정확 EEP보다 비경쟁적임을 입증",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "ADMM/LP 디코딩(BP 대안) 전용 - Prime ECC의 min-sum BP와 알고리즘 계열이 다름, EP 모듈은 이식 불가",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8617981---hardware-design-of-euclidean-projection-modules-for-admm-ldpc-decoding-2018-ieee-icecs">ieee:8617981 - Hardware design of Euclidean Projection modules for ADMM LDPC decoding (2018, IEEE ICECS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

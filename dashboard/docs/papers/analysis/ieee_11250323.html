@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11250323</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11250323---turbo-annihilation-of-hook-errors-in-stabilizer-measurement-circuits-2025-ieee-international-conference-on-quantum-computing-and-engineering-qce">ieee:11250323 - Turbo-Annihilation of Hook Errors in Stabilizer Measurement Circuits (2025, IEEE International Conference on Quantum Computing and Engineering (QCE))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>90~144</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>회로레벨 stabilizer 측정에서 발생하는 hook error(상관노이즈)를 FSM/trellis로 모델링해 BCJR 기반 turbo equalization을 min-sum QLDPC 디코더에 통합, O(n) 복잡도로 BPOSD0에 근접</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>non-binary/quantum QLDPC(bivariate bicycle code) 전용이며 회로레벨 hook error라는 양자 특화 노이즈 모델 기반이라 NAND binary LDPC로의 직접 이식 근거 없음</td></tr><tr><td>추가확인</td><td>BCJR/trellis 기반 turbo equalization 아이디어 자체가 classical ISI channel 대응 기법 재활용이라 일반 binary LDPC 상관노이즈 채널에 응용 가능한지는 별도 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: 양자 오류정정(QLDPC) 회로 노이즈 디코딩 논문으로 NAND binary LDPC 이식 관점에서는 관련성이 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>대상은 bivariate bicycle (BB) QLDPC 코드 <code>[[90,8,10]]</code>, <code>[[144,12,12]]</code> (Gross code), (3,6)-regular 구조에서 회로레벨 stabilizer 측정 노이즈를 다룸.</li><li>기존 circuit-level Tanner graph는 노이즈원마다 변수노드를 만들어 불규칙 degree와 짧은 사이클이 많아 message-passing 성능이 낮고, 이를 보완하려면 O(N³)의 OSD가 필요해 비현실적.</li><li>채널 모델: ancilla qubit에서 발생한 X error가 동일 stabilizer 측정 내 다수 data qubit으로 전파되는 hook error를 시간축 상관노이즈(FSM)로 모델링.</li><li>핵심 기법: hook fault를 하나의 ancilla당 "equalizer node"로 묶고 BCJR SISO 추정기로 로컬 디코딩, 원래 Tanner graph와 결합한 joint Tanner graph <code>HJ=[[HZ, In],[0, HXT]]</code> 위에서 min-sum과 turbo equalization.</li><li>핵심 식: BCJR forward/backward/branch metric(<code>log α_t</code>, <code>log β_t</code>, <code>log γ_t</code>)로 각 equalizer node가 사후 LLR을 계산, extrinsic info <code>σ_j = L_j - μ_i,j</code>를 constraint node에 전달.</li><li>확장: check-to-variable update는 표준 min-sum(정규화 factor β=0.875), variable node update는 MS-PI(Min-Sum with Past Influence, BB코드 전용) 규칙 적용.</li><li>구현 디테일: 3개 디코더(layered ×2 + flooding ×1)를 병렬 실행하는 diversity decoding으로 trapping set/수렴 실패 완화.</li><li>별도 학습/최적화 절차 없음 (파라미터는 heuristic tuning, 저자도 향후 최적화 필요성 언급).</li><li>결과: <code>[[90,8,10]]</code> 코드에서 표준 MS 대비 성능 크게 개선, BPOSD0에 근접(logical error rate 10⁻²~10⁻⁶ 구간). <code>[[144,12,12]]</code>는 개선폭이 더 작음. 복잡도는 O(n) (n=원 코드 blocklength).</li><li>한계: 시뮬레이션만 수행(HW 미설계), X error만 고려(Z 대칭 가정), idling/measurement noise 미포함, 코드 크기에 따라 성능 이득 편차 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Turbo equalization / BCJR SISO 추정기</td><td>대응 없음</td><td>Prime ECC는 non-binary trellis/BCJR 미보유, quantum-specific 상관노이즈 모델</td></tr><tr><td>min-sum check update (정규화 β=0.875)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>정규화 min-sum 자체는 이미 보유 기법과 유사하나 quantum 특화 확장</td></tr><tr><td>MS-PI (Min-Sum with Past Influence)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이전 iteration 메시지 반영이라는 아이디어는 이론상 대응 가능하나 BB code 전용 설계</td></tr><tr><td>diversity decoding (병렬 3디코더)</td><td>대응 없음</td><td>Prime ECC는 단일 디코더 구조, 병렬 다중 디코더 미보유</td></tr><tr><td>QLDPC (bivariate bicycle) 부호 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>non-binary/quantum 부호이므로 판정 필터상 이식성 하</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음. 양자 QLDPC 특화 회로노이즈(hook error) 디코딩이며 non-binary/quantum 도메인이라 NAND binary LDPC 이식 근거가 거의 없음.</p></blockquote>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:11250323",
+  "title": "Turbo-Annihilation of Hook Errors in Stabilizer Measurement Circuits",
+  "year": 2025,
+  "venue": "IEEE International Conference on Quantum Computing and Engineering (QCE)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "90~144",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "회로레벨 stabilizer 측정에서 발생하는 hook error(상관노이즈)를 FSM/trellis로 모델링해 BCJR 기반 turbo equalization을 min-sum QLDPC 디코더에 통합, O(n) 복잡도로 BPOSD0에 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "non-binary/quantum QLDPC(bivariate bicycle code) 전용이며 회로레벨 hook error라는 양자 특화 노이즈 모델 기반이라 NAND binary LDPC로의 직접 이식 근거 없음",
+  "todo_check": "BCJR/trellis 기반 turbo equalization 아이디어 자체가 classical ISI channel 대응 기법 재활용이라 일반 binary LDPC 상관노이즈 채널에 응용 가능한지는 별도 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11250323---turbo-annihilation-of-hook-errors-in-stabilizer-measurement-circuits-2025-ieee-international-conference-on-quantum-computing-and-engineering-qce">ieee:11250323 - Turbo-Annihilation of Hook Errors in Stabilizer Measurement Circuits (2025, IEEE International Conference on Quantum Computing and Engineering (QCE))</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

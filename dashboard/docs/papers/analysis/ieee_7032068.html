@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7032068</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7032068---high-speed-multi-block-row-layered-decoding-for-quasi-cyclic-ldpc-codes-2014-globalsip">ieee:7032068 - High-speed Multi-block-row Layered Decoding for Quasi-cyclic LDPC Codes (2014, GlobalSIP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>다중 블록로우 layered 복호에서 v2c 갱신식 재정식화로 critical path 상 adder 1개·routing network 1개 제거</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>214k gates (공정 미상, e=128/t=16/w=5)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>복호 성능(BER) 변화 없음(수학적 동치), 순수 clock-frequency/critical-path 최적화이며 합성·실측 없이 gate-count 이론 추정만</td></tr><tr><td>추가확인</td><td>e=128 서브매트릭스가 z=32 구조에 어떻게 매핑되는지, layered 스케줄이 우리 dual-update 스케줄과 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum layered QC-LDPC 복호기의 critical path 단축(clock↑) 기법으로 NAND 직접 관련이나 성능이득 없이 속도-면적 tradeoff에 국한.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 <code>r×t</code>개의 <code>e×e</code> cyclic permutation 부매트릭스로 이뤄진 QC-LDPC 코드(예제 row weight 16, <code>e=128</code>)의 layered min-sum 복호기.</li><li>문제: layered 복호에서 한 layer에 여러 block row를 넣어 throughput을 높이면(멀티블록로우) v2c 갱신이 여러 c2v에 의존해 갱신식이 복잡해지고 critical path가 길어짐.</li><li>선행 [3]은 intrinsic message <code>L</code>을 공유(<code>L ⇐ L + Σ(v(j,·) − v(j−1,·))</code>)한 뒤 <code>u = L − v(j−1,·)</code>로 v2c 계산 — <code>L</code> 공유가 데이터 경로에 adder를 추가하고 routing network를 늘림.</li><li>제안: <code>L</code> 공유 없이 각 block row의 v2c를 <code>u(j,pi+k) = u(j,p(i−1)+k) − v(j,p(i−1)+k) + Σ_{l≠k}(v(j,p(i−1)+l) − v(j−1,p(i−1)+l)) − v(j−1,pi+k)</code>로 직접 재정식화(식 4).</li><li>이 식은 (2)(3)과 수치적으로 완전히 동일 — <strong>복호 성능 손실 없음</strong>, critical path에서 adder 1개 감소(p−1 add + 1 sub).</li><li><code>p=2</code>(even/odd row) 케이스로 구체화(식 5): 4개 subtractor + 4개 routing network 구조(Fig.2).</li><li>HW 트릭: reverse routing과 forward routing을 하나의 MUX 제어 변경만으로 결합 → critical path에서 routing network 1개 추가 제거(면적 오버헤드 없음).</li><li>CNU는 표준 min-sum(min1/min2/idx + sign product, 2's-comp↔sign-mag 변환), <code>w=5</code>일 때 CNU critical path 약 13 게이트.</li><li>결과: <code>e=128,w=5</code>에서 [3] 대비 clock frequency 26%↑, 면적 23%↑(주 penalty는 추가 buffer, <code>t</code> 감소 시 오버헤드 감소 — <code>t=8</code>이면 19%). gate count 214k(제안) vs 174k([3]).</li><li>한계: BER 개선·iteration 감소 없음(순수 속도/면적), 합성·FPGA 없이 gate count 이론 추정, throughput 수치 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered min-sum v2c/c2v 갱신 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>멀티블록로우 layered 스케줄 재정식화를 이터레이션 루프에 이식 가능성 검토</td></tr><tr><td>CN min-sum 연산(min1/min2/sign product)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>동일 min-sum 구조, 이미 보유</td></tr><tr><td>routing network / MUX 결합</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>HW edge/MUX 선택 최적화와 유사 영역, 결합 라우팅 아이디어 참고</td></tr><tr><td>H-matrix(QC 부매트릭스 e×e) 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>e=128 vs z=32 lifting 정합 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — critical-path 단축(clock↑) 아이디어는 HW throughput 개선 방향과 맞으나 우리 pipeline/스케줄(dual-update, z=32)과 정합·재검증 부담이 있고 BER 이득이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7032068",
+  "title": "High-speed Multi-block-row Layered Decoding for Quasi-cyclic LDPC Codes",
+  "year": 2014,
+  "venue": "GlobalSIP",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "다중 블록로우 layered 복호 v2c 갱신식 재정식화로 critical path의 adder 1개·routing network 1개 제거(성능 손실 없이 clock frequency 26%↑)",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "214k gates(공정 미상, e=128/t=16/w=5)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "복호 성능(BER) 변화 없는 순수 clock/critical-path 최적화, 합성·실측 없이 gate count 이론 추정",
+  "todo_check": "e=128 서브매트릭스와 z=32 lifting 매핑, layered 스케줄과 dual-update 정합 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7032068---high-speed-multi-block-row-layered-decoding-for-quasi-cyclic-ldpc-codes-2014-globalsip">ieee:7032068 - High-speed Multi-block-row Layered Decoding for Quasi-cyclic LDPC Codes (2014, GlobalSIP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

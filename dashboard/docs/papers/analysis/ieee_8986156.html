@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8986156</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8986156---node-processing-unit-for-flexible-ldpc-decoders-with-subnode-for-min-sum-algorithm-2019-icacc">ieee:8986156 - Node Processing Unit for Flexible LDPC Decoders with Subnode for Min-Sum Algorithm (2019, ICACC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CLA 기반 2입력 비교기 subnode + dual-tree NPU로 유연한 CN/VN 처리 HW 면적 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>부호 rate/length·throughput 미제시, 정정성능 무관, subnode 면적/전력만 FPGA 검증</td></tr><tr><td>추가확인</td><td>I=16 전력 16.23W 수치의 측정 조건, dual-tree가 우리 z=32 병렬 구조와 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 유연 NPU용 CLA 비교기 subnode로 HW 면적을 줄이는 순수 아키텍처 논문이나, 부호/성능 무관하고 Prime ECC의 min-sum·HCU 구조와 중복성이 커 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 유연(flexible) LDPC 디코더의 노드 처리 유닛(NPU)이며, 특정 부호 rate/length는 명시하지 않는다.</li><li>문제: 완전병렬 디코더는 노드별 HW·라우팅 복잡도가 커 비실용적이고, 부분병렬은 CN/VN을 가변 degree로 재사용해야 한다.</li><li>하나의 NPU가 <code>I</code>개 입력/출력을 가지며 CNPU·VNPU 겸용, CN degree <code>dc=I</code>, VN degree <code>dv=I-1</code>(여분 입출력은 intrinsic 채널정보/posteriori).</li><li>구조는 binary tree와 multi-tree를 결합한 dual-tree로, summing section과 combining section 두 부로 나뉜다.</li><li>summing section은 <code>T[s][t]</code>가 이전 단 <code>T[s-1][2t]</code>,<code>T[s-1][2t+1]</code>의 결합으로 이진트리처럼 신호 수를 절반씩 줄인다.</li><li>combining section은 각 신호를 두 subnode로 보내 신호 수를 두 배로 늘려 corresponding 입력만 제외한 출력을 만든다.</li><li>subnode 핵심: 4-bit 두 입력 x,y의 최소값을 찾는 비교기(min-sum O-MSA용). 관용 비교기는 MSB부터 비교해 지연 <code>O(n)</code>.</li><li>제안 subnode는 CLA(carry look-ahead adder) 기반: y를 1의 보수로 만들고 carry-in으로 2의 보수화하여 감산기로 동작, 출력 carry 부호로 MUX가 최소값 선택, 지연 <code>O(log n)</code>.</li><li>결과: Vivado 2018.2 시뮬 + Kintex-7 FPGA 구현, 비교기 LUT 15-&gt;7(약 50~53% 감소), I=16시 16.23W / I=13시 15.002W로 입력 감소 시 전력 절감.</li><li>한계: 정정성능·BER·throughput 미제시, 부호 스펙 없음, subnode 단위 면적/전력만 평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum 최소값 비교기 subnode</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 min-sum 연산에 대응하나 Prime ECC는 이미 min-sum 보유</td></tr><tr><td>CN/VN 겸용 NPU dual-tree HW</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>병렬 노드처리 대응, 그러나 우리는 row 병렬 z=32 고정 구조</td></tr><tr><td>유연 degree CN/VN 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code>, HCU</td><td>HCU가 비대칭 degree col 처리에 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — min-sum 비교기·유연 NPU는 Prime ECC의 min-sum/HCU와 중복이며 부호·성능 개선이 없어 이식 이득이 미미하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8986156",
+  "title": "Node Processing Unit for Flexible LDPC Decoders with Subnode for Min-Sum Algorithm",
+  "year": 2019,
+  "venue": "ICACC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "CLA 기반 2입력 비교기 subnode + dual-tree NPU로 유연한 CN/VN 처리 HW 면적 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "부호 rate/length·throughput 미제시, 정정성능 무관, subnode 면적/전력만 FPGA 검증",
+  "todo_check": "I=16 전력 16.23W 수치의 측정 조건, dual-tree가 우리 z=32 병렬 구조와 정합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8986156---node-processing-unit-for-flexible-ldpc-decoders-with-subnode-for-min-sum-algorithm-2019-icacc">ieee:8986156 - Node Processing Unit for Flexible LDPC Decoders with Subnode for Min-Sum Algorithm (2019, ICACC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

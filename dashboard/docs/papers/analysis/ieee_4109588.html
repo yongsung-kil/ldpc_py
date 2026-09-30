@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4109588</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4109588---a-perturbation-method-for-decoding-of-ldpc-aided-by-crc-2006-ieee">ieee:4109588 - A Perturbation Method for Decoding of LDPC Aided by CRC (2006, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>192~384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CRC로 BP 복호 오류를 검출한 뒤, 신뢰도 낮은 L개 비트에 가우시안 perturbation을 추가해 재복호를 반복함으로써 짧은 LDPC 코드의 FER을 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬레이션 검증뿐이며, 재복호 루프(최대 100회 x iteration 50회)로 인해 평균 지연/연산량이 크게 증가할 수 있음</td></tr><tr><td>추가확인</td><td>최악 케이스(재복호 루프 최대치 도달 시) 지연 및 연산 오버헤드가 NAND read latency budget 내에서 허용 가능한 수준인지</td></tr></tbody></table>
+<blockquote><p>총평: CRC-검출+저신뢰도 비트 perturbation 재복호로 짧은 LDPC 코드의 IEEE802.16e 대비 0.5dB FER 이득을 시뮬레이션으로 보인 2006년 연구로, 개념은 명확하나 HW 설계 없이 재복호 오버헤드가 큰 편.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE802.16e에 규정된 짧은 LDPC(192,96) 및 (384,192), rate=1/2, CRC-8(<code>X8+X4+X3+X2+1</code>) 연접.</li><li>짧은 codeword 길이에서는 LDPC가 예측 성능(sphere-packing bound)에서 크게 벗어나는 문제(Tanner Graph의 short cycle로 인한 BP 최적해 도달 곤란)를 해결하고자 함.</li><li>AWGN 채널, BPSK 변조(<code>x_i=1-2c_i</code>), 표준 LLR 도메인 BP(min-sum 아님, tanh 기반 Sum-Product) 사용.</li><li>1차 BP 복호 결과가 실패(패리티 불만족)이거나 CRC 불일치이면, 초기 수신신호 <code>Y'</code>에서 신뢰도(|LLR|)가 가장 낮은 L개 비트를 선택해 perturbation을 가하고 재복호.</li><li>Perturbation은 <code>y_i = y_i + n_i'</code> (선택된 L개 비트에만 분산 <code>σ_p^2</code>의 가우시안 잡음 추가)로, 초기화 시 belief 분포를 바꿔 다른 국소해로 수렴을 유도.</li><li>재복호 루프는 최대 N=100회까지 반복하며, 매 루프마다 CRC로 결과를 검증해 통과 시 종료.</li><li>부수 디테일: perturbation 대상 비트 수 L과 전력 <code>σ_p</code>는 시뮬레이션으로 최적화된 고정값 사용(L=48/σ_p=0.35 for (192,96), L=72/σ_p=0.30 for (384,192)).</li><li>학습/최적화 절차: L=24+12i (i=0..6), σ_p=0.25+0.05j (j=0..5) 격자 탐색으로 SNR 구간 1~4.5dB에서 최적 조합을 시뮬레이션 탐색.</li><li>결과: FER=10^-4에서 IEEE802.16e 대비 약 0.5dB 이득, sphere-packing bound와 1.12dB(N=192)/1.19dB(N=384) 차이로 근접.</li><li>한계: HW 미설계, 재복호 루프(최대 100회 x BP iteration 최대 50회)로 연산량이 크게 증가하며 실제 구현 시 대역폭 효율은 이득이나 계산 파워 부담이 크다고 저자도 명시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CRC 기반 오류 검출</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료/오류검출 목적은 동일하나, 재복호 트리거 용도로 사용하는 점이 다름</td></tr><tr><td>저신뢰도 비트 선택 + perturbation 재복호</td><td>대응 없음</td><td>우리 코드는 min-sum + LLR 테이블 기반 적응형 조정은 있으나 랜덤 잡음 주입 재복호 기법은 없음</td></tr><tr><td>BP(Sum-Product, tanh) 복호 알고리즘</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>우리는 min-sum 근사를 사용하므로 tanh 기반 정확 SPA는 이질적(§3: full-tanh Sum-Product는 대응 없음)</td></tr><tr><td>데이터 메모리에 원본 수신신호(Y') 보관</td><td><code>channel.cpp</code></td><td>재시도용 원본 보관 개념 자체는 채널 모듈과 관련되나 세부 구현 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 정정능력(error-floor)을 개선하지만 tanh 기반 SPA 전제, HW 미설계, 최대 100회 재복호 루프로 latency 악화가 뚜렷해 NAND read latency 제약과 상충되며, 핵심 아이디어(perturbation 재복호)는 우리 코드 구조에 대응 모듈이 없어 이식 난이도가 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4109588",
+  "title": "A Perturbation Method for Decoding of LDPC Aided by CRC",
+  "year": 2006,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "192~384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CRC로 BP 복호 오류를 검출한 뒤, 신뢰도 낮은 L개 비트에 가우시안 perturbation을 추가해 재복호를 반복함으로써 짧은 LDPC 코드의 FER을 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬레이션 검증뿐이며, 재복호 루프(최대 100회 x iteration 50회)로 인해 평균 지연/연산량이 크게 증가할 수 있음",
+  "todo_check": "최악 케이스(재복호 루프 최대치 도달 시) 지연 및 연산 오버헤드가 NAND read latency budget 내에서 허용 가능한 수준인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4109588---a-perturbation-method-for-decoding-of-ldpc-aided-by-crc-2006-ieee">ieee:4109588 - A Perturbation Method for Decoding of LDPC Aided by CRC (2006, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

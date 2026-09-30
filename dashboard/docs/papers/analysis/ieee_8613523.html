@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8613523</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8613523---read-voltage-optimization-for-finite-code-length-in-mlc-nand-flash-memory-2018-ieee-conference">ieee:8613523 - Read-Voltage Optimization for Finite Code Length in MLC NAND Flash Memory (2018, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4544</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>유한블록길이 채널코딩레이트(FCR) 기반 read-voltage 최적화(GA+CIS)로 MLC NAND PE endurance 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호/디코더 불변, read-voltage(quantizer)만 최적화; MLC 2bit·6-level 특정 노이즈모델(PN/CCI/RTN/RN) 파라미터 종속</td></tr><tr><td>추가확인</td><td>FCR 목적함수의 blocklength·rate가 Prime ECC 부호(4KB, rate~0.9)에 맞는지, LLR 테이블 생성과의 연동 검증</td></tr></tbody></table>
+<blockquote><p>총평: NAND read-voltage(soft-read threshold) 최적화로 채널/LLR 레이어에 직접 닿는 직접관련 논문, 디코더는 불변이나 quantizer 개선 아이디어 이식 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 MLC(2bit/cell) NAND flash 채널: 4상태 s0~s3, J-level read로 J+1 region 양자화한 DMC, 검증 부호는 binary QC-LDPC 2K/4K-code(rate 0.9).</li><li>문제: 기존 read-voltage 설계는 MMI(mutual information) 또는 entropy 기반이라 유한 blocklength 효과를 반영 못함.</li><li>모델: threshold-voltage 분포 <code>ps0~ps3</code>를 PN/CCI/RTN/RN 노이즈 convolution으로 구성, <code>µrs</code>가 PE cycle·retention time T 종속(식3).</li><li>기법1(FCR): Polyanskiy 유한블록 채널코딩레이트 <code>R(n,ε)=I(P,W) − sqrt(U/n)Q⁻¹(ε) + δ/n</code>(식5,12)로 blocklength n·error prob 반영한 달성가능 rate 유도.</li><li>핵심식: 문제를 rate 최대화 대신 오류확률 <code>ε(d1..dJ,n,R)</code> 최소화로 변환(식14,15), 제약 <code>0&lt;d1&lt;...&lt;dJ&lt;Vmax</code>(식16) — read boundary가 실제 정정성능에 직결.</li><li>확장(6-level read): K=2에서 <code>pwrj = (1/4)Σ prj,si</code>(식17), MI <code>I(P,W)=H(R)−H(R|S)</code>(식19)로 6-level이 3-level 대비 capacity 크게 증가.</li><li>구현 디테일: 조건부확률 <code>prj,si=∫psi(v)dv</code>(식9)를 decision boundary로 적분, dynamic read-voltage 설계.</li><li>최적화: (a) Genetic Algorithm으로 전역탐색(local minima 회피), (b) Cross Iterative Searching(CIS, Alg.1)으로 각 dj를 나머지 고정 후 serial 갱신, <code>|ε(i)−ε(i−1)|&lt;θ</code>까지 반복.</li><li>결과: FER 2×10⁻⁴에서 2K-code는 MMI/entropy 대비 각각 ~900/600 PE cycle, 4K-code는 ~300/500 cycle endurance 향상(SPA 디코딩, max iter 25).</li><li>한계: 순수 시뮬(HW 미설계), 특정 MLC 노이즈 파라미터·2bit/6-level 가정, 부호·디코더는 고정하고 quantizer만 최적화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>read-voltage(decision boundary) 최적화</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold 설정에 직접 대응, 핵심 접점</td></tr><tr><td>region별 조건부확률→LLR 산출</td><td>channel.cpp soft-read LLR 양자화 + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>LLR 테이블 생성 입력으로 활용 가능</td></tr><tr><td>FER/PE 통계 평가</td><td>ecc_top.cpp 통계 오케스트레이션</td><td>최적화 목적함수 평가 루프에 대응</td></tr><tr><td>GA/CIS 최적화 절차</td><td>local_opt.cpp (LLR 자동최적화)</td><td>read-voltage 자동탐색 로직으로 유사 개념</td></tr><tr><td>SPA 디코딩 자체</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문은 디코더 불변, min-sum과 별개(대응 낮음)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 부호/디코더는 그대로 두고 NAND soft-read threshold를 유한블록길이 기준으로 최적화하는 접근이라 <code>channel.cpp</code>/LLR 테이블 레이어에 직접 이식 가능하나, MLC 6-level·특정 노이즈모델 파라미터를 Prime ECC의 read 스킴(HD/2SD/3SD)에 맞게 재조정 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8613523",
+  "title": "Read-Voltage Optimization for Finite Code Length in MLC NAND Flash Memory",
+  "year": 2018,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "4544",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "유한블록길이 채널코딩레이트(FCR) 기반 read-voltage 최적화(GA+CIS)로 MLC NAND PE endurance 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호/디코더 불변, read-voltage(quantizer)만 최적화; MLC 2bit·6-level 특정 노이즈모델(PN/CCI/RTN/RN) 파라미터 종속",
+  "todo_check": "FCR 목적함수의 blocklength·rate가 Prime ECC 부호(4KB, rate~0.9)에 맞는지, LLR 테이블 생성과의 연동 검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8613523---read-voltage-optimization-for-finite-code-length-in-mlc-nand-flash-memory-2018-ieee-conference">ieee:8613523 - Read-Voltage Optimization for Finite Code Length in MLC NAND Flash Memory (2018, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

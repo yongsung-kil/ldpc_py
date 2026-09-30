@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9914424</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9914424---a-ldpc-decoding-algorithm-based-on-convolutional-neural-network-2022-ieee-dsa">ieee:9914424 - A LDPC Decoding Algorithm based on Convolutional Neural Network (2022, IEEE DSA)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>DenseNet(CNN)으로 soft-decision BP 복호부를 대체하는 신경망 LDPC 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>미상</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DenseNet이 BP 전체를 대체하는 NN 디코더로 Prime ECC의 min-sum bit-exact HW 경로와 근본적으로 다름</td></tr><tr><td>추가확인</td><td>부호 rate/length, DenseNet 층수·파라미터, BER 곡선 수치, HW 자원 등 정량 지표 전무</td></tr></tbody></table>
+<blockquote><p>총평: DenseNet CNN으로 LDPC BP 복호를 통째로 대체하는 딥러닝 디코더로, 정량 스펙·HW 설계가 없고 Prime ECC의 min-sum bit-exact HW 방향과 상충 → 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC 부호를 QPSK 변조 후 AWGN 채널로 전송한 데이터를 복호하는 것(구체 rate/length 미상).</li><li>문제는 부호 길이 증가 시 전통 BP/행렬연산 복잡도가 커지고 Tanner 그래프의 short cycle이 복호 성능을 저하시키는 것.</li><li>핵심 가정: Tanner 그래프를 "전개(unfold)"하고 edge에 가중치를 두어 경사하강으로 학습하면 short cycle 악영향을 완화(Nachmani류 접근 계승).</li><li>핵심 기법: soft-decision BP 복호부를 DenseNet(CNN) 신경망으로 대체. 입력은 LDPC 부호화+QPSK+AWGN 통과 데이터.</li><li>DenseNet은 앞뒤 층을 dense connection(shortcut)으로 연결해 feature 재사용·gradient 소실 완화, ResNet보다 적은 파라미터로 더 나은 성능 목표.</li><li>CNN의 weight sharing 구조로 파라미터·복잡도를 줄여 긴 부호길이 입력을 처리하고 복호 성능 향상 주장.</li><li>구조는 convolution + pooling + fully-connected(최소 5층), conv-relu 사이 batch normalization으로 학습 가속·초기화 민감도 감소.</li><li>학습: 경사하강(gradient descent)으로 edge 가중치/네트워크 파라미터 훈련.</li><li>결과: 시뮬레이션 BER 곡선(Fig.2)에서 신경망 기반 복호가 전통 BP보다 우수하며 SNR 증가 시 BER 감소가 더 빠름(구체 수치 미상).</li><li>한계: HW 미설계, 정량 스펙 부재(rate/length/파라미터/gate 없음), 단일 채널 시뮬만, extended abstract 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DenseNet(CNN) 신경망 디코더</td><td>대응 없음</td><td>프로파일 §6에서 NN/딥러닝 디코더는 명시적 "대응 없음"</td></tr><tr><td>soft-decision BP 복호부 대체</td><td>대응 없음</td><td>Prime ECC는 min-sum 근사 사용, full-BP/NN 미보유</td></tr><tr><td>Tanner 그래프 edge 가중치 학습</td><td>대응 없음</td><td>Prime ECC 이터레이션 루프는 학습 가중치 미보유</td></tr><tr><td>soft/LLR 입력</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>입력단만 개념적 연관, 복호 알고리즘은 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 min-sum 기반 bit-exact HW 디코더로 NN 전면 대체 방식과 근본적으로 상충하며, 논문에 HW·정량 스펙이 전무해 이식 근거가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9914424",
+  "title": "A LDPC Decoding Algorithm based on Convolutional Neural Network",
+  "year": 2022,
+  "venue": "IEEE DSA",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "DenseNet(CNN)으로 soft-decision BP 복호부를 대체하는 신경망 LDPC 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "미상",
+  "recommend": "하",
+  "caveat": "DenseNet이 BP 전체를 대체하는 NN 디코더로 Prime ECC의 min-sum bit-exact HW 경로와 근본적으로 다름",
+  "todo_check": "부호 rate/length, DenseNet 층수·파라미터, BER 곡선 수치, HW 자원 등 정량 지표 전무"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9914424---a-ldpc-decoding-algorithm-based-on-convolutional-neural-network-2022-ieee-dsa">ieee:9914424 - A LDPC Decoding Algorithm based on Convolutional Neural Network (2022, IEEE DSA)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

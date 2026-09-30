@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_1912.09463</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv191209463v1---finite-state-markov-modeling-of-fading-channels-towards-decoding-of-ldpc-codes-2010-mtech-thesis-iit-delhi">arxiv:1912.09463v1 - Finite State Markov Modeling of Fading Channels Towards Decoding of LDPC Codes (2010, M.Tech thesis IIT Delhi)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>2000~4000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Markov(GEC) 메모리 채널에서 sum-product에 BCJR형 helper block과 Baum-Welch 채널추정을 결합해 버스트 오류 정정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>채널 메모리(버스트) 가정 특화 - NAND는 대체로 메모리없는 오류모델, full-tanh sum-product·BCJR forward-backward로 HW 부담 큼</td></tr><tr><td>추가확인</td><td>NAND read 오류가 상관성(버스트)을 가지는 상황이 있는지, 있다면 helper LLR 개념만 차용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: Markov 메모리 채널 특화 sum-product+BCJR helper 디코더로 버스트 채널에선 이득이 있으나 메모리없는 NAND binary QC-LDPC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: regular LDPC((2,4) rate 1/2, (4,6) rate 1/3), N=2000~4000, 2-state Gilbert-Elliott(GEC) Markov 노이즈 채널(good/bad 상태, bit-flip 잡음), 50 iteration.</li><li>문제: 실채널 오류는 독립이 아니라 버스트로 발생 - 기존 memoryless sum-product는 채널 메모리를 활용 못해 버스트 정정 능력 미달.</li><li>모델: 가법 잡음 <code>y = x ⊕ z</code>, <code>z</code>는 2-state MM(good/bad) 출력. 상태전이 <code>p(i|j)</code>, 상태별 오류확률 <code>q_{i←j}</code>.</li><li>핵심 기법 1단(helper block): sum-product 결과 잠정어 <code>ĉ</code>로부터 상태 정보를 이용해 각 bit의 helper LLR <code>HΛ(dk)</code>를 계산(식 3.4), 이를 sum-product 입력 extrinsic으로 되먹임(turbo 원리).</li><li>핵심 식: joint prob <code>ζ(i,m)=αk(i,m)·βk(m)</code>(식 3.9) - forward <code>α</code>/backward <code>β</code> 재귀(식 3.10/3.11)로 상태별 APP 계산(BCJR/forward-backward).</li><li>핵심 기법 2단(Gallager 확률적 복호 재해석): 상태정보를 넣은 likelihood ratio(식 4.4)로 Gallager의 옛 probabilistic decoding을 side-information 버전으로 확장.</li><li>부수: 상태별 오류확률 대비(contrast)가 클수록 상태 구분이 쉬워 이득 증가.</li><li>학습/추정: 채널 파라미터(전이·오류확률) 미지 시 Baum-Welch(EM)로 온라인 추정(식 3.16~3.26).</li><li>결과: helper block sum-product &gt; 기본 sum-product, Gallager+side-info가 세 기법 중 최고 BER; 근사 DE(식 4.13)로 성공복호 영역(decoding region) 도출.</li><li>한계: 채널 메모리(버스트) 가정 특화, HW 미설계, gate/throughput 없음, full-tanh sum-product + BCJR forward-backward로 연산 부담 큼, 부호설계는 미논의.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>sum-product LDPC 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 tanh SPA 아닌 min-sum - 계열이 다름(대응 약함)</td></tr><tr><td>helper block LLR / 채널 상태 LLR</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>채널 LLR 생성부에 닿으나 GEC 상태모델은 우리 채널에 없음</td></tr><tr><td>BCJR forward-backward / Baum-Welch 채널추정</td><td>대응 없음</td><td>Prime ECC에 상태추정·EM 모듈 없음</td></tr><tr><td>근사 Density Evolution 부호영역</td><td>대응 없음</td><td>부호설계/DE 도구 미보유</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 버스트(메모리) 채널 전제의 상태추정 helper가 핵심인데 NAND는 대체로 메모리없는 오류모델이고 Prime ECC는 min-sum 기반이라 이식 경로가 약하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:1912.09463v1",
+  "title": "Finite State Markov Modeling of Fading Channels Towards Decoding of LDPC Codes",
+  "year": 2010,
+  "venue": "M.Tech thesis, IIT Delhi",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "2000~4000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Markov(GEC) 메모리 채널에서 sum-product에 BCJR형 helper block과 Baum-Welch 채널추정을 결합해 버스트 오류 정정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "채널 메모리(버스트) 가정 특화 - NAND는 대체로 메모리없는 오류모델, full-tanh sum-product·BCJR forward-backward로 HW 부담 큼",
+  "todo_check": "NAND read 오류가 상관성(버스트)을 가지는 상황이 있는지, 있다면 helper LLR 개념만 차용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv191209463v1---finite-state-markov-modeling-of-fading-channels-towards-decoding-of-ldpc-codes-2010-mtech-thesis-iit-delhi">arxiv:1912.09463v1 - Finite State Markov Modeling of Fading Channels Towards Decoding of LDPC Codes (2010, M.Tech thesis IIT Delhi)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

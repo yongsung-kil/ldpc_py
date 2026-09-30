@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8645372</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8645372---polar-decoding-on-sparse-graphs-with-deep-learning-2018-asilomar">ieee:8645372 - Polar Decoding on Sparse Graphs with Deep Learning (2018, Asilomar)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128~256</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>polar BP factor graph를 LDPC-like sparse Tanner graph로 변환·unfold하여 min-sum NN 디코더(SNND) 구성, 단일 가중치 학습으로 MS 대비 약 0.5dB 이득·60% 연산 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>polar code 전용 NN 디코더(LDPC 아님), sparse Tanner 변환은 polar factor graph 종속, PyTorch 시뮬만·HW 미설계, SPA 대비 고SNR에서 0.1dB 열화</td></tr><tr><td>추가확인</td><td>단일 가중치(single weight) MS 스케일링 개념이 일반 QC-LDPC min-sum에 이식 시 이득 있는지, 학습된 w*가 채널/코드 변화에 견고한지</td></tr></tbody></table>
+<blockquote><p>총평: NN 기반 polar 디코더로 우리 부호(binary QC-LDPC)와 부호종류·구조가 달라 직접 이식 부적합, 다만 학습된 단일 스케일 factor(w*≈0.82~0.83) 아이디어는 normalized/scaled min-sum 튜닝 참고 정도.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템/코드: AWGN+BPSK 채널, (128,64)·(256,128) polar code (rate 0.5). polar BP를 대상.</li><li>문제: polar BP factor graph는 stage 수가 code length에 종속(<code>n=log2 N</code> stage) → latency 큼. 기존 dense NN 디코더[5,6]는 복잡도가 지수적, edge-weight NND[7]는 depth가 iteration·length에 종속되어 latency 김.</li><li>모델: polar generator graph를 <code>H</code>(식 1)로부터 LDPC-like bipartite Tanner graph로 변환 후 pruning[9]으로 sparse화, 이를 unfold하여 feed-forward DNN 구성(<code>2T</code> hidden layer, hidden node=edge).</li><li>핵심기법1: SPA를 min-sum 근사로 대체 - odd layer는 CN 연산 <code>x=sign·min|x|</code>(식 3, 무파라미터), even layer는 VN에 학습 가중치 <code>x=Lv+Σ w·x</code>(식 4), 출력은 sigmoid(식 5).</li><li>핵심식: 단일 가중치화(식 6) - 모든 CN→VN edge에 통합 스칼라 <code>w</code> 하나만 사용, 학습 파라미터를 대폭 축소(RNN weight-sharing보다 더 축소).</li><li>핵심기법2: <code>w* = argmin L(x,o)</code> - cross-entropy loss(식 8) 최소화하는 단일 스칼라 학습. (128,64)에서 <code>w*≈0.83</code>, (256,128)에서 <code>≈0.82</code>로 수렴.</li><li>부수트릭: zero-message가 CN min을 0으로 만드는 문제 회피 위해 sign(0):=1 정의, 파라미터 초기화 <code>N(μ=1,σ=0.1)</code>.</li><li>학습/최적화: PyTorch, mini-batch SGD+Adam, Lr=0.001, all-zero codeword 학습셋, 10 iter unfold(20-layer), 600 epoch.</li><li>결과: SNND-FF가 SPA와 동등 BER, MS 대비 약 0.1~0.5dB 이득. 단일가중치 SNND도 거의 동등. iteration당 latency=2(code length 무관, <code>log2 N</code> 감소), NND[7] 대비 약 60% 연산 감소.</li><li>한계: polar code 전용, HW·gatecount·throughput 없음(시뮬만), SPA 대비 고SNR 0.1dB 열화, NN 학습 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NN/딥러닝 unfold 디코더(SNND)</td><td>대응 없음</td><td>Prime ECC는 결정론적 min-sum HW 모델, NN 학습 디코더 미보유</td></tr><tr><td>단일 학습 가중치 min-sum(scaled MS 유사)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min-sum scaling 개념은 유사하나 Prime ECC는 magnitude 양자화 테이블 기반, 학습 아님 - 간접 참고만</td></tr><tr><td>polar sparse Tanner graph 변환</td><td>대응 없음</td><td>Prime ECC는 고정 binary QC-LDPC, polar factor graph 변환 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - polar code용 NN 디코더로 부호종류·접근법(딥러닝) 모두 Prime ECC와 상이. 단일 스칼라 스케일 factor 개념만 normalized min-sum 튜닝에 정성적 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8645372",
+  "title": "Polar Decoding on Sparse Graphs with Deep Learning",
+  "year": 2018,
+  "venue": "Asilomar",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "128~256",
+  "soft_quant": "무관",
+  "key_contribution": "polar BP factor graph를 LDPC-like sparse Tanner graph로 변환·unfold하여 min-sum NN 디코더(SNND) 구성, 단일 가중치 학습으로 MS 대비 약 0.5dB 이득·60% 연산 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "polar code 전용 NN 디코더(LDPC 아님), sparse Tanner 변환은 polar factor graph 종속, PyTorch 시뮬만·HW 미설계, SPA 대비 고SNR에서 0.1dB 열화",
+  "todo_check": "단일 가중치(single weight) MS 스케일링 개념이 일반 QC-LDPC min-sum에 이식 시 이득 있는지, 학습된 w*가 채널/코드 변화에 견고한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8645372---polar-decoding-on-sparse-graphs-with-deep-learning-2018-asilomar">ieee:8645372 - Polar Decoding on Sparse Graphs with Deep Learning (2018, Asilomar)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

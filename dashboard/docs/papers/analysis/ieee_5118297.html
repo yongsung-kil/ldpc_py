@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5118297</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5118297---on-the-structured-parallelism-of-decoders-for-ldpc-convolutional-codes-an-algebraic-description-2009-ieee">ieee:5118297 - On the Structured Parallelism of Decoders for LDPC Convolutional Codes – An Algebraic Description (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LDPC convolutional code(SC-LDPC) 디코더의 수평/수직/수평-수직 병렬화를 대수적(direct sum) 프레임워크로 정식화하고, 이로부터 벡터메모리+셔플+크로스바 기반 디코딩 코어 아키텍처 템플릿을 도출</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC(convolutional, semi-infinite syndrome former) 전용 구조로 QC-LDPC block code인 Prime ECC의 PCM 구조와 근본적으로 다름. HW 합성/실측 없이 이론적 프레임워크와 아키텍처 템플릿만 제시</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC 디코더 병렬화를 위한 대수적 프레임워크 논문으로, 코드 구조(convolutional, time-invariant syndrome former) 자체가 Prime ECC의 QC-LDPC block code와 달라 직접 이식 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: LDPC Convolutional Codes(LDPC-CC), rate <code>R=b/c</code>, semi-infinite 전치 패리티검사행렬(syndrome former) <code>H[T0,∞]</code>로 정의, syndrome former memory <code>ms</code>, time-invariant(<code>T=1</code>) 코드를 주로 다룸.</li><li>문제: LDPC 디코더의 belief propagation 메시지 교환에 필요한 메모리/라우팅 네트워크 복잡도는 코드의 그래프 구조에 좌우되며, semi-random 그래프는 복잡한 라우팅을 요구.</li><li>핵심 가정: 코드 그래프는 완전 병렬 처리 가능(각 iteration 내 CN/VN 연산에 데이터 의존성 없음)하다고 가정, tail-biting LDPC-CC(순환 wrap)도 포함.</li><li>핵심 기법 1단: CN/VN 연산을 direct sum(⊕) 표기로 벡터화하여 <code>수평 병렬화</code>(같은 타입 노드 NΓ개를 한 사이클에 처리)와 <code>수직 병렬화</code>(다른 타입 노드 NΛ개를 동시 처리)를 정의.</li><li>핵심 식: <code>C(tk:tk+NΓ-1),(j:j+NΛ-1) = ⊕ⁿ⁼ʲ...ⁿ⁺ᴺᴧ⁻¹ ⊕ᵗ⁼ᵗᵏ...ᵗᵏ⁺ᴺᴦ⁻¹ Cn(Vt,n(l))</code> — 수평-수직 결합 병렬 CN/VN 연산을 벡터ALU가 동시에 처리할 수 있음을 정식화.</li><li>핵심 기법 2단: <code>Proposition 1/2</code>(연속 노드 간 엣지는 연속 노드로 매핑, 연결 노드 간 시간 거리 ≤ ms)를 이용해 셔플 네트워크를 barrel shifter로, 크로스바 스위치를 ms 범위 내 연결로 단순화.</li><li>부수 트릭: lifted code(circulant 확장, 확장계수 X)에서는 NΓ가 X의 배수가 되도록 하여 셔플을 circulant 기반 barrel shifter로 단순화.</li><li>확장 아키텍처: <code>Block Processing</code>(여러 디코딩 코어에 데이터 블록 분산, 처리량 NB배 증가)과 <code>Iteration Pipelining</code>(circular pipeline decoder를 IP개 코어로 파이프라인화)을 Proposition 2 기반으로 제시.</li><li>결과: 별도 신규 수치 실험 없음(이전 연구 [2],[7],[13],[14] 실현 사례를 인용해 "수백 Mbit/s급, 저전력/저면적" 언급).</li><li>한계: 순수 대수적 프레임워크/아키텍처 템플릿 제시 논문으로 자체 HW 합성·시뮬레이션·정정성능 결과 없음. SC-LDPC(convolutional) 전용이라 QC-LDPC block code에는 구조 변환 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN/VN 병렬 연산 벡터화(수평/수직 병렬화)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 이미 z=32 row 단위 병렬(HCU 포함)을 구현하므로 개념적으로 유사하나 SC-LDPC 대수 정식화라 직접 이식 불가</td></tr><tr><td>셔플/크로스바 기반 라우팅 아키텍처</td><td>대응 없음</td><td>GT.cpp(Graph Thinning)의 MUX edge 선택과 목적은 유사하나 SC-LDPC 전용 barrel shifter/crossbar 구조로 실존 대응 없음</td></tr><tr><td>Block Processing / Iteration Pipelining</td><td><code>decoder.cpp</code> pipeline 6-stage</td><td>파이프라인 개념은 유사하나 convolutional 코드의 순환 메모리 섹션 구조 특유 기법</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — SC-LDPC(convolutional) 코드 고유의 대수적 병렬화 프레임워크로, QC-LDPC block code 기반 Prime ECC 3.1의 고정 PCM 구조와 근본적으로 다르며 실측/합성 검증도 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5118297",
+  "title": "On the Structured Parallelism of Decoders for LDPC Convolutional Codes – An Algebraic Description",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "LDPC convolutional code(SC-LDPC) 디코더의 수평/수직/수평-수직 병렬화를 대수적(direct sum) 프레임워크로 정식화하고, 이로부터 벡터메모리+셔플+크로스바 기반 디코딩 코어 아키텍처 템플릿을 도출",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SC-LDPC(convolutional, semi-infinite syndrome former) 전용 구조로 QC-LDPC block code인 Prime ECC의 PCM 구조와 근본적으로 다름. HW 합성/실측 없이 이론적 프레임워크와 아키텍처 템플릿만 제시",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5118297---on-the-structured-parallelism-of-decoders-for-ldpc-convolutional-codes-an-algebraic-description-2009-ieee">ieee:5118297 - On the Structured Parallelism of Decoders for LDPC Convolutional Codes – An Algebraic Description (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6195029</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6195029---jointly-designed-architecture-aware-ldpc-convolutional-codes-and-memory-based-shuffled-decoder-architecture-2012-ieee-transactions-on-signal-processing">ieee:6195029 - Jointly Designed Architecture-Aware LDPC Convolutional Codes and Memory-Based Shuffled Decoder Architecture (2012, IEEE Transactions on Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>shuffled MPD용 메모리 공유형 AA-LDPC-CC 공동설계로 processor 수·면적 절감, 90nm ASIC 1.025Gbps 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.025Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC convolutional code(sliding-window MPD) 전용 - Prime ECC의 block QC-LDPC와 부호 클래스 자체가 다름</td></tr><tr><td>추가확인</td><td>shuffled MPD의 iteration 절반 감소 아이디어만 block QC-LDPC에 분리 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC-CC 전용 부호-디코더 공동설계 ASIC 논문 - block QC-LDPC 기반 Prime ECC와 부호 클래스가 달라 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 rate-1/2 주기적 time-varying regular-<code>(479,3,6)</code> LDPC convolutional code(LDPC-CC)로, sliding-window 기반 message-passing으로 복호한다.</li><li>문제: 기존 iteration-parallel LDPC-CC 디코더는 two-phase MPD라 20개 내외 processor(=iteration)를 register로 구현 → 칩 면적이 큼.</li><li>모델: AWGN 채널, check node 알고리즘은 offset min-sum(OMSA), 6-bit 양자화 채택.</li><li>핵심기법: shuffled MPD를 LDPC-CC에 적용 - processor 내에서 최신 메시지를 즉시 반영해 수렴을 가속, two-phase 대비 iteration 약 절반으로 동일 BER 달성.</li><li>핵심식: C2V/V2C 갱신 시 <code>t'&lt;t</code> 최신 메시지를 즉시 사용(shuffled 스케줄), CN당 least-reliable V2C 크기를 압축 저장한 ordered set으로 CN memory 크기 축소.</li><li>확장: node 병렬화 인자 <code>p=8</code>을 iteration 병렬화와 결합, block column 단위로 8개 노드 동시 처리.</li><li>구현 디테일: architecture-aware(AA) 부호를 제약조건 C1~C6(인코딩 full rank, 병렬 인코딩, 메모리 접근/공유, 수렴, girth&gt;4)로 구성 → 메모리 충돌 없이 단일 word 공유(CV/CN memory), permutation network(PU)로 processor간 메시지 교환.</li><li>학습/최적화: global/local index를 mod 조건으로 결정해 length-4 cycle 회피 및 메모리 공유 동시 만족(별도 NN 학습 없음).</li><li>결과: 90nm CMOS, 11 processor(10 iteration), 면적 5.36mm^2, 256.4MHz서 information throughput 1.025Gbps, power 682mW. [25](30 processor, 27.72mm^2) 대비 면적 대폭 감소.</li><li>한계: LDPC-CC(convolutional) 전용, code length 본문 서술상 명확치 않음, 정정능력 자체는 two-phase와 동일(수렴속도만 개선).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>shuffled MPD 스케줄(iteration 절반)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프 스케줄 대응 - 단 Prime ECC는 Dual-Update(even/odd) 스케줄 이미 보유</td></tr><tr><td>offset min-sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min-sum 자체는 이미 보유(중복 기여)</td></tr><tr><td>메모리 공유/permutation network HW</td><td>디코더 HW 모델(z=32, GT/HCU)</td><td>LDPC-CC 전용 메모리 구성이라 block QC-LDPC 구조와 정합 어려움</td></tr><tr><td>AA-LDPC-CC 부호 구성(circulant+CC)</td><td>대응 없음</td><td>Prime ECC는 block QC-LDPC이며 convolutional 구성법 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 부호가 LDPC convolutional code라 block QC-LDPC 기반 Prime ECC에 부호·HW를 그대로 이식할 수 없고, 유일하게 재사용 여지가 있는 shuffled MPD 아이디어도 이미 보유한 Dual-Update 스케줄과 중복된다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6195029",
+  "title": "Jointly Designed Architecture-Aware LDPC Convolutional Codes and Memory-Based Shuffled Decoder Architecture",
+  "year": 2012,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "shuffled MPD용 메모리 공유형 AA-LDPC-CC 공동설계로 processor 수·면적 절감, 90nm ASIC 1.025Gbps 구현",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.025,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "LDPC convolutional code(sliding-window MPD) 전용 - Prime ECC의 block QC-LDPC와 부호 클래스가 다름",
+  "todo_check": "shuffled MPD의 iteration 절반 감소 아이디어만 block QC-LDPC에 분리 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6195029---jointly-designed-architecture-aware-ldpc-convolutional-codes-and-memory-based-shuffled-decoder-architecture-2012-ieee-transactions-on-signal-processing">ieee:6195029 - Jointly Designed Architecture-Aware LDPC Convolutional Codes and Memory-Based Shuffled Decoder Architecture (2012, IEEE Transactions on Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

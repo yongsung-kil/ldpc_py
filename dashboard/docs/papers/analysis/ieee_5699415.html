@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5699415</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5699415---noise-adaptive-ldpc-decoding-using-particle-filtering-2011-ieee-transactions-on-communications">ieee:5699415 - Noise Adaptive LDPC Decoding Using Particle Filtering (2011, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>1000~100000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>particle filtering을 BP에 통합해 bit-level 시변 SNR/noise variance를 온라인 추정하며 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>시변 SNR mismatch 특화, PF(입자 16개/노드) 오버헤드로 HW 부담 큼; NAND는 SNR 시변 아닌 RBER 모델</td></tr><tr><td>추가확인</td><td>NAND read의 고정 LLR 테이블 대비 이 온라인 SNR 추정이 실이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 시변 AWGN에서 particle filter로 bit-level SNR을 추정해 SNR mismatch 성능저하를 막는 알고리즘 논문으로, 연산 오버헤드가 크고 NAND RBER 모델과 무관해 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK 변조 binary irregular LDPC(rate 1/3, block length 10^3~10^5), 시변 AWGN 채널 <code>Y=X+Z</code>, <code>Z~N(0,σ²)</code>이 bit-level로 시간에 따라 변함.</li><li>문제: 표준 BP는 정확한 SNR을 알아야 최적이나 실제 SNR은 시변하며, SNR mismatch(특히 과소추정) 시 성능 저하.</li><li>모델: noise variance <code>σ²</code>이 자유도 <code>R</code>의 Chi-square 분포를 따름(실험 R=2), 100비트마다 동일 variance 공유.</li><li>핵심 기법: factor graph를 3영역으로 구성 — Region 3(표준 BP LDPC 제약), Region 1(각 비트 <code>σ_i</code>를 <code>N_p</code>개 particle로 모델링), Region 2(관측 우도 factor <code>f_i</code>)로 연결.</li><li>핵심 식: particle의 belief <code>b(σ_i^k)</code>를 particle weight <code>ω_i^k</code>에 비례시켜 BP belief로 weight를 갱신 → weight update 복잡도 절감.</li><li>확장: 인접 노드 상관 factor <code>f_{i,i+1}</code>의 파라미터 <code>λ_{i,i+1}</code>도 particle로 온라인 추정(T=10 iter마다), <code>Δσ</code> 차이로 weight 정의.</li><li>구현 디테일: systematic resampling 후 Random Walk(RW) 또는 Metropolis-Hasting(MH)으로 particle 이동, MH가 수렴/성능 우수.</li><li>절차: 초기화→resampling→perturb(RW/MH)→BP belief 갱신→parity check 만족 시 종료, 최대 200 iter.</li><li>결과: 시변 SNR에서 known-mean BP 대비 큰 이득, true-SNR BP와의 gap이 10^-4/10^-5 BER에서 0.5dB/0.1dB, MH가 RW 대비 +0.1dB; particle 16개/노드.</li><li>한계: HW 미설계, 시뮬만, particle filter 연산·resampling 오버헤드 큼, 시변 AWGN SNR 시나리오 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP belief 갱신 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>BP 루프에 particle weight 업데이트 삽입 지점이나 min-sum HW와 정합 어려움</td></tr><tr><td>bit-level SNR/noise variance 추정</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>Prime ECC는 고정 LLR threshold 테이블, 온라인 PF 추정과 목적 상이</td></tr><tr><td>particle filtering(RW/MH/resampling)</td><td>대응 없음</td><td>Prime ECC에 particle/Monte-Carlo 모듈 없음, full-tanh 아닌 min-sum HW</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — particle filtering 기반 온라인 SNR 추정은 연산 오버헤드가 크고 HW 미설계이며, NAND는 시변 AWGN이 아닌 RBER/고정 LLR 테이블 모델이라 Prime ECC 이식 이득이 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5699415",
+  "title": "Noise Adaptive LDPC Decoding Using Particle Filtering",
+  "year": 2011,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.333,
+  "code_length": "1000~100000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "particle filtering을 BP에 통합해 bit-level 시변 SNR/noise variance를 온라인 추정하며 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "시변 SNR mismatch 특화, PF 오버헤드로 HW 부담 큼; NAND는 RBER 모델",
+  "todo_check": "NAND read 고정 LLR 테이블 대비 온라인 SNR 추정 실이득 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5699415---noise-adaptive-ldpc-decoding-using-particle-filtering-2011-ieee-transactions-on-communications">ieee:5699415 - Noise Adaptive LDPC Decoding Using Particle Filtering (2011, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

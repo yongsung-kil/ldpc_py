@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7227080</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7227080---spatially-coupled-codes-and-optical-fiber-communications-an-ideal-match-2015-ieee-spawc">ieee:7227080 - Spatially Coupled Codes and Optical Fiber Communications: An Ideal Match? (2015, IEEE SPAWC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>7500~31200</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>빠른 수렴을 위해 최적화한 irregular SC-LDPC(av,6=0.2)를 FPGA windowed decoder로 검증하고, 동일 rate block QC-LDPC 대비 낮은 BER(10^-12~10^-13대)과 채널-불가지론적 성능을 시뮬로 입증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>장거리 광통신(100Gbit/s급, coherent optical) 채널·소프트검출기 정합 문제 특화, NAND 채널/read 모델과 무관, SC-LDPC는 Prime ECC의 QC-LDPC 구조와 근본적으로 다른 부호족</td></tr><tr><td>추가확인</td><td>FPGA 구현의 정확한 gate count/throughput(Gbit/s) 수치가 본문 서술엔 "Virtex-7, 수 Gbit/s"로만 언급되어 정확 수치 미상</td></tr></tbody></table>
+<blockquote><p>총평: 광통신(장거리/해저 케이블)용 spatially coupled LDPC의 수렴속도 최적화와 채널-불가지론적(modulation-agnostic) 성질을 다룬 논문으로, 부호족 자체가 SC-LDPC(convolutional 구조)라 QC-LDPC 기반 NAND ECC로의 직접 이식은 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate <code>r=4/5=0.8</code>(25% overhead) SC-LDPC, 100Gbit/s+ coherent 광통신(long-haul/submarine) FEC 타깃, BPSK+AWGN 채널, 목표 BER <code>10^-15</code>.</li><li>문제: 기존 block LDPC는 error floor 방지를 위해 별도의 hard-decision outer cleanup code가 필요해 rate loss·latency 증가. SC-LDPC는 threshold saturation으로 이를 완화.</li><li>핵심 모델: 무한 확장 parity-check <code>H_SC</code>(sub-matrix <code>H_i</code>, syndrome former memory <code>μ</code>)로 정의되는 시간불변(time-invariant) SC-LDPC, <code>μ=1,2</code>의 "weakly coupled" 코드로 제한해 HW 재사용성 확보.</li><li>핵심 기법 1단(수렴속도 최적화): degree-3 변수노드에 degree-6 노드를 비율 <code>a_{v,6}</code>만큼 섞은 irregular SC 앙상블에 density evolution을 적용, windowed decoder가 1 step 전진하는 데 필요한 iteration 수 <code>I_req</code>를 최소화하는 <code>Eb/N0</code>를 탐색.</li><li>핵심 식/결과: <code>I_req∈{1,3}</code> 저복잡도 디코더 목표 시 <code>a_{v,6}=0.2</code>(20% degree-6, 80% degree-3)가 최적, ML capacity에 근접한 결과는 <code>a_{v,6}≈0.5</code>에서 나오지만 그만큼 요구 iteration이 큼(trade-off).</li><li>핵심 기법 2단(HW 검증): FPGA(Virtex-7) 기반 windowed decoder, window size <code>W=13</code>, 2개의 병렬 디코딩 엔진이 겹치지 않는 구간을 처리(실질 <code>2W</code> iteration/bit), scaled min-sum + layered decoding.</li><li>부수 트릭: quasi-cyclic permutation(30×30) 기반 sub-matrix, <code>L=90</code> sub-block로 종단(termination), Gaussian noise generator는 uniform RNG + Box-Muller로 LLR 15-level 양자화 생성.</li><li>결과: <code>dv=3,dc=15</code> block QC-LDPC(N=31200) 대비, irregular SC-LDPC(Code A, <code>μ=2</code>)는 BER <code>10^-12</code>에서 약 0.3dB 이득이나 error floor 존재(uncorrected bit 소수, trapping set 아님); regular SC-LDPC(Code B, <code>μ=1</code>)는 <code>≈10^-13</code>에서 교차, 6.7×10^15 비트 전송 후 오류 미검출.</li><li>확장(4장): SC-LDPC를 다양한 변복조기·검출기와 결합 시, EXIT chart 상 pinch-off 이하에서도 threshold saturation으로 수렴 가능함을 density evolution(MET-DE)으로 입증 — 검출기 특성(slope <code>a</code>)에 거의 무관한 decoding threshold(범용/channel-agnostic 코드).</li><li>한계: 목표 채널이 광통신 coherent 시스템(고속 ADC, differential/phase noise 등)에 특화, HW는 FPGA emulation 수준(ASIC 합성/실측 없음), NAND의 read-retry/threshold voltage 채널 모델과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| SC-LDPC 부호구조(H_SC, syndrome former memory) | 대응 없음 | Prime ECC는 QC-LDPC(base+circulant) 고정 구조로 convolutional coupling 미지원 |
+| Windowed decoder / 2-engine 병렬 처리 | decoder.cpp LDPC_Decoder() | 스케줄링·병렬처리 개념은 유사하나 SC 특유의 sliding window 구조는 대응 없음 |
+| Scaled min-sum + layered decoding | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum 계열 알고리즘 자체는 이미 보유, 신규 기여 아님 |
+| Irregular degree 최적화(density evolution) | ecc_top.cpp Load_PCM() | H-matrix 설계 관점에서만 참고 가능, QC-LDPC 특정 구조 재검증 부담 큼(이식 난이도 높음) |
+| 채널-불가지론적(modulation/detector-agnostic) 설계 | 대응 없음 | NAND read channel은 고정 특성이라 이 논문의 변복조 적응성은 무관 |</code></pre>
+<p>적용 가치: 낮음 — SC-LDPC라는 이질적 부호족과 광통신 특화 채널/HW 검증(FPGA windowed decoder)을 다루어 Prime ECC의 QC-LDPC 부호설계·디코더 구조와 직접 대응되는 요소가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7227080",
+  "title": "Spatially Coupled Codes and Optical Fiber Communications: An Ideal Match?",
+  "year": 2015,
+  "venue": "IEEE SPAWC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.8,
+  "code_length": "7500~31200",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "빠른 수렴을 위해 최적화한 irregular SC-LDPC(av,6=0.2)를 FPGA windowed decoder로 검증하고, 동일 rate block QC-LDPC 대비 낮은 BER(10^-12~10^-13대)과 채널-불가지론적 성능을 시뮬로 입증",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "장거리 광통신(100Gbit/s급, coherent optical) 채널·소프트검출기 정합 문제 특화, NAND 채널/read 모델과 무관, SC-LDPC는 Prime ECC의 QC-LDPC 구조와 근본적으로 다른 부호족",
+  "todo_check": "FPGA 구현의 정확한 gate count/throughput(Gbit/s) 수치가 본문 서술엔 \"Virtex-7, 수 Gbit/s\"로만 언급되어 정확 수치 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7227080---spatially-coupled-codes-and-optical-fiber-communications-an-ideal-match-2015-ieee-spawc">ieee:7227080 - Spatially Coupled Codes and Optical Fiber Communications: An Ideal Match? (2015, IEEE SPAWC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

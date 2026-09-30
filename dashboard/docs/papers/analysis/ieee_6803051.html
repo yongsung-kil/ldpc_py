@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6803051</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6803051---realizing-unequal-error-correction-for-nand-flash-memory-at-minimal-read-latency-overhead-2014-ieee-tcas-ii">ieee:6803051 - Realizing Unequal Error Correction for NAND Flash Memory at Minimal Read Latency Overhead (2014, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.83~0.91 (rnorm=8/9, rl=10/11, rcon=5/6~10/11)</td></tr><tr><td>부호length</td><td>1kB~2kB (user data/codeword)</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>상/하위 페이지 BER 차이에 맞춘 부분 연접부호(partial concatenated) 기반 불균등 오류정정으로 read latency 최소화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>logic 0.31mm2, memory 0.74/1.41mm2@65nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호설계·시스템 레벨 전략(rate 배분/페이지 매핑)이라 디코더 알고리즘 자체 개선은 없음</td></tr><tr><td>추가확인</td><td>rl/rcon 최적화 절차와 연접부호 반복 디코딩 스케줄의 실제 iteration 수치(그림/표 손실분)</td></tr></tbody></table>
+<blockquote><p>총평: NAND MLC 상/하위 페이지 불균등 BER를 부분 연접부호로 대응해 20% 내구성 향상·&lt;7% read latency 오버헤드를 달성한 시스템 레벨 부호 rate 배분 전략(디코더는 기존 layered min-sum 활용).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: sub-22nm 2bit/cell MLC NAND, 페이지당 9kB(8kB user+1kB redundancy), <code>rnorm=8/9</code>, QC-LDPC 사용.</li><li>문제: MLC의 상위 페이지가 하위 페이지보다 BER이 높아 동일 rate 부호로는 상위 페이지가 내구성 병목이 되고 redundancy가 낭비됨.</li><li>모델: 각 wordline이 <code>N+R</code> 셀 구동, <code>2N</code>-bit user + <code>2R</code>-bit redundancy, <code>rnorm=N/(N+R)</code>. 하위 rate <code>rl</code>, 상위 concatenated rate <code>rcon</code> 사용, <code>ru&lt;rnorm&lt;rl</code>.</li><li>핵심 기법: 하위 페이지는 강한 rate-<code>rl</code> 부호로 보호(여유공간 <code>ur</code> 발생), 상위 페이지는 rate-<code>rnorm</code> 부호로 먼저 보호하고 각 세그먼트에서 <code>Ns/k</code> bit를 모아 rate-<code>rcon</code> 연접부호로 추가 보호하되 redundancy를 하위 페이지 여유공간에 저장.</li><li>핵심 식: <code>ur = k·Ns·(rl-rnorm)/(rl·rnorm)</code> (여유공간), <code>rcon = rl·rnorm/(rnorm+k·(rl-rnorm))</code> (연접 rate). 하위 여유공간과 상위 추가 redundancy를 일치시키기 위함.</li><li>디코딩 흐름: 상위 페이지 읽기 시 먼저 rate-<code>rnorm</code> 복호, 실패 시에만 하위 페이지에서 rate-<code>rcon</code> redundancy를 읽어 연접 복호(rcon→rnorm 반복). 실패 시 read-retry/soft-sensing.</li><li>구현 디테일: 모든 component code(rl/rnorm/rcon)의 user data 길이를 동일하게 강제해 디코더 구현비용 최소화.</li><li>최적화: 측정된 P/E cycling별 BER 기반으로 광범위 시뮬레이션하여 상/하위 페이지 내구성 gap 최소화하는 <code>rl</code>, <code>rcon</code> 선택 (rl=10/11이 최적).</li><li>결과: 하위 min-sum(max 5 iter, hard-decision)로 P/E 내구성 20% 향상, 상위 페이지 read latency &lt;7% 오버헤드, 65nm ASIC 합성 결과 1GB/s throughput.</li><li>한계: 디코더 알고리즘(min-sum) 자체는 기존 [2]를 그대로 사용, hard-decision만 평가, 그림/표 기반 gatecount 및 BER 곡선 수치 손실.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>페이지별 rate 배분 / 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>서로 다른 rate H-matrix 로드 필요, 우리 부호 고정이라 재검증 부담</td></tr><tr><td>연접부호(rcon→rnorm) 반복 복호 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>두 부호 교대 반복은 새 상위 스케줄러 필요, 기존 이터레이션 루프와 별도</td></tr><tr><td>조기종료 기반 상위 페이지 실패시 재읽기</td><td>partial_CRC.cpp / full_CRC.cpp</td><td>rnorm 복호 실패 판정에 CRC 조기종료 재사용 가능</td></tr><tr><td>하위/상위 페이지 hard-decision sensing</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>hard-decision 모델은 있으나 페이지별 BER 차등 주입 확장 필요</td></tr></tbody></table>
+<p>적용 가치: 중간 — NAND 직접 타깃의 실용적 시스템 전략이나, Prime ECC의 고정 QC-LDPC·단일 rate 구조와 min-sum 디코더에 그대로 얹기엔 다중 rate 부호설계와 연접 스케줄러 추가가 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6803051",
+  "title": "Realizing Unequal Error Correction for NAND Flash Memory at Minimal Read Latency Overhead",
+  "year": 2014,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.83~0.91",
+  "code_length": "1kB~2kB",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "상/하위 페이지 BER 차이에 맞춘 부분 연접부호 기반 불균등 오류정정으로 read latency 최소화",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "logic 0.31mm2, memory 0.74/1.41mm2@65nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호설계·시스템 레벨 전략이라 디코더 알고리즘 자체 개선은 없음",
+  "todo_check": "rl/rcon 최적화 절차와 연접부호 반복 디코딩 스케줄의 실제 iteration 수치"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6803051---realizing-unequal-error-correction-for-nand-flash-memory-at-minimal-read-latency-overhead-2014-ieee-tcas-ii">ieee:6803051 - Realizing Unequal Error Correction for NAND Flash Memory at Minimal Read Latency Overhead (2014, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

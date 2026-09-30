@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10775118</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10775118---high-speed-design-approaches-for-ccsds-ldpc-encoder-systems-2024-ieee-north-karnataka-subsection-flagship-international-conference-nkcon">ieee:10775118 - High-Speed Design Approaches for CCSDS LDPC Encoder Systems (2024, IEEE North Karnataka Subsection Flagship International Conference (NKCon))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>12~20</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CCSDS AR4JA protograph의 quasi-cyclic parity-check matrix로부터 block-cyclic generator matrix를 직접 구성해 RU(Richardson-Urbanke) 알고리즘 대비 인코더 속도·자원 사용을 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>딥스페이스용 CCSDS AR4JA protograph(비-NAND 통신 표준) 고정 구조에 특화, 예제 H-matrix가 12×20 규모의 toy example 수준으로 실사용 rate/length와 괴리 큼</td></tr><tr><td>추가확인</td><td>Prime ECC는 dual-diagonal 인코더로 고정되어 있어, 본 논문의 block-cyclic generator matrix 방식이 실제 대규모 QC-LDPC(NAND급 rate)에서도 RU 대비 이점을 유지하는지</td></tr></tbody></table>
+<blockquote><p>총평: 위성/딥스페이스 통신용 CCSDS AR4JA 인코더의 FPGA 구현·최적화 논문으로, 부호구조가 표준 고정형이고 검증 규모가 매우 작아 NAND 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: CCSDS 딥스페이스 표준 AR4JA(Accumulate-Repeat-4-Jagged) protograph LDPC 코드, 코드율 1/2, 확장 인자(expansion factor) <code>N=4</code>(예제는 <code>M=4</code>).</li><li>문제: 기존 RU(Richardson-Urbanke) 알고리즘 기반 QC-LDPC 인코더는 자원 사용·지연이 상대적으로 크며, 특수 크기 generator matrix에 preprocessing이 필요.</li><li>핵심 가정: quasi-cyclic 구조의 parity-check matrix <code>H</code>(각 row가 이전 row의 cyclic shift)로부터 non-singular한 block-cyclic generator matrix <code>G</code>를 직접 유도할 수 있다는 protograph 특성.</li><li>핵심 기법: <code>H</code>를 <code>[Q | P]</code>로 분할(<code>Q</code>: <code>3M×MK</code>, <code>P</code>: <code>3M×3M</code> 정방 정칙행렬)한 뒤 <code>P</code>의 역행렬을 구해 <code>W = Q·P^{-1}</code>을 계산, <code>G = [I_{MK} | W]</code>로 구성.</li><li>핵심 식 의미: <code>P</code> 역행렬 계산으로 별도 preprocessing 없이 quasi-cyclic 구조 그대로 인코딩 가능한 generator matrix를 얻어, RU 대비 곱셈 단계 수를 줄임.</li><li>인코더 구현: feedback shift register + 메모리에 <code>G</code>의 각 row를 저장, 정보비트를 1비트씩 곱셈 후 이전 row와 XOR 누적하는 방식으로 codeword <code>[S1, P1, P2]</code> 생성.</li><li>비교 대상(RU 알고리즘): <code>H</code>를 6개 block matrix(<code>A1~F1</code>)로 분해해 <code>P1^T</code>, <code>P2^T</code>를 순차 계산하는 기존 방식.</li><li>검증: 예제 12×20 <code>H</code> matrix(→ 20×8 <code>G</code>), Xilinx Vivado 합성 및 Basys-3 FPGA 보드에 다운로드해 시뮬레이션·RTL 구현·동작 확인(LED 출력 검증).</li><li>결과: delay 4.016ns vs 기존 5.207ns(22.87% 개선), Slice LUT 24 vs 28, FF 26 vs 32(자원 14.28% 절감).</li><li>한계: 검증 규모가 12×20/20×8의 매우 작은 toy H-matrix에 한정, 실제 CCSDS 표준 크기(n=1536 등) 적용 결과 없음, 디코더 성능·정정능력에 대한 언급 없음(순수 인코더 HW 설계).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>block-cyclic generator matrix 직접 구성(quasi-cyclic H → G)</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 인코딩 방식이 고정이라, 본 논문의 P역행렬 기반 G 구성법은 구조적으로 다른 인코딩 경로</td></tr><tr><td>feedback shift register + 메모리 기반 인코더 아키텍처</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>인코더 HW 구조 비교 대상이나 CCSDS 표준 전용 설계라 직접 이식 어려움</td></tr><tr><td>AR4JA protograph/H-matrix 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>딥스페이스 표준 고정 protograph, Prime ECC의 QC-LDPC H-matrix와 별개 구조</td></tr><tr><td>디코더 관련</td><td>대응 없음</td><td>본 논문은 인코더 전용, 디코더는 시뮬레이션 검증에만 언급</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — CCSDS 딥스페이스 표준 protograph 구조에 특화된 인코더 최적화이며, 검증 규모가 극히 작은 toy example이라 NAND급 대규모 QC-LDPC 인코더 이식 근거로 부족.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10775118",
+  "title": "High-Speed Design Approaches for CCSDS LDPC Encoder Systems",
+  "year": 2024,
+  "venue": "IEEE North Karnataka Subsection Flagship International Conference (NKCon)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "protograph",
+  "code_rate": 0.5,
+  "code_length": "12~20",
+  "soft_quant": "무관",
+  "key_contribution": "CCSDS AR4JA protograph의 quasi-cyclic parity-check matrix로부터 block-cyclic generator matrix를 직접 구성해 RU(Richardson-Urbanke) 알고리즘 대비 인코더 속도·자원 사용을 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "딥스페이스용 CCSDS AR4JA protograph(비-NAND 통신 표준) 고정 구조에 특화, 예제 H-matrix가 12×20 규모의 toy example 수준으로 실사용 rate/length와 괴리 큼",
+  "todo_check": "Prime ECC는 dual-diagonal 인코더로 고정되어 있어, 본 논문의 block-cyclic generator matrix 방식이 실제 대규모 QC-LDPC(NAND급 rate)에서도 RU 대비 이점을 유지하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10775118---high-speed-design-approaches-for-ccsds-ldpc-encoder-systems-2024-ieee-north-karnataka-subsection-flagship-international-conference-nkcon">ieee:10775118 - High-Speed Design Approaches for CCSDS LDPC Encoder Systems (2024, IEEE North Karnataka Subsection Flagship International Conference (NKCon))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7387473</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7387473---an-energy-efficient-18gbps-ldpc-decoding-processor-for-80211ad-in-28nm-cmos-2015-ieee-a-sscc">ieee:7387473 - An energy efficient 18Gbps LDPC decoding processor for 802.11ad in 28nm CMOS (2015, IEEE A-SSCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>1/2~13/16</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>Half-layer paralleled LDPC ASIP 아키텍처로 802.11ad 전 코드율을 지원하며 최대 18.4Gbps, 18pJ/bit 에너지효율 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>0.78mm2@28nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>18.4Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>특정 QC-LDPC(802.11ad Z=42, length 672) 고정 아키텍처, VLIW/SIMD ASIP 및 half-layer 병렬 구조는 특정 코드 구조에 최적화되어 Prime ECC 구조와 정합 필요</td></tr><tr><td>추가확인</td><td>half-layer 병렬화의 메모리 충돌 회피(2 half-layer 간 memory access conflict 없음) 원리 및 column re-ordering 기법이 Prime ECC HCU/GT와 어떻게 다른지 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: 정정성능 개선은 없으나 half-layer 파이프라이닝 + column re-ordering을 통한 HW 활용률 극대화로 동일 min-sum layered 디코딩에서 처리율/에너지효율을 크게 높인 HW 아키텍처 논문 - 병렬화/파이프라이닝 기법 이식 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11ad QC-LDPC, sub-matrix <code>Z=42</code>, 코드길이 672, 코드율 <code>1/2, 5/8, 3/4, 13/16</code> 전체 지원, ASIP(Synopsys IP Designer) 기반.</li><li>문제: layered 디코딩은 flooding 대비 수렴이 빠르나, 이전 layer 결과에 의존하는 특성 때문에 layer 간 파이프라이닝이 불가능해 고속화가 어려움.</li><li>핵심 기법: half-layer paralleled 아키텍처 - 코드워드 절반의 bit node만 VFU(381개, 8-slice)에 매핑하고, 42개 CFU가 8개 slice에서 온 최대 8개 사전정보로 min-sum 처리.</li><li>한 layer를 두 개의 half-layer로 나눠 처리하며, 두 half-layer 간 메모리 접근 충돌이 없어 half-layer 레벨 파이프라인 적용 가능(연속 layer 간 1cycle 오버랩).</li><li>사이클 수 = <code>(4×Nlayer)×Niter+1</code> - 4개 명령어 슬롯(scalar/load-rotate-subtract/min search/output-add-store)의 VLIW/SIMD 구조.</li><li>확장: 저코드율(예: rate 1/2)에서는 두 layer를 하나의 virtual layer로 결합해 5cycle 내 처리, throughput 저하를 완화.</li><li>구현 디테일: column re-ordering으로 APP 메모리↔VFU/CFU 간 라우팅을 규칙적으로 만들어 배선 복잡도 감소(Fig.3~4).</li><li>4-core 멀티코어 구성 + 전압/주파수 스케일링(VFS)으로 1.8~18.4Gbps 범위 처리율 지원, 저처리율에서는 4코어 저주파 동작이 1코어 고주파보다 에너지효율적.</li><li>결과: 28nm CMOS, 630MHz, rate 1/2에서 최대 4iteration 18.4Gbps, 평균 2iteration 시 18.0pJ/bit, 23.58Gbps/mm² - 기존 최고 ASIC([6], flooding+frame-pipeline, 12Gbps) 대비 40% 에너지효율·53% 면적효율 개선.</li><li>한계: 정정능력/error-floor 개선 없음(순수 HW 아키텍처 논문), 802.11ad 특정 QC-LDPC(Z=42) 구조에 최적화되어 코드 변경 시 재설계 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Half-layer 파이프라이닝(layer 간 1cycle overlap)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>layered 스케줄링 최적화 기법으로 파이프라인 6-stage 구조와 비교 검토 가치 있음</td></tr><tr><td>CN min-sum + sign 연산 (min1/min2)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum 방식과 동일 계열(중복), half-layer 분할 방식만 차별점</td></tr><tr><td>Column re-ordering(APP memory-VFU 라우팅 규칙화)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, HW 라우팅 관련</td><td>메모리 라우팅 최적화 기법으로 HCU/GT의 라우팅 최적화와 비교 가치</td></tr><tr><td>VLIW/SIMD ASIP 명령어 슬롯 구조</td><td>대응 없음</td><td>Prime ECC는 고정기능 HW 시뮬레이터로 프로그래머블 ASIP 구조 자체는 대응 없음</td></tr><tr><td>멀티코어 + VFS 처리율 스케일링</td><td>대응 없음</td><td>Prime ECC는 단일 코드/디코더 시뮬레이터로 멀티코어 관리 계층 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 정정성능 개선은 없지만 half-layer 파이프라이닝과 column re-ordering을 통한 HW 활용률/처리율 개선 기법은 Prime ECC의 layered 스케줄·파이프라인 구조에 참고할 수 있음. 단, VLIW ASIP·멀티코어 구조는 Prime ECC의 고정기능 시뮬레이터 구조와 이질적.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7387473",
+  "title": "An energy efficient 18Gbps LDPC decoding processor for 802.11ad in 28nm CMOS",
+  "year": 2015,
+  "venue": "IEEE A-SSCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "1/2~13/16",
+  "code_length": 672,
+  "soft_quant": "미상",
+  "key_contribution": "Half-layer paralleled LDPC ASIP 아키텍처로 802.11ad 전 코드율을 지원하며 최대 18.4Gbps, 18pJ/bit 에너지효율 달성",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "0.78mm2@28nm",
+  "parallelism": "부분",
+  "throughput_gbps": 18.4,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "특정 QC-LDPC(802.11ad Z=42, length 672) 고정 아키텍처, VLIW/SIMD ASIP 및 half-layer 병렬 구조는 특정 코드 구조에 최적화되어 Prime ECC 구조와 정합 필요",
+  "todo_check": "half-layer 병렬화의 메모리 충돌 회피(2 half-layer 간 memory access conflict 없음) 원리 및 column re-ordering 기법이 Prime ECC HCU/GT와 어떻게 다른지 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7387473---an-energy-efficient-18gbps-ldpc-decoding-processor-for-80211ad-in-28nm-cmos-2015-ieee-a-sscc">ieee:7387473 - An energy efficient 18Gbps LDPC decoding processor for 802.11ad in 28nm CMOS (2015, IEEE A-SSCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7489038</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7489038---design-of-ldpc-codes-based-on-multipath-emd-strategies-for-progressive-edge-growth-2016-ieee-trans-commun">ieee:7489038 - Design of LDPC Codes Based on Multipath EMD Strategies for Progressive Edge Growth (2016, IEEE Trans. Commun.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>230~258</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Multipath EMD 지표로 PEG 그래프 구성 시 stopping set 생성을 줄여 error floor 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>offline 구성법(디코더 무관), 짧은 블록·rate 1/2·block-fading 위주라 고rate NAND QC-LDPC 직접 적용은 재검증 필요</td></tr><tr><td>추가확인</td><td>z=8 등 소형 circulant/짧은 length 결과라 z=32·고rate·긴 length에서 이득 재현 여부</td></tr></tbody></table>
+<blockquote><p>총평: 디코더 불변으로 PCM 구성만 개선해 error floor를 낮추는 그래프 구성법 — Prime ECC의 H-matrix 설계에 응용 가능하나 특정 QC-LDPC 재검증 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 유한 블록장(short-to-medium) LDPC의 error floor를 offline 그래프 구성으로 개선. AWGN/BEC/block-fading 채널, rate <code>1/2</code> 위주.</li><li>문제: 짧은 블록에서 cycle이 message 독립성을 깨 stopping set/error floor를 유발. 기존 PEG/IPEG(ACE), EMD[12] 구성법이 다중 경로 상황에서 stopping set 위험을 부정확하게 평가.</li><li>핵심 개념: cycle의 <code>EMD</code>(집합에 단일 연결된 CN 수), stopping set(EMD=0). PCM 열 합의 1 개수로 경로 EMD를 계산.</li><li>핵심 기법 1단: PEG 트리 확장으로 최대거리·최소가중 CN 후보(<code>A</code>,<code>B</code>) 확보 후, root VN에서 후보 CN까지 distinct path 수 <code>P_ci</code>가 최소인 CN(<code>C</code>)을 우선 선택(작은 cycle 수 최소화).</li><li>의미: stopping set은 zero-EMD cycle 또는 extrinsic edge로 결합된 cycle들에서 생기므로, 작은 cycle 수를 줄이면 stopping set 생성 확률이 감소.</li><li>핵심 기법 2단: <code>C</code>가 복수면 각 경로의 EMD를 (12)로 구해 평균 <code>γ_ci=(1/P_ci)ΣE_p,ci</code>가 최대인 CN을 최종 배치(연결성 큰 후보 선택).</li><li>부수: cycle-oriented EMD spectrum <code>γ</code>를 부산물로 산출해 그래프 품질 정량 비교. QC-LDPC/IRA에도 적용(IRA는 accumulator dual-diagonal 초기화).</li><li>확장: block-fading(F 페이딩) 완전다이버시티용 reduced-structure 코드 클래스 제안(systematic stopping set 회피, null block 배치), 단순 puncturing으로 F-1 채널 호환.</li><li>결과: QC-LDPC에서 PEG 대비 0.4dB, IPEG 대비 0.3dB, QC-DO-PEG 대비 0.25dB 이득(BER&lt;1e-7). 최단 cycle 수 PEG 대비 27% 감소. block-fading 수렴 반복수 개선.</li><li>한계: HW 미설계·시뮬만, 짧은 블록/rate 1/2/block-fading 중심, 구성 시 distinct path 저장 비용 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| Multipath EMD PEG 그래프 구성 (H-matrix) | ecc_top.cpp Load_PCM() | H-matrix/PCM 로드 지점 — offline로 만든 PCM을 교체 적용하는 수준 |
+| QC-LDPC 부호구조 | ecc_top.cpp Load_PCM() | circulant 기반 QC 구조 로드에 대응 |
+| stopping set/error-floor 개선 | 대응 없음 | 구성법 자체는 코드 내 대응 모듈 없음(디코더 불변) |
+| EMD spectrum 품질 지표 | 대응 없음 | 코드베이스 내 그래프 분석 도구 없음 |
+| block-fading/diversity 코드 | 대응 없음 | NAND 채널과 무관 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 디코더/HW 변경 없이 error floor를 낮추는 PCM 구성법이라 재사용 가치는 있으나, 짧은 블록·저rate·block-fading 위주 검증이라 고rate NAND QC-LDPC(z=32)로의 이득 이전은 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7489038",
+  "title": "Design of LDPC Codes Based on Multipath EMD Strategies for Progressive Edge Growth",
+  "year": 2016,
+  "venue": "IEEE Trans. Commun.",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "230~258",
+  "soft_quant": "무관",
+  "key_contribution": "Multipath EMD 지표로 PEG 그래프 구성 시 stopping set 생성을 줄여 error floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "offline 구성법(디코더 무관), 짧은 블록·rate 1/2·block-fading 위주라 고rate NAND QC-LDPC 직접 적용은 재검증 필요",
+  "todo_check": "z=8 등 소형 circulant/짧은 length 결과라 z=32·고rate·긴 length에서 이득 재현 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7489038---design-of-ldpc-codes-based-on-multipath-emd-strategies-for-progressive-edge-growth-2016-ieee-trans-commun">ieee:7489038 - Design of LDPC Codes Based on Multipath EMD Strategies for Progressive Edge Growth (2016, IEEE Trans. Commun.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

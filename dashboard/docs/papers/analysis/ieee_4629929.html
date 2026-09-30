@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4629929</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4629929---fpga-implementation-of-a-flexible-decoder-for-long-ldpc-codes-2008-ieee-conf">ieee:4629929 - FPGA Implementation of a Flexible Decoder for Long LDPC Codes (2008, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.44~0.90</td></tr><tr><td>부호length</td><td>1728~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>임의(구조/비구조) LDPC를 동일 HW로 복호하는 완전 프로그래머블 아키텍처 + H-matrix를 오프라인 "컴파일"해 충돌없는 메모리 매핑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>18.5k slices+202 BRAM@Virtex4 XC4LX160 (p=16,W=8)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.075 (75Mbps@74MHz)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>유연성(임의 부호 복호)이 목적이라 고정 고rate QC-LDPC NAND엔 오버스펙; FPGA 75Mbps로 throughput 낮고 정정이득 없음(고정소수점 0.1~0.15dB 손실)</td></tr><tr><td>추가확인</td><td>ASIC 포팅 시 gate/throughput, Benes 라우팅 면적 vs QC 구조 활용의 비교</td></tr></tbody></table>
+<blockquote><p>총평: 임의 LDPC를 하나의 HW로 복호하는 유연 FPGA 디코더 + 메모리 매핑 논문으로, 정규화 min-sum은 Prime ECC가 이미 보유하고 유연성은 고정 QC-LDPC NAND ECC에 불필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>목표: DVB-S2/WiMax/WiFi 등 특정 구조에 묶인 decoder-aware 설계를 벗어나, <strong>구조·비구조 무관 임의 LDPC</strong>를 동일 HW로 복호하는 완전 프로그래머블 디코더.</li><li>문제: 기존 부분병렬 디코더는 constituent matrix 크기 공약수 등 제약이 커 부호설계 자유도가 낮음; 완전 유연 시 extrinsic 메시지의 메모리 접근 충돌 발생.</li><li>아키텍처: 병렬도 <code>p</code>개의 extrinsic 메모리뱅크 <code>EM_i</code>, <code>p</code>개 VFU/CFU, 두 permutation network <code>pi</code>/<code>pi^-1</code>(Benes)와 <code>2p</code>개 <code>p:1</code> MUX로 메시지를 노드연산기에 라우팅, 제어신호는 컴파일된 부호를 <code>HM</code>에서 선형 read.</li><li>CN 연산은 <strong>normalized BP-based(정규화 min-sum)</strong> <code>R = alpha * min|Q| * prod(sign)</code>, <code>alpha in (0,1]</code>(합성후 0.71875~0.90625, 4bit 표현) - 단 아키텍처는 근사에 비의존, 다른 근사로 교체 가능.</li><li>VN 연산 <code>Q = In + sum(R)</code>, 반복 두 half-iteration 교대.</li><li><strong>매핑 알고리즘</strong>이 각 edge에 제어벡터 <code>m=(addr,pos,mem)</code> 배정 - 같은 degree의 <code>p</code>개 노드를 그룹핑, check node 그룹에서 <code>mem</code> 중복이 <code>&lt;=dC</code> 되도록 교환하여 충돌없는 접근 보장.</li><li>실제 평균병렬도 <code>pa = 0.5*(E/NV + E/NC) &lt;= p</code>, 활성 FU 비율 <code>eact = pa/p</code> - 고rate 부호(C7/C8)에서 96%, 저rate에서 77~79%.</li><li>반복당 클록수 <code>Titer ≈ 2E/pa</code>, 정보 throughput <code>Dinfo ≈ R*N*f*pa/(I*2*E)</code>.</li><li>결과: XILINX Virtex4 XC4LX160에 VHDL 구현, <code>f&gt;=73MHz</code>, 최대 <code>Nmax=73,728</code>/<code>Emax=524,288</code>, throughput 4~11 Mbps(15 iter). FPGA 고정소수점(8bit=1s+5i+2f) BER은 부동소수 BP 대비 0.1~0.15dB 손실.</li><li>한계: FPGA라 ASIC 대비 throughput 1/3 이하, 정정성능 이득 없음(구현 검증용); 유연성이 목적이라 고정 QC-LDPC 최적화와는 지향이 반대.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>정규화 min-sum(normalized BP-based) CN 연산 (alpha 스케일)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC min-sum과 동일 계열 - 이미 보유(중복 기여)</td></tr><tr><td>VN update / 8bit 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>표준 VN 처리, 신규성 없음</td></tr><tr><td>유연 메모리뱅크 매핑 + Benes 라우팅(비구조 부호용)</td><td>대응 없음</td><td>Prime ECC는 QC 구조(z=32)로 라우팅이 고정·정규 - 임의부호 매핑이 불필요</td></tr><tr><td>valid codeword 조기종료</td><td><code>partial_CRC.cpp</code>, <code>full_CRC.cpp</code></td><td>개념 유사, Prime ECC가 더 정교(Partial CRC 4점)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 임의 부호 복호를 위한 유연 HW+매핑은 고정 고rate QC-LDPC NAND ECC에 불필요하고, 핵심 연산(정규화 min-sum)은 이미 보유.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:4629929",
+  "title": "FPGA Implementation of a Flexible Decoder for Long LDPC Codes",
+  "year": 2008,
+  "venue": "IEEE Conference (2008)",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1728~64800",
+  "soft_quant": "무관",
+  "key_contribution": "임의(구조/비구조) LDPC를 동일 HW로 복호하는 완전 프로그래머블 아키텍처 + H-matrix 오프라인 컴파일 충돌없는 메모리 매핑",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "18.5k slices+202 BRAM@Virtex4 XC4LX160 (p=16,W=8)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.075,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "유연성이 목적이라 고정 고rate QC-LDPC NAND엔 오버스펙; FPGA 75Mbps로 throughput 낮고 정정이득 없음",
+  "todo_check": "ASIC 포팅 시 gate/throughput, Benes 라우팅 면적 vs QC 구조 활용 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4629929---fpga-implementation-of-a-flexible-decoder-for-long-ldpc-codes-2008-ieee-conf">ieee:4629929 - FPGA Implementation of a Flexible Decoder for Long LDPC Codes (2008, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

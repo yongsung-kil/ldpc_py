@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7828079</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7828079---multi-bit-flipping-decoding-of-ldpc-codes-for-nand-storage-systems-2017-ieee-communications-letters">ieee:7828079 - Multi-Bit Flipping Decoding of LDPC Codes for NAND Storage Systems (2017, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>1kB~4kB</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>최대 flip 수를 제한한 hard-only 다중비트 flipping(MBF)로 과정정 방지, 근사 정렬로 정렬 HW 48.3% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>BCH 대비 정정능력은 못 미치고, hard-info 전용이라 soft-decision LDPC 대비 정정능력은 낮음(good 채널 구간용 fast path)</td></tr><tr><td>추가확인</td><td>TH·flip 수(F4)·그룹 수(8)의 우리 부호(z=32, N_b=129)에서의 재튜닝 및 512-to-4 sorter HW 정합</td></tr></tbody></table>
+<blockquote><p>총평: NAND용 고rate QC-LDPC에 hard-info 전용 fast 디코더로 바로 이식 가능한 저지연 BF 개선 - Min-Sum 폴백/보조 경로로 관심 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 4kB user message, rate 0.9의 regular QC-LDPC (추가로 1kB, 2kB 코드도 검증), AWGN 채널, hard-decision <code>z</code> 입력만 사용.</li><li>문제: 기존 WBF/MWBF/GDBF 성능개선은 soft-info를 요구하는데, NAND는 soft-info 생성에 다중 read가 필요해 지연이 커서 부적합.</li><li>원본 Gallager BF는 iteration당 가장 의심스러운 1비트만 flip → 정정능력 부족.</li><li>핵심: 한 iteration에 여러 비트를 flip하되 flip 최대 수를 <code>Fx</code>로 제한 (과정정 방지). 평가값 <code>En = Σ(2sm-1)</code> (식 4)이 임계 <code>TH</code> 초과인 비트를 후보로.</li><li>후보 수 ≤ <code>Fx</code>면 전부 flip, 초과 시 <code>En</code> 기준 정렬 후 상위 x개만 flip → syndrome 갱신 후 반복.</li><li><code>En</code>은 <code>dv</code>개 이산값만 가져 범위가 좁음 → 초기 iteration에 후보가 많아 과도 flip 시 non-error 비트까지 뒤집혀 복호 실패. F32/F64는 F4보다 오히려 나쁨.</li><li>관측 기반으로 최대 flip 수를 4로 고정(<code>F4</code>에서 성능 포화), <code>TH=3</code>(dv 이하 양의 정수)로 결정.</li><li>HW 근사: N비트를 g개 그룹으로 분할, 각 그룹 local max에서 top-4 선택 → 정확한 global 4-max 근사. 8그룹이면 성능 열화 거의 없음.</li><li>결과: 512-to-4 sorter에서 8그룹 근사 시 CASU 48.3% 절감(성능 유지), 기존 hard-info BF(GDBF/WBF/MWBF/TBF) 대비 WER 우수, latency는 soft LDPC보다 훨씬 짧고 대부분 BCH보다도 짧음.</li><li>한계: BCH 및 soft-decision LDPC 대비 정정능력은 낮음(양호 채널 구간 fast path 용도), gate count/throughput 등 HW 수치는 표(Table II)에만 있어 본문 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MBF 디코딩 루프(syndrome/En 계산, flip, 반복)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>hard-info 전용 대체 디코더/폴백 경로로 이터레이션 루프에 삽입 가능</td></tr><tr><td>syndrome 기반 CN 평가값 En</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>Min-Sum CN 대신 syndrome 합산형 평가로 대체(hard 모드)</td></tr><tr><td>hard 판정 VN flip 처리</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>HD 경로의 다중비트 flip 갱신에 대응</td></tr><tr><td>조기종료(syndrome all-zero)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>syndrome 종료조건은 기존 조기종료와 병존 가능</td></tr><tr><td>512-to-4 근사 정렬 HW(그룹별 local-max)</td><td>대응 없음</td><td>Prime ECC에 정렬기 없음 - 신규 HW 블록 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> - hard-1bit만으로 동작하는 저지연 fast 디코더라 NAND good-채널 구간에서 Min-Sum 앞단 폴백으로 곧장 붙일 수 있고, 우리 고rate QC-LDPC와 코드 스펙(rate 0.9, 4kB)이 정합한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7828079",
+  "title": "Multi-Bit Flipping Decoding of LDPC Codes for NAND Storage Systems",
+  "year": 2017,
+  "venue": "IEEE Communications Letters",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "1kB~4kB",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "최대 flip 수를 제한한 hard-only 다중비트 flipping(MBF)로 과정정 방지, 근사 정렬로 정렬 HW 48.3% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "BCH 대비 정정능력은 못 미치고, hard-info 전용이라 soft-decision LDPC 대비 정정능력은 낮음(good 채널 구간용 fast path)",
+  "todo_check": "TH·flip 수(F4)·그룹 수(8)의 우리 부호(z=32, N_b=129)에서의 재튜닝 및 512-to-4 sorter HW 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7828079---multi-bit-flipping-decoding-of-ldpc-codes-for-nand-storage-systems-2017-ieee-communications-letters">ieee:7828079 - Multi-Bit Flipping Decoding of LDPC Codes for NAND Storage Systems (2017, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

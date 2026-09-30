@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10802915</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10802915---adaptive-sliding-window-decoding-of-spatially-coupled-low-density-parity-check-codes-algorithms-and-energy-efficient-implementations-2024-ieee-access">ieee:10802915 - Adaptive Sliding Window Decoding of Spatially Coupled Low-Density Parity-Check Codes: Algorithms and Energy Efficient Implementations (2024, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.798</td></tr><tr><td>부호length</td><td>640(서브코드, L=80 결합 시 전체 코드워드)</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>syndrome check 기반으로 sliding window 내 활성 프로세서(=iteration) 수를 SNR에 따라 동적으로 증감시켜 정정성능 손실 없이(또는 미소 손실로) 에너지효율을 개선하는 HA/FA-SWD 및 HW 친화적 Re-HA/Re-FA-SWD 알고리즘</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상(Table 3 수치, 본문 서술 없음)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상(Tc=c·f 공식만 본문 제시, 구체 수치는 표에만)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>SC-LDPC 고유의 sliding-window 구조 기반 기법이라 Prime ECC의 블록 QC-LDPC(비-SC)에는 window/processor 개념이 존재하지 않아 구조적 이식에 재설계 필요; 조기종료 아이디어(syndrome 기반 activation 감소)만 개념적으로 차용 가능</td></tr><tr><td>추가확인</td><td>Prime ECC의 Partial CRC 조기종료(4 termination point)와 본 논문의 layer별 syndrome 기반 processor activation을 비교해 유사 이득을 일반 QC-LDPC layered decoding에도 적용 가능한지 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC 특유의 sliding window 구조에서 SNR 적응형 iteration(프로세서) 활성화로 에너지효율을 최대 6.5배 개선하는 ASIC 검증된 설계이나, 코드 구조 의존성이 커 QC-LDPC 블록코드 기반 Prime ECC에는 직접 이식이 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 SC-LDPC 코드(4×80 base-graph, lifting <code>Z=16</code>, <code>(640,512)</code> 서브코드, <code>L=80</code>결합, <code>ms=1</code>, rate <code>R=0.798</code>), AWGN/Rayleigh 채널, NMS(<code>γ=0.75</code>) 기반 row-wise layered sliding window decoding(SWD).</li><li>기존 고정 window(<code>Pmax</code>개 프로세서 항시 활성) SWD는 매우 높은 처리량을 내지만 전력소모가 활성 프로세서 수에 비례해 큼(LDPC-BC의 iteration control은 SWD엔 적용 불가).</li><li>각 프로세서는 하나의 레이어(layer)에서 1회 CN/VN 갱신을 수행하며, 이는 LDPC-BC의 1 iteration에 대응한다는 모델을 가정.</li><li>HA-SWD(반적응): tail layer의 partial syndrome check <code>z1</code>이 실패하면 프로세서를 1개씩 순차 활성화(<code>P←P+1</code>)해 window를 증가; FA-SWD(전적응)는 성공 시 조건(<code>zi..zi+ms+1</code>=0)을 만족하면 다시 감소(<code>P←P-1</code>)까지 가능.</li><li>정정성능 보존의 핵심 조건: tail layer 재처리 시 인접(좌/우 연결) layer의 syndrome도 함께 확인해야 정정능력 손실 없이(HA/FA-SWD는 fixed SWD와 BER 완전 동일) window 크기 조정 가능.</li><li>HW 친화 버전(Re-HA-SWD, Re-FA-SWD)은 증가를 <code>ms+1</code> 스텝 지연시키고 감소를 프로세서 1개로 제한해 critical path·pipeline stall을 억제하는 대신 정정성능을 미세하게 완화(<code>BER 10⁻¹⁰</code>에서 &lt;0.025dB 손실).</li><li>아키텍처: <code>Pmax</code>개 프로세서를 파이프라인 연결, syndrome 기반 중앙 controller가 clock gating으로 L-APP/EXTR 레지스터를 비활성화해 미사용 프로세서 전력을 절감, HD bypass 파이프라인으로 출력 순서 유지.</li><li>별도 학습절차 없음(휴리스틱 아님, 결정론적 syndrome 기반 알고리즘).</li><li>결과: 12nm FinFET ASIC 합성 기준 SNR 4~7dB 구간 에너지효율 1.4~3.4배(최대 SNR 10dB에서 6.5배·84.6%) 개선, 정정성능은 fixed SWD 대비 waterfall/error-floor 전 구간 동일(Re-FA-SWD만 &lt;0.025dB 손실), 면적 오버헤드 약 1.4%.</li><li>한계: 정정성능 보존에 대한 엄밀한 이론적 증명 없이 Monte-Carlo 시뮬레이션으로만 검증, 단일 SC-LDPC 코드(lifting factor만 변화)로만 평가해 일반화 제한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>syndrome 기반 조기종료/iteration 축소</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC도 partial CRC 기반 조기종료를 이미 보유(개념 유사, 다만 SC-LDPC window가 아닌 블록 전체 단위)</td></tr><tr><td>프로세서(iteration) 클록게이팅/활성화 제어</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>활성 iteration 수를 SNR 적응형으로 줄이는 아이디어는 Prime ECC의 고정 iter_max 루프에 조기종료 확장으로 참고 가능</td></tr><tr><td>SC-LDPC sliding window 구조/layer 정의</td><td>대응 없음</td><td>Prime ECC는 SC 코드가 아닌 QC-LDPC 블록코드로 window/layer 개념 자체가 없음, 구조적 이식 불가</td></tr><tr><td>NMS 기반 CN/VN 처리(VN2VN unit)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>Get_VNU_*</code></td><td>Prime ECC도 min-sum 계열 보유(이미 구현), 신규 기여는 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — SC-LDPC 구조 자체는 이식 난이도가 높지만, syndrome 기반 iteration 활성화 축소라는 조기종료 확장 아이디어는 Prime ECC의 Partial CRC 조기종료 로직에 참고 가치가 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10802915",
+  "title": "Adaptive Sliding Window Decoding of Spatially Coupled Low-Density Parity-Check Codes: Algorithms and Energy Efficient Implementations",
+  "year": 2024,
+  "venue": "IEEE Access",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.798,
+  "code_length": "640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "syndrome check 기반으로 sliding window 내 활성 프로세서(iteration) 수를 SNR에 따라 동적 증감시켜 정정성능 손실 없이 에너지효율을 개선하는 적응형 SWD 알고리즘",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "SC-LDPC sliding-window 구조 의존 기법이라 Prime ECC의 블록 QC-LDPC에는 window/processor 개념이 없어 구조적 이식에 재설계 필요",
+  "todo_check": "Prime ECC의 Partial CRC 조기종료와 본 논문의 layer별 syndrome 기반 processor activation 비교, 일반 QC-LDPC layered decoding에 적용 가능성 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10802915---adaptive-sliding-window-decoding-of-spatially-coupled-low-density-parity-check-codes-algorithms-and-energy-efficient-implementations-2024-ieee-access">ieee:10802915 - Adaptive Sliding Window Decoding of Spatially Coupled Low-Density Parity-Check Codes: Algorithms and Energy Efficient Implementations (2024, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

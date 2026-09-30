@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5537671</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5537671---low-power-decoder-design-for-qc-ldpc-codes-2010-ieee-국제학회---apccas-추정">ieee:5537671 - Low Power Decoder Design for QC-LDPC Codes (2010, IEEE 국제학회 - APCCAS 추정)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>반복 진행에 따라 소프트 메시지 워드길이를 동적으로 줄이는 length-shortening + bit-serial CNU로 저전력</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>CNU 864 / VNU 337 gate (총 CNU 38k, VNU 18k), 180nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.09Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정능력 개선 아닌 저전력 목적, 90Mb/s로 NAND ECC급 throughput에 크게 미달</td></tr><tr><td>추가확인</td><td>length-shortening 시 6비트 대비 0.03~0.1dB 손실이 NAND 고rate 부호에서도 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: layered min-sum 기반 bit-serial CNU + 반복별 메시지 워드길이 축소로 전력 절감하는 디코더 HW 기법. 정정성능은 손실측이며 mobile 저throughput 타깃.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 일반 QC-LDPC (base+circulant), 예제는 CMMB 표준의 (9216,4608) (3,6) 부호, rate 1/2 및 3/4 지원, 6비트 양자화 소프트 메시지.</li><li>문제: 모바일 응용에서 LDPC 디코더의 전력 소비가 소프트 메시지 워드길이에 선형 비례 → 전력 병목.</li><li>알고리즘: layered min-sum. 층별로 column weight ≤ 1이 되게 H를 L개 층으로 나눠 즉시 갱신, 수렴 가속·메모리 절감.</li><li>핵심 식: <code>Rcv = α·Scv·min|Lnc|</code> (α=0.75 스케일링), <code>Lv = yv + Lcv,L</code>로 hard decision.</li><li>핵심 기법 (length-shortening): 반복이 진행될수록 V2C 메시지 비트수를 6→4→3(또는 2)비트로 동적 축소 (Table I의 scheme1/2). 처음 2회 반복은 6비트 유지로 성능 손실 최소화.</li><li>이를 뒷받침하는 HW: bit-serial CNU가 매 클록 1비트씩 읽어 축소된 길이만큼만 처리.</li><li>CNU 트릭: "0-selecting" 비교기로 min/2nd-min 탐색, 다른 메시지에 0이 여럿이면 해당 경로 disable(shift 정지)해 불필요 연산 차단. min/2nd-min/index/sign만 압축 저장.</li><li>스케줄: L층 = L클록/iteration, Cn=5*M/L CNU, Vn=M*t/L VNU, VNU는 1클록에 V2C 생성 후 distributor로 5개 CNU 중 하나에 전달.</li><li>결과: scheme1이 FER=1e-3에서 6비트 대비 0.03dB 손실로 메시지 연산 28% 절감, serial+shortening 결합 시 36% 연산 절감, 기존 부분병렬 대비 ~20% 에너지 절감. 180nm 50MHz 90Mb/s, 2.97mm².</li><li>한계: 정정능력 향상 없음(오히려 손실), throughput이 90Mb/s로 낮고 저전력 모바일 타깃. FPGA/실측 아닌 합성 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered min-sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리도 min1/min2+sign XOR 보유, 층별 스케줄만 상이</td></tr><tr><td>반복별 메시지 워드길이 축소</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>우리 적응형 LLR 테이블(iter 구간별)과 발상 유사하나 우리는 threshold, 논문은 비트폭 축소</td></tr><tr><td>bit-serial CNU / 0-selecting 비교기</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>대응 없음(우리 pipeline은 병렬 magnitude, bit-serial 아님)</td></tr><tr><td>min/2nd-min 압축 저장</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리도 min1/min2 저장 방식 동일</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 저전력 워드길이 축소 발상은 흥미로우나 bit-serial CNU는 우리 pipeline 병렬 구조와 정합 어렵고 정정성능 이득이 없어 NAND 고throughput ECC에 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5537671",
+  "title": "Low Power Decoder Design for QC-LDPC Codes",
+  "year": 2010,
+  "venue": "IEEE (APCCAS 추정)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "9216",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "반복 진행에 따라 소프트 메시지 워드길이를 동적 축소하는 length-shortening + bit-serial CNU로 저전력 디코더 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "CNU 38k / VNU 18k gate @180nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.09,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "정정능력 개선 아닌 저전력 목적, 90Mb/s로 NAND ECC급 throughput에 미달",
+  "todo_check": "length-shortening의 0.03~0.1dB 손실이 NAND 고rate 부호에서도 유지되는지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5537671---low-power-decoder-design-for-qc-ldpc-codes-2010-ieee-국제학회---apccas-추정">ieee:5537671 - Low Power Decoder Design for QC-LDPC Codes (2010, IEEE 국제학회 - APCCAS 추정)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9420267</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9420267---parallel-and-flexible-5g-ldpc-decoder-architecture-targeting-fpga-2021-ieee-tvlsi">ieee:9420267 - Parallel and Flexible 5G LDPC Decoder Architecture Targeting FPGA (2021, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.324~0.815</td></tr><tr><td>부호length</td><td>3840~8448</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>5G QC-LDPC 디코더의 frame-level 병렬화 + 저복잡도 permutation network + 동적 스케줄링으로 FPGA 처리율/자원효율 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.196Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G 표준 특유의 51개 lifting size 유연성·puncturing·BG 전환에 최적화 - NAND 고정 QC-LDPC엔 불필요한 복잡도</td></tr><tr><td>추가확인</td><td>OMS offset α=2, Q={5,8,6} 양자화 전략이 NAND 고rate 코드에서도 0.1dB 손실 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: 5G 표준 유연성(가변 lifting/rate) 전용 FPGA 아키텍처로, NAND 고정 binary QC-LDPC엔 permutation/스케줄링 기법 재사용성이 낮아 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G NR QC-LDPC 코드로, 2개 basegraph(BG1/BG2)와 51개 lifting size <code>Z = B×2^z ≤ 384</code>(B∈{2,3,5,7,9,11,13,15})를 지원하며 rate 1/5~9/10, 정보비트 최대 8448(BG1)/3840(BG2).</li><li>풀려는 문제: 5G 코드는 긴 프레임(큰 Z)에서만 병렬효율이 높고, 짧은 프레임(작은 Z)에선 384개 NPU 중 극소수만 가동되어 처리율이 급락(예: Z=2면 0.52%만 사용).</li><li>채널/모델: BPSK+AWGN, 채널 LLR <code>Li = 2yi/σ²</code>, layered(순차) 스케줄 디코딩.</li><li>핵심기법 1단 - Frame Parallelism: <code>P = Zmax/Z</code>개 프레임을 동일 rate/BG로 동시 처리해 미사용 NPU를 재활용, HW 효율 <code>η = P·Z/Zmax</code>을 평균 0.23→0.92로 약 4배 향상.</li><li>이를 가능케 하는 저복잡도 permutation network(단일 barrel shifter + MUX 단, [9])로 double barrel shifter 대비 MUX 38.8% 절감, frame parallelism 지원.</li><li>핵심기법 2단 - OMS(offset min-sum) layered 디코딩: <code>f</code>(tanh) 대신 min1/min2·offset α로 근사, C2V는 global sign/first-min index/두 최소값만 저장해 메모리 절감.</li><li>구현 디테일 - 양자화 <code>Q={QCH,QAPP,QC2V}={5,8,6}</code>, <code>CQCH=3.3</code>, <code>α̃=2</code>로 full precision 대비 FER 손실 &lt;0.1dB.</li><li>동적 스케줄링: read/write 주소를 다르게 배치(충돌 주소는 read는 나중·write는 먼저)해 update conflict IDLE 지연 최소화, FER 무영향. rn=sn mod Z modulus를 LUT 8개로 구현해 메모리 13,833bit(10배 절감).</li><li>결과: Kintex7 160MHz/Virtex7US+ 225MHz, 평균 PT Xilinx 대비 rate0.815에서 2배(1.196Gbps)·rate0.324에서 3배, 짧은 프레임 최대 28배, worst latency 18.2us.</li><li>한계: FER/정정능력 개선 없음(순수 처리율·자원효율 아키텍처), 단일 코어로 10Gbps 미달(7코어 필요), 5G 표준 유연성 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMS(offset min-sum) CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 Min-Sum 보유(min1/min2+sign), offset 변형은 소폭 - 중복 기여</td></tr><tr><td>layered/스케줄링 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>conflict 회피 스케줄은 우리 Dual-Update와 다른 5G 특화 방식</td></tr><tr><td>양자화 Q={5,8,6}, LLR 계수</td><td>channel.cpp <code>Set_LLR_Th()</code> + <code>ecc_data.h</code> PARAM_LLR</td><td>우리 hard/2SD/3SD 테이블과 비트폭 상이, 참고용</td></tr><tr><td>permutation network(가변 lifting)</td><td>대응 없음</td><td>우리 z=32 고정 barrel shift - 51 lifting 유연성 불필요</td></tr><tr><td>H-matrix / BG 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>5G 2-BG 가변 vs 우리 고정 PCM, 이식 부담 큼</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - OMS/layered/양자화는 이미 보유하거나 5G 표준 유연성(가변 lifting/rate/puncturing) 전용이라 NAND 고정 QC-LDPC에 떼어낼 재사용 가치가 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9420267",
+  "title": "Parallel and Flexible 5G LDPC Decoder Architecture Targeting FPGA",
+  "year": 2021,
+  "venue": "IEEE TVLSI",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.324~0.815",
+  "code_length": "3840~8448",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "5G QC-LDPC 디코더 frame-level 병렬화 + 저복잡도 permutation network + 동적 스케줄링으로 FPGA 처리율/자원효율 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.196,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "5G 표준 특유의 51개 lifting size 유연성·puncturing·BG 전환 최적화로 NAND 고정 QC-LDPC엔 불필요한 복잡도",
+  "todo_check": "OMS offset α=2, Q={5,8,6} 양자화가 NAND 고rate 코드에서도 0.1dB 손실 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9420267---parallel-and-flexible-5g-ldpc-decoder-architecture-targeting-fpga-2021-ieee-tvlsi">ieee:9420267 - Parallel and Flexible 5G LDPC Decoder Architecture Targeting FPGA (2021, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

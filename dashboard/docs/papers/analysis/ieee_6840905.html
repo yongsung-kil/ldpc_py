@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6840905</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6840905---a-new-optimization-of-group-shuffled-ldpc-decoding-2014-ieee">ieee:6840905 - A new optimization of group shuffled LDPC decoding (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96, 1008</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>낮은 intrinsic 정보 VN을 첫 레이어로 두는 VN group-shuffled BP + offset β min-sum으로 수렴 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계, 레이어당 β를 Eb/N0마다 수동 튜닝, AWGN·소형 부호(N≤1008) 시뮬만</td></tr><tr><td>추가확인</td><td>β 자동/고정화 가능성 및 QC-LDPC(z=32) 레이어 스케줄과의 정합성</td></tr></tbody></table>
+<blockquote><p>총평: layered(shuffled) BP 수렴 가속 + offset min-sum 조합으로 우리 min-sum/dual-update 스케줄에 접목 여지 있으나 β 수동튜닝·소형부호 시뮬 한계.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 rate 0.5 regular LDPC 두 종: C1 = (3,6) <code>N=96</code>, C2 = (5,10) <code>N=1008</code> (MacKay DB), AWGN·all-zero codeword 시뮬.</li><li>문제: 표준 BP는 수렴속도 느리고 복잡도 높으며, min-sum 근사는 수렴은 빠르나 성능손실이 큼.</li><li>Group-shuffled BP는 Tanner 그래프를 레이어(sub-group)로 나눠 sub-iteration마다 최신 메시지로 갱신(sequential scheduling)해 수렴을 가속.</li><li>핵심 기여: VN을 레이어로 나눌 때 **intrinsic 정보 <code>In</code>의 절대값이 낮은 VN을 첫 레이어**에 배치 — 신뢰도 낮은 비트를 먼저 갱신해 결정 신뢰도를 올림.</li><li>VN 갱신 <code>Tn = Tn + Σ(E_{l,η} - E_{l-1,η})</code>로 레이어 내 최신 extrinsic 반영.</li><li>CN 갱신은 <code>tanh</code> 곱을 sign-magnitude로 분리 후 min 선택으로 근사: <code>E = Πsgn(·) × min|Tn'-E|</code> (min-sum).</li><li>성능손실 보상을 위해 레이어별 offset β를 최소값에서 빼는 보정: <code>E ← sgn(E)·max(|E|-β, 0), β&gt;0</code>.</li><li>β는 학습이 아니라 각 Eb/N0에서 BER 최소가 되는 값을 수동 선택(예: Eb/N0=2.5dB, 5 iter에서 β=0.4).</li><li>결과: Optimized VN group-shuffled BP가 BP 및 CN group-shuffled BP보다 빠른 수렴·낮은 BER (itermax=5, 2레이어 기준, Fig.1~2).</li><li>한계: HW 미설계, 정성적 그래프 결과뿐(수치 gate/throughput 없음), β Eb/N0별 수동튜닝, 소형·AWGN 한정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VN 레이어 스케줄 / shuffled 갱신 순서</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>shuffled/layered 스케줄을 dual-update 교대 스케줄에 대응·접목</td></tr><tr><td>CN min-sum + offset β 보정</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 보유; offset 보정은 추가 여지(중복성 일부)</td></tr><tr><td>intrinsic <code>In</code> 기반 VN 우선순위</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등 / <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>LLR 신뢰도 기반 레이어 정렬은 적응형 LLR 테이블과 유사</td></tr><tr><td>조기종료(syndrome=0)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리는 CRC 조기종료 보유(더 강력)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered/shuffled 스케줄 + offset min-sum은 우리 dual-update·min-sum과 접목 여지가 있으나, β 수동튜닝과 소형·AWGN 시뮬 한계로 HW 정합·재검증 부담이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6840905",
+  "title": "A new optimization of group shuffled LDPC decoding",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "96, 1008",
+  "soft_quant": "무관",
+  "key_contribution": "낮은 intrinsic 정보 VN을 첫 레이어로 두는 VN group-shuffled BP + offset β min-sum으로 수렴 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계, 레이어당 β를 Eb/N0마다 수동 튜닝, AWGN·소형 부호(N≤1008) 시뮬만",
+  "todo_check": "β 자동/고정화 가능성 및 QC-LDPC(z=32) 레이어 스케줄과의 정합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6840905---a-new-optimization-of-group-shuffled-ldpc-decoding-2014-ieee">ieee:6840905 - A new optimization of group shuffled LDPC decoding (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

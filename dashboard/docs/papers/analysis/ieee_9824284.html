@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9824284</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9824284---check-ratio-aided-layer-based-rescaling-anmsa-and-its-application-for-5g-nr-ldpc-codes-2022-iwcmc">ieee:9824284 - Check-ratio-aided Layer-based Rescaling ANMSA and Its Application for 5G-NR LDPC Codes (2022, IWCMC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.2~0.83</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>MSA의 horizontal 출력 PDF를 실제 LLR로 되돌리는 rescaling 개념 + edge별 check-ratio factor를 MET-DE로 오프라인 탐색</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G-NR MET-LDPC(BG2)·layered decoding 특화, SPA 근접이 목표라 waterfall만 개선하고 error-floor·HW·throughput 미논의</td></tr><tr><td>추가확인</td><td>check-ratio 기반 edge 분류(2 type)를 우리 고rate QC-LDPC의 CN degree 구조로 매핑 가능한지, factor LUT 크기(K×2^N) HW 비용</td></tr></tbody></table>
+<blockquote><p>총평: NMSA/ANMSA 계열의 rescaling factor 오프라인 최적화 기법으로, min-sum waterfall 개선 아이디어는 유효하나 5G-NR MET 특화·시뮬 전용이라 이식 시 재설계 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G-NR LDPC(BG2), BPSK/AWGN, code rate 1/5~5/6, <code>k=10, b=384</code> MET(multi-edge-type) 구조.</li><li>문제: MSA는 scale-invariant·저복잡도지만 <code>tanh</code>를 min으로 대체해 horizontal 출력이 진짜 LLR이 아니게 되어 belief 전파가 왜곡되고, NMSA류는 MET-LDPC에서 성능·안정성을 동시에 못 잡음.</li><li>모델: AWGN <code>y=x+n</code>, a-priori <code>LLR = 2y_i/σ²</code>; MSA 출력을 확률분포 관점에서 real LLR과 비교.</li><li>핵심기법: rescaling — horizontal 출력 <code>l_i=ζ</code>의 PDF(<code>PDForg</code>)를 real LLR의 PDF에 맞도록 출력값을 보정(식 (5)~(9)), SPA를 template로 삼지 않음.</li><li>식 의미: <code>L(l)=log(p0/p1)</code> 로 정의된 집합 <code>Φ(ξ)</code>를 통해 각 출력을 real LLR ξ로 사상, min으로 깨진 LLR 정합성을 복원.</li><li>확장: asymptotic optimal(각 edge 실시간 보정, SPA급이나 HW 불가) → suboptimal(least KL divergence로 factor α, 식 (10)~(11)) → 실용판 CL-RANMSA.</li><li>구현 트릭: check-ratio(5bit) 기반 edge 분류, CN degree&gt;6 여부로 2 type 분류, factor는 [0,1]을 M 구간 이산화한 LUT.</li><li>최적화: MET-DE로 decoding threshold <code>SNRth</code>를 목적함수로 삼아 <code>K×2^N</code> factor LUT를 greedy 탐색(algorithm 1), Monte Carlo 샘플 한계 회피.</li><li>결과: BG2에서 제안법이 asymptotic optimal과 threshold 차 0.098dB, SPA 대비 +0.244dB이며 rate-1/5로 얻은 factor가 다른 5개 rate에도 near-capacity로 전이.</li><li>한계: HW 미설계, error-floor·gate count·throughput 미보고, layered/MET 구조 및 SNR 추정에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>rescaling / factor 적용한 CN 출력 보정</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum magnitude 보정 지점에 factor LUT 삽입 가능</td></tr><tr><td>edge별 factor look-up table</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>이미 iteration별 LLR 테이블 존재, edge/degree별 확장 대응</td></tr><tr><td>전체 iterative 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>rescaling 스텝을 CN→VN 사이에 추가</td></tr><tr><td>MET-DE 기반 오프라인 factor 탐색</td><td>대응 없음</td><td>Prime ECC는 bit-exact 시뮬레이터, DE 분석 툴 미보유 (별도 오프라인)</td></tr></tbody></table>
+<p>적용 가치: 중간 — min-sum 정규화 계열 성능개선 아이디어는 Prime ECC의 CN magnitude 경로에 부합하나, 5G-NR MET/layered 특화·DE 기반 factor 산출이 우리 고rate binary QC-LDPC로의 이식·재검증 부담을 남긴다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9824284",
+  "title": "Check-ratio-aided Layer-based Rescaling ANMSA and Its Application for 5G-NR LDPC Codes",
+  "year": 2022,
+  "venue": "IWCMC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.2~0.83",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "MSA horizontal 출력 PDF를 real LLR로 되돌리는 rescaling + edge별 check-ratio factor를 MET-DE로 오프라인 탐색",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "5G-NR MET-LDPC(BG2)/layered 특화·시뮬 전용, SPA 근접이 목표라 waterfall만 개선하고 error-floor·HW 미논의",
+  "todo_check": "check-ratio edge 분류를 고rate QC-LDPC의 CN degree 구조로 매핑 가능한지, factor LUT(K×2^N) HW 비용 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9824284---check-ratio-aided-layer-based-rescaling-anmsa-and-its-application-for-5g-nr-ldpc-codes-2022-iwcmc">ieee:9824284 - Check-ratio-aided Layer-based Rescaling ANMSA and Its Application for 5G-NR LDPC Codes (2022, IWCMC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

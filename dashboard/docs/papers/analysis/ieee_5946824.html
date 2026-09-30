@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5946824</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5946824---real-time-dvb-s2-ldpc-decoding-on-many-core-gpu-accelerators-2011-ieee-icassp">ieee:5946824 - Real-Time DVB-S2 LDPC Decoding on Many-Core GPU Accelerators (2011, IEEE ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.25~0.9 (DVB-S2 B1~B11)</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>DVB-S2 irregular IRA LDPC(N=64800)를 CUDA GPU에서 thread-per-node + 16-codeword 동시복호 + coalesced 접근 + staircase B행렬 주소 on-the-fly로 90Mbps+ 실시간 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상 (GPU: Fermi C2050 448코어)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.079~0.284Gbps (반복 1~10, GPU-optimized)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU(CUDA) 소프트웨어 가속기 대상 — NAND ASIC HW와 실행 모델 상이, 부호는 irregular IRA(QC-LDPC 아님), 8비트 표현으로 NAND read 비용 관점과도 무관</td></tr><tr><td>추가확인</td><td>staircase B행렬 주소 on-the-fly 계산 아이디어가 dual-diagonal 인코딩/디코딩 주소생성에 시사점 있는지(단 QC-LDPC circulant과는 구조 상이)</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 irregular IRA LDPC의 GPU(CUDA) 실시간 복호 논문으로, min-sum은 이미 보유·부호는 QC-LDPC 아님·타깃이 GPU 소프트웨어라 NAND ASIC binary QC-LDPC ECC로의 이식 가치는 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: DVB-S2 위성방송 FEC용 irregular IRA(Repeat-Accumulate) LDPC, systematic, <code>N</code> 최대 64800bit(short 16200), normal frame 11개 rate(B1~B11), row/col weight는 rate 종속.</li><li>문제: LDPC 복호는 데이터 의존성·대량 메모리접근으로 병렬화가 어렵고, 특히 긴 irregular 코드가 실시간 처리에 부담 → 전용 VLSI 대신 범용 many-core GPU로 대체 시도.</li><li>부호 구조: <code>H=[A|B]</code>, <code>A</code>는 sparse, <code>B</code>는 staircase 하삼각 → 주소가 규칙적이라 on-the-fly 계산 가능, periodicity로 저장 절감.</li><li>핵심 기법(복호): Min-Sum(Sum-Product보다 저복잡), <code>Lrmn = ∏sign(Lqnm)·min|Lqnm|</code>(CN, kernel1), <code>Lqnm = Lpn + Σ Lrm'n</code>(BN, kernel2), <code>LQn</code>로 사후 LLR→hard decision.</li><li>병렬화 핵심: thread-per-node(row당/col당 thread), flooding schedule로 BN↔CN 메시지 교환의 데이터 의존성 제거 → thread-level 완전 병렬.</li><li>확장: multicodeword decoding — 16 codeword를 동시 복호해 GPU 점유율 극대화, 데이터는 8bit 표현(기존 VLSI 5~6bit 대비 여유).</li><li>메모리 최적화: coalesced global memory 접근(연속 정렬)으로 느린 global memory 접근 최소화, 32-thread warp 단위 처리.</li><li>GPU-optimized 변형: staircase <code>B</code> 행렬의 Tanner edge 주소를 GPU에서 on-the-fly 생성 → global memory 접근 축소로 throughput 향상.</li><li>결과: Fermi C2050(448코어)에서 전 rate 90Mbps+ 달성, GPU-optimized 시 반복10에서 B1 87Mbps~반복1 B1 284Mbps, 전용 VLSI와 throughput·BER 경쟁 가능.</li><li>한계: 순수 GPU 소프트웨어 가속(HW 미설계), 부호는 irregular IRA(QC-LDPC 아님), kernel1 divergence로 고 row-weight 코드(B7~B11) 성능 저하.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum CN/BN 커널</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code>, <code>VN_Cal_HD()</code></td><td>min-sum 자체는 이미 보유 — 중복 기여, GPU 병렬화 기법은 ASIC과 무관</td></tr><tr><td>flooding schedule 병렬 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 layered/dual-update 계열이라 스케줄 상이</td></tr><tr><td>staircase B행렬 주소 on-the-fly</td><td>대응 없음 (dual-diagonal 인코딩은 <code>encoder.cpp</code>이나 IRA staircase와 구조 다름)</td><td>부호구조 상이(IRA vs QC dual-diag)</td></tr><tr><td>GPU thread/coalesced 메모리</td><td>대응 없음 (Prime ECC는 z=32 HW 모델)</td><td>실행 플랫폼 자체가 다름</td></tr></tbody></table>
+<p>적용 가치: 낮음 — min-sum은 이미 보유하고 GPU 소프트웨어 병렬화·irregular IRA 부호·8bit 표현 모두 NAND ASIC binary QC-LDPC와 정합하지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5946824",
+  "title": "Real-Time DVB-S2 LDPC Decoding on Many-Core GPU Accelerators",
+  "year": 2011,
+  "venue": "IEEE ICASSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.25~0.9",
+  "code_length": "64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "DVB-S2 irregular IRA LDPC(N=64800)를 CUDA GPU에서 thread-per-node+16-codeword 동시복호+coalesced 접근으로 90Mbps+ 실시간 복호",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.284,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "GPU(CUDA) 소프트웨어 가속 대상, 부호는 irregular IRA(QC-LDPC 아님), 8비트 표현으로 NAND ASIC·read 비용과 무관",
+  "todo_check": "staircase B행렬 주소 on-the-fly 계산이 dual-diagonal 주소생성에 시사점 있는지(구조 상이 유의)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5946824---real-time-dvb-s2-ldpc-decoding-on-many-core-gpu-accelerators-2011-ieee-icassp">ieee:5946824 - Real-Time DVB-S2 LDPC Decoding on Many-Core GPU Accelerators (2011, IEEE ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

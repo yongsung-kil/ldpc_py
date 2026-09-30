@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7078274</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7078274---bit-flipping-post-processing-for-forced-convergence-decoding-of-ldpc-codes-2005-미상">ieee:7078274 - Bit-Flipping Post-Processing for Forced Convergence Decoding of LDPC Codes (2005, 미상)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>forced convergence 디코딩에 hard-decision bit-flipping post-processor를 붙여 노드 비활성화로 생긴 error floor 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>(3,6) 저rate regular code, 무선/ARQ 타깃, FC 노드 비활성화로 평균 iteration 증가·병렬 HW 스케줄 복잡화, HW 미설계</td></tr><tr><td>추가확인</td><td>BF post-processing이 고rate QC-LDPC+min-sum에서도 error floor를 낮추는지, iteration 증가의 latency 영향</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 정합성 높고 BF로 error-floor 완화한다는 아이디어는 유용하나, FC 복잡도 감소는 Prime ECC의 GT/CRC 조기종료와 목적 중복.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 무선 FEC용 binary LDPC로, (3,6) regular code <code>N=4000</code>(MacKay 4000.2000.3.243), max 40 iter, AWGN 채널에서 평가.</li><li>풀려는 문제: Forced Convergence(FC)는 복잡도를 줄이지만 threshold를 낮게 잡으면 error floor가 발생한다.</li><li>배경 기법 FC: 이미 수렴한 node(<code>|Bi|&gt;tv</code> 또는 <code>|Cj|&lt;tc</code>)를 이후 iteration에서 비활성화하고, parity 불만족 node는 재활성화.</li><li>핵심 기법: FC 디코딩 뒤 Gallager식 hard-decision bit-flipping(BF) post-processor 추가 — 가장 많은 unsatisfied check에 연결된 VN을 flip하고 syndrome 갱신을 반복(<code>NBF=30</code>).</li><li>게이팅: BF는 unsatisfied check 수 <code>≤ 2·NBF</code>일 때만 활성화(FC 잔여오류는 &lt;10개라 저비용, 일반 block error는 수백개라 무익).</li><li>min-sum 계열 통합: MSA·NMSA(<code>α=13/16=0.8125</code>)에도 FC+BF 적용, min-sum에서 <code>tc</code>는 lower bound로 동작.</li><li>복잡도 모델: node별 MAC ops로 <code>ΘD</code> 유도, BF 오버헤드는 정보비트당 최대 6 MAC로 무시가능.</li><li>threshold <code>tv,tc</code>는 수동 설정(학습 절차 없음).</li><li>결과: FC로 복잡도 20~25% 감소, BF가 error floor 대폭 하락; NMSA는 원 성능 0.2dB 이내, MSA는 high threshold+BF로 원 성능 능가 가능.</li><li>한계: 평균 iteration 증가로 이득 일부 상쇄, threshold 선택 민감, HW 미설계, 저rate code.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum / normalized min-sum CN 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC min-sum과 동일 계열</td></tr><tr><td>forced convergence 노드 비활성화(복잡도 감소)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code>, <code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 edge 씨닝(GT)으로 유사 목적, node 비활성화는 미보유</td></tr><tr><td>bit-flipping post-processing(error floor 완화)</td><td>대응 없음</td><td>Prime ECC 미보유, 잠재 신규 가치</td></tr><tr><td>조기종료(syndrome/parity 만족)</td><td><code>partial_CRC.cpp</code>, <code>full_CRC.cpp</code></td><td>Prime ECC는 CRC 기반 조기종료 보유</td></tr><tr><td>iteration별 threshold(<code>tv,tc</code>)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR threshold와 개념 유사</td></tr></tbody></table>
+<p>적용 가치: 중간 — min-sum 정합성이 높고 BF post-processing은 error-floor 대책으로 신규 가치가 있으나, FC 복잡도 감소는 Prime ECC의 GT/CRC 조기종료와 목적이 중복되고 평균 iteration 증가 리스크가 있다.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:7078274",
+  "title": "Bit-Flipping Post-Processing for Forced Convergence Decoding of LDPC Codes",
+  "year": 2005,
+  "venue": "미상",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "4000",
+  "soft_quant": "무관",
+  "key_contribution": "forced convergence 디코딩에 hard-decision bit-flipping post-processor를 붙여 노드 비활성화로 생긴 error floor 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "(3,6) 저rate regular code, 무선/ARQ 타깃, FC 노드 비활성화로 평균 iteration 증가·병렬 HW 스케줄 복잡화, HW 미설계",
+  "todo_check": "BF post-processing이 고rate QC-LDPC+min-sum에서도 error floor를 낮추는지, iteration 증가의 latency 영향"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7078274---bit-flipping-post-processing-for-forced-convergence-decoding-of-ldpc-codes-2005-미상">ieee:7078274 - Bit-Flipping Post-Processing for Forced Convergence Decoding of LDPC Codes (2005, 미상)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

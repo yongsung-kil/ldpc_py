@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5633746</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5633746---an-improved-harq-scheme-based-on-irregular-ldpc-coding-2010-ieee">ieee:5633746 - An Improved HARQ Scheme Based on Irregular LDPC Coding (2010, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>3960</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Type-II HARQ에서 parity를 degree 큰 순서로 재전송해 iteration·재전송 수 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선 HARQ 재전송 프로토콜 특화, NAND는 재전송 개념 없음, HW 미설계</td></tr><tr><td>추가확인</td><td>degree-우선 parity 순서 개념이 NAND read/LLR 스케줄에 유의미한지(무관 가능성 높음)</td></tr></tbody></table>
+<blockquote><p>총평: 무선 Type-II HARQ 재전송 순서 최적화(고degree parity 우선). NAND ECC는 재전송 프로토콜이 없어 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 AWGN·BPSK 무선 packet 통신용 irregular LDPC 기반 Type-II HARQ 재전송 기법 (990x3960, rate~3/4).</li><li>문제: 기존 Type-II HARQ는 message 위주 전송 후 parity를 무작위 순서로 재전송, 평균 iteration·재전송 수가 큼.</li><li>채널/모델: AWGN, degree distribution <code>λ(x)=0.25105x+0.30938x^2+0.00104x^3+0.43853x^9</code>, <code>ρ(x)=0.63676x^6+0.36324x^7</code>.</li><li>핵심 기법: 최초 전송 시 전체 codeword 전송, 실패 시 parity를 node degree로 subset 분류하여 <strong>큰 degree subset(parity 1)을 먼저, 작은 degree(parity 2)를 나중에</strong> 재전송.</li><li>근거: irregular LDPC에서 큰 degree bit가 성능 기여가 커 우선 재전송하면 빠르게 수렴.</li><li>재전송 시 LLR 결합: <code>LLRp1=(LLRp1re+LLRp1pre)/2</code> (식 5), 갱신된 <code>LLR=(LLRm,LLRp1,LLRp2)</code>로 재복호.</li><li>구현 단순화: degree 10 parity를 parity 1로, 나머지를 parity 2로 분류, 최대 재전송 2회, 최대 iteration 50.</li><li>학습/최적화 절차 없음 (고정 degree distribution 사용).</li><li>결과: BER=0 도달 SNR이 3.0dB→2.4dB로 개선(0.5dB gain), SNR&lt;2.8dB에서 평균 재전송·iteration 수 감소, SNR&gt;2.8dB에서 재전송 없이 복호.</li><li>한계: HW 미설계, 시뮬만, 무선 재전송 프로토콜 특화 — NAND ECC는 재전송 개념이 없어 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LLR 결합/갱신 (재전송)</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>LLR 개념만 유사, 재전송 결합은 NAND에 대응 없음</td></tr><tr><td>irregular degree distribution 부호</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 binary QC-LDPC, irregular HARQ 구조 무관</td></tr><tr><td>HARQ 재전송 프로토콜/스케줄</td><td>대응 없음</td><td>NAND ECC는 재전송 프로토콜 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무선 Type-II HARQ의 degree 우선 parity 재전송 기법으로, 재전송 개념이 없는 NAND binary QC-LDPC ECC에 이식할 수 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5633746",
+  "title": "An Improved HARQ Scheme Based on Irregular LDPC Coding",
+  "year": 2010,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "irregular",
+  "code_rate": 0.75,
+  "code_length": "3960",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Type-II HARQ에서 parity를 degree 큰 순서로 재전송해 iteration·재전송 수 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무선 HARQ 재전송 프로토콜 특화, NAND는 재전송 개념 없음, HW 미설계",
+  "todo_check": "degree-우선 parity 순서 개념이 NAND read/LLR 스케줄에 유의미한지(무관 가능성 높음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5633746---an-improved-harq-scheme-based-on-irregular-ldpc-coding-2010-ieee">ieee:5633746 - An Improved HARQ Scheme Based on Irregular LDPC Coding (2010, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

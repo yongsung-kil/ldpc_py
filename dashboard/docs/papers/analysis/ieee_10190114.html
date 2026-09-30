@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10190114</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10190114---adaptive-differential-wearing-for-read-performance-optimization-on-high-density-nand-flash-memory-2024-ieee-tcad">ieee:10190114 - Adaptive Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory (2024, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>wear leveling과 hot-read 데이터를 저마모(LWA)/고마모(HWA) 영역으로 분리 배치해 read retry로 인한 지연을 줄이는 FTL 레벨 기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 시스템 배경(read retry 트리거)으로만 언급되며 부호설계·디코더 알고리즘 자체는 전혀 다루지 않음</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: FTL/SSD 시스템 레벨 wear-leveling·데이터 배치 논문으로 LDPC ECC 자체(부호/디코더/HW)를 다루지 않아 Prime ECC 이식 대상이 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>대상 시스템은 3-D TLC NAND flash 기반 SSD이며, LDPC는 read 시 오류정정에 쓰이는 기존 ECC로 시스템 배경 요소일 뿐이다.</li><li>풀려는 문제는 wear leveling(WL)이 모든 블록을 균일하게 마모시켜 reliability가 동시에 저하되고, 이로 인해 read retry가 늘어나 read latency가 3.8~6.1배 증가하는 현상이다.</li><li>핵심 가정은 워크로드마다 "hot read data"(자주 읽히고 드물게 갱신되는 데이터)의 footprint가 다르다는 실측 관찰이다.</li><li>핵심 기법은 ADWR(Adaptive Differential Wearing): 플레인을 저마모 영역(LWA, hot read 저장)과 고마모 영역(HWA, 나머지)으로 물리적으로 분할한다.</li><li>Lifetime_real(i) = (x%·AvePE_LWA + (1-x%)·AvePE_HWA)·CAP_SSD/WAF_i 식으로 차등 마모에 따른 lifetime 손실을 모델링한다.</li><li>Adaptive capacity allocation(요청 window 10000, step 2%)으로 LWA/HWA 용량 비율을 워크로드 특성에 맞춰 조정하고, progressive capacity adjustment로 LWA를 점진적으로 HWA에 흡수시켜 lifetime 손실을 보전한다.</li><li>LRU 기반 데이터 관리로 LWA 내 가장 hot한 데이터만 유지하고, host-side 태그(논리주소 최상위 비트)로 hot/cold 정보를 SSD에 전달한다.</li><li>Differential Refresh(DR)는 LWA를 더 자주(1개월/5회 retry), HWA는 덜 자주(4개월/11회 retry) refresh하여 read disturbance 영향을 줄인다.</li><li>SSDsim 기반 시뮬레이션(MSR 트레이스 등) 결과 SWL 대비 read latency를 middle/old stage에서 각각 최대 약 45%, lifetime 손실은 거의 없음(0% 수준)으로 보고.</li><li>한계: LDPC 디코더/부호 자체는 개선 대상이 아니며 순수 FTL 레벨 데이터 배치·리프레시 정책 연구, HW 미설계, 시뮬 검증뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| Differential wearing(LWA/HWA 데이터 배치) | 대응 없음 | FTL/블록 관리 계층으로 Prime ECC(디코더/인코더 시뮬레이터) 범위 밖 |
+| Adaptive capacity allocation / progressive adjustment | 대응 없음 | wear-leveling 알고리즘, ECC 코드와 무관 |
+| Differential Refresh(DR) | 대응 없음 | refresh 정책은 컨트롤러 펌웨어 로직, decoder.cpp/channel.cpp와 직접 관련 없음 |
+| LDPC read retry (배경 언급) | channel.cpp (간접, 개념적 배경) | 본문에서 LDPC 정정 실패 시 read retry 트리거로만 언급, 알고리즘 상세 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — FTL 데이터 배치/웨어레벨링/리프레시 정책 논문으로 LDPC 부호설계·디코더·HW를 전혀 다루지 않아 Prime ECC 코드베이스에 이식할 요소가 없음.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:10190114",
+  "title": "Adaptive Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory",
+  "year": 2024,
+  "venue": "IEEE TCAD",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "wear leveling과 hot-read 데이터를 저마모/고마모 영역으로 분리 배치해 read retry로 인한 지연을 줄이는 FTL 레벨 기법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 시스템 배경(read retry 트리거)으로만 언급되며 부호설계·디코더 알고리즘 자체는 전혀 다루지 않음",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10190114---adaptive-differential-wearing-for-read-performance-optimization-on-high-density-nand-flash-memory-2024-ieee-tcad">ieee:10190114 - Adaptive Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory (2024, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

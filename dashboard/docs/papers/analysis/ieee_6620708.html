@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6620708</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6620708---a-revolving-iterative-algorithm-for-decoding-algebraic-quasi-cyclic-ldpc-codes-2013-ieee-isit">ieee:6620708 - A Revolving Iterative Algorithm for Decoding Algebraic Quasi-Cyclic LDPC Codes (2013, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.756~0.819</td></tr><tr><td>부호length</td><td>992~4032</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>QC 블록순환 구조로 첫 부분행렬 하나만 revolving 재사용해 CN unit·wire·메모리를 e/l 비율로 축소한 min-sum</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>큰 row redundancy 가진 대수적 QC/cyclic 부호에 특화, irregular 부호엔 성능 저하; HW 미설계</td></tr><tr><td>추가확인</td><td>l/f 파라미터·attenuation factor가 우리 고rate H-matrix에서도 무손실 수렴 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum을 유지하면서 QC 순환구조로 CN 하드웨어·메모리를 대폭 줄이는 아키텍처 트릭 — 정정능력 개선은 없고 특정 대수적 부호에 특화되나 자원 절감 관점에서 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 <code>J×K</code> 원형행렬(<code>e×e</code> circulant) 배열로 주어진 대수적 QC-LDPC(예: (992,750), (4032,3304)), BPSK/AWGN 채널.</li><li>문제: MS/layered-MS 디코더는 전체 <code>Hqc,perm</code>을 써서 CN unit·wire·메모리가 커진다.</li><li>행/열 치환 <code>πrow, πcol</code>으로 <code>Hqc</code>를 블록순환 구조 <code>Hqc,perm</code>(식 (1))으로 바꾼다 — 각 row block은 위 block을 <code>K</code> 우측순환한 것.</li><li>핵심: 전체 대신 첫 부분행렬 <code>Hqc,perm,0</code>(top <code>l</code> row block, <code>Jl×n</code>) <strong>하나만</strong> 사용해 revolving(순환) 방식으로 복호.</li><li>매 iteration 후 reliability vector를 좌측 <code>lK</code> 순환 이동 → <code>Hqc,perm,0</code>만으로 <code>Hqc,perm,i</code> 기반 iteration과 등가.</li><li>Revolving MS(RMS): 식 (3)/(4)로 <code>Fj = Rj + λatten·Σ sign·min|R|</code>, VN은 모든 인접 CN에 동일 메시지 전달(VN unit 단순화).</li><li>트릭: <code>f</code> iteration마다 채널정보 <code>y</code>를 재주입(식 (4))해 오차성능 유지, hard-decision <code>z</code>의 syndrome=0이면 조기 종료.</li><li>각 iteration 종료 시 CN 메시지 메모리 전부 해제 가능 → 메모리 추가 절감.</li><li>결과: CN unit·wire를 MS 대비 32.26%, RN 덧셈 36%, 6bit 양자화 시 메모리 최대 89% 절감, 성능손실 0.1~0.12dB 이내.</li><li>한계: HW 실설계 없음(복잡도는 분석적 카운트), regular 대수적 QC/cyclic에 효과적이나 irregular엔 성능 저하.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Revolving MS 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>부분행렬 재사용 스케줄로 CN unit 축소 — 루프 구조 변경 지점</td></tr><tr><td>CN min-sum(min1/min2+sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리도 이미 min-sum, 동일 연산</td></tr><tr><td>f주기 채널정보 재주입 LLR</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>반복별 채널정보 가중 재주입 개념 대응</td></tr><tr><td>H-matrix 블록순환 로드/치환</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 QC 구조에 revolving 부분행렬 적용 가능성</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 유지하며 CN/메모리 자원을 QC 순환구조로 줄이는 점은 HW 절감에 부합하나, 큰 row redundancy 대수적 부호 특화라 우리 고rate H-matrix에서 무손실 유지 여부 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6620708",
+  "title": "A Revolving Iterative Algorithm for Decoding Algebraic Quasi-Cyclic LDPC Codes",
+  "year": 2013,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "992~4032",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "QC 블록순환 구조로 첫 부분행렬 하나만 revolving 재사용해 CN unit·wire·메모리를 e/l 비율로 축소한 min-sum",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "큰 row redundancy 가진 대수적 QC/cyclic 부호에 특화, irregular 부호엔 성능 저하; HW 미설계",
+  "todo_check": "l/f 파라미터·attenuation factor가 우리 고rate H-matrix에서도 무손실 수렴 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6620708---a-revolving-iterative-algorithm-for-decoding-algebraic-quasi-cyclic-ldpc-codes-2013-ieee-isit">ieee:6620708 - A Revolving Iterative Algorithm for Decoding Algebraic Quasi-Cyclic LDPC Codes (2013, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

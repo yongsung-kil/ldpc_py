@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6778012</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6778012---subcarrier-reliability-aware-soft-decision-ldpc-code-in-co-ofdm-systems-2014-ieee-photonics-technology-letters">ieee:6778012 - Subcarrier Reliability Aware Soft-Decision LDPC Code in CO-OFDM Systems (2014, IEEE Photonics Technology Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>2295</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>서브캐리어별 noise variance를 LLR 초기화에 반영(SRA)+drift 대역 UEP로 near-DC noise 상쇄</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CO-OFDM 광통신·subcarrier SNR 편차 특화, NAND read/채널 모델과 무관</td></tr><tr><td>추가확인</td><td>subcarrier별 σ² 추정은 OFDM training symbol 의존, NAND에는 대응 개념 없음</td></tr></tbody></table>
+<blockquote><p>총평: 광 CO-OFDM에서 subcarrier별 SNR 편차를 LLR 가중과 UEP로 대응한 코딩 스킴으로, NAND binary LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템: 120Gb/s 16-QAM CO-OFDM(coherent optical OFDM), FFT size 128, 중앙 64 subcarrier 데이터, inner 부호 QC-LDPC <code>(2295,2042)</code> column weight 3, girth 6.</li><li>풀려는 문제: LO 근처 near-DC noise로 몇몇 subcarrier SNR이 급락 → 전체 BER 지배, 기존 LDPC는 모든 VN noise variance가 동일하다고 가정하여 오염됨.</li><li>채널 모델: 수신 <code>r = c + n</code>, <code>n</code>은 AWGN이나 subcarrier마다 variance <code>σ²</code>가 다름(varying subcarrier reliability); LO drift 범위 1.25GHz 가정.</li><li>핵심 기법(디코딩): subcarrier별 <code>σ²</code>를 training symbol로 추정 후 식(1)(2)의 LLR 초기화에 반영 → 저신뢰 subcarrier의 VN LLR을 0에 가깝게 만들어 iteration에서 가중치 축소.</li><li>핵심 식 의미: <code>LLR_j = log[p(r|b_j=0)/p(r|b_j=1)]</code>에 subcarrier별 <code>σ²</code>를 대입 → error-propagation 억제.</li><li>핵심 기법(인코딩, UEP): LO drift 대역(middle range) subcarrier에 강한 FEC(20%), outer range에 약한 FEC(7% RS) 적용 — 비대칭 보호.</li><li>부호 구성: strong FEC = 13% QC-LDPC(2295,2042) inner + 7% RS(255,239) outer concatenation + interleaver; decoding은 sum-product(또는 min-sum) 기반.</li><li>최적화: 별도 학습 없음, training symbol 20개로 채널·subcarrier SNR 추정.</li><li>결과: 20% middle+7% outer로 near-DC noise 하 error-free 달성, constant variance 디코딩 시 10⁻⁴ error floor 잔존, conventional 대비 수신감도 ≥1dB 개선, SE 손실 1.67%.</li><li>한계: HW 미설계(실험 검증뿐), 광 CO-OFDM subcarrier 구조 특화, throughput/복잡도/gate count 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| subcarrier별 σ² 반영 LLR 초기화 | channel.cpp Set_LLR_Th(), Set_R_Offset() | 개념상 채널별 LLR 계산 접점이나 subcarrier 구조가 NAND에 없음 |
+| soft-decision SPA/MSA 반복 | decoder.cpp LDPC_Decoder(), C2V_Cal() | 우리 min-sum 반복 보유, 신규성 없음 |
+| UEP(대역별 강/약 FEC) 부호 구성 | ecc_top.cpp Load_PCM() | 우리는 단일 고정 QC-LDPC, 대역별 부호 스위칭 미지원 |
+| VN별 신뢰도 가중 LLR | ecc_data.h PARAM_LLR, decoder.cpp VN_Cal_HD() | 반영 위치는 있으나 subcarrier reliability 개념 이식 불가 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — near-DC noise·subcarrier SNR 편차라는 광 CO-OFDM 고유 문제에 특화되어, subcarrier 개념이 없는 NAND binary QC-LDPC에는 이식할 알맹이가 없고 SPA/MSA 자체는 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6778012",
+  "title": "Subcarrier Reliability Aware Soft-Decision LDPC Code in CO-OFDM Systems",
+  "year": 2014,
+  "venue": "IEEE Photonics Technology Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": "2295",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "서브캐리어별 noise variance를 LLR 초기화에 반영(SRA)+drift 대역 UEP로 near-DC noise 상쇄",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CO-OFDM 광통신·subcarrier SNR 편차 특화, NAND read/채널 모델과 무관",
+  "todo_check": "subcarrier별 σ² 추정은 OFDM training symbol 의존, NAND에는 대응 개념 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6778012---subcarrier-reliability-aware-soft-decision-ldpc-code-in-co-ofdm-systems-2014-ieee-photonics-technology-letters">ieee:6778012 - Subcarrier Reliability Aware Soft-Decision LDPC Code in CO-OFDM Systems (2014, IEEE Photonics Technology Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

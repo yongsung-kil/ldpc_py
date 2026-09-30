@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11154588</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11154588---action-list-reinforcement-learning-decoders-2025-istc">ieee:11154588 - Action-List Reinforcement Learning Decoders (2025, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>Deep-Q Network 기반 bit-flipping 디코딩을 beam-search 유사 action-list(top-k 후보 경로) 구조로 확장하고 QC-LDPC 자기동형군을 결합해 진동(oscillation) 문제를 완화.</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(155,64,20) 짧은 Tanner 코드·BSC 채널의 순수 하드결정 bit-flipping 디코더로 NAND용 QC-LDPC(soft-info 기반 min-sum)와 알고리즘 계열이 다르고 HW 미설계.</td></tr><tr><td>추가확인</td><td>Deep-Q 학습·추론의 실제 복잡도(네트워크 크기, 추론 지연)가 실시간 NAND 디코더 대비 어느 정도인지 본문에 미기재.</td></tr></tbody></table>
+<blockquote><p>총평: RL 기반 bit-flipping 계열 알고리즘 논문으로 개념적 흥미는 있으나 짧은 코드·hard-decision·BSC 한정 시뮬 결과뿐이라 Prime ECC(soft min-sum, QC-LDPC HW)로의 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 이진 선형 블록코드 C(n,k,dmin), BSC 채널(교차확률 α)에서 hard-decision bit-flipping 복호를 다룸. 실험은 Tanner 코드 (155, 64, 20)로 수행.</li><li>문제의식: ML 복호는 NP-hard이며, 기존 학습 기반 bit-flipping 디코더(Deep Q-Network)는 Q-value 근사 오차로 정책이 진동(oscillation)하여 수렴 실패가 발생.</li><li>모델링: 복호 과정을 MDP <code>(S,A,P,R,γ)</code>로 정의 - 상태 <code>s</code>는 syndrome(길이 m), 행동 <code>a∈{1,...,n}</code>은 비트 플립, 전이 <code>s'=s+h_ca</code>는 결정적, 보상은 <code>R=1</code>(종료) 또는 <code>-1/L</code>(매 스텝 페널티).</li><li>핵심 기법 1단: Deep Q-learning으로 <code>Q_θ(s,a)</code>를 학습(primary/target 네트워크, replay memory, ε-greedy), loss <code>L(θ)=E[(r+γ max_a' Q^t_θ-(s',a') - Q^p_θ(s,a))^2]</code>.</li><li>핵심 기법 2단(action-list decoding): 각 depth에서 top-k Q-value 행동으로 후보 경로 집합 <code>B_l</code>을 유지, 조건 <code>Q(s_l^i,a) &gt; v_i</code>(부모보다 개선되는 행동만) 만족 시에만 경로 확장, 매 depth마다 top-k 경로만 유지(beam search와 유사).</li><li>자동형군 확장: QC-LDPC의 circulant 구조에서 오는 순환 자기동형군(Z_p의 곱셈/덧셈 부분군)을 이용해 syndrome을 순환 이동시키며 재시도, <code>S(Γ_v(e))=Γ_s(S(v))</code> 성질을 활용.</li><li>부수 트릭: 탐색은 all-zero syndrome 도달 또는 최대 깊이 <code>D_max</code>에서 종료, 최고 점수 후보 경로를 최종 출력으로 선택.</li><li>학습 절차: 은닉층 1개(512 뉴런) 신경망, 10^6 에피소드, batch 128, γ=0.9, ε을 0.9→0.05로 선형 감쇠, learning rate 10^-4, <code>D_max=10</code>.</li><li>결과: list size 증가(1→40)에 따라 FER/BER가 크게 개선되며, 자기동형군을 결합한 list size=5가 BDD(radius=10)에 근접하는 성능을 달성.</li><li>한계: 짧은 코드(n=155)·BSC·hard-decision만 다루었고 HW 설계·복잡도·지연시간 분석은 전무하며 Monte Carlo 시뮬 결과에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Deep-Q 기반 bit-flipping 디코딩 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 soft-info 디코더로 RL/bit-flipping 알고리즘 계열이 아님.</td></tr><tr><td>Action-list(beam search) 후보 경로 관리</td><td>대응 없음</td><td>조기종료(<code>partial_CRC.cpp</code>)와 목적은 유사하나 구조적으로 무관.</td></tr><tr><td>QC-LDPC 자기동형군(circulant shift) 활용</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix가 base+circulant 구조(<code>PCM_b</code>)라는 점에서 구조적 유사성은 있으나 자기동형군 재시도 전략은 미구현.</td></tr><tr><td>BSC/hard-decision 채널 모델</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>hard-1bit(HD) 지원과 연관되나 논문은 soft-info를 전혀 다루지 않음.</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — RL 기반 hard-decision bit-flipping 계열로 Prime ECC의 soft min-sum HW 아키텍처와 알고리즘 패러다임이 상이하고, HW/복잡도 분석이 없어 이식 시 재검증 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11154588",
+  "title": "Action-List Reinforcement Learning Decoders",
+  "year": 2025,
+  "venue": "ISTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "155",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "Deep-Q Network 기반 bit-flipping 디코딩을 beam-search 유사 action-list 구조로 확장하고 QC-LDPC 자기동형군을 결합해 진동 문제를 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "(155,64,20) 짧은 Tanner 코드·BSC 채널의 순수 하드결정 bit-flipping 디코더로 NAND용 QC-LDPC(soft-info 기반 min-sum)와 알고리즘 계열이 다르고 HW 미설계",
+  "todo_check": "Deep-Q 학습·추론의 실제 복잡도(네트워크 크기, 추론 지연)가 실시간 NAND 디코더 대비 어느 정도인지 본문에 미기재"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11154588---action-list-reinforcement-learning-decoders-2025-istc">ieee:11154588 - Action-List Reinforcement Learning Decoders (2025, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

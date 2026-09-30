@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1327044</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1327044---area-efficient-decoding-of-quasi-cyclic-low-density-parity-check-codes-2004-icassp">ieee:1327044 - Area Efficient Decoding of Quasi-Cyclic Low Density Parity Check Codes (2004, ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.587</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 두 단계 유사성을 이용해 CNFU/VNFU를 동일 HW로 re-map, HUE 100%·로직 코어 21% 면적감소(성능손실 없음)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>6041 gates (원본 7634 gates 대비 21%↓)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Ψ=log(tanh) LUT 기반 SP 디코더 전제(Prime ECC는 min-sum), k가 j의 배수여야 re-map 단순, (155,64,31) 짧은 부호 예시</td></tr><tr><td>추가확인</td><td>min-sum CNU/VNU에서 두 유닛의 연산 부하가 유사한지(LUT 없는 min-sum에서 re-map 이득이 유지되는가)</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC partly-parallel 디코더에서 CNFU/VNFU를 하나의 HW로 시분할 재사용해 21% 면적감소를 얻는 아키텍처 기법으로, NAND QC-LDPC HW 면적절감에 개념적으로 유용하나 LUT(SP) 전제·min-sum 대비 이득 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: regular QC-LDPC(<code>(3,5)</code>, 예시 <code>(155,64,31)</code>, rate <code>R≥1−j/k=0.4</code> 이상, 실제 155/64로 ~0.587), AWGN, partly-parallel 디코더.</li><li>문제: partly-parallel BP 디코더는 CNFU/VNFU를 별도 HW로 두는데, 한 iteration에서 CN update와 VN update가 순차라 각 유닛이 절반은 idle → HUE 50%.</li><li>부호구성: base all-one <code>j×k</code> 행렬의 각 원소를 <code>m×m</code> circulant(shift = <code>b^{s-1}·a^{t-1} mod m</code>)로 치환, <code>jm×km</code> PCM → 메모리 주소생성·배선 단순.</li><li>BP 원식: CNFU는 <code>Scv=∏sign(Lcn)</code>, <code>Rcv=−Scv·Ψ(Σ Ψ(Lcn))</code>, <code>Ψ(x)=log(tanh|x/2|)</code>는 LUT로 구현(식1,2); VNFU는 <code>Lv=Σ Rmv − 2rv/σ²</code>, <code>Lcv=Lv−Rmv</code>(식3,4).</li><li>핵심 관찰: CNFU/VNFU가 sign-magnitude↔2's complement 변환과 Ψ LUT를 공유하는 구조적 유사성을 가짐 → 동일 HW로 통합 가능.</li><li>핵심기법 1단(재정식화): 계산부하 재분배로 CNFU/VNFU 각각 critical path에 LUT 1개만 두도록 균형화(식5~8) — 원본은 CNFU에 LUT 2개, VNFU에 0개였음.</li><li>핵심기법 2단(re-map): CNFU/VNFU가 clock당 처리하는 입력수가 동일(=block H의 non-zero 수, 예시 15)임을 이용, control 신호(0=CN, 1=VN)로 같은 HW를 시분할 → 매 iteration busy, HUE 100%.</li><li>메모리 스케줄: <code>z</code>(intrinsic)·<code>ms,t</code>(extrinsic) 메모리, CN update는 block-row(같은 s의 k 메모리), VN update는 block-column(같은 t의 j 메모리), 각 update <code>m</code> clock cycle.</li><li>결과: VHDL·Synopsys 합성, 원본 7634 gate → re-map 6041 gate로 <strong>약 21% 면적감소</strong>, 성능손실 없음, 부호길이(m) 무관하게 절감폭 유지.</li><li>확장성: <code>(j,k)</code>에서 <code>k</code>가 <code>j</code>의 배수면 re-map이 더 단순, CNFU/VNFU 수 증가 시 로직 공유 비율↑로 절감폭 증가.</li><li>한계: throughput/공정노드 명시 없음, LUT 기반 full-Ψ(SP) 전제라 min-sum 디코더에는 이득 직접 적용 불확실, error-floor/정정능력 논의 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC partly-parallel 복호 전체</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동일 QC-LDPC binary 계열, 아키텍처 문맥 일치</td></tr><tr><td>CNFU/VNFU 동일 HW re-map (HUE↑, 면적↓)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code> 등</td><td>CN/VN 유닛 자원공유 개념을 pipeline HW 모델에 참고 가능 (핵심 이식 후보)</td></tr><tr><td>circulant shift QC 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC의 base+shift QC 구조와 동종, 기보유</td></tr><tr><td>Ψ=log(tanh) LUT (SP)</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2), full-tanh LUT 미사용 → 이 논문의 LUT 공유 이득이 min-sum엔 그대로 적용 안 됨</td></tr><tr><td>block-row/block-col 메모리 스케줄</td><td>GT.cpp <code>Make_GT_HW()</code>, decoder.cpp pipeline</td><td>localized 메모리 접근 아이디어 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC-LDPC partly-parallel HW에서 CN/VN 유닛 자원공유로 면적을 줄이는 방향성은 Prime ECC HW 면적절감에 유용하나, 이득의 핵심이 Ψ LUT 공유라 min-sum 기반 Prime ECC에서는 실질 절감폭 재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1327044",
+  "title": "Area Efficient Decoding of Quasi-Cyclic Low Density Parity Check Codes",
+  "year": 2004,
+  "venue": "ICASSP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.587,
+  "code_length": "155",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 두 단계 유사성으로 CNFU/VNFU를 동일 HW로 re-map, HUE 100%·로직코어 21% 면적감소(성능손실 없음)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "6041 gates (원본 7634 대비 21%↓)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "Ψ=log(tanh) LUT SP 전제(Prime ECC는 min-sum), k가 j의 배수여야 re-map 단순, (155,64,31) 짧은 부호",
+  "todo_check": "min-sum CNU/VNU에서 두 유닛 부하 유사성 및 LUT 없는 min-sum에서 re-map 이득 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1327044---area-efficient-decoding-of-quasi-cyclic-low-density-parity-check-codes-2004-icassp">ieee:1327044 - Area Efficient Decoding of Quasi-Cyclic Low Density Parity Check Codes (2004, ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

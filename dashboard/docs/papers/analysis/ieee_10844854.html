@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10844854</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10844854---lvde-a-lightweight-threshold-voltage-distribution-estimation-strategy-for-high-performance-3-d-nand-flash-memory-2025-ieee-transactions-on-circuits-and-systemsi-regular-papers">ieee:10844854 - LVDE: A Lightweight Threshold Voltage Distribution Estimation Strategy for High-Performance 3-D Nand Flash Memory (2025, IEEE Transactions on Circuits and Systems—I: Regular Papers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>8/9</td></tr><tr><td>부호length</td><td>18364</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>probe wordline 1회 read만으로 3D NAND 각 층의 Vth 분포를 층간(cross-layer) 추정해 LDPC 디코딩용 read level/read voltage offset/LLR을 온라인으로 산출</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 디코더/부호 자체는 미변경(min-sum 그대로 사용), 순수 memory-sensing(Vth 추정) 전략이라 이식 시 decoder.cpp가 아닌 channel.cpp의 LLR 산출부에만 연결됨</td></tr><tr><td>추가확인</td><td>프로파일에 층(layer) 개념이 없는 2D 혹은 다른 3D 적층 구조 NAND에도 Corollary 1/2(로그함수 기반 Vth drift)가 성립하는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코더 알고리즘 자체는 건드리지 않지만, NAND 실측 검증까지 마친 온라인 Vth 분포 추정으로 soft-read LLR/read-level 산출 정확도를 높여 iteration·latency를 줄이는 memory-sensing 기법 — Prime ECC의 channel.cpp LLR 설계 레이어에 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>3D TLC NAND(62-layer, page 16kB, 코드 rate 8/9, codeword length 18364bit, min-sum LDPC)를 대상으로, 장기 데이터 보존(retention) 중 발생하는 Vth 분포 좌측 drift를 온라인으로 추정.</li><li>기존 Vopt 트래커/soft-read 설계는 배치(batch) 단위 P/E-사이클 매핑 테이블에 의존해, 블록 간 공정편차(IBPV)에 취약하고 최적 파라미터 추정이 부정확.</li><li>핵심 가정(Characteristic 1,2): 동일 wordline·동일 state의 셀들은 retention 중 Vth drift가 균일하며, 분포 평균 <code>μ</code>는 retention 시간에 로그적으로 비례(<code>μ = k·log(t) + b</code>).</li><li>probe wordline 설계: 각 층 중앙의 한 wordline만 선택해 state window별 셀 카운트 증가량 <code>N_i(t)</code>로부터 순차적으로 각 state의 평균 drift <code>μ_i</code>를 역산(식 19, 21, 23) — 단 1회 read로 전체 Vth 분포 drift 산출.</li><li>식 (27): 임의의 두 layer m,n에서 평균 drift 비율 <code>μ_n^j(t3,t2) / μ_i^m(t3,t2) = k_i^m / k_j^n</code>이 retention 길이에 무관하게 상수 — 이를 이용해 probe wordline 측정값으로 다른 모든 층의 drift를 추정(cross-layer estimation).</li><li>노이즈 억제를 위해 7개 state의 추정치를 가중평균(식 31,32)해 RTN 등 랜덤 오차를 완화.</li><li>부수 트릭: state S0-S1 경계는 read margin이 넓어 측정 생략, 메타데이터(진폭/평균/분산/drift/probe wordline index)는 spare SLC 영역에 저장.</li><li>별도 학습절차 없음(폐형식 기반 추정, DE/GA/NN 미사용) — Algorithm 1(메타데이터 획득)/Algorithm 2(플래시 read 적용)로 구성.</li><li>결과: 실제 Micron B16A 칩 실측 기준, 샘플링 오버헤드는 layer read 0.08회(기존 RFBC 0.17, DRRM 0.5 대비 50%+ 감소); LDPC hard decision FER 19%(DRRM 43%, RFBC 61% 대비 대폭 개선); soft decision 적용 시(PreLDPC/EBDN) 총 read latency 최대 45% 감소.</li><li>한계: LDPC 디코딩 알고리즘/부호 자체는 전혀 수정하지 않는 순수 memory-sensing 전략(정정능력 자체 향상 아님), retention loss(좌측 drift) 중심 모델이며 우측 drift·기타 노이즈원에는 메타데이터 주기적 갱신이 별도 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Vth 분포 기반 read level/offset/LLR 산출</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read LLR 양자화 threshold 설계 개선에 직접 연결 가능한 memory-sensing 레이어</td></tr><tr><td>초기 read level 예측(진행적 디코딩 시도 감소)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (반복 트리거 조건)</td><td>초기 read level 정확도 향상 시 불필요한 재시도(추가 read retry) 감소 효과, 디코더 로직 자체는 무관</td></tr><tr><td>층별(layer) Vopt 캘리브레이션</td><td>대응 없음</td><td>Prime ECC는 HW 클록 레벨 디코더 시뮬레이터로 NAND 셀 물리/층 구조 모델을 포함하지 않음</td></tr><tr><td>H-matrix/부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>논문은 부호구조 자체를 다루지 않음(대상=other), 참고용 명시일 뿐 관련성 낮음</td></tr></tbody></table>
+<p>적용 가치: <code>중간</code> — 디코더 알고리즘이 아닌 NAND soft-read/LLR 산출 파라미터 결정 레이어의 기법으로, Prime ECC의 channel.cpp LLR threshold 설계에 아이디어 차용 가능하나 직접적인 코드 이식보다는 개념적 참고(온라인 Vth drift 추정) 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10844854",
+  "title": "LVDE: A Lightweight Threshold Voltage Distribution Estimation Strategy for High-Performance 3-D Nand Flash Memory",
+  "year": 2025,
+  "venue": "IEEE Transactions on Circuits and Systems—I: Regular Papers",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.888888,
+  "code_length": "18364",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "probe wordline 1회 read만으로 3D NAND 각 층의 Vth 분포를 층간(cross-layer) 추정해 LDPC 디코딩용 read level/read voltage offset/LLR을 온라인으로 산출",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LDPC 디코더/부호 자체는 미변경(min-sum 그대로 사용), 순수 memory-sensing(Vth 추정) 전략이라 이식 시 decoder.cpp가 아닌 channel.cpp의 LLR 산출부에만 연결됨",
+  "todo_check": "프로파일에 층(layer) 개념이 없는 2D 혹은 다른 3D 적층 구조 NAND에도 Corollary 1/2(로그함수 기반 Vth drift)가 성립하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10844854---lvde-a-lightweight-threshold-voltage-distribution-estimation-strategy-for-high-performance-3-d-nand-flash-memory-2025-ieee-transactions-on-circuits-and-systemsi-regular-papers">ieee:10844854 - LVDE: A Lightweight Threshold Voltage Distribution Estimation Strategy for High-Performance 3-D Nand Flash Memory (2025, IEEE Transactions on Circuits and Systems—I: Regular Papers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

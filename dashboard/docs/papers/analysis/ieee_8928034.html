@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8928034</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8928034---concatenated-reed-solomonspatially-coupled-ldpc-codes-2019-ieee">ieee:8928034 - Concatenated Reed-Solomon/Spatially Coupled LDPC Codes (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.47</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>지역-시스테매틱 인코딩 SC-LDPC(inner)에 RS(outer)를 연접해 SWD 잔류 버스트 에러/error-floor 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC + sliding window + RS 연접 구조로 NAND용 고rate binary QC-LDPC와 부호구조·디코더 흐름이 상이, 저rate(0.44~0.47)</td></tr><tr><td>추가확인</td><td>없음 (본 논문 자체가 NAND/HW와 무관한 데이터 스트리밍용 이론·시뮬 연구)</td></tr></tbody></table>
+<blockquote><p>총평: 데이터 스트리밍용 SC-LDPC+RS 연접 부호 설계로, NAND 고rate binary QC-LDPC 파이프라인과 정합성이 낮아 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템/채널: AWGN·BPSK, inner=SC-LDPC(<code>(nc,nv)=(3,6)</code>, <code>M=126</code>, <code>ω=3</code>, <code>L=60</code>, girth≥8), outer=RS <code>(63,59)</code>. 코드 rate: SC-LDPC 0.47, 연접 0.44.</li><li>풀려는 문제: SC-LDPC의 sliding window decoding(SWD)은 타깃 심볼셋에서 버스트 에러가 남아 error-floor를 유발.</li><li>핵심 가정: SWD 잔류 에러를 강한 버스트 정정 능력의 RS outer code로 제거하면 error-floor를 없앨 수 있다.</li><li>핵심 기법 1단: RS-SC-LDPC 연접 - RS로 먼저 인코딩한 이진 시퀀스 <code>U[0,L-1]</code>를 SC-LDPC로 다시 인코딩, SWD 후 하드결정 심볼을 BM 알고리즘으로 RS 복호.</li><li>핵심 식: inner SC-LDPC의 <strong>지역-시스테매틱 인코딩</strong>(식 24/25) - <code>H0(t)</code>의 마지막 <code>Nc</code>행을 항등부분행렬화하여 SWD 출력을 outer RS가 다시 복호 가능하게 함.</li><li>핵심 기법 2단: inner 부호를 4-cycle 제거(대표블록 <code>BR</code>/구성블록 <code>BC</code>/제외패턴 <code>BE</code>) 2단계 설계로 girth≥6 확보 후, Fossorier 조건 M-fold lifting으로 girth≥8까지 확대.</li><li>구현 디테일: RS 복호 성공 시 타깃 심볼 LLR을 <code>±∞</code>로 확정해 SWD에 재투입(BM feedback), 반복적으로 SWD 성능 향상.</li><li>학습/최적화: 없음 (조합적 부호 설계).</li><li>결과: 설계된 RS-SC-LDPC는 BER <code>10^-8</code>까지 error-floor 미출현. RS <code>(63,59)</code>가 <code>(63,61)</code>보다 잔류 에러 제거에 유리. 단 rate 손실로 waterfall 소폭 열화.</li><li>한계: HW 미설계, 시뮬만. 윈도우 <code>W</code>가 작으면(W=8) error-floor 완전 제거 실패. 저rate·SC-LDPC 스트리밍 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SC-LDPC 부호구조 / protograph lifting</td><td>대응 없음</td><td>Prime ECC는 고정 binary QC-LDPC이고 SC-LDPC(대각밴드+coupling) 구조 미지원</td></tr><tr><td>Sliding window BP 복호</td><td>대응 없음</td><td>Prime ECC 디코더는 블록 min-sum(<code>decoder.cpp</code> <code>LDPC_Decoder()</code>)으로 SWD 흐름과 상이</td></tr><tr><td>RS outer 연접 / BM 복호</td><td>대응 없음</td><td>외부 RS+BM 연접은 Prime ECC 코드베이스 범위 밖</td></tr><tr><td>지역-시스테매틱 인코딩</td><td>대응 없음</td><td>Prime ECC 인코딩은 dual-diagonal(<code>encoder.cpp</code>)로 구조 상이</td></tr><tr><td>4-cycle 제거 / girth 설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 설계 레이어에 닿으나 SC-LDPC 특화로 재사용 난도 매우 높음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - SC-LDPC + SWD + RS 연접이라는 스트리밍 특화 구조가 NAND용 고rate binary QC-LDPC(블록 min-sum, dual-diagonal 인코딩)와 부호설계·디코더·인코더 전 레이어에서 정합되지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8928034",
+  "title": "Concatenated Reed-Solomon/Spatially Coupled LDPC Codes",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.47,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "지역-시스테매틱 인코딩 SC-LDPC(inner)에 RS(outer)를 연접해 SWD 잔류 버스트 에러/error-floor 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "SC-LDPC + sliding window + RS 연접 구조로 NAND용 고rate binary QC-LDPC와 부호구조·디코더 흐름이 상이, 저rate(0.44~0.47)",
+  "todo_check": "없음 (본 논문 자체가 NAND/HW와 무관한 데이터 스트리밍용 이론·시뮬 연구)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8928034---concatenated-reed-solomonspatially-coupled-ldpc-codes-2019-ieee">ieee:8928034 - Concatenated Reed-Solomon/Spatially Coupled LDPC Codes (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

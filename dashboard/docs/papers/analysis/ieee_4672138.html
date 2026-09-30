@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4672138</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4672138---a-flexible-decoder-ic-for-wimax-qc-ldpc-codes-2008-cicc">ieee:4672138 - A Flexible Decoder IC for WiMAX QC-LDPC Codes (2008, CICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>layered decoding + offset Min-Sum + consolidated memory 구조로 면적·전력 효율 높인 재구성 가능 WiMAX QC-LDPC 디코더 ASIC</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>55K게이트@0.18µm(3.4mm2, 165mW)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.068Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMAX irregular 다중rate 특화, ASIC 미실측(제작중), 68Mbps로 NAND 수Gbps 요구 대비 낮음</td></tr><tr><td>추가확인</td><td>consolidated memory bank·cyclic shifter forward routing을 z=32 고정 QC 구조에 적용 시 면적/전력 이득</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC 디코더 HW로 도메인 일치하나 layered decoding·offset min-sum은 이미 보유 기법과 중복, memory consolidation·area/energy 최적화 관점만 참고가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 WiMAX 802.16e irregular QC-LDPC (rate <code>1/2~5/6</code>, length <code>576~2304</code>, 채널 5-bit LLR).</li><li>다중 rate/length를 하나의 칩으로 처리해야 해 재구성 가능·저복잡도·저전력 디코더가 필요.</li><li><code>layered-decoding</code> message passing으로 H를 non-overlapping check row 블록(layer)으로 나눠 AP-LLR을 Bit-Sum memory 경유로 갱신 → 수렴 약 2배 가속.</li><li>CN 연산은 offset 기반 Min-Sum: bit message 중 최소 2개 크기(<code>qmin,qmin2</code>)와 그 index(<code>qidx</code>)만으로 check message 생성, offset으로 과대추정 보정.</li><li><code>qjm/qj</code>는 8-bit, magnitude는 5-bit saturation으로 복잡도 축소(성능손실 미미), sign+MS message만 메모리 저장해 비트수 절감.</li><li>아키텍처는 partial-parallel: 24개 CFU(최대 병렬 96의 subset)로 블록 병렬 처리, CFU 내부는 순차 연산이라 irregular check degree 수용.</li><li>Bit-Sum memory를 24뱅크가 아닌 6뱅크로 통합(consolidated), read port를 2배 클록으로 구동해 분산 저장 AP-LLR 회수, clock gating으로 40mW(20%) 절감.</li><li>message routing은 barrel shifter 기반 cyclic shifter로 forward routing만 구현(backward network 제거), 미사용 CFU엔 0 강제로 switching 절감.</li><li>결과: rate-1/2 length-2304 10-iter에서 68Mbps@100MHz, 3.4mm2/165mW@0.18µm, 타 WiMAX 디코더 대비 면적 53%↓·게이트 86%↓·에너지효율 27~45%↑.</li><li>한계: ASIC 제작중(post-layout 추정치), WiMAX 다중rate 특화, throughput 68Mbps로 NAND용엔 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset Min-Sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>중 - Prime ECC도 min1/min2 min-sum, offset은 명시 미확인 scaling과 비교 여지</td></tr><tr><td>layered decoding 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>중 - Prime ECC의 Dual-Update(even/odd 교대) 스케줄과 유사, 수렴 가속 개념 중복</td></tr><tr><td>parity-satisfied 조기종료</td><td>full_CRC.cpp / partial_CRC.cpp</td><td>중 - Prime ECC는 CRC 기반, 본 논문은 parity check 만족 기반</td></tr><tr><td>consolidated memory / cyclic shifter routing</td><td>대응 없음</td><td>낮음 - Prime ECC HW 모델(z=32, HCU, GT)과 구조 상이, 직접 대응 함수 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - offset min-sum·layered decoding은 이미 보유한 min-sum·dual-update와 중복이나, memory bank consolidation·forward-only routing 등 area/energy 최적화 아이디어는 HW 참고가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4672138",
+  "title": "A Flexible Decoder IC for WiMAX QC-LDPC Codes",
+  "year": 2008,
+  "venue": "CICC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "layered decoding + offset Min-Sum + consolidated memory 구조로 면적·전력 효율 높인 재구성 가능 WiMAX QC-LDPC 디코더 ASIC",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "55K게이트@0.18µm(3.4mm2, 165mW)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.068,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiMAX irregular 다중rate 특화, ASIC 미실측(제작중), 68Mbps로 NAND 수Gbps 요구 대비 낮음",
+  "todo_check": "consolidated memory bank·cyclic shifter forward routing을 z=32 고정 QC 구조에 적용 시 면적/전력 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4672138---a-flexible-decoder-ic-for-wimax-qc-ldpc-codes-2008-cicc">ieee:4672138 - A Flexible Decoder IC for WiMAX QC-LDPC Codes (2008, CICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

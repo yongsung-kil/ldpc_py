@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10251598</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10251598---partial-spatial-coupling-of-ldpc-codes-reducing-the-gap-to-capacity-by-improving-the-rate-2023-ieee-trans-commun">ieee:10251598 - Partial Spatial Coupling of LDPC Codes: Reducing the Gap to Capacity by Improving the Rate (2023, IEEE Trans. Commun.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.49~0.5</td></tr><tr><td>부호length</td><td>1920~96000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>lifting 단계에서 α는 SC, β=1-α는 uncoupled block LDPC로 나눠 rate loss를 줄이는 PSC-LDPC 구성법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC 전용 구성법이라 우리 고정 QC-LDPC(binary, dual-diagonal enc)와 구조 불일치, BEC/DE 중심 분석</td></tr><tr><td>추가확인</td><td>PSC의 windowed decoding·convolutional 구조가 NAND용 block QC-LDPC에 부합할 여지 자체가 없는지</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC의 rate loss를 줄이는 우아한 구성법이나 NAND용 고정 block QC-LDPC와 부호구조·복호방식이 근본적으로 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: protograph 기반 SC-LDPC, BEC(주 분석)/AWGN(비교), rate ~1/2, 예제 length N=1920/80000/96000, lifting Z=500~3000, L=5~100.</li><li>문제: SC-LDPC는 threshold saturation으로 near-capacity지만 종단(termination)으로 인한 <code>rate loss w/L·(1-R)</code>가 실용 걸림돌이며 L을 키우면 복잡도/latency 증가.</li><li>핵심 아이디어: lifting 단계에서 Z copy를 α는 SC-LDPC protograph, β=1-α는 uncoupled block LDPC protograph로 분할, 두 구조 edge bundle을 multi-edge-type(MET) framework로 permute → PSC-LDPC.</li><li>핵심 변수: <code>α∈[0,1]</code>, <code>β=1-α</code>. β로 rate를 연속·선형 조정.</li><li>설계 rate 식: <code>R(L,w,β) = R - (w/L)(1-R)(1-β)</code> (식 10), 즉 SC의 rate loss 항에 α=(1-β) 선형인자가 곱해져 손실 감소. 성장률 <code>λ=(w/L)(1-R)</code>.</li><li>확장: D-dimensional protograph 기반 DE 정의(식 14,15)로 두 lifting dimension(Ω1=α, Ω2=β)의 같은 edge type끼리 메시지 평균.</li><li>부수: PEG 알고리즘을 edge-index 순서로 수정(Remark 2)해 저차수 CN 문제 회피, random puncturing으로 rate 추가 상향(<code>R(γ)=R/(1-γ)</code>).</li><li>이론 결과: L→∞에서 <code>ε*_PSC(βopt) ≥ ε*_SC</code> (Theorem 1), EA(3,6): βopt=0.545에서 ε=0.492 (MAP 0.4881 초과), gap to capacity 0.07056→0.04074(β 1.0→0.8).</li><li>시뮬 결과: BEC BER에서 β 감소 시 성능 개선(error floor 미관측), WD(W=5)가 SC-LDPC보다 우수, 5G NR BG2(R=0.5, N=1920) 대비 10^-6에서 0.34dB 이득.</li><li>한계: HW 미설계, SC/convolutional·windowed decoding 전용 구성법, 주 분석이 BEC·asymptotic DE.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PSC-LDPC protograph/H-matrix 구성 (α/β lifting, MET)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 고정 QC-LDPC(base+circulant) → SC/protograph 구조와 불일치, 이식난이도 높음</td></tr><tr><td>SC/windowed/convolutional 복호</td><td>대응 없음</td><td>우리 디코더는 block QC-LDPC min-sum 이터레이션, SC 체인·WD 개념 부재</td></tr><tr><td>DE/threshold·rate loss 이론</td><td>대응 없음</td><td>코드 스펙 확정용 이론일 뿐 런타임 모듈 대응 없음</td></tr><tr><td>dual-diagonal 인코딩과의 관계</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>PSC는 인코더 구조 자체가 다름, 재사용 여지 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — binary LDPC이긴 하나 SC-LDPC/convolutional·windowed decoding 전용 부호설계로, 고정 block QC-LDPC 기반의 Prime ECC 디코더/인코더/H-matrix와 구조가 근본적으로 달라 떼어 쓸 레이어가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10251598",
+  "title": "Partial Spatial Coupling of LDPC Codes: Reducing the Gap to Capacity by Improving the Rate",
+  "year": 2023,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "SC-LDPC",
+  "code_rate": "0.49~0.5",
+  "code_length": "1920~96000",
+  "soft_quant": "무관",
+  "key_contribution": "lifting 단계에서 α는 SC, β=1-α는 uncoupled block LDPC로 나눠 rate loss를 줄이는 PSC-LDPC 구성법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SC-LDPC 전용 구성법이라 우리 고정 QC-LDPC(binary, dual-diagonal enc)와 구조 불일치, BEC/DE 중심 분석",
+  "todo_check": "PSC의 windowed decoding·convolutional 구조가 NAND용 block QC-LDPC에 부합할 여지 자체가 없는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10251598---partial-spatial-coupling-of-ldpc-codes-reducing-the-gap-to-capacity-by-improving-the-rate-2023-ieee-trans-commun">ieee:10251598 - Partial Spatial Coupling of LDPC Codes: Reducing the Gap to Capacity by Improving the Rate (2023, IEEE Trans. Commun.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

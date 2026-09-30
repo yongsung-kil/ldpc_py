@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9979875</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9979875---deep-unfolding-aided-sum-product-algorithm-for-error-correction-of-crc-coded-short-message-2022-apsipa-asc">ieee:9979875 - Deep Unfolding-Aided Sum-Product Algorithm for Error Correction of CRC Coded Short Message (2022, APSIPA ASC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.4~0.73</td></tr><tr><td>부호length</td><td>40~88</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SPA를 deep unfolding으로 펼쳐 belief damping 가중치를 학습하고 negentropy+BCE 손실로 short-cycle 아웃라이어 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>full-tanh SPA + CRC 부호 대상이라 Prime ECC(min-sum QC-LDPC)와 부호·연산 모두 상이, 채널별/부호길이별 오프라인 재학습 필요, HW 미설계</td></tr><tr><td>추가확인</td><td>edge별 학습 damping 가중치가 min-sum·QC-LDPC 및 고rate에도 이득 있는지, 학습 파라미터의 HW 저장/적용 비용</td></tr></tbody></table>
+<blockquote><p>총평: IoT용 짧은 CRC 부호를 full-tanh SPA + deep unfolding으로 복호하는 학습형 기법으로, Prime ECC의 고rate binary QC-LDPC min-sum 디코더와 부호·연산이 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK+AWGN, 채널 LLR <code>λn = -4√(Es/N0)·ℜ{yn}</code>; 부호는 CRC-24(생성다항식 <code>G=x^24+...+1</code>)를 정보길이 <code>L=16/40/64</code>bit에 붙여 error-correcting code로 사용(rate <code>L/(L+24)</code>).</li><li>문제: LDPC는 부호길이가 짧으면 정정능력 급감, IoT 소형 패킷에 부적합. CRC 부호를 SPA로 그대로 복호하면 패리티행렬의 short cycle(길이-4 루프)로 belief 상관·아웃라이어가 증폭됨.</li><li>핵심 가정: soft-decision 디코더는 belief <code>α,β</code>가 Gaussian consistency(mean:var=1:2)를 만족할 때 성능 최대화됨.</li><li>기법 1단: 표준 SPA(변수노드 <code>βn→m=λn+Σα</code>, 함수노드 <code>αm→n=2 tanh⁻¹(Π tanh(β/2))</code>)를 iteration 방향으로 unfolding하여 FFNN로 간주.</li><li>학습 파라미터: 변수노드 갱신에 edge별 damping 가중치 <code>ζη(i)∈[0,1]</code> 도입, <code>βn→m ← ζ·βn→m + (1-ζ)·β(i-1)</code>; 출력층엔 sigmoid 적용.</li><li>손실함수: BCE <code>Jbce</code>(최대우도 등가) + negentropy <code>Jneg</code>(belief를 Gaussian으로 정형; ICA 근사식 사용)를 가중평균 <code>Jloss = w·Jneg + (1-w)·Jbce</code>.</li><li>학습: PyTorch, Adam(lr=0.005), 파라미터 갱신 10^4회, 고정 <code>Es/N0</code>와 <code>w</code>로 오프라인 학습.</li><li>원리: negentropy 항이 짧은 정보길이(L=16,40)에서 Gaussian shaping 효과로 BCE 단독보다 낮은 BER 달성; L=64에선 BCE가 유리.</li><li>결과: DU 튜닝으로 BER=10⁻⁴ 기준 코딩이득 약 0.7/0.5/0.9dB(L=16/40/64), 도달 최소 BER 약 1.2~1.4×10⁻⁴.</li><li>한계: 시뮬만·HW 미설계, full-tanh SPA(min-sum 아님)와 CRC 부호 특화, 채널/부호길이별 오프라인 재학습 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA(full-tanh) 함수노드 연산</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2) 근사이지 full-tanh Sum-Product이 아님</td></tr><tr><td>iteration별 belief damping 학습 가중치</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>개념상 iteration 루프에 삽입 가능하나 min-sum·학습 프레임워크 부재로 이식 부담 큼</td></tr><tr><td>CRC 부호 자체를 error-correcting code로 사용</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 CRC를 조기종료용으로만 쓰므로 목적이 반대</td></tr><tr><td>deep learning 학습형 디코더</td><td>대응 없음</td><td>NN/딥러닝 디코더 미지원</td></tr></tbody></table>
+<p>마지막 적용 가치: <strong>낮음</strong> — full-tanh SPA와 CRC 부호에 특화된 학습형 기법이라 Prime ECC의 고rate binary QC-LDPC min-sum 디코더와 부호·연산·학습 인프라가 모두 달라 떼어내기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9979875",
+  "title": "Deep Unfolding-Aided Sum-Product Algorithm for Error Correction of CRC Coded Short Message",
+  "year": 2022,
+  "venue": "APSIPA ASC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.4~0.73",
+  "code_length": "40~88",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SPA를 deep unfolding으로 펼쳐 belief damping 가중치를 학습하고 negentropy+BCE 손실로 short-cycle 아웃라이어 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "full-tanh SPA + CRC 부호 대상이라 Prime ECC(min-sum QC-LDPC)와 부호·연산 모두 상이, 채널별/부호길이별 오프라인 재학습 필요, HW 미설계",
+  "todo_check": "edge별 학습 damping 가중치가 min-sum·QC-LDPC 및 고rate에도 이득 있는지, 학습 파라미터의 HW 저장/적용 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9979875---deep-unfolding-aided-sum-product-algorithm-for-error-correction-of-crc-coded-short-message-2022-apsipa-asc">ieee:9979875 - Deep Unfolding-Aided Sum-Product Algorithm for Error Correction of CRC Coded Short Message (2022, APSIPA ASC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

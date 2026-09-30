@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4711302</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4711302---concatenated-low-density-parity-check-and-bch-coding-system-for-magnetic-recording-read-channel-with-4-kb-sector-format-2008-ieee-transactions-on-magnetics">ieee:4711302 - Concatenated Low-Density Parity-Check and BCH Coding System for Magnetic Recording Read Channel With 4 kB Sector Format (2008, IEEE Transactions on Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9375~0.95</td></tr><tr><td>부호length</td><td>4380~32768</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LDPC 복호 실패 시 iteration별 bit-error 진동을 이용해 각 iteration hard-decision을 외부 BCH에 순차 시도하는 trial-and-error 연접복호로 error-floor 회피</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>1Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>자기기록 채널(SOVA/jitter) 특화이며 외부 BCH 계층이 필요 — Prime ECC는 단독 LDPC 엔진이라 시스템 확장 필요, gate count는 표에만 있어 본문 미확인</td></tr><tr><td>추가확인</td><td>Table III의 65nm ASIC gate count/실리콘 비용 수치, 내부 3-bit 메시지 양자화가 NAND soft-read와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 자기기록용 inner LDPC + outer BCH 연접에서 iteration 진동을 이용한 trial-and-error 복호로 error-floor를 회피 — NAND 연접 ECC에 개념 이식은 가능하나 외부 BCH 계층 추가가 전제.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: perpendicular 자기기록 read channel, 4 kB 섹터, inner rate-19/20 <code>(4380,4163)</code> QC-LDPC(column weight 3) + outer <code>(33304, 32850, 28)</code> binary BCH, 전체 rate-15/16.</li><li>문제: LDPC-only는 error floor와 매우 낮은 SER(<code>10^-11</code>) 검증이 FPGA로도 비현실적(4kB 섹터에 약 80일 추정).</li><li>모델: perpendicular 채널 + media jitter(노이즈의 90%) + AWGN(10%), SOVA 검출, min-sum LDPC 복호(max iteration 8).</li><li>핵심 기법: LDPC 복호 실패 시 iteration마다 bit-error 수가 진동한다는 관찰 → 각 iteration의 hard-decision을 외부 BCH 디코더에 순차 입력(trial-and-error)하여 BCH 성공 시 종료.</li><li>핵심 식: overall SER를 식(1)로 <code>P_f</code>(inner LDPC 실패확률)와 최소 bit-error 확률의 곱 형태로 추정 — 저 SER를 직접 시뮬 대신 두 확률 추정으로 대체.</li><li>확장: BCH 오정정(mis-correction) 대비 error detection 병행, <code>m</code>개 실패 시 실패별로 서로 다른 iteration 출력 조합 탐색.</li><li>구현 디테일: 내부 LDPC 메시지 3-bit, SOVA soft output 3-bit, path metric 9-bit, 채널/AWGN/equalizer 출력 6-bit 양자화.</li><li>결과: 연접 trial-and-error로 SER <code>10^-11</code> 도달, RS 대비 약 0.7 dB coding gain 손해지만 실리콘 비용은 LDPC-only/RS-only보다 낮음(65nm ASIC).</li><li>한계: 자기기록 채널 특화, turbo equalization 미적용으로 RS 대비 gain gap 존재, gate count 등 수치는 표에만 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum LDPC 디코딩</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>이미 보유(min-sum) — 중복 기여</td></tr><tr><td>iteration별 hard-decision 캡처(trial-and-error)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>각 iteration 출력 저장 훅 추가 필요</td></tr><tr><td>외부 BCH 연접 / 재시도 종료</td><td>대응 없음 (<code>full_CRC.cpp</code> 조기종료와 유사 위치)</td><td>Prime ECC엔 BCH 외부부호 없음 — 시스템 레벨 확장</td></tr><tr><td>inner QC-LDPC H-matrix 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>inner QC-LDPC 로드 대응</td></tr><tr><td>3-bit 메시지 soft 양자화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>양자화 폭 대응</td></tr></tbody></table>
+<p>적용 가치: 중간 — iteration 진동 이용 + 외부부호 재시도라는 개념은 이식 가능하나, Prime ECC에 BCH 외부 계층이 없어 decoder 단독 port가 아니라 시스템 레벨 확장이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4711302",
+  "title": "Concatenated Low-Density Parity-Check and BCH Coding System for Magnetic Recording Read Channel With 4 kB Sector Format",
+  "year": 2008,
+  "venue": "IEEE Transactions on Magnetics",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "4380~32768",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LDPC 복호 실패 시 iteration별 bit-error 진동을 이용해 각 iteration hard-decision을 외부 BCH에 순차 시도하는 trial-and-error 연접복호로 error-floor 회피",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": 1,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "자기기록 채널(SOVA/jitter) 특화이며 외부 BCH 계층이 필요 — Prime ECC는 단독 LDPC 엔진이라 시스템 확장 필요, gate count는 표에만 있어 본문 미확인",
+  "todo_check": "Table III의 65nm ASIC gate count/실리콘 비용 수치, 내부 3-bit 메시지 양자화가 NAND soft-read와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4711302---concatenated-low-density-parity-check-and-bch-coding-system-for-magnetic-recording-read-channel-with-4-kb-sector-format-2008-ieee-transactions-on-magnetics">ieee:4711302 - Concatenated Low-Density Parity-Check and BCH Coding System for Magnetic Recording Read Channel With 4 kB Sector Format (2008, IEEE Transactions on Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

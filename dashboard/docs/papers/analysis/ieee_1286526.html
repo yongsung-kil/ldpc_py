@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1286526</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1286526---semi-parallel-reconfigurable-architectures-for-real-time-ldpc-decoding-2004-itcc">ieee:1286526 - Semi-Parallel Reconfigurable Architectures for Real-Time LDPC Decoding (2004, ITCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1536</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>block-shift 구조 PCM 기반 확장가능 semi-parallel LDPC 디코더 + Modified Min-Sum(scaling 0.8) 첫 HW 구현, shift값+counter로 주소 복원해 메모리 효율화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.127</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate-1/2 (3,6) 저rate·AWGN/BPSK 무선 타깃, 5bit(1+2+2) 양자화, Modified Min-Sum·block-shift 메모리 구조는 Prime ECC가 이미 보유(중복 기여)</td></tr><tr><td>추가확인</td><td>folding factor S 기반 BFU/CFU 재사용 스케줄과 block-shift 주소생성이 Prime ECC z=32 병렬구조 대비 우위 있는지</td></tr></tbody></table>
+<blockquote><p>총평: QC 유사 block-shift PCM + 재구성 가능 semi-parallel + Modified Min-Sum(0.8 scaling)는 HW 관점 전형적 참고자료이나 대부분 Prime ECC가 이미 보유하고 rate 0.5·무선 타깃이라 이식 가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN+BPSK 채널, regular (3,6) LDPC, rate 1/2, block length <code>N = s×768</code> (예 s=2 → 1536), 무선 실시간 통신 타깃.</li><li>문제: fully-parallel(Blanksby)은 라우팅 폭증으로 length&gt;1000 비현실적, fully-serial은 느림 → area-time 절충하는 semi-parallel 필요.</li><li>모델: PCM을 <code>(3×12)</code>개 <code>s×s</code> 블록으로 구성, 각 블록은 우측 shift된 identity(shift값은 girth 최대화 heuristic 탐색). shift값+counter로 주소 복원 → on 위치 저장 불필요(메모리 절감).</li><li>핵심 기법 1: Modified Min-Sum — Sum-Product의 <code>phi(x)=log(tanh(x/2))</code> 비선형함수를 min 근사, soft info에 scaling factor 0.8 곱함(shift+add 구현).</li><li>의미: scaling이 근사 손실을 보상하고 overestimation error를 줄여 Sum-Product보다 오히려 우수한 성능(Fig.2), LUT/비선형함수 제거로 면적·복잡도 절감.</li><li>핵심 기법 2: semi-parallel folding — <code>l_c</code>개 CFU, <code>l_b</code>개 BFU를 folding factor <code>S</code>로 재사용. rate 1/2이라 BFU=2×CFU (block 1536: CFU 16, BFU 16 with S). </li><li>HW 디테일: 5bit 고정소수(sign1+int2+frac2) 양자화, dual-port BRAM에 8 메시지 pack, CFU는 6입력 중 5개 최소값 계산·동시에 이전 iteration parity check 수행(속도↑).</li><li>학습/최적화: shift값은 girth 최대(good matrix) 목표 시뮬 탐색으로 결정, [8]과 달리 sub-block 길이가 소수 아님.</li><li>결과: Xilinx VirtexII-3000 FPGA, max 121 MHz, 79% slice 사용, 20 iteration worst case에서 데이터율 최대 127 Mbps. 구조 irregular 코드로도 소폭 수정해 확장 가능.</li><li>한계: HW를 FPGA 구현·합성까지만(ASIC/실측 없음), rate 1/2 저rate, gatecount 미보고, block 변경은 재컴파일(off-line) 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Modified Min-Sum (0.8 scaling)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum 보유(중복); scaling factor 도입 여지만 참고</td></tr><tr><td>CFU 6입력 min 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min1/min2 CN 연산과 동일 계열</td></tr><tr><td>BFU 가산+scaling+threshold</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 처리에 대응</td></tr><tr><td>block-shift PCM + counter 주소</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC도 base+circulant shift 구조(중복)</td></tr><tr><td>5bit 고정소수 양자화</td><td>channel.cpp + <code>PARAM_LLR</code></td><td>soft-read 양자화 설계 참고(단 Prime ECC는 최대 3SD)</td></tr><tr><td>semi-parallel folding/메모리 pack</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>z 병렬·GT와 개념적 대응(중복)</td></tr><tr><td>조기종료(반복 중 parity check)</td><td>full_CRC.cpp, <code>partial_CRC.cpp</code></td><td>iteration 중 parity 검사와 유사(Prime ECC는 CRC 기반)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Modified Min-Sum·block-shift QC 구조·semi-parallel folding 모두 Prime ECC가 이미 보유하고, rate 1/2·무선 AWGN 타깃이라 신규 이식 요소가 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1286526",
+  "title": "Semi-Parallel Reconfigurable Architectures for Real-Time LDPC Decoding",
+  "year": 2004,
+  "venue": "ITCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1536",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "block-shift 구조 PCM 기반 확장가능 semi-parallel LDPC 디코더 + Modified Min-Sum(0.8 scaling) 첫 HW 구현, shift값+counter 주소복원 메모리 효율화",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.127,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "rate-1/2 (3,6) 저rate·AWGN/BPSK 무선 타깃, 5bit 양자화, Modified Min-Sum·block-shift 메모리 구조는 Prime ECC가 이미 보유(중복)",
+  "todo_check": "folding factor S 기반 BFU/CFU 재사용 스케줄과 block-shift 주소생성이 Prime ECC z=32 병렬구조 대비 우위 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1286526---semi-parallel-reconfigurable-architectures-for-real-time-ldpc-decoding-2004-itcc">ieee:1286526 - Semi-Parallel Reconfigurable Architectures for Real-Time LDPC Decoding (2004, ITCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

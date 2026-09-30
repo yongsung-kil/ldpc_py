@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1205887</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1205887---a-massively-scaleable-decoder-architecture-for-low-density-parity-check-codes-2003-ieee-iscasicassp-proceeding">ieee:1205887 - A Massively Scaleable Decoder Architecture for Low-Density Parity-Check Codes (2003, IEEE (ISCAS/ICASSP proceeding))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2040</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>병렬화 제약을 H 구성에 부과(연속 M열의 1 미겹침)해 메모리 분할·HW 스케일링으로 100Gbps 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>~10M gates@0.35um</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>100</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>(3,6) regular·rate-1/2·AWGN 특화, log(tanh) 복호로 min-sum과 상이, M&lt;=(N-K)/j 병렬화 상한</td></tr><tr><td>추가확인</td><td>연속M열 미겹침 제약이 우리 QC circulant(z=32) 구조와 양립하는지, 4-bit LLR/20-iter가 우리 양자화와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 메모리 분할+HW 스케일링으로 latency N/M 감소·100Gbps를 노린 병렬 아키텍처 — HW 병렬화 통찰 유용하나 부호·복호가 NAND용 min-sum QC-LDPC와 달라 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (3,6) regular LDPC, rate-1/2, block length <code>N=2040</code>(및 3000), AWGN 채널, 4-bit LLR·20 iteration 복호.</li><li>문제: 직렬 디코더는 <code>N</code> clock 지연으로 latency 큼, rigid 완전병렬은 HW 자원 과다 → 확장가능한 중간 병렬화 필요.</li><li>핵심기법(병렬화): iteration logic을 병렬화 계수 <code>M</code>으로 스케일, latency <code>= N/M</code>, <code>M</code>은 rate-1/2에서 2~N/6 범위.</li><li>부호설계 제약: Gallager (3,6) 구성에 추가 제약 — 연속 <code>M</code>열의 첫/둘째/셋째 1이 같은 row에 겹치지 않게(pseudo-random 구성) → 동일 클럭 read/write 충돌 없이 M열 동시 처리.</li><li>상한: 이론적 최대 <code>M=(N-K)/j</code>, 예: N=2040·j=3에서 M=340까지 BER 열화 없음.</li><li>메모리: 패리티체크 그룹별 독립 read/write 가능한 <code>3M</code> 메모리 블록으로 M-way 분할, 최소구조 메모리로 동시 접근 지원.</li><li>스위치 로직: LLR을 적절한 메모리 슬라이스로 라우팅(read 후 두번째 switch로 원래 bit 순서 복원).</li><li>연산 유닛: bit-slice LLR 연산(adder/subtractor/<code>log(tanh(x/2))</code> 회로)을 M배 스케일, FIFO 폭도 M배, initializer·decision logic은 불변.</li><li>결과: TSMC 0.35um, M=500·N=3000·200MHz에서 100Gbps, 직렬 대비 BER/FER 차이 0.2dB 미만, 약 10M gate.</li><li>한계: BER 개선 아닌 유지가 목표(HW throughput 논문), rate-1/2·(3,6) regular·AWGN 특화, log(tanh) 복호로 min-sum 코드베이스와 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>병렬화 제약 H 구성(연속M열 미겹침)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 제약 — 우리는 QC circulant로 이미 병렬성 확보, 재구성 부담</td></tr><tr><td>iteration logic M-way 병렬 스케일</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 z=32 row병렬·pipeline과 개념 유사, 다만 구현 상이</td></tr><tr><td>M-way 메모리 분할·스위치 라우팅</td><td>GT.cpp <code>Make_GT_HW()</code> (edge/MUX)</td><td>메모리 충돌 회피 라우팅 아이디어 참고 가능</td></tr><tr><td>log(tanh) CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum — full log(tanh)는 대응 알고리즘 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — HW 스케일링·메모리 분할·병렬화 제약 부호설계라는 아키텍처 통찰은 참고 가치가 있으나, log(tanh) 복호와 (3,6) regular rate-1/2 부호가 NAND용 고rate min-sum QC-LDPC와 정합성이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1205887",
+  "title": "A Massively Scaleable Decoder Architecture for Low-Density Parity-Check Codes",
+  "year": 2003,
+  "venue": "IEEE (ISCAS/ICASSP proceeding)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2040",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "병렬화 제약을 H 구성에 부과(연속 M열의 1 미겹침)해 메모리 분할·HW 스케일링으로 100Gbps 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "~10M gates@0.35um",
+  "parallelism": "부분",
+  "throughput_gbps": 100,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "(3,6) regular·rate-1/2·AWGN 특화, log(tanh) 복호로 min-sum과 상이, M&lt;=(N-K)/j 병렬화 상한",
+  "todo_check": "연속M열 미겹침 제약이 우리 QC circulant(z=32)와 양립하는지, 4-bit LLR/20-iter가 우리 양자화와 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1205887---a-massively-scaleable-decoder-architecture-for-low-density-parity-check-codes-2003-ieee-iscasicassp-proceeding">ieee:1205887 - A Massively Scaleable Decoder Architecture for Low-Density Parity-Check Codes (2003, IEEE (ISCAS/ICASSP proceeding))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

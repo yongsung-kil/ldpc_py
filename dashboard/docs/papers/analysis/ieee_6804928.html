@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6804928</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6804928---optimal-detector-for-multilevel-nand-flash-memory-channels-with-intercell-interference-2014-ieee-jsac">ieee:6804928 - Optimal Detector for Multilevel NAND Flash Memory Channels with Intercell Interference (2014, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.9 (SIQ=1.8bits/cell 대응 언급)</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ICI 존재 MLC 채널의 최적 MAP/ML soft-output detector를 특성함수 FFT로 유도, soft-output 0.35dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상 (O(L)+O(NlogN) metric, N=512 FFT점)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 디코더가 아닌 채널 detector(전처리)로, soft-output이 exact posterior 확률 벡터라 우리 2~3bit LLR 양자화 파이프라인과 이질적</td></tr><tr><td>추가확인</td><td>Table II 상세 gate/latency 부재, ICI coupling 파라미터를 실측 NAND 값으로 캘리브레이션 가능 여부</td></tr></tbody></table>
+<blockquote><p>총평: ICI 있는 MLC NAND 채널의 정확한 soft-output MAP detector(Viterbi/BCJR + 특성함수 FFT)를 유도해 기존 detector 대비 0.35dB soft 이득을 보이나, LDPC 디코더 밖 채널 전처리 detector라 Prime ECC의 binary QC-LDPC 디코더에 직접 이식 대상은 아니다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: MLC(4-level, <code>m=4</code>) NAND, ECC encoder→channel→detector→ECC decoder 구조에서 detector 블록만 다룸. Detector 출력이 LDPC의 soft-input이 됨.</li><li>문제: 기존 문헌은 채널출력 양자화로 근사 soft-info만 제공, 양자화 없는 exact soft-output detector가 부재.</li><li>모델: Dong et al. 채널모델을 tractable하게 변형. <code>Yk = Xk + Σ Γℓ(Yk-ℓ - Ek-ℓ) + Wk + Uk</code>, ICI 계수 <code>Γℓ~N(γℓ,gℓ)</code>, program noise <code>Uk~U(-Δ/2,Δ/2)</code>, PE noise <code>Wk~N(0,σw²)</code> (truncated Gaussian 대신 Gaussian 채택).</li><li>핵심 기법 1단: input을 order-<code>M</code> Markov로 두고 trellis 상태 <code>(Xk...Xk-M+1)</code>, <code>mM</code> states의 Viterbi/BCJR MAP sequence/symbol detector. Branch metric <code>ΛMAP(xk,yk)</code> 계산이 관건.</li><li>핵심 식: <code>f(yk|xk,yk-1)</code>를 직접 못 구해 조건부 특성함수 <code>GYk|Xk,Yk-1(t)</code>를 유도(식 10-11)하고 그 Fourier 역변환으로 pdf 획득 → branch metric. 왜: 곱 Gaussian(ICI)의 pdf가 해석적으로 안 풀려 특성함수 경유가 필요.</li><li>핵심 기법 2단: 각 trellis section당 FFT 한 번(N=512)으로 모든 branch metric을 샘플링 획득.</li><li>부수 트릭: sufficient statistics는 <code>2L+1</code>개(FIR 필터 출력), Gaussian Approximation(GA) detector는 <code>[yk, θk, νk]</code> 3개 통계와 Q-function 닫힌형으로 FFT/LUT 없이 곱셈기·가산기만으로 구현.</li><li>확장: signal-dependent noise, input ISI, 2D anti-causal(even/odd bit-line) 채널로 일반화. 기존 post-compensation[5]·soft detector[2]가 본 GA의 추가근사임을 보임.</li><li>결과: hard BER은 post-comp와 동등, soft-output은 SIQ(=random LDPC 달성가능 rate) 기준 SNR 변화 시 0.35dB 이득(SIQ 1.8bits/cell, rate 0.9 대응). N=512.</li><li>한계: HW 미설계, 시뮬만, MAP은 FFT로 <code>O(NlogN)</code> 부담, 2D 최적 detector·최적 Markov input은 미해결로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MLC 채널모델/ICI 노이즈 주입</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>ICI/신호의존 노이즈 모델은 채널 에러 주입부에 대응 가능하나 우리 AWGN/RBER와 이질적</td></tr><tr><td>soft-output → LLR/양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>detector가 내는 exact posterior를 2~3bit LLR로 양자화해야 함, soft-4bit+ 수준이라 정합 부담</td></tr><tr><td>MAP/BCJR/Viterbi detector 본체</td><td>대응 없음</td><td>Prime ECC는 trellis detector 없음, 채널 전처리 detector 자체가 코드베이스 밖</td></tr><tr><td>LDPC 디코더 이터레이션</td><td>대응 없음</td><td>본 논문은 디코더를 다루지 않음 (detector만)</td></tr></tbody></table>
+<p>적용 가치: 낮음 — NAND 직접 타깃이고 soft-info 품질(SIQ)을 0.35dB 올리지만, LDPC 디코더가 아닌 채널 detector 전처리이며 exact posterior 출력이 Prime ECC의 hard/2~3bit soft 파이프라인과 맞지 않아 그대로 떼어 쓰기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6804928",
+  "title": "Optimal Detector for Multilevel NAND Flash Memory Channels with Intercell Interference",
+  "year": 2014,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.9,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ICI 존재 MLC 채널의 최적 MAP/ML soft-output detector를 특성함수 FFT로 유도, soft-output 0.35dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 디코더가 아닌 채널 detector(전처리)로 exact posterior 출력이 우리 2~3bit LLR 양자화 파이프라인과 이질적",
+  "todo_check": "Table II 상세 gate/latency 부재, ICI coupling 파라미터를 실측 NAND 값으로 캘리브레이션 가능 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6804928---optimal-detector-for-multilevel-nand-flash-memory-channels-with-intercell-interference-2014-ieee-jsac">ieee:6804928 - Optimal Detector for Multilevel NAND Flash Memory Channels with Intercell Interference (2014, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6310824</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6310824---iterative-decoding-and-turbo-equalization-the-z-crease-phenomenon-2012-ieee-isit">ieee:6310824 - Iterative Decoding and Turbo Equalization: The Z-Crease Phenomenon (2012, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>반복복호기를 비선형 동역학계로 모델링해 블록별 오류수가 반복에 따라 진동(Z-crease)함을 규명하고, LLR 최소/평균 크기 기반 조기종료 기준을 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>실험 대상이 주로 rate-1/3 turbo 코드(BCJR/SOVA)이며 LDPC는 현상 관찰(§I 서술)만 언급되고 정량 실험은 turbo decoder 위주; HW/게이트 구현 없음, 순수 시뮬레이션</td></tr><tr><td>추가확인</td><td>LDPC 메시지패싱 디코더에서 Z-crease 및 제안 조기종료 기준의 정량적 iteration 감소 수치가 본문에 없어 turbo 결과("50% 이상 감소")를 LDPC에 그대로 적용 가능한지 미상</td></tr></tbody></table>
+<blockquote><p>총평: LLR 최소/평균 크기 기반 조기종료라는 아이디어는 Prime ECC의 조기종료(Partial/Full CRC) 로직과 보완적으로 결합 가능성 있으나, 핵심 실험·검증이 turbo 코드 중심이라 LDPC 직접 이식 근거는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>대상 시스템은 rate-1/3 turbo 코드(두 개의 RSC 서브코드, pseudo-random interleaver), AWGN 채널, half-iteration 단위로 BCJR/SOVA 서브디코더가 LLR을 교환; LDPC message-passing, product-accumulate(PA) 코드, turbo equalization에서도 동일 현상 관찰됨을 언급.</li><li>문제: 기존 DE/EXIT-chart 등은 ensemble-average(무한 블록 길이) 가정이라 실제 유한 길이 블록의 개별(per-block) 오류 거동을 설명 못함. "반복이 많을수록 성능이 나빠지지 않는다"는 통념이 블록 단위에선 성립하지 않음을 지적.</li><li>핵심 가정/모델: 반복복호기를 비선형 동역학계(nonlinear dynamical system)로 보고, 3k개 파라미터를 단일 SNR 파라미터 <code>γ = R·E_b/‖z‖²</code>로, k차원 상태공간을 LLR 평균크기 <code>x^(n) = E[|m_i|]</code> 1차원으로 축소(projection)해 분석.</li><li>핵심 기법: <code>γ</code> 증가에 따라 위상궤적(phase trajectory)이 fixed point → period-doubling → limit cycle → chaos → transient chaos → unequivocal fixed point 순으로 분기(bifurcation)하는 것을 관찰, "Z-crease"(블록별 오류수가 반복에 따라 지그재그로 진동)를 정의.</li><li>핵심 식의 의미: LLR 최소크기 <code>min(|m_i^(n)|)</code>가 임계값 이상으로 증가하면 정확한 codeword로 수렴했다는 강한 신호이며, 평균크기 <code>E(|m_i^(n)|)</code>의 국소 최댓값이 이전 국소 최댓값보다 작아지면 Z-crease(성능 저하) 발생 신호로 사용.</li><li>확장: 3영역 SNR 구조(저SNR=indecisive fixed point, waterfall 영역=분기 다발, 고SNR=unequivocal fixed point)를 규명하고, waterfall 영역의 진동형 fixed point가 pseudo-codeword/stopping-set/trapping-set 개념과 대응됨을 지적.</li><li>제안 조기종료 기준(부수 트릭): (i) <code>min(|m_i^(n)|)</code>이 임계값 이상이면 즉시 종료(성공 판정), (ii) <code>E(|m_i^(n)|)</code> 국소최댓값이 직전 국소최댓값보다 작아지면 그 직전 후보 지점으로 트레이스백해 그 시점의 비트결정을 최종값으로 채택.</li><li>별도 학습/최적화 절차 없음(휴리스틱 규칙 기반, 파라미터 튜닝 없이 LLR 궤적 관찰만으로 판정).</li><li>결과: 1024비트 짧은 블록에서 오류수가 80~120 사이로 준주기적(quasi-periodic) 진동함을 관측; 제안 조기종료 기준으로 평균 성능 저하 없이 반복횟수를 50% 이상 감소 가능(특히 저SNR 또는 "운 좋은" 프레임에서 효과 큼).</li><li>한계: 정량 실험이 turbo 코드(BCJR/SOVA) 중심이며 LDPC는 현상의 보편성 주장(§I)에만 등장, HW/게이트/throughput 설계 없음(순수 시뮬레이션), worst-case per-block 성능 개선 목적이라 평균 BER 개선 효과는 제한적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LLR 최소/평균크기 기반 조기종료 판정</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>기존 CRC 기반 조기종료와 별개로 LLR 통계 기반 조기종료 신호를 추가 결합할 수 있는 아이디어이나 Prime ECC엔 해당 로직 자체가 없어 신규 구현 필요</td></tr><tr><td>iteration별 LLR 궤적(진동/Z-crease) 관찰</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>min-sum 반복 루프에서 LLR 궤적을 추적하면 유사 현상 분석 가능하나 논문은 turbo 디코더 대상이라 직접 검증 없음</td></tr><tr><td>비선형 동역학 분기 이론</td><td>대응 없음</td><td>순수 분석 이론으로 코드/HW 모듈과 직접 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — LLR 최소/평균크기 기반 조기종료 아이디어는 Prime ECC의 조기종료 로직에 보완적으로 결합 가능한 참고 가치가 있으나, 검증이 turbo 코드 중심이고 LDPC/QC-LDPC min-sum 디코더에 대한 정량 검증이 없어 이식 시 재검증 필요.</p></blockquote>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:6310824",
+  "title": "Iterative Decoding and Turbo Equalization: The Z-Crease Phenomenon",
+  "year": 2012,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.33,
+  "code_length": "1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "반복복호기를 비선형 동역학계로 모델링해 블록별 오류수가 반복에 따라 진동(Z-crease)함을 규명하고, LLR 최소/평균 크기 기반 조기종료 기준을 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "실험 대상이 주로 rate-1/3 turbo 코드(BCJR/SOVA)이며 LDPC는 현상 관찰(§I 서술)만 언급되고 정량 실험은 turbo decoder 위주; HW/게이트 구현 없음, 순수 시뮬레이션",
+  "todo_check": "LDPC 메시지패싱 디코더에서 Z-crease 및 제안 조기종료 기준의 정량적 iteration 감소 수치가 본문에 없어 turbo 결과(50% 이상 감소)를 LDPC에 그대로 적용 가능한지 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6310824---iterative-decoding-and-turbo-equalization-the-z-crease-phenomenon-2012-ieee-isit">ieee:6310824 - Iterative Decoding and Turbo Equalization: The Z-Crease Phenomenon (2012, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

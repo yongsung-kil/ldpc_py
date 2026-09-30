@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9912041</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9912041---high-throughput-vlsi-architecture-for-ldpc-decoder-based-on-low-latency-decoding-technique-for-wireless-communication-systems-2022-ieee-isvlsi">ieee:9912041 - High-Throughput VLSI Architecture for LDPC Decoder Based on Low-Latency Decoding Technique for Wireless Communication Systems (2022, IEEE ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>flooding min-sum의 column-slice 의존성을 min-block(MB)/LVC-block 분리로 제거해 iteration당 4 clock으로 단축</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>6.02mm2@130nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>3.6Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate 1/2·672bit WiGig 무선용, min-sum α 근사로 부동소수 대비 0.6dB 손실, 130nm·7bit LLR로 NAND 고rate와 정합 낮음</td></tr><tr><td>추가확인</td><td>MB/LVC 분리 스케줄이 z=42 flooding 기준 — Prime z=32 layered/dual-update 파이프라인과 클록당 처리 이득 재검토</td></tr></tbody></table>
+<blockquote><p>총평: min-sum flooding 디코더의 CNU를 MB(min1/min2/sgn)와 LVC-B로 쪼개 열간 의존성을 없앤 저latency HW 기법으로, Prime의 min-sum 파이프라인 스케줄 개선 아이디어로는 참고가치가 있으나 저rate 무선 코드·부동소수 대비 손실이 있어 이식은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11ad(WiGig) QC-LDPC, base matrix <code>B∈C^{8×16}</code>, expansion factor <code>z=42</code>, mother rate 1/2, block length 672bit(16×42), BPSK/AWGN, 7-bit 양자화(Q4.3).</li><li>문제: flooding min-sum을 단일 CVPU로 처리하면 column-slice 간 min 비교가 순차 의존이라 latency가 열 수에 선형 증가.</li><li>모델: 표준 min-sum(Algorithm 1) — <code>mcv = (∏sign)·min|Lvc|</code>, <code>Lv=Σmcv+Qv</code>, <code>Lvc=Lv-mcv</code>, syndrome=0 조기종료.</li><li>핵심 기법: CNU를 둘로 분리. min-block(MB)이 행별 <code>sgn</code>(식1), <code>Min1</code>(식2), <code>Min2</code>(식3, Min1 인덱스 제외)만 먼저 계산.</li><li>핵심 식: <code>mcv = sgn_i·sign(Lvc)·α</code>, <code>α=Min2 (|Lvc|=Min1일 때) else Min1</code> (식4,5) — index 값 없이 Min1/Min2만으로 mcv 산출.</li><li>확장: 나머지 mcv/Lvc/Lv 계산은 LVC-Block(LVC-B)이 담당. MB는 1클록에 전부 병렬, LVC-B는 추가 1클록 → column 간 의존 제거.</li><li>구현 트릭: rejection-based Min1/Min2(4×2-MIN, 3×2-MIN, index unit 제거), sign-magnitude/2's-complement 변환기, VN당 최대 4 CN으로 interconnect 축소, 4-stage 파이프라인.</li><li>최적화: 없음(학습/DE 없음). RCU 8개·CCU 16개가 각 z=42 MB/LVC-B로 완전 병렬.</li><li>결과: iteration당 4 clock, 217MHz@130nm, core 6.02mm2, 3.6Gbps(10 iter), scaled 36Gbps/iter로 SOTA 대비 +85.64% throughput·+41.02% 에너지효율; BER 10^-5 @1.2dB(10 iter), 7bit 양자화 손실 0.6dB@BER 10^-3.</li><li>한계: rate 1/2·672bit 무선 코드 한정, error-floor/정정능력 개선 없음, min-sum α 근사로 부동소수 대비 손실.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| MB의 Min1/Min2/sgn 계산 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | Prime도 min1/min2+sign XOR 방식 — 동일 연산의 HW 분리 스케줄 |
+| mcv=α(Min1/Min2) LVC-B 계산 | decoder.cpp C2V_Cal(), VN_Cal_HD() 등 | C2V/VN 갱신 지점과 대응 |
+| iteration당 4-clock 파이프라인/열 병렬 | decoder HW 모델(z=32, pipeline 6-stage) | Prime은 6-stage — MB/LVC 분리 스케줄과 정합 검토 대상 |
+| 7-bit LLR 양자화 | ecc_data.h PARAM_LLR, channel.cpp Set_LLR_Th() | Prime은 HD/2SD/3SD — 7bit 무선 양자화는 직접 이식 아님 |
+| flooding schedule | 대응 없음 | Prime은 dual-update(even/odd) 교대 — flooding 자체는 별개 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — CNU를 min-block/LVC-block으로 분리해 열간 의존을 없애는 파이프라인 재구성 아이디어는 Prime min-sum 디코더의 클록당 처리량 개선 관점에서 참고할 만하나, z/스케줄/rate/양자화가 모두 다르고 정정능력 이득은 없어 직접 이득으로 옮기려면 재정합 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9912041",
+  "title": "High-Throughput VLSI Architecture for LDPC Decoder Based on Low-Latency Decoding Technique for Wireless Communication Systems",
+  "year": 2022,
+  "venue": "IEEE ISVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "672",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "flooding min-sum의 column-slice 의존성을 min-block(MB)/LVC-block 분리로 제거해 iteration당 4 clock으로 단축",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "6.02mm2@130nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 3.6,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "rate 1/2·672bit WiGig 무선용, min-sum α 근사로 부동소수 대비 0.6dB 손실, 130nm·7bit LLR로 NAND 고rate와 정합 낮음",
+  "todo_check": "MB/LVC 분리 스케줄이 z=42 flooding 기준 — Prime z=32 layered/dual-update 파이프라인과 클록당 처리 이득 재검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9912041---high-throughput-vlsi-architecture-for-ldpc-decoder-based-on-low-latency-decoding-technique-for-wireless-communication-systems-2022-ieee-isvlsi">ieee:9912041 - High-Throughput VLSI Architecture for LDPC Decoder Based on Low-Latency Decoding Technique for Wireless Communication Systems (2022, IEEE ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

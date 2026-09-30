@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10251502</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10251502---adaptive-quantized-and-normalized-msa-based-on-modified-met-de-and-its-application-for-5g-nr-ldpc-codes-2023-ieee-access">ieee:10251502 - Adaptive Quantized and Normalized MSA Based on Modified MET-DE and Its Application for 5G-NR LDPC Codes (2023, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33~0.89</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check-ratio·edge-type 인덱스 비대칭 적응 양자화+정규화 min-sum(AQNMSA), 4bit로 float NMSA 근접</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G-NR MET/BG1 대상 irregular 부호(punctured/deg-1)이고 소프트 4bit 이상 전제라 우리 hard/2~3bit·고rate QC-LDPC와 양자화 정합 필요</td></tr><tr><td>추가확인</td><td>check-ratio 기반 적응 정규화/양자화 LUT를 우리 iteration별 LLR 테이블·2SD/3SD 양자화에 대체 적용 시 이득 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 양자화·정규화를 check-ratio로 적응화하고 MET-DE로 LUT를 설계하는 기법으로 아이디어는 우리 min-sum/LLR 테이블에 닿으나 5G MET·4bit+ 전제라 조건부 이식.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G-NR BG1 MET/QC-LDPC(irregular, raptor-like, punctured VN, deg-1 VN), lifting <code>z=384</code>, BI-AWGN, code rate 0.33~0.89.</li><li>문제: 고throughput(20Gb/s)용 저bit 양자화 min-sum은 성능 열화 크고(5bit SPA 대비 0.70dB↓), 기존 DE/RCA는 양자화·min 연산 예측 부정확.</li><li>핵심모델: LLR을 bit-width <code>w</code>, 양자화 간격 <code>T</code>로 균일 양자화 <code>QUAN(w,T)</code>, VNU=합·CNU=min·sign 쌍연산으로 표현.</li><li>핵심기법1 modified MET-DE: PMF를 실제 양자화 파라미터로 정확 추적(<code>ψInput/ψV/ψV2C/ψC/ψC2V</code>), check-ratio를 unsatisfied CN 확률 <code>P(k)</code>로 근사해 적응 알고리즘 예측 가능케 함.</li><li>핵심식: <code>P_i=½(1-Π(1-p_j))</code>, <code>p_j=Σ_{n≥0}PMF(n)</code> — VNU 출력 부호확률로 check-ratio를 DE에서 산출(수치 시뮬 없이 LUT 인덱스 확보).</li><li>핵심기법2 비대칭 양자화: 입력/VNU는 고bit <code>wH=9</code>, VNU↔CNU 전달은 저bit <code>wL=4</code>, QCM으로 도메인 변환해 라우팅 부담 축소.</li><li>부수트릭: check-ratio+edge-type을 LUT 인덱스로 <code>T</code>·정규화 <code>α</code> 동시 적응(QCNM), smooth operation(<code>sT,sα</code>)으로 check-ratio 요동 안정화.</li><li>최적화 절차: modified MET-DE 기반 LUT 설계(Alg.1) — SNR을 waterfall 영역에 맞추고 파라미터를 단위씩 증감·단조성 유지하며 BER 최소 후보 채택.</li><li>결과: 5G-NR BG1에 4bit로 적용 시 float NMSA와 동등/우수, float SPA 대비 0.36dB 손실·error floor 없음, QANMSA 대비 0.25dB 이득; |dSNR|&gt;1.5dB에서 SPA보다 강건.</li><li>한계: HW 미설계(시뮬만), gatecount/throughput 수치 없음, 5G MET/BG1·BI-AWGN 특화, 4bit+ 소프트 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| min-sum CNU(min·sign) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 동일 min-sum 계열, 정규화 α 적용부 대응 |
+| 적응 양자화/정규화 LUT(check-ratio,edge-type) | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | 우리 iteration별 LLR 테이블 인덱싱을 check-ratio 인덱스로 대체 검토 가능 |
+| VNU 합산·양자화 처리 | decoder.cpp VN_Cal_HD() 등, decoder.h Get_VNU_* | 비대칭 wH/wL 양자화 개념 이식 지점 |
+| soft-read LLR 양자화/threshold | channel.cpp Set_LLR_Th(), Set_R_Offset() | 입력 LLR 양자화 간격 T 설계와 대응 |
+| MET-DE LUT 설계 도구 | 대응 없음 | 오프라인 파라미터 최적화 도구, 런타임 모듈 아님 |
+| MET/irregular 부호구조 | ecc_top.cpp Load_PCM() | 우리는 고정 QC-LDPC, 5G MET base graph와 상이 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — min-sum 적응 정규화/비대칭 양자화·LUT 인덱스 아이디어가 우리 min-sum LLR 테이블과 직접 닿으나, 5G MET/BG1·4bit+ 소프트 전제라 hard/2~3bit 고rate QC-LDPC로 옮기려면 양자화·부호 정합 재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10251502",
+  "title": "Adaptive Quantized and Normalized MSA Based on Modified MET-DE and Its Application for 5G-NR LDPC Codes",
+  "year": 2023,
+  "venue": "IEEE Access",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check-ratio·edge-type 인덱스 비대칭 적응 양자화+정규화 min-sum(AQNMSA), 4bit로 float NMSA 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "5G-NR MET/BG1 대상 irregular 부호(punctured/deg-1)이고 소프트 4bit 이상 전제라 우리 hard/2~3bit·고rate QC-LDPC와 양자화 정합 필요",
+  "todo_check": "check-ratio 기반 적응 정규화/양자화 LUT를 우리 iteration별 LLR 테이블·2SD/3SD 양자화에 대체 적용 시 이득 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10251502---adaptive-quantized-and-normalized-msa-based-on-modified-met-de-and-its-application-for-5g-nr-ldpc-codes-2023-ieee-access">ieee:10251502 - Adaptive Quantized and Normalized MSA Based on Modified MET-DE and Its Application for 5G-NR LDPC Codes (2023, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1204470</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1204470---low-complexity-decoding-of-finite-geometry-ldpc-codes-2003-ieee-iccglobecom">ieee:1204470 - Low Complexity Decoding of Finite Geometry LDPC Codes (2003, IEEE ICC/GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.763~0.919</td></tr><tr><td>부호length</td><td>1023~4599</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>high-rate FG-LDPC용 저복잡도 single-bit-flip 디코더: failed-check 수 + 신뢰도 결합 metric으로 flip 비트 선택, 무한루프 검출 옵션, 곱셈/나눗셈 불필요</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>N-1+tc·tr real add/iter</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>FG(EG)-LDPC 특화(cyclic, 다수 length-6 cycle), Prime ECC는 QC-LDPC라 부호 정합 안됨; iteration 수는 BP보다 많음</td></tr><tr><td>추가확인</td><td>QC-LDPC high-rate에서도 weighted-BF 대비 이득이 유지되는지, min-sum 대비 실질 HW 면적 절감 규모</td></tr></tbody></table>
+<blockquote><p>총평: FG-LDPC 특화 weighted-BF 계열 저복잡도 디코더로 곱셈/나눗셈이 없어 HW 면적엔 유리하나, Prime ECC의 QC-LDPC/min-sum 조합과는 부호·알고리즘 정합이 낮아 참고 수준.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>코드: high-rate finite geometry LDPC (EG-LDPC), cyclic/quasi-cyclic, 예: Type-I 2D (1023,781) rate 0.763, Type-II 3D (4599,4227) rate 0.919, length 10^2~10^4 대역.</li><li>문제: FG-LDPC는 redundant check·높은 row/col weight으로 BP 복잡도가 큼; 저비용이면서 성능 좋은 디코더 필요.</li><li>아이디어: hard-decision 수신벡터 <code>b(0)=sgn(y)</code>에서 시작해 GF(2) 공간을 반복 탐색, 매 iteration <code>en(k)</code> 한 비트만 flip해 valid codeword 찾기.</li><li>핵심 metric: 각 비트 <code>φn = Σ_{m∈M(n)} φn,m</code>, 여기서 check 통과/실패에 따라 <code>φn,m = |yn|-lm/2</code> 또는 <code>|yn|-(um+lm/2)</code> (식 6), <code>lm=min|yn|, um=max|yn|</code>.</li><li>의미: metric이 "failed check 참여 비트" + "낮은 신뢰도 비트"를 동시에 선호 → 가장 작은 <code>φn</code> 비트를 flip; <code>|yn|</code> 선형성 덕에 AWGN에서 신호/잡음전력 정보 불필요.</li><li>확장: 무한루프 검출 — flip 인덱스 누적합 <code>E(k0)=0</code>이면 이전 방문 벡터 재방문(식 9), Hamming weight <code>w(l)</code>만 추적해 O(iteration) 비용으로 loop 검출·회피.</li><li>구현: syndrome은 flip된 tc개 check만 갱신(식 12), <code>φn</code>도 관련 비트만 <code>±um</code> 갱신(식 13), 곱셈/나눗셈 전무.</li><li>복잡도: iteration당 <code>N-1+tc·tr</code> real add; 비교는 log2 N, φ 갱신은 tr time unit으로 병렬화 가능; loop 검출은 bit-op만.</li><li>결과: (1023,781)에서 weighted-BF 대비 +0.48dB(BER 10^-5), plain BF +0.97dB, BP와는 0.63dB 차; (4599,4227)에서 BP와 0.6dB, Shannon limit 1.7dB 차, 전 디코더 중 최저 복잡도.</li><li>한계: HW 미설계(복잡도 분석/시뮬만), FG-LDPC 특화, 평균 iteration 수는 BP보다 많음(~25 peak, latency 불리), min-distance 9 코드에서 undetected error 다수 관측.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>single-bit-flip metric 디코딩 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 min-sum message-passing — 알고리즘 계열이 다름(BF vs MinSum)</td></tr><tr><td>failed-check+reliability metric (<code>φn</code>)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등 VN 처리</td><td>VN 갱신 대체안이나 min-sum 대비 성능 열위, 직접 대응 아님</td></tr><tr><td>syndrome 부분 갱신 / 조기종료(codeword found)</td><td><code>partial_CRC.cpp</code> / <code>full_CRC.cpp</code></td><td>조기종료 개념은 유사하나 CRC 기반 Prime ECC와 방식 다름</td></tr><tr><td>무한루프 검출(E(k0)/w(l))</td><td>대응 없음</td><td>Prime ECC엔 대응 기법 없음, post-processing 아이디어로만 참고</td></tr><tr><td>FG(EG)-LDPC 부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC 고정 — FG 부호 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음~중간</strong> — 곱셈/나눗셈 없는 BF 계열 저복잡도라 HW 면적엔 매력적이나, Prime ECC의 QC-LDPC + min-sum 조합과 부호·알고리즘 정합이 낮고 iteration/latency가 불리해 직접 이식보다 저비용 post-processing 아이디어 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1204470",
+  "title": "Low Complexity Decoding of Finite Geometry LDPC Codes",
+  "year": 2003,
+  "venue": "IEEE (Conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.763~0.919",
+  "code_length": "1023~4599",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "high-rate FG-LDPC용 저복잡도 single-bit-flip 디코더: failed-check 수 + 신뢰도 결합 metric으로 flip 비트 선택, 무한루프 검출 옵션, 곱셈/나눗셈 불필요",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "N-1+tc·tr real add/iter",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "FG(EG)-LDPC 특화(cyclic, 다수 length-6 cycle), Prime ECC는 QC-LDPC라 부호 정합 안됨; iteration 수는 BP보다 많음",
+  "todo_check": "QC-LDPC high-rate에서도 weighted-BF 대비 이득이 유지되는지, min-sum 대비 실질 HW 면적 절감 규모"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1204470---low-complexity-decoding-of-finite-geometry-ldpc-codes-2003-ieee-iccglobecom">ieee:1204470 - Low Complexity Decoding of Finite Geometry LDPC Codes (2003, IEEE ICC/GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

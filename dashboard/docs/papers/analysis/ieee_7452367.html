@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7452367</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7452367---construction-of-multiple-rate-qc-ldpc-codes-using-hierarchical-row-splitting-2016-ieee-communications-letters">ieee:7452367 - Construction of Multiple-Rate QC-LDPC Codes Using Hierarchical Row-Splitting (2016, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.9</td></tr><tr><td>부호length</td><td>61440</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>고rate mother code에서 계층적 행분할(unequal '1' 분배)+edge variation으로 동일 blocklength multiple-rate QC-LDPC 생성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 부호구성법(waterfall만 PEXIT로 최적화), HW는 HPU 공유 개념만 제시·미구현, error-floor는 정성적 주장</td></tr><tr><td>추가확인</td><td>rate-compatible 다중rate 필요성이 Prime ECC(단일 고rate)에 있는지, DVB-T2 대비 이득이 NAND read 조건에서 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: 통신용 multiple-rate QC-LDPC 구성법으로, 단일 고rate 고정인 Prime ECC에는 직접 수요가 낮고 HW도 미구현이라 정독가치 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN/Rayleigh 채널용 multiple-rate QC-LDPC (base matrix + b×b circulant, <code>n=61440</code>, <code>b=512</code>, target rate {0.4,0.6,0.8}).</li><li>문제: rate-compatible 코드 생성 시 puncturing은 blocklength 감소로 성능↓, row-combining(RCEV)은 강결합이라 전 rate 동시 최적화 어렵고 지원 rate 제한.</li><li>핵심기법1 (row-splitting): 고rate mother code의 각 행을 여러 행으로 분할(역으로 combine 가능), 열 degree 불변 → VPU 공유 가능. cycle-free라 girth 유지.</li><li>핵심기법2 (unequal '1' 분배): 한 행을 <code>p+1</code>개 행으로 쪼개되 '1'을 불균등 분배 후 작은 degree 행들을 재결합 → 정수배 제약 제거, 넓은 rate 범위 지원.</li><li>목표 행 degree: <code>dc_k = (1-r1)/(1-rk) · dc1</code> (식5), row-split/combine이 '1' 개수 불변임을 이용.</li><li>edge variation [7]: split 후 열 degree 분포를 최적값에 맞추려 '1'을 추가/삭제.</li><li>최적화 절차: EXIT charts로 rate별 열 degree 분포 최적화 → 최고rate 코드는 RS-PEG로 큰 girth 확보 → PEXIT로 decoding threshold 계산(gap&lt;0.25dB 제약).</li><li>계층 파라미터: level of fragmentation <code>α = dcK / gcd(dc1..dcK)</code> (식7), α≤2 권장(HPU 파편화·복잡도 억제).</li><li>결과: BER 1e-5에서 DVB-T2(blocklength 64800) 대비 rate 0.6에서 약 0.15dB(AWGN)/0.32dB(Rayleigh), rate 0.8에서 0.09dB 이득(더 짧은 blocklength로).</li><li>한계: 순수 부호구성법(HW는 HPU/VPU 공유 개념도만 제시), soft/양자화·NAND 특화 없음, error-floor는 girth 근거의 정성적 주장.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>행분할 기반 multiple-rate H-matrix 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 로드 지점에 닿으나 Prime ECC는 단일 고rate 고정이라 수요 낮음</td></tr><tr><td>QC base matrix + circulant 구조</td><td>ecc_data.h <code>PCM_b</code></td><td>동일 QC-LDPC 표현이나 다중rate 세트는 미보유·미요구</td></tr><tr><td>HPU/VPU 공유(다중rate 디코더)</td><td>대응 없음</td><td>Prime ECC 디코더는 단일 부호 대상, rate 공유 HW 개념 부재</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 통신용 multiple-rate 구성법으로 단일 고rate NAND ECC에는 직접 수요가 없고 HW·soft-read 측면 기여도 없음.</p>
+<pre><code>{
+  "id": "ieee:7452367",
+  "title": "Construction of Multiple-Rate QC-LDPC Codes Using Hierarchical Row-Splitting",
+  "year": 2016,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "61440",
+  "soft_quant": "무관",
+  "key_contribution": "고rate mother code에서 계층적 행분할(unequal '1' 분배)+edge variation으로 동일 blocklength multiple-rate QC-LDPC 생성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 부호구성법(waterfall만 PEXIT 최적화), HW는 HPU 공유 개념만 제시·미구현, error-floor는 정성적 주장",
+  "todo_check": "rate-compatible 다중rate 수요가 Prime ECC(단일 고rate)에 있는지, DVB-T2 대비 이득이 NAND read 조건에서 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7452367---construction-of-multiple-rate-qc-ldpc-codes-using-hierarchical-row-splitting-2016-ieee-communications-letters">ieee:7452367 - Construction of Multiple-Rate QC-LDPC Codes Using Hierarchical Row-Splitting (2016, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

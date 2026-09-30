@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10602896</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10602896---an-efficient-multi-code-ldpc-encoder-for-deep-space-communication-2024-icccs">ieee:10602896 - An efficient Multi-code LDPC Encoder for Deep Space Communication (2024, ICCCS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.8</td></tr><tr><td>부호length</td><td>1024~16384</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CCSDS 표준 9종 LDPC 코드를 모두 지원하는 개선된 recursive convolutional encoder(RCE) 구조로 처리량 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.12Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>딥스페이스 통신(CCSDS) 특화 인코더로 NAND ECC와 채널·코드 스펙이 상이하고 QC 구조(shift-register-accumulator 기반)는 이미 보유한 기법과 유사</td></tr><tr><td>추가확인</td><td>RCE 구조가 Prime ECC의 dual-diagonal 인코더 대비 실질적 하드웨어 이득이 있는지 미상(gatecount 미제시)</td></tr></tbody></table>
+<blockquote><p>총평: 딥스페이스 통신용 CCSDS 표준 QC-LDPC 인코더 하드웨어 설계로, NAND ECC와 무관한 채널·코드 스펙이며 인코더 구조 개선도 전형적 QC 순환 시프트 레지스터 기법이라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>CCSDS 딥스페이스 통신 표준의 9종 LDPC 코드(rate 1/2, 2/3, 4/5; k=1024/4096/16384)를 모두 지원하는 인코더 설계.</li><li>기존 다중 rate 인코더 대비 처리량(throughput)이 낮은 문제를 해결하려는 목적.</li><li>채널 모델은 별도로 다루지 않고 순수 인코더 하드웨어 구조 개선에 집중.</li><li>핵심 기법은 recursive convolutional encoder(RCE): 부호화 메시지 <code>mGqc</code>를 n개의 직렬 선형 피드백 시프트 레지스터(총 길이 <code>4n/M</code>)로 계산.</li><li>Quasi-cyclic 생성행렬 <code>Gqc</code>는 <code>H</code> 행렬에서 <code>A</code>, <code>B</code> 서브행렬을 추출해 <code>C = A^-1 B^T</code> (GF 연산)로 구성, 이후 순환 시프트로 확장.</li><li>개선점은 M을 모든 코드에서 최대공약수인 128로 통일해 RCE 유닛을 캐스케이드 가능하게 만들어 유연성 확보.</li><li>RCE 유닛 캐스케이드 시 각 유닛의 마지막 비트를 버스로 모아 멀티플렉싱하여 다음 유닛 첫 위치에 할당하는 구조 트릭 사용.</li><li>별도 학습/최적화 절차 없음(고정 구조 설계).</li><li>Xilinx VC690T FPGA 합성 결과 Fmax=170.64MHz, throughput 70~120Mbps, 기존 SRAA(직렬 인코딩) 대비 register/LUT/FF 자원 대폭 절감(LUT 4075→1123, FF 8201→4301).</li><li>인코더만 다루며 디코더/정정성능 분석 없음, deep space 채널(AWGN 등) 특화로 NAND read 채널과 무관, 추가 자원 최적화는 향후 과제로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| RCE 기반 QC-LDPC 인코더 구조 | `encoder.cpp` `LDPC_encoder_4KB()`, `Generate_PCM_encoding()` | Prime ECC는 dual-diagonal 인코딩 고정 구조라 RCE(시프트레지스터 재귀) 방식과 설계 철학이 달라 직접 이식 난이도 높음 |
+| Quasi-cyclic 생성행렬 G 구성(A^-1B^T) | `ecc_top.cpp` `Load_PCM()` | 부호 H-matrix 자체가 CCSDS 표준 전용이라 대응 없음에 가까움 |
+| CCSDS 표준 다중 rate 지원 구조 | 대응 없음 | Prime ECC는 특정 QC-LDPC로 고정되어 다중 표준 지원 개념이 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 딥스페이스 통신 CCSDS 표준 전용 인코더 하드웨어로 NAND ECC 채널·코드 스펙과 무관하고, 이미 Prime ECC가 보유한 dual-diagonal 인코딩 대비 구조적 이점이 명확히 검증되지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10602896",
+  "title": "An efficient Multi-code LDPC Encoder for Deep Space Communication",
+  "year": 2024,
+  "venue": "ICCCS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.8",
+  "code_length": "1024~16384",
+  "soft_quant": "무관",
+  "key_contribution": "CCSDS 표준 9종 LDPC 코드를 모두 지원하는 개선된 RCE 구조로 처리량 및 하드웨어 자원 효율 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.12,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "딥스페이스 통신(CCSDS) 특화 인코더로 NAND ECC와 채널·코드 스펙이 상이하고 QC 순환 구조는 이미 보유한 기법과 유사",
+  "todo_check": "RCE 구조가 Prime ECC의 dual-diagonal 인코더 대비 실질적 하드웨어 이득이 있는지 미상(gatecount 미제시)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10602896---an-efficient-multi-code-ldpc-encoder-for-deep-space-communication-2024-icccs">ieee:10602896 - An efficient Multi-code LDPC Encoder for Deep Space Communication (2024, ICCCS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

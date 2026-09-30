@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7434300</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7434300---simplified-llr-calculation-for-dvb-s2-ldpc-decoder-2015-comnetsat">ieee:7434300 - Simplified LLR calculation for DVB-S2 LDPC decoder (2015, COMNETSAT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.6~0.667</td></tr><tr><td>부호length</td><td>16200</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>8-PSK/16-APSK 성상을 소구역으로 분할해 인접 심볼 2개만으로 LLR을 근사, 제곱근·지수·비교연산 없이 실수부·허수부 곱셈만으로 soft demapper 구현</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 디코더 자체(Min-Sum)는 기존 것을 그대로 사용, 위성통신 고차 변조(PSK/APSK) 성상에 특화된 soft-demapper 근사이며 NAND read 채널 모델과 무관</td></tr><tr><td>추가확인</td><td>실제 HW 게이트수/처리량 수치 없음(연산 개수 테이블만 제시)</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 위성통신 고차 변조용 soft-demapper의 LLR 계산을 저복잡도화한 논문으로, LDPC 디코더 자체 개선이 아니며 변조방식이 NAND 채널과 무관해 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>DVB-S2 표준의 8-PSK(코드rate 3/5)와 16-APSK(코드rate 2/3) 변조, 짧은 프레임(16200 bit) LDPC 부호에 대해 AWGN 채널에서의 soft demapper를 다룸.</li><li>기존 정확한 LLR 계산(식 2, 3)은 제곱근·지수·로그 연산이 많아 고차 변조에서 HW 면적/메모리 부담이 크고, Max-Log 근사(<code>ln(e^x1+e^x2)≈max(x1,x2)</code>)도 여전히 전체 성상 심볼과 max 비교가 필요함.</li><li>채널은 AWGN, 수신 심볼 <code>r</code>과 성상점 <code>si</code> 간 유클리드 거리 기반 우도(<code>Vi</code>)를 가정.</li><li>핵심 기법: 성상을 π/8 회전(8-PSK) 후 사분면별 소구역으로 분할, 각 비트마다 인접 2심볼(<code>bj=0</code>, <code>bj=1</code>)만으로 <code>LLR(bj) ≈ Di - Dj</code> 형태로 근사(식 6~8).</li><li>최종 일반식(식 9)은 <code>LLR(bj) ≈ (1/σ²)[I(Isx-Isy)+Q(Qsx-Qsy)]</code> — 수신 심볼의 실수부·허수부를 미리 계산된 상수(μi, μq)와 곱셈만으로 LLR 산출, 제곱항이 상쇄되어 소거됨.</li><li>확장: 16-APSK는 진폭이 다른 링(ring) 구조이므로 Equivalent Received Symbol(ERS, <code>ri=Gi·r</code>, 스케일 팩터 <code>Gi=Ri/|r|</code>)을 도입해 각 링을 정규화 후 동일 방식 적용.</li><li>구현 디테일: 곱셈 상수(<code>μi</code>, <code>μq</code>, <code>DRef</code> 등)를 메모리에 사전 저장해 곱셈-덧셈만으로 연산, 비교 연산 수도 Max-Log 대비 대폭 축소(표 II·III).</li><li>별도 학습/최적화 절차 없음(수학적 유도와 경계조건 설계).</li><li>결과: 8-PSK는 Max-Log 대비 성능 저하 거의 없음, 16-APSK는 Max-Log 대비 약 0.5dB 성능 열화; 연산 개수는 Max-Log 대비 덧셈/곱셈/비교 모두 대폭 감소(표 II·III, 구체 게이트/처리량 수치는 본문에 없음).</li><li>한계: LDPC 디코딩 자체는 기존 Min-Sum을 그대로 사용(디코더 알고리즘 개선 아님), HW 합성/실측 없이 시뮬레이션(BER 곡선)에만 근거하며 스케일링 팩터 부재로 인한 16-APSK 성능 열화 원인은 추가 분석 필요로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| soft demapper LLR 근사 (PSK/APSK 성상) | 대응 없음 | Prime ECC는 NAND read 기반 LLR 테이블(`channel.cpp` `Set_LLR_Th()`)을 사용하며 PSK/APSK 성상 복조 자체가 대응 없음 |
+| LDPC 디코딩(Min-Sum) | `decoder.cpp` `LDPC_Decoder()` | 논문에서 디코더는 기존 Min-Sum을 그대로 사용, 개선 없음 |</code></pre>
+<p>적용 가치: 낮음 — 위성통신 고차 변조(PSK/APSK) 성상 특화 soft-demapper 단순화로, NAND read 채널의 LLR/threshold 설계(<code>channel.cpp</code>)와는 물리 계층이 근본적으로 달라 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7434300",
+  "title": "Simplified LLR calculation for DVB-S2 LDPC decoder",
+  "year": 2015,
+  "venue": "COMNETSAT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": "0.6~0.667",
+  "code_length": "16200",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "8-PSK/16-APSK 성상을 소구역으로 분할해 인접 심볼 2개만으로 LLR을 근사, 제곱근·지수·비교연산 없이 실수부·허수부 곱셈만으로 soft demapper 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 디코더 자체(Min-Sum)는 기존 것을 그대로 사용, 위성통신 고차 변조(PSK/APSK) 성상에 특화된 soft-demapper 근사이며 NAND read 채널 모델과 무관",
+  "todo_check": "실제 HW 게이트수/처리량 수치 없음(연산 개수 테이블만 제시)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7434300---simplified-llr-calculation-for-dvb-s2-ldpc-decoder-2015-comnetsat">ieee:7434300 - Simplified LLR calculation for DVB-S2 LDPC decoder (2015, COMNETSAT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

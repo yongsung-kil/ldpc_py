@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4432803</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4432803---layered-approx-regular-ldpc-code-construction-and-encoderdecoder-design-2008-ieee-trans-circuits-syst-i">ieee:4432803 - Layered Approx-Regular LDPC: Code Construction and Encoder/Decoder Design (2008, IEEE Trans. Circuits Syst. I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>2304~9216</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>layer-block-cell 구조의 QC LDPC(LAR-LDPC) 구성 + FS 제거·FSR로 개선한 RU 인코더 + layered modified min-sum(LMMS) 부분병렬 디코더로 단일 쌍이 다양한 길이/rate 지원</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.18Gbps(dec)/1.2Gbps(enc)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LAR 부호는 PEG 성능을 초과 못하고 동등, mobile/DVB 통신 타깃, LMMS(layered min-sum+scaling)는 Prime ECC의 min-sum·Dual-Update와 상당 중복</td></tr><tr><td>추가확인</td><td>고정소수점 LLR 데이터폭(txt 손상으로 미확인)과 scaling factor(0.8/compact binary)의 NAND RBER 채널 적합성</td></tr></tbody></table>
+<blockquote><p>총평: NAND용 QC-LDPC min-sum 디코더에 참고할 layered 스케줄·interconnect 설계는 있으나, Prime ECC 기존 기법과 겹치고 부호 자체는 성능 이득이 없어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 단일 인코더/디코더 쌍이 다양한 code length·rate를 지원하는 QC LDPC 시스템, mobile/DVB급 다중서비스 대상.</li><li>부호 구조: <code>layer-block-cell</code> 계층 구조 QC 행렬 — 각 cell은 zero 또는 순환천이 항등행렬, 열/행 가중이 두 종류뿐(<code>approximately regular</code>).</li><li>구성법(DEx): all-1 base matrix → PEx(permutation expansion)+full-ranking으로 mother matrix(LAR-I) → CSEx(cyclic-shift expansion)+short-cycle 제거로 PCM(LAR-II).</li><li>부호 성능: 동일 degree분포·girth의 PEG 부호 성능에 근접(초과 아님), rate 1/2·7/8 예제에서 float/fixed 모두 확인.</li><li>인코더: RU(Richardson-Urbanke) ALT 방식을 개선 — forward substitution 완전 제거, dense-matrix <code>E·T⁻¹·B</code> 곱을 QC성 이용해 feedback shift-register로 처리(면적 선형).</li><li>인코더 유연성: rate 고정 시 CSEx factor만 바꿔 길이 변경, 길이 고정 시 파라미터 동시조정으로 rate 변경, 온라인 재구성.</li><li>디코더 알고리즘 LMMS: modified min-sum(스케일링)과 layered decoding 결합, MS라 수신심볼 직접 사용, layer별 CN/BN 갱신.</li><li>디코더 HW: 부분병렬(BNU/CNU + interconnection network), interconnect는 PEx 덕에 복잡도가 일반 LDPC 대비 낮고 작은 crossbar 배열로 구현, scaling factor를 compact binary로 골라 곱셈을 shift+add로 축소.</li><li>결과: LMMS 10 iter ≈ BP 20 iter BER, fixed-point는 float 대비 ~0.1 dB 열화. Xilinx XC2V6000 FPGA 구현 시 인코더 최대 1200 Mbps, 디코더 60(단일)~180(3개) Mbps @100 MHz.</li><li>한계: 부호는 PEG 성능 동등(이득 없음), 통신 채널 타깃, 고정소수점 데이터폭 등 세부 수치가 txt 추출에서 손상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LMMS layered modified min-sum 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN + layered 스케줄, Prime ECC의 min-sum·Dual-Update와 개념 유사(중복 가능)</td></tr><tr><td>min-sum 스케일링(0.8/compact binary)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, magnitude 양자화</td><td>Prime ECC scaling factor 미확인이라 최적값 참고 가능</td></tr><tr><td>고정소수점 LLR 데이터폭 설계</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR 양자화 폭 설계 참고(단, 실제 폭은 txt 손상)</td></tr><tr><td>layer-block-cell QC PCM 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC 구조 로드 대상이나 Prime ECC는 고정 PCM</td></tr><tr><td>개선 RU 인코더(FS 제거, FSR)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal, RU 방식과 상이</td></tr><tr><td>BNU-CNU interconnection network(crossbar)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>QC HW 라우팅, Prime ECC는 GT MUX(방식 상이)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered min-sum과 QC crossbar interconnect는 NAND용 min-sum 디코더 설계에 참고할 만하나, Prime ECC가 이미 min-sum+Dual-Update+적응형 LLR을 보유해 상당 부분 중복이고 부호 자체는 성능 이득이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4432803",
+  "title": "Layered Approx-Regular LDPC: Code Construction and Encoder/Decoder Design",
+  "year": 2008,
+  "venue": "IEEE Trans. Circuits Syst. I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "2304~9216",
+  "soft_quant": "미상",
+  "key_contribution": "layer-block-cell QC LDPC(LAR-LDPC) 구성 + FS 제거·FSR 개선 RU 인코더 + layered modified min-sum(LMMS) 부분병렬 디코더로 단일 쌍이 다양한 길이/rate 지원",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.18,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LAR 부호는 PEG 성능 동등(이득 없음), 통신 타깃, LMMS는 Prime ECC의 min-sum·Dual-Update와 상당 중복",
+  "todo_check": "고정소수점 LLR 데이터폭(txt 손상)과 scaling factor(0.8/compact binary)의 NAND RBER 채널 적합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4432803---layered-approx-regular-ldpc-code-construction-and-encoderdecoder-design-2008-ieee-trans-circuits-syst-i">ieee:4432803 - Layered Approx-Regular LDPC: Code Construction and Encoder/Decoder Design (2008, IEEE Trans. Circuits Syst. I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

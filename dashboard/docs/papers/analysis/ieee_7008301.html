@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7008301</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7008301---matrix-reordering-techniques-for-memory-conflict-reduction-for-pipelined-qc-ldpc-decoder-2014-ieeecic-iccc">ieee:7008301 - Matrix Reordering Techniques for Memory Conflict Reduction for Pipelined QC-LDPC Decoder (2014, IEEE/CIC ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>파이프라인 TDMP/BCJR 층별복호의 APP-LLR write-after-read 충돌을 오프라인 행렬 재정렬(RE+SE)로 무손실 제거해 throughput 최대 140% 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>TDMP/BCJR 층별복호 전제, Prime ECC는 min-sum 기반이라 충돌 양상 다를 수 있음(복호성능 무변화)</td></tr><tr><td>추가확인</td><td>Prime ECC z=32 pipeline에서 실제 write-after-read 충돌이 병목인지, base matrix 재정렬 여지 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 파이프라인 QC-LDPC 디코더의 메모리 충돌을 무손실 오프라인 재정렬로 없애 throughput을 크게 올리는 HW 최적화, 스케줄 관점 참고가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 고throughput QC-LDPC 층별복호(LD), base matrix <code>B_{J×K}</code>를 <code>z×z</code> circulant로 확장, 한 layer가 <code>z</code> sub-layer 병렬.</li><li>문제: TDMP(=BCJR) CNU는 forward/backward 재귀 때문에 이전 layer의 갱신 write 전에 현 layer가 APP-LLR을 read → write-after-read 메모리 충돌 → pipeline stall로 throughput 급락.</li><li>핵심 알고리즘 3요소: (a) Row Exchange(layer 순서 교환, 성능 무손실), (b) Sequence Reordering(행 내 원소 순서 재배열), (c) 충돌 검출기+NOP 삽입.</li><li>BCJR 스텝: <code>λ_{j,k}=L_{X}-Λ</code>, forward <code>α_k</code>, backward <code>β_k</code>, <code>Λ_k=α_k ⊞ β_{k+1}</code>, <code>L_new=λ+Λ_new</code> (⊞는 log-sum 연산).</li><li>핵심 원리: BCJR write-back(backward)은 input(forward) 역순이므로, read/write '거리' <code>d_{j,θ}</code>를 최대화(공통원소를 최대한 늦게 read)하면 충돌 감소 → <code>max d_{j,θ}, θ∈[-2,-1,1,2]</code>.</li><li>Sequence Reordering: 인접 layer(r±1 우선, 그다음 r±2)의 공통원소를 읽기순서 오른쪽에 배치, 홀/짝 layer에 원순서/역순서 교대 적용해 거리 증대. 선형 복잡도(재귀·반복 불필요).</li><li>탐색: Row Exchange는 허용 연속충돌 <code>c</code>를 0부터 증가시키며 DFT로 최적 base matrix 탐색, <code>SequenceReordering</code>+<code>ConflictTest</code>를 호출해 NOP 최소해 선택.</li><li>NOP 삽입 2종: CNI(충돌 시 전 행 앞에 열단위 NOP, HW수정 불필요)와 SNI(해당 행에만 단일 NOP, 최소비용이나 layer별 NOP 테이블 필요).</li><li>결과: 802.11n/802.16e 전 모드에서 효율 최대 60%, 정규화 throughput 최대 약 140% 향상. rate 1/2(11n mode1/5/9, 16e 1/2)는 RE+SE로 충돌 완전 제거. 고rate(5/6)는 inter-layer 공통원소 많아 잔여 NOP 존재.</li><li>한계: TDMP/BCJR 층별복호 전제이고 min-sum 기반과는 충돌 양상 상이 가능, gatecount·절대 throughput은 본문 미제시(시뮬 효율 지표 위주).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>파이프라인 스케줄/충돌</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프, pipeline(col_M1/Z/P1~P4)</td><td>우리 6-stage pipeline의 read/write 충돌 스케줄 최적화 관점에서 직접 관련</td></tr><tr><td>base matrix 재정렬(RE/SE)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix 로드)</td><td>재정렬은 로드 단계 오프라인 전처리로 반영 가능하나 우리 PCM은 고정</td></tr><tr><td>CNU(BCJR/TDMP 연산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 min-sum이라 BCJR 재귀와 다름 → 충돌 원인 구조 상이</td></tr><tr><td>메모리 뱅크 접근/NOP</td><td>대응 없음 (전용 메모리 충돌 모듈 표에 없음)</td><td>z=32 구조에서 충돌 병목 존재 여부 별도 확인 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 파이프라인 QC-LDPC 디코더의 메모리 충돌 제거라는 목표는 Prime ECC의 z=32 pipeline과 부합하나, 알고리즘이 TDMP/BCJR 전제라 min-sum 기반 우리 구조에 충돌 양상·이득이 그대로 옮겨지는지는 재검증 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7008301",
+  "title": "Matrix Reordering Techniques for Memory Conflict Reduction for Pipelined QC-LDPC Decoder",
+  "year": 2014,
+  "venue": "IEEE/CIC ICCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "파이프라인 TDMP/BCJR 층별복호의 APP-LLR write-after-read 충돌을 오프라인 행렬 재정렬(RE+SE)로 무손실 제거해 throughput 최대 140% 향상",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "TDMP/BCJR 층별복호 전제, Prime ECC는 min-sum 기반이라 충돌 양상 다를 수 있음(복호성능 무변화)",
+  "todo_check": "Prime ECC z=32 pipeline에서 실제 write-after-read 충돌이 병목인지, base matrix 재정렬 여지 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7008301---matrix-reordering-techniques-for-memory-conflict-reduction-for-pipelined-qc-ldpc-decoder-2014-ieeecic-iccc">ieee:7008301 - Matrix Reordering Techniques for Memory Conflict Reduction for Pipelined QC-LDPC Decoder (2014, IEEE/CIC ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

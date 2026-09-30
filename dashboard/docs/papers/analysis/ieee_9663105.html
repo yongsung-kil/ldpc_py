@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9663105</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9663105---semi-ldpc-convolutional-codes-construction-and-low-latency-windowed-list-decoding-2021-j-commun-inf-netw">ieee:9663105 - Semi-LDPC Convolutional Codes: Construction and Low-Latency Windowed List Decoding (2021, J. Commun. Inf. Netw.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.4848</td></tr><tr><td>부호length</td><td>2112</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>sparse+dense sub-matrix 결합 semi-LDPC-CC 부호 + window size 2 sliding-window list(SWL) 저지연 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>dense random sub-matrix R + list/OSD 복호라 1-D binary QC-LDPC min-sum 파이프라인에 이식 불가, 5G URLLC 스트리밍 타깃</td></tr><tr><td>추가확인</td><td>list decoding(FPT-REL/OREL)의 min-list 조기종료 아이디어만 개념적으로 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 저지연 스트리밍(URLLC)용 컨볼루셔널 LDPC + list 복호로, dense sub-matrix·convolutional 구조가 NAND용 1-D QC-LDPC 블록부호/min-sum과 근본적으로 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 5G URLLC 같은 저지연 스트리밍이며, sub-frame <code>[n,k]=[64,32]</code>, coupling length <code>L=32</code>, BPSK/AWGN 채널.</li><li>문제: 기존 LDPC-CC/SC-LDPC는 좋은 성능에 큰 window size(<code>d≥6(m+1)</code>)가 필요해 복호 지연이 크다.</li><li>부호구조: parity-check가 banded block matrix로, sparse <code>H0=[P,I]</code>(PEG로 <code>wc=wr=2</code>)와 <strong>dense</strong> 서브행렬 <code>R</code>(Bernoulli(1/2)로 무작위 고정)의 결합 — 이 dense 블록이 conventional LDPC-CC와의 핵심 차이.</li><li>인코딩: <code>v(t)=u(t)Pᵀ + c(t-1)Rᵀ</code>, register <code>D</code>로 이전 sub-frame 결합 (encoding memory <code>m=1</code>).</li><li>복호 핵심: sliding-window list(SWL) 알고리즘. window size 고정 <code>d=2</code>(또는 3)로 지연을 <code>dn</code> bit로 억제.</li><li>절차: sparse 부분 partial Tanner graph에서 BP(SPA) 수행 후 list decoding(REL 또는 OREL) → 후보 codeword 리스트 생성 후 soft metric <code>ΓSWL</code>으로 선택.</li><li>list 순서화: flipping pattern tree(FPT)로 flipping pattern을 soft weight 순 정렬 → FPT-REL / FPT-OREL(OSD 유사).</li><li>성능분석: first-event error 기반 upper bound <code>≤2·fER0</code>, underlying LDPC-BC의 GA(genie-aided) lower bound 제시.</li><li>복잡도 절감: two-round serial 구현 + 조기종료(soft metric 최대·차순위 차이 <code>δ</code>에 threshold <code>T</code>) → 평균 list size 10배 이상 감소.</li><li>결과: 동일 latency에서 (3,6)-regular SC-LDPC 대비 최대 1.4dB coding gain(<code>fER=10⁻⁴</code>), max iteration은 5(SC-LDPC 50 대비 소수). HW 미설계, 이론+시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>sparse H0 BP(SPA) 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 min-sum, 논문은 full-BP(SPA) + dense 제약 → 부분적</td></tr><tr><td>sliding-window list(SWL/OREL) 복호</td><td>대응 없음</td><td>list/OSD 기반 windowed 복호는 우리 iterative min-sum 파이프라인에 미대응</td></tr><tr><td>dense sub-matrix R 결합 convolutional 부호구성</td><td>대응 없음</td><td>우리는 1-D banded/blocked QC-LDPC 블록부호, dense random 서브행렬 미지원</td></tr><tr><td>조기종료(soft metric 차이 threshold)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료 목적은 유사하나 우리는 CRC 기반(중복)</td></tr><tr><td>부호 rate·length</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>rate~0.48 저rate 컨볼루셔널로 고rate NAND ECC와 부적합</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — convolutional/SC-LDPC + dense random sub-matrix + list(OSD류) 복호로, NAND용 고rate 1-D binary QC-LDPC 블록부호와 min-sum 디코더에 떼어 쓸 구조적 공통점이 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9663105",
+  "title": "Semi-LDPC Convolutional Codes: Construction and Low-Latency Windowed List Decoding",
+  "year": 2021,
+  "venue": "J. Commun. Inf. Netw.",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.4848,
+  "code_length": "2112",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "sparse+dense sub-matrix 결합 semi-LDPC-CC 부호 + window size 2 sliding-window list(SWL) 저지연 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "dense random sub-matrix R + list/OSD 복호라 1-D binary QC-LDPC min-sum 파이프라인에 이식 불가, 5G URLLC 스트리밍 타깃",
+  "todo_check": "list decoding(FPT-REL/OREL)의 min-list 조기종료 아이디어만 개념적으로 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9663105---semi-ldpc-convolutional-codes-construction-and-low-latency-windowed-list-decoding-2021-j-commun-inf-netw">ieee:9663105 - Semi-LDPC Convolutional Codes: Construction and Low-Latency Windowed List Decoding (2021, J. Commun. Inf. Netw.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

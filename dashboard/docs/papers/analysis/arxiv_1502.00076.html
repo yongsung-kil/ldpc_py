@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_1502.00076</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv150200076v1---design-of-a-unified-transport-triggered-processor-for-ldpcturbo-decoder-2015-arxivcsit">arxiv:1502.00076v1 - Design of a Unified Transport Triggered Processor for LDPC/Turbo Decoder (2015, arXiv:cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Turbo/LDPC 공용 function unit(ALPHA, BetaLLR)을 갖는 TTA 프로그래머블 프로세서 설계</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.01012Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>min-sum이 아닌 forward-backward trellis 기반 supercode sum-product를 사용해 Prime ECC의 min-sum CN 구조와 이질적</td></tr><tr><td>추가확인</td><td>Turbo와 공용화를 위한 설계라 LDPC 단독 최적화 대비 throughput/복잡도 손해가 어느 정도인지 미상</td></tr></tbody></table>
+<blockquote><p>총평: Turbo/LDPC 통합 ASIP 아키텍처 논문으로 부호설계·디코더 알고리즘 자체의 이식 요소가 없어 NAND binary QC-LDPC에는 참고가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: 3GPP турбо 코드(6144비트, sliding window MAP) + IEEE 802.11n QC-LDPC (rate 1/2, N=648).</li><li>문제: Turbo와 LDPC 디코더를 별도 HW로 만들면 재사용성이 없어 로밍/멀티모드 지원이 비효율적 → 하나의 프로그래머블 프로세서로 통합.</li><li>Turbo는 max-log-MAP(트렐리스 forward-backward), LDPC는 min-sum 근사 대신 M개 파리티 행을 이진 2-state trellis(supercode)로 분해한 trellis 기반 sum-product를 사용해 두 알고리즘의 연산 형태를 통일.</li><li>핵심 변수: forward metric <code>αk(s)</code>, backward metric <code>βk(s)</code>, LLR 갱신은 <code>Lok = 1/2[max*{αk-1(s)+βk(s)} - max*{αk-1(s)+βk(s⊕1)}]</code>.</li><li>LDPC의 branch metric은 LLR 값 하나, Turbo는 3개 LLR 조합(<code>γ1~γ4</code>)이라는 차이만 있고 연산 구조(<code>max*</code> 재귀)는 동일 → 공용 function unit(ALPHA, BetaLLR) 설계 근거.</li><li>레이어드 스케줄(layered schedule)을 LDPC 메시지 플로우로 채택, <code>A(n)</code> 누적 LLR을 행 단위로 갱신.</li><li>HW 특화: ALPHA unit(3입력2출력), BetaLLR unit(5입력4출력)을 4개씩 배치해 4개 supercode/butterfly 병렬 처리, LSU/ALU/GCU/레지스터파일/30개 버스로 TTA 구성, LLR 출력은 FIFO(STREAM 유닛).</li><li>별도 학습/최적화 절차 없음 (고수준 C 언어로 TCE 툴 기반 프로세서 프로그래밍/설계).</li><li>결과: 200MHz에서 Turbo 22.64Mbps(1 iteration), LDPC 10.12Mbps(5 iteration, 10,368 clock cycle/블록).</li><li>한계: min-sum 대비 supercode trellis 방식이라 HW 구조가 표준 min-sum 디코더와 다르고, LDPC 단독 구현 대비 throughput이 타 프로그래머블 구현(15.2~257Mbps) 대비 낮음; ASIC 합성/실측 없이 사이클 시뮬 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>supercode 기반 trellis sum-product (min-sum 아님)</td><td>대응 없음</td><td>Prime ECC는 min-sum(<code>CNU_Update_New_Mag()</code>) 기반이라 trellis forward-backward 구조와 이질적</td></tr><tr><td>레이어드 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>layered 메시지 갱신 개념은 유사하나 구현 방식(공유 유닛 시분할)은 이식 어려움</td></tr><tr><td>Turbo/LDPC 공용 프로세서 아키텍처</td><td>대응 없음</td><td>Prime ECC는 binary LDPC 전용 고정 파이프라인, ASIP형 범용 프로세서 개념과 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 - 알고리즘이 min-sum이 아닌 trellis 기반이며 목적이 Turbo/LDPC 겸용 ASIP 설계라 NAND 전용 고정 QC-LDPC 파이프라인에 이식할 요소가 거의 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:1502.00076v1",
+  "title": "Design of a Unified Transport Triggered Processor for LDPC/Turbo Decoder",
+  "year": 2015,
+  "venue": "arXiv:cs.IT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 648,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Turbo/LDPC 공용 function unit(ALPHA, BetaLLR)을 갖는 TTA 프로그래머블 프로세서 설계",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.01012,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "min-sum이 아닌 forward-backward trellis 기반 supercode sum-product를 사용해 Prime ECC의 min-sum CN 구조와 이질적",
+  "todo_check": "Turbo와 공용화를 위한 설계라 LDPC 단독 최적화 대비 throughput/복잡도 손해가 어느 정도인지 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv150200076v1---design-of-a-unified-transport-triggered-processor-for-ldpcturbo-decoder-2015-arxivcsit">arxiv:1502.00076v1 - Design of a Unified Transport Triggered Processor for LDPC/Turbo Decoder (2015, arXiv:cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

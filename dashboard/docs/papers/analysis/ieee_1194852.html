@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1194852</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1194852---software-based-erasure-codes-for-scalable-distributed-storage-2003-ieeenasa-mss">ieee:1194852 - Software-based Erasure Codes for Scalable Distributed Storage (2003, IEEE/NASA MSS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>분산스토리지용 irregular LDPC 기반 소거정정부호(LEC), Luby/RS 대비 throughput·신뢰도 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>소거정정(erasure) 전용 XOR 그래프 부호로 NAND 비트오류 soft-decision LDPC와 정정모델 자체가 다름</td></tr><tr><td>추가확인</td><td>없음 (분산스토리지 도메인, NAND ECC 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 분산스토리지 소거정정용 irregular LDPC 소프트웨어 부호로 NAND 비트오류 ECC에는 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 수천 개 디스크/노드에 걸친 대규모 분산 스토리지, 소프트웨어 소거정정부호 대상.</li><li>문제: RS는 GF 크기(255 원소) 한계로 수천 fragment 확장 불가, Luby/Tornado는 계산비용·저장효율 열세.</li><li>모델: 파일을 fragment로 분할, data/parity 노드 이분그래프(bipartite graph), parity = 연결된 data 노드의 XOR (소거=bit 손실).</li><li>핵심기법(LEC): Luby와 달리 원본 data를 모두 보존, parity는 irregular 이분그래프로 생성. degree j parity 노드 수 <code>N_j(s,p,k,A,j*,imax)</code>를 분포식으로 지정.</li><li>식 의미: 목표 신뢰도·손실률 L·data 수 k에 대해 s,A,j*,imax 파라미터로 degree 분포를 조정, 최적 코드를 경험적으로 탐색.</li><li>확장: 파라미터 탐색 알고리즘으로 block size·손실률별 최소 parity 수 자동 산출(tunability).</li><li>구현 트릭: parity-centric/data-centric 두 뷰 저장으로 인코딩/디코딩 locality 개선, journaling으로 동일 erasure 패턴 재사용.</li><li>최적화: 동일 파라미터 랜덤코드 신뢰도가 최대 3배 변동 → 100회 반복 생성 후 최고 신뢰도 그래프 선택.</li><li>결과: 13.1MB 파일에서 LEC 인코딩 240Mbps/디코딩 760Mbps(20% loss), Luby(180/220)·RS(0.09/0.20) 대비 우수; 20% loss에서 block failure 8e-7 vs Luby 6e-3.</li><li>한계: 소거정정 전용(비트오류 정정 아님), HW 미설계, soft-decision·error-floor 개념 부재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>irregular 이분그래프 부호설계(degree 분포식)</td><td>대응 없음</td><td>소거정정용 XOR 부호, binary QC-LDPC H-matrix 구조와 무관</td></tr><tr><td>XOR 기반 소거 디코더(iterative)</td><td>대응 없음</td><td>Prime ECC는 min-sum LLR 비트오류 복호, 소거정정 아님</td></tr><tr><td>소프트웨어 throughput 평가 프레임워크</td><td>대응 없음</td><td>HW 클록레벨 시뮬(z=32)과 목적 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 분산스토리지 소거정정 도메인의 소프트웨어 부호로 NAND binary LDPC 비트오류 ECC 파이프라인과 정정모델·타깃이 근본적으로 다르다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1194852",
+  "title": "Software-based Erasure Codes for Scalable Distributed Storage",
+  "year": 2003,
+  "venue": "IEEE/NASA Goddard Conference on Mass Storage Systems (MSS)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "무관",
+  "key_contribution": "분산스토리지용 irregular LDPC 기반 소거정정부호(LEC), Luby/RS 대비 throughput·신뢰도 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "소거정정(erasure) 전용 XOR 그래프 부호로 NAND 비트오류 soft-decision LDPC와 정정모델 자체가 다름",
+  "todo_check": "없음 (분산스토리지 도메인, NAND ECC 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1194852---software-based-erasure-codes-for-scalable-distributed-storage-2003-ieeenasa-mss">ieee:1194852 - Software-based Erasure Codes for Scalable Distributed Storage (2003, IEEE/NASA MSS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

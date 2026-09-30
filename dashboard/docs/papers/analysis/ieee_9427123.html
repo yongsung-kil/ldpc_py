@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9427123</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9427123---belief-propagation-decoding-of-ldpc-codes-with-variable-node-centric-dynamic-schedules-2021-ieee-transactions-on-communications">ieee:9427123 - Belief-Propagation Decoding of LDPC Codes With Variable Node-Centric Dynamic Schedules (2021, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.2~0.5</td></tr><tr><td>부호length</td><td>500~1944</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>conditional innovation(CI) 메트릭 + latest-message-driven(LMD) 탐색범위 축소로 IDS/RBP 조기 iteration 성능·복잡도 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>순수 스케줄링(edge/VN 선택)만, HW 미설계·시뮬만, precompute는 tanh SPA 기반(min-sum 대체 시 성능손실 가능), degree-1 VN(5G NR) 별도 처리 필요</td></tr><tr><td>추가확인</td><td>우리 flooding/layered 파이프라인(z=32 병렬) HW에 VN-centric 순차 스케줄이 라우팅·throughput 관점에서 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: CI 메트릭+LMD 탐색축소로 초기 iteration FER를 크게 낮추는 순수 스케줄링 기법. 아이디어는 우수하나 fully-serial/multi-edge IDS는 우리의 z=32 병렬 layered HW 구조와 정합이 어려워 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이진 (N,K) LDPC, AWGN+BPSK. 실험 부호는 802.11 (1944,972) R=1/2, 5G NR (1848,616) R=1/3(BG1,lift28), (500,100) R=1/5(BG2,lift10).</li><li>문제: flooding BP는 수렴 느리고 HW 배선·메모리 부담. 기존 IDS/RBP는 greedy(소수 edge 반복)로 수렴 error-rate 열화, 전역 탐색 비용 큼.</li><li>관찰: 디코딩 목표는 올바른 VN 결정이므로 스케줄은 VN-centric이어야 하고, LLR 변화는 likelihood 변화와 비선형이라 새 신뢰도 메트릭 필요.</li><li>핵심 기법1 - CI(conditional innovation) <code>Dn=|p0(Ln)-p0(L̃n)|</code>: 갱신 시 얻는 사후확률 변화량. 큰 <code>Dn</code>은 오결정 가능성↑ 및 갱신 시 정정 가능성↑ (Property 1,2, GA-DE 반증).</li><li>식 (9)의 의미: LLR residual 대신 확률영역 변화로 "틀렸고 고칠 수 있는" VN을 정확히 지목.</li><li>CIRBP(Alg.1): 최대 CI VN 선택, <code>Dn*&lt;γ</code>면 원래 RBP(최대 residual)로 폴백. 임계값 <code>γ</code>(≈0.1~0.15)로 초기/수렴 성능 트레이드오프.</li><li>핵심 기법2 - LMD(latest-message-driven): 다음 갱신 후보를 최근 갱신 VN에서 2-hop 이내로 제한 → 탐색범위 축소+신뢰도↑. LMDRBP/sLMDRBP, CI 결합한 LMD-CIRBP(Alg.3).</li><li>구현: precompute C2V는 식(2) tanh(SPA)이나 min-sum 근사로 대체 가능(복잡도↓/성능 소폭↓). p0(·) LUT + 실수비교로 최대 CI/residual 탐색.</li><li>결과: Imax=3에서 N-500는 SVNF-RBP 대비 LMD-CIRBP 0.5dB(FER 1e-2)/0.35dB(BER 1e-3), W-1944는 0.2dB. 초기 iteration FER가 가장 우수, 1 iteration 내 유효 codeword 확보로 평균 복잡도↓.</li><li>확장 - multi-edge(ME-CIRBP/ME-LMD-CIRBP): NG그룹화로 <code>Np</code> VN 병렬 갱신, latency를 1/Np로. 한계: HW 미설계·시뮬만, gate/throughput 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CI/LMD 동적 스케줄(edge/VN 선택)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이터레이션 스케줄을 flooding→VN-centric IDS로 교체 시도 지점</td></tr><tr><td>C2V precompute / residual</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>residual 계산에 우리 min-sum CN 연산 재사용 가능</td></tr><tr><td>CI용 사후확률 p0(·) LUT</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>LLR→확률 변환 LUT 추가 필요(현 테이블과 별개)</td></tr><tr><td>multi-edge 병렬 갱신</td><td>decoder.cpp HW 병렬(z=32, HCU, GT)</td><td>우리 row 병렬(z=32) layered와 스케줄 정합 어려움</td></tr><tr><td>GA-DE 이론분석(J,F 함수)</td><td>대응 없음</td><td>이론 증명, 코드 이식 대상 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - 초기 iteration FER 개선과 avg iteration/latency 감소는 우리 관심사와 부합하나, IDS/RBP는 본질적으로 순차(또는 소규모 multi-edge) 스케줄이라 z=32 row-병렬 layered HW와의 정합·재검증 부담이 커 직접 이식은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9427123",
+  "title": "Belief-Propagation Decoding of LDPC Codes With Variable Node-Centric Dynamic Schedules",
+  "year": 2021,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "500~1944",
+  "soft_quant": "무관",
+  "key_contribution": "conditional innovation(CI) 메트릭 + latest-message-driven(LMD) 탐색범위 축소로 IDS/RBP 조기 iteration 성능·복잡도 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "순수 스케줄링(edge/VN 선택)만, HW 미설계·시뮬만, precompute는 tanh SPA 기반(min-sum 대체 시 성능손실 가능), degree-1 VN(5G NR) 별도 처리 필요",
+  "todo_check": "우리 flooding/layered 파이프라인(z=32 병렬) HW에 VN-centric 순차 스케줄이 라우팅·throughput 관점에서 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9427123---belief-propagation-decoding-of-ldpc-codes-with-variable-node-centric-dynamic-schedules-2021-ieee-transactions-on-communications">ieee:9427123 - Belief-Propagation Decoding of LDPC Codes With Variable Node-Centric Dynamic Schedules (2021, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

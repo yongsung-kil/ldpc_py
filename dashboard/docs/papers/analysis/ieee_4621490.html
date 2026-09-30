@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4621490</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4621490---reconfigurable-architecture-for-ldpc-and-turbo-decoding-a-noc-case-study-2008-ieee">ieee:4621490 - Reconfigurable Architecture for LDPC and Turbo Decoding: A NoC Case Study (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>하나의 SISO-CN 처리유닛으로 turbo와 LDPC(TDMP/layered)를 공유 복호하는 재구성형 MPSoC 아키텍처 (분리 대비 면적 23% 절감)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>42.8k~43.2k gates@0.13um (SISO-CN, FIFO/LIFO 제외)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.033~0.038Gbps(LDPC, NoC 없이)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>WiMaX(802.16e) 무선용 turbo+LDPC 공유·NoC 트래픽 분석이 핵심 — NAND binary QC-LDPC와 무관, TDMP는 BCJR-SISO 기반으로 우리 min-sum과 이질적</td></tr><tr><td>추가확인</td><td>없음 (NoC 삽입 시 throughput 4~5배 저하가 결론)</td></tr></tbody></table>
+<blockquote><p>총평: WiMaX용 turbo/LDPC 겸용 복호기 HW 공유 + NoC 통신병목 사례연구로, NAND 고전 binary QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 WiMaX 802.16e의 double-binary CTC(turbo)와 구조적 block LDPC를 <strong>한 재구성형 처리유닛</strong>으로 복호하는 MPSoC.</li><li>문제: 다중모드 무선 표준에서 turbo/LDPC 각각 별도 HW를 두면 면적·비용 과다 → 자원 공유 필요.</li><li>LDPC는 <code>HBASE</code> base matrix를 <code>Z</code>-by-<code>Z</code> 순환천이 순열행렬로 확장한 QC 구조(rate 1/2·2/3·3/4, 최대 <code>N=2304</code>, irregular).</li><li>핵심: LDPC를 <code>TDMP</code>(layered, supercode 단위)로 복호하면 turbo의 BCJR/Max-Log-MAP SISO와 동일 데이터플로가 되어 SISO-CN 하드웨어를 공유 가능.</li><li>SISO-CN은 BMU→<code>α</code>/<code>β</code>(forward/backward)→<code>γ</code> 프로세서로 구성, MUX 기반 assignment network로 8-state(turbo)/2-state(LDPC) trellis 전환.</li><li><code>γ = δ + Σλ</code>(supercode별 intrinsic 합 + 채널값)으로 SISO 입력을 구성, 출력 <code>Λ</code>(extrinsic)·<code>Γ</code>(posterior)를 다음 sub-iteration에 재사용.</li><li>HW 친화: max-star correction·MUX 공유, scaled-max(예: 0.7)로 turbo/LDPC 공통 근사 제안.</li><li>병렬화: PE 최대 16개, PE당 CN 4개; <code>Z&gt;64</code>면 supercode당 2 sub-iteration 필요.</li><li>결과: 0.13um 합성 시 SISO-CN ~43k gates/0.256mm2, 분리 구조 대비 면적 23% 절감; LDPC throughput 32.9~37.6Mbps(NoC 없이), 2D Torus/Mesh 삽입 시 6.76~11.2Mbps로 4~5배 저하.</li><li>한계: 실측 없음(합성+NoC 시뮬), 무선 WiMaX 특화, 네트워크 통신대역이 병목.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TDMP/layered SISO-CN 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>낮음 (Prime는 min-sum C2V/V2C, BCJR-SISO trellis와 이질)</td></tr><tr><td>WiMaX QC-LDPC H-matrix(순환천이) 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>낮음 (irregular·저rate, NAND 고rate와 상이)</td></tr><tr><td>turbo/LDPC HW 공유·재구성</td><td>대응 없음</td><td>Prime ECC는 LDPC 전용, turbo 없음</td></tr><tr><td>MPSoC NoC 라우팅/메모리 공유</td><td>대응 없음</td><td>단일 QC-LDPC 엔진, MPSoC/NoC 구조 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무선 turbo/LDPC 겸용 복호기·NoC 트래픽 분석으로 NAND binary QC-LDPC min-sum 파이프라인에 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4621490",
+  "title": "Reconfigurable Architecture for LDPC and Turbo Decoding: A NoC Case Study",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "2304",
+  "soft_quant": "미상",
+  "key_contribution": "하나의 SISO-CN 처리유닛으로 turbo와 LDPC(TDMP/layered)를 공유 복호하는 재구성형 MPSoC 아키텍처 (분리 대비 면적 23% 절감)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "42.8k~43.2k gates@0.13um",
+  "parallelism": "부분",
+  "throughput_gbps": 0.037,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "WiMaX 무선용 turbo+LDPC 공유·NoC 분석이 핵심, NAND binary QC-LDPC와 무관, TDMP는 BCJR-SISO 기반",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4621490---reconfigurable-architecture-for-ldpc-and-turbo-decoding-a-noc-case-study-2008-ieee">ieee:4621490 - Reconfigurable Architecture for LDPC and Turbo Decoding: A NoC Case Study (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

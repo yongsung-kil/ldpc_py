@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6466751</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6466751---low-cost-vlsi-design-of-the-ldpc-decoder-in-advanced-broadcasting-system-for-satellite-2012-ieee">ieee:6466751 - Low cost VLSI design of the LDPC decoder in Advanced Broadcasting System for Satellite (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>15360</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>정렬 스케줄링 + payload CRC 조기종료로 iteration 8~10% 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>ABS-S 표준 특화 부호(15360bit)이고 gatecount/throughput 미기재, 정정능력 개선 없음</td></tr><tr><td>추가확인</td><td>정렬 스케줄링의 CN 실패수 계산 오버헤드와 파이프라인 스톨 영향, soft quant bit 폭</td></tr></tbody></table>
+<blockquote><p>총평: 고rate QC-LDPC layered normalized min-sum에 정렬 스케줄링+payload CRC 조기종료를 얹어 iteration을 줄이는 실용 기법이나, 조기종료는 Prime ECC가 이미 보유(Partial/Full CRC)해 신규성은 정렬 스케줄링 정도.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 위성방송 표준 ABS-S로, 32×32 순환천이 서브행렬로 구성된 QC-LDPC, 고정길이 <code>Nldpc=15360</code>, 8개 rate(1/2~9/10)를 단일 디코더로 지원.</li><li>문제: layered 복호에서 반복(iteration) 수와 그로 인한 전력을 줄이면서 8 rate 호환 저비용 VLSI를 만드는 것.</li><li>복호는 layered(수평) 스케줄링 + 정규화 min-sum: 각 layer에서 갱신된 bit LLR을 다음 layer CN 평가에 즉시 사용.</li><li>CN 갱신식은 <code>Lr = (∏ sign(Lq))·min(|Lq|)·k</code>로, <code>k</code>는 min-sum 과추정 보정 scaling factor.</li><li>bit node 갱신은 <code>Lq_i,m+1 = Lq_i,m + (Lr(n) - Lr(n-1))</code>로 layer 간 extrinsic 차분만 누적.</li><li>핵심 트릭1 "sorted scheduling": 1st iteration 후 각 layer의 실패 check 방정식 수를 세어, 실패가 적은 layer부터(불확실 bit가 최신 정보를 받도록) 처리 → 평균 iteration 0.5~1 감소.</li><li>핵심 트릭2 "payload CRC 조기종료": irregular 부호라 마지막 반복에서 오류가 parity부에 몰림 → 실패 check 수가 임계 T(=50) 미만이면 payload 32bit CRC를 활성화, payload가 통과하면 parity 실패가 남아도 종료.</li><li>HW: Altera Stratix III FPGA, 135MHz, 32개 SISO CNU 병렬, LLR 메모리 뱅크와 extrinsic 메모리 뱅크 2개, 스케줄/종료는 main controller가 담당.</li><li>결과: sorted scheduling+CRC 조기종료로 총 iteration 8~10% 감소(예: QPSK 3/4 4.2dB에서 10271→9267), FPGA ALUT 38%/메모리 22% 사용.</li><li>한계: gatecount/throughput/BER 곡선 수치 없음(FPGA 자원표만), soft quant bit 폭 미기재, 정정능력(waterfall/error-floor) 개선은 없음(iteration/전력 절감 목적).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered normalized min-sum 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리도 min-sum 이터레이션 루프 보유; scaling·layered 스케줄만 참고</td></tr><tr><td>sorted scheduling (실패 check 수 기반 layer 순서)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄 재배치 삽입 지점; Dual-Update와 정합 검토 필요</td></tr><tr><td>payload CRC 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>이미 보유(중복 기여) — payload-only 활성화 아이디어만 참고</td></tr><tr><td>32×32 순환 QC 구조, LLR/extrinsic 메모리 뱅크</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 z=32와 lifting 크기 일치, 구조 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 정규화 min-sum·CRC 조기종료는 Prime ECC가 이미 보유하며, 신규 이식 후보는 "실패 check 수 기반 sorted scheduling"으로 iteration 절감 여지가 있으나 정정능력 개선은 없고 표준 특화 부호라 검증 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6466751",
+  "title": "Low cost VLSI design of the LDPC decoder in Advanced Broadcasting System for Satellite",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.9",
+  "code_length": "15360",
+  "soft_quant": "미상",
+  "key_contribution": "정렬 스케줄링 + payload CRC 조기종료로 iteration 8~10% 감소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "ABS-S 표준 특화 부호(15360bit), gatecount/throughput 미기재, 정정능력 개선 없음",
+  "todo_check": "정렬 스케줄링의 실패 check 계산 오버헤드/파이프라인 스톨, soft quant bit 폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6466751---low-cost-vlsi-design-of-the-ldpc-decoder-in-advanced-broadcasting-system-for-satellite-2012-ieee">ieee:6466751 - Low cost VLSI design of the LDPC decoder in Advanced Broadcasting System for Satellite (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

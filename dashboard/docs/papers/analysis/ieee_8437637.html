@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8437637</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8437637---decoding-reed-muller-codes-using-minimum-weight-parity-checks-2018-ieee-isit">ieee:8437637 - Decoding Reed-Muller Codes Using Minimum-Weight Parity Checks (2018, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.23~0.77</td></tr><tr><td>부호length</td><td>32~128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>RM 부호의 최소무게 PC(MWPC) 과잉 행렬을 채널 신뢰도로 수신벡터에 맞춰 선별(Hsub)해 반복복호로 near-ML 달성+복잡도 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>RM 부호 automorphism 유래 MWPC(짧은 대칭 대수부호) 전용, QC-LDPC엔 대칭성 부재로 이식 불가; short block(n=32~128) 시뮬만</td></tr><tr><td>추가확인</td><td>BP 과신 완화용 message scaling(w&lt;1)이 min-sum 개념과 겹치나 이미 보유, MWPC 선별은 RM 고유</td></tr></tbody></table>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 짧은 RM(r,m) 부호(<code>n=2^m</code>, <code>n=32/128</code>, rate 0.23~0.77), BEC/BI-AWGN/BSC 채널, ML 근접 복호 목표.</li><li>문제: RM은 ML서 우수하나 실용 반복복호로 near-ML 달성 여부 미해결; 전체 MWPC 사용은 복잡(예 RM(3,7)은 weight-16 PC 94,488개).</li><li>모델: 이진선형부호의 dual codeword가 유효 PC 행; RM(r,m)의 dual은 RM(m-r-1,m), MWPC weight <code>2^{r+1}</code>, 개수 <code>F(r,m)</code>(식(1)).</li><li>핵심기법1: 최소무게 dual codeword만 행으로 담은 과잉(redundant) PC 행렬 <code>Hfull</code>에 반복복호(peeling/BP/LP/BF) 적용.</li><li>핵심식: MWPC는 <code>(r+1)</code>차원 affine subspace의 indicator → Algorithm 1로 지정 <code>r+2</code>비트를 포함하는 MWPC 생성.</li><li>핵심기법2: 수신 LLR <code>γ</code> 정렬로 good(G)/bad(B) 비트 분할, bad 1개+good <code>r+1</code>개로 MWPC 뽑아 수신벡터 맞춤 <code>Hsub</code>(s행) 구성(Algorithm 2, 파라미터 <code>f</code>).</li><li>구현 디테일: BP에서 cycle correlation 과신 완화 위해 bit-node 입력 message에 scaling <code>w&lt;1</code> 곱(min-sum overconfidence 대책과 동일 취지); LP는 ADMM(µ,Tmax).</li><li>최적화: <code>f</code>(신뢰비트 비율)와 행 수 <code>s</code>를 부호별 튜닝(RM(3,7)은 ~3% MWPC로 full 대비 향상).</li><li>결과: RM(2,5)는 BEC/AWGN/BSC 모두 near-ML; RM(3,7)은 <code>Hsub</code> 3%로 full 대비 최대 0.5dB 향상(cycle 감소), n=128서 MRB 대비 ~0.25dB.</li><li>한계: HW 미설계·시뮬만; short block RM 대수부호의 automorphism 유래 대칭성에 의존해 QC-LDPC로 일반화 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MWPC 과잉 PC 행렬 / 수신맞춤 Hsub 생성</td><td>대응 없음</td><td>RM automorphism 유래 대칭 PC, 고정 binary QC-LDPC(<code>ecc_top.cpp</code> <code>Load_PCM()</code>)엔 대칭성·중복 PC 개념 없음</td></tr><tr><td>BP message scaling (w&lt;1) 과신 완화</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code> (min-sum)</td><td>개념 유사하나 이미 보유(min-sum magnitude), 신규성 없음</td></tr><tr><td>LLR 신뢰도 정렬 기반 비트 분류</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code> (부분 유사만)</td><td>복호 전 PC 선별 목적이라 NAND read LLR와 용도 상이</td></tr><tr><td>peeling/LP/BF 복호</td><td>대응 없음</td><td>Prime ECC는 min-sum QC-LDPC 전용, 해당 복호기 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 짧은 RM 대수부호의 automorphism 유래 MWPC 과잉행렬+수신맞춤 선별 기법으로, 대칭성 없는 NAND binary QC-LDPC ECC에 이식 불가(단 BP message-scaling은 이미 min-sum으로 보유).</p>
+<pre><code>{
+  "id": "ieee:8437637",
+  "title": "Decoding Reed-Muller Codes Using Minimum-Weight Parity Checks",
+  "year": 2018,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.23~0.77",
+  "code_length": "32~128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "RM 부호의 최소무게 PC(MWPC) 과잉 행렬을 채널 신뢰도로 수신벡터에 맞춰 선별(Hsub)해 반복복호로 near-ML 달성+복잡도 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "RM 부호 automorphism 유래 MWPC(짧은 대칭 대수부호) 전용, QC-LDPC엔 대칭성 부재로 이식 불가; short block(n=32~128) 시뮬만",
+  "todo_check": "BP 과신 완화용 message scaling(w&lt;1)이 min-sum 개념과 겹치나 이미 보유, MWPC 선별은 RM 고유"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8437637---decoding-reed-muller-codes-using-minimum-weight-parity-checks-2018-ieee-isit">ieee:8437637 - Decoding Reed-Muller Codes Using Minimum-Weight Parity Checks (2018, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

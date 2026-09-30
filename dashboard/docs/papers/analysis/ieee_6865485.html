@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6865485</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6865485---performance-comparison-of-hybrid-partial-response-detectors-over-frequency-selective-fading-channels-2014-ieee">ieee:6865485 - Performance Comparison of Hybrid Partial Response Detectors over Frequency-Selective Fading Channels (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>2단 하이브리드 detector(PRML vs PRBP) 성능 비교 - prefilter로 CIR을 sparse TIR로 만든 뒤 Viterbi/BP로 잔여 ISI 정정, ITU-R 3G 채널에서 PRBP가 MMSE-LE 대비 최대 3.5dB 우수</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BP는 채널 등화용(ISI factor graph)이고 channel coding 미고려 - NAND/LDPC 부호 무관, 무선 fading 특화, 시뮬만</td></tr><tr><td>추가확인</td><td>없음 (NAND binary LDPC ECC와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 3G 무선 fading 채널용 PRML/PRBP 등화기 비교 논문. BP를 채널 detection에 적용해 NAND LDPC 부호와 무관, 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: frequency-selective fading 무선 채널, QPSK(<code>M=4</code>), 심볼레이트 <code>f=50MHz</code>, SRRC(roll-off 0.25), <code>N=1024</code> 심볼 블록. channel coding은 고려 안 함(등화만).</li><li>문제: MLSE(Viterbi)는 ISI에 최적이나 복잡도가 채널길이에 지수적으로 증가해 비현실적. 실용적 suboptimal detector가 필요.</li><li>모델: 이산시간 CIR <code>h=[h[0]..h[Lh-1]]</code> + complex AWGN <code>w[k]</code>, <code>y[k]=Σ x[k-i]h[i]+w[k]</code>. 채널은 수신단에서 완벽히 알려짐 가정.</li><li>통합 프레임워크: 1단 prefilter <code>f</code>로 CIR을 target impulse response(TIR) <code>g</code>(nonzero tap 소수)로 부분등화 → 2단 nonlinear detector로 잔여 ISI 제거.</li><li>PRML: prefilter를 CSF로 써서 CIR을 짧은 연속 TIR로 축소 후 reduced-state Viterbi MLSE 적용. CSF가 all-pass가 아니라 colored noise 발생 → MLSE 성능 저하(백색잡음에서만 최적).</li><li>PRBP: TIR nonzero tap 위치를 CIR의 dominant arrival에 맞추고(비연속 허용) MMSE로 prefilter/TIR 계수 결정. BP 복잡도는 nonzero tap 수에만 의존.</li><li>BP 동작: ISI factor graph에서 채널 입력심볼=variable node, 출력=check node. CTV/VTC 메시지를 여러 iteration 교환 후 각 variable node 정보로 심볼 추정.</li><li>파라미터: TIR nonzero tap 3, BP iteration 5, prefilter 길이 <code>Lf=5Lh</code>(실용적으론 <code>≈3Lh</code>면 충분). TIR nonzero tap은 최소 3개 권장.</li><li>결과: ITU-R 3G 4개 프로파일에서 PRBP가 PRML·MMSE-LE보다 일관되게 우수. SER 10^-4에서 indoor office B 기준 MMSE-LE 대비 3.5dB, outdoor-to-indoor/pedestrian B 기준 2dB 이득. PRML은 자기기록과 달리 무선 fading에선 colored noise로 MMSE-LE 대비 우위 없음.</li><li>한계: 채널 등화(detection) 성능 비교 논문. HW 미설계(시뮬만), channel coding·LDPC 부호 없음, NAND와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PRBP(BP) detector / CTV·VTC 메시지</td><td>대응 없음</td><td>Prime ECC의 C2V/V2C는 LDPC 부호 복호용, 본 논문은 ISI 채널 detection용으로 목적이 다름</td></tr><tr><td>PRML(Viterbi MLSE) detector</td><td>대응 없음</td><td>trellis 계열 detector로 Prime ECC(min-sum LDPC)와 무관</td></tr><tr><td>prefilter/TIR(channel shortening/sparsening)</td><td>대응 없음</td><td>NAND ECC에 채널 등화 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BP/Viterbi를 무선 fading 채널의 ISI detection에 적용·비교한 논문으로, NAND binary LDPC ECC와 대응 모듈이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6865485",
+  "title": "Performance Comparison of Hybrid Partial Response Detectors over Frequency-Selective Fading Channels",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "2단 하이브리드 detector(PRML vs PRBP) 성능 비교 - prefilter로 CIR을 sparse TIR로 만든 뒤 Viterbi/BP로 잔여 ISI 정정, ITU-R 3G 채널에서 PRBP가 MMSE-LE 대비 최대 3.5dB 우수",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BP는 채널 등화용(ISI factor graph)이고 channel coding 미고려 - NAND/LDPC 부호 무관, 무선 fading 특화, 시뮬만",
+  "todo_check": "없음 (NAND binary LDPC ECC와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6865485---performance-comparison-of-hybrid-partial-response-detectors-over-frequency-selective-fading-channels-2014-ieee">ieee:6865485 - Performance Comparison of Hybrid Partial Response Detectors over Frequency-Selective Fading Channels (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

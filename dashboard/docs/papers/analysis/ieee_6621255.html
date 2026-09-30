@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6621255</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6621255---improved-min-sum-plus-correction-factor-algorithm-using-stopping-node-for-ldpc-decoding-2012-ieee-conference">ieee:6621255 - Improved Min-Sum-Plus-Correction-Factor Algorithm using Stopping Node for LDPC Decoding (2012, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Min-Sum+보정계수 복호에서 LLR 부호가 K회 불변인 bit node를 Stopping Node로 동결, 다음 iteration 연산 생략</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>처리시간 지표가 MATLAB 러닝타임(HW gate/throughput 아님), BER 0.05~0.2dB 손실, 부호구조·gatecount 미제시</td></tr><tr><td>추가확인</td><td>node-freeze가 error-floor/수렴에 미치는 영향, K값(9/11) 튜닝 근거</td></tr></tbody></table>
+<blockquote><p>총평: node-level 조기동결로 avg iteration·연산량을 줄이는 아이디어는 재사용 가능하나 검증이 얕고(시뮬·러닝타임) BER 손실이 있어 정독가치 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate 1/2 (504,252) 이진 LDPC, QPSK, AWGN 채널, 최대 iteration <code>Ymax=30/70</code>.</li><li>문제: Min-Sum+Correction-Factor(MSPCF) 복호의 iteration당 연산량이 커서 처리시간/전력 부담.</li><li>기법 베이스(MSPCF): CN 갱신을 <code>L(rji)=⊕ L(qi'j)</code>로 두고, <code>L(a1⊕a2)=sign·sign·min[|L1|,|L2|] + s(x,y)</code> 보정계수 <code>s(x,y)=log(1+e^{-|x+y|})/(1+e^{-|x-y|})</code>로 min-sum 오차 보정.</li><li>핵심기법(Stopping Node): 각 bit node의 hard decision <code>c_i^(y)</code> 부호가 최근 <code>K</code>회 iteration 동안 불변이면 그 노드를 Stopping Node(SN)로 지정.</li><li>판정식: <code>Σ_{j=y-K}^{y} |c_i^(j)| = K</code> 이면 SN → 해당 노드의 <code>L(qij)</code>, <code>L(rji)</code> 갱신을 생략하고 직전 값 유지.</li><li>의미: 이미 수렴한(부호 안정) 노드의 message passing 연산을 건너뛰어 다음 iteration 연산량 감소.</li><li>조기종료(ES): 모든 노드가 SN이면 Early Stopping으로 iteration 자체 종료.</li><li>파라미터: 관측창 <code>K=9</code> 또는 <code>11</code>로 실험 (K 클수록 BER 손실↓, 연산절감↓).</li><li>결과: 처리시간(MATLAB 러닝타임) MSPCF 대비 2~6배 감소 (Ymax=70, 3.5dB: 12454s→2089s(K=9)), BER 손실 0.05~0.2dB.</li><li>한계: HW 미설계, 복잡도 지표가 SW 러닝타임뿐(gatecount/throughput 없음), SNR&gt;2.5dB에서는 iteration 절감 거의 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>복호 이터레이션 루프 / 노드 동결</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>SN 동결 로직을 이터 루프에 삽입 가능 — VN/CN 갱신 스킵 조건 추가</td></tr><tr><td>Min-Sum + 보정계수 CN 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>MSPCF의 보정계수는 우리 순수 min-sum과 다름(보정계수 미보유) — 참고 가능하나 HW면적↑ 우려</td></tr><tr><td>VN 부호 안정성 판정(hard decision)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>LLR 부호 K회 불변 판정 로직 대응 지점</td></tr><tr><td>조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>전역 ES는 이미 Partial/Full CRC 조기종료 보유 — 중복</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 노드별 조기동결(avg iteration 감소) 착안점은 유효하나, 전역 조기종료는 이미 CRC로 보유하고 보정계수 min-sum은 HW면적 관점에서 불리하며 검증이 시뮬·SW 러닝타임 수준에 그친다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6621255",
+  "title": "Improved Min-Sum-Plus-Correction-Factor Algorithm using Stopping Node for LDPC Decoding",
+  "year": 2012,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "504",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LLR 부호가 K회 불변인 bit node를 Stopping Node로 동결해 다음 iteration 연산 생략 (MSPCF-SN)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "처리시간 지표가 MATLAB 러닝타임(HW gate/throughput 아님), BER 0.05~0.2dB 손실, 부호구조·gatecount 미제시",
+  "todo_check": "node-freeze가 error-floor/수렴에 미치는 영향, K값(9/11) 튜닝 근거"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6621255---improved-min-sum-plus-correction-factor-algorithm-using-stopping-node-for-ldpc-decoding-2012-ieee-conference">ieee:6621255 - Improved Min-Sum-Plus-Correction-Factor Algorithm using Stopping Node for LDPC Decoding (2012, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

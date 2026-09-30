@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8461609</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8461609---a-shuffled-based-iterative-demodulation-and-decoding-scheme-for-ldpc-coded-flash-memory-2018-ieee-icassp">ieee:8461609 - A Shuffled-Based Iterative Demodulation and Decoding Scheme for LDPC Coded Flash Memory (2018, IEEE ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>18396</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>TLC(8-PAM) 비-Gray 매핑 IDD에 shuffle(vertical) 스케줄링 + HW친화 structure interleaver로 1-codeword 처리, Le/Lc 메모리 53.5% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>1888K@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.555Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>IDD는 8-PAM demodulator↔decoder 반복이 전제 — Prime ECC는 셀당 심볼 복조 루프가 없고 8-PAM 비-Gray coded modulation 채널모델 도입 필요</td></tr><tr><td>추가확인</td><td>structure interleaver의 circulant Z=? 및 Prime ECC z_sb=32 정합성, 비-Gray 매핑용 부호 재설계 없이 스케줄러만 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND TLC 직접 타깃의 shuffle-IDD 스케줄러·structure interleaver로 메모리·throughput을 실측급으로 개선한 논문이나, IDD(반복 복조-복호) 전제와 8-PAM coded modulation 채널이 Prime ECC의 단발 hard/soft-read 구조와 달라 스케줄링 아이디어만 부분 이식 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: TLC NAND(8-PAM, 비-Gray 매핑) coded modulation, rate-0.9 (18396,16644) 매우 희소 LDPC(블록열 구조, circulant size <code>Z</code>), NMS 복호.</li><li>문제: 비-Gray 8-PAM용 희소 LDPC로 IDD 시 복호기-복조기 간 latency·hardware idle이 커져 non-IDD 대비 throughput/면적효율 열위.</li><li>기법 1단: shuffle-based(vertical scheduling) 복호를 활용, PCM을 G개 블록열로 나눠 블록열 순차로 V2C/C2V(NMS: <code>R=α·S·min{...}</code>, 0&lt;α&lt;1) 갱신 → extrinsic <code>Le</code>를 실시간 전달 가능.</li><li>기법 2단: HW친화 structure interleaver — 한 8-PAM 심볼의 3비트를 연속 3개 블록열(<code>b_j,z, b_{j+1,z}, b_{j+2,z}</code>)에 배치, 복조기가 3블록열 <code>Le</code>만 받으면 <code>Lc</code> 재계산 가능.</li><li>의미: 랜덤 interleaver 대신 구조화하여 복호기가 전체 블록열 <code>Le</code>를 다 계산해 넘길 필요 없이 3열 단위 파이프라인 → 1-codeword 처리 실현, idle 최소화.</li><li>부가 트릭: 블록열을 degree 내림차순 배치해 C2V recover/APP adder vs V2C calculator 간 HW conflict(idle) 회피.</li><li>인터페이스: <code>Le</code>를 전 블록열 저장 대신 3열 buffer로 대체, demodulator↔decoder 메모리 bank 최적화.</li><li>양자화: 5비트(non-IDD) / 6비트(IDD), 90nm TSMC 1P9M, 190MHz, FO4 27.8ps.</li><li>결과: throughput 1555 Mbps(layer-IDD 1100 대비 +40%), gate count 1888K, HW효율 292.19 Mbps/mm² (+41.6%), Le/Lc 메모리 53.5% 절감(1028K→478K), BER 0.5dB 개선.</li><li>한계: 8-PAM IDD 전제·특정 비-Gray 매핑 부호([5]) 종속, iteration 감소는 아니며 반복 복조 자체가 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>shuffle(vertical) 블록열 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>블록열 순차 스케줄은 Prime ECC의 z=32 row-병렬 스케줄과 상이, 재구성 필요</td></tr><tr><td>NMS C2V/V2C 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>min-sum 동일 계열이라 이미 보유(중복 기여)</td></tr><tr><td>structure interleaver / Le·Lc 버퍼</td><td>대응 없음 (Prime ECC는 단발 read LLR, IDD 복조 루프 없음)</td><td>8-PAM 심볼-블록열 매핑 인터리버는 우리 구조에 없음</td></tr><tr><td>8-PAM 비-Gray coded modulation 채널</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code> (확장 필요)</td><td>Prime ECC는 셀-비트 LLR을 직접 산출, 심볼 단위 IDD 채널모델 부재</td></tr><tr><td>block column degree 정렬(HW conflict 회피)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code> (개념적 유사)</td><td>edge/열 스케줄 최적화 아이디어는 GT와 유사하나 대상 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND TLC 직접 타깃이며 메모리·throughput 개선이 실측급이지만, 핵심 이득이 IDD(반복 복조-복호)+8-PAM coded modulation 전제에서 나오므로 단발 read 기반 Prime ECC엔 스케줄링·인터리버 아이디어만 부분 적용 가능하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8461609",
+  "title": "A Shuffled-Based Iterative Demodulation and Decoding Scheme for LDPC Coded Flash Memory",
+  "year": 2018,
+  "venue": "IEEE ICASSP",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": 18396,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "TLC(8-PAM) 비-Gray 매핑 IDD에 shuffle(vertical) 스케줄링 + HW친화 structure interleaver로 1-codeword 처리, Le/Lc 메모리 53.5% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "1888K@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1.555,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "IDD는 8-PAM demodulator↔decoder 반복이 전제 — Prime ECC는 셀당 심볼 복조 루프가 없고 8-PAM 비-Gray coded modulation 채널모델 도입 필요",
+  "todo_check": "structure interleaver의 circulant Z=? 및 Prime ECC z_sb=32 정합성, 비-Gray 매핑용 부호 재설계 없이 스케줄러만 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8461609---a-shuffled-based-iterative-demodulation-and-decoding-scheme-for-ldpc-coded-flash-memory-2018-ieee-icassp">ieee:8461609 - A Shuffled-Based Iterative Demodulation and Decoding Scheme for LDPC Coded Flash Memory (2018, IEEE ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

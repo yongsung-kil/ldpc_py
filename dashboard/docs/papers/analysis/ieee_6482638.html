@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6482638</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6482638---hierarchical-and-high-girth-qc-ldpc-codes-2013-ieee-trans-information-theory">ieee:6482638 - Hierarchical and High-Girth QC LDPC Codes (2013, IEEE Trans. Information Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.45~0.7</td></tr><tr><td>부호length</td><td>8000~28000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>protograph 고정 하 girth 최대화: HQC(계층 circulant) 중간표현 + hill-climbing + squashing으로 inevitable cycle 제거해 고girth QC-LDPC 생성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호설계 기법(HW 미설계), Gallager-B/BSC 시뮬만(min-sum·AWGN 아님), spatially-coupled protograph 타깃</td></tr><tr><td>추가확인</td><td>Prime ECC 고정 QC-LDPC H-matrix에 hill-climbing+squashing으로 girth 재최적화 시 error-floor 개선폭·rate/length 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: waterfall 최적 protograph를 유지하며 girth 최대화로 error-floor를 낮추는 부호설계 방법론 - 아이디어는 유용하나 특정 spatially-coupled 부호·시뮬 검증뿐이라 Prime ECC 고정부호 이식엔 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 임의 protograph(특히 one-sided spatially-coupled) 구조를 유지하는 binary QC-LDPC 부호설계. HW 친화(circulant) 유지.</li><li>문제: waterfall 최적 protograph는 multi-edge를 가져 단순 lifting 시 inevitable short cycle(6/8-cycle)이 생겨 error-floor 유발.</li><li>핵심 표현: HQC(hierarchical QC) LDPC - circulant의 circulant을 다변수 다항식 <code>H(x_1..x_L)</code>(식 (21))과 라벨 트리로 표현, 각 level이 graph cover에 대응.</li><li>cycle 판정: HQC의 길이-<code>2m</code> cycle 필요충분조건은 각 변수별 교대합 <code>sum ≡ 0 (mod z_j)</code>가 모든 level에서 동시 성립(Theorem 1, 식 (30)).</li><li>핵심 기법 1: hill-climbing girth 최대화(Algorithm 1/2) - cost vector 기반 greedy 라벨 조정으로 non-inevitable cycle 제거. PEG/guess-and-test보다 짧은 length·빠른 시간.</li><li>핵심 기법 2: squashing - HQC 계층구조를 접어 inevitable cycle을 제거, 계층성은 사라지나 원 protograph 대응 QC-LDPC 유지(계산 trivial).</li><li>설계 절차: protograph → 2-level HQC lifting → hill-climbing(non-inevitable 제거) → squash(inevitable 제거) → 고girth QC-LDPC.</li><li>결과 부호: girth-10 rate-0.45 len-8000, girth-10 rate len-24000, girth-8 rate-0.7 len-28000(모두 one-sided spatially-coupled protograph).</li><li>성능: Gallager-B/BSC 시뮬에서 동일 protograph girth-6 대비 error-floor 대폭 감소(girth-10은 WER~10^-? 까지 floor 없음), var-degree 4 girth-8은 관측 floor 없음.</li><li>한계: 부호설계뿐 HW 미설계, Gallager-B/BSC 시뮬만(min-sum/AWGN·gate count 없음), 고rate girth-10은 block length 과대(rate-0.8 girth-10은 ~수만 필요).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>고girth QC-LDPC 부호구조 생성(HQC+squashing)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>girth 재최적화로 error-floor 낮추는 부호설계 - Prime ECC는 H-matrix 고정이라 재검증 부담 큼</td></tr><tr><td>girth→error-floor(trapping-set) 개선</td><td>대응 없음</td><td>정정능력/error-floor 개선을 부호구조로 달성, decoder 모듈 직접 대응 아님</td></tr><tr><td>hill-climbing / squashing 알고리즘</td><td>대응 없음</td><td>오프라인 부호설계 도구, 런타임 디코더 코드와 무관</td></tr><tr><td>Gallager-B 복호 시뮬</td><td>대응 없음</td><td>Prime ECC는 min-sum, 논문 시뮬은 Gallager-B(BSC)</td></tr></tbody></table>
+<p>적용 가치: 중간 — waterfall 유지+girth 최대화로 error-floor를 낮추는 부호설계 방법론은 Prime ECC 고rate QC-LDPC의 error-floor 개선에 원리적으로 유용하나, 고정 H-matrix 재설계·재검증 부담과 min-sum/AWGN 미검증으로 즉시 이식은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6482638",
+  "title": "Hierarchical and High-Girth QC LDPC Codes",
+  "year": 2013,
+  "venue": "IEEE Trans. Information Theory",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "8000~28000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "protograph 고정하 HQC 중간표현+hill-climbing+squashing으로 inevitable cycle 제거해 고girth QC-LDPC 생성, error-floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호설계뿐 HW 미설계, Gallager-B/BSC 시뮬만(min-sum/AWGN 아님), spatially-coupled protograph 타깃",
+  "todo_check": "Prime ECC 고정 QC-LDPC H-matrix에 hill-climbing+squashing 재최적화 시 error-floor 개선폭·rate/length 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6482638---hierarchical-and-high-girth-qc-ldpc-codes-2013-ieee-trans-information-theory">ieee:6482638 - Hierarchical and High-Girth QC LDPC Codes (2013, IEEE Trans. Information Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

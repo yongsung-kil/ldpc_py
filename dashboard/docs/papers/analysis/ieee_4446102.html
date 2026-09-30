@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4446102</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4446102---girth-conditioning-of-ldpc-codes-through-modified-breadth-first-search-algorithm-2007-ieee">ieee:4446102 - Girth Conditioning of LDPC Codes through Modified Breadth First Search Algorithm (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>510</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Tanner 그래프에서 짧은 사이클을 탐지·제거하여 girth를 늘리는 저복잡도 MBFS(Modified BFS) 알고리즘으로 기존 Trellis 기반 기법보다 낮은 복잡도로 동일 성능 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>girth를 과도하게 늘리면(g=10 이상) column/row weight 분포가 저하되어 오히려 성능이 악화되는 trade-off 존재</td></tr><tr><td>추가확인</td><td>이미 확정된 Prime ECC 3.1 H-matrix(PCM_b)에 girth conditioning 후처리를 적용할 경우 기존 검증된 부호 구조·rate와의 정합성 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: 기존 부호의 Tanner 그래프에서 edge를 최소한으로 제거해 girth를 늘리는 off-chip 후처리 기법으로, 새 부호 구성법 없이 기존 QC-LDPC에 적용 가능한 저복잡도 girth 개선 방법.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이미 존재하는 (irregular 가능) LDPC 부호의 Tanner 그래프(bipartite graph)에서 girth(최단 사이클 길이)를 사후에 증가시키는 방법. 예시 부호는 QC-LDPC(255,510), rate 1/2, 두 개의 255x255 순환행렬로 구성.</li><li>문제: 짧은 사이클은 BP/SPA 복호 시 메시지 독립성을 깨뜨려 성능을 저하시키며, 기존 Trellis 기반 girth conditioning([5])은 복잡도가 커서 긴 부호(N up to 3만)에 적용 곤란.</li><li>핵심 가정: 표준 BP/SPA 반복복호, AWGN 채널.</li><li>핵심 기법 1단: 각 variable node <code>s</code>를 루트로 하는 support tree <code>T_s</code>를 <code>g/2</code> 레벨까지 BFS로 탐색해, 레벨 <code>g/2</code>에서 노드가 두 번 나타나면 길이 <code>g</code> 사이클 존재로 판정(MBFS, 표준 BFS의 변형).</li><li>핵심 식: 사이클을 이루는 edge를 최소로 제거하는 문제는 set-covering 문제로 정식화 — <code>min Σx_{i,j}</code> s.t. <code>Σx_{i,j}y_{i,j} ≥ 1 ∀cycle∈C_g</code> (NP-complete). 그리디 방식으로 각 edge의 등장 카운터 <code>K_{i,j}</code>가 최대인 edge부터 제거.</li><li>핵심 기법 2단: girth conditioning을 반복 적용해 <code>g0 → g0+2 → g0+4 ...</code>로 순차 증가시키는 iterative 구조(G0→G1→G2→...).</li><li>부수 트릭: H matrix 자체를 카운터 저장 공간으로 재사용해 별도 메모리 오버헤드 최소화(공간복잡도 <code>O((d_v d_c)^{g/2})</code> 분석, N=30000 부호도 처리 가능함을 입증).</li><li>최적화 절차: 그리디 휴리스틱(정식 DE/GA 없음), 복잡도 분석으로 최대 girth 상한 결정.</li><li>결과: girth 4→6 적용 시 약 0.5dB, 6→8 적용 시 약 1dB 코딩 이득; 단 8→10 확장 시 일부 Eb/N0 구간에서 오히려 성능 저하(row/column weight 분포가 저weight 쪽으로 치우쳐 구조 붕괴).</li><li>한계: HW 미설계, off-chip 전처리 전용(온칩 실시간 미적용), 복호 반복횟수(maxit) 영향은 미미하다고만 정성적으로 언급되고 특정 수치의 iteration 감소 보고는 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>girth conditioning (사이클 제거로 H-matrix 수정)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>기존 확정 PCM_b에 후처리로 girth 개선을 적용할 수 있으나 QC 구조(z_sb=32 lifting) 유지 검증 필요</td></tr><tr><td>그리디 edge 제거 알고리즘</td><td>대응 없음</td><td>순수 오프라인 그래프 알고리즘으로 디코더/인코더 실행 경로와 무관</td></tr><tr><td>girth-성능 trade-off 분석(weight 분포)</td><td>대응 없음</td><td>Prime ECC는 코드 구조가 이미 고정(base matrix 설계 완료)이라 이 분석 로직 자체는 대응 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 | Prime ECC 3.1의 H-matrix는 이미 특정 QC-LDPC 구조로 고정·검증되어 있어(§4 "부호설계는 이식 난이도 높음") girth 재설계는 재검증 부담이 크고, 본 논문은 순수 이론적 오프라인 구성법에 그쳐 즉시 이식 가치는 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4446102",
+  "title": "Girth Conditioning of LDPC Codes through Modified Breadth First Search Algorithm",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 510,
+  "soft_quant": "무관",
+  "key_contribution": "Tanner 그래프에서 짧은 사이클을 탐지·제거하여 girth를 늘리는 저복잡도 MBFS(Modified BFS) 알고리즘으로 기존 Trellis 기반 기법보다 낮은 복잡도로 동일 성능 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "girth를 과도하게 늘리면(g=10 이상) column/row weight 분포가 저하되어 오히려 성능이 악화되는 trade-off 존재",
+  "todo_check": "이미 확정된 Prime ECC 3.1 H-matrix(PCM_b)에 girth conditioning 후처리를 적용할 경우 기존 검증된 부호 구조·rate와의 정합성 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4446102---girth-conditioning-of-ldpc-codes-through-modified-breadth-first-search-algorithm-2007-ieee">ieee:4446102 - Girth Conditioning of LDPC Codes through Modified Breadth First Search Algorithm (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

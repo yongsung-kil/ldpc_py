@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1710383</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_1710383---a-turbo-decoding-message-passing-algorithm-for-sparse-parity-check-matrix-codes-2006-ieee-transactions-on-signal-processing">ieee_1710383 - A Turbo-Decoding Message-Passing Algorithm for Sparse Parity-Check Matrix Codes (2006, IEEE Transactions on Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>1024~9720</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check row를 순차 처리하며 최신 메시지를 즉시 다음 row 계산에 반영하는 layered(turbo-like) 메시지패싱(TDMP)으로 수렴속도 2배 개선 및 메모리 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>실제 HW 구현(합성/칩)은 없고 알고리즘/시뮬 및 데이터플로우 다이어그램 수준; 병렬화(P-TDMP)는 architecture-aware 구조(순열 네트워크) 전제로 QC-LDPC의 z-circulant 구조와는 다른 클러스터형 permuter</td></tr><tr><td>추가확인</td><td>Prime ECC의 기존 layered/dual-update 스케줄과 TDMP의 read-subtract-decode-writeback 4단계 구조 간 차이(특히 posterior message 누적 방식) 세부 대조 필요</td></tr></tbody></table>
+<blockquote><p>총평: Layered(row-serial) 스케줄과 단일 메시지 타입(posterior) 저장 방식을 통한 수렴속도·메모리 절감의 원조격 알고리즘으로, Prime ECC의 디코더 이터레이션 루프/메모리 구조 개선에 참고 가치 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: LDPC, repeat-accumulate(RA), turbo-like 코드를 포괄하는 sparse parity-check matrix(SPCM) 코드의 반복 복호.</li><li>표준 two-phase(LDPC-like) 스케줄은 variable/check 두 라운드로 나뉘어 같은 이터레이션 내에서 새로 계산된 메시지를 즉시 활용하지 못해 수렴이 느리고 메시지 두 종류(check/variable) 저장으로 메모리 소모가 큼.</li><li>채널모델은 AWGN+BPSK, 표준 sum-product 메시지패싱 프레임워크 가정.</li><li>TDMP(Turbo-Decoding Message-Passing): parity-check 행렬 H의 행(row, parity-check 식)을 순차 처리하며, 각 행마다 posterior message 벡터 <code>r</code>과 extrinsic message 벡터 <code>e_i</code>만 유지(메시지 타입 1종으로 통합).</li><li>각 row 처리는 4단계(Read: <code>r</code>,<code>e_i</code> 읽기 → Subtract: 사전확률 <code>p_i = r - e_i</code> 생성(extrinsic 원칙 유지) → Decode: SISO(식 4, 또는 BCJR)로 새 <code>e_i</code> 계산 → Write-back: <code>e_i</code> 갱신 및 <code>r += (new e_i - old e_i)</code>)로 구성, 최신 메시지를 같은 이터레이션 내 다음 row 계산에 즉시 반영.</li><li>병렬화판(P-TDMP): H를 겹치지 않는 row-band(cluster) 구조의 architecture-aware SPCM(AA-SPCM) 코드로 설계해 여러 row를 동시에 SISO 디코더 다수로 처리, Benes망 같은 프로그래머블 permuter로 클러스터 단위 라우팅.</li><li>메시지 계산은 <code>φ(x)=-log(tanh(|x|/2))</code> 대신 근사식 <code>Φ</code>(간단한 max 연산 기반, 식 7)로 대체해 단순 로직게이트로 구현 가능, 정확도 손실은 무시할 수준(그림3, ideal 대비).</li><li>코드 설계는 girth가 큰 그래프(Ramanujan graph, cage graph)로부터 base Tanner graph를 구성 후 확장(expansion)하는 절차 사용, EXIT chart로 수렴 분석.</li><li>결과: rate-1/3 length 3456 RA 코드에서 두 배 빠른 수렴(예: 1dB에서 20 vs 10 iteration), 고SNR에서 BER 약 10배(1자릿수) 개선, (3,6) regular 코드 기준 메모리 절감 약 43.75%.</li><li>한계: 알고리즘/시뮬레이션 수준 검증뿐, ASIC/FPGA 합성 결과 없음(단, 데이터플로우 그래프 및 Benes망 트랜지스터 수 추정치만 제시); P-TDMP는 특정 구조화 코드(AA-SPCM) 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Row-serial(layered) 스케줄, read-subtract-decode-writeback</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이미 보유한 Dual-Update(홀짝 교대 스케줄)와 유사 계열의 layered 스케줄 원조 개념, 직접 비교 가능</td></tr><tr><td>단일 메시지 타입(posterior) 통합, 메모리 절감</td><td><code>decoder.cpp</code>, <code>ecc_data.h</code> <code>PARAM_DEC</code></td><td>메시지 저장 구조 최적화 아이디어로 메모리 라우팅 개선 참고 가능</td></tr><tr><td>Φ-함수(간단 max 근사) 메시지 계산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>min-sum과 유사하게 tanh 근사를 단순연산으로 대체하는 개념, 이미 Min-Sum 채택 중이라 중복 기여</td></tr><tr><td>AA-SPCM 코드 설계(girth 기반 그래프 확장), Benes network permuter</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 구조 자체 변경으로 이식 난이도 높음, 랜덤 permuter 대신 구조화 permuter 아이디어는 GT.cpp와 결이 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — layered 스케줄/단일 메시지 통합을 통한 수렴속도·메모리 절감 원리는 디코더 이터레이션 구조 개선에 직접 참고할 수 있는 근본 기법(2006년 시점 layered decoding의 대표 원조 논문).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1710383",
+  "title": "A Turbo-Decoding Message-Passing Algorithm for Sparse Parity-Check Matrix Codes",
+  "year": 2006,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1024~9720",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check row를 순차 처리하며 최신 메시지를 즉시 다음 row 계산에 반영하는 layered(turbo-like) 메시지패싱(TDMP)으로 수렴속도 2배 개선 및 메모리 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "실제 HW 구현(합성/칩)은 없고 알고리즘/시뮬 및 데이터플로우 다이어그램 수준; 병렬화(P-TDMP)는 architecture-aware 구조(순열 네트워크) 전제로 QC-LDPC의 z-circulant 구조와는 다른 클러스터형 permuter",
+  "todo_check": "Prime ECC의 기존 layered/dual-update 스케줄과 TDMP의 read-subtract-decode-writeback 4단계 구조 간 차이(특히 posterior message 누적 방식) 세부 대조 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_1710383---a-turbo-decoding-message-passing-algorithm-for-sparse-parity-check-matrix-codes-2006-ieee-transactions-on-signal-processing">ieee_1710383 - A Turbo-Decoding Message-Passing Algorithm for Sparse Parity-Check Matrix Codes (2006, IEEE Transactions on Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

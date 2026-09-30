@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11313566</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11313566---a-markov-chain-monte-carlo-method-for-efficient-finite-length-ldpc-code-design-2026-ieee-transactions-on-communications">ieee:11313566 - A Markov Chain Monte Carlo Method for Efficient Finite-Length LDPC Code Design (2026, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.50~0.9</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Gibbs sampling 기반 MCMC(MC2)로 SC/MD-LDPC의 partitioning·lifting 단계에서 short cycle/흡수집합 수를 기존 대비 적은 연산으로 최소화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>부호설계(오프라인 구성 알고리즘) 전용이며 HW/디코더 구조 변경 없음, NAND 실측 없음</td></tr><tr><td>추가확인</td><td>Prime ECC 3.1의 고정 QC-LDPC H-matrix를 이 MCMC 방식으로 재설계할 실익이 있는지(재검증 부담 대비) 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC 유한장 부호설계(cycle 최적화)를 위한 MCMC 프레임워크로 이론적으로 우아하나, Prime ECC 3.1은 고정 QC-LDPC(비-SC) 구조라 직접 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 protograph 기반 spatially-coupled(SC) 및 multi-dimensional(MD) LDPC 부호로, base matrix를 partitioning(component matrix로 분할)한 뒤 circulant power로 lifting하는 2단계 구성 절차를 다룸.</li><li>기존 finite-length 최적화기(FL-AO)는 SC/MD 부호의 partitioning·lifting·relocation 자유도가 커질수록 연산량이 급증해 비효율적이라는 문제를 해결하고자 함.</li><li>목적함수 <code>C(x) = w4*C4(x) + w6*C6(x) + w8*C8(x)</code>는 partitioning/lifting 배치 <code>x</code> 하에서 활성 상태로 남는 cycle-4/6/8 후보 개수의 가중합.</li><li>핵심 기법은 Gibbs sampling 기반 MCMC(MC2)로, <code>P(x) ∝ exp(-βC(x))</code>인 분포에서 표본을 추출하며 d-tuple 단위로 조건부확률 <code>T(x';x|ν)</code>을 갱신해 상태를 전이.</li><li><code>β</code>는 목표 accept rate <code>fT</code>에 맞춰 PID 컨트롤러로 적응 조정되며(simulated annealing 형태), 이는 탐색 초반 광역 탐색→후반 탐욕적 최적화를 가능케 함.</li><li>Detailed balance(식 14)로 <code>P(x)</code>의 불변성과 비주기성을 증명(Lemma 2), 목적함수 최소값과 정상분포 기대값의 차이를 상한(Theorem 1)으로 도출.</li><li>부수적으로 목적함수 분포를 Gaussian으로 피팅(<code>μ_A(β)</code>, <code>σ_A(β)</code>)해 최소 cycle 수·필요 반복횟수·Markov chain recurrent class 크기를 사전 추정.</li><li>GD(gradient-descent, 기존 논문[19]) 기반 초기화와 결합하면 더 나은 recurrent class로 수렴; ordered overrelaxation으로 Gibbs sampling 수렴 10~20배 가속.</li><li>결과: cycle-6 최대 48.13%, cycle-8 최대 22.37% 감소, 동일 카운트 도달 시 연산량 최대 3.32 orders of magnitude 절감, FER/FER 성능 최대 1.61 orders of magnitude 개선(SC Code 3에서 literature 코드의 error floor를 size-10 stopping set 제거로 해소).</li><li>한계: 순수 소프트웨어 오프라인 부호설계 알고리즘(MATLAB)이며 HW 구현·양자화·디코더 구조 변경은 다루지 않고, 검증은 시뮬레이션(BEC/AWGNC)에 한정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SC/MD-LDPC partitioning·lifting 최적화</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC(비-SC) H-matrix를 로드만 하며, 이 논문의 MCMC 재설계 절차와는 구조적으로 무관</td></tr><tr><td>cycle-6/8, UAS/UTS 최소화 목적함수</td><td>대응 없음</td><td>Prime ECC 코드베이스는 부호설계 알고리즘 자체를 포함하지 않음(고정 H-matrix 사용)</td></tr><tr><td>디코딩 성능 검증(peeling/sum-product decoder)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>검증용 디코더 알고리즘은 다르지만(min-sum) 부호 품질이 디코더 성능에 영향을 준다는 관점만 공통</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — SC-LDPC 전용 부호설계 알고리즘으로 Prime ECC 3.1의 고정 QC-LDPC(non-SC) 구조 이식 난이도가 매우 높고(§4 "부호설계" 행 참조), HW/디코더 레이어 기여가 전무함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11313566",
+  "title": "A Markov Chain Monte Carlo Method for Efficient Finite-Length LDPC Code Design",
+  "year": 2026,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": "0.50~0.9",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Gibbs sampling 기반 MCMC(MC2)로 SC/MD-LDPC의 partitioning·lifting 단계에서 short cycle/흡수집합 수를 기존 대비 적은 연산으로 최소화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "부호설계(오프라인 구성 알고리즘) 전용이며 HW/디코더 구조 변경 없음, NAND 실측 없음",
+  "todo_check": "Prime ECC 3.1의 고정 QC-LDPC H-matrix를 이 MCMC 방식으로 재설계할 실익이 있는지(재검증 부담 대비) 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11313566---a-markov-chain-monte-carlo-method-for-efficient-finite-length-ldpc-code-design-2026-ieee-transactions-on-communications">ieee:11313566 - A Markov Chain Monte Carlo Method for Efficient Finite-Length LDPC Code Design (2026, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

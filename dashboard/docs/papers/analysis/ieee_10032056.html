@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10032056</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10032056---ldpc-level-prediction-toward-read-performance-of-high-density-flash-memories-2023-ieee-tcad">ieee:10032056 - LDPC Level Prediction Toward Read Performance of High-Density Flash Memories (2023, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.94</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>오류취약셀 비율로 최종 read i-level 예측 + i-level을 소수 d-level로 세분화해 read-retry latency 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더/부호 알고리즘 무관, read voltage 스케줄·retry 정책 최적화(컨트롤러 레벨)이며 Disksim+MATLAB 시뮬만</td></tr><tr><td>추가확인</td><td>corr-table 특성화 비용과 flash chip별 재보정 부담, d-level의 asymmetric read voltage 배치 근거</td></tr></tbody></table>
+<blockquote><p>총평: NAND read latency 최적화(예측+세분 read-retry) 시스템 기법으로 binary QC-LDPC 디코더/부호 이식 관점에선 대상 밖(read-retry 정책 참고 정도).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 고밀도(TLC/QLC) NAND, 8kB page, LDPC <code>code rate=0.94</code>, BP 디코딩, soft read-retry로 read i-level을 점증.</li><li>문제: RBER를 사전에 모르므로 read level을 낮은 값부터 점증(read-retry)해 불필요한 sensing/전송/decoding latency 누적.</li><li>관찰: 처음 두 read voltage 사이 "error-prone area"에 놓인 셀 비율이 최종 성공 read i-level과 비례.</li><li>기법1 (예측): error-prone 셀 수를 세어 페이지 크기로 나눈 비율을 corr-table(7 entry, ~7~10 byte, DRAM 상주)로 조회해 최종 read i-level을 예측 후 바로 그 level로 read.</li><li>corr-table은 flash chip type별 특성화(7000 page read)로 구축, 예측이 실제 level과 정확 일치 확률 50~70%, ±1 level 포함 시 90%+.</li><li>기법2 (fine-grained): 정수 i-level을 소수 d-level(예 1.25/1.5/1.75)로 분할, 각 retry에서 read voltage를 1개만 추가(TLC 0.25, MLC 0.5, QLC 0.125 단위).</li><li>d-level 추가 시 asymmetric interstate error 고려해 RBER 높은 P6-P7 영역에 우선 배치.</li><li>PreLDPC: hard read(i-level1) → 다음 d-level → 실패 시 예측 i-level 점프 → 그 후 d-level 단위 fine-grained retry (Algorithm 1).</li><li>결과: Baseline(progressive 7 i-level) 대비 read latency 평균 30% 감소(P/E 4000·1개월 retention), 세분화 단독 7%, 예측 단독 25%.</li><li>한계: HW 미설계, 디코더/부호 알고리즘 변경 없음, MATLAB(LDPC)+Disksim(SSD) 시뮬만, low P/E·짧은 retention에선 예측 이득 음수.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| soft read voltage/threshold 배치, d-level | channel.cpp Set_R_Offset(), Set_LLR_Th() | read voltage 개수·위치 개념은 닿으나 논문은 컨트롤러 retry 정책이라 직접 대응 약함 |
+| read-retry 정책 / 최종 read level 예측 | 대응 없음 | 디코더 이터레이션 외부의 sensing 스케줄이라 코드베이스 대응 모듈 없음 |
+| LDPC 디코딩(BP) | decoder.cpp LDPC_Decoder() | 논문은 디코더 내부를 건드리지 않음(블랙박스로 사용) |</code></pre>
+<p>마지막으로 적용 가치: <strong>낮음</strong> — read voltage/soft-read 비용 관점에서 채널 threshold 설정과 개념적으로만 겹치고, 논문 기여(예측·retry 세분화)는 디코더/부호가 아닌 컨트롤러 read 정책이라 Prime ECC 이식 대상이 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10032056",
+  "title": "LDPC Level Prediction Toward Read Performance of High-Density Flash Memories",
+  "year": 2023,
+  "venue": "IEEE TCAD",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.94,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "오류취약셀 비율로 최종 read i-level 예측 + i-level을 소수 d-level로 세분화해 read-retry latency 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코더/부호 알고리즘 무관, read voltage 스케줄·retry 정책(컨트롤러 레벨)이며 Disksim+MATLAB 시뮬만",
+  "todo_check": "corr-table 특성화 비용과 flash chip별 재보정 부담, d-level asymmetric read voltage 배치 근거"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10032056---ldpc-level-prediction-toward-read-performance-of-high-density-flash-memories-2023-ieee-tcad">ieee:10032056 - LDPC Level Prediction Toward Read Performance of High-Density Flash Memories (2023, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

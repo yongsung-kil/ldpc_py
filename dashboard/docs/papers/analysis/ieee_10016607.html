@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10016607</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10016607---simulation-of-dynamic-weighted-ms-decoding-algorithm-on-ldpc-for-5g-2022-iccwamtip">ieee:10016607 - Simulation of Dynamic Weighted MS Decoding Algorithm on LDPC for 5G (2022, ICCWAMTIP)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>512~1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>C2V LLR을 3구간으로 나눠 α 이득/β 억제로 동적 가중해 수렴 가속·성능 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G LDPC/BPSK/AWGN 시뮬만, HW 미설계, 파라미터(α,β,n1,n2) 수동 튜닝·근거 빈약</td></tr><tr><td>추가확인</td><td>LLR 구간 임계(n1=0.8,n2=0.3) 및 α/β가 고정소수점 min-sum·NAND RBER 채널에서도 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: MS의 min1 magnitude를 LLR 크기 3구간별로 스칼라 가중하는 경량 변형으로 아이디어는 이식 쉬우나 0.4dB·iteration 감소가 5G float 시뮬 한정이라 가치 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR LDPC, BPSK, AWGN 채널. 부호 rate 1/2·2/3, code length 512·1024, PEG 구성 + LU분해 인코딩.</li><li>문제: 표준 Min-Sum(MS)은 sum-product 대비 근사로 BER 손실이 있어 성능·수렴을 함께 개선하고자 함.</li><li>모델: LLR <code>L(q_ij)</code>(VN→CN), <code>L(r_ji)</code>(CN→VN)의 크기가 0/1 확률차(신뢰도)를 반영한다는 관점.</li><li>핵심 기법: CN 업데이트 후 <code>L(r_ji)</code>를 크기 기준 3구간으로 분할, 큰 값엔 이득 <code>α(&gt;1)</code>, 작은 값엔 억제 <code>β(&lt;1)</code>를 곱하는 동적 가중 <code>LDMS(r_ji)</code>.</li><li>식 의미: 신뢰 높은(큰 LLR) 메시지는 증폭, 신뢰 낮은 메시지는 감쇠 → 불확실 노드가 확실 노드를 오염시키는 것 방지.</li><li>확장: 구간 경계 <code>n1=0.8</code>, <code>n2=0.3</code> 고정, 가중치 <code>α≈1.03~1.04</code>, <code>β≈0.96~0.97</code>로 실험.</li><li>구현 디테일: MS의 sign XOR + min 근사는 그대로 두고 magnitude에 스칼라 곱만 추가 (NMS/OMS 계열의 구간별 확장).</li><li>최적화: 학습 절차 없음, 파라미터 수동 지정. iteration 최대 12로 비교.</li><li>결과: MS 대비 약 0.4dB 개선(code length 512·1024, rate 1/2·2/3 공통), iteration 수 감소(정성적 언급).</li><li>한계: HW 미설계, MATLAB 시뮬만, 고정소수점·gate count·throughput 미제시. 파라미터 근거·일반화 부족.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum + magnitude 동적 가중</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>LLR 크기별 α/β 스칼라 곱을 min1/min2 magnitude 후단에 삽입 가능</td></tr><tr><td>iteration별 LLR 임계(구간 n1/n2)</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>이미 iteration별 LLR threshold 테이블 보유 — 구간 가중과 개념 중복</td></tr><tr><td>VN 업데이트</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>표준 VN 합산, 변경 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 3구간 스칼라 가중은 Prime ECC가 이미 보유한 적응형 LLR 테이블/normalized-MS와 개념 중복이고, HW·고정소수점 검증 없이 5G float 시뮬 0.4dB뿐이라 새로 얻을 것이 적다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10016607",
+  "title": "Simulation of Dynamic Weighted MS Decoding Algorithm on LDPC for 5G",
+  "year": 2022,
+  "venue": "ICCWAMTIP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.67",
+  "code_length": "512~1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "C2V LLR을 3구간으로 나눠 α 이득/β 억제로 동적 가중해 수렴 가속·성능 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "5G LDPC/BPSK/AWGN 시뮬만, HW 미설계, 파라미터(α,β,n1,n2) 수동 튜닝·근거 빈약",
+  "todo_check": "LLR 구간 임계(n1=0.8,n2=0.3) 및 α/β가 고정소수점 min-sum·NAND RBER 채널에서도 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10016607---simulation-of-dynamic-weighted-ms-decoding-algorithm-on-ldpc-for-5g-2022-iccwamtip">ieee:10016607 - Simulation of Dynamic Weighted MS Decoding Algorithm on LDPC for 5G (2022, ICCWAMTIP)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10457117</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10457117---lightweight-error-correction-for-in-storage-acceleration-of-large-language-model-inference-2024-iceic">ieee:10457117 - Lightweight Error Correction for In-Storage Acceleration of Large Language Model Inference (2024, ICEIC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LLM 파라미터의 상위 비트 마스킹, 클리핑, 파라미터 타입별 차등 보호를 조합해 ECC로 보호해야 할 대역폭을 GPT2-XL 기준 9.38%까지 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC/LDPC 코드설계나 디코더 알고리즘 자체를 다루지 않음, "무엇을 ECC로 보호할지" 결정하는 애플리케이션(데이터 배치) 레벨 기법</td></tr><tr><td>추가확인</td><td>LDPC는 RBER 10^-2까지 soft-decision으로 신뢰성 보장 가능하다는 배경 가정으로만 인용, 부호/디코더 구조는 본문에 없음</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 자체 기법이 아니라 LLM 파라미터의 비트별 오류 내성을 분석해 ECC로 보호할 데이터 범위(대역폭)를 줄이는 애플리케이션 레벨 데이터 배치 기법 논문.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NAND flash 기반 in-storage LLM 추론 가속기, flash channel 확장(128개 이상)으로 인한 ECC(주로 LDPC) 하드웨어 비용 증가가 문제.</li><li>풀려는 문제: LLM의 과매개변수화(over-parameterization)로 인한 내재적 오류 내성을 활용해 ECC가 보호해야 할 비트 범위(대역폭)를 줄여 ECC 엔진 비용 절감.</li><li>핵심 가정/모델: FP32 파라미터(sign 1 + exponent 8 + mantissa 23bit) 중 상위 비트(exponent 상위)일수록 오류에 취약, RBER은 modern SSD LDPC soft-decision 한계인 10^-2로 가정, MLC 3D NAND retention loss 오류모델[12] 사용.</li><li>핵심 기법 1: bit index masking - MSB부터 순차적으로 ECC 보호 대상에서 제외(마스킹)하며 정확도(perplexity)가 유지되는 최소 마스킹 레벨을 탐색.</li><li>핵심 관찰: GPT2 S/M/L/XL 모델별 최소 마스킹 레벨이 각각 12/11/8/7 -&gt; 모델(파라미터 수)이 클수록 오류 내성이 커져 보호해야 할 비트 범위가 줄어듦.</li><li>핵심 기법 2: weight magnitude clipping - 파라미터를 [0.0078125, 2] 범위로 clip하면 exponent 상위 5bit가 100% 고정값이 되어 known value로 취급, ECC 보호 불필요.</li><li>핵심 기법 3: parameter type별 차등 마스킹(layer masking) - embedding/normalization/linear transformation 중 embedding이 가장 오류 민감, layer별로 별도 마스킹 레벨 적용.</li><li>학습/최적화 절차: 없음(오류 주입 실험으로 최소 마스킹 레벨을 grid search식 탐색), 평가지표는 Wikitext perplexity.</li><li>결과: 세 기법(masking+clipping+layer masking) 조합 시 GPT2-XL 기준 필요 ECC 대역폭 9.38%까지 축소(16K P/E cycle까지 정확도 유지).</li><li>한계: LDPC/ECC 코드설계나 디코더 알고리즘은 전혀 다루지 않으며 순수 데이터(파라미터) 배치 전략, HW 구현 없음(시뮬레이션만), GPT2 계열에 한정된 실험.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit index masking(상위 비트 ECC 보호 제외)</td><td>대응 없음</td><td>ECC 코드/디코더가 아닌 상위 애플리케이션의 데이터 배치(어느 비트를 보호할지) 결정 기법</td></tr><tr><td>RBER 10^-2 soft-decision LDPC 배경 가정</td><td><code>decoder.cpp</code> (soft decoding 일반 배경)</td><td>논문은 LDPC를 성능 한계치 인용에만 사용, 구체 알고리즘 언급 없음</td></tr><tr><td>파라미터 타입별 차등 보호(layer masking)</td><td>대응 없음</td><td>데이터 중요도 기반 선택적 보호는 ECC 코드/HW 레이어가 아닌 시스템 소프트웨어 레이어</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 | ECC 코드설계·디코더·HW를 전혀 다루지 않고 "무엇을 보호할지"를 결정하는 애플리케이션 레벨 논문이라 Prime ECC 3.1 코드베이스(디코더/인코더/H-matrix)에 이식할 요소가 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10457117",
+  "title": "Lightweight Error Correction for In-Storage Acceleration of Large Language Model Inference",
+  "year": 2024,
+  "venue": "ICEIC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LLM 파라미터 비트 마스킹+클리핑+레이어별 차등보호 조합으로 ECC 보호 대역폭을 9.38%까지 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC/LDPC 코드설계나 디코더 알고리즘 자체를 다루지 않는 애플리케이션 레벨 데이터 배치 기법",
+  "todo_check": "LDPC는 RBER 10^-2 soft-decision 한계 배경 가정으로만 인용, 부호/디코더 구조 미기술"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10457117---lightweight-error-correction-for-in-storage-acceleration-of-large-language-model-inference-2024-iceic">ieee:10457117 - Lightweight Error Correction for In-Storage Acceleration of Large Language Model Inference (2024, ICEIC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

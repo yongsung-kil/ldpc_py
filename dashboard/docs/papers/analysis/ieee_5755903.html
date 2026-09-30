@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5755903</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5755903---a-low-complexity-and-programmable-encoder-architecture-of-the-ldpc-codes-for-dvb-s2-2006-turbo-coding-2006-munich">ieee:5755903 - A Low Complexity and Programmable Encoder Architecture of the LDPC Codes for DVB-S2 (2006, Turbo-Coding 2006 (Munich))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.9</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Shift register 대신 partitioned single-port RAM을 사용해 quasi-cyclic IRA 코드를 저복잡도·programmable·단일클록으로 인코딩하는 HW 구조 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>11840 LUTs (Altera Stratix EP1S80)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.4Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>인코더 전용 구조이며 디코더/정정성능과 무관, DVB-S2용 IRA 특유의 staircase parity 구조에 의존</td></tr><tr><td>추가확인</td><td>Prime ECC의 dual-diagonal 인코더(고정 PCM) 대비 RAM 기반 방식의 이식 시 재검증 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 다중 코드율/길이를 단일 HW로 지원하는 programmable QC-LDPC(IRA) 인코더로, RAM 기반 저복잡도 인코딩 기법이 Prime ECC 인코더 재설계 시 참고 가치가 있으나 정정성능과는 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-S2 표준에 정의된 21종 QC-LDPC(IRA, Irregular Repeat-Accumulate) 코드로, 코드 길이 <code>N=16200 또는 64800</code>, 코드율 <code>1/4~9/10</code>이다.</li><li>풀려는 문제는 LDPC는 인코딩 스킴이 원래 정의되어 있지 않고, generator matrix <code>G</code>는 sparse하지 않아 인코딩 복잡도가 크다는 점 - 21종 코드를 하나의 HW로 지원하는 programmability도 필요.</li><li>IRA 코드 parity part는 staircase 구조(accumulator에 대응), information part는 매 360열마다 새 컬럼 패턴이 나타나고 나머지는 순환 시프트(quasi-cyclic) 구조를 가진다.</li><li>핵심 기법: shift register 대신 <strong>single-port RAM</strong>을 사용하는 quasi-cyclic 인코더 구조 - 정보부 <code>H_I</code>의 파티 생성 행렬 <code>G_P^I = H_I^T</code>를 barrel shifter + m개 EXOR + RAM으로 계산.</li><li>인코딩은 <code>m=360</code> 비트 단위로 <code>p=m/s</code> 병렬 입력을 받아 시프트 후 RAM에 mod-2 누적(read-modify-write, 2클록/워드) - 정보벡터 전체(<code>m×k_0</code> 비트) 처리 후 parity 완성.</li><li>확장 기법: 순서 문제(permuted matrix 순서 vs. 원래 parity check 순서 불일치) 해결을 위해 RAM을 <code>b</code>개로 분할하고 데이터를 interleave 저장하는 partitioned RAM 기법(diagonal read).</li><li>부수 트릭: <code>p</code>비트 parallel accumulator(8비트 예시, EXOR 8개+레지스터), 최대 column weight <code>C_max ≤ s/2</code> 조건 하에서 동작.</li><li>별도 학습/최적화 절차는 없음(구조적 설계).</li><li>결과: FPGA(Altera Stratix EP1S80) 합성 결과 11840 LUTs, 11 RAM 블록, 50MHz 클록으로 최대 400Mbps 처리, 기존 shift-register 방식(57k bits 레지스터, 약 0.5M게이트) 대비 복잡도 대폭 절감.</li><li>한계: 인코더 HW 구조에 국한되며 디코더/정정성능(BER, error-floor, iteration)에 대한 언급이나 실험이 전혀 없고, ASIC이 아닌 FPGA 합성 결과만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Quasi-cyclic RAM 기반 인코더 구조</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>Prime ECC는 dual-diagonal 고정 인코더를 사용하나, RAM 기반 저복잡도 QC 인코딩 아이디어는 인코더 HW 재설계 시 참고 가능</td></tr><tr><td>부호용 PCM(H_I) 기반 parity 생성</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code></td><td>정보부 PCM 구조에서 parity를 직접 생성하는 방식이 유사한 레이어</td></tr><tr><td>Partitioned RAM order control(column reordering)</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>컬럼 순서 재배치라는 컨셉은 유사하나 목적(순서 문제 해결 vs dual-update)이 다름</td></tr><tr><td>Programmable 다중 코드 지원</td><td>대응 없음</td><td>Prime ECC는 특정 QC-LDPC 고정 구조로 21종 코드 지원 개념 자체가 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>중간</strong> — 인코더 HW 복잡도 절감을 위한 RAM 기반 quasi-cyclic 인코딩 아이디어는 참고 가치가 있으나, 정정성능/디코더 개선과 무관하고 Prime ECC는 이미 dual-diagonal 인코더가 고정되어 있어 재설계 부담이 있음(이식 난이도 중~높음).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5755903",
+  "title": "A Low Complexity and Programmable Encoder Architecture of the LDPC Codes for DVB-S2",
+  "year": 2006,
+  "venue": "Turbo-Coding 2006 (Munich)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.9",
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "Shift register 대신 partitioned single-port RAM을 사용해 quasi-cyclic IRA 코드를 저복잡도·programmable·단일클록으로 인코딩하는 HW 구조 제안",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "11840 LUTs (Altera Stratix EP1S80)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.4,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "인코더 전용 구조이며 디코더/정정성능과 무관, DVB-S2용 IRA 특유의 staircase parity 구조에 의존",
+  "todo_check": "Prime ECC의 dual-diagonal 인코더(고정 PCM) 대비 RAM 기반 방식의 이식 시 재검증 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5755903---a-low-complexity-and-programmable-encoder-architecture-of-the-ldpc-codes-for-dvb-s2-2006-turbo-coding-2006-munich">ieee:5755903 - A Low Complexity and Programmable Encoder Architecture of the LDPC Codes for DVB-S2 (2006, Turbo-Coding 2006 (Munich))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

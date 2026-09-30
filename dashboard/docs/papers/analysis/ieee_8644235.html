@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8644235</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8644235---antipodal-detection-and-decoding-for-large-multi-user-mimo-with-reduced-base-station-antennas-2018-ieee">ieee:8644235 - Antipodal Detection and Decoding for Large Multi-User MIMO with Reduced Base-Station Antennas (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>SD 기반 Antipodal 검출(신뢰 해 or erasure)과 이에 특화된 BP 기반 erasure 복원+비트정정 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>MIMO 검출기 출력(erasure 채널)에 강결합된 디코더 - NAND BSC/AWGN LLR 입력에 그대로 이식 불가</td></tr><tr><td>추가확인</td><td>Antipodal 디코더가 표준 LDPC BER 채널에서도 이득을 주는지(검출기 없이 단독 사용 가능성)</td></tr></tbody></table>
+<blockquote><p>총평: 5G MIMO 검출기 특화 BP 디코더로, LDPC는 채널부호로만 등장 - NAND binary QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 32×32 large MU-MIMO uplink, Rayleigh flat-fading, 4~256-QAM, LDPC(802.11n, <code>rate=0.75</code>) 부호화, <code>y=Hs+n</code>.</li><li>문제: SD는 ML 최적이나 dense 성상·다수 스트림에서 복잡도·latency 폭증, soft LLR 추출 비용 큼; MMSE/LAS는 저복잡도지만 성능 열위.</li><li>모델: AWGN noise 통계 기반, <code>Θ</code> = 최소거리 <code>Dmin</code>만큼 떨어진 오검출 후보 벡터 집합.</li><li>Antipodal 검출: depth-first SD + 통계적 pruning. 레이어별 pruning 경계 <code>rp(l)=σ²·Fχ⁻²(1−β)</code> (χ² CDF 역함수, <code>β</code>=pruning 파라미터).</li><li>의미: PD가 <code>rp(l)</code>보다 크면 가지치기 - 단 하나의 해만 통과하면 "고신뢰", 아니면 erasure로 처리(Antipodal 출력).</li><li><code>β</code> 조정으로 erasure 확률 <code>PEr</code>을 임계 <code>τE</code> 이하로 맞춰 디코더 오류내성과 동기화; latency는 <code>αNt</code> 방문노드로 모델링, 복잡도 <code>O(αNt²)</code>.</li><li>Antipodal 디코더: 검출기 출력 d∈{0,1,e}에 특화된 BP 변형, 내부 연산을 binary addition만으로 단순화.</li><li>Erasure 복원: parity check <code>Ve=Σ Vi</code>로 resolvable check node 순회하며 erased 비트 복원(리스트 <code>Le</code> 반복).</li><li>비트정정: 단일 비트오류 가정(<code>Pτ≈B·τ</code>), exposed/hidden 오류 구분 - doubtful 노드를 erasure로 바꿔 재복원 시도로 hidden 오류 위치 탐색.</li><li>결과: 32×32 64-QAM에서 soft-MMSE 대비 9dB 전력 절감, throughput 56% 향상; 한계 - HW 미설계, 시뮬만, MIMO erasure 채널에 강결합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| BP 기반 erasure 복원/비트정정 디코더 | decoder.cpp LDPC_Decoder() | 낮음: erasure(3값) 입력 전제, min-sum LLR 파이프라인과 구조 상이 |
+| SD 통계적 pruning 검출기 | 대응 없음 | MIMO 검출 단계로 NAND 채널에 대응 요소 없음 |
+| parity check 기반 erasure 해결 | decoder.cpp C2V_Cal() | 낮음: BEC-style 복원으로 우리 iterative MP 스케줄과 목적 다름 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - MIMO SD 검출기 출력(erasure)에 강결합된 디코더로, NAND binary LDPC의 LLR 기반 min-sum 파이프라인에 떼어 쓸 요소가 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8644235",
+  "title": "Antipodal Detection and Decoding for Large Multi-User MIMO with Reduced Base-Station Antennas",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.75,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "SD 기반 Antipodal 검출(신뢰 해 or erasure)과 이에 특화된 BP 기반 erasure 복원+비트정정 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "MIMO 검출기 출력(erasure 채널)에 강결합된 디코더 - NAND BSC/AWGN LLR 입력에 그대로 이식 불가",
+  "todo_check": "Antipodal 디코더가 표준 LDPC BER 채널에서도 이득을 주는지(검출기 없이 단독 사용 가능성)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8644235---antipodal-detection-and-decoding-for-large-multi-user-mimo-with-reduced-base-station-antennas-2018-ieee">ieee:8644235 - Antipodal Detection and Decoding for Large Multi-User MIMO with Reduced Base-Station Antennas (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

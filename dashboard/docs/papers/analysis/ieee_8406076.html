@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8406076</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8406076---ldpc-decoder-implementation-on-dsparm-platform-with-opencl-2018-meco">ieee:8406076 - LDPC Decoder Implementation on DSP+ARM Platform with OpenCL (2018, MECO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.444 (7200/16200)</td></tr><tr><td>부호length</td><td>16200</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>GPU+GPP OpenCL BP 디코더를 Keystone II DSP+ARM SoC로 이식하고 커널·메모리·수학라이브러리 최적화로 실시간 처리 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DSP+ARM SW 이식 사례로 알고리즘 신규성 없고 min-sum도 실시간 2 iteration에 그침, DVB-T2 부호 대상</td></tr><tr><td>추가확인</td><td>box-plus 근사(Jacobi LUT/PL/Line/S)들의 BER 차이가 NAND soft-read 환경에서 유의미한지</td></tr></tbody></table>
+<blockquote><p>총평: DVB-T2 LDPC BP 디코더를 DSP+ARM에 OpenCL로 이식한 SW 구현 사례로, 부호설계·복호 알고리즘 신규성이 없어 NAND binary QC-LDPC ECC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-T2 Lite 표준 LDPC(length <code>16200</code>, info <code>7200</code>, rate≈0.444)의 BP 복호를 임베디드 실시간 처리하는 문제로, HW 플랫폼은 TI 66AK2H14 Keystone II SoC(8 DSP-core@1.2GHz + 4 ARM-core).</li><li>문제: LDPC 복호는 연산량이 커 FPGA/GPU가 주로 쓰이나 개발비용·전력 문제가 있어, 저전력 DSP+ARM으로 실시간 가능한지 검증.</li><li>복호 알고리즘: LLR 영역 BP에서 box-plus 연산을 Jacobi logarithm으로 근사(LLR Jacobi BP)하고, 그 변형으로 LUT/piecewise-linear/single-line/simplified-surface 근사 및 min-sum(MSA)을 구현(차이는 box-plus 구현부뿐).</li><li>이식 핵심: GPU+GPP용 OpenCL 프로젝트를 device 정의만 ACCELERATOR로 바꿔 DSP로 빌드했으나 성능 저조.</li><li>최적화 1 - 커널 구조: DSP processing unit은 work-group 내 다중 work-item 병렬 불가(반복 실행)라 work-group당 work-item 1개, 전체를 8 core에 균등 분할(큰 커널).</li><li>최적화 2 - 메모리: 4MB MSM(multicore shared memory)에 PCM·입력 저장, 중간결과 일부를 local memory로 이동(DDR3 대비 고속).</li><li>부수 트릭: log/exp 연산이 최대 병목이라 TI MATHLIB의 <code>logsp()</code>/<code>expsp()</code> 최적화 함수 사용.</li><li>효율 추정: DVB-T2 Data-Rate Calculator로 코드워드당 7ms 실시간 예산 산정, 그 안에 수행 가능한 iteration 수로 효율 측정.</li><li>결과: Jacobi BP는 7.4ms/iter로 실시간 불가, 단순화 알고리즘은 1~2 iteration 실행; min-sum이 2.75ms/iter로 최소 처리시간에 BER은 타 근사와 유사, 단 dispatch overhead가 min-sum에서 약 70%.</li><li>한계: HW(RTL) 미설계·SW 이식만, 알고리즘 신규성 없음, 실시간 iteration이 2에 그쳐 정정성능 제한, min-sum도 3 iteration 미달.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP/min-sum 복호 알고리즘 전체</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC가 이미 min-sum 보유, 알고리즘 신규성 없음</td></tr><tr><td>box-plus 근사(Jacobi LUT/PL/Line/S)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>CN magnitude 근사 지점이나 min-sum 대비 이득 불명</td></tr><tr><td>DSP+ARM OpenCL 병렬화/메모리 배치</td><td>대응 없음</td><td>Prime ECC HW 모델(z=32, HCU, GT)과 무관한 GPGPU SW 이식</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — DVB-T2 BP 디코더의 DSP+ARM SW 이식·최적화 사례로 알고리즘·부호 신규성이 없고, Prime ECC의 min-sum HW 파이프라인과 실행 모델이 이질적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8406076",
+  "title": "LDPC Decoder Implementation on DSP+ARM Platform with OpenCL",
+  "year": 2018,
+  "venue": "MECO (Mediterranean Conference on Embedded Computing)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.444,
+  "code_length": "16200",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "GPU+GPP OpenCL BP 디코더를 Keystone II DSP+ARM SoC로 이식하고 커널·메모리·수학라이브러리 최적화로 실시간 처리 달성",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "DSP+ARM SW 이식 사례로 알고리즘 신규성 없고 min-sum도 실시간 2 iteration에 그침, DVB-T2 부호 대상",
+  "todo_check": "box-plus 근사(Jacobi LUT/PL/Line/S)들의 BER 차이가 NAND soft-read 환경에서 유의미한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8406076---ldpc-decoder-implementation-on-dsparm-platform-with-opencl-2018-meco">ieee:8406076 - LDPC Decoder Implementation on DSP+ARM Platform with OpenCL (2018, MECO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8509142</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8509142---pair-bit-errors-aware-ldpc-decoding-in-mlc-nand-flash-memory-2019-ieee-tcad">ieee:8509142 - Pair-Bit Errors Aware LDPC Decoding in MLC NAND Flash Memory (2019, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.89, 0.80</td></tr><tr><td>부호length</td><td>2KB(정보비트)</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MLC pair-bit error 상관을 이용해 LSB 복호 결과로 MSB 초기 LLR을 flip 최적화, MSB 복호 iteration/latency 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·min-sum 자체 개선 아님(초기 LLR 전처리)·LSB/MSB 페이지 쌍 및 2KB 버퍼 종속으로 우리 QC-LDPC 구조에 맞춰 매핑 필요</td></tr><tr><td>추가확인</td><td>LSB→MSB 순차 복호에 따른 read 순서·버퍼 관리가 Prime ECC 파이프라인/스케줄과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: MLC LSB-MSB 상관을 초기 LLR 전처리로 활용해 MSB iteration/latency를 최대 54% 줄이는 NAND 직접 타깃 기법, min-sum 코어 밖의 전처리라 이식은 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: MLC NAND(2bit/cell, SE/S1/S2/S3), QC-LDPC(<code>CR</code>=0.89, 0.80, 정보 2KB), AWGN+4-PAM 채널, min-sum 복호 기준.</li><li>문제: LDPC soft-decision 반복복호로 read latency 증가, 특히 MSB 페이지 RBER가 LSB보다 훨씬 높아 MSB iteration이 급증.</li><li>관찰: 한 셀의 LSB/MSB가 동시에 틀리는 <code>PBE</code>(pair-bit error) 특성 — FPGA 플랫폼에서 블록별 PBE 비율 최대 67% 측정.</li><li>핵심 기법: LSB 페이지를 먼저 복호하여 soft 결과 <code>(L1..Ln)</code>를 버퍼에 저장, MSB 초기 LLR <code>(M1..Mn)</code> 최적화에 활용.</li><li>판정식: LSB 복호값과 초기 LLR의 곱 <code>VNj·ISILSBj &lt; 0</code>이면 LSB 오류로 간주 → 대응 MSB LLR을 <code>OSIMSBj = -0.85·ISIMSBj</code>로 flip(부호 반전).</li><li>원리: PBE 상관상 LSB가 틀리면 MSB도 틀릴 확률이 높으므로, LSB 오류 위치의 MSB 초기 정보를 반전시켜 초기 정밀도를 높이고 수렴 가속.</li><li>구현 디테일: min-sum CN 갱신 <code>CN = α·sgn·min(|VN|)</code>, <code>α=0.85</code>, 최대 iteration 50, LSB/MSB 두 페이즈로 분리 처리.</li><li>학습/최적화: 별도 학습 없음, PBE 통계 관찰 기반 휴리스틱 전처리.</li><li>결과: <code>CR</code>=0.89에서 RBER≈2.5e-2일 때 MSB 복호 iteration·time 최대 54% 감소, RBER≈1.3e-2에서 26.9% 감소. 오버헤드는 1페이지(2KB) 버퍼와 소량 시간.</li><li>한계: HW 미설계(MATLAB 시뮬만), MLC LSB/MSB 페이지 쌍 구조 및 순차 복호에 의존, 순차 read 시나리오에 유리.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MSB 초기 LLR flip 전처리</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>초기 soft-info/LLR 산출 지점에서 pair-bit 기반 보정 삽입 가능</td></tr><tr><td>iteration별 LLR/복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>Get_VNU_Table_Idx()</code></td><td>LSB 결과를 MSB 복호 초기값에 주입하는 훅 필요</td></tr><tr><td>min-sum CN 연산(α·min)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min-sum), 중복 기여</td></tr><tr><td>LSB 결과 저장 버퍼</td><td>대응 없음</td><td>페이지 쌍 버퍼 관리는 코드 외부 오케스트레이션 필요</td></tr></tbody></table>
+<p>적용 가치: 중간 — NAND 직접 타깃이고 초기 LLR 전처리라 <code>channel.cpp</code> LLR 산출부에 얹기 쉬우나, MLC LSB/MSB 페이지 쌍·순차 복호 종속이라 우리 구조와 매핑·재검증 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8509142",
+  "title": "Pair-Bit Errors Aware LDPC Decoding in MLC NAND Flash Memory",
+  "year": 2019,
+  "venue": "IEEE TCAD",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.89, 0.80",
+  "code_length": "2KB(정보비트)",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MLC pair-bit error 상관을 이용해 LSB 복호 결과로 MSB 초기 LLR을 flip 최적화, MSB 복호 iteration/latency 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·min-sum 자체 개선 아님(초기 LLR 전처리)·LSB/MSB 페이지 쌍 및 2KB 버퍼 종속으로 우리 QC-LDPC 구조에 맞춰 매핑 필요",
+  "todo_check": "LSB→MSB 순차 복호에 따른 read 순서·버퍼 관리가 Prime ECC 파이프라인/스케줄과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8509142---pair-bit-errors-aware-ldpc-decoding-in-mlc-nand-flash-memory-2019-ieee-tcad">ieee:8509142 - Pair-Bit Errors Aware LDPC Decoding in MLC NAND Flash Memory (2019, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

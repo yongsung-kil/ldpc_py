@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9530762</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9530762---area--and-energy-efficient-ldpc-decoder-using-mixed-resolution-check-node-processing-2022-ieee-tcas-ii">ieee:9530762 - Area- and Energy-Efficient LDPC Decoder Using Mixed-Resolution Check-Node Processing (2022, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.846</td></tr><tr><td>부호length</td><td>1664</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CNU 최소값 탐색을 저해상도로 수행하는 mixed-resolution SM으로 면적·전력 대폭 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>19.9Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G NR/protograph 타깃, gatecount 절대치는 표에만 있어 미상, 고rate NAND 코드로 재튜닝 필요</td></tr><tr><td>추가확인</td><td>(F,B,L) 파라미터가 NAND 고rate QC-LDPC(dc, 8bit LLR)에서 BER 손실 없이 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CNU의 최소값 탐색기를 저해상도화해 면적·전력·지연을 동시에 줄이는 순수 HW 기법으로, min-sum 기반 Prime ECC 디코더에 그대로 얹기 좋음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (1664,1408) 5G NR QC-LDPC(및 (1800,1200) protograph), layered NMS 디코딩, 8-bit fixed-point, <code>Imax=10</code>, 64-parallel.</li><li>문제: min-sum CNU의 first-two-minima 탐색 모듈(SM)이 디코더 면적·전력의 최대 병목이며, 정확도 유지를 위해 큰 해상도를 요구해 비용 절감이 제한됨.</li><li>핵심 아이디어: CN 처리 메시지의 bit-width를 줄여 SM 복잡도를 완화하는 <code>mixed-resolution</code> 접근.</li><li><code>CNUN</code>(naive): 앞 <code>F</code>비트·뒤 <code>B</code>비트를 truncate해 <code>L=Q-(F+B)</code>비트 저해상도 메시지로 두 최소값 탐색, <code>M1</code>은 원본 상위비트를 MUX로 복원, <code>M2</code>는 zero-padding.</li><li>식 의미: <code>L</code>비트 탐색은 SM 비교기 폭을 줄이지만, <code>M1</code> 복원용 dc-to-1 MUX가 지연 오버헤드를 유발.</li><li><code>CNUP1</code>: <code>M1</code> 복원 MUX 제거 — <code>M1L</code>에 zero-padding만 적용해 임계경로 단축(단, L을 과하게 줄이면 성능 급락).</li><li><code>CNUP2</code>(최종): 트리 SM을 3단으로 나눠 단계별로 해상도를 점진 축소(L→L-1→L-2), 초기 단 비교 정확도 유지하며 오판 최소화.</li><li>부수 트릭: <code>F+2</code> MSB truncation이 사실상 normalization/offset 효과를 내어 NMS의 shift-add 정규화 단계를 완전히 제거 가능.</li><li>결과: <code>L=4,(F,B)=(1,2)</code>에서 CNUN/CNUP1은 baseline MS 대비 0.1dB 이내, CNUP2는 오히려 BER 개선(NMS급); 65nm 323MHz, 19.9Gbps, 0.83mm2, baseline NMS 대비 면적 28.4%·전력 23.1% 절감, 면적효율 88.2% 향상.</li><li>한계: 5G NR/protograph 코드 대상 시뮬+합성만, error-floor 개선은 없고 정정능력은 유지 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| mixed-resolution CN min-sum(첫 두 최소값 탐색) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 높음 - min1/min2 탐색부에 저해상도 windowing 직접 적용 가능 |
+| 저해상도 truncation의 normalization 효과(NMS shift-add 제거) | decoder.cpp Get_VNU_Table_Idx(), ecc_data.h PARAM_LLR | 중 - 우리 magnitude 양자화/scaling과 상호작용 검토 필요 |
+| tree-based SM edge/비교기 축소 | GT.cpp Make_GT_HW() | 낮음 - GT는 edge 선택, 본 기법은 비교기 bit-width 축소로 결이 다름 |</code></pre>
+<p>적용 가치: 중간 — min-sum CNU를 이미 보유한 Prime ECC에서 first-two-minima 탐색부의 면적·전력을 낮추는 순수 HW 최적화로 이식성은 높지만, 정정능력 자체 향상은 없고 NAND 고rate 코드용 (F,B,L) 재튜닝이 필요.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:9530762",
+  "title": "Area- and Energy-Efficient LDPC Decoder Using Mixed-Resolution Check-Node Processing",
+  "year": 2022,
+  "venue": "IEEE TCAS-II",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.846,
+  "code_length": 1664,
+  "soft_quant": "무관",
+  "key_contribution": "CNU 최소값 탐색을 저해상도로 수행하는 mixed-resolution SM으로 면적·전력·지연 대폭 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 19.9,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "5G NR/protograph 타깃, gatecount 절대치 미상, NAND 고rate 코드로 (F,B,L) 재튜닝 필요",
+  "todo_check": "NAND 고rate QC-LDPC(8bit LLR)에서 저해상도 파라미터가 BER 손실 없이 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9530762---area--and-energy-efficient-ldpc-decoder-using-mixed-resolution-check-node-processing-2022-ieee-tcas-ii">ieee:9530762 - Area- and Energy-Efficient LDPC Decoder Using Mixed-Resolution Check-Node Processing (2022, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

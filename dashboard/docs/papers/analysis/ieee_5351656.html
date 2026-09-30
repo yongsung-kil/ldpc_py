@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5351656</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5351656---two-reliability-based-iterative-majority-logic-decoding-algorithms-for-ldpc-codes-2009-ieee-trans-communications">ieee:5351656 - Two Reliability-Based Iterative Majority-Logic Decoding Algorithms for LDPC Codes (2009, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.75~0.89</td></tr><tr><td>부호length</td><td>961~5256</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>직교 check-sum 기반 이진 메시지패싱 MLGD 복호 2종(soft/hard 신뢰도), 논리연산+정수덧셈만·완전병렬</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SPA 대비 0.65~1.6dB 열세(즉 min-sum 이하), 큰 column weight·RC-constraint 필요, SRBI는 8-bit 양자화 요구</td></tr><tr><td>추가확인</td><td>Prime ECC γ=17·2~3bit soft 환경에서 성능/error-floor 재확인 (본 논문은 γ=8~64·8-bit 기준)</td></tr></tbody></table>
+<blockquote><p>총평: OSMLGD를 반복·신뢰도누적으로 확장한 초저복잡도 완전병렬 이진 복호기지만 성능이 min-sum(≈SPA) 이하라 Prime ECC엔 신규 이득 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: RC-constraint(girth≥6) 만족하는 <code>(γ,ρ)</code>-regular binary LDPC, BI-AWGN+BPSK; 예제 (4095,3367)EG cyclic, (961,721)·(5256,4679)QC.</li><li>문제: OSMLGD(1-pass 다수결)는 intrinsic 신뢰도 부재로 성능 낮고, WBF류는 1비트씩 flip해 수렴 느리고 병렬화 불가.</li><li>핵심량: bit <code>z_j</code>에 직교하는 <code>γ</code>개 check-sum <code>S_j</code>, 그로부터 extrinsic-information <code>E_j = Σ_{i∈M_j}(2σ_{i,j}-1)</code>, 범위 <code>[-γ,+γ]</code> (<code>σ_{i,j}=s_i+z_j</code>).</li><li>SRBI(soft): 초기 신뢰도 <code>R_j^(0)=q_j</code>(양자화 표본), 매 iter <code>R_j^(k+1)=R_j^(k)+E_j^(k)</code>, 부호로 hard-decision, syndrome=0이면 종료.</li><li>식 의미: <code>E_j</code>는 다른 비트가 <code>z_j</code>에 주는 다수결 증거, 이를 신뢰도에 누적해 반복마다 판정을 개선.</li><li>HRBI(hard): soft 입력 없을 때 초기 신뢰도를 <code>z_j=0→-γ</code>, <code>z_j=1→+γ</code>로만 배정(하드), 이후 갱신식 동일 → storage/simple decoder용.</li><li>구현 트릭: 신뢰도는 항상 정수 → <code>b</code>-bit 이진가산기·flip-flop만으로 조합회로 구현, 포화클리핑 <code>|R|≤2^{b-1}-1</code>(SRBI)/<code>≤γ</code>(HRBI).</li><li>병렬: syndrome은 check node, 신뢰도 갱신·판정은 variable node에서 n비트 동시 처리(완전병렬), WBF의 직렬 flip 대비 큰 이점.</li><li>결과: BER 1e-6에서 SRBI가 SPA 대비 0.65~0.85dB 열세이나 WBF(ZF/JZSC)·DBMPD를 능가·더 빠른 수렴; 5~10 iter로도 WBF 100 iter 상회; HRBI는 SPA 대비 ~1.1~1.6dB.</li><li>한계: HW 미설계(연산수만 제시, gate/throughput 없음), 작은 column weight·irregular 부호에선 무력화·error-floor 상승.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SRBI/HRBI 반복 복호 루프·신뢰도 갱신</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>min-sum 루프를 정수-덧셈 다수결 복호로 대체하는 형태(성능 하향)</td></tr><tr><td>직교 check-sum(syndrome) sign 연산</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>CN 부호계산에 대응(magnitude 대신 이진 check-sum)</td></tr><tr><td>VN 신뢰도 누적·양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>R_j 정수 누적/포화가 VN 갱신에 매핑</td></tr><tr><td>초기 soft 신뢰도 q_j(8-bit 양자화)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>8-bit 요구가 Prime ECC 2~3bit soft와 불일치</td></tr><tr><td>syndrome=0 조기종료</td><td>대응 없음</td><td>Prime ECC는 partial/full CRC 종료(구조 상이)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 부호설계·min-sum·조기종료 어디에도 신규 이득이 없고 성능이 기존 min-sum 이하이며 8-bit 양자화·큰 column weight를 전제하기 때문.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5351656",
+  "title": "Two Reliability-Based Iterative Majority-Logic Decoding Algorithms for LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE Trans. Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "961~5256",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "직교 check-sum 기반 이진 메시지패싱 MLGD 복호 2종(soft SRBI/hard HRBI), 논리연산+정수덧셈만으로 완전병렬 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "SPA 대비 0.65~1.6dB 열세로 min-sum 이하, 큰 column weight·RC-constraint·SRBI 8-bit 양자화 전제",
+  "todo_check": "Prime ECC γ=17·2~3bit soft 환경에서의 성능과 error-floor 재확인 필요(본 논문은 γ=8~64·8-bit 기준)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5351656---two-reliability-based-iterative-majority-logic-decoding-algorithms-for-ldpc-codes-2009-ieee-trans-communications">ieee:5351656 - Two Reliability-Based Iterative Majority-Logic Decoding Algorithms for LDPC Codes (2009, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

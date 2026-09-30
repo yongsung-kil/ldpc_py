@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6601731</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6601731---error-prediction-ldpc-and-error-recovery-schemes-for-highly-reliable-solid-state-drives-ssds-2013-ieee-j-solid-state-circuits">ieee:6601731 - Error-Prediction LDPC and Error-Recovery Schemes for Highly Reliable Solid-State Drives (SSDs) (2013, IEEE J. Solid-State Circuits)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.667~0.9</td></tr><tr><td>부호length</td><td>8100</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>W/E cycle·retention·inter-cell coupling을 prerecorded 테이블로 참조해 3개 read만으로 LLR을 추정(EP-LDPC), soft-decision 대비 read cycle 1/7</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC codec 자체는 불변(기존 그대로), 기여는 LLR 생성(채널모델·테이블)에 국한, EP테이블은 칩별 측정·retention time 필요</td></tr><tr><td>추가확인</td><td>Prime ECC의 LLR 테이블/channel 모듈이 W/E·retention·이웃셀 테이블 입력을 받도록 확장 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND에 직접 타깃한 실측 논문으로 read cycle을 대폭 줄이는 테이블 기반 LLR 생성이 채널/LLR 모듈에 이식 여지가 있으나, LDPC 복호 알고리즘·HW 자체는 손대지 않아 이식은 채널 계층에 국한된다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: sub-20nm MLC(2-bit/cell) NAND SSD, LDPC ECC codeword length <code>8100 Byte</code>, code rate <code>9/10</code>(user 7290B) 및 <code>2/3</code>(user 5400B), 채널은 NAND retention/program-disturb 실측.</li><li>문제: soft-decision LDPC는 정밀 LLR을 위해 최대 21개 read(<code>V_ref</code>)가 필요해 read time이 과도(예: 2b/cell 21회≈1050us) - 신뢰성은 높지만 read latency가 수용 불가.</li><li>모델: BER를 W/E cycle <code>N_W/E</code>, retention time <code>t_DR</code>, 이웃셀(inter-cell coupling) 데이터의 함수로 보고, 출하 전 측정으로 만든 prerecorded 테이블(<code>t_DR</code>, <code>N_W/E</code>, EP 테이블)로 표현.</li><li>핵심기법(EP-LDPC): 하드리드 3회(BCH와 동일 read cycle)만 수행 후, lower page의 "1" 개수 <code>N_1_read</code>와 테이블로 BER를 예측하고 이 예측 BER에서 각 비트 LLR을 산출(8-step read flow).</li><li>식 의미: <code>N_1_read</code>가 프로그램 시점 <code>N_1_write</code> 대비 감소/증가하는지로 program-disturb vs data-retention error mode를 판별(식3), 이를 통해 read 반복 없이 <code>V_th</code> shift 방향을 추정.</li><li>핵심기법 2(inter-cell): EP 테이블이 상/하/좌/우 이웃셀 데이터별 target-cell error 수를 저장해 CER를 이웃 의존 가중(식9,10)으로 보정 - 이웃 4셀 고려가 좌우 2셀만보다 신뢰성 우수.</li><li>구현 디테일: EP 테이블 크기 약 195KB(512GB SSD 대비 무시가능), <code>N_1_write</code>는 3중화 저장, LDPC codec 아키텍처는 기존과 동일(추가 로직은 NAND controller 내 단순 게이트).</li><li>학습/최적화: EP 테이블은 출하 전 write/erase stress + 실제 read error 카운트로 training(Fig.11c), 칩 1개 측정 테이블로도 변이 내성 확보.</li><li>결과(실측): sequential read cycle 1/7, acceptable retention time 최대 11배(rate 2/3)·2.8배(rate 9/10), acceptable BER 3.7배, 추가로 PDRP/DRRP 에러복구 펄스가 program-disturb·retention error를 76%·56% 저감.</li><li>한계: LDPC 복호/HW 성능은 논문 범위 밖(codec 불변), 기여가 LLR 생성(테이블·채널모델)에 국한되고 EP 테이블은 칩별 측정·retention time 추정에 의존(칩간 20% 편차).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>테이블 기반 BER→LLR 생성(hard read 3회)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold/LLR 산출 지점에 테이블 입력 확장 가능</td></tr><tr><td>W/E·retention·이웃셀 기반 LLR 캘리브레이션</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR 테이블 구조와 유사 - 조건 인덱스 확장 여지</td></tr><tr><td>에러 주입/채널 모델(RBER, retention)</td><td>channel.cpp (AWGN/RBER/fixed)</td><td>시뮬 채널을 W/E·retention 종속 모델로 확장 시 참고</td></tr><tr><td>LDPC 복호 알고리즘</td><td>대응 없음</td><td>논문은 codec을 손대지 않음(min-sum/이터레이션 무관)</td></tr><tr><td>PDRP/DRRP 에러복구 펄스</td><td>대응 없음</td><td>NAND 셀 물리 조작으로 ECC 코드베이스 범위 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - read cycle을 BCH 수준으로 줄이는 테이블 기반 LLR 생성은 Prime ECC의 channel/LLR 모듈에 이식 여지가 있으나, 복호 알고리즘·HW 개선은 없고 EP 테이블 확보(칩별 측정)라는 시스템 부담이 따른다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6601731",
+  "title": "Error-Prediction LDPC and Error-Recovery Schemes for Highly Reliable Solid-State Drives (SSDs)",
+  "year": 2013,
+  "venue": "IEEE J. Solid-State Circuits",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "8100",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "W/E cycle·retention·inter-cell coupling을 prerecorded 테이블로 참조해 3개 read만으로 LLR 추정(EP-LDPC), soft-decision 대비 read cycle 1/7",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LDPC codec 자체는 불변(기존 그대로), 기여는 LLR 생성(채널모델·테이블)에 국한, EP테이블은 칩별 측정·retention time 필요",
+  "todo_check": "Prime ECC의 LLR 테이블/channel 모듈이 W/E·retention·이웃셀 테이블 입력을 받도록 확장 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6601731---error-prediction-ldpc-and-error-recovery-schemes-for-highly-reliable-solid-state-drives-ssds-2013-ieee-j-solid-state-circuits">ieee:6601731 - Error-Prediction LDPC and Error-Recovery Schemes for Highly Reliable Solid-State Drives (SSDs) (2013, IEEE J. Solid-State Circuits)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

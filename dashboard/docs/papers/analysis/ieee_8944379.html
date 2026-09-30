@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8944379</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8944379---work-in-progress-ecc-management-with-rate-compatible-ldpc-code-for-nand-flash-storage-2019-cases19-companion">ieee:8944379 - Work-in-Progress: ECC Management with Rate Compatible LDPC Code for NAND Flash Storage (2019, CASES'19 Companion)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.57~0.8</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>P/E 사이클 구간별로 pchk를 확장(A/B→Ae/Be)해 rate-compatible 단계별 parity를 생성·분리 저장하는 ECC 관리</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WIP 4쪽·상대BER/read overhead 곡선만 제시, 디코더/HW/정정성능 정량 없음</td></tr><tr><td>추가확인</td><td>pchk 확장 시 성능 손실 없이 rate 낮추는 QC 구조(Ae 비특이성 보장) 설계 상세와 실제 codeword length</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃의 rate-compatible QC-LDPC 부호설계+parity 관리 아이디어이나 WIP 수준이라 이식엔 상세 재구성 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템: NAND flash 컨트롤러 ECC로 QC-LDPC 사용, <code>k</code> message + <code>m</code> check bit로 codeword 구성, P/E 사이클 증가에 따라 error rate 상승을 다룸.</li><li>문제: 고정 rate LDPC는 P/E 후기 에러 급증에 대응 못 하고, parity를 더 만들어도 spare region에 못 넣어 read/write overhead 발생.</li><li>핵심 기법 1단(부호설계): 기본 pchk를 <code>A</code>(m×m 비특이 QC) + <code>B</code>(m×k QC)로 구성하고, <code>e</code> bit 추가 parity를 위해 <code>D</code>(e×e), <code>I</code>(e×e 단위), <code>O</code>(m×e 영), <code>E</code>(e×k)로 확장한 <code>pchke</code>(=<code>Ae</code>,<code>Be</code>) 생성.</li><li>핵심 식: 생성행렬 <code>G = A^{-1} x B</code>, 확장은 <code>Ge = Ae^{-1} x B</code> — rate-compatible이라 상위 레벨 parity <code>Pe</code>가 하위 codeword에 그냥 append되어 기존 parity와 안 섞임.</li><li>확장: 2~3개 P/E 구간(예: 2000, 4000에서 rate 전환)마다 다른 길이의 parity를 단계적으로 생성.</li><li>구현 디테일(parity 관리): 1단 parity는 기존처럼 page spare에 저장, 2단 이상 parity는 별도 flash 영역에 수집 저장(4KB당 256B parity면 16 page분을 1 page에), DRAM 캐시로 관리, FTL 매핑테이블에 parity 정보 추적.</li><li>디코딩 순서: 하위→상위 codeword 순으로 복호, 하위에서 성공하면 상위 parity 미인출로 retrieval overhead 절감.</li><li>결과: rate 0.8/0.67/0.57 3단계 구성으로 시뮬, 확장 LDPC가 기본 대비 높은 frame error recovery rate(Figure 3)와 낮은 상대 read overhead(Figure 4)를 보임 — 수명 연장 주장.</li><li>정량 수치: BER/overhead는 상대 곡선(그림)만 제시, 절대 gate count/throughput/iteration 수치 없음.</li><li>한계: Work-in-Progress 4쪽 논문, 디코더 알고리즘·HW 설계·정정능력 정량 결과 부재, codeword length·연판정 방식 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>pchk 확장(Ae/Be)·rate-compatible 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 재설계 계열 — 고정 QC-LDPC와 정합·재검증 부담 큼</td></tr><tr><td>확장 generator <code>Ge=Ae^{-1}xB</code> 기반 인코딩</td><td>encoder.cpp <code>Generate_PCM_encoding()</code>, <code>LDPC_encoder_4KB()</code></td><td>dual-diagonal 고정 인코더와 다른 방식, 확장 parity 생성은 개조 필요</td></tr><tr><td>단계별 parity 별도영역 저장·캐시·FTL 관리</td><td>대응 없음</td><td>컨트롤러/FTL 레이어 이슈로 시뮬레이터 범위 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND rate-compatible 부호설계라는 방향은 유용하나, 특정 QC-LDPC가 고정된 Prime ECC에 pchk 확장을 이식하려면 H-matrix 재설계·재검증 부담이 크고 논문 자체가 WIP 수준이라 상세가 부족하다.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:8944379",
+  "title": "Work-in-Progress: ECC Management with Rate Compatible LDPC Code for NAND Flash Storage",
+  "year": 2019,
+  "venue": "CASES'19 Companion",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.57~0.8",
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "P/E 사이클 구간별로 pchk를 확장(A/B→Ae/Be)해 rate-compatible 단계별 parity를 생성·분리 저장하는 ECC 관리",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "WIP 4쪽·상대BER/read overhead 곡선만 제시, 디코더/HW/정정성능 정량 없음",
+  "todo_check": "pchk 확장 시 성능 손실 없이 rate 낮추는 QC 구조(Ae 비특이성 보장) 설계 상세와 실제 codeword length"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8944379---work-in-progress-ecc-management-with-rate-compatible-ldpc-code-for-nand-flash-storage-2019-cases19-companion">ieee:8944379 - Work-in-Progress: ECC Management with Rate Compatible LDPC Code for NAND Flash Storage (2019, CASES&#x27;19 Companion)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

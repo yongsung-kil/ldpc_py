@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4063517</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4063517---performance-of-belief-propagation-for-decoding-ldpc-codes-in-the-presence-of-channel-estimation-error-2007-ieee-transactions-on-communications">ieee:4063517 - Performance of Belief Propagation for Decoding LDPC Codes in the Presence of Channel Estimation Error (2007, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>10000~20000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SNR mismatch(채널 추정 오차) 하에서 BP 성능을 평균+분산을 함께 추적하는 Gaussian approximation으로 해석적으로 분석, SNR 과소/과대추정 극한이 각각 채널 BER/min-sum 성능에 수렴함을 증명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>새 디코딩 알고리즘이나 HW 기법 없음. 순수 이론적 민감도 분석(threshold/GA)이며 정정능력 개선 기법이 아님</td></tr><tr><td>추가확인</td><td>Prime ECC의 LLR 테이블이 채널 SNR 오추정(RBER 추정 오차)에 얼마나 민감한지 참고자료로만 활용 가능한지 확인</td></tr></tbody></table>
+<blockquote><p>총평: LDPC BP 디코더의 채널 SNR 추정 오차에 대한 민감도를 Gaussian approximation으로 분석한 이론 논문으로, 새로운 디코딩 기법이나 HW 이식 요소는 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>BIAWGN 채널에서 LDPC 코드를 BP로 디코딩할 때 채널 노이즈 분산을 잘못 추정한 "SNR mismatch"(<code>σ_e² ≠ σ²</code>) 상황을 다룸.</li><li>기존 discretized DE(density evolution)는 SNR mismatch 하에서 메시지 분포의 대칭성이 깨져 계산 복잡도가 커진다는 문제.</li><li>핵심 가정: 입력 LLR 분포는 <code>N(2r/σ², 4/σ²·σ_e²/σ²)</code> 형태로 비대칭 Gaussian이며, tree-like(cycle-free) 그래프·무한 블록길이 가정.</li><li>핵심 기법: 기존 GA(Gaussian Approximation, Chung et al.)는 평균만 추적하나, 본 논문은 평균과 분산을 함께 추적하는 2-D GA를 제안(변수노드 mean/variance 갱신식 (1)(3), 체크노드 2-입력 2-출력 매핑 <code>g_m, g_σ</code> (4)(5)).</li><li>체크노드 매핑은 수치적으로 계산한 lookup table(<code>g_m(m,σ)</code>, <code>g_σ(m,σ)</code>) 참조로 처리, threshold(<code>SNR*(δ)</code>)와 mismatch threshold(<code>δ_over*, δ_under*</code>)를 정의.</li><li>Irregular 코드로 확장 시 degree distribution <code>λ(x), ρ(x)</code>에 따라 Gaussian mixture로 근사.</li><li>부수 결과: SNR offset이 <code>-∞</code>로 가면 BP 성능이 channel BER에, <code>+∞</code>로 가면 min-sum 성능에 수렴함을 Taylor 전개로 증명(check node 연산이 min 연산으로 근사됨).</li><li>학습/최적화 절차 없음(해석적 threshold 계산, 0.01 스텝 grid search로 DE와 오차 0.1~0.2dB 이내 검증).</li><li>결과: (3,6)-regular 앙상블에서 SNR 과소추정이 과대추정보다 더 해로움을 확인, variable-node degree가 클수록 mismatch에 민감(예: (3,27) vs (5,6) 코드 비교), irregular 코드는 무mismatch 성능이 좋아도 mismatch 하에서 역전될 수 있음.</li><li>한계: 순수 점근적(무한 길이, cycle-free) 분석 + 유한길이 시뮬 검증뿐, 새로운 디코딩 알고리즘/HW 설계 없음. 코드설계 개선안도 제시하지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SNR mismatch 하 BP threshold 분석</td><td>대응 없음</td><td>이론적 민감도 분석으로 코드 모듈에 직접 대응되지 않음</td></tr><tr><td>채널 LLR 초기화(σ 추정 오차)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>Prime ECC의 soft-read LLR threshold 설계 시 오추정 영향 참고 가능하나 논문은 이론 분석뿐, 구체 대응책 없음</td></tr><tr><td>Min-sum이 BP의 SNR overestimation 극한과 동일함을 증명</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 이미 Min-Sum 기반이므로 이론적 배경 설명 수준의 관련성만 있음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 새로운 디코딩 알고리즘이나 HW 개선이 아닌 순수 이론적 민감도 분석이라 Prime ECC 코드베이스에 이식할 구체적 모듈이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4063517",
+  "title": "Performance of Belief Propagation for Decoding LDPC Codes in the Presence of Channel Estimation Error",
+  "year": 2007,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "10000~20000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SNR mismatch 하에서 BP 성능을 평균+분산을 함께 추적하는 Gaussian approximation으로 해석적으로 분석, SNR 과소/과대추정 극한이 각각 채널 BER/min-sum 성능에 수렴함을 증명",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "새 디코딩 알고리즘이나 HW 기법 없음. 순수 이론적 민감도 분석(threshold/GA)이며 정정능력 개선 기법이 아님",
+  "todo_check": "Prime ECC의 LLR 테이블이 채널 SNR 오추정(RBER 추정 오차)에 얼마나 민감한지 참고자료로만 활용 가능한지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4063517---performance-of-belief-propagation-for-decoding-ldpc-codes-in-the-presence-of-channel-estimation-error-2007-ieee-transactions-on-communications">ieee:4063517 - Performance of Belief Propagation for Decoding LDPC Codes in the Presence of Channel Estimation Error (2007, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

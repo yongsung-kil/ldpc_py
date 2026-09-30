@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5687430</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5687430---design-of-a-novel-multi-rate-qc-ldpc-decoder-2010-ieee-asiconicsict급-학술대회">ieee:5687430 - Design of A Novel Multi-Rate QC-LDPC Decoder (2010, IEEE (ASICON/ICSICT급 학술대회))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>인접 서브행렬 2개를 기본연산단위로 삼아 rate무관 HW 고정 + layered NMS + Lr(ji) 간접저장(sign/min_idx/β)으로 저장공간 33~50% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>9.19mm²@0.18um (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.318</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>IEEE 802.16e WiMAX 부호 전용 multi-rate 설계로 NAND 고정 고rate QC-LDPC엔 multi-rate 필요성이 낮음; NMS normalization factor 0.875는 Prime ECC가 이미 보유한 수준</td></tr><tr><td>추가확인</td><td>Lr 간접저장(sign/min_idx/β) 방식이 Prime ECC의 z=32 파이프라인/GT 메모리 구조와 정합되는지, VNU-CNU 레이어 중첩 스케줄이 6-stage 파이프라인과 충돌 없는지</td></tr></tbody></table>
+<blockquote><p>총평: layered NMS 반semi-parallel multi-rate QC-LDPC 디코더로 Lr 간접저장에 의한 메모리 절감과 인접 서브행렬 기반 rate무관 HW가 요점이나, WiMAX 다중rate 특화·표준 NMS라 Prime ECC(고정 고rate, min-sum 이미 보유)엔 메모리 아이디어 정도만 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.16e QC-LDPC, <code>H</code>는 M×N 서브행렬(각 z×z circulant-shift/zero), length 2304, 4-rate/6-encoding(rate 1/2~5/6).</li><li>문제: 기존 multi-rate 디코더는 최저rate 기준 CNP/VNP를 두어 고rate 시 유닛 미활용, 혹은 메모리 블록 과다.</li><li>복호 알고리즘: layered decoding 기반 <strong>Normalized Min-Sum</strong>(NMS), normalization factor <code>γ=0.875</code>; TPMP 대비 열/행연산 병합으로 지연·수렴 개선.</li><li>CNU: <code>Lq(ij)=Lc(i)−Lr(ji)</code>, 1st/2nd 최소값 <code>α,α2</code>와 <code>min_idx</code>, sign(XOR) 계산 → <code>β=γα</code>, <code>β2=γα2</code> (식 1~4).</li><li>VNU: <code>Lc(i)'=Lc(i)−Lr(ji)^{k-1}+Lr(ji)^{k}</code> 로 변수노드 갱신 (식 5), syndrome=0이면 조기종료.</li><li>핵심 HW 트릭: <strong>인접 서브행렬 2개를 CNU/VNU 기본 연산단위</strong>로 삼아 유닛 규모·개수를 row weight·행수와 독립화 → rate 변경 시 카운터로 연산횟수만 조정, HW 무변경.</li><li>스루풋 트릭: <code>(i+1)</code>층 CNU와 <code>i</code>층 VNU를 동시 수행(레이어 중첩), z-CNP/z-VNP 병렬(2z-VNU 동시).</li><li>메모리: layered라 <code>Lr(ji)</code>만 저장 + <code>Lr</code>을 sign/min_idx/β/β2로 <strong>간접저장</strong>; 7-bit 균일 양자화(1 sign+3 int+3 dec). 저장 4032z→2016z→1008z (33%/50% 절감).</li><li>결과: SMIC 0.18um 합성, 145MHz, 9.19mm², 15 iteration에서 throughput rate별 65.4/129.9/193.5/318.2Mbps; [13] 대비 90nm 스케일 시 면적 우위 주장.</li><li>한계: BER/정정능력 성능곡선 없음(정정능력 개선 아님), NMS는 표준 기법, WiMAX 부호 전용, ASIC 합성만(실측 없음), gatecount 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered NMS CNU/VNU</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>min-sum CN/VN 대응, 이미 min1/min2+sign 보유라 중복</td></tr><tr><td>Lr 간접저장(sign/min_idx/β)</td><td>decoder.cpp LLR/메시지 버퍼</td><td>메모리 절감 발상은 참고 가치, HW 메모리 모델과 정합 필요</td></tr><tr><td>서브행렬 기반 shift/flag 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC 서브행렬 shift 로드 대응, 단 multi-rate 가변구조는 불필요</td></tr><tr><td>barrel shifter(SHIFT)</td><td>GT.cpp <code>Make_GT_HW()</code> (edge/MUX)</td><td>HW edge 라우팅과 성격 유사하나 직접 대응은 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered NMS·인접-서브행렬 유닛·Lr 간접저장은 HW 메모리/스루풋 관점에서 참고할 만하나, Prime ECC는 이미 min-sum·파이프라인을 보유하고 고정 고rate라 multi-rate 특화 이득이 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5687430",
+  "title": "Design of A Novel Multi-Rate QC-LDPC Decoder",
+  "year": 2010,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.833",
+  "code_length": "2304",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "인접 서브행렬 2개를 기본연산단위로 삼아 rate무관 HW 고정 + layered NMS + Lr(ji) 간접저장(sign/min_idx/β)으로 저장공간 33~50% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "9.19mm²@0.18um (gatecount 미상)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.318,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "IEEE 802.16e WiMAX 부호 전용 multi-rate 설계로 NAND 고정 고rate QC-LDPC엔 multi-rate 필요성이 낮음; NMS normalization factor 0.875는 Prime ECC가 이미 보유한 수준",
+  "todo_check": "Lr 간접저장(sign/min_idx/β)이 z=32 파이프라인/GT 메모리 구조와 정합되는지, VNU-CNU 레이어 중첩이 6-stage 파이프라인과 충돌 없는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5687430---design-of-a-novel-multi-rate-qc-ldpc-decoder-2010-ieee-asiconicsict급-학술대회">ieee:5687430 - Design of A Novel Multi-Rate QC-LDPC Decoder (2010, IEEE (ASICON/ICSICT급 학술대회))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

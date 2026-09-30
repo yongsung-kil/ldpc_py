@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2001.07979</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv200107979v1---100mbps-reconciliation-for-quantum-key-distribution-using-a-single-graphics-processing-unit-2020-arxiv-preprint">arxiv:2001.07979v1 - 100Mbps Reconciliation for Quantum Key Distribution Using a Single Graphics Processing Unit (2020, arXiv preprint)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.8</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>multi-matrix(2~3개 PEG parity-check 행렬) BP 기반 QKD 오류조정(reconciliation) 알고리즘을 GPU에서 thread/branch/memory 최적화하여 최대 102Mbps 처리율 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.102Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>QKD 오류조정(BSC 유사 채널, sifted key 오류정정) 도메인으로 NAND 채널·부호 스펙과 무관, full-tanh sum-product BP를 GPU 스레드 최적화한 것이라 min-sum 기반 HW ASIC(Prime ECC)과 이질적</td></tr><tr><td>추가확인</td><td>multi-matrix(복수 H 병렬 시도) 구조가 QC-LDPC 단일 PCM 기반 HW 파이프라인에 이식 가능한지, GPU 최적화(warp/coalesced memory) 기법이 ASIC HW 설계 관점에서 의미 있는지</td></tr></tbody></table>
+<blockquote><p>총평: QKD 오류조정을 위한 GPU 기반 multi-matrix BP 가속 논문으로, NAND용 binary QC-LDPC ECC와는 채널·목적·플랫폼(GPU vs ASIC)이 모두 달라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>QKD 후처리 중 reconciliation 단계에서 Bob의 sifted key <code>y</code>를 Alice의 <code>x</code>와 일치시키는 오류정정 문제를 다룸, 채널은 QKD 물리계층에서 유도된 이진 오류율 <code>e</code>.</li><li>기존 단일 parity-check 행렬 BP 대비, 여러 개(<code>u&gt;1</code>)의 PEG 기반 parity-check 행렬 <code>H_1,...,H_u</code>를 동시에 사용하는 multi-matrix BP(MBP, 선행연구[12])를 GPU로 구현·최적화하는 것이 목적.</li><li>각 <code>H_l</code>마다 syndrome <code>z_l = H_l·x (mod 2)</code>을 전송하고, Bob은 <code>u</code>개 행렬의 C2V 정보를 합산해 최종 LLR <code>LV_i = LP_i + Σ_l Σ LC_{j→i}^l</code>로 복호 결정.</li><li>CN 업데이트는 표준 sum-product(<code>tanh</code>) 식 <code>LC_{j→i} = (-1)^{z_j}·2tanh^-1(Π tanh(LV/2))</code> 사용, full-precision 실수 연산.</li><li>GPU 구현: 220-bit sifted key를 길이 <code>n</code>의 짧은 키 <code>k</code>개로 분할(<code>k·n=2^20</code>)해 VN/CN당 1 스레드 할당, warp(32 threads) 단위 실행에 맞춰 thread block/thread 차원 <code>(Bx,By)/(Tx,Ty)</code>을 튜닝.</li><li>최적화 3요소: (a) thread 분할 방식 튜닝, (b) 분기(if/for) 80% 이상 제거해 warp divergence 감소, (c) 반복 중 GPU-CPU 통신 최소화(global/shared memory·coalesced access 활용).</li><li>부수 트릭: 사전확률 <code>P_i^b</code> 계산식을 조건분기 없는 산술식(식 5)으로 대체해 GPU 친화적으로 변형.</li><li>별도 학습/최적화 절차 없음(오프라인 GPU 파라미터 튜닝만, Table 1 실험적 스윕).</li><li>결과: 최적화 후 평균 iteration 5.16→3.71로 감소, throughput 최대 102.084Mbps(평균 85.67Mbps) 달성, 기존 GPU/FPGA reconciliation 대비 최고 성능(Table 4).</li><li>한계: NAND/일반 통신 LDPC가 아닌 QKD 특화 채널·프로토콜 대상, 단정도(single/double precision) GPU 실수 연산 기반으로 HW(ASIC/FPGA) 미설계, min-sum 근사 없이 full-tanh 사용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>multi-matrix(복수 H) BP syndrome 병렬 처리</td><td>대응 없음</td><td>Prime ECC는 단일 QC-LDPC PCM 기반, 다중 행렬 구조 없음</td></tr><tr><td>full-tanh sum-product CN 업데이트</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 min-sum 근사 사용, full-tanh 알고리즘 자체는 대응 없음</td></tr><tr><td>GPU warp/thread/memory 최적화</td><td>대응 없음</td><td>Prime ECC는 ASIC 클록레벨 HW 시뮬레이터로 GPU 소프트웨어 병렬화와 플랫폼이 상이</td></tr><tr><td>반복 중 iteration 수 감소(5.16→3.71)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>개념적으로만 유사(조기종료류), 메커니즘은 multi-matrix 병렬 시도로 상이</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — QKD 도메인 GPU 소프트웨어 가속 논문으로 채널모델·알고리즘(full-tanh sum-product, multi-matrix)·플랫폼(GPU) 모두 Prime ECC의 NAND ASIC min-sum QC-LDPC와 거리가 멀다.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2001.07979v1",
+  "title": "100Mbps Reconciliation for Quantum Key Distribution Using a Single Graphics Processing Unit",
+  "year": 2020,
+  "venue": "arXiv preprint",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.8",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "multi-matrix(2~3개 PEG parity-check 행렬) BP 기반 QKD 오류조정(reconciliation) 알고리즘을 GPU에서 thread/branch/memory 최적화하여 최대 102Mbps 처리율 달성",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.102,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "QKD 오류조정(BSC 유사 채널, sifted key 오류정정) 도메인으로 NAND 채널·부호 스펙과 무관, full-tanh sum-product BP를 GPU 스레드 최적화한 것이라 min-sum 기반 HW ASIC(Prime ECC)과 이질적",
+  "todo_check": "multi-matrix(복수 H 병렬 시도) 구조가 QC-LDPC 단일 PCM 기반 HW 파이프라인에 이식 가능한지, GPU 최적화(warp/coalesced memory) 기법이 ASIC HW 설계 관점에서 의미 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv200107979v1---100mbps-reconciliation-for-quantum-key-distribution-using-a-single-graphics-processing-unit-2020-arxiv-preprint">arxiv:2001.07979v1 - 100Mbps Reconciliation for Quantum Key Distribution Using a Single Graphics Processing Unit (2020, arXiv preprint)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

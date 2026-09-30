@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10273470</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10273470---learning-to-decode-linear-block-codes-using-adaptive-gradient-descent-bit-flipping-2023-istc">ieee:10273470 - Learning to Decode Linear Block Codes using Adaptive Gradient-Descent Bit-Flipping (2023, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.71~0.84</td></tr><tr><td>부호length</td><td>63~255</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>GA로 학습한 가중치·momentum·restart를 갖는 gradient-descent bit-flipping(gAD-GDBF)으로 AWGN·임의 선형부호에 적용, 저복잡도로 BP 능가</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>짧은 조밀 PCM BCH·AWGN 대상, iteration이 300~800으로 매우 커 latency 불리, code별 GA 재학습 필요</td></tr><tr><td>추가확인</td><td>NAND 고rate QC-LDPC·soft 2~3bit 양자화에서의 동작, iteration↓ 시 이득 유지 여부, HW 라우팅/면적</td></tr></tbody></table>
+<blockquote><p>총평: GA로 GDBF 파라미터(가중치/momentum/restart)를 code별 학습해 곱셈/tanh 없이 BP를 능가하는 저복잡도 bit-flip 디코더로 min-sum 대안 가치는 있으나, 300~800 iteration의 큰 latency와 짧은 BCH·AWGN 실험이라 NAND 이식은 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 임의 binary 선형부호 <code>(N,K)</code>(주로 짧고 조밀한 BCH), 채널은 binary-input AWGN, 목적함수 <code>f(x)=Σxᵢyᵢ + Σ_j Π_{i∈Q(cj)}xᵢ</code>(식 (1)) 최대화.</li><li>문제: BCH의 ML 복호는 과복잡, DNN 기반 NBP/NOMS는 iteration 증가 시 이득 감소·cross-entropy 손실이 BER과 불일치 → 학습형 저복잡 대안 필요.</li><li>핵심 가정: GDBF-w/M을 일반화, 채널 potential <code>rᵢ(0)=yᵢ</code>에서 시작해 local energy 기반 bit-flip을 반복.</li><li>핵심 기법 1단: local energy <code>Eᵢ = w1·yᵢx̂ᵢ + w2·Σ_{j∈P(vi)} sⱼ + m_{ℓi}</code>(식 (2)), <code>w1,w2</code>는 variable별(같은 degree끼리 공유) 학습 가중치, <code>m</code>은 momentum 보정.</li><li>핵심 식 의미: variable별 가중치로 저degree 오류변수를 더 자주 flip하도록 조정해 code 비정형성(irregularity)을 보상.</li><li>핵심 기법 2단: potential update <code>rᵢ = rᵢ − 1_F·x̂ᵢδ1 + 1_G·x̂ᵢδ2</code>(식 (6))로 확정 flip 대신 potential을 밀어 확률적 디코더 거동 모사, momentum 갱신(set M)·restart(set S, <code>rᵢ=yᵢ</code>)로 trapping set 진동 억제.</li><li>부수 트릭: 학습 파라미터를 이진 양자화해 하나로 이어붙임, energy 계산 시 대다수 변수는 <code>Si=|P(vi)|</code>로 초기화 후 불만족 check만 감산.</li><li>학습 절차: heuristics(Lmax, L′, δ 등)는 사전 고정, 학습 파라미터(가중치/증분/momentum/restart)는 GA로 BER/FER 직접 최소화, 파라미터 수 <code>|M|(2D+L′+3)</code>.</li><li>결과: (63,45)·(127,106)에서 Lmax=300일 때 BP(Lmax=50) 대비 약 1.0 dB 이득, (63,45) 곱셈·덧셈 BP 대비 6배↓, (127,106) 8배↓, (255,215) 곱셈 17배↓.</li><li>한계: 짧은 조밀 PCM BCH·AWGN 시뮬만, iteration이 300~800으로 큼(latency 불리), HW 미설계, code별 GA 재학습 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>디코딩 알고리즘 전체(bit-flip 대안)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>min-sum 이터레이션 루프를 GDBF 계열로 교체 시 대응, 그러나 알고리즘 패러다임 상이</td></tr><tr><td>energy/potential(양자화) 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>VN 처리/LLR 테이블 층에 variable별 가중치·potential 개념 매핑 가능</td></tr><tr><td>채널 입력(soft yᵢ)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>AWGN soft 입력 필요, NAND soft-read(2~3bit) 정합 검토 필요</td></tr><tr><td>GA 파라미터 학습</td><td>local_opt.cpp (LLR 자동최적화)</td><td>code별 파라미터 자동최적화 인프라와 개념적 접점</td></tr><tr><td>trapping-set 진동/restart</td><td>corner.cpp (수렴실패 추적)</td><td>restart/momentum이 수렴실패 대응과 접점</td></tr><tr><td>min-sum tanh 근사</td><td>대응 없음</td><td>본 논문은 min-sum이 아닌 GDBF 계열</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 곱셈/tanh 없는 저복잡 GDBF 계열이라 HW 면적 관점에서 흥미로우나, 300~800 iteration의 큰 latency와 짧은 BCH·AWGN 실험이라 NAND 고rate QC-LDPC·soft 2~3bit에서의 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10273470",
+  "title": "Learning to Decode Linear Block Codes using Adaptive Gradient-Descent Bit-Flipping",
+  "year": 2023,
+  "venue": "ISTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "63~255",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "GA로 학습한 가중치·momentum·restart를 갖는 gradient-descent bit-flipping(gAD-GDBF)으로 AWGN·임의 선형부호에 적용, 저복잡도로 BP 능가",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "짧은 조밀 PCM BCH·AWGN 대상, iteration이 300~800으로 매우 커 latency 불리, code별 GA 재학습 필요",
+  "todo_check": "NAND 고rate QC-LDPC·soft 2~3bit 양자화에서의 동작, iteration 감소 시 이득 유지 여부, HW 라우팅/면적"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10273470---learning-to-decode-linear-block-codes-using-adaptive-gradient-descent-bit-flipping-2023-istc">ieee:10273470 - Learning to Decode Linear Block Codes using Adaptive Gradient-Descent Bit-Flipping (2023, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

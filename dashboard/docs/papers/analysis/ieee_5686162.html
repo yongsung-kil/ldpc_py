@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5686162</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_5686162---a-tree-based-ml-decoding-algorithm-with-adaptive-thresholding-2010-ieee">ieee_5686162 - A Tree-based ML Decoding Algorithm with Adaptive Thresholding (2010, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>104~256</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ensemble branch 기반 code-tree 탐색 + adaptive thresholding(cost/direction)으로 OSD 대비 탐색량 줄인 near-ML 연판정 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OSD 계열 탐색복호로 정보길이 커지면 복잡도 폭증(정보길이&lt;30, 오류&lt;4 조건에서만 OSD 대비 유리), HW 미설계</td></tr><tr><td>추가확인</td><td>없음 (고rate 장코드로 확장 불가, min-sum 파이프라인에 이식 요소 없음)</td></tr></tbody></table>
+<blockquote><p>총평: OSD 대비 탐색량을 줄인 near-ML 연판정 복호지만 짧은 저rate 코드·소수 오류 조건 한정이고 HW 미설계라 NAND QC-LDPC min-sum에 이식 불가.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이진 선형블록/LDPC 코드의 ML 연판정 복호. (256,128,17) PEG-LDPC, (104,52,20) LQR 코드로 검증.</li><li>문제: OSD-i는 order i가 커질수록 후보 codeword <code>Σ C(k,j)</code>가 폭증 — 탐색비용을 줄이면서 near-ML 달성 필요.</li><li>모델: 정렬 수신벡터 <code>ỹ</code>에서 (n-k) less-reliable basis=parity subtree, k more-reliable basis(MRB)=information subtree로 분할한 bi-directional code tree.</li><li>핵심기법: BESCT — 각 codeword를 tree branch로 보고 ensemble branch <code>B_i^en = g_i</code>(생성행렬 행)의 XOR로 branch를 한 스텝에 성장(<code>B_{i+1}=B_i ⊕ B_j^en</code>).</li><li>핵심식: cost <code>cst(B_i)=Σ(2b_{i,j}-1)ỹ_j</code>를 <code>Mag(y)=Σ|y_j|</code>에 가장 가깝게 만드는 branch 탐색 — cross-correlation 최대화가 ML 판정.</li><li>확장: 두 adaptive threshold — cost threshold(현 최고 cost 갱신)와 direction threshold <code>δ(Mag,cst)</code>로 growing-forward(V+)/backward(V-) 방향 제어.</li><li>구현 디테일: MRB 서브트리 내로 탐색 제한, ensemble branch 사전계산으로 불필요한 branch 확장 회피.</li><li>최적화: 방향 임계 비교(<code>δ ≥ 2|ỹ_{k-j-1}|</code>)로 V+/V- 전환, 잠재 codeword 집합 F에서 최대 cost branch 선정.</li><li>결과: PEG-LDPC(256,128,17)에서 FER&lt;1e-4시 OSD-3 대비 2dB+, OSD-1 대비 4dB 이득. 정보길이&lt;30·오류&lt;4일 때 OSD 대비 복잡도 10배↓.</li><li>한계: HW 미설계, 시뮬만, 정보길이/오류수 커지면 복잡도 폭증하여 고rate 장코드에 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BESCT code-tree 탐색복호</td><td>대응 없음</td><td>OSD/Dorsch 계열 탐색복호로 min-sum 반복복호와 근본적으로 다름, 이식 불가</td></tr><tr><td>adaptive cost/direction threshold</td><td>대응 없음</td><td>Prime ECC의 iteration별 LLR threshold와 개념·목적 모두 상이</td></tr><tr><td>ensemble branch(생성행렬 기반)</td><td>대응 없음</td><td>생성행렬 기반 codeword 열거, Prime ECC는 PCM 기반 LLR message passing</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — OSD 계열 near-ML 탐색복호는 복잡도가 실시간 NAND HW와 양립 불가하고, min-sum 파이프라인/LLR 테이블에 이식할 알고리즘 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5686162",
+  "title": "A Tree-based ML Decoding Algorithm with Adaptive Thresholding",
+  "year": 2010,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "104~256",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ensemble branch 기반 code-tree 탐색 + adaptive thresholding으로 OSD 대비 탐색량 줄인 near-ML 연판정 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "OSD 계열 탐색복호로 정보길이 커지면 복잡도 폭증(정보길이&lt;30·오류&lt;4 조건에서만 OSD 대비 유리), HW 미설계",
+  "todo_check": "없음 (고rate 장코드로 확장 불가, min-sum 파이프라인에 이식 요소 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_5686162---a-tree-based-ml-decoding-algorithm-with-adaptive-thresholding-2010-ieee">ieee_5686162 - A Tree-based ML Decoding Algorithm with Adaptive Thresholding (2010, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

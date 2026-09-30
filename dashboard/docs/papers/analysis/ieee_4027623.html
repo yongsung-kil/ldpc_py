@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4027623</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4027623---improvements-in-belief-propagation-decoding-based-on-averaging-information-from-decoder-and-correction-of-clusters-of-nodes-2006-ieee-communications-letters">ieee:4027623 - Improvements in Belief-Propagation Decoding Based on Averaging Information from Decoder and Correction of Clusters of Nodes (2006, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>155~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 디코더 실패 시 (1) waterfall 구간에서 반복간 평균 신뢰도/부호/degree 통계로 최소신뢰 노드를 선정해 채널정보를 재주입하는 augmented BP, (2) error-floor 구간에서 saturated SUC(unsatisfied check) 그래프의 단일 오류 이웃 노드를 순차적으로 부호반전·보정하는 클러스터 보정 기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>HW 미설계, 추가 반복(jmax≈10, 단계당 20 iteration)으로 인한 latency 증가가 큼, non-binary/구조 제약 없는 일반 LDPC(Tanner code, Margulis code) 기준 실험이라 QC-LDPC/NAND 환경 재검증 필요</td></tr><tr><td>추가확인</td><td>Algorithm B의 SUC 단일-오류-이웃 가정이 Prime ECC의 고rate irregular QC-LDPC(VN degree 17)에서도 성립하는지, HW 구현 시 게이트/레이턴시 비용 정량화 필요</td></tr></tbody></table>
+<blockquote><p>총평: 표준 BP를 실패 시에만 추가로 재작동시켜 waterfall/error-floor를 모두 개선하는 post-processing 기법으로, min-sum 자체를 바꾸지 않아 Prime ECC 이터레이션 루프에 얹기 수월하나 latency 증가가 이식 리스크.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC(Tanner graph) BP 복호에서, 표준 BP가 ML 대비 최대 약 1dB 성능 gap을 보이는 문제(예: (155,64) Tanner code)를 다룸.</li><li>기존 augmented BP([6],[7])는 실패 시 최종 degree/reliability만 보고 노드를 재선정하나 계산량이 stage당 지수적(<code>2^j</code>)으로 증가.</li><li>본 논문은 반복 구간 <code>Δ</code> 동안의 평균 통계(SUC degree <code>d_GS(v)</code>, 평균 복호 신뢰도 <code>R(ℓ)(v)=|M(ℓ)(v)|</code>, 평균 복호 부호 <code>S(ℓ)(v)</code>)를 상태로 사용해 노드를 세밀하게 구분하는 waterfall 개선 기법(Section III)을 제안.</li><li>핵심 식: <code>M(ℓ)(v) = (1/Δ)Σ_{i=ℓ-Δ+1}^{ℓ} m(i)(v)</code>(평균 LLR), 최소 <code>R(ℓ)(v)</code> 노드 <code>vp</code>를 골라 채널정보를 <code>m(0)(vp)=±S</code>로 강제 재주입 후 추가 반복.</li><li>세 가지 상태(평균 degree/부호/신뢰도) 중 average-sign 방식이 처리 오버헤드는 가장 낮으면서 SNR 1.75~3.25dB 구간에서 최고 성능(WER)을 보임(Fig.2).</li><li>error-floor용 Algorithm B: BP 수렴 실패 후 steady-state의 unsatisfied check 집합 <code>C_S</code>와 그 이웃 심볼 <code>V_S</code>에서, 각 unsatisfied check는 거의 항상 오류 이웃이 정확히 1개라는 경험적 관찰을 이용해 노드를 하나씩 부호반전·이웃 신뢰도 보정 후 재복호(step j까지 순차 시도).</li><li>HW 친화 디테일: 식 (1),(3),(4)의 <code>1/Δ</code> 나눗셈은 생략 가능하고 평균값은 <code>Δ</code>개 값을 저장하지 않고 반복마다 갱신 가능(누적 업데이트).</li><li>별도 학습/최적화 절차 없음(경험적 관찰 기반 휴리스틱).</li><li>결과: jmax=10, 단계당 20 iteration으로 (2640,1320) Margulis code의 error floor를 2자리수 이상 낮추고, 최대 필요 iteration은 기존 [6] 대비 최소 2배 감소; Algorithm B 복잡도는 선형(jmax), 기존 방식은 지수적.</li><li>한계: Algorithm B는 waterfall 영역에서는 비효과적(unsatisfied check당 오류 이웃이 3개 이상일 수 있어 가정 붕괴), HW 설계·게이트카운트 없음, 추가 반복으로 인한 latency 증가는 다루지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반복 실패 시 추가 재복호(post-processing) 트리거</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>조기종료(CRC) 실패 후 추가 처리 단계로 삽입 가능한 error-floor 대책</td></tr><tr><td>평균 신뢰도/부호/degree 기반 노드 선정 및 채널정보 재주입</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>VN 값 갱신·LLR 재설정 로직과 대응, 단 평균 통계 누적을 위한 추가 레지스터 필요</td></tr><tr><td>SUC 그래프 단일-오류-이웃 기반 클러스터 보정(Algorithm B)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>unsatisfied check 판별은 기존 syndrome 체크와 유사하나 이웃 심볼 개별 반전 로직은 신규 추가 필요</td></tr><tr><td>조기종료(CRC 실패 후 보정 시도)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>CRC 실패 시 본 기법의 보정 루프를 후속 단계로 연결 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 알고리즘 자체는 건드리지 않고 실패 시에만 작동하는 post-processing이라 이터레이션 루프에 이식이 비교적 용이하나, 추가 반복에 따른 latency 증가와 HW 비용(평균 통계 누적 레지스터, 노드별 재시도 제어로직)이 검증되지 않아 NAND read-latency 민감 환경에서 실익 검토 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4027623",
+  "title": "Improvements in Belief-Propagation Decoding Based on Averaging Information from Decoder and Correction of Clusters of Nodes",
+  "year": 2006,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "155~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 실패 시 평균 신뢰도/부호/degree 통계로 waterfall 영역 노드 재선정, error-floor 영역 SUC 단일-오류-이웃 순차 보정(Algorithm B)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "HW 미설계, 추가 반복으로 latency 증가, 일반 LDPC(비-QC) 기준 검증이라 NAND QC-LDPC 재검증 필요",
+  "todo_check": "SUC 단일-오류-이웃 가정이 Prime ECC 고rate irregular QC-LDPC에서도 성립하는지, HW 비용 정량화 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4027623---improvements-in-belief-propagation-decoding-based-on-averaging-information-from-decoder-and-correction-of-clusters-of-nodes-2006-ieee-communications-letters">ieee:4027623 - Improvements in Belief-Propagation Decoding Based on Averaging Information from Decoder and Correction of Clusters of Nodes (2006, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

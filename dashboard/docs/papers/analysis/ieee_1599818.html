@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1599818</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1599818---optimized-message-passing-schedules-for-ldpc-decoding-2005-ieee">ieee:1599818 - Optimized Message Passing Schedules for LDPC Decoding (2005, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>3000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>층/행별(RMP=layered)·열별(CMP)·행열(RCMP) turbo 스케줄로 수렴 약 2배 가속, RMP≡SMP 동일 BP임을 해석 증명하고 수렴가속률 α를 해석식으로 예측</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>RMP는 사실상 알려진 layered decoding, CMP는 약간 느리고 RCMP는 평균 iteration이 크게 증가, SPA(Psi/tanh) 기반 해석</td></tr><tr><td>추가확인</td><td>Prime ECC의 dual-update 스케줄과 RMP(layered) 중복/우열, min-sum에서도 동일 2배 가속이 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: layered(행 단위) 스케줄이 동일 BP로 수렴을 ~2배 가속함을 해석적으로 정량화 — iteration/latency 이득은 크나 정정능력 자체는 불변이며 Prime ECC의 dual-update와 개념 중복.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 규칙 Gallager 부호((3,6)(3,9)(3,12)(4,8)(5,10)) 해석 + 불규칙 802.16e 부호(<code>N=3000</code>) 시뮬, AWGN, <code>LLR_j=2r_j/σ²</code>.</li><li>문제: LDPC의 SMP(표준 2-phase) 스케줄은 turbo 대비 수렴이 느림(25~30 vs 8~10 iter) → 수렴 가속 필요.</li><li>핵심기법: 메시지 갱신 순서를 바꿔 갱신된 신뢰도를 같은 iteration 안에서 즉시 재활용. RMP=행(layer)별, CMP=열별, RCMP=행열(random walk) 스케줄.</li><li>RMP 등가성: 식 전개(7)~(15)로 RMP의 APP 갱신식이 SMP와 수학적으로 동일 → 둘은 같은 BP 근사, 차이는 스케줄뿐.</li><li>핵심식 의미: RMP는 현재 iteration에서 갱신된 check-message를 같은 iteration의 bit-node 갱신에 즉시 사용(식17 vs SMP 식18) → 신뢰도 전파가 빨라짐.</li><li>수렴가속률: <code>α = log(N_RMP)/log(N_SMP)</code>, <code>N</code>은 한 APP 계산에 쓰인 이전 iteration check-message 수(식22/23). check node degree <code>W_R</code>, bit node degree <code>W_C</code>.</li><li>부수: 계산복잡도를 SMP와 동일하게 유지하도록 (3)→(5), (1)→(6) 부분합 단순화.</li><li>학습/최적화: 없음(해석적 수렴 예측 metric 도입).</li><li>결과: 규칙부호에서 α≈2(해석·시뮬 일치, Fig2), 불규칙 802.16e에서 RMP/CMP 15 iter ≈ SMP 30 iter(Fig3), RCMP는 성능 유사하나 평균 iteration 큼.</li><li>한계: HW 설계·게이트카운트 없음, RMP는 기존 layered decoding 재해석, 이득은 수렴속도(iteration/latency)로 정정능력 자체는 불변.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 메시지 패싱 스케줄(RMP/CMP/RCMP) | decoder.cpp LDPC_Decoder() 이터레이션 루프 | 스케줄 변경이 닿는 핵심 지점, Prime ECC의 dual-update와 동일 계층 |
+| 층(layer) 단위 병렬 갱신 | decoder.cpp LDPC_Decoder(), C2V_Cal() | row-layer 병렬 처리 개념 대응 |
+| 즉시-재활용 스케줄(dual-update 유사) | encoder.cpp Column_Reordering_Dual_Update() | Prime ECC의 parity even/odd 교대 스케줄과 개념적 대응 |
+| CN 갱신(Psi/SPA) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 스케줄은 min-sum 연산과 독립적으로 이식 가능 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 층별(layered) 스케줄로 iteration을 ~2배 줄이는 이득은 NAND 디코더 throughput/latency에 직결되나, Prime ECC가 이미 dual-update 교대 스케줄을 보유해 개념 중복이 크고 정정능력 자체 개선은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1599818",
+  "title": "Optimized Message Passing Schedules for LDPC Decoding",
+  "year": 2005,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "3000",
+  "soft_quant": "무관",
+  "key_contribution": "층/행별(RMP=layered)·열별(CMP)·행열(RCMP) turbo 스케줄로 수렴 약 2배 가속, RMP과 SMP이 동일 BP임을 해석 증명하고 수렴가속률을 해석식으로 예측",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "RMP는 사실상 알려진 layered decoding, CMP는 약간 느리고 RCMP는 평균 iteration 크게 증가, SPA(Psi/tanh) 기반 해석",
+  "todo_check": "Prime ECC의 dual-update 스케줄과 RMP(layered)의 중복/우열, min-sum에서도 동일 2배 가속 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1599818---optimized-message-passing-schedules-for-ldpc-decoding-2005-ieee">ieee:1599818 - Optimized Message Passing Schedules for LDPC Decoding (2005, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

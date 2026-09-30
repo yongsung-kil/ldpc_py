@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1399193</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1399193---implementation-of-an-ldpc-decoder-on-a-vector-signal-processor-2004-isitaieee">ieee:1399193 - Implementation of an LDPC Decoder on a Vector Signal Processor (2004, ISITA/IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC sum-product를 병렬 slice VSP에 매핑, 슬라이스 간 메시지 교환 스케줄링으로 확장성/throughput 확보</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.0361Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>offset-BP는 Prime ECC의 min-sum과 중복, VSP 프로그래머블 아키텍처는 우리 고정 z=32 QC-LDPC HW와 정합 안 됨</td></tr><tr><td>추가확인</td><td>slice 간 crossbar 스케줄링 알고리즘이 QC 구조 라우팅에 시사점 있는지</td></tr></tbody></table>
+<blockquote><p>총평: offset-BP 디코더를 프로그래머블 VSP에 매핑한 2004년 구현 논문 - 알고리즘·부호는 표준이고 정정능력 기여 없음, 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>dv=3, dc=6</code> regular LDPC (rate 0.5, block length <code>N=1024</code>), AWGN 채널, LLR 메시지 패싱.</li><li>풀려는 문제: 전용 HW 디코더는 개발기간·비용이 크고 표준 변경 시 재설계 필요 → 프로그래머블·확장 가능한 해법 필요.</li><li>아키텍처: VSP는 독립 계산 유닛(slice) 다수 병렬 구성, crossbar로 slice 간 메시지 1clk 교환.</li><li>VN 연산: <code>Zmn = Ln0 + Σ Lmn</code> (외재정보 합), APP <code>An = Ln0 + Σ Lmn</code> (식1,2), 고정소수점에 이미 적합.</li><li>CN 연산: 원식은 <code>tanh</code> 곱 <code>L = 2atanh(Π tanh(Z/2))</code> (식3) — 고정소수점 부적합.</li><li>근사: Max-Log-MAP류 <code>L ≈ min|Z|·Π sgn(Z)</code> (식4, min-sum).</li><li>보정: additive offset <code>L ← sgn(L)·max(|L|-β,0)</code> (식5, offset BP), β는 density evolution으로 부호설계 시 최적화 (상수라 저복잡).</li><li>매핑: 각 slice가 VN/CN 집합을 교대 처리, 처리 후 interleaver 따라 메시지 교환.</li><li>스케줄링: crossbar 충돌(한 slice가 동일 clk에 2메시지 수신) 회피 위해 경로탐색 스케줄, 또는 PCM을 submatrix당 동일 개수 <code>1</code> (<code>P = N·dv/L²</code>, 식6)로 구성해 규칙적 교환.</li><li>결과: <code>I=10, 200MHz</code>에서 slice 수 <code>L</code>에 따라 2.3~36.1Mbps (식7 <code>CIB=35.5/L+26/N</code>), TI DSP(5.4Mbps@600MHz) 대비 8-slice로 동등, 확장 시 초과.</li><li>한계: 시뮬/계산 기반 (실칩 없음), 정정능력 개선 아님, soft-input 양자화 비트폭 본문 미명시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN 근사 (식4)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum과 동일 계열 (이미 보유)</td></tr><tr><td>offset BP 보정 (식5)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>offset 항은 우리 magnitude 양자화/스케일과 유사, 중복</td></tr><tr><td>VN/APP 연산 (식1,2)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>표준 VN, 대응 있으나 신규성 없음</td></tr><tr><td>slice 간 crossbar 메시지 스케줄</td><td>대응 없음</td><td>우리는 고정 z=32 QC 라우팅, 프로그래머블 slice 아키텍처 부적용</td></tr><tr><td>조기종료 (valid codeword 검출)</td><td><code>full_CRC.cpp</code> / <code>partial_CRC.cpp</code></td><td>개념 유사 (parity-check 만족 시 중단), 이미 보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — offset-BP/min-sum·조기종료 모두 Prime ECC가 이미 보유하고, 프로그래머블 VSP 매핑·스케줄링은 고정 QC-LDPC HW에 이식 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1399193",
+  "title": "Implementation of an LDPC Decoder on a Vector Signal Processor",
+  "year": 2004,
+  "venue": "IEEE (ISITA-related)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC sum-product를 병렬 slice VSP에 매핑, 슬라이스 간 메시지 교환 스케줄링으로 확장성/throughput 확보",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.0361,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "offset-BP는 Prime ECC의 min-sum과 중복, VSP 프로그래머블 아키텍처는 우리 고정 z=32 QC-LDPC HW와 정합 안 됨",
+  "todo_check": "slice 간 crossbar 스케줄링 알고리즘이 QC 구조 라우팅에 시사점 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1399193---implementation-of-an-ldpc-decoder-on-a-vector-signal-processor-2004-isitaieee">ieee:1399193 - Implementation of an LDPC Decoder on a Vector Signal Processor (2004, ISITA/IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

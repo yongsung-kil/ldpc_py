@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10078338</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10078338---matryoshka-globally-coupled-ldpc-code-2023-ieee-trans-communications">ieee:10078338 - Matryoshka Globally-Coupled LDPC Code (2023, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.61~0.85</td></tr><tr><td>부호length</td><td>7200~37632</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>GC-LDPC를 nested Matryoshka chain으로 확장한 rate-compatible binary QC-LDPC 부호구성 + DLT 기반 recursive 인코딩</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate-compatible 다층·global-coupling 구조라 부호 고정된 Prime ECC에 통째 이식은 재검증 부담 큼, HW·NAND 채널 미검증</td></tr><tr><td>추가확인</td><td>truncating/masking로 short-cycle 감소한 base matrix 설계기법이 우리 고rate QC-LDPC H-matrix waterfall 개선에 부분 차용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC(CPM-superposition) rate-compatible 부호구성+인코딩 논문 - min-sum·AWGN 검증으로 이식가능성 있으나 다층 global-coupling 구조 재검증 부담으로 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary QC-LDPC (CPM-dispersion superposition, <code>Hgc=CPM(Bgc)</code>), GC-LDPC(local code + global CN 결합)을 확장한 N-fold MGC-LDPC.</li><li>문제: 기존 GC-LDPC의 degree/cycle 분포·threshold를 더 개선하고, 여러 blocklength·rate를 하나의 구조로 지원(rate-compatible)하고 싶다.</li><li>핵심정의: N층 Matryoshka-style code가 <code>Cmgc(1)≺Cmgc(2)≺…≺Cmgc(N)</code> nested chain을 이뤄 상위층이 하위층을 포함 → 자연스러운 rate-compatible (Theorem 1).</li><li>핵심기법1(구성): base matrix <code>Bmgc(N)</code>를 하삼각 array로 두고 <code>Bgc,n</code>(대각=GC-LDPC), <code>Bcm,n1,n2</code>(층간 연결) 조립; truncating(효율적) / masking(유연, cycle·degree 최적화) 두 방식.</li><li>핵심식: 2x2/3x3 SM-constraint로 girth≥6/8 보장, masking <code>Bmgc=Bsm⊙Mmgc</code>로 short-cycle 축소.</li><li>핵심기법2(인코딩): parity-check matrix를 DLT(double lower triangular) form <code>[[HU1,HU2,HU3],[HL1,HL2,0]]</code>으로 변환, back-substitution으로 <code>pL,pU</code> 계산.</li><li>확장(recursive encoding): local code M-1개는 독립 인코딩, 마지막 local code만 방정식 풀이; n층 코드워드는 (n-1)층 <code>vmgc(n-1)</code>에서 재귀 생성 (Theorem 3, Algorithm 2).</li><li>복잡도: 전처리 <code>O(l^3+kn l^2+Mn l kn^2)</code>, 인코딩 <code>O(kn(Mnl-kn)+l^2)</code>.</li><li>결과: MGC가 동rate/length GC-LDPC 대비 short-cycle 대폭 감소, P-EXIT threshold 0.21~0.37dB 개선, AWGNC BER 1e-8~1e-9까지 error-floor 없음, 50-iter MSA 복호, 4-fold 예제서 rate 5/6~2/3 연속 지원.</li><li>한계: 순수 시뮬(HW 없음), min-sum flooding 복호만 검증(전용 저복잡 디코더는 future work), NAND read/soft-quant 미고려, non-binary 미포함.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MGC/GC base matrix·H-matrix 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>binary QC-LDPC H-matrix 로드 지점이나, Prime ECC는 특정 QC-LDPC 고정이라 rate-compatible 다층구조 통째 대체는 재검증 부담(프로파일 §4 "높음")</td></tr><tr><td>CPM-dispersion / circulant shift 구조</td><td><code>ecc_data.h</code> <code>PCM_b</code>(base+shift)</td><td>동일 QC 계열이나 global-coupling·nested layer 개념 없음</td></tr><tr><td>MSA(min-sum) 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>복호는 min-sum으로 동일 계열, 이미 보유(중복)</td></tr><tr><td>recursive/DLT 인코딩</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 고정, DLT recursive 방식은 상이</td></tr><tr><td>masking으로 short-cycle 감소 (waterfall)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 설계 단계에서 waterfall 개선 아이디어로 부분 참고 여지</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - binary QC-LDPC + min-sum + waterfall/threshold 개선이라 Prime ECC와 계열은 일치하나, rate-compatible 다층 global-coupling 부호구조는 특정 QC-LDPC 고정인 우리 코드에 통째 이식하기엔 재검증 부담이 크고, short-cycle 억제 masking 설계 아이디어 정도가 부분 차용 대상이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10078338",
+  "title": "Matryoshka Globally-Coupled LDPC Code",
+  "year": 2023,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "7200~37632",
+  "soft_quant": "무관",
+  "key_contribution": "GC-LDPC를 nested Matryoshka chain으로 확장한 rate-compatible binary QC-LDPC 부호구성 + DLT 기반 recursive 인코딩",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "rate-compatible 다층·global-coupling 구조라 부호 고정된 Prime ECC에 통째 이식은 재검증 부담 큼, HW·NAND 채널 미검증",
+  "todo_check": "truncating/masking로 short-cycle 감소한 base matrix 설계기법이 우리 고rate QC-LDPC H-matrix waterfall 개선에 부분 차용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10078338---matryoshka-globally-coupled-ldpc-code-2023-ieee-trans-communications">ieee:10078338 - Matryoshka Globally-Coupled LDPC Code (2023, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

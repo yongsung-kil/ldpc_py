@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9860767</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9860767---crc-aided-adaptive-belief-propagation-decoding-of-nr-ldpc-codes-2022-vtc2022-spring">ieee:9860767 - CRC-Aided Adaptive Belief Propagation Decoding of NR LDPC Codes (2022, VTC2022-Spring)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.917</td></tr><tr><td>부호length</td><td>108~1152</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CRC 패리티행렬 일부를 LDPC H와 결합한 joint 행렬로 ABP(Gaussian elimination 기반 적응형 BP)를 수행, damping factor로 UER 제어하며 short NR LDPC 성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ABP가 매 iteration 실수기반 Gaussian elimination(<code>O(TI·TO·N^3)</code>)이라 복잡도 극도로 높고 short code(N≤1152)에만 유효, HW 미설계, CRC 소모로 검출능력 희생(UER 트레이드오프)</td></tr><tr><td>추가확인</td><td>CRC 조기종료 개념은 우리 partial/full CRC와 연관 있으나 ABP 자체는 고rate·수천비트 NAND QC-LDPC에 복잡도상 부적합, 실제 이득 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: short 5G-NR LDPC에 CRC를 정정에 활용하는 고복잡도 ABP(반복 Gaussian elimination) 기법으로, NAND용 고rate·긴 QC-LDPC에는 복잡도·코드길이 제약상 이식 부적합하여 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>대상: 5G NR short LDPC(<code>R=1/2~11/12</code>, <code>N=108~1152</code>), AWGN/BPSK, 참조는 BP(SPA) 50 iter. CRC 최대 24bit 부착.</li><li>문제: short LDPC는 이론한계와 실성능 격차가 큼. CRC를 검출뿐 아니라 정정에 활용하되(polar의 CA-SCL처럼) BP에 통합.</li><li>핵심 구조: CRC 생성행렬을 Gaussian elimination으로 systematic화 <code>G_S=[I|J]</code> → CRC 패리티행렬 <code>H_S=[J^T|I]</code>. LDPC(inner) H_I과 CRC(outer) H_O 일부 L̂행을 결합해 joint <code>H=[[H_I];[H̄_O, Θ]]</code>.</li><li>기법(ABP): Jiang-Narayanan ABP를 LDPC에 일반화. 비트 신뢰도(LLR) 기준으로 덜 신뢰한 열을 identity로 만드는 Gaussian elimination <code>H^(j)=φ(H,|r^(j)|)</code> 반복.</li><li>신뢰도 갱신: 외재정보 <code>r_ext^(j)=ψ(H^(j),r^(j))</code>, <code>r^(j+1)=r^(0)+α·r_ext^(j)</code> — damping factor <code>α(0&lt;α≤1)</code>가 갱신속도·UER 제어.</li><li>이중 반복: inner iter <code>T_I</code>, outer iter <code>T_O</code>. outer마다 GP1(N-K 소거 비트)/GP2(K 신뢰 비트) 간 <code>λ</code>개 불확실 비트 교환해 그룹핑을 바꿔 재시도.</li><li>UER 제어: CRC를 정정에 쓰면 검출능력 희생 → UER≈<code>2^{-L}·FER</code>. damping factor↓ 또는 참여 CRC bit수↓로 UER를 FER의 1%(5G 요구) 이하로 유지.</li><li>결합: BP가 먼저 돌고 실패 시에만 CA-ABP 수행(<code>X_p=X_b+ζ·X_c</code>, ζ=BP의 FER).</li><li>결과: N=108,R=2/3에서 BP+CA-ABP(20,3,24)-0.5가 BP 대비 2dB↑; N=144에서 BP+OSD 대비 slope 우위; N=1152,R=11/12에선 이득 0.3dB로 감소(코드 길수록 이득↓).</li><li>한계: Gaussian elimination <code>O(T_I·T_O·N^3)</code> 초고복잡도, HW 미설계(시뮬만), short code 전용, CRC 소모로 검출능력 저하.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| ABP 반복 Gaussian elimination 기반 적응형 BP | 대응 없음 | 우리 min-sum 메시지패싱에 실수기반 GE를 매 iter 삽입하는 구조 없음, 이질적 |
+| 기저 BP/메시지패싱 디코딩 | decoder.cpp LDPC_Decoder(), C2V_Cal() | ABP의 1차 스테이지 BP만 대응, ABP 본체는 대응 없음 |
+| CRC 기반 조기종료/검출 | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 우리도 CRC 조기종료 보유 — 단 여기선 CRC를 "정정"에 소모(개념 상이) |
+| joint H 행렬(CRC+LDPC 결합) 로드 | ecc_top.cpp Load_PCM() | H-matrix 로드 대응하나 CRC 결합 joint 구성은 우리 고정 QC 구조와 불일치 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — CA-ABP는 매 iteration 실수기반 Gaussian elimination(<code>O(N^3)</code>)을 요구하는 short-code(N≤1152) 전용 소프트 디코딩으로, 수천비트 고rate binary QC-LDPC를 부분병렬 HW로 돌리는 Prime ECC에 복잡도·코드길이·구조 모두 맞지 않아 이식 가치가 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9860767",
+  "title": "CRC-Aided Adaptive Belief Propagation Decoding of NR LDPC Codes",
+  "year": 2022,
+  "venue": "VTC2022-Spring",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.917",
+  "code_length": "108~1152",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CRC 패리티행렬 일부를 LDPC H와 결합한 joint 행렬로 ABP(Gaussian elimination 기반 적응형 BP)를 수행, damping factor로 UER 제어하며 short NR LDPC 성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "ABP가 매 iteration 실수기반 Gaussian elimination(O(TI·TO·N^3))이라 복잡도 극도로 높고 short code(N&lt;=1152)에만 유효, HW 미설계, CRC 소모로 검출능력 희생",
+  "todo_check": "CRC 조기종료 개념은 우리 partial/full CRC와 연관 있으나 ABP 자체는 고rate·수천비트 NAND QC-LDPC에 복잡도상 부적합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9860767---crc-aided-adaptive-belief-propagation-decoding-of-nr-ldpc-codes-2022-vtc2022-spring">ieee:9860767 - CRC-Aided Adaptive Belief Propagation Decoding of NR LDPC Codes (2022, VTC2022-Spring)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

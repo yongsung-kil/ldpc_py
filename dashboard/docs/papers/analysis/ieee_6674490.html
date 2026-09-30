@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6674490</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6674490---an-area-and-energy-efficient-half-row-paralleled-layer-ldpc-decoder-for-the-80211ad-standard-2013-ieee-workshop-on-signal-processing-systems-sips">ieee:6674490 - An Area and Energy Efficient Half-Row-Paralleled Layer LDPC Decoder for the 802.11ad Standard (2013, IEEE Workshop on Signal Processing Systems / SiPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.8125</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>half-row-paralleled layer 디코더 + 단일 permutation network + half-layer 파이프라인으로 HW 자원 절반 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.16mm2@40nm (area)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>5.6Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11ad 짧은 부호(672)·저rate 전용, gate count 미제공(area만), 정정능력 개선 아님</td></tr><tr><td>추가확인</td><td>NAND용 고rate(~0.9)·긴부호 QC-LDPC에서 half-row 매핑과 z=32/HCU 구조 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: 802.11ad용 layer 디코더 HW 최적화(자원 절반, single permutation network) - 아키텍처 아이디어는 참고되나 NAND 고rate 구조와는 정합 재검증 필요, 정정성능 개선은 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.11ad AA-QC-LDPC, 부호길이 <code>N=672</code>, sub-matrix <code>z=42</code>, rate 1/2·5/8·3/4·13/16 지원, base matrix <code>Mb×Nb</code> (13/16일 때 <code>Nb=16</code>).</li><li>문제: multi-gigabit LDPC 디코더는 row-paralleled로 고throughput을 얻으나 면적·전력이 큼, 모바일용으로 부적합.</li><li>복호: partial-paralleled SPA/normalized Min-Sum layer decoding, posterior <code>Qn</code>(size z)와 extrinsic <code>rmn</code>을 permutation network(shift <code>P(m,n)</code>)로 라우팅, 5bit LLR 양자화 시 floating 대비 BER 손실 무의미.</li><li>핵심 기법1 (half-row): bit-node 병렬도를 code length 절반(672→336)으로 줄여 VFN/APP RAM/permutation 블록을 <code>Nb/2=8</code>로 반감, CN 병렬도는 z=42 유지.</li><li>CN 2-phase: 첫 8입력으로 <code>m1_p1,m2_p1,sg_p1</code>(식 1-3), 둘째 8입력으로 phase2 계산 후 최종 <code>m1_fnl,m2_fnl,sg_fnl</code>(식 4-6)로 min1/min2 병합.</li><li>핵심 기법2 (single permutation network): 두 개의 barrel-shifter permutation을 하나로 축소, APP RAM을 비순차 저장하고 연속 두 layer의 shift 차분(식 7)만큼만 회전, inverse shift <code>τ=0</code>.</li><li>파이프라인: CN 처리 3-stage, 각 half-layer 4 cycle(VC/RP/CT/CF/CF2), 두 half-layer 간 데이터 의존성이 없어 half-layer level 파이프라인 적용.</li><li>cycle 수: row-based <code>N_row=3·Nlayers·Niter</code>, half-row <code>N_half=4·Nlayers·Niter+1</code> (13/16에서 iteration당 12 cycle).</li><li>결과: 40nm G, 500MHz, 5 iteration, rate 13/16에서 5.6Gbps, 99mW, 3.53 pJ/bit/iter, 35 Gbps/sqmm, area 0.16mm2, CFU가 전력 68% 차지.</li><li>한계: 802.11ad 짧은부호·저rate 전용, gate count 미제공(면적만), half-layer 파이프라인으로 iteration당 cycle 증가(12 vs 9)라 latency 관점 불리.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layer Min-Sum CN 연산(min1/min2/sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2+sign 구조 동일, half-row 2-phase 병합은 우리 pipeline과 다름</td></tr><tr><td>half-row 병렬 매핑/파이프라인</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>우리 z=32 row 병렬·HCU·GT와 개념 유사, half-row는 자원절감 대안 아이디어로 참고</td></tr><tr><td>single permutation network(라우팅 축소)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>라우팅/edge 축소 목적은 유사, barrel-shift 방식은 우리 MUX 그래프씨닝과 상이</td></tr><tr><td>layer 스케줄 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>layer scheduling 자체는 참고 가능</td></tr></tbody></table>
+<p>적용 가치: 중간 - 자원 절반 절감(half-row)·단일 permutation network 라우팅 축소 아이디어는 HW 면적/전력 관점에서 참고되나, 802.11ad 짧은부호·저rate 전용이라 NAND 고rate·긴부호 QC-LDPC 구조와 정합 재검증 부담이 있고 정정능력 개선은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6674490",
+  "title": "An Area and Energy Efficient Half-Row-Paralleled Layer LDPC Decoder for the 802.11ad Standard",
+  "year": 2013,
+  "venue": "IEEE Workshop on Signal Processing Systems (SiPS)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.8125",
+  "code_length": "672",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "half-row-paralleled layer 디코더 + 단일 permutation network + half-layer 파이프라인으로 HW 자원 절반 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.16mm2@40nm",
+  "parallelism": "부분",
+  "throughput_gbps": 5.6,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "802.11ad 짧은 부호(672)·저rate 전용, gate count 미제공(area만), 정정능력 개선 아님",
+  "todo_check": "NAND용 고rate(~0.9)·긴부호 QC-LDPC에서 half-row 매핑과 z=32/HCU 구조 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6674490---an-area-and-energy-efficient-half-row-paralleled-layer-ldpc-decoder-for-the-80211ad-standard-2013-ieee-workshop-on-signal-processing-systems-sips">ieee:6674490 - An Area and Energy Efficient Half-Row-Paralleled Layer LDPC Decoder for the 802.11ad Standard (2013, IEEE Workshop on Signal Processing Systems / SiPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

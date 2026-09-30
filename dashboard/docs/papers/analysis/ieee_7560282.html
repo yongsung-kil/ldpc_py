@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7560282</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7560282---multi-clock-flooded-ldpc-decoding-architecture-with-reduced-memory-and-interconnect-2016-isvlsi">ieee:7560282 - Multi Clock Flooded LDPC Decoding Architecture with Reduced Memory and Interconnect (2016, ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>메모리/라우팅에 고클록(fH), 처리유닛에 저클록(fL)의 dual-clock 도메인으로 멀티포트 메모리·다중 barrel shifter를 에뮬레이션</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.353Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>(3,6) rate-0.5 정규부호·짧은 길이(1296)로만 검증, 로직 ~80% 증가·고rate NAND QC-LDPC 미검증</td></tr><tr><td>추가확인</td><td>fH:fL 정수배 클록도메인 크로싱 버퍼가 우리 z=32 파이프라인/HCU 구조와 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 정정성능은 안 건드리고 메모리포트·barrel shifter 라우팅 비용을 dual-clock으로 줄이는 순수 HW 아키텍처 트릭 — 관심영역(라우팅/메모리 병목)에 맞으나 rate-0.5 정규부호·FPGA 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (3,6) regular QC-LDPC, 길이 1296bit, base matrix 12×24, circulant <code>z=54</code>, MS 복호.</li><li>문제: partially-parallel flooded 디코더에서 병렬도 <code>p</code>를 올리면 멀티포트 메모리와 다중 barrel shifter가 필요해 메모리·라우팅 비용이 지배적으로 증가.</li><li>관찰: 최신 FPGA에서 메모리/BRAM 동작주파수(~600MHz)가 처리유닛(150-250MHz)보다 훨씬 높다는 점을 활용.</li><li>핵심기법: 두 클록 도메인 사용 — 메모리 인터페이스와 barrel shifter 라우팅에 고클록 <code>fH</code>, 처리유닛에 저클록 <code>fL</code>, <code>fH = R·fL</code> (정수배).</li><li>의미: 고클록 도메인이 시분할로 단일포트 메모리/소수 barrel shifter를 재사용해 멀티포트·다중 라우팅을 에뮬레이션 → 배선·MUX 수 감소로 라우팅 혼잡 완화.</li><li>flooding 스케줄 MS: CNU <code>β=∏sign(α)·min|α|</code>, VNU <code>α=γ+Σβ</code>, APP <code>γ̃=γ+Σβ</code>, 출력 <code>sign(γ̃)</code>.</li><li>구현 디테일: <code>R=3</code>일 때 MC는 read/write 각 1포트 메모리 + barrel shifter 2개로, 병렬도 3 단일클록(메모리 3R/3W + barrel shifter 6개)과 동일 정정성능을 훨씬 적은 메모리/라우팅으로 구현.</li><li>두 디코더를 Verilog로 구현, Xilinx ISE 14.7 / Virtex-7 VLX485T 합성, SystemVerilog+C++ 모델로 검증.</li><li>결과: 단일클록 serial=1976 slice/10 BRAM/280Mbps(20 iter), MC(fH 450/fL 150MHz)=3763 slice/10 BRAM/353Mbps → throughput +25%, 메모리 오버헤드 0, 로직 +80%.</li><li>한계: rate-0.5 (3,6) 정규부호·짧은 부호길이 FPGA 합성만, BER/정정성능·고rate 부호·ASIC 미평가, 로직 면적 증가가 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>flooding MS CNU/VNU 이터레이션</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>MS 연산 자체는 이미 보유, 스케줄만 flooding</td></tr><tr><td>barrel shifter 라우팅 / MUX edge 선택</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>라우팅 축소라는 목표는 GT(그래프 씨닝)와 유사, 접근은 상이</td></tr><tr><td>dual-clock 메모리 포트 에뮬레이션</td><td>대응 없음 (HW clock-domain 트릭, C++ bit-exact 시뮬 범위 밖)</td><td>알고리즘 무관, RTL 설계 이슈</td></tr><tr><td>부호구조(circulant, base matrix) 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>z=54 vs 우리 z=32, 부호구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 메모리/라우팅 병목 절감이라는 방향은 우리 관심사와 맞지만, dual-clock은 RTL 클록 도메인 설계 트릭이라 bit-exact C++ 시뮬레이터에는 직접 이식할 대상이 없고 정정성능 기여도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7560282",
+  "title": "Multi Clock Flooded LDPC Decoding Architecture with Reduced Memory and Interconnect",
+  "year": 2016,
+  "venue": "ISVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1296",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "메모리/라우팅 고클록·처리유닛 저클록의 dual-clock 도메인으로 멀티포트 메모리·다중 barrel shifter를 에뮬레이션, throughput +25%·메모리 오버헤드 0",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.353,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "(3,6) rate-0.5 정규부호·짧은 길이(1296) FPGA 합성만, 로직 ~80% 증가, 고rate NAND QC-LDPC·ASIC 미검증",
+  "todo_check": "fH:fL 정수배 클록도메인 크로싱 버퍼가 z=32 파이프라인/HCU 구조와 정합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7560282---multi-clock-flooded-ldpc-decoding-architecture-with-reduced-memory-and-interconnect-2016-isvlsi">ieee:7560282 - Multi Clock Flooded LDPC Decoding Architecture with Reduced Memory and Interconnect (2016, ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

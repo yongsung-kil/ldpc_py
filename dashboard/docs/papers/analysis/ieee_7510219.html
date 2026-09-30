@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7510219</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7510219---non-iterative-ldpc-decoding-by-syndrome-generation-using-artificial-neural-network-2015-ieee-raece-conf">ieee:7510219 - Non Iterative LDPC Decoding By Syndrome Generation Using Artificial Neural Network (2015, IEEE RAECE conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>12 (n=12, k=6)</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>MLP로 syndrome을 생성하고 LUT로 오류위치 정정하는 비반복(non-iterative) LDPC 디코더 프로토타입</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(12,6) 초소형 코드만, syndrome→오류패턴 LUT 크기 지수폭발, 다중비트 syndrome 충돌로 성능 열화</td></tr><tr><td>추가확인</td><td>LUT/MLP 방식이 NAND급 고rate 장부호에 스케일 불가 - 확장 무의미</td></tr></tbody></table>
+<blockquote><p>총평: MLP+LUT 기반 비반복 신드롬 디코더 초기 프로토타입 - non-binary NN 접근이자 초소형 코드 한정으로 Prime ECC 이식성 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 (12,6) irregular LDPC, rate-1/2, H는 6×12 (4행 weight-4, 2행 weight-5), 예제 프로토타입.</li><li>문제: belief propagation(BP) 반복 디코딩이 실시간 통신에서 지연·복잡도가 크다고 보고 비반복 대안을 제시.</li><li>핵심 관찰: 2비트 이상 오류의 syndrome은 오류 위치에 해당하는 H 열들의 Ex-OR과 같다(선형 성질).</li><li>핵심기법: syndrome 생성을 MLP(또는 RBFN)로 대체. H가 irregular이므로 행별 1의 개수(4,5)마다 별도 MLP 사용(4입력/5입력 MLP 2개).</li><li>MLP 학습: 출력 뉴런 1개, even-parity 입력→'0', odd-parity 입력→'1'을 출력하도록 학습해 각 parity 방정식 결과를 산출, 직렬 concat으로 full syndrome 구성.</li><li>학습 이점: 전체 codeword(2^k) 패턴이 아니라 방정식별 4/5비트 패턴만 학습 → 기존 NN 디코더의 학습패턴 폭발 완화.</li><li>정정: 생성된 syndrome을 사전 계산 LUT(좌=syndrome, 우=오류 열위치)와 비교해 매칭 위치 비트를 flip.</li><li>용량 한계: parity 6비트→syndrome 2^6=64개인데 2비트까지 정정에 78개 필요→14개 충돌; parity 12비트로 늘리면 4bit까지 정정 가능 언급.</li><li>결과: (12,6) BPSK/AWGN BER 곡선 제시. 프레임당 768비트라 최소 BER≈1.3e-3, common syndrome 충돌로 곡선에 fluctuation.</li><li>한계: 초기단계 프로토타입, HW 미설계, syndrome 충돌 미해결, LUT 없는 자동정정을 향후과제로 명시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MLP 기반 syndrome 생성 (NN 디코더)</td><td>대응 없음</td><td>프로파일 §6 명시 - NN/딥러닝 디코더는 대응 없음</td></tr><tr><td>LUT 기반 오류위치 정정</td><td>대응 없음</td><td>Prime ECC는 min-sum 반복 message passing, syndrome-LUT 방식 아님</td></tr><tr><td>syndrome 계산 개념</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료용 CRC와 개념만 유사, 정정 메커니즘은 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - NN 디코더 + syndrome-LUT 방식은 Prime ECC의 min-sum 반복 구조와 무관하고 (12,6) 초소형 코드 한정이라 이식 대상 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7510219",
+  "title": "Non Iterative LDPC Decoding By Syndrome Generation Using Artificial Neural Network",
+  "year": 2015,
+  "venue": "IEEE RAECE conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "12 (n=12, k=6)",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "MLP로 syndrome을 생성하고 LUT로 오류위치 정정하는 비반복(non-iterative) LDPC 디코더 프로토타입",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "(12,6) 초소형 코드만, syndrome→오류패턴 LUT 크기 지수폭발, 다중비트 syndrome 충돌로 성능 열화",
+  "todo_check": "LUT/MLP 방식이 NAND급 고rate 장부호에 스케일 불가 - 확장 무의미"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7510219---non-iterative-ldpc-decoding-by-syndrome-generation-using-artificial-neural-network-2015-ieee-raece-conf">ieee:7510219 - Non Iterative LDPC Decoding By Syndrome Generation Using Artificial Neural Network (2015, IEEE RAECE conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

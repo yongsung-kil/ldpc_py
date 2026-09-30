@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7795194</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_7795194---reduced-complexity-node-wise-scheduling-of-admm-decoding-for-ldpc-codes-2017-ieee-communications-letters">ieee_7795194 - Reduced Complexity Node-Wise Scheduling of ADMM Decoding for LDPC Codes (2017, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>576~1152</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>ADMM LP 디코더용 node-wise IDS 스케줄링에서 Euclidean projection 없이 residual을 근사 계산(RC-NS-ADMM)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM/LP 디코딩 전용 - Prime ECC의 min-sum과 알고리즘 계열이 달라 residual 근사·NS 스케줄이 직접 이식 불가</td></tr><tr><td>추가확인</td><td>min-sum 기반 informed dynamic scheduling(NS-BP)로 대체 시 유사 iteration 감소가 Prime ECC 구조에서 재현되는지</td></tr></tbody></table>
+<blockquote><p>총평: ADMM LP 디코딩의 dynamic scheduling으로 avg iteration을 3.5배(vs flooding) 줄이나, min-sum 계열이 아니고 HW 미설계라 Prime ECC 직접 이식성은 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary LDPC ADMM penalized LP 디코더, AWGN, IEEE 802.16e (576,288) rate-0.5·(1152,288) rate-0.75 코드.</li><li>문제: layered ADMM은 BP처럼 수렴속도 2배가 안 나오고, IDS(informed dynamic scheduling)가 layered보다 빠르다는 BP 결과를 ADMM에 적용하려 함.</li><li>ADMM vs BP 차이: (i) VN→여러 CN 메시지가 동일, (ii) CN→여러 VN 메시지가 동시 계산 → edge-based residual(RBP) 부적합, node-wise(NS) 필요.</li><li>NS-ADMM: 각 CN residual <code>r(c_j)=max_i|L_{j→i}^new - L_{j→i}^old|</code> 계산 후 최대 residual CN부터 C2V→V2C 갱신, 이웃 residual 재계산(Algorithm 2).</li><li>병목: residual 계산에 parity polytope로의 Euclidean projection <code>PP_{d_j}(·)</code> 필요 - ADMM에서 가장 비싼 연산.</li><li>핵심 근사: <code>w_j=T_j x+y_j</code>로 두고 <code>L^{k+1}-L^k = 2(PP(w^{k+1})-PP(w^k)) - (w^{k+1}-w^k)</code>에서 projection 순서보존 가정 → <code>≈ |w^{k+1}-w^k|</code>.</li><li>핵심 식: (8) residual을 projection 없이 <code>w_j</code> 차분의 최대 절댓값으로 근사 → 4-cycle 없으면 <code>w_q</code> 차분이 단일 non-zero 성분이라 스칼라 연산으로 축약.</li><li>근사 타당성: 가정은 엄밀히 성립 안 하나, Monte-Carlo로 max-index 일치확률 <code>Pr(·)</code>가 SNR 증가 시 90%에 근접(신뢰도↑).</li><li>결과: RC-NS-ADMM은 NS-ADMM과 수렴·FER 동등, avg iteration이 LADMM 대비 2.3배·flooding 대비 3.5배 적음(SNR=4dB에서 ANI 2.0 vs LADMM 4.5), projection 전량 제거.</li><li>한계: HW 미설계·시뮬만, ADMM/LP 디코딩 전용(min-sum 무관), fixed scheduling은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>디코더 이터레이션 루프 / 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC 반복 루프 위치에 대응하나, ADMM이 아닌 min-sum이라 알고리즘 계열 상이</td></tr><tr><td>CN residual 계산 / C2V 갱신</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>CN 갱신 지점 대응, ADMM residual·projection 근사는 min-sum에 직접 대응 없음</td></tr><tr><td>ADMM Euclidean projection (parity polytope)</td><td>대응 없음</td><td>Prime ECC는 min-sum 근사, ADMM LP projection 개념 자체가 미대응</td></tr><tr><td>조기종료 (Hx^T=0)</td><td><code>full_CRC.cpp</code>, <code>partial_CRC.cpp</code></td><td>종료 판정은 유사하나 논문 기여의 핵심 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — iteration 감소라는 목표는 매력적이나 ADMM/LP 디코딩 계열 전용이라 min-sum 기반 Prime ECC에 residual 근사·NS 스케줄을 직접 이식 불가. informed dynamic scheduling 아이디어 자체는 참고 가능하나 HW 미설계.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7795194",
+  "title": "Reduced Complexity Node-Wise Scheduling of ADMM Decoding for LDPC Codes",
+  "year": 2017,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "576~1152",
+  "soft_quant": "무관",
+  "key_contribution": "ADMM LP 디코더용 node-wise IDS 스케줄링에서 Euclidean projection 없이 residual을 근사 계산(RC-NS-ADMM)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "ADMM/LP 디코딩 전용 - Prime ECC의 min-sum과 알고리즘 계열이 달라 residual 근사·NS 스케줄이 직접 이식 불가",
+  "todo_check": "min-sum 기반 informed dynamic scheduling(NS-BP)로 대체 시 유사 iteration 감소가 Prime ECC 구조에서 재현되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_7795194---reduced-complexity-node-wise-scheduling-of-admm-decoding-for-ldpc-codes-2017-ieee-communications-letters">ieee_7795194 - Reduced Complexity Node-Wise Scheduling of ADMM Decoding for LDPC Codes (2017, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

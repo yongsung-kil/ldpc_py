@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7987518</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_7987518---a-multi-gbps-fully-pipelined-layered-decoder-for-ieee-80211nacax-ldpc-codes-2017-ieee-isvlsi">ieee_7987518 - A Multi-Gbps Fully Pipelined Layered Decoder for IEEE 802.11n/ac/ax LDPC Codes (2017, IEEE ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>idle-cycle-free 단일프레임 3단 파이프라인 layered(RMP) 디코더 + register 기반 메모리로 WiFi LDPC 4.2Gbps 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.38mm2@40nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>4.2</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiFi 표준부호(z=27, rate1/2) 전용 register메모리·barrel shifter 최적화라 우리 z=32 구조에 재튜닝 필요, error-floor·정정능력 기여 없음</td></tr><tr><td>추가확인</td><td>8bit WL/2bit FL 양자화와 우리 hard/2SD/3SD LLR 테이블 정합성, single-frame 파이프라인이 6-stage 우리 구조와 스케줄 충돌 여부</td></tr></tbody></table>
+<blockquote><p>총평: WiFi QC-LDPC용 idle-cycle-free layered 디코더 HW 아키텍처로 파이프라인·register메모리 기법은 참고가치 있으나, 부호가 z=27·rate1/2 표준 전용이고 정정능력 기여는 없어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.11n/ac/ax(WiFi) QC-LDPC(base matrix + z×z circulant shift), N=648/1296/1944, rate 1/2~5/6; 합성은 N=648, rate 1/2, z=27로 수행.</li><li>문제: layered 디코더의 파이프라인화 시 이전 layer 갱신 대기로 idle-cycle이 생기거나 수렴속도가 저하 - 멀티프레임 처리로 idle을 없애면 메모리가 프레임수만큼 증가.</li><li>핵심 기법 1 - RMP(row message passing) layered 스케줄: check node 계산 후 연결된 variable node를 즉시 갱신, SMP 대비 수렴 약 2배 빠름.</li><li>핵심 기법 2 - single-frame idle-cycle-free 3단 파이프라인: 멀티프레임 없이 한 프레임만 처리해 메모리 오버헤드 제거, write 후 read 순서로 depth 3이 depth 4 효과.</li><li>핵심 식: offset min-sum <code>Lij = (min|Pji|-beta)·sign(...)</code> (식4)로 check node 근사, beta=0.5.</li><li>파이프라인 깊이 영향: depth 0~3 시뮬로 수렴속도-깊이 trade-off 분석, depth 3이 적정.</li><li>HW 디테일: LLR Mem/CN Mem을 register 기반 메모리로 구성해 한 layer 전체 메시지를 1클록에 read/write; barrel shifter 6개 병렬(0-shift 2개 제외), z=27개 CNU 병렬.</li><li>양자화: word length 8bit, fraction length 2bit, Imax=10, fixed-point가 floating-point에 근접.</li><li>결과: 40nm TSMC 합성, 780MHz, 4.2Gbps, 0.38mm2, 218mW, 1.21V. throughput은 기존 최고([20] 1.71Gbps) 상회.</li><li>한계: WiFi rate1/2 표준부호 전용 최적화, 정정능력/error-floor 개선 아님(속도·면적만), NAND/soft-read 비용 논의 없음, gatecount 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RMP layered 디코딩 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리 Dual-Update(even/odd) 교대 스케줄과 유사 계열, layered 참고 가능</td></tr><tr><td>offset min-sum CNU (식4)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리도 min1/min2+sign XOR min-sum 보유 - 기법 중복</td></tr><tr><td>register 기반 메모리 / barrel shifter 라우팅</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>우리 z=32·GT 구조와 정합 필요, WiFi z=27 전용 최적화라 재설계</td></tr><tr><td>3단 파이프라인 (idle-cycle-free)</td><td>디코더 HW pipeline 6-stage</td><td>우리 6-stage와 스케줄 상이, single-frame 기법 참고 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - idle-cycle-free single-frame 파이프라인·register메모리 라우팅 기법은 HW throughput 관점 참고가치가 있으나 min-sum은 이미 보유하고 부호가 WiFi 표준 전용(z=27)이라 우리 z=32 QC 구조 재튜닝 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7987518",
+  "title": "A Multi-Gbps Fully Pipelined Layered Decoder for IEEE 802.11n/ac/ax LDPC Codes",
+  "year": 2017,
+  "venue": "IEEE ISVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "648",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "idle-cycle-free 단일프레임 3단 파이프라인 layered(RMP) 디코더 + register 기반 메모리로 WiFi LDPC 4.2Gbps 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.38mm2@40nm (gatecount 미상)",
+  "parallelism": "부분",
+  "throughput_gbps": 4.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiFi 표준부호(z=27, rate1/2) 전용 register메모리·barrel shifter 최적화라 우리 z=32 구조에 재튜닝 필요, error-floor·정정능력 기여 없음",
+  "todo_check": "8bit WL/2bit FL 양자화와 우리 hard/2SD/3SD LLR 테이블 정합성, single-frame 파이프라인이 6-stage 우리 구조와 스케줄 충돌 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_7987518---a-multi-gbps-fully-pipelined-layered-decoder-for-ieee-80211nacax-ldpc-codes-2017-ieee-isvlsi">ieee_7987518 - A Multi-Gbps Fully Pipelined Layered Decoder for IEEE 802.11n/ac/ax LDPC Codes (2017, IEEE ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

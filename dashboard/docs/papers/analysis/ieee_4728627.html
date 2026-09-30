@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4728627</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4728627---improving-ber-performance-of-ldpc-codes-based-on-intermediate-decoding-results-2007-ieee-icspc">ieee_4728627 - Improving BER Performance of LDPC Codes Based on Intermediate Decoding Results (2007, IEEE ICSPC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>디코딩 실패(수렴 미달) 시 최종 iteration이 아닌, syndrome <code>Hc</code> 비영원소 개수(failed check 수)가 최소였던 중간 iteration의 추정 비트를 출력하여 BER을 최대 40% 감소시키는 post-processing 기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>부동소수점 확률영역 BP(SPA) 기반 시뮬레이션만 제시, min-sum/고정소수점 하드웨어 디코더에서의 검증·게이트/레이턴시 오버헤드 분석 없음. 매 iteration마다 syndrome 계산+최소값 갱신+비트벡터 저장 필요(레지스터/비교기 추가)</td></tr><tr><td>추가확인</td><td>매 iteration syndrome 계산 및 최솟값 후보 비트벡터 저장에 필요한 추가 레지스터/비교 로직의 HW 오버헤드(gatecount, latency) 확인 필요, min-sum LLR 기반 Prime ECC 디코더에서도 동일한 오실레이팅 에러 패턴이 재현되는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 디코딩 실패 시 최종 결과 대신 failed-check-count 최소인 중간 iteration 결과를 반환하는 저비용 post-processing 아이디어로, 조기종료(CRC) 로직과 유사한 위치에 추가 가능해 Prime ECC 이식성이 높은 편.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate 1/2 (1024,512) PEG(progressive edge-growth) irregular LDPC 코드, AWGN 채널, 표준 확률영역 BP(sum-product) 디코더.</li><li>풀려는 문제: 최대 iteration에 도달해 디코딩이 실패(syndrome <code>Hc≠0</code>)하는 프레임의 경우, 최종 iteration 시점의 비트 오류 수가 최적이 아닐 수 있음 — 중간 iteration에 더 적은 오류를 가진 순간이 존재.</li><li>핵심 관찰: 미수렴 프레임의 오류 패턴을 iteration에 따라 관찰하면 오실레이팅(주기적 큰 변동), 준일정, 랜덤형 3가지로 분류되며, 고SNR일수록 오실레이팅 패턴이 지배적(3dB에서 63%).</li><li>핵심 기법: syndrome <code>Hc</code>의 비영 원소 수(<code>Check Errors</code>, 즉 실패한 parity check 개수)를 매 iteration 추적하여, 실제 비트오류 수는 모르지만(수신 불가) <code>Check Errors</code>와 강한 상관관계가 있음을 이용해 대리 지표로 사용.</li><li>알고리즘 변형: 기존 <code>Loop: update check/variable nodes → compute c → compute Hc → until Hc=0 or max iter</code> 에서, 매 iteration마다 <code>Check Errors &lt; Minimum</code>이면 <code>Minimum=Check Errors</code>, <code>m=c</code>로 최적 후보를 갱신하고, 종료 시 마지막 <code>c</code>가 아닌 저장된 <code>m</code>을 반환.</li><li>부수 구현: 추가 저장 공간은 최소 check-error 값(스칼라)과 해당 시점의 비트벡터 <code>m</code>(코드워드 길이) 뿐으로 구조적으로 단순.</li><li>학습/최적화 절차 없음(휴리스틱 규칙 기반, 별도 훈련 불필요).</li><li>결과: (1024,512) PEG 코드에서 SNR 2.25~3.0dB 구간 BER이 기존 대비 최대 40% 감소, SNR이 높을수록(오실레이팅 비중이 클수록) 개선폭 증가.</li><li>한계: 부동소수점 SPA 시뮬레이션에 한정되어 HW 구현·고정소수점/min-sum 환경에서의 검증 없음, iteration 수 자체는 줄지 않고(여전히 max iteration까지 실행) 오히려 매 iteration syndrome 계산과 후보 갱신이 필요해 실행시간은 늘 수 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>매 iteration syndrome(failed check 수) 추적 및 최소 후보 비트벡터 저장</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>이터레이션 루프 내부에 최소-check-error 후보 추적 로직을 추가하는 형태로 이식 가능</td></tr><tr><td>조기종료/실패시 최적 후보 반환</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>기존 CRC 기반 조기종료(성공시 종료)와 달리 이 기법은 "실패 확정시 최적 중간결과 반환"이라 상호보완적 post-processing으로 추가 가능</td></tr><tr><td>syndrome 계산 (Hc)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>이미 check node update 과정에서 유사 계산(parity 만족 여부) 수행 중이라 추가 비교기만으로 확장 가능</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 알고리즘 자체는 단순하고 조기종료 모듈 인근에 이식 난이도가 낮으나, 표준 SPA 기반 검증뿐이라 min-sum·고정소수점 환경에서 오실레이팅 패턴 재현 여부와 추가 레지스터/비교 로직의 HW 비용 검증이 선행되어야 함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4728627",
+  "title": "Improving BER Performance of LDPC Codes Based on Intermediate Decoding Results",
+  "year": 2007,
+  "venue": "IEEE ICSPC",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 1024,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "디코딩 실패(수렴 미달) 시 최종 iteration이 아닌, syndrome Hc 비영원소 개수(failed check 수)가 최소였던 중간 iteration의 추정 비트를 출력하여 BER을 최대 40% 감소시키는 post-processing 기법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "부동소수점 확률영역 BP(SPA) 기반 시뮬레이션만 제시, min-sum/고정소수점 하드웨어 디코더에서의 검증·게이트/레이턴시 오버헤드 분석 없음. 매 iteration마다 syndrome 계산+최소값 갱신+비트벡터 저장 필요(레지스터/비교기 추가)",
+  "todo_check": "매 iteration syndrome 계산 및 최솟값 후보 비트벡터 저장에 필요한 추가 레지스터/비교 로직의 HW 오버헤드(gatecount, latency) 확인 필요, min-sum LLR 기반 Prime ECC 디코더에서도 동일한 오실레이팅 에러 패턴이 재현되는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4728627---improving-ber-performance-of-ldpc-codes-based-on-intermediate-decoding-results-2007-ieee-icspc">ieee_4728627 - Improving BER Performance of LDPC Codes Based on Intermediate Decoding Results (2007, IEEE ICSPC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

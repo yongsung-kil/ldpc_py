@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11542085</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11542085---fpga-and-asic-implementation-of-a-1224-parity-check-matrix-based-ldpc-decoder-2026-icoei-2026">ieee:11542085 - FPGA and ASIC Implementation of a 12×24 Parity-Check Matrix Based LDPC Decoder (2026, ICOEI 2026)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>24</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>(24,12) 소형 regular LDPC의 min-sum 인코더-디코더 전체 파이프라인(CNU/VNU/syndrome checker)을 Verilog RTL로 구현해 FPGA/ASIC(Cadence Genus) 합성 결과(면적/전력/타이밍)를 제시</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>12477 cells (114620.951µm²)@미상공정</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>표준 min-sum 알고리즘의 교과서적 HW 구현이며 Wi-Fi/5G 타깃, NAND/SSD 언급 전무. 부호 규모(24,12)가 극소형(데모용)이라 Prime ECC의 실사용 규모(n=18656급)와 무관</td></tr><tr><td>추가확인</td><td>정규화/스케일링 팩터 없는 고정 magnitude LLR(+8/-8) 방식이 실제 NAND soft-read LLR 설계에 참고 가치 있는지는 미상(본문은 Wi-Fi 채널 가정)</td></tr></tbody></table>
+<blockquote><p>총평: min-sum·syndrome 조기종료 등은 Prime ECC가 이미 보유한 표준 기법을 소형 코드(24,12)로 재구현한 교육/검증용 FPGA-ASIC 워크플로우로, NAND 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>통신 채널(Wi-Fi/5G 가정), regular LDPC <code>(24,12)</code> 코드(정보 12비트→코드워드 24비트), 12×24 sparse parity-check matrix H, rate 0.5.</li><li>문제: SPA(sum-product)는 곱셈/나눗셈/지수 연산으로 하드웨어 비용이 크므로, 저전력 FPGA/ASIC용으로 min-sum 근사 디코더의 완전한 RTL→합성 워크플로우를 시연.</li><li>채널 모델: 단일/이중 비트플립 오류를 주입하는 controlled bit-flip 채널(Wi-Fi 스타일 왜곡 모사), 정밀 확률모델 없음.</li><li>핵심 기법: 표준 Min-Sum 알고리즘 — CNU는 <code>min1, min2</code>와 sign XOR 계산, VNU는 채널 LLR과 인접 CNU 메시지 누적 후 extrinsic 정보 생성.</li><li>핵심 식: 고정 magnitude LLR 양자화 <code>수신비트 0→+8, 1→-8</code> (부호=비트결정, 크기=고정 신뢰도) — 곱셈기·정규화 회로 완전 제거가 목적.</li><li>확장 없음(normalized min-sum도 검토했으나 스케일링 팩터/곱셈기 필요해 채택하지 않고 기본 min-sum 유지).</li><li>구현 디테일: CNU/VNU 완전 파이프라인(레지스터로 critical path 절단), syndrome 기반 조기종료(<code>H·c^T=0</code>), re-encode &amp; compare 검증 방식.</li><li>별도 학습/최적화 절차 없음(고정 파라미터 RTL 구현).</li><li>결과: FPGA에서 92 LUT(0.22%), 전력 0.086W(동적 &lt;0.004W); ASIC(Cadence Genus)에서 12477 cells, 114620.951µm², 총 전력 0.00414628W, 임계경로 지연 2.882ns@100MHz, 10개 테스트케이스 100% 성공.</li><li>한계: 코드 크기(24,12)가 극소형으로 확장성 논의만 있고 대형 코드 실측 없음, NAND/SSD 관련 언급 전혀 없이 Wi-Fi/5G/IoT 타깃, 정정능력(waterfall/error-floor) 비교나 개선 주장 없이 순수 구현 검증 논문.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum CNU(min1/min2, sign XOR)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 이미 보유한 표준 min-sum과 동일 원리, 중복 기여(추천도 낮음)</td></tr><tr><td>VNU 메시지 누적/양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>표준 VN 업데이트, 이미 구현됨</td></tr><tr><td>syndrome 기반 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>이미 Partial/Full CRC로 더 정교하게 구현됨</td></tr><tr><td>고정 magnitude LLR 양자화(+8/-8)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>Prime ECC는 iteration별 LLR threshold 테이블(HD/2SD/3SD)을 이미 보유, 이 논문은 단일 고정값 수준으로 단순</td></tr><tr><td>파이프라인 RTL(레지스터 삽입)</td><td>디코더 HW 모델 (pipeline 6-stage)</td><td>Prime ECC가 이미 pipeline bit-exact 모델 보유, 규모/복잡도 차이 큼</td></tr><tr><td>Wi-Fi/5G 채널 모델·타깃</td><td>대응 없음</td><td>NAND/RBER 채널이 아닌 통신 채널 특화, 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 표준 min-sum/syndrome 조기종료의 소규모 교육용 RTL 구현이며 Prime ECC가 이미 더 정교한 형태(HCU, GT, adaptive LLR, partial CRC)로 보유한 기법과 중복되고 NAND 특화 요소가 전무함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11542085",
+  "title": "FPGA and ASIC Implementation of a 12×24 Parity-Check Matrix Based LDPC Decoder",
+  "year": 2026,
+  "venue": "ICOEI 2026",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "24",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "(24,12) 소형 regular LDPC의 min-sum 인코더-디코더 전체 파이프라인(CNU/VNU/syndrome checker)을 Verilog RTL로 구현해 FPGA/ASIC(Cadence Genus) 합성 결과(면적/전력/타이밍)를 제시",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "12477 cells (114620.951um2)@미상공정",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "표준 min-sum 알고리즘의 교과서적 HW 구현이며 Wi-Fi/5G 타깃, NAND/SSD 언급 전무. 부호 규모(24,12)가 극소형(데모용)",
+  "todo_check": "정규화/스케일링 팩터 없는 고정 magnitude LLR(+8/-8) 방식이 실제 NAND soft-read LLR 설계에 참고 가치 있는지는 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11542085---fpga-and-asic-implementation-of-a-1224-parity-check-matrix-based-ldpc-decoder-2026-icoei-2026">ieee:11542085 - FPGA and ASIC Implementation of a 12×24 Parity-Check Matrix Based LDPC Decoder (2026, ICOEI 2026)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

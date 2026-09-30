@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10182649</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10182649---a-deep-learning-based-multi-edge-type-decoding-algorithm-for-5g-nr-ldpc-codes-2023-iwcmc">ieee:10182649 - A Deep Learning based Multi-edge-type decoding algorithm for 5G NR LDPC codes (2023, IWCMC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>624~952</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>PCM을 수렴특성별 edge-type 영역으로 분할해 영역×iteration별 normalized min-sum scaling factor를 NN으로 학습(MET-NNMS)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G NR BG1/BG2 protograph에 P-GADE로 영역분할 — NAND용 H-matrix에 맞춰 edge-type 재도출·재학습 필요, HW 미설계/시뮬만</td></tr><tr><td>추가확인</td><td>Prime ECC H-matrix에서 영역분할 시 edge-type 수 및 추가 scaling table 메모리(Nedgetypes×lmax) 규모</td></tr></tbody></table>
+<blockquote><p>총평: normalized min-sum의 영역별·iteration별 scaling factor를 오프라인 NN으로 학습하는 기법으로, 런타임은 NMS+scaling table이라 NAND binary QC-LDPC 디코더에 개념 이식 가능(중).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR QC-LDPC(BG1: M46×N68, Kb=22 / BG2: M42×N52, Kb=10), lifting <code>Zc</code>로 length 확장, BPSK+AWGN, 최대 iteration 20.</li><li>문제: NMS/OMS는 모든 edge에 동일 scaling factor <code>α</code>를 써서 PCM 영역별 수렴 차이를 무시, 반대로 edge마다 고유 factor를 주면 복잡도 과다.</li><li>관찰: 5G NR raptor-like 구조상 base matrix를 <code>Hcore=[A,B]</code>, <code>Hext=[C,E]</code>로 나누면 영역별 LLR 수렴속도가 다름(E는 identity라 V2C가 항상 채널 LLR과 동일).</li><li>핵심 기법1(MET): P-GADE(protograph Gaussian approx. density evolution)로 각 영역 평균 LLR 수렴곡선을 분석해 edge를 여러 type으로 분할.</li><li>핵심 식: min-sum CN 업데이트에 type·iteration별 scaling <code>α_i^l</code> 적용, <code>U = sgn(·)·α_i^l·min|V|</code> (i=edge type, l=iteration).</li><li>핵심 기법2: type과 iteration 조합마다 독립 scaling factor 부여, 총 factor 수 <code>Nfactor = Nedgetypes × l</code>.</li><li>학습: model-driven deep unfolding — MS 반복복호를 2×lmax+2 layer(입력/출력 + lmax CN + lmax VN) 네트워크로 전개, CN layer 앞에서 <code>α_i^l</code> 곱, 출력 sigmoid, cross-entropy loss.</li><li>학습 설정: TensorFlow 2.0, Adam(lr 0.001); NMS α=0.6, OMS β=0.5 비교군.</li><li>결과: FER=1e-5에서 BG1은 BP 대비 0.45dB, NMS 대비 0.37dB, OMS 대비 0.25dB 개선; BG2는 각각 0.28/0.11/0.07dB. 추가 저장복잡도만 <code>Nedgetypes×lmax</code>.</li><li>한계: HW 설계 없음, 시뮬만, 개선폭은 부호(BG)에 민감, iteration 감소 언급 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>type·iteration별 scaling factor를 적용한 min-sum CN 업데이트</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>Prime ECC min-sum에 영역별 scaling 도입 지점 — 이식 핵심</td></tr><tr><td>iteration별 scaling table 저장/참조</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>이미 iteration별 LLR threshold 테이블 보유 — scaling table 추가 구조 유사</td></tr><tr><td>PCM을 [A,B,C,E] 영역으로 분할(edge-type)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC H-matrix에 맞춘 edge-type 재정의 필요</td></tr><tr><td>P-GADE 기반 영역 수렴분석 / NN 학습</td><td>대응 없음</td><td>오프라인 factor 도출 절차, 런타임 코드와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 런타임은 순수 NMS+scaling table이라 이미 보유한 적응형 LLR 테이블 구조에 영역별 scaling을 얹는 형태로 이식 가능하나, NAND용 H-matrix 기준 edge-type 재도출·재학습이 필요하고 이득폭이 부호 의존적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10182649",
+  "title": "A Deep Learning based Multi-edge-type decoding algorithm for 5G NR LDPC codes",
+  "year": 2023,
+  "venue": "IWCMC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "624~952",
+  "soft_quant": "무관",
+  "key_contribution": "PCM을 수렴특성별 edge-type 영역으로 분할해 영역×iteration별 normalized min-sum scaling factor를 NN으로 학습(MET-NNMS)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "5G NR BG1/BG2 protograph에 P-GADE로 영역분할 — NAND용 H-matrix에 맞춰 edge-type 재도출·재학습 필요, HW 미설계/시뮬만",
+  "todo_check": "Prime ECC H-matrix에서 영역분할 시 edge-type 수 및 추가 scaling table 메모리(Nedgetypes×lmax) 규모"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10182649---a-deep-learning-based-multi-edge-type-decoding-algorithm-for-5g-nr-ldpc-codes-2023-iwcmc">ieee:10182649 - A Deep Learning based Multi-edge-type decoding algorithm for 5G NR LDPC codes (2023, IWCMC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

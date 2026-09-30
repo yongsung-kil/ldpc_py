@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_cs_0607112</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv_cs_0607112v1---improving-convergence-of-belief-propagation-decoding-2006-arxiv">arxiv_cs_0607112v1 - Improving Convergence of Belief Propagation Decoding (2006, arXiv)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.41</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check-to-variable 메시지 갱신에 이전 이터레이션 값을 섞는 relaxation(damping) 파라미터 <code>Δ</code>를 도입해 min-sum/BP의 Bethe free energy 수렴을 가속, 특히 최대 iteration 제한 시 오류율 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>AWGN·[155,64,20] 코드 소규모 실험뿐이며 relaxation 파라미터 <code>Δ</code>(및 non-monotonic 오류율)를 iteration 예산에 맞춰 튜닝해야 함, HW 미설계</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC·낮은 iteration 예산(NAND 레이턴시 제약)에서도 damping 이득이 유지되는지, tanh 기반 sum-product뿐 아니라 min-sum(식 19)에도 적용됨을 재확인</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 반복식에 이전 메시지를 섞는 단순 damping 파라미터 <code>Δ</code> 하나만 추가해 최대 iteration 제한 하 오류율을 크게 낮추는 저비용 기법으로, <code>decoder.cpp</code>의 이터레이션 루프에 소규모 수정으로 이식 가능해 정독 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN 채널 위 [155,64,20] 코드(Tanner group-structured LDPC)에 대해 표준 iterative BP(sum-product) 및 그 min-sum 근사로 복호, LLR 필드 <code>η_iα</code>(check α, bit i 간 메시지)를 반복 갱신.</li><li>문제: 표준 iterative BP는 loopy graph에서 수렴 보장이 없고, termination-iteration 분포를 측정하면 최대값 이후 algebraic-tail(느리게 감소하는 꼬리)이 존재해 iteration을 늘려도 개선이 적음 — 특히 최대 iteration 제한이 있는 실사용에서 실패율이 큼.</li><li>핵심 가정/모델: BP를 Bethe free energy <code>F_Bethe = U_Bethe − H_Bethe</code>의 변분 최소화 문제로 재해석(Yedidia-Freeman-Weiss 프레임)하고, 수렴 실패를 메시지의 "overshoot(진동)"로 규정.</li><li>핵심 기법: belief <code>b_i(σ_i)</code>에 relaxation dynamics <code>∂_t b_i = -(1/τ_i) δL/δb_i</code>를 도입해 이산화한 결과, 표준 BP 식(18) <code>η_iα = h_i + tanh⁻¹[Σ tanh η_jβ]</code>이 damping 항을 포함한 식(1)로 확장됨: <code>η_iα^(n+1) + (1/Δ)Σ_{β∋i,β≠α} η_iβ^(n+1) = h_i + tanh⁻¹[...] + (1/Δ)Σ η_iβ^(n)</code>.</li><li><code>Δ</code>는 조정 가능한 damping 파라미터로, <code>Δ→∞</code>이면 표준 BP와 완전히 동일, <code>Δ</code>가 작을수록 강하게 damping되어 Bethe free energy 극소값 수렴이 보장됨.</li><li>min-sum 버전(식 19)도 동일한 damping 구조로 명시: <code>min</code> 연산 항에 <code>(1/Δ)Σ η_iβ^(n)</code> 보정항 추가 — sum-product의 <code>tanh</code>를 그대로 min-sum 하드웨어 구조에 대입 가능.</li><li>부수 트릭: <code>τ_i</code> 선택으로 damping 계수를 bit index에 무관하게 통일해 시간 단위를 재척도화, 표준 retarded discretization 사용 — 추가 상태변수(η) 외 별도 자료구조 불필요.</li><li>학습/최적화 절차: <code>Δ</code>-<code>n_it</code>(최대 iteration) 평면에서 trade-off 탐색(그리드 서치), 별도 DE/GA 없음.</li><li>결과: SNR=3, 최대 허용 iteration <code>n_it=32</code>에서 <code>Δ=1</code> 선택 시 표준 BP 대비 오류확률이 약 40배 감소(termination curve 최대점은 iteration이 늘지만 이후 감쇠가 빨라짐).</li><li>한계: 짧은 코드(n=155)·AWGN 채널 시뮬레이션뿐, HW 설계 없음, <code>Δ</code> 선택이 최적화되지 않으면(코드/디코더 unaware) 오류율이 비단조적으로 변해 사전 튜닝 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum 반복식에 damping(Δ) 추가</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>이터레이션 루프의 메시지 갱신식에 이전 값 가중합 항만 추가하면 되는 저난이도 변형, min-sum 명시식(19) 존재로 이식성 높음</td></tr><tr><td>C2V 메시지(η_iα) 계산</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>damping 항이 C2V 계산 직후 이전 iteration 메시지와 혼합되는 지점에 해당</td></tr><tr><td>Bethe free energy 수렴/최대-iteration 제한 하 오류율 개선</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code> (조기종료와 상호작용)</td><td>조기종료 이전 소수 iteration에서의 수렴 가속이므로 Partial CRC termination point 설계와 맞물려 검토 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>중간</strong> — min-sum 이터레이션 루프에 damping 계수 하나만 추가하는 단순 변형으로 저iteration 예산(NAND 레이턴시 제약)에서 오류율 개선 가능성이 있어 <code>decoder.cpp</code>에 프로토타입 이식해 검증할 가치가 있음. 다만 짧은 코드·소규모 실험이라 고rate QC-LDPC에서의 이득 재검증 필요.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:cs/0607112v1",
+  "title": "Improving Convergence of Belief Propagation Decoding",
+  "year": 2006,
+  "venue": "arXiv",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.41,
+  "code_length": 155,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check-to-variable 메시지 갱신에 이전 이터레이션 값을 섞는 relaxation(damping) 파라미터 Δ를 도입해 min-sum/BP의 Bethe free energy 수렴을 가속, 특히 최대 iteration 제한 시 오류율 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "AWGN·[155,64,20] 코드 소규모 실험뿐이며 relaxation 파라미터 Δ(및 non-monotonic 오류율)를 iteration 예산에 맞춰 튜닝해야 함, HW 미설계",
+  "todo_check": "고rate QC-LDPC·낮은 iteration 예산(NAND 레이턴시 제약)에서도 damping 이득이 유지되는지, tanh 기반 sum-product뿐 아니라 min-sum(식 19)에도 적용됨을 재확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv_cs_0607112v1---improving-convergence-of-belief-propagation-decoding-2006-arxiv">arxiv_cs_0607112v1 - Improving Convergence of Belief Propagation Decoding (2006, arXiv)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

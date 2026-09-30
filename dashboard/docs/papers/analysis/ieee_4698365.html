@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4698365</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4698365---lowering-ldpc-error-floors-by-postprocessing-2008-globecom">ieee:4698365 - Lowering LDPC Error Floors by Postprocessing (2008, GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>absorbing set(트래핑셋) 구조를 이용해 unsatisfied check 메시지 신뢰도↑/satisfied check 신뢰도↓ 선택적 바이어싱 postprocessing으로 error floor 제거</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>0.26Gbps(emul)</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>absorbing set 특성이 부호별로 달라 Prime ECC 지배적 셋 재특성화·ε 튜닝 필요, 대상 부호는 802.3an Ethernet RS-LDPC</td></tr><tr><td>추가확인</td><td>Prime ECC QC-LDPC의 지배적 (a,b) absorbing set 목록과 offset min-sum에서 ε(strong/weak level) 최적값·wordlength 정합</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 디코더에 최소 오버헤드 훅으로 붙는 absorbing-set 기반 message biasing postprocessing으로 error floor를 없애는 실증(HW emul) 기법 - NAND error-floor 대책으로 이식가치 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (2048,1723) RS-LDPC(col degree 6, row degree 32, 64×64 permutation submatrix, 802.3an 10GBASE-T), AWGN+BPSK, sum-product/approx-SPA(offset min-sum) 복호.</li><li>문제: waterfall 이후 BER 10^-10 부근에서 error floor 발생 - 고신뢰(저BER) 스토리지·고속통신 배치의 걸림돌.</li><li>원인 모델: error floor는 <code>(a,b)</code> absorbing set(트래핑셋의 일종, bit-flip에 안정)이 지배, 특히 이 부호는 <code>(8,8)</code> fully absorbing set이 지배(N(D) 크기 256).</li><li>핵심 관찰: absorbing set 내 각 비트는 falsely-satisfied check 5개(오결정 강화)+unsatisfied check 1개(정정 시도)에 연결, 유한 wordlength에서 메시지 포화로 다수결형 hard-decision화되어 셋에 갇힘.</li><li>핵심 기법(선택적 바이어싱): unsatisfied check <code>O(D)</code>-&gt;<code>N(D)</code> 메시지 신뢰도를 <code>Lstrong</code>으로 강화, satisfied check <code>S(D)</code>-&gt;<code>N(D)</code> 메시지를 <code>Lweak</code>으로 약화.</li><li>오프셋 튜닝: 유효 오프셋 <code>ε=Lstrong-5Lweak</code>(8,8 셋 기준), prior LLR 분포로 결정 - <code>ε=1</code>이면 absorbing 비트 절반 이상 정정하면서 N(D)\D 오정정은 2.2%(평균 5~6비트)로 억제.</li><li>절차: (1) 정규 message-passing 고정 iteration 실행-&gt;수렴실패 시 (2) message biasing 1회 후 소수 iteration 재개, absorbing set이 도미노식으로 붕괴.</li><li>구현: Q4.0(4-bit) approx-SPA 디코더에 stall 감지 후 weakening/strengthening 로직 소량 추가, scheduling 불변·알고리즘 소폭 수정.</li><li>결과: BEE2 HW emulation에서 error-floor-free down to BER 10^-13(&gt;2 orders 개선), postprocessing 평균 ~3 iteration 수렴, (7,12)·(11,6) 셋도 해결.</li><li>한계: 대상은 802.3an RS-LDPC(NAND 실측 아님), 지배 absorbing set 특성화·ε 튜닝이 부호/SNR 종속, 미해결은 weight-14/16 undetected codeword(ML로도 정정불가).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>postprocessing message biasing(신뢰도 strong/weak)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프, <code>VN_Cal_HD()</code></td><td>stall 감지 후 특정 메시지 magnitude 가감 훅 삽입 지점</td></tr><tr><td>unsatisfied check(O(D)) 식별(syndrome)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>매 iteration 미충족 parity 식별 로직으로 O(D)/N(D) 추출</td></tr><tr><td>offset min-sum(β correction)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 보유, offset은 magnitude 양자화 테이블에서 처리</td></tr><tr><td>absorbing/trapping set 수렴실패 분석</td><td><code>corner.cpp</code>(수렴실패 추적)</td><td>Prime ECC 지배 absorbing set 특성화에 재사용</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> - 이미 보유한 offset min-sum 위에 최소 로직으로 붙는 error-floor 전용 postprocessing으로, NAND ECC의 저BER 신뢰성에 직접 기여(단 부호별 absorbing set 특성화 선행 필요).</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:4698365",
+  "title": "Lowering LDPC Error Floors by Postprocessing",
+  "year": 2008,
+  "venue": "GLOBECOM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "무관",
+  "key_contribution": "absorbing set 구조를 이용해 unsatisfied check 메시지 신뢰도↑/satisfied check 신뢰도↓ 선택적 바이어싱 postprocessing으로 error floor 제거",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": 0.26,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "absorbing set 특성이 부호별로 달라 Prime ECC 지배 셋 재특성화·ε 튜닝 필요, 대상 부호는 802.3an Ethernet RS-LDPC",
+  "todo_check": "Prime ECC QC-LDPC의 지배 (a,b) absorbing set 목록과 offset min-sum에서 ε 최적값·wordlength 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4698365---lowering-ldpc-error-floors-by-postprocessing-2008-globecom">ieee:4698365 - Lowering LDPC Error Floors by Postprocessing (2008, GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

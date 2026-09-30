@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9594252</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9594252---a-two-stage-decoding-algorithm-for-spatially-coupled-algebraic-ldpc-codes-2021-istc">ieee:9594252 - A Two-stage Decoding Algorithm for Spatially Coupled Algebraic LDPC Codes (2021, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.9044~0.9176</td></tr><tr><td>부호length</td><td>5256</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>슬라이딩윈도우 BP 뒤에 majority-logic(MLG) 2단계를 붙여 waterfall 오류율을 추가 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC(convolutional) 구조·슬라이딩윈도우 전제로, 고정 blockwise QC-LDPC인 Prime ECC 구조와 불일치</td></tr><tr><td>추가확인</td><td>MLG 후처리를 non-SC blockwise QC-LDPC의 error-floor 후처리로 축소 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC 전용 2단(BP+MLG) 복호로 waterfall 개선을 노리나, HW 미설계·SC 전제라 blockwise NAND QC-LDPC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: 소수체 <code>F_p</code> 기반 CPM array로 만든 (γ,ρ)-regular QC-LDPC(girth≥6)를 랜덤 분할해 만든 SC-LDPC(convolutional). 예: <code>F_73</code>, (6,72)-regular, <code>n=5256</code>, <code>k≈4823</code>, rate 0.9176.</li><li>풀 문제: 기존 슬라이딩윈도우 BP만으로는 waterfall/고SNR 영역 오류율이 아직 부족.</li><li>채널/모델: BPSK + AWGN, LLR <code>Λ_j=log(Pr(c=0|y)/Pr(c=1|y))</code> 입력.</li><li>핵심 기법 1단: 결합깊이 <code>m</code>, 결합길이 <code>L</code>, 윈도우 <code>d≥2m+1</code>로 슬라이딩윈도우 BP를 수행해 각 sub-codeword <code>c(t)</code> 추정.</li><li>핵심 기법 2단: 이미 추정된 <code>ĉ(t-m)...ĉ(t+m)</code>로 majority-logic(MLG) 갱신 - 각 비트의 γ개 check-sum 합이 <code>γ/2</code> 초과면 flip.</li><li>수식 의미: column weight γ, girth≥6이므로 MLG 정정능력은 <code>⌊γ/2⌋</code>; BP가 놓친 오류를 대수적으로 보정.</li><li>수용 기준: flip 비트 수 <code>N_flip ≤ ⌊γ/2⌋</code> 이고 syndrome <code>s(t)=0</code>일 때만 MLG 갱신 채택(miscorrection 방지).</li><li>인코딩: <code>H0=[L0,R0]</code>의 <code>L0</code>를 블록대각(identity)로 제한해 systematic 재귀 인코딩(Algorithm 1).</li><li>복잡도: check-sum <code>nγρ</code> binary + <code>nγ</code> integer add, syndrome <code>(n-k)ρ+m</code> binary add per sub-codeword - 부호길이에 선형.</li><li>결과/한계: <code>Eb/N0=4.2~4.4dB</code>에서 BP 대비 SFER를 추가로 낮춤(무오류 구간 도달). HW 미설계, 시뮬만, SC/윈도우 구조 전제, gatecount/throughput 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>슬라이딩윈도우 BP 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>SC/윈도우 구조라 blockwise 루프와 직접 대응 안 됨</td></tr><tr><td>MLG(majority-logic) 후처리</td><td>대응 없음</td><td>Prime ECC엔 bit-flip 후처리 단계 부재</td></tr><tr><td>syndrome 기반 수용 판정</td><td>full_CRC.cpp</td><td>조기종료/검증 유사하나 MLG accept 기준과 다름</td></tr><tr><td>SC-LDPC H-matrix 분할 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 blockwise QC-LDPC라 SC 구성 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — SC-LDPC + 슬라이딩윈도우 전제이고 HW 미설계라, 고정 blockwise binary QC-LDPC인 Prime ECC에 직접 떼어 쓸 요소가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9594252",
+  "title": "A Two-stage Decoding Algorithm for Spatially Coupled Algebraic LDPC Codes",
+  "year": 2021,
+  "venue": "ISTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": null,
+  "code_length": "5256",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "슬라이딩윈도우 BP 뒤 majority-logic(MLG) 2단계로 waterfall 오류율 추가 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "SC-LDPC/슬라이딩윈도우 전제로 고정 blockwise QC-LDPC인 Prime ECC 구조와 불일치",
+  "todo_check": "MLG 후처리를 non-SC blockwise QC-LDPC error-floor 후처리로 축소 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9594252---a-two-stage-decoding-algorithm-for-spatially-coupled-algebraic-ldpc-codes-2021-istc">ieee:9594252 - A Two-stage Decoding Algorithm for Spatially Coupled Algebraic LDPC Codes (2021, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

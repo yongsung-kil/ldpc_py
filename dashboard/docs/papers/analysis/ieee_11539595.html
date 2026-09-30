@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11539595</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11539595---exploiting-variable-dimensional-ldpc-coding-to-improve-nand-flash-memory-system-performance-2026-date-2026">ieee:11539595 - Exploiting Variable-Dimensional LDPC Coding to Improve NAND Flash Memory System Performance (2026, DATE 2026)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.94</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>행/열 두 방향으로 별도 인코딩되는 2차원 LDPC(TD-LDPC)를 구성하고, 행-열 반복 스캐닝 디코딩(layered normalized min-sum)으로 병렬 디코딩하여 hot read data의 지연시간을 줄임</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>미상</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>부호구조 자체(2D 행/열 sub-LDPC 구성)를 바꾸는 방식이라 Prime ECC의 고정 QC-LDPC(단일 PCM_b) 구조에 이식하려면 H-matrix/부호설계 전면 재설계가 필요(이식 난이도 "높음" 레이어)</td></tr><tr><td>추가확인</td><td>부호길이(N), 실제 CPM 크기 외 전체 코드워드 길이 수치가 본문에 명시적으로 없어 미상 처리; hot/cold 데이터 분류기 및 ECC 스킴 선택기는 Prime ECC 범위 밖(FTL/컨트롤러 정책)</td></tr></tbody></table>
+<blockquote><p>총평: 새로운 2차원 부호구조와 반복 스캐닝 디코딩으로 waterfall 영역 정정능력과 latency를 동시에 개선하지만, 코드 구조 자체(H-matrix 이원화)를 바꾸는 부호설계 레이어라 Prime ECC 이식 난이도는 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>3D TLC NAND, 4KB 데이터 단위, QC-LDPC 베이스(column weight 4, row weight 36, CPM 1024)에서 파생된 sub-LDPC 2종으로 구성, 서브코드 rate 0.94.</li><li>문제: hot read data(자주 읽히고 retention 짧은 데이터)에서 기존 hard/soft 하이브리드 LDPC 디코딩이 soft 디코딩 트리거 시 큰 latency 급증을 유발.</li><li>가정: hot read data는 짧은 retention·낮은 PEC로 RBER이 낮게(≤5×10⁻³) 유지되는 특성을 실측(FPGA, 160 layer 3D TLC) 근거로 활용.</li><li>핵심 기법: TD-LDPC — 정보행렬을 <code>r</code>행 <code>c</code>열로 배치하고 각각 서브코드 <code>LDPC1(n1,j1,k1)</code>(행), <code>LDPC2(n2,j2,k2)</code>(열)로 이중 인코딩. rate <code>R = K/N</code> (식 3)로 계산.</li><li>디코딩은 각 서브코드에 layered normalized min-sum(LNMS) 적용, <code>r·H^T=0</code> 검증 후 행 디코딩→열 디코딩→(열 결과를 새 행 디코딩 입력으로) 반복 스캐닝(Algorithm 1, <code>CycleNum</code>회 한도).</li><li>확장 설계: TD-LDPC-2ways(행/열 동일 서브코드, CPM 256)와 TD-LDPC-4ways(CPM 128, 4행4열)로 병렬도·CPM 크기를 조절.</li><li>구현 디테일: VDLDPC 상위 구조는 hot/cold 데이터 패턴 분류기 + ECC 스킴 선택기로, hot 데이터에만 TD-LDPC 적용, cold 데이터는 기존 1차원 LDPC 유지.</li><li>별도 학습 절차 없음(구성적 설계, 파라미터는 실험적으로 CPM/row·col 크기 조정).</li><li>결과: TD-LDPC-4ways는 UBER를 RBER 5×10⁻³에서 10⁻⁶까지 낮추고(LDPC-hard 대비 개선, LDPC-soft에는 못 미침), soft LDPC 대비 지연 최대 9배, hard LDPC 대비 2배 감소. 시스템 레벨(FEMU)에서 read response time 최대 12.0%(평균 5.8%) 개선.</li><li>한계: RBER 5×10⁻³ 이상에서는 정정능력이 soft LDPC보다 약함(적용 범위 제한적), FPGA는 RBER 측정용이며 TD-LDPC 자체는 순수 시뮬레이션(FEMU/수치 시뮬)만으로 검증, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TD-LDPC 2차원 부호 구성(행/열 sub-LDPC, H-matrix 이원화)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>기존 단일 QC-LDPC PCM_b 구조를 2개 서브코드로 분할해야 하므로 부호설계 전면 재작업 필요 (이식 난이도 높음)</td></tr><tr><td>행-열 반복 스캐닝 디코딩(Algorithm 1)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>반복 제어 로직 자체는 기존 이터레이션 루프 확장으로 이식 가능하나 서브코드 2개 동시 관리 필요</td></tr><tr><td>LNMS(layered normalized min-sum)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>normalized min-sum은 기존 min-sum과 유사 계열, 정규화 계수 도입 정도로 낮은 난이도 이식 가능</td></tr><tr><td>hot/cold 데이터 분류 + ECC 스킴 선택기</td><td>대응 없음</td><td>FTL/컨트롤러 정책 레이어로 Prime ECC(디코더 시뮬레이터) 범위 밖</td></tr><tr><td>인코딩(행/열 이중 인코딩)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>현재 dual-diagonal 고정 인코더 구조와 다른 2D 인코딩 방식으로 재설계 필요 (이식 난이도 중~높음)</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 정정능력과 latency를 동시에 개선하는 흥미로운 결과이나, 이식하려면 Prime ECC의 단일 QC-LDPC 부호구조 자체를 2차원 서브코드 체계로 전면 재설계해야 해 이식 난이도가 매우 높음(§4 "높음" 레이어).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11539595",
+  "title": "Exploiting Variable-Dimensional LDPC Coding to Improve NAND Flash Memory System Performance",
+  "year": 2026,
+  "venue": "DATE 2026",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.94,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "행/열 두 방향으로 별도 인코딩되는 2차원 LDPC(TD-LDPC)를 구성하고, 행-열 반복 스캐닝 디코딩(layered normalized min-sum)으로 병렬 디코딩하여 hot read data의 지연시간을 줄임",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "미상",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "부호구조 자체(2D 행/열 sub-LDPC 구성)를 바꾸는 방식이라 Prime ECC의 고정 QC-LDPC(단일 PCM_b) 구조에 이식하려면 H-matrix/부호설계 전면 재설계가 필요",
+  "todo_check": "부호길이(N) 등 코드워드 전체 길이 수치가 본문에 명시적으로 없어 미상 처리; hot/cold 데이터 분류기 및 ECC 스킴 선택기는 Prime ECC 범위 밖"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11539595---exploiting-variable-dimensional-ldpc-coding-to-improve-nand-flash-memory-system-performance-2026-date-2026">ieee:11539595 - Exploiting Variable-Dimensional LDPC Coding to Improve NAND Flash Memory System Performance (2026, DATE 2026)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

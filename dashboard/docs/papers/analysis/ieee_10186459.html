@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10186459</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10186459---exploiting-the-single-symbol-llr-variation-to-accelerate-ldpc-decoding-for-3-d-nand-flash-memory-2023-ieee-tcad">ieee:10186459 - Exploiting the Single-Symbol LLR Variation to Accelerate LDPC Decoding for 3-D NAND Flash Memory (2023, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>intrapage frame RBER 유사성 + single-symbol LLR 상승 특성을 이용, auxiliary frame의 feedback λ로 다른 frame의 check-node 정보를 스케일링해 iteration 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Sum-Product(tanh/atanh) 기반 스케일 계수라 우리 Min-Sum 스케줄에 직접 이식 시 재해석 필요, λ 최적값 미확정</td></tr><tr><td>추가확인</td><td>Min-Sum(min1/min2)에 동적 scale factor v를 곱하는 형태로 변형했을 때 waterfall 이득 유지 여부, frame 간 λ 공유의 HW 저장·타이밍 비용</td></tr></tbody></table>
+<blockquote><p>총평: NAND 실측 기반 iteration 감소 디코더 기법으로 관련성은 높으나, tanh-SP 스케일링을 우리 Min-Sum에 맞게 재해석·HW화해야 하는 이식 부담이 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: Micron B17A 3D TLC NAND(62 layer, page 16KB+2208B) 실측 채널, LDPC는 PEG로 만든 regular (4000,3600) 부호(dc=30, dv=3, rate 0.9), 최대 iteration 10.</li><li>문제: LDPC 반복 복호가 iteration마다 posterior LLR을 갱신해 read latency가 큼 - iteration 수를 줄여야 함.</li><li>모델: page를 binary channel로 보고(0↔1 오독), 채널 LLR <code>LLRch</code>를 상태 전이확률로 산출. mutual info <code>J(δL)</code>는 LLR 평균·표준편차 증가 시 단조 증가(Ten Brink).</li><li>관찰: iteration이 늘수록 bit 1의 single-symbol LLR 평균이 전역적으로 상승하고 error bit 수는 감소(Fig.2/3). 또한 같은 page 내 intrapage frame들의 RBER이 서로 유사(Fig.4).</li><li>핵심 기법(FFIA-DA): 한 frame(auxiliary)의 복호 전/후 양의 LLR 평균비 <code>λ = ELLR/ELLRI</code> 를 feedback으로 계산.</li><li>핵심 식 의미: <code>λ</code>는 LLR 평균 상승 폭 = 수렴 속도 지표. 유사 RBER frame(adaptive)에서 이 상승 경향을 미리 반영해 수렴을 앞당김.</li><li>Adaptive decoding: 반복마다 동적 scale factor <code>v = λ·ELLR/ELLRI</code>를 계산해 check-node 갱신식 <code>CI = v·2·atanh(∏ tanh(0.5·VI))</code> 에 곱함(식10). VN/posterior는 표준식(4)(5).</li><li>절차: Algorithm 1(auxiliary, λ 산출) → Algorithm 2(adaptive, v로 CN 스케일). frame 간 저장 오버헤드는 λ 하나뿐.</li><li>결과: PE=5K/12mo(RBER 9.5e-3)에서 block BER 1e-5 도달 avg iteration 10→5, BER 1.1e-5→2.9e-6, FER 4.6e-3→1.7e-3. CSB page에서 EMAL 대비도 iteration 9→6로 우수.</li><li>한계: HW 미설계(복잡도는 연산횟수 수식만, gatecount/throughput 없음), λ 최적화 미해결(future work), SP(tanh) 기반이라 Min-Sum 대비 계산량 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 정보에 동적 scale factor v 곱하기(식10)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>check-node magnitude 갱신 지점 - Min-Sum 스케일 계수로 재해석해 삽입 가능</td></tr><tr><td>반복별 LLR 평균 기반 feedback λ</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>iteration 구간별 LLR 테이블과 유사 개념, λ를 테이블/스케일로 매핑</td></tr><tr><td>채널 LLR <code>LLRch</code> 산출(binary channel)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-read LLR 양자화 지점과 대응</td></tr><tr><td>frame 간 λ 공유(같은 H 여러 codeword)</td><td>대응 없음</td><td>codeword 간 feedback 공유 메커니즘은 현 구조에 없음</td></tr></tbody></table>
+<p>적용 가치: 중간 - iteration/latency를 줄이는 검증된 NAND 디코더 기법이나, SP(tanh) 기반 스케일 계수를 Prime ECC의 Min-Sum 스케줄과 frame 간 feedback 구조에 맞게 재설계해야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10186459",
+  "title": "Exploiting the Single-Symbol LLR Variation to Accelerate LDPC Decoding for 3-D NAND Flash Memory",
+  "year": 2023,
+  "venue": "IEEE TCAD",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.9,
+  "code_length": "4000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "intrapage frame RBER 유사성과 single-symbol LLR 상승 특성으로 auxiliary frame의 feedback λ를 계산해 다른 frame의 check-node 정보를 스케일링, iteration 감소",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "Sum-Product(tanh/atanh) 기반 스케일 계수라 Min-Sum 스케줄에 직접 이식 시 재해석 필요, λ 최적값 미확정",
+  "todo_check": "Min-Sum에 동적 scale factor를 곱했을 때 waterfall 이득 유지 여부와 frame 간 λ 공유의 HW 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10186459---exploiting-the-single-symbol-llr-variation-to-accelerate-ldpc-decoding-for-3-d-nand-flash-memory-2023-ieee-tcad">ieee:10186459 - Exploiting the Single-Symbol LLR Variation to Accelerate LDPC Decoding for 3-D NAND Flash Memory (2023, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

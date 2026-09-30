@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9685385</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9685385---a-novel-iterative-soft-decision-decoding-algorithm-for-rs-spc-product-codes-2021-globecom">ieee:9685385 - A Novel Iterative Soft-Decision Decoding Algorithm for RS-SPC Product Codes (2021, GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.759~0.938</td></tr><tr><td>부호length</td><td>6048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>RS-SPC product code의 이진확장 PCM 전체에 대한 2단계(local BM-HDD + global BP/MSA) 조인트 반복복호로 저지연·고신뢰 절충</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>성분부호가 비이진 RS(GF(2^p))이고 PCM이 HDPC(밀도 0.3~0.5)라 binary QC-LDPC와 부호구조·밀도가 다름; HW 미설계</td></tr><tr><td>추가확인</td><td>없음 (MSA 재사용 외 이진 QC-LDPC로 떼어낼 부호설계 요소 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 비이진 RS 성분부호의 product code를 이진확장 후 BP/MSA로 조인트 복호하는 구성법으로, MSA는 공유하나 부호구조가 HDPC·RS 기반이라 NAND binary QC-LDPC 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: RS-SPC product code (행=RS <code>C1(n,k,δ)</code> over GF(2^p), 열=binary SPC <code>C2</code>). AWGN·BPSK. 예제: <code>P(255,239,4,32)</code> rate 0.93, <code>P(63,51,1,15)</code> 6048bit rate 0.759.</li><li>문제: RS 단일부호의 SDD는 MLD와 격차 큼; RS PCM은 비희소(HDPC)라 BP 직접적용 곤란 (ABP는 매 iteration Gaussian소거로 복잡도 과함).</li><li>부호구성: RS의 이진 image expansion <code>Hb</code>(밀도 ~0.5, sparsification으로 ~0.3)와 SPC를 결합해 전체 이진 PCM <code>H(n,k,w,L)</code> 구성 (식(6): 대각 <code>Δ(Hb,L)</code> + 순환 <code>R</code> + <code>I</code>).</li><li>2단계 복호: local decoding(LD)=성분별 BM-HDD, global decoding(GD)=전체 이진 PCM에 BP 반복. LD 저지연 유지 + GD로 큰 블록급 정정능력 확보.</li><li>조기판정: soft weight <code>W=Σ|y_i|(y_i^H⊕ĉ_i)/Σ|y_i|</code> (식(9), 0≤W≤1), 임계 <code>Wθ</code>보다 작으면 정답으로 간주하고 해당 RS 성분을 freeze(LLR 큰값 고정, active set 제거).</li><li>CN 업데이트: check node를 <code>M1</code>(RS부분)/<code>M2</code>(SPC부분)로 분할, <code>M1</code>엔 SSID식 순환 shift <code>Θ(L,µ)</code> 적용. extrinsic LLR은 MSA <code>sgn·min</code> (식(14))로 계산 (APP 기반).</li><li>VN 업데이트: <code>L^{κ1+1}=L0+α1·L_ext,1+α2·L_ext,2</code> (damping factor <code>α1,α2</code>). inner/outer iteration <code>κ1,κ2</code>, <code>N2=1</code>(LCS)/<code>N2=n</code>(HCS) 두 모드.</li><li>복잡도: CN당 실수곱 2회, per-bit 정규화 복잡도를 Chase-Pyndiah TPC와 비교 (Table I). 큰 SNR에서 <code>Iavg≈2</code>로 수렴.</li><li>결과: BER 10^-7에서 <code>P(255,239,4,32)</code> HCS는 TPC <code>PR(63,61)</code> 대비 0.4dB 이내; LD 성능은 TPC LD보다 1.9dB 우수. 큰 SNR에서 TPC보다 낮은 복잡도.</li><li>한계: HW 미설계(시뮬만); 성분부호가 비이진 RS, PCM이 HDPC라 희소 binary LDPC와 구조 상이; undetected error 제어(Wθ 튜닝) 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| CN extrinsic LLR = MSA sgn·min (식14) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum CN 연산 자체는 공유하나 우리는 희소 QC-LDPC, 논문은 HDPC 이진확장 RS |
+| VN 업데이트 / damping α1,α2 | decoder.cpp VN_Cal_HD(), decoder.h Get_VNU_* | VN 합산 구조 유사, damping/2단 extrinsic은 우리 스케줄과 상이 |
+| soft weight Wθ 조기판정·freeze | full_CRC.cpp, partial_CRC.cpp partial_crc_HW_T4() | 조기종료 목적 유사하나 우리는 CRC 기반, 논문은 ML-metric 임계 |
+| 이진확장 PCM/부호구조 로드 H(n,k,w,L) | ecc_top.cpp Load_PCM() | 로드 지점은 대응하나 HDPC·RS 기반이라 우리 QC-LDPC H-matrix와 부호설계 상이 |
+| LLR 초기화 L(c_i)=2y_i/σ² | channel.cpp Set_LLR_Th() | LLR 산출 개념만 공유 |
+| product code 인코딩(RS×SPC) | encoder.cpp | dual-diagonal QC-LDPC 인코더와 부호구조 상이 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — min-sum(MSA) CN 연산은 이미 보유(중복)이고, 부호가 비이진 RS 성분의 HDPC 이진확장이라 NAND binary QC-LDPC의 부호설계·디코더에 떼어낼 재사용 가치가 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9685385",
+  "title": "A Novel Iterative Soft-Decision Decoding Algorithm for RS-SPC Product Codes",
+  "year": 2021,
+  "venue": "GLOBECOM",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "6048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "RS-SPC product code의 이진확장 PCM 전체에 대한 2단계(local BM-HDD + global BP/MSA) 조인트 반복복호로 저지연·고신뢰 절충",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "성분부호가 비이진 RS(GF(2^p))이고 PCM이 HDPC(밀도 0.3~0.5)라 binary QC-LDPC와 부호구조·밀도가 다름; HW 미설계",
+  "todo_check": "없음 (MSA 재사용 외 이진 QC-LDPC로 떼어낼 부호설계 요소 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9685385---a-novel-iterative-soft-decision-decoding-algorithm-for-rs-spc-product-codes-2021-globecom">ieee:9685385 - A Novel Iterative Soft-Decision Decoding Algorithm for RS-SPC Product Codes (2021, GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

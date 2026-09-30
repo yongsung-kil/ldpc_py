@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9603866</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9603866---hardware-implementation-method-of-ldpc-efficient-decoding-based-on-fpga-2021-icnisc">ieee:9603866 - Hardware Implementation Method of LDPC Efficient Decoding Based on FPGA (2021, ICNISC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>트리형 토폴로지 check-node 갱신을 개선해 core 연산·클록 사이클 축소 후 FPGA 부분병렬 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.01Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(3,6) regular·기하구성 부호에 특화된 log-domain SP 디코더로 정정성능 개선 없음, 10Mbps로 NAND급 대비 매우 낮음</td></tr><tr><td>추가확인</td><td>개선된 core 연산 축소(3→2 U@V, 4→3 clock)가 Min-Sum 대비 실이득 있는지, 양자화 8bit 정밀도의 BER 영향</td></tr></tbody></table>
+<blockquote><p>총평: (3,6) regular LDPC의 log-domain sum-product 디코더를 tree-topology 개선·8bit 고정소수점으로 FPGA(10Mbps) 구현한 교과서적 HW 설계 논문으로, Prime ECC의 min-sum QC-LDPC와 정합성·이득 모두 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 기하구성법으로 설계된 girth-8 <code>(1008, 3, 6)</code> regular LDPC (rate 0.5), 채널은 노이즈 오염된 likelihood-ratio 입력을 가정한다.</li><li>풀려는 문제: tree-topology check-node 갱신이 core 연산 호출 수와 클록 사이클이 많아 HW 구현이 비효율적이다.</li><li>check-node 갱신의 두 core 연산은 <code>f(U⊕V')</code>와 <code>L(U⊕V)</code>이며, tree 구조에서 (3,6) 부호는 5회 <code>f</code>, 6회 <code>L</code>, 4 clock이 필요하다.</li><li>개선안: verification-node 갱신에 <code>f(U⊕V')</code> core 연산을 2개만 포함시키고 total core 연산을 12회로 재배치, 클록을 4→3으로 축소한다.</li><li>reduction 연산 병렬화로 single-point check 갱신을 9회 <code>f(U⊕V')</code> + 4 clock으로 처리한다.</li><li><code>L(U⊕V)</code> core 연산을 제거해 양자화 대상은 <code>g(x)=log(1+e^-|x|)</code> 함수와 입력 <code>2y/σ²</code>만 남는다.</li><li>양자화: 8bit 고정소수점(부호 1bit + 정수 3bit + 소수 4bit), 값 범위 ±7.9375, 초기·중간 정보에 동일 표준 적용해 별도 처리 불필요.</li><li>HW 구조: 입력전처리 + variable-node 갱신(폭 Wv=36, L=28) + check-node 갱신(폭 Wc=18, L=28) + interleaving + 판정출력, 부분병렬. lookup(lpm_rom)으로 <code>g(x)</code> 저장.</li><li>결과: Stratix II EP2S60F484C3에서 logic 67%, memory 15%, 최고 처리율 10Mbps, Matlab과 시뮬레이션 일치.</li><li>한계: 정정성능 개선 없음(구현 효율만), throughput 10Mbps로 NAND급에 크게 미달, BER/gate-count 정량치 미제시, 특정 기하구성 (3,6) 부호에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check-node 갱신 core 연산 축소</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime은 min-sum 사용, 논문은 log-SP <code>f</code>/<code>L</code> core 연산 축소 → 알고리즘 계열 상이, 이식 이득 낮음</td></tr><tr><td>variable-node 부분병렬 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>Prime은 z=32 row 병렬, 논문은 Wv=36 단순 부분병렬 → 구조 상이</td></tr><tr><td>8bit 고정소수점 양자화</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>Prime은 iteration별 LLR 테이블 보유, 단일 8bit 균일양자화는 이미 열위</td></tr><tr><td>lookup(lpm_rom) <code>g(x)</code> 테이블</td><td>대응 없음</td><td>log-SP 전용 correction 함수, min-sum엔 불필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — log-domain sum-product 계열의 tree-topology 개선이라 min-sum 기반 Prime ECC와 알고리즘 정합성이 낮고, 정정성능·throughput 이득이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9603866",
+  "title": "Hardware Implementation Method of LDPC Efficient Decoding Based on FPGA",
+  "year": 2021,
+  "venue": "ICNISC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "미상",
+  "key_contribution": "트리형 토폴로지 check-node 갱신을 개선해 core 연산·클록 사이클 축소 후 FPGA 부분병렬 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.01,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "(3,6) regular·기하구성 부호에 특화된 log-domain SP 디코더로 정정성능 개선 없음, 10Mbps로 NAND급 대비 매우 낮음",
+  "todo_check": "개선된 core 연산 축소가 Min-Sum 대비 실이득 있는지, 양자화 8bit 정밀도의 BER 영향"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9603866---hardware-implementation-method-of-ldpc-efficient-decoding-based-on-fpga-2021-icnisc">ieee:9603866 - Hardware Implementation Method of LDPC Efficient Decoding Based on FPGA (2021, ICNISC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

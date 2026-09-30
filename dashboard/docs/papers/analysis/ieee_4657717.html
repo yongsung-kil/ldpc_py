@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4657717</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4657717---a-fast-and-efficient-encoding-structure-for-qc-ldpc-codes-2008-ieee">ieee:4657717 - A Fast and Efficient Encoding Structure for QC-LDPC Codes (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.8</td></tr><tr><td>부호length</td><td>7493</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>QC-LDPC 인코더를 PIPO(병렬입력-병렬출력) 구조로 구현해 SIPO/PISO SRAA 대비 레지스터를 b²→b로 절감하며 인코딩 속도 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>레지스터 b개·AND/XOR b²개(b=127, FPGA LC; 절대 gatecount@공정 미상)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>&gt;1Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>생성행렬(G) dense circulant ROM 기반이라 고rate에서 비효율, Prime ECC의 dual-diagonal(sparse H) 인코딩 대비 이점 적음, DTMB(방송) 타깃</td></tr><tr><td>추가확인</td><td>PIPO 병렬 circulant MAC 구조가 dual-diagonal 인코더 대비 실제 면적/속도 이점 있는지 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: DTMB용 고속 병렬 QC-LDPC 인코더(PIPO) — binary QC-LDPC라 형식은 맞으나 인코더 전용·G-matrix 기반이라 dual-diagonal을 이미 보유한 NAND ECC엔 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 binary QC-LDPC로 <code>Hqc</code>가 <code>b×b</code> circulant permutation/zero 행렬 블록(<code>c×t</code>)으로 구성, DTMB 코드는 <code>b=127</code>, <code>t=59</code>, <code>c=35/23/11</code>, block length 7493, rate 0.4/0.6/0.8(P4/P6/P8).</li><li>문제: LDPC 인코딩은 복호보다 비싸고, 기존 SRAA 기반 SIPO/PISO 인코더는 클록 수가 정보/패리티 길이에 비례해 수천 클록 소요 → 고속 인코딩 난제.</li><li>인코딩은 systematic-circulant 생성행렬 <code>Gqc</code>(dense circulant <code>Gi,j</code> + identity)로 <code>Cqc = a·Gqc</code>.</li><li>핵심 기법 PIPO: 정보비트를 <code>b</code>폭 병렬 입력, 패리티도 병렬 출력. <code>Pj = a1·G1,j + a2·G2,j + ... </code>를 각 스텝마다 <code>ai</code>와 <code>Gi,j</code>의 generator를 병렬 투입해 누적.</li><li>패리티 <code>Pj</code>(b비트)는 <code>t-c</code> 클록에 생성, 전체 패리티는 <code>c(t-c)</code> 클록에 완료 → SIPO의 <code>b(t-c)</code> 대비 대폭 단축(b가 t,t-c보다 큼).</li><li>구현 트릭: 입력폭 <code>w</code>가 <code>b</code>와 같을 필요 없음(예 <code>w=⌈b/8⌉</code>), 출력폭도 가변 → 속도-복잡도 유연 trade-off, 서로 다른 클록 적용 가능.</li><li>자원 비교(<code>c=t-c=b</code> 가정): PIPO는 레지스터 <code>b</code>개(SIPO <code>2b²</code>, PISO <code>b²</code>), AND/XOR는 세 구조 모두 <code>b²</code> 수준 → 레지스터가 b제곱이 아닌 b에 선형.</li><li>DTMB 아키텍처: S/P 변환→PIPO 인코더→패리티 버퍼→P/S. 생성행렬 ROM 단 1개(127×2196)로 다중 rate를 주소로 선택.</li><li>결과: P4 기준 SIPO(12 SRAA) 9144 클록 대비 PIPO 840 클록(~10배), Stratix II에서 fmax&gt;250MHz, 잠재 throughput &gt;1Gbps, LC combinational은 SIPO의 1/2~1/3.</li><li>한계: 순수 인코더(복호/정정 무관), FPGA 자원(LC/레지스터) 비교뿐 절대 ASIC gatecount 없음, 방송 QC-LDPC 대상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC-LDPC 병렬 인코딩(PIPO) | encoder.cpp LDPC_encoder_4KB() | Prime ECC는 dual-diagonal(sparse H) 인코딩 — G-matrix 병렬 MAC 방식과 접근 상이 |
+| 생성/부호 PCM 처리 | encoder.cpp Generate_PCM_encoding() | Prime ECC는 부호용 PCM_b_enc(sparse) 사용, dense generator ROM 불필요 |
+| circulant 구조 로드 | ecc_top.cpp Load_PCM() | QC circulant 로드는 대응하나 인코딩 알고리즘이 다름 |</code></pre>
+<p>적용 가치: 낮음 — encoder 전용이며 dense generator-matrix ROM 기반이라, sparse dual-diagonal 인코딩을 이미 보유한 고rate NAND QC-LDPC(Prime ECC)에 실질 이점이 적다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4657717",
+  "title": "A Fast and Efficient Encoding Structure for QC-LDPC Codes",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "7493",
+  "soft_quant": "무관",
+  "key_contribution": "QC-LDPC 인코더를 PIPO(병렬입력-병렬출력) 구조로 구현해 SIPO/PISO 대비 레지스터를 b²에서 b로 줄이고 클록수를 약 10배 단축",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "레지스터 b개·AND/XOR b²개(b=127, FPGA LC; 절대 gatecount 미상)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.0,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "dense generator-matrix ROM 기반이라 고rate에서 비효율, dual-diagonal 인코딩을 이미 보유한 Prime ECC엔 이점 적음, DTMB 방송 타깃",
+  "todo_check": "PIPO 병렬 circulant MAC가 dual-diagonal 인코더 대비 실제 면적/속도 이점 있는지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4657717---a-fast-and-efficient-encoding-structure-for-qc-ldpc-codes-2008-ieee">ieee:4657717 - A Fast and Efficient Encoding Structure for QC-LDPC Codes (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

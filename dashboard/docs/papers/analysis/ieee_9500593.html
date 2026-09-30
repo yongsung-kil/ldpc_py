@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9500593</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9500593---coarsely-quantized-layered-decoding-using-the-information-bottleneck-method-2021-icc">ieee:9500593 - Coarsely Quantized Layered Decoding Using the Information Bottleneck Method (2021, ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>7648~18360</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Information Bottleneck 기반 3~4bit 조립층(layered) QC-LDPC 디코더 node 설계 (LUT/computational-domain/min-approx), 반복 절반·저error-floor</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>LUT node 96~512bit/table (합성 gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>fiber optical 타깃·BI-AWGN 가정, HW 미설계(area/energy future work), layered는 추가 메모리 필요</td></tr><tr><td>추가확인</td><td>binary QC-LDPC NAND 조건에서 IB LUT node의 실제 gate/메모리 및 min-approx error-floor 개선의 우리 min-sum 대비 이득</td></tr></tbody></table>
+<blockquote><p>총평: IB로 설계한 3~4bit layered QC-LDPC 디코더 - 우리 min-sum 대비 저bit·저error-floor 이점이 흥미로우나 fiber용·HW 미설계, 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BI-AWGN 채널, regular QC-LDPC(exponent matrix <code>P</code>, circulant size <code>Z</code>), rate 0.5~5/6, N=7648~18360, 4bit 이하 메시지 교환, 최대 8~10 iteration.</li><li>문제: coarse quantization LDPC는 주로 flooding schedule로 연구됨 - 수렴이 빠른 layered schedule에 IB 기반 설계를 적용한 사례가 거의 없음.</li><li>layered schedule: full VN update 대신 layer별 partial update(<code>dv</code>개)로 각 layer가 개선된 신뢰도 메시지를 받아 수렴 속도 약 2배 향상(iteration 절반).</li><li>핵심 기법(IB): node 연산을 <code>max p(t|s) I(X;T)</code>로 설계 - 관측 메시지를 압축하되 code bit <code>x</code> 관련 정보를 최대 보존, discrete density evolution로 메모리 내 분포까지 추적.</li><li>VN 설계1(LUT): 거대한 <code>|S|</code>(예 dv=4,4bit=65536)을 2-input LUT 연쇄로 분할, 각 LUT를 sequential IB로 경계 threshold 최적화(LLR 정렬 기반) - 서브구조 최적화라 손실 존재.</li><li>VN 설계2(computational domain): <code>s̃=L(x)+ΣL(yl|x)</code> 로 LLR 합산 후 threshold quantizer <code>Q(s̃)</code>, 정수 스케일 <code>φl</code>, w=8bit 내부폭이면 무손실 - 단일 압축이라 LUT 대비 MI 더 보존.</li><li>CN 설계: 2-input LUT / computational domain / min-approximation 3종, min-approx는 HW 복잡도 낮음.</li><li>최적화: 오프라인 layered discrete density evolution + IB, 설계 <code>Eb/N0</code> 고정으로 초기 <code>p(x,ych)</code> 결정.</li><li>결과: 4bit IB 디코더가 4bit OMSQ 대비 0.06~0.14dB 우위, min-approx CN이 오히려 error floor를 1~2 order 낮춤(C1 layered 10^-12), 3bit IB는 4bit OMSQ 대비 0.02~0.05dB 손실. GPU(PyOpenCL) 시뮬로 error floor 관찰.</li><li>한계: fiber optical(R&gt;0.8, floor&lt;10^-15) 타깃, HW area/energy는 future work, layered는 중간결과 저장 추가 메모리 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VN/CN 조립층 quantized node(IB LUT/comp)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>CNU_Update_New_Mag()</code></td><td>min-sum CN/VN을 IB LUT/comp domain node로 대체하는 방향, 재설계 필요해 이식 중난이도</td></tr><tr><td>min-approximation check node</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리가 이미 보유한 min-sum과 동종(중복) - error-floor 낮추는 threshold 변형만 참신</td></tr><tr><td>3~4bit 메시지 양자화/LLR 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>soft-2~3bit 양자화 테이블 설계에 IB 최적화 참조 가능</td></tr><tr><td>layered(partial update) schedule</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프 (Dual-Update 스케줄)</td><td>우리 Dual-Update와 유사 계열, 반복 감소 개념 참조</td></tr><tr><td>QC exponent matrix / girth 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC 구조는 정합되나 부호 고정이라 재검증 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - 조립층 IB node/3bit 양자화·min-approx error-floor 개선은 우리 min-sum·양자화 테이블과 접점이 크나, min-sum 자체는 이미 보유(중복)이고 HW 미설계·fiber 타깃이라 직접 이식이익은 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9500593",
+  "title": "Coarsely Quantized Layered Decoding Using the Information Bottleneck Method",
+  "year": 2021,
+  "venue": "ICC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "7648~18360",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Information Bottleneck 기반 3~4bit 조립층(layered) QC-LDPC 디코더 node 설계 (LUT/computational-domain/min-approx), 반복 절반·저error-floor",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "LUT node 96~512bit/table (합성 gatecount 미상)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "fiber optical 타깃·BI-AWGN 가정, HW 미설계(area/energy future work), layered는 추가 메모리 필요",
+  "todo_check": "binary QC-LDPC NAND 조건에서 IB LUT node의 실제 gate/메모리 및 min-approx error-floor 개선의 우리 min-sum 대비 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9500593---coarsely-quantized-layered-decoding-using-the-information-bottleneck-method-2021-icc">ieee:9500593 - Coarsely Quantized Layered Decoding Using the Information Bottleneck Method (2021, ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8816821</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8816821---5g-nr-ldpc-decoding-performance-comparison-between-gpu-fpga-platforms-2019-ieee">ieee:8816821 - 5G NR LDPC Decoding Performance Comparison between GPU &amp; FPGA Platforms (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.2~0.5</td></tr><tr><td>부호length</td><td>26112</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>3GPP NR QC-LDPC 디코더의 FPGA vs GPU 구현 비교 + PCM compact 압축(28kbit-&gt;3.5kbit)으로 로컬 메모리 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G NR 특화(BG1/BG2, Zc up to 384), SPA 전체·부동소수 GPU 중심, 정정성능 개선 아님, gate/throughput 수치 본문 부재</td></tr><tr><td>추가확인</td><td>PCM compact 압축 방식 상세, FPGA 4.25us/iter 대비 우리 z=32 pipeline과의 정합, GPU 비교는 NAND 무관</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR QC-LDPC의 GPU/FPGA 플랫폼 비교 - 부호 자체가 NR 전용이고 정정성능 기여 없음, PCM 압축 아이디어만 참고 가치 소.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 3GPP 5G NR QC-LDPC 디코더, Base Graph 1(46x68)·2(42x52), lifting size <code>Zc</code> up to 384, QPSK, <code>R=1/3</code>(BG1)·<code>R=1/5</code>(BG2), 최대 NR 블록 26,112 bit.</li><li>문제: LDPC를 HW(ASIC/FPGA) 대신 GPU SDR로 가상화하려 하나 GPU는 불규칙 메모리 접근으로 latency가 큼 - 저지연 요구 충족이 목표.</li><li>부호 구조: PCM은 compact <code>[h]</code> 행렬의 각 원소를 <code>Zc x Zc</code> circulant 순환치환/영행렬로 lifting해 생성(TS 38.212), 82개 H 행렬 존재.</li><li>기저 알고리즘: binary LDPC의 Sum-Product Algorithm(SPA), Tanner graph의 info/parity 노드 간 LLR 메시지 전달.</li><li>디코더 개선: 최적 가중치+고정소수점 확률계산, 벡터화된 message passing으로 중복 제거, PCM 압축 저장, GPU용 fully-independent thread rotator.</li><li>PCM 압축: 표준 28kbit -&gt; 3.5kbit(BG1 기준), 82개 uncompressed 64kB -&gt; compressed 9kB로 shared local memory 절감(핵심 기여).</li><li>GPU 병렬화: <code>Zc</code> 도메인당 최대 384 병렬 프로세스, H 행 내 원소 병렬, 저상관 행 결합으로 추가 병렬화 계획.</li><li>FPGA 구현: Xilinx Zynq UltraScale+ xczu15eg, 245.76MHz, HW 자원 &lt;50%, iteration당 BG1 4.25us / BG2 3.14us(Zc=384).</li><li>결과: 고정소수점 FPGA vs 32-bit float GPU BLER 차이 0.5dB 이내, GPU는 단일 multiprocessor 사용 시 목표 대비 약 32배 큰 latency(BG1 520us/iter), 평균전력 FPGA 7.5W / GPU ~5W*, PM_FPGA=42.75 &gt; PM_GPU=11.11.</li><li>한계: 정정능력 개선 아님(플랫폼 비교), GPU latency는 향후 개선 과제, throughput/gatecount 수치 본문 미기재, NR 전용 부호.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC-LDPC PCM(circulant lifting) 로드 | ecc_top.cpp Load_PCM() | 개념 동일(base+shift) - 단 NR BG는 우리 고정 H와 다름 |
+| PCM compact 압축 저장 | ecc_data.h PCM_b (base+shift 표현) | 우리도 base+shift로 이미 컴팩트 저장 - 신규성 낮음 |
+| SPA(full tanh) CN 연산 | 대응 없음 | 우리는 min-sum 사용, full-SPA는 미보유이나 HW 면적상 채택 안함 |
+| 고정소수점 LLR bit-width 설계 | decoder.cpp VN_Cal_HD(), ecc_data.h PARAM_LLR | 양자화 관점만 약한 대응 |
+| GPU thread rotator / 병렬화 | 대응 없음 | Prime ECC는 z=32 HW pipeline, GPU 아키텍처 무관 |</code></pre>
+<p>적용 가치: 낮음 - QC-LDPC이라 부호 형식은 겹치나 5G NR 전용 부호·SPA·GPU/FPGA 플랫폼 비교라 NAND HW 디코더 개선 기여가 없고, PCM 압축은 이미 base+shift로 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8816821",
+  "title": "5G NR LDPC Decoding Performance Comparison between GPU &amp; FPGA Platforms",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.2~0.5",
+  "code_length": "26112",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "3GPP NR QC-LDPC 디코더의 FPGA vs GPU 구현 비교 + PCM compact 압축(28kbit-&gt;3.5kbit)으로 로컬 메모리 절감",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "5G NR 특화(BG1/BG2, Zc up to 384), SPA 전체·부동소수 GPU 중심, 정정성능 개선 아님, gate/throughput 수치 본문 부재",
+  "todo_check": "PCM compact 압축 방식 상세, FPGA 4.25us/iter 대비 우리 z=32 pipeline과의 정합, GPU 비교는 NAND 무관"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8816821---5g-nr-ldpc-decoding-performance-comparison-between-gpu-fpga-platforms-2019-ieee">ieee:8816821 - 5G NR LDPC Decoding Performance Comparison between GPU &amp; FPGA Platforms (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

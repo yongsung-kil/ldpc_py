@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6192273</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6192273---finding-the-exhaustive-list-of-small-fully-absorbing-sets-and-designing-the-corresponding-low-error-floor-decoder-2012-ieee-trans-communications">ieee:6192273 - Finding the Exhaustive List of Small Fully Absorbing Sets and Designing the Corresponding Low Error-Floor Decoder (2012, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>504~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>소형 FAS 완전탐색(B&amp;B/IP) 리스트로 union-aware soft post-processing 디코더 구성해 error-floor 1~2자릿수 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>post-processing은 BP 실패 시에만 추가 iteration - 평균복잡도는 낮으나 오프라인 FAS 탐색(코드당 5~48h) + 코드별 FAS 리스트 사전확보 필요</td></tr><tr><td>추가확인</td><td>Prime의 QC-LDPC(고rate/장길이)에서 FAS 탐색 가능성 및 리스트 크기·매칭 HW 비용, min-sum과의 정합</td></tr></tbody></table>
+<blockquote><p>총평: error-floor(10^-12~10^-15 목표, storage 명시) 저감용 soft post-processing 디코더로 NAND에 개념적 부합하나, 실험 코드가 짧은 규칙/불규칙 PEG·Margulis(rate 대부분 0.5)이고 코드별 오프라인 FAS 완전탐색이 선행되어야 해 고rate QC-LDPC 이식엔 재검증 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 임의 LDPC 코드(규칙/불규칙, PEGR504/1008, M816/1008, Tanner155, Margulis2640, PEGI504/1008), AWGNC, 저장장치·광통신용 초저 error-floor(10^-12~10^-15) 요구.</li><li>문제: BP는 EPS(stopping/trapping/absorbing set)로 수렴해 error-floor 발생, 기존 post-processing은 부분 TS 리스트만 사용해 식별 불완전.</li><li>핵심기법1(탐색): 크기&lt;t의 모든 FAS 탐색을 정수계획(IP)으로 정식화, branch-&amp;-bound(B&amp;B) + branch-&amp;-cut로 하한 <code>b</code> 계산해 가지치기 (Algorithm 1).</li><li>FAS 정의: <code>|EA(v)|&gt;|OA(v)|</code> for all v(짝수차수 만족CN이 홀수차수 위반CN보다 많음) - majority-vote bit-flip에서 "정지 TS", degree-2 다수 불규칙코드엔 정의 완화(<code>&gt;=</code>).</li><li>노드선택/트리밍: LP relaxation의 soft <code>xi</code>로 위반가능성 metric <code>ξk</code> 계산, 가장 큰 <code>ξk</code> 위치를 분기 → CPLEX node/time limit로 loose 하한 조기 확보.</li><li>핵심기법2(디코더): 완전 FAS 리스트로 unsatisfied CN 패턴 매칭, <code>βA=Σ mcj</code> 로 FAS 후보 정렬(Algorithm 2).</li><li>소프트 스케일링: unsatisfied CN→오류bit LLR은 <code>f=α-hΔα</code>로 강화, mis-satisfied는 <code>1/(α-hΔα)</code>로 약화해 <code>Lnew</code> 생성 후 BP <code>l</code>회 재실행.</li><li>union 처리: AWGNC에선 다중 FAS의 union으로 수렴 → 슬라이딩 윈도우 <code>d</code>개 FAS 결합, <code>L(0)</code>·<code>L(l)</code> 양쪽 concatenate.</li><li>결과: BP 대비 error-floor 1~2자릿수 저감, [Varnica07]/[Han-Ryan] 등 state-of-art 능가, Margulis2640에서 평균 FAS 13.56개(절반은 1개)로 평균복잡도 BP와 거의 동일, 파라미터 강건(βth[0,10] 등).</li><li>한계: HW 미설계, FAS 완전탐색은 코드당 5~48h 오프라인 1회작업(길이&lt;=2000), CN update는 full-tanh Sum-Product 기반.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Post-processing LLR 재초기화·재디코딩</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>BP 실패 후 Lnew로 재실행 - 디코더 루프 후단에 삽입 가능</td></tr><tr><td>소프트 스케일링 f(cj,vi) 적용</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>Get_VNU_Table_Idx()</code></td><td>CN→VN 메시지 가중 - VNU/LLR 테이블 경로에 대응</td></tr><tr><td>수렴실패 FAS 패턴 추적</td><td>corner.cpp</td><td>수렴실패 코너 추적과 목적 유사</td></tr><tr><td>CN soft-parity mcj (full tanh)</td><td>대응 없음</td><td>Prime은 min-sum(min1/min2), full-tanh Sum-Product 미보유</td></tr><tr><td>FAS 완전탐색(IP/B&amp;B)</td><td>대응 없음</td><td>Prime에 코드해석·EPS 탐색 도구 없음(오프라인 별도 필요)</td></tr><tr><td>H-matrix / 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>FAS 탐색 입력으로 PCM 로드 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - error-floor 저감(NAND 핵심)과 post-processing 접근은 Prime 디코더 루프 후단에 이식 여지가 있으나, 코드별 오프라인 FAS 완전탐색과 full-tanh 기반 소프트연산이 min-sum 구조와 정합 재검증을 요구한다.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:6192273",
+  "title": "Finding the Exhaustive List of Small Fully Absorbing Sets and Designing the Corresponding Low Error-Floor Decoder",
+  "year": 2012,
+  "venue": "IEEE Trans. Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "미상",
+  "code_length": "504~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "소형 FAS 완전탐색(B&amp;B/IP) 리스트로 union-aware soft post-processing 디코더 구성해 error-floor 1~2자릿수 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "post-processing은 BP 실패 시에만 추가 iteration - 평균복잡도는 낮으나 오프라인 FAS 탐색(코드당 5~48h) + 코드별 FAS 리스트 사전확보 필요",
+  "todo_check": "Prime의 QC-LDPC(고rate/장길이)에서 FAS 탐색 가능성 및 리스트 크기·매칭 HW 비용, min-sum과의 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6192273---finding-the-exhaustive-list-of-small-fully-absorbing-sets-and-designing-the-corresponding-low-error-floor-decoder-2012-ieee-trans-communications">ieee:6192273 - Finding the Exhaustive List of Small Fully Absorbing Sets and Designing the Corresponding Low Error-Floor Decoder (2012, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

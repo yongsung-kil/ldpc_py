@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8269402</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_8269402---exploiting-locality-for-improved-decoding-of-binary-cyclic-codes-2018-ieee-transactions-on-communications">ieee_8269402 - Exploiting Locality for Improved Decoding of Binary Cyclic Codes (2018, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.63~0.81</td></tr><tr><td>부호length</td><td>63~255</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LRC locality를 이용해 cyclic/BCH 부호의 OSD 앞에 local-parity BP 1라운드 삽입, trellis state complexity 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 binary cyclic/BCH 부호(LDPC 아님)·OSD/trellis 복호 전용, QC-LDPC min-sum 파이프라인과 무관</td></tr><tr><td>추가확인</td><td>LRC locality 개념이 Prime ECC의 QC-LDPC base matrix 조기종료·quick-look에 응용 가능한지 이론 검토</td></tr></tbody></table>
+<blockquote><p>총평: LRC locality로 cyclic/BCH 복호(OSD·trellis)를 개선하는 코딩이론 연구로, NAND QC-LDPC min-sum 디코더에 직접 이식할 요소가 없어 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary cyclic/BCH 부호(예 [63,·], [255,206], LDPC 아님), BPSK/AWGN 채널, locality(LRC: 각 좌표가 저가중 local parity로 복구)를 복호 개선에 활용.</li><li>문제: ML 복호는 길이 증가에 지수 복잡, OSD/trellis는 준최적 — locality를 주입해 성능↑·복잡도↓.</li><li>접근1 (locality-aware OSD): OSD 시작 전에 local parity-check만으로 BP 1라운드 <code>Λ^(1)=2 tanh^{-1}(∏ tanh(Λ/2))+Λ^(0)</code>를 돌려 신뢰도(reliability)를 갱신 후 OSD 재처리.</li><li>Quick-Look ML(QL-MLD): disjoint local code(단일 parity-check 또는 middle code)를 독립 ML 복호, 합쳐 유효 codeword면 조기종료 — 중고SNR에서 ML을 자주 반환(예 n=63,nl=7: 3.5dB에서 82% 성공).</li><li>확장: hierarchical locality/availability(t개 orthogonal parity), overlapping locality는 GDL(junction tree message passing)로 LLR 계산.</li><li>접근2 (trellis decoding): cyclic 부호의 zeros에 locality train을 추가해 subcode <code>C_new</code>를 만들어 특정 레벨의 state complexity <code>s_i=log_q|V_i|</code>를 감소.</li><li>이론: 부호의 zeros만으로 state complexity profile 상계(Theorem 14)를 유도, Vardy-Beery 결과를 hierarchical locality로 일반화.</li><li>부호 구성: <code>(r+1)|n</code> zero 패턴이 r-all-symbol locality를 부여(Theorem 8), 예 [255,192] r=16 부호를 zeros 추가로 생성.</li><li>결과: locality-aware order-0 OSD가 conventional order-2 OSD를 고SNR에서 능가(Fig.2,3,5), QL-MLD로 평균 복잡도·지연 감소(연산량 real ops로 정량화).</li><li>한계: HW/FPGA 미설계, throughput/gatecount 없음, 시뮬레이션(연산량 카운트)뿐, LDPC 부호 대상 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>local-parity BP 1라운드 (OSD 전처리)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>full-tanh BP·OSD 방식이라 min-sum 파이프라인과 이질적</td></tr><tr><td>Quick-Look ML 조기종료(유효 codeword 검사)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>개념적 유사(조기종료)이나 Prime ECC는 이미 CRC 기반 보유</td></tr><tr><td>cyclic/BCH 부호구조 (zeros/locality train)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC 고정 — cyclic locality 구성법 이식 부담</td></tr><tr><td>OSD / trellis(Viterbi) 복호</td><td>대응 없음</td><td>Prime ECC 미보유·min-sum iterative MP와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LRC locality 기반 OSD/trellis 복호는 binary cyclic/BCH 부호를 대상으로 한 코딩이론 기법이라, NAND용 binary QC-LDPC min-sum 디코더(부호설계→디코더→HW)에 떼어 쓸 구체 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8269402",
+  "title": "Exploiting Locality for Improved Decoding of Binary Cyclic Codes",
+  "year": 2018,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.63~0.81",
+  "code_length": "63~255",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LRC locality를 이용해 cyclic/BCH 부호의 OSD 앞에 local-parity BP 1라운드 삽입, trellis state complexity 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상이 binary cyclic/BCH 부호(LDPC 아님)·OSD/trellis 복호 전용, QC-LDPC min-sum 파이프라인과 무관",
+  "todo_check": "LRC locality 개념이 Prime ECC의 QC-LDPC base matrix 조기종료·quick-look에 응용 가능한지 이론 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_8269402---exploiting-locality-for-improved-decoding-of-binary-cyclic-codes-2018-ieee-transactions-on-communications">ieee_8269402 - Exploiting Locality for Improved Decoding of Binary Cyclic Codes (2018, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

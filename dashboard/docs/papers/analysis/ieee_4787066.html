@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4787066</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4787066---min-sum-decoder-architectures-with-reduced-word-length-for-ldpc-codes-2010-ieee-tcas-i">ieee_4787066 - Min-Sum Decoder Architectures With Reduced Word Length for LDPC Codes (2010, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1728~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>min1/min2에 서로 다른 보정계수 2개를 적용하는 개선 normalized MS + 비균일 양자화로 word length 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>부호길이가 802.11n/16e급(1728~1944)이며 rate가 NAND(~0.9)보다 낮음, 4-bit는 소폭 성능손실 동반</td></tr><tr><td>추가확인</td><td>비균일 양자화 변환회로(EXP/COMP)가 우리 z=32 pipeline에 삽입 시 임계경로 영향, 두 보정계수의 우리 magnitude 테이블 정합</td></tr></tbody></table>
+<blockquote><p>총평: min1/min2 개별 보정 + 비균일 양자화로 메모리·word length를 줄이는 순수 디코더 기법으로 min-sum 기반 Prime ECC에 이식성 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.11n/16e용 irregular LDPC (<code>(1728,864)</code>, <code>(1728,1296)</code>, <code>(1944,972)</code>), BPSK/AWGN, 최대 iteration 24~30.</li><li>문제: normalized/offset MS는 CNU 출력에 보정계수를 단 하나만 적용해 min1/min2를 동일 비율로 보정 → 과보정 여전, 4-bit 균일 양자화 시 error floor 발생.</li><li>핵심 기법 1: 개선 normalized MS는 최소메시지 <code>min1</code>과 두번째 최소 <code>min2</code>에 서로 다른 정규화계수 <code>α1</code>, <code>α2</code>를 각각 곱한다(추가 연산 없음, <code>α1=α2</code>면 기존 방식).</li><li>최적 계수는 광범위 시뮬로 탐색해 <code>α1=0.750</code>, <code>α2=0.875</code>로 HW 친화 값 채택(Table I에 여러 부호별 값).</li><li>결과 1: (1728,864)에서 FER 기준 고SNR 0.2 dB 이상 이득, error floor 억제, BP보다도 소폭 우수.</li><li>핵심 기법 2: 비균일 양자화 — 메시지 크기가 클수록 큰 양자화 스텝 사용(식 16), CNU에서는 비균일값 그대로 min1/min2 비교에 사용 가능.</li><li>VNU(덧셈) 직전에만 EXP 회로로 균일값으로 확장, VNU 후 COMP 회로로 다시 비균일값으로 압축해 메모리 저장.</li><li>6-bit 균일 ↔ 5-bit 비균일, 5-bit 균일 ↔ 4-bit 비균일 변환표(Table II/III), 변환회로는 30 게이트 미만.</li><li>보정(offset/normalize)회로를 VNU의 EXP 회로에 결합해 임계경로/HW 절감.</li><li>결과 2: TSMC 0.18um 합성 결과 4-bit 비균일 방식이 기존 5-bit 대비 메모리 20%, 조합논리 8% 감소, CNU 임계경로 단축.</li><li>한계: 부호가 무선통신용(rate 0.5~0.75, length ~2K)이라 NAND 고rate와 다름, 4-bit 시 &lt;0.1 dB 손실.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min1/min2 개별 보정 normalized MS</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>CNU magnitude 보정에 계수 2개 적용, 이식 용이</td></tr><tr><td>비균일 양자화/EXP/COMP</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>Get_VNU_Table_Idx()</code></td><td>우리 magnitude 양자화 테이블/LLR 테이블을 비균일로 대체</td></tr><tr><td>iteration별 정규화계수 테이블</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>보정계수를 파라미터 테이블로 관리</td></tr><tr><td>soft-read 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>4-bit soft에 맞춘 threshold 설정</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — min-sum 정규화계수 개선과 메모리 절감 비균일 양자화 모두 Prime ECC 디코더에 직접 접목 가능(단 4bit+ soft이며 부호길이/rate는 무선용).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4787066",
+  "title": "Min-Sum Decoder Architectures With Reduced Word Length for LDPC Codes",
+  "year": 2010,
+  "venue": "IEEE TCAS-I",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.75",
+  "code_length": "1728~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "min1/min2에 서로 다른 보정계수 2개를 적용하는 개선 normalized MS + 비균일 양자화로 word length 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "부호길이가 802.11n/16e급(1728~1944)이며 rate가 NAND(~0.9)보다 낮음, 4-bit는 소폭 성능손실 동반",
+  "todo_check": "비균일 양자화 변환회로(EXP/COMP)가 우리 z=32 pipeline에 삽입 시 임계경로 영향, 두 보정계수의 우리 magnitude 테이블 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4787066---min-sum-decoder-architectures-with-reduced-word-length-for-ldpc-codes-2010-ieee-tcas-i">ieee_4787066 - Min-Sum Decoder Architectures With Reduced Word Length for LDPC Codes (2010, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

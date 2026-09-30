@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8644090</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8644090---deep-learning-based-joint-detection-and-decoding-of-non-orthogonal-multiple-access-systems-2018-ieee-wcsp">ieee:8644090 - Deep Learning Based Joint Detection and Decoding of Non-Orthogonal Multiple Access Systems (2018, IEEE WCSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.71</td></tr><tr><td>부호length</td><td>63</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NOMA factor-graph(MPA 검출)+Tanner-graph(BP 복호) edge에 가중치를 부여하고 딥러닝으로 학습해 joint 검출·복호를 하나의 sparse NN으로 통합, 2dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN 기반 weighted-BP 전면 대체 + BCH 부호 + NOMA/5G multi-ary 특화 — Prime ECC의 binary QC-LDPC min-sum과 무관</td></tr><tr><td>추가확인</td><td>HW 미설계·gatecount/throughput 없음; MPA 검출단이 codebook(변조)에 종속되어 NAND 채널에 부적합</td></tr></tbody></table>
+<blockquote><p>총평: NOMA 무선용 딥러닝 weighted-MPA/BP joint 검출·복호로 BCH 부호·multi-ary 변조에 종속되며, NAND binary QC-LDPC min-sum(Prime ECC)과 부호·채널·복호 방식이 모두 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: uplink NOMA, V=6 user가 F=4 resource element에 비직교 다중화, 각 user는 BCH(63,45)로 채널부호화 후 SCMA codebook 매핑, AWGN/fading 채널.</li><li>문제: NOMA 수신단은 다중사용자 검출(MPA)+채널복호(BP)를 결합해야 하며, 검출만으로는 부호 이득을 못 얻어 두 단을 함께 최적화할 필요.</li><li>모델: NOMA 구조를 factor graph(VN=user, FN=RE)로, 선형부호를 Tanner graph로 표현 — MPA와 LDPC BP가 본질적으로 동일한 message passing임을 활용.</li><li>핵심 기법: factor/Tanner graph의 edge에 학습 가능한 가중치 <code>w</code>를 부여한 weighted MPA/BP를 다층 sparse NN(2L hidden layer=L iteration)으로 전개.</li><li>핵심 식: 검출단 <code>Θf(x)=-(1/N0)|y_f - Σ h_{v,f}x_{v,f}|^2</code>, 복호단 <code>I_{i,(v,c)}=tanh((1/2)(w·l_v + Σ w·I_{i-1}))</code>, 출력 <code>Λ(b)=max{Q(x^1)}-max{Q(x^0)}</code> — <code>max*</code> 대신 <code>max</code>로 근사(지수연산 회피).</li><li>확장: 검출 NN 출력 LLR을 복호 NN에 cascade하여 전체를 하나의 큰 NN으로 학습.</li><li>구현 디테일: 한 neuron이 2^J sub-neuron으로 구성(multi-ary 변조), 정규화로 max 차감, 병렬 구조는 ⌈N/J⌉ detector + V decoder.</li><li>학습: cross-entropy loss + multiloss, RMSPROP, lr=0.01, SNR을 mini-batch마다 랜덤(10~16dB), epoch 10000; MPA는 codeword 독립성이 없어 단일 codeword 학습 불가.</li><li>결과: 기존(MPA+BP) 대비 AWGN에서 BER=1e-4에 2dB, fading에서 약 1dB 이득; 학습 후 forward 복잡도는 표준 MPA/BP와 동일(학습은 offline).</li><li>한계: HW 미설계(gatecount/throughput 없음), BCH·NOMA·multi-ary 변조 종속, 검출단이 codebook에 강하게 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| weighted-BP NN 복호기 (tanh 기반) | 대응 없음 | Prime ECC는 min-sum HW 디코더이며 NN/딥러닝 full-tanh BP 복호는 모듈 대응이 없음(프로파일 §6 명시 "대응 없음") |
+| edge 가중치 학습 | 대응 없음 | Prime ECC에 학습 파라미터 개념 없음 |
+| MPA 다중사용자 검출단 | 대응 없음 | NOMA 검출은 NAND ECC 파이프라인과 무관 |
+| BP iteration 루프 (개념적) | decoder.cpp LDPC_Decoder() | 반복 message passing 구조만 유사, 실제 연산(NN weighted-BP)은 이식 불가 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — NN 기반 weighted-BP 전면 대체 + BCH 부호 + NOMA/5G multi-ary 변조 특화로, 프로파일 §5 판정필터상 NN 전면 대체·무선 특화는 관련성 낮음이며 Prime ECC의 binary QC-LDPC min-sum HW 엔진에 떼어 쓸 요소가 없음.</p>
+<pre><code>{
+  "id": "ieee:8644090",
+  "title": "Deep Learning Based Joint Detection and Decoding of Non-Orthogonal Multiple Access Systems",
+  "year": 2018,
+  "venue": "IEEE WCSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.71,
+  "code_length": "63",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NOMA factor-graph(MPA 검출)+Tanner-graph(BP 복호) edge에 가중치를 부여하고 딥러닝으로 학습해 joint 검출·복호를 하나의 sparse NN으로 통합, 2dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "NN 기반 weighted-BP 전면 대체 + BCH 부호 + NOMA/5G multi-ary 특화 — Prime ECC의 binary QC-LDPC min-sum과 무관",
+  "todo_check": "HW 미설계·gatecount/throughput 없음; MPA 검출단이 codebook(변조)에 종속되어 NAND 채널에 부적합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8644090---deep-learning-based-joint-detection-and-decoding-of-non-orthogonal-multiple-access-systems-2018-ieee-wcsp">ieee:8644090 - Deep Learning Based Joint Detection and Decoding of Non-Orthogonal Multiple Access Systems (2018, IEEE WCSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

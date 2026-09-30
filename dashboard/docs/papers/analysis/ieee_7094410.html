@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7094410</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7094410---a-reduced-complexity-iterative-scheme-for-decoding-quasi-cyclic-low-density-parity-check-codes-2014-ieee-itw-information-theory-workshop">ieee:7094410 - A Reduced-Complexity Iterative Scheme for Decoding Quasi-Cyclic Low-Density Parity-Check Codes (2014, IEEE ITW / Information Theory Workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9519</td></tr><tr><td>부호length</td><td>16120</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>section-wise cyclic 구조를 이용한 Merry-Go-Round(MGR) 복호로 CN/VN-MPU 및 배선 수를 CRF-c배 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>복잡도를 c배 줄이는 대가로 sub-iteration이 c배 늘어 latency 증가 (throughput 감소), 실제 gatecount/합성 없음</td></tr><tr><td>추가확인</td><td>z_sb=32 구조에서 CRF 값별 latency-면적 trade-off가 우리 pipeline(6-stage, GT/HCU)과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: CPM-QC 구조 재사용으로 MPU/배선을 c배 줄이는 area-throughput 교환 기법. 성능 무손실이나 latency 악화가 명확하고 우리 병렬구조와 정합 검토 필요, 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 CPM(circulant permutation matrix)-structure QC-LDPC. H는 e×e CPM/ZM으로 이뤄진 m×n array, 길이 <code>ne</code>, rate ≥ (n-m)/n.</li><li>문제: 전체 H 기반 디코더는 CN-MPU/VN-MPU와 이들을 잇는 wire 수가 매우 많아 (예제: 780 CN, 16120 VN, 96,720 wire) HW 복잡도가 큼.</li><li>핵심 관찰: 각 row-block <code>Hi</code>는 section-wise cyclic-shift 구조 → 한 행을 e-1번 shift하면 전체 row-block이 복원됨 (CPM-structure 유지).</li><li>MGRD(Merry-Go-Round) 기법: 각 row-block에서 <code>l</code>개 연속 행만 뽑아 만든 <code>ml×ne</code> 부분행렬 <code>M(l)</code>만으로 복호. <code>c = ⌈e/l⌉</code>가 complexity reduction factor(CRF).</li><li><code>M(l)</code>의 행수·1-entry 수가 H의 약 1/c → CN-MPU·wire를 최소 c-1배(l이 e의 인수면 정확히 c배) 축소.</li><li>한 sub-iteration 후 reliability R과 수신열을 왼쪽으로 <code>l</code>만큼 section-wise cyclic shift → 다음 sub-iteration 입력. c번 sub-iteration = H 기준 1 full iteration.</li><li>MGR-MSA: MGRD에 scaled Min-Sum(<code>λatten</code> attenuation)을 결합. R 갱신은 <code>Rj ← Rj − ΣL(t→f)j</code> 후 CN 메시지 <code>L = λ·sign×min|Rj|</code> 갱신, 다시 <code>Rj ← Rj + ΣL</code>.</li><li>조기종료: 각 sub-iteration마다 hard-decision z를 <code>fl</code> shift 후 전체 H로 syndrome <code>s=z·Hᵀ</code> 계산, <code>s=0</code>이면 종료.</li><li>결과: GF(131) 기반 (6,124)-regular (16120,15345) rate-0.9519 코드. scaled MSA 50 iter로 BER 10⁻¹⁵, error-floor 없음, Shannon 한계 대비 1.45dB. MGR-MSA(CRF-130, CRF-13) 성능이 full-MSA와 거의 겹침.</li><li>한계: gatecount/전력/합성 결과 없음(FPGA로 BER만), CRF가 클수록 sub-iteration이 c배 늘어 decoding latency 증가. rate-compatible descendant 코드(puncturing/masking)도 mother decoder로 복호 가능함을 보임.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MGRD 반복 스케줄 (M(l) 기반 sub-iteration)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>CN/VN 처리 순서·부분행렬 재사용 스케줄로 이터레이션 루프 개조 지점</td></tr><tr><td>scaled Min-Sum CN 갱신 (<code>λatten</code>)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일 계열 (attenuation factor만 차이)</td></tr><tr><td>syndrome 기반 조기종료</td><td>full_CRC.cpp / <code>partial_CRC.cpp</code></td><td>우리는 CRC 조기종료, 논문은 syndrome=0 종료 (대체 관계)</td></tr><tr><td>CPM/배선 라우팅 축소 (HW edge/MUX)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Graph Thinning과 목적(edge/배선 축소) 유사, 접근은 상이</td></tr><tr><td>CPM-QC H-matrix 로드 (mother/descendant)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>z=32 CPM 구조와 정합, puncturing/masking 재현은 부호설계 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CPM 구조 기반 배선/MPU 축소 아이디어는 우리 z=32 QC-LDPC·GT/HCU와 개념적으로 정합하나, latency 악화·gatecount 미제시로 실HW 이득 불확실하고 스케줄 개조 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7094410",
+  "title": "A Reduced-Complexity Iterative Scheme for Decoding Quasi-Cyclic Low-Density Parity-Check Codes",
+  "year": 2014,
+  "venue": "IEEE Information Theory Workshop (ITW)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9519,
+  "code_length": "16120",
+  "soft_quant": "무관",
+  "key_contribution": "section-wise cyclic 구조를 이용한 Merry-Go-Round(MGR) 복호로 CN/VN-MPU 및 배선 수를 CRF-c배 축소",
+  "hw_designed": "X",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "복잡도를 c배 줄이는 대가로 sub-iteration이 c배 늘어 latency 증가(throughput 감소), 실제 gatecount/합성 없음",
+  "todo_check": "z_sb=32 구조에서 CRF 값별 latency-면적 trade-off가 우리 pipeline(GT/HCU)과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7094410---a-reduced-complexity-iterative-scheme-for-decoding-quasi-cyclic-low-density-parity-check-codes-2014-ieee-itw-information-theory-workshop">ieee:7094410 - A Reduced-Complexity Iterative Scheme for Decoding Quasi-Cyclic Low-Density Parity-Check Codes (2014, IEEE ITW / Information Theory Workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

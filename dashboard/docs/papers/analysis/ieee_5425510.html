@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5425510</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5425510---a-relaxed-half-stochastic-iterative-decoder-for-ldpc-codes-2009-globecom">ieee:5425510 - A Relaxed Half-Stochastic Iterative Decoder for LDPC Codes (2009, GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>검노드는 stochastic, 변수노드는 SPA(successive relaxation)로 stochastic 스트림을 LLR로 변환하는 RHS 복호 + redecoding으로 error-floor 저감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>전체가 stochastic 스트림/RNG/XOR 검노드 아키텍처라 Prime ECC의 결정론적 min-sum 파이프라인과 부정합, FPGA/ASIC 합성 수치 없음</td></tr><tr><td>추가확인</td><td>successive relaxation(β)·redecoding(재시작) 아이디어를 결정론적 min-sum에 이식해 error-floor 개선 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 고rate 바이너리 RS-LDPC(10GBASE-T)에서 100-iter float SPA 상회 + redecoding으로 error-floor 저감, 아이디어(SR/redecoding)는 참고가치 있으나 stochastic 아키텍처 전체 이식은 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN 채널, <code>(6,32)-regular</code> RS 기반 LDPC, 길이 2048, rate 0.84, girth 6 (IEEE 802.3an 10GBASE-T).</li><li>문제: stochastic 복호는 검노드(XOR)·인터리버가 극단적으로 단순해 완전병렬 장부호에 유리하나, 변수노드 정확도 부족으로 float SPA 대비 ~0.5 dB 손실.</li><li>관찰: 성능 격차의 원인이 변수노드 구현에 있다고 보고, 검/인터리버는 stochastic로 두고 변수노드만 SPA/LLR 연산으로 정밀화.</li><li>RHS 변수노드: 입력 stochastic 스트림을 지수이동평균 <code>p_i=(1-β)p_{i-1}+β b_i</code> (식5)로 확률 추정 후 LLR 변환, SPA 합산(식2) 수행, 출력은 다시 stochastic 스트림 생성.</li><li>핵심 식 의미: 식5의 <code>β</code>(relaxation factor)는 successive relaxation으로 반복 간 메시지를 점진 갱신 → 수렴/성능 트레이드오프 제어(작을수록 성능↑, 클수록 수렴↑). β를 구간별 스케줄(1/4→1/8→1/16)로 바꿔 avg DC 15로 단축.</li><li>Redecoding: stochastic 랜덤성 덕에 실패 프레임을 초기상태에서 재시작하면 성공 가능 → trapping set(국소최적) 탈출로 error-floor 저감.</li><li>HW 구현 디테일: LLR 도메인 트래커를 2조각 선형근사(shift/shift-sub)로, RNG는 12-bit로 [-8.3,8.3] 커버, 확률→LLR 변환을 leading-zero 카운트 + 8-entry LUT(Table I)로.</li><li>양자화: 변수노드 LLR 4~5-bit, 트래커 9/12-bit로도 이상적 성능 근접(BER 1e-8에서 (12,5) 구현 손실 0.04 dB).</li><li>결과: 파형(waterfall)에서 100-iter float SPA·기존 stochastic·ASPA(4-bit) 모두 상회(BER 1e-8), redecoding으로 error-floor를 SPA 이하로 낮춤; 5.5 dB에서 RHS 9.6 clk(2.4 iter×4 clk) vs MSA 19.5 clk → throughput 약 2배.</li><li>한계: FPGA/ASIC 합성·gate count 없음(fixed-point 시뮬만), 성능은 [21] postprocessing 대비 초저 FER에서 열세 가능, stochastic RNG/스트림 인프라 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RHS 변수노드 SPA 합산 / LLR 양자화(4~5bit)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 처리·저정밀 LLR 양자화 설계 참고 가능하나 stochastic 입력 전제</td></tr><tr><td>successive relaxation(β) 메시지 점진갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>min-sum 메시지 업데이트에 relaxation 적용 여지(스케줄링)</td></tr><tr><td>redecoding(재시작으로 error-floor 저감)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>error-floor 대책 아이디어이나 랜덤성 의존이라 결정론적 min-sum엔 변형 필요</td></tr><tr><td>stochastic 스트림·XOR 검노드·인터리버</td><td>대응 없음</td><td>Prime ECC는 min-sum CN, stochastic 표현 없음</td></tr></tbody></table>
+<p>적용 가치: 중간 — successive relaxation·redecoding으로 error-floor/latency 개선 아이디어는 참고가치가 있으나, stochastic 스트림 아키텍처 전체는 min-sum bit-exact 코드베이스와 부정합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5425510",
+  "title": "A Relaxed Half-Stochastic Iterative Decoder for LDPC Codes",
+  "year": 2009,
+  "venue": "GLOBECOM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "검노드는 stochastic, 변수노드는 SPA(successive relaxation)로 stochastic 스트림을 LLR로 변환하는 RHS 복호 + redecoding으로 error-floor 저감",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "전체가 stochastic 스트림/RNG/XOR 검노드 아키텍처라 Prime ECC의 결정론적 min-sum 파이프라인과 부정합, FPGA/ASIC 합성 수치 없음",
+  "todo_check": "successive relaxation(β)·redecoding(재시작) 아이디어를 결정론적 min-sum에 이식해 error-floor 개선 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5425510---a-relaxed-half-stochastic-iterative-decoder-for-ldpc-codes-2009-globecom">ieee:5425510 - A Relaxed Half-Stochastic Iterative Decoder for LDPC Codes (2009, GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

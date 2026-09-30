@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7840415</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7840415---avoiding-trapping-sets-in-sc-ldpc-codes-under-windowed-decoding-2016-isita">ieee:7840415 - Avoiding Trapping Sets in SC-LDPC Codes under Windowed Decoding (2016, ISITA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.45</td></tr><tr><td>부호length</td><td>32000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>edge-spreading 단계에서 windowed decoder에 해로운 trapping set를 poset 우선순위로 제거하는 SC-protograph 구성 알고리즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC(convolutional)+windowed decoder 전용 구성법으로 Prime ECC의 고정 block QC-LDPC와 부호 구조가 근본적으로 다름</td></tr><tr><td>추가확인</td><td>제안 알고리즘이 array/QC-LDPC block code의 trapping set 제거에도 유효한지, BSC/Gallager A 외 BP·soft channel에서 이득 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC edge-spreading trapping set 제거 이론으로 error-floor 개선을 노리나, 부호구조·채널·디코더가 NAND binary block QC-LDPC와 맞지 않아 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 protograph 기반 SC-LDPC 부호(base protograph를 <code>L</code>번 복제·coupling, coupling width <code>w</code>), 예시는 block length 32000, rate 0.45.</li><li>문제: SC-LDPC은 threshold saturation으로 capacity에 근접하나 유한 길이에서는 trapping set으로 error floor가 남으며, 특히 windowed decoder 기준으로 해로운 trapping set을 제거해야 한다.</li><li>모델: (a,b)-trapping set(변수노드 a개, 홀수차수 체크노드 b개), critical number(최소 inducing set 크기), spread(σ2(v)&gt;σ1(v)인 변수노드 수)로 harmfulness 정의.</li><li>핵심기법(Algorithm I): base graph의 trapping set 우선순위 리스트 <code>P</code>를 받아, 해로운 subgraph의 edge를 뒤쪽 position 복사본으로 spread하고, 같은 체크노드 공유 edge를 freeze하여 later position에서 trapping set 재구성을 방지.</li><li>핵심 아이디어: cycle에 포함된 edge를 우선 spread하면 girth 개선과 다수 trapping set 동시 제거 효과가 크다.</li><li>확장(Ranking): trapping set의 parent/child 관계로 poset <code>P(G)</code> 구성 — parent를 제거하면 down-set(children) 전부 제거되므로 parent 우선 제거가 더 효율적.</li><li>구현 디테일: down-set 격자 <code>J(P(G))</code>에서 maximal element를 제거하여 원하는 critical number 이하 trapping set 집합을 최소 개입으로 제거.</li><li>우선순위 리스트는 (a)critical number, (b)spread, (c)poset maximal element, (d)join down-set의 maximal element 중 선택.</li><li>결과: BSC/Gallager A, rate 0.45, length 32000, <code>L=20</code>, lifting <code>m=100</code>에서 Algorithm I이 random edge-spreading 대비 error floor를 2자릿수 이상 개선.</li><li>한계: HW 미설계, BSC/Gallager A 시뮬만, SC-LDPC/windowed decoder 특화 구성 이론, lifting 최적화는 후속 논문으로 미룸.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SC-protograph edge-spreading 부호 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix/PCM 로드)</td><td>낮음: Prime ECC는 고정 block QC-LDPC를 로드만 하며 SC/protograph 구성 파이프라인 없음</td></tr><tr><td>trapping set 기반 error-floor 대책</td><td>대응 없음</td><td>Prime ECC에 부호설계 단계의 trapping set 제거 로직 부재</td></tr><tr><td>windowed decoder</td><td>대응 없음</td><td>Prime ECC는 전체 block 디코딩(min-sum, HCU, pipeline)으로 sliding window 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — SC-LDPC convolutional + windowed decoder 전용 부호구성 이론으로, 고정 block binary QC-LDPC인 Prime ECC의 부호구조·디코딩 방식과 정합되지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7840415",
+  "title": "Avoiding Trapping Sets in SC-LDPC Codes under Windowed Decoding",
+  "year": 2016,
+  "venue": "ISITA",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.45,
+  "code_length": "32000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "edge-spreading 단계에서 windowed decoder에 해로운 trapping set를 poset 우선순위로 제거하는 SC-protograph 구성 알고리즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SC-LDPC(convolutional)+windowed decoder 전용 구성법으로 Prime ECC의 고정 block QC-LDPC와 부호 구조가 근본적으로 다름",
+  "todo_check": "제안 알고리즘이 array/QC-LDPC block code의 trapping set 제거에도 유효한지, BSC/Gallager A 외 BP·soft channel에서 이득 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7840415---avoiding-trapping-sets-in-sc-ldpc-codes-under-windowed-decoding-2016-isita">ieee:7840415 - Avoiding Trapping Sets in SC-LDPC Codes under Windowed Decoding (2016, ISITA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

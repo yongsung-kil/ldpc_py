@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6657436</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6657436---a-hybrid-belief-propagation-decoding-algorithm-of-ldpc-codes-for-fast-convergence-2013-ieee-csqrwc">ieee:6657436 - A Hybrid Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence (2013, IEEE CSQRWC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.76</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>BF 신뢰도(AWRM) 기반 적응 가중치 W(k)를 BP CN update에 곱해 수렴 가속·iteration 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>SPA(full-tanh φ) 기반이라 우리 min-sum과 스케일 다르고, W(k)가 SNR별 λ 사전 최적화(시뮬)에 의존, HW 미설계</td></tr><tr><td>추가확인</td><td>AWRM/W(k) 계산이 min-sum·soft-2/3bit 양자화 환경에서도 gain 유지되는지, error-floor 영향</td></tr></tbody></table>
+<blockquote><p>총평: BF 신뢰도로 얻은 적응 가중치를 BP 반복에 주입해 iteration을 55~76%로 줄이고 ~0.2dB gain을 내는 decoder 알고리즘 개선으로, min-sum 이식 시 재검증이 필요하지만 avg-iteration 감소 관점에서 참고 가치가 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN 채널, LDPC 코드 <code>H(M×N)</code>. 검증 코드는 IEEE802.16 (<code>n=2304</code>, <code>R=0.5</code>)과 (1023,781) EG-LDPC (<code>Rc=0.76</code>).</li><li>문제: SPA/MSA BP는 그래프의 cycle 때문에 수렴에 수백 iteration이 필요하고, 기존 조기종료(CMM, NSPC)는 "멈출 시점"만 정할 뿐 수렴 자체를 빠르게 못 함.</li><li>아이디어: SISO 디코더 출력(extrinsic)이 지나치게 낙관적이므로 가중치를 곱해 보정하고, 그 가중치를 bit-flipping(BF) 신뢰도에서 적응적으로 유도.</li><li>BF 신뢰도: MWBF의 flipping function <code>e_n = Σ(2S_m−1)w_{m,n} − |y_n|</code> (식7)에서 syndrome 기반 weighted reliability measure를 정의.</li><li>AWRM: kth iteration hard output의 평균 <code>avg[e^(k)]</code> (식8). 계속 감소하면 정정 성공, 개선 멈추면 실패로 수렴 여부 예측.</li><li>적응 가중: CN update를 <code>r = ∏sgn · φ(Σ φ(|q|, W(k)))</code> (식9)로 수정. <code>W(k)</code>는 AWRM 변화량 <code>d(k)=|avg[e^(k)]−avg[e^(k-1)]|</code> 기반 (식10) — 느린 수렴이면 W↑로 가속.</li><li>파라미터: 가중 상수 <code>λ</code>는 SNR별로 BER 최소가 되게 사전 시뮬로 정해 고정(802.16은 0.35, EG-LDPC는 0.25), kmax=100.</li><li>절차: init→CN(식9)→VN(식2)→LLR(식3)→hard decision→syndrome 검사→AWRM/W(k) 갱신 반복.</li><li>결과: SPA/CMM/NSPC 대비 최소 ANI 달성, EG-LDPC(Rc=0.76)에서 iteration을 76~55%로 감소, <code>Eb/N0=10^-5</code>에서 약 0.2dB coding gain.</li><li>한계: 순수 시뮬(HW 미설계), SPA(full-tanh φ) 기반, λ 사전 최적화 의존, throughput/gate 정보 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 디코딩 루프 + W(k) 주입</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프에 가중치 스텝 추가 가능, 단 우리는 min-sum</td></tr><tr><td>CN update 가중 φ(식9)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>full-tanh φ라 min1/min2 magnitude와 정합 재설계 필요</td></tr><tr><td>AWRM/W(k) 적응 스케일</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR 테이블과 유사 개념, 적응 인자로 재해석 여지</td></tr><tr><td>syndrome 기반 수렴판정</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>우리 조기종료는 CRC 기반, AWRM 판정과 목적 겹침</td></tr><tr><td>BF flipping function</td><td>대응 없음</td><td>Prime ECC에 BF 경로 없음, 신규 계산 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — avg-iteration 감소·waterfall gain은 매력적이나, SPA 기반 φ와 SNR별 λ 사전학습 의존성 때문에 우리 min-sum·soft-2/3bit HW에 그대로 못 붙이고 적응인자만 아이디어로 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6657436",
+  "title": "A Hybrid Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence",
+  "year": 2013,
+  "venue": "IEEE CSQRWC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.76",
+  "code_length": "2304",
+  "soft_quant": "무관",
+  "key_contribution": "BF 신뢰도(AWRM) 기반 적응 가중치 W(k)를 BP CN update에 곱해 수렴 가속·iteration 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "SPA(full-tanh φ) 기반이라 우리 min-sum과 스케일 다르고, W(k)가 SNR별 λ 사전 최적화(시뮬)에 의존, HW 미설계",
+  "todo_check": "AWRM/W(k) 계산이 min-sum·soft-2/3bit 양자화 환경에서도 gain 유지되는지, error-floor 영향"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6657436---a-hybrid-belief-propagation-decoding-algorithm-of-ldpc-codes-for-fast-convergence-2013-ieee-csqrwc">ieee:6657436 - A Hybrid Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence (2013, IEEE CSQRWC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

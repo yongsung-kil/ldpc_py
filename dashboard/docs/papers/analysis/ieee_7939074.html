@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7939074</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7939074---characterization-of-tlc-3d-nand-flash-endurance-through-machine-learning-for-ldpc-code-rate-optimization-2017-ieee-iscas">ieee:7939074 - Characterization of TLC 3D-NAND Flash Endurance through Machine Learning for LDPC Code Rate Optimization (2017, IEEE ISCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.75~0.97</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 알고리즘 개선 아님, k-means 클러스터링 기반 오프라인 code-rate 배정 방법론</td></tr><tr><td>추가확인</td><td>adaptive code-rate 전환이 Prime ECC의 고정 QC-LDPC H-matrix/dual-diagonal 인코더 구조와 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 특성화 데이터에 k-means 클러스터링을 적용해 TLC 페이지·영역별 worst BER에 맞춰 adaptive LDPC code rate를 배정, 24% user space 이득을 내는 시스템 최적화 방법론.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: TLC 3D-NAND(16kB page = 4kB chunk 4개), lower/center/upper 페이지 구분, QC-LDPC ECC, PCIe NVMe 컨트롤러 특성화 장비.</li><li>문제: 3D-NAND는 파라미터 공간·페이지/블록별 신뢰도 편차가 커 "judge-by-eye"로 최적 조건·code rate 찾기 불가능.</li><li>데이터: 800+ 블록을 3k P/E cycle 후 read해 BER 측정(수개월 캠페인), worst BER 기준으로 ECC 정정능력 설계.</li><li>핵심 기법: k-means 클러스터링으로 블록 내 유사 신뢰도 영역을 k=5로 분할, centroid 수렴까지 반복.</li><li>문제점: 단순 k-means는 클러스터 분리가 불명확하고 컨트롤러에 구현하기엔 복잡도 과다.</li><li>확장(제약 클러스터링): semi-supervised 제약(한 TLC 페이지의 chunk는 동일 클러스터, 페이지 인접성, lower/center/upper 동일 클러스터 공유)을 부과해 6개 클러스터로 분리, 펌웨어 구현 용이화.</li><li>부호구조: QC-LDPC H-matrix가 circulant 배열이라 modular 인코딩·layered 복호가 가능해 code rate를 HW 구조 변경 없이 adaptive하게 조정 가능(식 1).</li><li>최적화(식 2): 페이지 타입·클러스터별 worst BER에 FER=1e-4 유지 code rate 배정, 등가 code rate = Σ(n_j·CR_ij)/(3·WL).</li><li>결과(실측): 단일 code rate 0.75(보수적) 대비 페이지 분리 시 0.87(16% 이득), 클러스터링까지 적용 시 등가 rate 0.93으로 24% user space 이득.</li><li>한계: LDPC 디코더/알고리즘 자체 개선 아님, 오프라인 클러스터링 기반 code-rate 배정 방법론, code length·HW 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<blockquote><p>대상=other (특성화+클러스터링 기반 code-rate 최적화 방법론, 디코더 알고리즘 미변경). 디코더 성능 항목은 N/A.</p></blockquote>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>adaptive QC-LDPC code rate 배정</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>code rate/H-matrix 선택 계층에 참고 가능하나 Prime ECC는 고정 QC-LDPC라 재검증 부담</td></tr><tr><td>worst BER 특성화 / BER 측정</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>페이지별 RBER 프로파일 주입 개념 참조 가능</td></tr><tr><td>k-means 클러스터링 방법론</td><td>대응 없음</td><td>오프라인 특성화 도구, 런타임 디코더/인코더와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — LDPC 알고리즘 개선은 아니나 TLC 페이지·영역별 worst BER에 맞춘 adaptive code-rate 배정 방법론으로 시스템 레벨 ECC 설계 참고 가치 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7939074",
+  "title": "Characterization of TLC 3D-NAND Flash Endurance through Machine Learning for LDPC Code Rate Optimization",
+  "year": 2017,
+  "venue": "IEEE ISCAS",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.75~0.97",
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "k-means 제약 클러스터링으로 TLC 페이지/영역별 worst BER에 adaptive LDPC code rate 배정, 24% user space 이득",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "LDPC 알고리즘 개선 아님, k-means 클러스터링 기반 오프라인 code-rate 배정 방법론",
+  "todo_check": "adaptive code-rate 전환이 Prime ECC 고정 QC-LDPC H-matrix/dual-diagonal 인코더 구조와 정합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7939074---characterization-of-tlc-3d-nand-flash-endurance-through-machine-learning-for-ldpc-code-rate-optimization-2017-ieee-iscas">ieee:7939074 - Characterization of TLC 3D-NAND Flash Endurance through Machine Learning for LDPC Code Rate Optimization (2017, IEEE ISCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

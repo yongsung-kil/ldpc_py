@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6804933</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6804933---enhanced-precision-through-multiple-reads-for-ldpc-decoding-in-flash-memories-2014-ieee-jsac">ieee:6804933 - Enhanced Precision Through Multiple Reads for LDPC Decoding in Flash Memories (2014, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.9021</td></tr><tr><td>부호length</td><td>8225</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>NAND read의 word-line 전압을 채널 상호정보(MI) 최대화로 최적 배치, 소수(2~3) 추가 read로 full-soft에 근접하는 FER 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>미상</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>quantization은 채널 LLR만 대상, 디코더 내부 메시지는 float. HW/gatecount 미제시</td></tr><tr><td>추가확인</td><td>constant-ratio/MMI로 얻은 threshold를 Prime ECC의 2SD/3SD LLR 테이블(PARAM_LLR)에 맞춰 재도출 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND multiple-read 전압을 MI 최대화로 최적화해 소수 read로 soft-decoding 이득을 얻는 방법으로, Prime ECC의 soft-read threshold/LLR 테이블 설계에 직접 이식 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NAND SLC(2-level)/MLC(4-level) read 채널, rate 0.9021 irregular LDPC(k=8225), sequential BP 최대 50 iter, BCH(t=64) 대비.</li><li>문제: Flash sense-amp은 read당 1bit(hard)만 주는데 LDPC는 soft가 필요; 균일 간격 다중 read 전압은 성능이 나쁨.</li><li>모델: threshold voltage를 Gaussian mixture로 모델(SLC=BPSK+AWGN), MLC는 retention 노이즈 모델[16]로 비대칭 채널 반영.</li><li>핵심기법: 추가 read의 word-line 전압 <code>q</code>를 quantized read 채널의 상호정보 <code>I(X;Y)</code> 최대화(MMI)로 선택; 2-read/3-read는 <code>dI/dq=0</code>을 bisection으로 해석적 도출.</li><li>핵심식: <code>I(X;Y)=H(Y)-H(Y|X)</code>, threshold별 crossover <code>p_i</code>가 <code>Q((√Es±q)/√(N0/2))</code> — MI를 최대화하는 전압이 정보량을 최대로 준다.</li><li>확장: MLC 4-level은 6-read(7-region) DMC로 일반화, 다중 파라미터 <code>q1..q6</code>를 수치최적화.</li><li>구현 트릭: constant-ratio(CR) 제약 — erasure 영역 크기를 단일비 <code>R</code>로 묶어 다차원 최적화를 단일 파라미터 quasi-concave 문제로 축소, 성능 손실 거의 없음.</li><li>최적화: brute-force + bisection으로 MMI 전압 탐색; DE threshold로 코드별 정밀도별 성능 교차 확인.</li><li>결과: 2~3 read로 single/hard 대비 full-soft 격차 절반 이상 회복, LDPC가 BCH 대비 큰 우위. 잘 설계된 Code2는 MMI가 FER도 최소화.</li><li>한계: 잘못 설계된 Code1(작은 (4,2)/(5,1) absorbing set)은 MMI가 FER 최소를 못 줌 → error-floor 완화 위해 더 넓은 erasure(R=15) 선호. HW 미설계, 내부 메시지 float.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MMI/constant-ratio word-line 전압 최적화</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-read threshold 배치에 직접 대응 — 2SD/3SD read 전압 최적화에 이식</td></tr><tr><td>soft LLR 양자화(2~3read → LLR)</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>quantized read를 LLR 테이블로 매핑하는 부분과 직결</td></tr><tr><td>absorbing set로 인한 error-floor·quantization 상호작용</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>erasure 폭/정밀도가 error-floor에 영향 — 코드-정밀도 공동설계 시사</td></tr><tr><td>irregular 부호 degree distribution 설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 부호는 고정 QC-LDPC라 degree분포 재설계는 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — soft-read 전압/LLR threshold를 MI 기준으로 최적화하는 절차가 Prime ECC의 <code>channel.cpp</code> threshold·<code>PARAM_LLR</code> 설계에 그대로 이식 가능하며 read 횟수(비용) 절감 이득이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6804933",
+  "title": "Enhanced Precision Through Multiple Reads for LDPC Decoding in Flash Memories",
+  "year": 2014,
+  "venue": "IEEE JSAC",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.9021,
+  "code_length": "8225",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "NAND multiple-read word-line 전압을 채널 MI 최대화(MMI)+constant-ratio로 최적 배치, 소수 read로 full-soft 근접 FER 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "미상",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "quantization은 채널 LLR만 대상, 디코더 내부 메시지는 float. HW/gatecount 미제시",
+  "todo_check": "MMI/constant-ratio threshold를 Prime ECC의 2SD/3SD LLR 테이블(PARAM_LLR)에 맞춰 재도출 가능한지 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6804933---enhanced-precision-through-multiple-reads-for-ldpc-decoding-in-flash-memories-2014-ieee-jsac">ieee:6804933 - Enhanced Precision Through Multiple Reads for LDPC Decoding in Flash Memories (2014, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

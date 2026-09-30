@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6820914</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6820914---thermal-aware-task-mapping-for-reconfigurable-channel-decoding-2014-ieee-isbb">ieee:6820914 - Thermal-Aware Task Mapping for Reconfigurable Channel Decoding (2014, IEEE ISBB)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>재구성형 radix-4 SISO 커널의 turbo/LDPC 열분포 균형을 위한 3가지 thermal-aware task mapping</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 복호/부호설계와 무관, turbo/LDPC 공용 커널의 온도 균형(floorplan/스케줄링)만 다룸</td></tr><tr><td>추가확인</td><td>없음 (NAND binary QC-LDPC ECC 이식과 연결점 없음)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 정정성능·HW 알고리즘과 무관한 열 관리(task mapping) 논문으로 Prime ECC 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 HW는 LTE/WiMAX용 turbo와 WiMAX용 LDPC를 겸용하는 재구성형 radix-4 SISO 커널([4]), TSMC 90nm, 250MHz, 코어면적 <code>0.36mm²</code>.</li><li>풀려는 문제: 재구성 커널에서 turbo/LDPC 모드가 서로 다른 모듈을 활성화해 열분포가 불균형해지고 hotspot이 발생함.</li><li>LDPC 모드는 QC-LDPC 확장계수 <code>z=96</code>, two-phase message-passing, 반복당 <code>8z</code> 사이클로 복호(부호 스펙 이상 언급 없음).</li><li>turbo 모드 총전력 <code>382.6mW</code> vs LDPC 모드 <code>103.78~197.24mW</code> — turbo가 열의 주원인, RPU-α/β/βd·ACU가 주 발열원.</li><li>기법 A: turbo/LDPC 서브블록을 시간축에서 교차(interchange) 배치해 turbo 누적 발열을 분산.</li><li>기법 B: turbo 서브블록 중간에 idle cycle(<code>I</code>)을 삽입해 누적 전력을 낮춤(대신 복호시간 증가).</li><li>기법 C: 2/4/8 SISO 커널 병렬화로 작업 마이그레이션, working→idle 커널로 turbo 서브블록 이전.</li><li>열 시뮬은 HotSpot 5.02, ambient 45°C, turbo:LDPC 블록비 16:96(=1:6)로 평가.</li><li>결과: <code>Ts=T/48</code>로 baseline 대비 최대 2.43°C 저감, idle+2-SISO 조합 시 최대 <code>4.8°C</code> peak 온도 감소(단 idle 시 복호시간 최대 25.89% 증가).</li><li>한계: 부호설계·복호 알고리즘·정정성능 개선이 전혀 없고 순수 물리설계(열/스케줄링) 최적화이며 NAND와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>radix-4 SISO 열/전력 task mapping</td><td>대응 없음</td><td>Prime ECC는 bit-exact 알고리즘 시뮬레이터로 열/floorplan 모델 없음</td></tr><tr><td>turbo/LDPC 겸용 SISO 커널</td><td>대응 없음</td><td>Prime ECC는 binary QC-LDPC 전용, turbo·SISO 커널 미보유</td></tr><tr><td>QC-LDPC z=96 two-phase MP</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적 유사(반복 MP)일 뿐 기법 이식점 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 부호설계/복호 성능/HW 데이터패스가 아닌 열 관리·스케줄링만 다뤄 Prime ECC에 떼어낼 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6820914",
+  "title": "Thermal-Aware Task Mapping for Reconfigurable Channel Decoding",
+  "year": 2014,
+  "venue": "IEEE ISBB",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "미상",
+  "key_contribution": "재구성형 radix-4 SISO 커널의 turbo/LDPC 열분포 균형을 위한 3가지 thermal-aware task mapping",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "LDPC 복호/부호설계와 무관, turbo/LDPC 공용 커널의 온도 균형(floorplan/스케줄링)만 다룸",
+  "todo_check": "없음 (NAND binary QC-LDPC ECC 이식과 연결점 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6820914---thermal-aware-task-mapping-for-reconfigurable-channel-decoding-2014-ieee-isbb">ieee:6820914 - Thermal-Aware Task Mapping for Reconfigurable Channel Decoding (2014, IEEE ISBB)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

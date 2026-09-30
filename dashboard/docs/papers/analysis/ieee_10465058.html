@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10465058</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10465058---a-high-flexibility-decoding-structure-with-high-hardware-utilization-efficiency-for-qc-ldpc-2023-gc-wkshps">ieee:10465058 - A High Flexibility Decoding Structure with High Hardware Utilization Efficiency for QC-LDPC (2023, GC Wkshps)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.323</td></tr><tr><td>부호length</td><td>26112</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>다양한 코드길이 동시복호 가능한 reconfigurable QC-LDPC 디코더 + 계층 내 노드 dynamic planning으로 메모리 충돌 해소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>23.713Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G BG1/BG2 다길이 동시복호가 목적이라 NAND 단일 고정 QC-LDPC엔 permutation network 오버스펙, LLR 양자화 9/9/6bit로 NAND soft-read 예산 초과</td></tr><tr><td>추가확인</td><td>dynamic planning 노드 재배열이 HCU/GT 기반 z=32 파이프라인의 메모리 충돌에 적용 가능한지, 정정능력(BER) 그래프 부재라 성능 손실 여부 확인</td></tr></tbody></table>
+<blockquote><p>총평: 다길이 5G QC-LDPC용 HW 활용효율(HUE) 구조라 NAND 단일코드엔 부분 이식 가능하나 다코드 유연성 기능은 불필요(추천도 중).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR QC-LDPC, base graph BG1(46×68, Hcore 4×26) / BG2(42×52), lifting <code>Z</code>=2~384(51종), 각 <code>Z</code>행=1 layer로 병렬.</li><li>문제: 기존 flexible 5G 디코더는 short code(작은 <code>Z</code>)에서 처리유닛이 놀아 처리율·자원활용률(HUE)이 낮음.</li><li>채널/복호모델: 계층복호(layered) + normalized min-sum(NMS), <code>L_c2v = α·M(i)·∏sgn</code>, <code>α∈[0.5,1]</code>, min1/min2만 계산.</li><li>핵심기법 1단(reconfigurable 구조): [8]의 segmented shifter를 개조해 제어신호를 path별 분리·재그룹, <code>Z&lt;Zmax</code>일 때 서로 다른 길이 codeword를 concat해 동시복호 → HUE↑.</li><li>의미: 384 path를 6 segment로 분할, 최대 6개 입력 동시복호(단, lifting 합 ≤384)로 놀던 자원을 재사용.</li><li>핵심기법 2단(dynamic planning): 계층 내 노드 재배열 - 이전 layer 갱신 미완료 노드는 rightmost로 이동(conflict node), shared node는 NPU 2단에서 우선 갱신하여 메모리 read/write 충돌 회피.</li><li>부수트릭: offset permutation으로 LLR 원위치 복귀 생략, 4-stage pipeline shifter, ping-pong으로 sign bit 선캐싱, segment별 독립 XOR early termination, buffer로 완료 codeword freeze.</li><li>학습절차: 없음.</li><li>결과: idle cycle 10→3 감소; Z=192에서 평균 throughput 23.713Gbps(비교군 [3] 16.250Gbps), Zmax에서 [7] 대비 Mbps/kLUT +25.14%·Mbps/BRAM +165.5%, Fclk 346MHz, LUT 122839, quantization (9,9,6).</li><li>한계: 정정능력(BER) 곡선 없이 HUE/throughput만 보고, 시뮬 아닌 FPGA 구현 결과이나 부호성능 개선은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered NMS 복호(min1/min2, α scaling)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>min-sum 코어는 이미 보유, α scaling은 코드상 명시 미확인이라 참고 가능</td></tr><tr><td>dynamic planning 노드 재배열(메모리 충돌 회피)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 z=32/HCU/pipeline의 메모리 라우팅 개선에 개념적 적용 여지, 이식 난이도 중</td></tr><tr><td>reconfigurable permutation shifter(다길이)</td><td>대응 없음</td><td>Prime ECC는 단일 고정 QC-LDPC라 다코드 shifter 불필요</td></tr><tr><td>segment별 XOR early termination</td><td><code>partial_CRC.cpp</code>, <code>full_CRC.cpp</code></td><td>조기종료 개념 대응, 우리는 CRC 기반이라 방식 상이</td></tr><tr><td>ping-pong sign-bit 선캐싱</td><td>대응 없음</td><td>6-stage pipeline과 다른 별도 메모리 스킴</td></tr><tr><td>HW edge/MUX 스케줄</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>Graph Thinning의 edge 선택과 유사 목적(클록당 처리 최적화)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — dynamic node reordering을 통한 메모리 충돌 회피 아이디어는 HCU/GT 기반 파이프라인의 라우팅 병목에 참고할 여지가 있으나, 핵심인 다길이 동시복호 유연성은 단일 고정 부호를 쓰는 NAND용에 불필요하고 부호성능 개선도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10465058",
+  "title": "A High Flexibility Decoding Structure with High Hardware Utilization Efficiency for QC-LDPC",
+  "year": 2023,
+  "venue": "GC Wkshps",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.323,
+  "code_length": "26112",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "다양한 코드길이 동시복호 가능한 reconfigurable QC-LDPC 디코더 + 계층 내 노드 dynamic planning으로 메모리 충돌 해소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 23.713,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "5G BG1/BG2 다길이 동시복호가 목적이라 NAND 단일 고정 QC-LDPC엔 permutation network 오버스펙, LLR 양자화 9/9/6bit로 NAND soft-read 예산 초과",
+  "todo_check": "dynamic planning 노드 재배열이 HCU/GT 기반 z=32 파이프라인의 메모리 충돌에 적용 가능한지, 정정능력(BER) 그래프 부재라 성능 손실 여부 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10465058---a-high-flexibility-decoding-structure-with-high-hardware-utilization-efficiency-for-qc-ldpc-2023-gc-wkshps">ieee:10465058 - A High Flexibility Decoding Structure with High Hardware Utilization Efficiency for QC-LDPC (2023, GC Wkshps)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8403902</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8403902---a-probabilistic-parallel-bit-flipping-decoder-for-low-density-parity-check-codes-2019-ieee-tcas-i">ieee:8403902 - A Probabilistic Parallel Bit-Flipping Decoder for Low-Density Parity-Check Codes (2019, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>155~1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>각 VN이 energy별 확률 <code>p(En)</code>로 국소·병렬 flip - global Maximum Finder 제거로 임계경로 단축·주파수·정정능력 동시 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.35~0.37mm2@90nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>2~2.5Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC hard-decision 전용(min-sum 근접 목표), soft-read LLR 미활용이라 NAND soft decoding 이점과 상충, regular code 위주 검증</td></tr><tr><td>추가확인</td><td>Prime ECC의 z=32 QC-LDPC(고VN degree, high-rate)와 dv=3 regular BSC 코드 간 성능/오류바닥 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: global MF/SC 제거로 임계경로를 줄인 확률적 병렬 BF 디코더 - hard-only BSC라 NAND soft decoding과는 결이 다르나 저복잡도 고throughput 하드디시전 경로로 참고가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC(crossover <code>α</code>) 상의 regular LDPC(예 Tanner <code>dv=3,dc=5,N=155</code>; <code>dv3R050N1296</code> R=0.5; R=0.75 코드), 채널 hard-info만 사용하는 BF 디코더.</li><li>문제: GDBF/PGDBF/MBF는 최대 energy 탐색용 global Maximum Finder(MF)와 Syndrome Check(SC)가 임계경로를 늘려 주파수·throughput을 제한.</li><li>모델: CN은 XOR parity, VN energy <code>En(k)=(vn⊕yn)+ (unsatisfied 이웃 CN 수)</code>로 0~<code>dv+1</code> 정수.</li><li>핵심 기법(PPBF): 각 VN이 자신의 <code>En</code>에 대응하는 확률 <code>p(En)</code>으로 Bernoulli 난수 <code>Rn</code>을 생성, <code>Rn=1</code>이면 flip - 전 VN이 서로 다른 확률로 flip 후보라 global MF 불필요.</li><li>식 의미: flip 확률을 energy에 종속시키면 결정적 GDBF의 진동(oscillation)을 깨 수렴, PGDBF(최대 energy VN만 flip)가 못 푸는 TS(5,3) 등 trapping-set 패턴도 정정.</li><li>확장(NS-PPBF): energy-1 VN 중 <code>vn⊕yn</code> 기인분만 flip 억제하는 종료 메커니즘으로 SC를 임계경로에서 제거(추가 MUX2to1 1개).</li><li>구현 트릭: 난수원은 LFSR 대신 CSTS(Cyclic Shift Truncated Sequence) + 논리게이트 PCU로 <code>p=(0,pr^4,pr,1-pr,1)</code>(pr=0.3) 등 원하는 확률 생성, <code>Nc=1</code> cycle/iteration.</li><li>p 최적화: 6400개 <code>p</code> 조합 통계로 다수의 <code>p</code>가 PGDBF 대비 이득(일부 GDBF 대비 1.4 decade), <code>p</code> 선택 자유도 큼.</li><li>결과(ASIC 90nm SAED-EDK90): fmax PPBF 476MHz/NS-PPBF 556MHz(GDBF 385, PGDBF 357, MS 250), throughput 2~2.5Gbps(worst), area 0.35~0.37mm2(MS의 1/4), FER는 MS에 근접·PGDBF 대비 최대 2 decade↑.</li><li>한계: BSC hard-decision 전용(soft LLR 미사용), 에너지 랜덤성으로 전력↑(0.59~0.6pJ/bit vs GDBF 0.24), 대부분 regular code 검증, iteration 수 자체는 감소 아님(성능 위해 Itmax 크게).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PPBF 디코딩 알고리즘 전체(VN energy 기반 확률 flip)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프에 BF 대안 경로로 이식 가능하나 Prime ECC는 min-sum 기반이라 대체/공존 설계 필요</td></tr><tr><td>CN XOR parity 연산</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>BF의 CN은 순수 XOR로 min-sum sign 경로와 유사 접점</td></tr><tr><td>VN energy 계산·양자화(hard)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>HD 경로 VNU에 energy+확률 flip 로직 대체 가능</td></tr><tr><td>SC 조기종료 제거(NS-PPBF)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>종료판정 접점이나 Prime ECC는 CRC 기반이라 SC-free 메커니즘과 직접 대응은 약함</td></tr><tr><td>CSTS/PCU 난수 생성</td><td>대응 없음</td><td>Prime ECC는 확정적 min-sum이라 확률 flip용 난수 생성기 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - hard-decision BF 계열 저복잡도·고throughput 디코더로 Prime ECC의 HD 경로 대안으로는 참고가치 있으나, soft(2SD/3SD) 미활용·min-sum과 알고리즘 계열이 달라 직접 대체 이식은 부담.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8403902",
+  "title": "A Probabilistic Parallel Bit-Flipping Decoder for Low-Density Parity-Check Codes",
+  "year": 2019,
+  "venue": "IEEE TCAS-I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.75",
+  "code_length": "155~1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "각 VN이 energy별 확률 p(En)로 국소·병렬 flip - global Maximum Finder 제거로 임계경로 단축·주파수·정정능력 동시 개선",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.35~0.37mm2@90nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": "2~2.5",
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC hard-decision 전용(min-sum 근접 목표), soft-read LLR 미활용이라 NAND soft decoding 이점과 상충, regular code 위주 검증",
+  "todo_check": "Prime ECC의 z=32 QC-LDPC(고VN degree, high-rate)와 dv=3 regular BSC 코드 간 성능/오류바닥 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8403902---a-probabilistic-parallel-bit-flipping-decoder-for-low-density-parity-check-codes-2019-ieee-tcas-i">ieee:8403902 - A Probabilistic Parallel Bit-Flipping Decoder for Low-Density Parity-Check Codes (2019, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

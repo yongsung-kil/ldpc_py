@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8855948</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8855948---speeding-up-ldpc-decoder-by-inter-frame-pipeline-for-wireless-laser-communications-2019-ieeecic-iccc">ieee:8855948 - Speeding up LDPC Decoder by Inter-Frame Pipeline for Wireless Laser Communications (2019, IEEE/CIC ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>4008</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>column-serial layered 디코더의 layer간 idle clock을 2프레임 파이프라인(IFP)으로 채워 throughput 30%↑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2.429Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>latency가 1080ns 증가하고 RAM 2배(78 BRAM 추가) 소모, 순수 throughput 트릭이라 정정성능 무개선</td></tr><tr><td>추가확인</td><td>column-serial layered가 우리 z=32 병렬/HCU/GT pipeline 구조와 정합되는지, IFP의 2프레임 버퍼가 NAND 저지연 요구와 상충하지 않는지</td></tr></tbody></table>
+<blockquote><p>총평: layered 디코더의 layer간 유휴 clock을 프레임 인터리빙으로 흡수하는 순수 throughput 최적화로, 아이디어는 이식 가능하나 latency·메모리 비용이 커 NAND 적용 가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: FSO(무선 레이저) 통신용 QC-LDPC, <code>(4008,3507)</code>, rate <code>0.875</code>, base matrix <code>3×24</code>, sub-matrix <code>167×167</code>, max col weight 3, BPSK.</li><li>문제: column-serial layered 디코더는 CNU가 <code>nc</code>개 직렬 입력의 min1/min2를 다 처리해야 출력 → 다른 모듈(LS/AS/SUB/ADD/BS)이 layer당 <code>Call-nc</code> clock을 idle로 낭비.</li><li>채널/모델: AWGN 기반 LLR 초기화 <code>Λ = 2y/σ²</code>, NMSA 기반 layered decoding(LDA).</li><li>핵심기법: Inter-Frame Pipeline(IFP) — REC 모듈이 2프레임 LLR을 ping-pong으로 수신, 첫 프레임이 iteration 루프에 진입한 뒤 둘째 프레임을 idle clock에 삽입해 layer당 소비 clock을 <code>2nc</code>로 유지하며 유휴 제거.</li><li>근거식: 절감 clock <code>Cearn=(Call-nc)×mL×mI</code>, 소요 clock <code>Cneed=nc×mL×mI+Δ</code> — idle 구간을 valid 처리로 전환해 유효 clock 밀도 최대화.</li><li>확장: DMFP[14]가 3프레임 이상 저장으로 지연 폭증하는 것과 달리 IFP는 정확히 2프레임만 저장해 지연 최소화.</li><li>구현 디테일: CNU는 min1(<code>vmin</code>)/min2(<code>vsmin</code>)/index(<code>vid</code>)/sign 추출, ADD·SUB의 특수 로직(Algorithm 1)으로 Rcv 복원, Sign 모듈은 redundant delay 없이 pipeline 참여.</li><li>최적화: 별도 학습 없음(구조적 스케줄링 기법).</li><li>결과: Xilinx VU13P, f=220MHz, niter=5, Δ=3 → throughput <code>2429Mbps</code>(IFP 없을 때 1825Mbps 대비 <code>+604Mbps</code>, 약 30%↑), delay <code>3.28us</code>.</li><li>한계: HW는 FPGA만(ASIC/gate count 없음), 정정성능·error-floor 무개선, latency +1080ns 및 RAM 2배 소모, FSO 고rate 코드 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>column-serial layered 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>IFP는 iteration/layer 스케줄 레벨 트릭, 루프 스케줄러에 대응</td></tr><tr><td>CNU min1/min2/sign 추출</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum CN 연산 보유, 중복</td></tr><tr><td>pipeline 유휴 clock 흡수(IFP)</td><td>decoder.cpp pipeline 6-stage 모델</td><td>우리는 GT/HCU로 이미 clock당 edge 축소, IFP 프레임 인터리빙은 별개 접근</td></tr><tr><td>2프레임 LLR 버퍼링/REC ping-pong</td><td>대응 없음</td><td>프레임 파이프라인 버퍼 모듈은 프로파일에 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layer간 유휴 clock을 프레임 인터리빙으로 흡수하는 아이디어는 우리 pipeline 디코더 처리량 향상에 참고 가능하나, latency 증가·RAM 2배 비용이 NAND 저지연 요구와 상충하고 정정성능 무개선.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8855948",
+  "title": "Speeding up LDPC Decoder by Inter-Frame Pipeline for Wireless Laser Communications",
+  "year": 2019,
+  "venue": "IEEE/CIC ICCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "4008",
+  "soft_quant": "무관",
+  "key_contribution": "column-serial layered 디코더의 layer간 idle clock을 2프레임 파이프라인(IFP)으로 채워 throughput 30% 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 2.429,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "latency 1080ns 증가 및 RAM 2배 소모, throughput 트릭이라 정정성능 무개선",
+  "todo_check": "column-serial layered가 우리 z=32/HCU/GT pipeline 구조와 정합되는지, 2프레임 버퍼가 NAND 저지연과 상충하지 않는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8855948---speeding-up-ldpc-decoder-by-inter-frame-pipeline-for-wireless-laser-communications-2019-ieeecic-iccc">ieee:8855948 - Speeding up LDPC Decoder by Inter-Frame Pipeline for Wireless Laser Communications (2019, IEEE/CIC ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

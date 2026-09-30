@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9254828</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9254828---design-of-an-iteration-reduced-ldpc-cc-decoder-based-on-compact-decoding-architecture-2020-ieee">ieee:9254828 - Design of an Iteration-Reduced LDPC-CC Decoder Based on Compact Decoding Architecture (2020, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC-CC pipeline 디코더에 stopping rule + weighting factor(correction/offset factor)를 결합해 초기지연/저장공간 절반 감소 및 평균 iteration 대폭 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 LDPC-CC(convolutional code)로 QC-LDPC block code인 Prime ECC와 구조가 근본적으로 다름(FIFO 기반 pipeline 프로세서, memory length 개념)</td></tr><tr><td>추가확인</td><td>offset/correction weighting factor를 min-sum normalized/offset factor와 동일 개념으로 볼 수 있는지, block code로 재해석 가능한지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 컨볼루션 코드(LDPC-CC) 전용 pipeline 디코더 구조 논문으로 stopping rule과 weighting factor 아이디어는 min-sum 보정과 유사하나, 대상 부호 자체가 block QC-LDPC와 다른 컨볼루션 코드 특유 아키텍처(FIFO, 인접 프로세서 이격)라 Prime ECC(block QC-LDPC)로 직접 이식하기 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 rate 1/2, (ms,3,6) regular LDPC-CC(convolutional code, memory length ms=128/256/512bit), AWGN+BPSK 채널.</li><li>기존 compact pipeline decoder는 OVA(on-demand variable node activation) 대비 초기지연/저장공간은 줄였지만 복잡도는 동일하고, stopping rule 단독으로는 지연/저장공간 절감 효과가 없었다는 문제를 지적.</li><li>채널은 AWGN, 인코더 레지스터 초기값은 0, LLR 초기화는 <code>I(n) = 4R·r(n)·Eb/N0</code>.</li><li>핵심 기법: compact decoder(인접 프로세서 간격 <code>S = ms/2+1</code>)에 프로세서별 카운터 기반 stopping rule을 추가 — parity-check 만족이 ms회 연속되면 해당 프로세서를 sleep 모드로 정지.</li><li>CNU 갱신식에 weighting factor(<code>α</code>=correction factor, <code>β</code>=offset factor)를 추가하여 min-sum 근사의 message 진폭을 보정, parity-check node 업데이트로 인한 오차 전파를 완화(식 (8)(9), 시뮬로 α=0.8, β=0.4가 최적).</li><li>VNU는 기존 OVA와 동일한 on-demand 갱신 방식 유지, 프로세서 N에서만 hard decision 수행.</li><li>구현 디테일: 프로세서당 FIFO 레지스터 (J+1)개, 각 FIFO 길이 <code>2(ms+1)</code>; compact 구조 채택 시 저장공간 <code>(N·S+ms+1-S)·2(J+1)</code>, 초기지연 <code>N·S+ms+1-S</code> 비트로 OVA 대비 약 50% 감소.</li><li>별도 학습/최적화 절차 없음, α/β는 MATLAB 시뮬레이션 스윕으로 결정(그리드서치 성격).</li><li>결과: BER=10^-4에서 OVA 대비 약 0.3dB 이득, (128,3,6) 코드에서 2.4dB SNR 시 평균 iteration이 10(최대)에서 6으로 감소, 초기지연/저장공간 약 50% 절감.</li><li>한계: HW(RTL/FPGA) 미설계, MATLAB 시뮬레이션뿐이며 gatecount/throughput 미제시. 대상 부호가 LDPC-CC(convolutional)로 QC-LDPC block code와 구조가 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CNU weighting factor(correction/offset) 보정</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min-sum 보정 계수 아이디어는 개념상 유사하나 LDPC-CC 전용 수식이라 직접 이식은 재검증 필요</td></tr><tr><td>stopping rule(프로세서별 카운터)</td><td>decoder.cpp 이터레이션 루프, partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 이미 CRC 기반 조기종료를 보유하므로 중복 기여, LDPC-CC의 개별 프로세서 sleep 방식은 block code 구조와 불일치</td></tr><tr><td>pipeline 프로세서(FIFO 기반, 인접거리 S) 구조</td><td>대응 없음</td><td>LDPC-CC 특유의 convolutional 구조로 QC-LDPC block decoder(z=32 병렬)와 근본적으로 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음. weighting factor와 조기종료 아이디어의 방향성은 참고할 만하나, 대상 코드가 컨볼루션 코드 전용 pipeline 아키텍처이고 Prime ECC는 이미 유사 기능(조기종료, min-sum 보정)을 보유하고 있어 중복이며 이식 시 재설계 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9254828",
+  "title": "Design of an Iteration-Reduced LDPC-CC Decoder Based on Compact Decoding Architecture",
+  "year": 2020,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC-CC pipeline 디코더에 stopping rule + weighting factor(correction/offset factor)를 결합해 초기지연/저장공간 절반 감소 및 평균 iteration 대폭 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상 부호가 LDPC-CC(convolutional code)로 QC-LDPC block code인 Prime ECC와 구조가 근본적으로 다름(FIFO 기반 pipeline 프로세서, memory length 개념)",
+  "todo_check": "offset/correction weighting factor를 min-sum normalized/offset factor와 동일 개념으로 볼 수 있는지, block code로 재해석 가능한지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9254828---design-of-an-iteration-reduced-ldpc-cc-decoder-based-on-compact-decoding-architecture-2020-ieee">ieee:9254828 - Design of an Iteration-Reduced LDPC-CC Decoder Based on Compact Decoding Architecture (2020, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6811973</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6811973---a-high-throughput-ldpc-decoder-for-optical-communication-2013-ieee">ieee:6811973 - A High-Throughput LDPC Decoder For Optical Communication (2013, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.833</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>클록 양엣지(clock multiplexing)로 완전병렬 디코더 처리량 2배 및 배선혼잡 완화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>54.2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Optical(WiMAX 5/6) 타깃, 면적 57.6mm2·고전력, gatecount 미제시</td></tr><tr><td>추가확인</td><td>clock multiplexing의 타이밍 제약이 NAND ECC 클록/pipeline에 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 광통신용 완전병렬 처리량 극대화 HW 트릭으로, min-sum 자체는 이미 보유, NAND 고rate QC-LDPC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>타깃: WiMAX 5/6 code rate LDPC, 광통신 100Gb/s급 초고속 처리량 목표(완전병렬 디코더).</li><li>문제: 완전병렬 LDPC 디코더는 병렬도가 커질수록 배선혼잡(wiring congestion)이 급증해 면적·속도가 병목.</li><li>알고리즘: Normalized Min-Sum(식 (1)) 사용, 스케일링 팩터 <code>D</code>로 <code>min</code> 근사 보정, SPA의 <code>tanh</code> 대체.</li><li>갱신식: <code>R</code> = CN→VN(부호곱 × min), <code>L</code> = VN→CN(식 (2)), 사후정보 <code>S</code>(식 (3)) → 경판정 식 (4), <code>x·H^T=0</code>(식 (5))이면 조기종료.</li><li>핵심 트릭 clock multiplexing: 메모리를 MEM0(positive edge)/MEM1(negative edge)로 2배화, 조합블록(I2RLS, RLS_RENEW)은 공유, <code>ACTIVE</code> 신호로 두 코드워드를 클록 양엣지에 교대 처리.</li><li>효과: 한 디코딩 사이클에 코드 2개 처리 → 종래 완전병렬 대비 처리량 2배, 조합블록 공유로 2칩 대비 면적 절감.</li><li>메모리 최적화: R_MEM 16bit 단위(min 5bit, 2nd min 5bit, min 위치 5bit, sign곱), LS_MEM은 sign bit만 저장 → layered 대비 LLR 메모리 5/6 절감.</li><li>양자화: 26666 스킴(INTR/L/R/S 6bit, 2bit 소수부), max iteration 15, error floor 없음.</li><li>결과: SMIC 0.13um 200MHz에서 54.2Gb/s, 면적 57.6mm2, ACE(throughput/area/clock) 1.881로 비교군 최고. 65nm·400MHz 시 108.4Gb/s 추정.</li><li>한계: 전력 매우 높음(추가개선 필요), gatecount 미제시, 광통신/WiMAX 특화, NAND soft-read·고rate QC-LDPC와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Normalized Min-Sum CN 연산 (min/2nd min/sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min-sum), 신규 기여 없음</td></tr><tr><td>VN 갱신 / 6bit 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>양자화 스킴 상이, 참고 수준</td></tr><tr><td>clock multiplexing HW arch (완전병렬)</td><td>대응 없음</td><td>Prime ECC는 z=32 row 병렬 구조로 완전병렬 아님</td></tr><tr><td>min-only R_MEM 압축 저장</td><td>대응 없음</td><td>HW 메모리 트릭, 구조 정합 어려움</td></tr></tbody></table>
+<p>적용 가치: 낮음 - min-sum·min압축은 이미 보유, 핵심인 완전병렬 clock multiplexing은 z=32 부분병렬 NAND 구조와 정합되지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6811973",
+  "title": "A High-Throughput LDPC Decoder For Optical Communication",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.833,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "클록 양엣지(clock multiplexing)로 완전병렬 디코더 처리량 2배 및 배선혼잡 완화",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 54.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "Optical(WiMAX 5/6) 타깃, 면적 57.6mm2·고전력, gatecount 미제시",
+  "todo_check": "clock multiplexing의 타이밍 제약이 NAND ECC 클록/pipeline에 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6811973---a-high-throughput-ldpc-decoder-for-optical-communication-2013-ieee">ieee:6811973 - A High-Throughput LDPC Decoder For Optical Communication (2013, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

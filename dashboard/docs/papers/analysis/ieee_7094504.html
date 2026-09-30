@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7094504</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7094504---on-the-performance-of-ldpc-and-turbo-decoder-architectures-with-unreliable-memories-2014-ieee">ieee:7094504 - On the Performance of LDPC and Turbo Decoder Architectures with Unreliable Memories (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>불신뢰 메모리 stuck-at 고장 하에서 MSB(부호비트)만 보호 + 말기 repair-iteration으로 error-floor 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 구현은 범위 밖(개념 제안), DVB-S2 rate 1/3 8bit LLR 기준이라 NAND 고rate·저비트 구성과 다름</td></tr><tr><td>추가확인</td><td>NAND용 hard/2~3bit LLR 메모리에서 MSB 보호가 부호비트 보존에 유효한지, repair-iter의 전력/지연 비용</td></tr></tbody></table>
+<blockquote><p>총평: 저전력 불신뢰 메모리 하에서 MSB 보호와 repair-iteration으로 BER floor를 완화하는 접근으로, DRAM/저전압 메모리를 쓰는 컨트롤러에는 개념적 참고가 되나 HW 미구현·통신용 코드 기준이라 직접 이식은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>DVB-S2 LDPC(N=64800, rate 1/3, QPSK, MSA)와 3GPP LTE Turbo(N=6144, rate 1/3, MAP)를 불신뢰 메모리 하에서 AWGN 채널로 시뮬.</li><li>문제: sub-45nm/eDRAM·저전압에서 embedded memory bit-cell 고장이 늘어 100% 신뢰 저장의 면적/전력 오버헤드가 지속 불가.</li><li>고장 모델: production 단계에서 각 bit-cell이 확률 <code>Ps</code>로 독립 stuck-at-0, worst-case 블록당 고장 셀 수 <code>Em = Sm × Ps0</code>로 i.i.d. 균등 주입.</li><li>채널 메모리만 vs 디코더 내부 메모리(LDPC의 LLR, Turbo의 extrinsic·state-metric) 전부에 고장 주입해 BER 열화 특성 분석.</li><li>완화1 - 불균등 보호: LLR의 부호를 담는 MSB만 보호(<code>Ps0,MSB</code>), 부호 정보가 크기보다 결정적이라는 통찰 활용.</li><li>완화2 - repair iteration: 처음 <code>X</code>~<code>MAXiter</code> 구간은 고장 존재, <code>X</code>번째 이후는 오류 없는 repair iteration(예: 말기 구간 공급전압 상승) 실행. <code>X=0</code>이면 채널메모리만 고장, <code>X=MAXiter</code>면 repair 없음.</li><li>실험: <code>Ps0</code>∈{1e-5,1e-4,1e-3,1e-2}, LDPC MAXiter=50(X∈{0,9,14,19,24,29}), Turbo MAXiter=8, genie-aided 조기종료.</li><li>LDPC 결과: 채널메모리 고장만으로도 error-floor 급상승(<code>Ps0</code>=1e-3은 전 SNR 실패), MSB 보호로 floor 회복; 내부 메모리까지 고장 시 1e-5에서도 floor 상승하나 MSB 보호로 1e-4까지 열화 없음.</li><li>repair iteration을 일찍 시작할수록 floor 개선(단 <code>X=0</code>인 채널메모리만 케이스보다 낮출 수는 없음), MSB 보호 시 추가 iteration은 1e-4 이하에서 ~5% 수준.</li><li>한계: 완화 전략의 실제 HW 구현은 논문 범위 밖, 통신용 코드(rate 1/3, 8bit LLR)·stuck-at-0 전용 모델이라 NAND 고rate·저비트 상황과 직접 연결은 추가 검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MSB(부호비트) 불균등 보호</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>LLR/메시지 양자화 저장에서 부호비트 보호 위치, 시뮬 상 주입만 가능</td></tr><tr><td>LLR 메모리 고장 주입 모델</td><td>channel.cpp <code>Set_LLR_Th()</code>, fixed-error 주입</td><td>채널/메모리 오류 모델링과 유사 개념</td></tr><tr><td>repair iteration(말기 무오류 반복)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이터레이션 스케줄에 오류-free 구간 삽입 개념</td></tr><tr><td>stuck-at 고장 하 정정능력</td><td>대응 없음</td><td>Prime ECC는 신뢰 메모리 가정, 불신뢰 메모리 모델 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 저전압/eDRAM 메모리를 쓰는 컨트롤러라면 MSB 보호·repair-iter 개념은 유용하나 HW 미구현이고 통신용 코드 기준이라 NAND 상황 재검증 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7094504",
+  "title": "On the Performance of LDPC and Turbo Decoder Architectures with Unreliable Memories",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.333,
+  "code_length": "64800",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "불신뢰 메모리 stuck-at 고장 하에서 MSB(부호비트)만 보호 + 말기 repair-iteration으로 error-floor 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 구현은 범위 밖(개념 제안), DVB-S2 rate 1/3 8bit LLR 기준이라 NAND 고rate·저비트 구성과 다름",
+  "todo_check": "NAND용 hard/2~3bit LLR 메모리에서 MSB 보호가 부호비트 보존에 유효한지, repair-iter의 전력/지연 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7094504---on-the-performance-of-ldpc-and-turbo-decoder-architectures-with-unreliable-memories-2014-ieee">ieee:7094504 - On the Performance of LDPC and Turbo Decoder Architectures with Unreliable Memories (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

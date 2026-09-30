@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8035302</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8035302---imwbf-decoding-algorithm-with-dynamic-magnitude-update-for-ldpc-codes-2017-ieee">ieee:8035302 - IMWBF Decoding Algorithm with Dynamic Magnitude Update for LDPC Codes (2017, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.76</td></tr><tr><td>부호length</td><td>273~1023</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>outlier(큰 magnitude 오류비트)의 수신 magnitude를 불만족 check수&gt;θ일 때 ρ배 축소해 flip 확률 상승</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BF/WBF 계열이라 min-sum 대비 성능 열위, 이득 0.1~0.5dB로 작고 저column-degree 부호에 국한, HW 미설계</td></tr><tr><td>추가확인</td><td>Prime ECC는 min-sum BP 채택이라 WBF 계열 전환 불필요 — outlier magnitude 축소 아이디어를 min-sum LLR에 이식 가능한지만 확인</td></tr></tbody></table>
+<blockquote><p>총평: binary regular LDPC용 BF 계열 개량으로 이식은 가능하나, Prime ECC의 min-sum 대비 정정능력이 낮고 HW 미설계라 실익 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN+BPSK, regular binary LDPC <code>(N,K,dv,dc)</code>, hard decision <code>zj</code>, 채널 magnitude <code>rj</code>를 신뢰도로 사용하는 WBF 계열.</li><li>문제: IMWBF에서 큰 magnitude를 가지나 부호가 반대인 "outlier"는 신뢰도가 높게 취급되어 flip 기회를 못 얻어 오류 잔존.</li><li>모델: outlier = magnitude 큰데 hard decision이 틀린 수신신호(deconstructive large noise). Monte Carlo로 다수 outlier가 고SNR에서도 flip 안 됨을 확인.</li><li>핵심기법: 비트 <code>j</code>가 참여한 불만족 parity-check 수 <code>fj &gt; θ</code>이면 수신 magnitude를 <code>rj = ρ·rj</code> (<code>0&lt;ρ≤1</code>)로 동적 축소.</li><li>식의 의미: magnitude가 줄면 check-based reliability <code>wj,i</code>(식1)와 flipping function <code>γj</code>(식2)가 커져 outlier의 flip 확률 상승.</li><li>확장: magnitude update는 <code>Q</code> iteration마다 1회만 수행 — 갱신효과 대기 + 복잡도 절감 목적.</li><li>구현 디테일: 파라미터 <code>α</code>(bit reliability weight), <code>θ</code>(불만족 임계), <code>ρ</code>(correction factor), <code>Q</code>(갱신 주기); 추가 곱셈복잡도 <code>Na/Q</code>로 무시가능 수준.</li><li>최적화: 파라미터 스윕으로 <code>ρ=0.8, θ=1, Q=7~10</code>이 Code1에서 최적, 저column-degree일수록 이득 큼.</li><li>결과: Code1 <code>(1008,504,3,6)</code>에서 IMWBF 대비 BER=1e-5에서 ~0.5dB 이득, DWBF 대비는 0.25dB 열위이나 복잡도 낮음.</li><li>한계: HW 미설계·시뮬만, column degree 증가 시 이득 급감(Code2에서 0.1dB), min-sum BP 대비 근본 성능 열위.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| IMWBF flipping function / 반복 루프 | decoder.cpp LDPC_Decoder() | 우리는 min-sum BP라 BF 루프로 대체 불가, 개념만 참고 |
+| outlier 수신 magnitude ρ 축소 | decoder.cpp VN_Cal_HD() 등, decoder.h Get_VNU_* | soft magnitude 조정 아이디어를 VN LLR 스케일링에 응용 여지 |
+| 불만족 check수 기반 신뢰도 갱신 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | syndrome/check 정보 활용, min-sum과 연산 상이 |
+| 채널 magnitude/양자화 | channel.cpp Set_R_Offset(), Set_LLR_Th() | AWGN magnitude를 soft-read LLR로 매핑 시 참고 |
+| 조기종료(syndrome=0) | partial_CRC.cpp / full_CRC.cpp | 종료조건 개념 유사, 구현 상이 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 min-sum BP 기반인데 본 논문은 BF/WBF 계열의 소폭(0.1~0.5dB) 개량이고 HW 미설계라, outlier magnitude 축소 발상 정도만 참고 가치가 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8035302",
+  "title": "IMWBF Decoding Algorithm with Dynamic Magnitude Update for LDPC Codes",
+  "year": 2017,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.76",
+  "code_length": "273~1023",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "outlier(큰 magnitude 오류비트)의 수신 magnitude를 불만족 check수&gt;θ일 때 ρ배 축소해 flip 확률 상승",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "BF/WBF 계열이라 min-sum 대비 성능 열위, 이득 0.1~0.5dB로 작고 저column-degree 부호에 국한, HW 미설계",
+  "todo_check": "Prime ECC는 min-sum BP 채택이라 WBF 계열 전환 불필요 — outlier magnitude 축소 아이디어를 min-sum LLR에 이식 가능한지만 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8035302---imwbf-decoding-algorithm-with-dynamic-magnitude-update-for-ldpc-codes-2017-ieee">ieee:8035302 - IMWBF Decoding Algorithm with Dynamic Magnitude Update for LDPC Codes (2017, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

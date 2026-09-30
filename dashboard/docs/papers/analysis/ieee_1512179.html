@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1512179</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1512179---a-hardware-gaussian-noise-generator-using-the-wallace-method-2005-ieee-trans-vlsi-systems">ieee:1512179 - A Hardware Gaussian Noise Generator Using the Wallace Method (2005, IEEE Trans. VLSI Systems)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1944</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Wallace 방법 기반 FPGA Gaussian noise generator로 초대량 BER 시뮬 고속화(155M samples/s, tail 정확도 확보)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>770 slices+6 BRAM+4 MULT18X18@Virtex-II</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 노이즈 생성기 검증용 응용일 뿐, 복호기/부호설계와 무관 - 이식 대상 아님</td></tr><tr><td>추가확인</td><td>Prime ECC 시뮬레이터가 대량 low-BER 검증 시 채널 노이즈 생성 병목이면 참조 가치 있음</td></tr></tbody></table>
+<blockquote><p>총평: FPGA 하드웨어 Gaussian noise 생성기 논문. LDPC 복호기/부호설계 기여 없음(응용 예시로만 등장), NAND ECC 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>목적: 초대량(10^12+ 샘플) Monte-Carlo BER 시뮬을 위한 고품질 하드웨어 Gaussian noise generator를 FPGA로 구현.</li><li>문제: rejection/central-limit/Box-Muller 등 소프트웨어 방법은 transcendental 함수(<code>log</code>,<code>sqrt</code>,<code>sin</code>)로 HW 부담·불일정 출력률; 기존 HW 설계는 tail 정확도 부족(소량 샘플 후 통계검정 실패).</li><li>핵심 기법: Wallace 방법 - 이미 생성된 정규분포 pool <code>N=1024</code>에 orthogonal matrix 변환을 반복 적용해 새 정규분포 샘플 생성, transcendental 함수 불필요.</li><li>orthogonal matrix <code>A_1</code>,<code>A_2</code> 원소는 ±1뿐 → 정수 덧셈·shift로 4개 값 동시 변환(pass 전반부 <code>A_1</code>, 후반부 <code>A_2</code>).</li><li>주소생성: <code>start</code>+random-odd <code>stride</code>+XOR <code>mask</code> 조합으로 pool 인덱싱, 상관 최소화(셋 중 하나 빠지면 품질 저하).</li><li>sum-of-squares 보정(Stage 4): pool 제곱합이 상수로 고정되는 defect를 chi-square variate로 스케일 보정, 상수 계수 곱셈기.</li><li>4-stage 파이프라인 구조: Tausworthe URNG(3 LFSR 결합) → 주소생성 → dual-port pool RAM 변환 → 제곱합 보정.</li><li>구현: Xilinx Virtex-II XC2V4000-6 @155MHz, 770 slices/6 BRAM/4 MULT18X18(디바이스 3%), 155M samples/s; Spartan-III도 구현.</li><li>검증: chi-square·Anderson-Darling 검정 대량 샘플(10^12)에서도 통과(Xilinx/Boutillon 코어는 조기 실패); LDPC <code>972x1944</code> irregular 코드 BER 시뮬로 SW Box-Muller와 무차이 확인.</li><li>한계: 노이즈 생성기 전용 HW로 LDPC 복호/부호설계와 무관; 병렬 20 인스턴스 시 라우팅 혼잡으로 클럭 저하.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| Gaussian noise 생성 (채널 노이즈) | channel.cpp (AWGN 주입) | 시뮬 채널 노이즈 소스로 개념 대응, 단 SW 시뮬레이터엔 HW noise-gen 불필요 |
+| LDPC BER 시뮬 응용 | ecc_top.cpp (시뮬 오케스트레이션/통계) | 검증 응용 예시일 뿐, 알고리즘 이식 요소 아님 |
+| Wallace pool/변환 HW arch | 대응 없음 | 복호기 데이터패스와 무관한 난수생성 회로 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — LDPC는 노이즈 생성기 품질 검증용 응용으로만 등장하며, Prime ECC의 부호설계·복호기·HW 데이터패스에 이식할 요소가 없다. 대량 low-BER 검증 시 채널 노이즈 생성 속도가 병목일 때만 간접 참고.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1512179",
+  "title": "A Hardware Gaussian Noise Generator Using the Wallace Method",
+  "year": 2005,
+  "venue": "IEEE Trans. VLSI Systems",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1944",
+  "soft_quant": "무관",
+  "key_contribution": "Wallace 방법 기반 FPGA Gaussian noise generator로 초대량 BER 시뮬 고속화(155M samples/s, tail 정확도 확보)",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "770 slices+6 BRAM+4 MULT18X18@Virtex-II",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 노이즈 생성기 검증용 응용일 뿐, 복호기/부호설계와 무관 - 이식 대상 아님",
+  "todo_check": "Prime ECC 시뮬레이터가 대량 low-BER 검증 시 채널 노이즈 생성 병목이면 참조 가치 있음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1512179---a-hardware-gaussian-noise-generator-using-the-wallace-method-2005-ieee-trans-vlsi-systems">ieee:1512179 - A Hardware Gaussian Noise Generator Using the Wallace Method (2005, IEEE Trans. VLSI Systems)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

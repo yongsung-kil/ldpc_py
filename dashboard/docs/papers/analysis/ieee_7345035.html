@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7345035</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7345035---improved-symbol-based-belief-propagation-detection-for-large-scale-mimo-2015-ieee-pimrc">ieee:7345035 - Improved Symbol-Based Belief Propagation Detection for Large-Scale MIMO (2015, IEEE PIMRC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>대규모 MIMO 검출을 real-domain symbol-based BP로 수행해 행렬역변환 없이 성상 크기 축소·복잡도 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>MIMO 신호검출(채널 detection)용 BP, 채널코딩 미사용 — LDPC 복호와 무관</td></tr><tr><td>추가확인</td><td>없음 (LDPC ECC 이식 대상 아님)</td></tr></tbody></table>
+<blockquote><p>총평: MIMO 채널 검출 BP로 LDPC ECC 자체를 다루지 않음("No channel coding scheme is considered"). NAND ECC 이식가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대규모 MIMO 상향링크(<code>N</code> 수신안테나, <code>M&lt;N</code> 단일안테나 사용자, QPSK/16-QAM/256-QAM)에서 심볼 검출.</li><li>문제: ML·K-Best·SD·MMSE는 안테나 수 증가 시 복잡도 급증, MMSE는 Neumann 근사가 antenna ratio <code>M²/N</code>(TSRR) 클 때 부정확.</li><li>채널모델은 i.i.d. Rayleigh <code>r̃=H̃x̃+ñ</code>, RVD로 복소→실수 <code>r=Hx+n</code>으로 변환해 성상 크기를 <code>Q→√Q</code>로 축소.</li><li>MIMO 채널을 factor graph(symbol node ↔ observation node)로 표현, 간섭항 <code>z_j,i</code>를 Gaussian 근사(GAI)로 모델링.</li><li>핵심 식: 관측노드 사후정보 <code>β_j,i(sk)</code> 갱신 (식 12·16), likelihood <code>p(rj|x,hj)</code>에 GAI 평균/분산 <code>μ, σ²</code> 사용.</li><li>full-edge BP(FE-BP)를 <code>log(e^x+e^y)≈max(x,y)</code>로 근사, single-edge(SE-BP)는 이웃 edge a priori 무시로 더 단순화 (식 18·19).</li><li>심볼노드 a priori <code>α_i,j(sk)=Σβ_t,i</code> 갱신 후 확률 <code>p(xi=sk)</code>로 변환, <code>L=7</code> iteration 후 soft output <code>γ(sk)</code>로 판정.</li><li>학습/최적화 절차 없음.</li><li>결과: QPSK BER <code>10⁻²</code>에서 복소 SE-BP 대비 <code>1dB</code> 개선, 256-QAM(M=8,N=32)에서 SE-BP 대비 복잡도 약 <code>75%</code> 감소, matrix-inverse free.</li><li>한계: HW 미설계, 시뮬만, 채널코딩 미사용 — 순수 MIMO detection이며 LDPC 부호/복호와 별개.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MIMO factor-graph BP detection</td><td>대응 없음</td><td>채널 심볼검출용 BP, LDPC ECC 복호가 아님</td></tr><tr><td>GAI 기반 max-approx 메시지 갱신</td><td>대응 없음</td><td>Prime ECC min-sum과 목적·그래프 구조 상이(MIMO channel FG)</td></tr><tr><td>RVD 성상 축소</td><td>대응 없음</td><td>변조 성상 처리, binary LDPC와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 대상이 MIMO 신호검출이고 채널코딩(LDPC) 자체를 다루지 않아 NAND binary QC-LDPC ECC에 이식할 요소가 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:7345035",
+  "title": "Improved Symbol-Based Belief Propagation Detection for Large-Scale MIMO",
+  "year": 2015,
+  "venue": "IEEE PIMRC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "대규모 MIMO 검출을 real-domain symbol-based BP로 수행, 행렬역변환 없이 성상 축소·복잡도 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "MIMO 신호검출용 BP, 채널코딩 미사용 — LDPC 복호와 무관",
+  "todo_check": "없음 (LDPC ECC 이식 대상 아님)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7345035---improved-symbol-based-belief-propagation-detection-for-large-scale-mimo-2015-ieee-pimrc">ieee:7345035 - Improved Symbol-Based Belief Propagation Detection for Large-Scale MIMO (2015, IEEE PIMRC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

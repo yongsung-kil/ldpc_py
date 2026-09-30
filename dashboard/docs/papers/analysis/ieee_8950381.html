@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8950381</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8950381---efficient-qp-admm-decoder-for-binary-ldpc-codes-and-its-performance-analysis-2020-ieee-transactions-on-signal-processing">ieee:8950381 - Efficient QP-ADMM Decoder for Binary LDPC Codes and Its Performance Analysis (2020, IEEE Transactions on Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.89</td></tr><tr><td>부호length</td><td>576~13298</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check polytope 투영을 제거하고 전 변수를 분석적·병렬로 갱신하는 non-convex QP 기반 ADMM(QP-ADMM) LDPC 디코더를 제안, error floor 없이 BP 수준 성능과 코드길이에 선형인 반복당 복잡도를 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>미상</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·미검증(PC 시뮬만), min-sum 계열이 아닌 QP/ADMM 기반 완전히 다른 디코딩 패러다임이라 Prime ECC의 기존 min-sum 파이프라인에 이식하려면 아키텍처 전면 재설계가 필요</td></tr><tr><td>추가확인</td><td>반복당 O(n+Γa) 선형복잡도가 실제 HW 게이트카운트로 환산 시 min-sum 대비 우위인지 별도 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: BP/min-sum의 error floor 문제를 수학적 프로그래밍(ADMM) 접근으로 해결한 신규 디코딩 알고리즘이나, HW 미설계 상태이고 아키텍처가 Prime ECC의 min-sum 기반 파이프라인과 근본적으로 달라 이식 시 전면 재설계 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>이진 LDPC 코드(길이 n, parity-check H)의 ML 복호 문제를 정수계획법으로 정식화 후, 3-변수 parity-check 식(<code>x1+x2+x3=0 mod 2</code>)을 보조변수로 분해해 선형 정수계획(9)으로 변환.</li><li>BP는 고SNR에서 error floor, 기존 LP/ADMM 디코더는 check polytope 투영 연산이 고비용이라는 문제의식.</li><li>채널은 이진 대칭 채널(memoryless binary-input output-symmetric), LLR <code>γi=log(Pr(ri|xi=0)/Pr(ri|xi=1))</code> 기반 ML 목적함수 사용.</li><li>핵심 기법: 정수제약 <code>v∈{0,1}</code>을 박스제약 <code>v∈[0,1]</code>로 완화하고 비볼록 이차 페널티항 <code>-α/2‖v-0.5‖²</code>를 목적함수에 추가한 QP 모델(식 10)을 제안, ADMM으로 <code>v,z,y</code>를 교대 갱신.</li><li>행렬 A의 열-직교성(column orthogonality) 덕분에 <code>v</code>, <code>z</code> 갱신이 각각 <code>[0,1]</code>, <code>[0,+∞)</code> 구간으로의 단순 사영(clipping)만으로 분석적·병렬 계산 가능 — check polytope 투영(정렬 필요)을 완전히 제거.</li><li>all-zeros assumption 성질을 이론적으로 증명(대칭채널 가정 시 실패확률이 전송 코드워드에 무관), 정수해 획득 시 ML 여부를 1회 추가 반복으로 검증 가능(Proposition 1).</li><li>HW 친화 트릭: 행렬 A의 원소가 {0,1,-1}뿐이라 대부분 연산이 덧셈으로 처리되고, 사영은 min/max clip 수준으로 저복잡.</li><li>별도 학습 절차 없음; μ, α 페널티 파라미터는 시뮬레이션 스윕으로 경험적 선정(μ≈1, α∈[0.3,1] 범위에서 양호).</li><li>결과: 6종 표준 LDPC(Margulis, MacKay, IEEE 802.16e, 802.11n, 길이 576~13298, rate 0.5~0.89)에서 BP 대비 고SNR에서 error floor 없이 우수, 반복당 복잡도 O(n+Γa)로 코드길이에 선형(기존 ADMM 계열 O(n+m·d·log d) 대비 저복잡), 반복횟수 대부분 100회 미만.</li><li>한계: HW(FPGA/ASIC) 구현·검증 없이 PC 시뮬(i5-3470, C++)만 수행, ADMM 비볼록 수렴성은 이론적으로 완전히 증명되지 않고 관측적 가정에 의존, 완전히 새로운 min-sum과 무관한 디코더 아키텍처.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QP-ADMM 반복 갱신 알고리즘 전체 (v/z/y 갱신)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>min-sum 이터레이션 루프를 완전히 대체해야 하는 이질적 알고리즘, 이식 시 CN/VN 갱신식 전면 교체 필요</td></tr><tr><td>check polytope 투영 제거(사영을 단순 clip으로 대체)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum의 min1/min2 연산 자체를 QP 사영 연산으로 대체하는 개념이라 회로 재설계 필요, 직접 매핑 불가</td></tr><tr><td>error floor 개선(all-zeros assumption 하 이론적 무오류 특성)</td><td>대응 없음 (개선영역: error-floor)</td><td>Prime ECC는 min-sum 계열 error floor 대책(HCU, 조기종료)을 이미 보유, 근본적으로 다른 접근이라 관심 높음 영역이나 대응 모듈 없음</td></tr><tr><td>LLR 기반 soft-decision 입력</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>ML 목적함수 입력으로 LLR 사용하나 양자화 방식은 논문에 미기술(soft-4bit+ 가정)</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — error floor 없는 신규 디코딩 패러다임(min-sum 계열과 무관)이라 이론적 흥미는 있으나 HW 미설계·미검증이며 Prime ECC의 min-sum 파이프라인(CNU/VNU, HCU, pipeline)과 구조가 근본적으로 달라 이식하려면 디코더 아키텍처 전면 재설계가 필요.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8950381",
+  "title": "Efficient QP-ADMM Decoder for Binary LDPC Codes and Its Performance Analysis",
+  "year": 2020,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.89",
+  "code_length": "576~13298",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check polytope 투영을 제거하고 전 변수를 분석적·병렬로 갱신하는 non-convex QP 기반 ADMM(QP-ADMM) LDPC 디코더를 제안, error floor 없이 BP 수준 성능과 코드길이에 선형인 반복당 복잡도를 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "미상",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 미설계·미검증(PC 시뮬만), min-sum 계열이 아닌 QP/ADMM 기반 완전히 다른 디코딩 패러다임이라 Prime ECC의 기존 min-sum 파이프라인에 이식하려면 아키텍처 전면 재설계가 필요",
+  "todo_check": "반복당 O(n+Γa) 선형복잡도가 실제 HW 게이트카운트로 환산 시 min-sum 대비 우위인지 별도 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8950381---efficient-qp-admm-decoder-for-binary-ldpc-codes-and-its-performance-analysis-2020-ieee-transactions-on-signal-processing">ieee:8950381 - Efficient QP-ADMM Decoder for Binary LDPC Codes and Its Performance Analysis (2020, IEEE Transactions on Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

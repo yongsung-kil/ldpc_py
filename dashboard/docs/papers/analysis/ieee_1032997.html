@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1032997</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1032997---pseudorandom-construction-of-low-density-parity-check-codes-using-linear-congruential-sequences-2002-ieee-trans-communications">ieee:1032997 - Pseudorandom Construction of Low-Density Parity-Check Codes Using Linear Congruential Sequences (2002, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>선형합동수열 재귀로 (3,k) regular LDPC 그래프를 저장 없이 생성, girth&gt;4 보장</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>rate-1/2 짧은 regular 코드, NAND ECC급 고rate와 무관하며 QC 구조 아님</td></tr><tr><td>추가확인</td><td>재귀 그래프 생성이 QC-LDPC 순환행렬(z=32) 병렬 라우팅에 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 그래프 연결을 저장 대신 재귀로 생성하는 메모리 절감 구성법이나, rate-1/2 regular·비QC 코드라 고rate QC-LDPC인 Prime ECC에 직접 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(j,k)=(3,6)</code> regular binary LDPC 코드, rate 0.5, length 2048, AWGN 채널 message-passing 복호.</li><li>문제: 랜덤 구성 그래프는 연결 구조를 메모리(lookup table)에 저장해야 해 HW/DSP에서 저장 비용이 크고, 길이·rate가 다른 여러 코드마다 별도 저장이 필요함.</li><li>핵심 가정: 짧은 사이클(길이 2·4)이 message-passing 성능과 error-floor를 좌우하므로 이를 피해야 함.</li><li>핵심 기법: 최대길이 선형합동수열(LCS) 재귀 <code>π(i+1) = (a·π(i) + c) mod (jN)</code>로 bit connection ↔ check connection 매핑을 생성.</li><li>식 의미: 재귀 파라미터 <code>a</code>, <code>c</code>만 저장하면 그래프 edge 주소를 on-the-fly로 계산 가능해 lookup 저장을 제거.</li><li>확장: 조건 C1~C4(최대길이 보장)에 더해 C5~C9를 추가하면 girth&gt;4 (길이 2·4 사이클 없음)를 이론적으로 보장(Theorem 1).</li><li>구현 디테일: 복호 시 check/bit node의 extrinsic 정보 메모리 주소를 재귀로 생성, <code>a</code>,<code>c</code>,<code>π0</code>만 저장.</li><li>최적화: 여러 length·rate 코드를 동일 재귀 틀로 설계(Code 1~6 예시), 유한기하 코드와 파라미터 매칭.</li><li>결과: LCS 생성 코드의 BER이 4-cycle을 명시 회피한 제약 랜덤 구성과 거의 동일, 유한기하(PG/EG) 코드와도 대등.</li><li>한계: HW 미설계, 시뮬레이션만, rate-1/2 짧은 regular 코드에 국한, 최소거리는 유한기하 코드보다 낮을 수 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LCS 재귀 그래프 생성 (H-matrix 구조)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 QC base+circulant 고정 로드, 재귀 생성 방식과 상이</td></tr><tr><td>edge 메모리 주소 on-the-fly 생성</td><td>대응 없음</td><td>Prime ECC는 z=32 circulant shift로 라우팅, 재귀 lookup 회피와 목적은 유사하나 구조 다름</td></tr><tr><td>girth&gt;4 사이클 회피 부호설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호설계 레이어(이식 난이도 높음)</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 메모리 절감 아이디어(재귀 그래프 생성)는 흥미로우나 rate-1/2 비QC regular 코드라 고rate QC-LDPC인 Prime ECC의 circulant 구조와 정합되지 않고 재검증 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1032997",
+  "title": "Pseudorandom Construction of Low-Density Parity-Check Codes Using Linear Congruential Sequences",
+  "year": 2002,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2048",
+  "soft_quant": "무관",
+  "key_contribution": "선형합동수열 재귀로 (3,k) regular LDPC 그래프를 저장 없이 생성, girth&gt;4 보장",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "rate-1/2 짧은 regular 코드, NAND ECC급 고rate와 무관하며 QC 구조 아님",
+  "todo_check": "재귀 그래프 생성이 QC-LDPC 순환행렬(z=32) 병렬 라우팅에 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1032997---pseudorandom-construction-of-low-density-parity-check-codes-using-linear-congruential-sequences-2002-ieee-trans-communications">ieee:1032997 - Pseudorandom Construction of Low-Density Parity-Check Codes Using Linear Congruential Sequences (2002, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

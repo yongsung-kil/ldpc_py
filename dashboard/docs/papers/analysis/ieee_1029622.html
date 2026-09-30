@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1029622</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1029622---low-power-vlsi-decoder-architectures-for-ldpc-codes-2002-islped">ieee:1029622 - Low-Power VLSI Decoder Architectures for LDPC Codes (2002, ISLPED)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4</td></tr><tr><td>부호length</td><td>305~1055</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>interconnect-driven QC부호설계(cyclotomic coset)+동적주소 메모리스케줄로 interconnect망 제거, metric-difference BCJR CFU로 저비트 양자화 강건성 확보(최대 85.64% 전력절감)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate 0.4·단거리(&lt;2K) regular(3,5)부호 대상, gatecount/throughput 정량 없음, 0.35um 구공정, BCJR-CFU는 min-sum과 다른 계열</td></tr><tr><td>추가확인</td><td>metric-difference BCJR CFU를 우리 min-sum 대비 면적/전력·성능 비교, 동적주소 스킴을 z=32 circulant 구조에 적용 가능성</td></tr></tbody></table>
+<blockquote><p>총평: circulant(cyclotomic coset) QC부호+동적 메모리주소 스케줄로 interconnect망을 제거한 저전력 아키텍처와, 저비트 양자화에서 Gallager 대비 강건한 metric-difference BCJR CFU가 핵심 — QC/양자화/메모리 관점은 우리와 결이 맞으나 rate 0.4 단거리 부호·구공정이라 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>regular <code>(r,c)</code>-LDPC 부호를 <code>p×p</code> block(순환치환 행렬)으로 분할해 <code>n=cp</code>, dim <code>&gt;=(c-r)p</code> 구성, cyclotomic coset(예 <code>p=31,c=5,q=2</code>)으로 shift값 지정 → circulant QC-LDPC.</li><li>문제: random LDPC의 무규칙 interconnection network가 전력·라우팅·congestion의 병목 → 부호·디코더 joint 설계로 구조규칙성 유도.</li><li>핵심가정: AWGN 채널, 두 프레임 동시처리(BLOCK1=BFU/BLOCK2=CFU가 Gallager 2-phase 교대).</li><li>핵심기법1(부호+메모리): <code>p×p</code> block 단위 배치로 interconnect 제거, 동적 주소 카운터 <code>RD1/RD2</code>를 iteration마다 <code>(C_ij-C_zj)-(C_iJ-C_zJ) mod p</code>로 갱신해 multilayered interconnect network 완전 제거.</li><li>이 스케줄로 2프레임 1 iteration을 <code>2p</code> 클록에, throughput <code>cf/I</code> bps, 서브블록 <code>v</code>분할로 스케일업(단 interconnect 복잡도 증가).</li><li>핵심기법2(CFU): Gallager <code>φ(z)=-log|tanh(z/2)|</code> LUT는 <code>φ^{-1}(φ(z))</code>가 저비트에서 dynamic range 손상 → 단일 parity-check trellis에 BCJR을 tailoring.</li><li>metric-difference 변환: 절대 metric 대신 <code>Δα,Δβ,ΔΛ</code>만 사용(식(6), correction factor <code>Q(z)</code>), normalization/overflow 방지, forward metric 한 벌만 저장.</li><li>CFU는 3개 Compare-Select 블록(comparator+2's complementer+MUX+LUT)+FIFO로 구성, BFU는 Save-Add-Subtract 또는 tree-adder.</li><li>결과: 4-bit 양자화에서 Gallager 대비 coding gain &gt;1dB, 5-bit BCJR이 6-bit Gallager보다 우수, iteration 감소로 switching activity↓; 0.35um CMOS 합성 시 전력 82.42~85.64% 절감(A1 5-bit vs A2 6-bit).</li><li>한계: rate 0.4·length 305~1055 단거리 regular(3,5) 부호 대상, gatecount/throughput 정량 미기재, 0.35um 구공정, HW 검증은 합성 전력추정 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>circulant QC부호(cyclotomic coset) 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC circulant 구조는 우리 base+shift와 동종이나 rate 0.4·regular(3,5)로 고rate degree-17과 상이</td></tr><tr><td>동적주소 메모리 스케줄(interconnect 제거)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>메모리 라우팅/스케줄 병목 해소 아이디어, 우리 z=32 pipeline/GT와 정합 검토 필요</td></tr><tr><td>metric-difference BCJR CFU(양자화 강건 CN)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리는 min-sum(min1/min2) 사용, BCJR-trellis CN은 다른 계열이나 저비트 양자화 개선 기여는 참고가치</td></tr><tr><td>iteration별 양자화/LLR</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>4~6bit 양자화 성능 비교는 우리 LLR 테이블 설계에 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — circulant QC구조·동적 메모리주소·저비트 양자화 강건성은 우리 코드베이스 결과 맞으나, 대상 부호가 rate 0.4 단거리 regular(3,5)이고 CN 연산이 min-sum이 아닌 BCJR-trellis 계열이라 직접이식보다 아이디어 참고 성격.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1029622",
+  "title": "Low-Power VLSI Decoder Architectures for LDPC Codes",
+  "year": 2002,
+  "venue": "ISLPED",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.4,
+  "code_length": "305~1055",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "interconnect-driven QC부호설계(cyclotomic coset)+동적주소 메모리스케줄로 interconnect망 제거, metric-difference BCJR CFU로 저비트 양자화 강건성 확보(최대 85.64% 전력절감)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "rate 0.4·단거리(&lt;2K) regular(3,5)부호 대상, gatecount/throughput 정량 없음, 0.35um 구공정, BCJR-CFU는 min-sum과 다른 계열",
+  "todo_check": "metric-difference BCJR CFU를 우리 min-sum 대비 면적/전력·성능 비교, 동적주소 스킴을 z=32 circulant 구조에 적용 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1029622---low-power-vlsi-decoder-architectures-for-ldpc-codes-2002-islped">ieee:1029622 - Low-Power VLSI Decoder Architectures for LDPC Codes (2002, ISLPED)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2509.25580</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv250925580v2---neural-model-augmented-hybrid-nms-osd-decoders-for-near-ml-in-short-block-codes-2026-arxiv-csit">arxiv:2509.25580v2 - Neural-Model-Augmented Hybrid NMS-OSD Decoders for Near-ML in Short Block Codes (2026, arXiv cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.87</td></tr><tr><td>부호length</td><td>15~127</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NMS를 1차로 두고 실패분만 OSD로 넘겨 near-ML 달성, CNN 기반 DIA·SWA·UDE 신경모델로 OSD TEP 수를 대폭 감축</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미검증(SW만), OSD의 Gaussian elimination이 GPU/HW 가속 난이·q=6 soft 필요, DIA/SWA/UDE 3개 NN 학습·튜닝 부담</td></tr><tr><td>추가확인</td><td>NMS만으로 커버되는 NAND 고rate QC-LDPC에서 OSD 후단이 실제로 필요한 waterfall 영역인지, OSD의 HW latency/면적</td></tr></tbody></table>
+<blockquote><p>총평: NMS가 대부분을 처리하고 소수 실패분만 OSD로 near-ML을 노리는 하이브리드로 발상은 좋으나, OSD의 GE·serial 특성과 3개 NN 학습·soft-heavy 요구가 NAND QC-LDPC HW 파이프라인에 부담이라 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 short linear block code(LDPC (128,64)/(49,36), BCH (63,45)~(127,99), RS binary image (15,13)~(31,29)), rate 0.5~0.87, AWGN+BPSK.</li><li>문제: 유한길이 LDPC/HDPC에서 NMS는 짧은 cycle로 ML 대비 gap이 있고, OSD는 near-ML이나 TEP 수가 블록길이에 지수증가 → 둘을 순차 결합해 throughput과 near-ML을 동시에 취하려 함.</li><li>모델: <code>SNR=-10log10(2Rσ2)</code>, LLR <code>lvi=2yi/σ2</code>; NMS는 flooding으로 완전병렬, OSD는 <code>H(2)=[I|Q2]</code> GE 후 TEP 탐색.</li><li>핵심 기법1: 직렬 하이브리드 — 고throughput NMS가 대부분 복호, 실패 프레임만 OSD로 전달(<code>Chb=Cn+FnCo</code>).</li><li>핵심 기법2 (DIA): NMS의 posterior LLR trajectory(길이 <code>Im+1</code>)를 1D-CNN으로 처리해 OSD용 bit reliability를 정제 → LDPC에서 특히 효과 큼.</li><li>핵심 식: OSD 최적후보 선택 <code>c=argmin Σ 1(cˇi≠ci)|yi(2)|</code>(식6), 신뢰도 낮은 순 정렬로 MRB/LRB 분리.</li><li>부수 기법 (ALMLT decoding path): Hamming weight 대신 평균신뢰도 기반 고정 TEP 순서, 경험적 counter 갱신으로 online 적응(<code>lw=β·lt</code> 버퍼).</li><li>부수 기법 (SWA/UDE): SWA CNN이 sliding window로 TEP 탐색 조기종료(soft margin <code>sm</code>); UDE CNN이 패리티는 만족하나 오복호된 NMS false positive를 잡아 OSD로 전달.</li><li>결과: LDPC (128,64)에서 <code>Iat</code>가 4500→600으로 급감하며 near-ML, MRB(4) 대비 0.15dB 이내이나 TEP 6.7×10^5→10^4 수준; NMS <code>Ian</code>은 SNR↑에서 9.31→1.94 iter.</li><li>한계: SW 시뮬만, HW/양자화/메모리 매핑 미검증, OSD의 GE·serial이 GPU/TPU 가속 난이, 3개 보조 NN 학습·튜닝 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS(min-sum) 1차 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일 계열, α normalization만 추가 여지</td></tr><tr><td>posterior LLR 기반 reliability 정제(DIA), 신뢰도 정렬</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>적응형 LLR 테이블과 취지 유사하나 CNN·OSD 후단은 대응 없음</td></tr><tr><td>UDE detector (패리티 만족 오복호 검출)</td><td>full_CRC.cpp, <code>partial_CRC.cpp</code></td><td>Prime ECC는 CRC로 오복호를 걸러 유사 목적, NN 기반 UDE는 대응 없음</td></tr><tr><td>OSD / SWA / ALMLT decoding path</td><td>대응 없음</td><td>OSD 후처리·TEP 탐색 구조 자체가 Prime ECC에 부재</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NMS 1차 + 실패분 OSD near-ML 발상과 CRC 이후 후처리 아이디어는 참고가치가 있으나, OSD의 Gaussian elimination·serial TEP 탐색과 3개 NN이 NAND QC-LDPC HW 파이프라인·soft 제약과 정합성이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2509.25580v2",
+  "title": "Neural-Model-Augmented Hybrid NMS-OSD Decoders for Near-ML in Short Block Codes",
+  "year": 2026,
+  "venue": "arXiv cs.IT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.87",
+  "code_length": "15~127",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NMS를 1차로 두고 실패분만 OSD로 넘겨 near-ML 달성, CNN 기반 DIA·SWA·UDE 신경모델로 OSD TEP 수를 대폭 감축",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미검증(SW만), OSD의 Gaussian elimination이 GPU/HW 가속 난이·q=6 soft 필요, DIA/SWA/UDE 3개 NN 학습·튜닝 부담",
+  "todo_check": "NMS만으로 커버되는 NAND 고rate QC-LDPC에서 OSD 후단이 실제로 필요한 waterfall 영역인지, OSD의 HW latency/면적"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv250925580v2---neural-model-augmented-hybrid-nms-osd-decoders-for-near-ml-in-short-block-codes-2026-arxiv-csit">arxiv:2509.25580v2 - Neural-Model-Augmented Hybrid NMS-OSD Decoders for Near-ML in Short Block Codes (2026, arXiv cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

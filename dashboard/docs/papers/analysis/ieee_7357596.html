@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7357596</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7357596---a-log-likelihood-ratio-for-improved-receiver-performance-for-vlflf-communication-in-atmospheric-noise-2015-milcom">ieee:7357596 - A log-likelihood ratio for improved receiver performance for VLF/LF communication in atmospheric noise (2015, MILCOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>VLF/LF 대기잡음(log-normal envelope) 채널에 맞춘 복조기 출력 LLR을 수치적으로 유도해 AWGN용 LLR 대비 성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 자체는 기존 표준 부호(rate 1/2, n=64800) 그대로 사용, 개선은 MSK 복조기의 채널별 LLR 계산식뿐이며 디코더/부호 구조 변경 없음</td></tr><tr><td>추가확인</td><td>특정 대기잡음(log-normal, Vd=10dB) 채널 모델 전용이라 NAND 채널(비대칭 read 오류)과 무관, 이식 시사점 없음</td></tr></tbody></table>
+<blockquote><p>총평: 통신 채널(VLF/LF 잠수함 대기잡음) 전용 LLR 유도 논문으로, LDPC 부호·디코더는 기존 표준을 그대로 사용해 NAND ECC 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: MSK 변조 + rate 1/2, n=64800 irregular LDPC(표준 부호), 채널은 대기잡음(atmospheric noise) 또는 AWGN.</li><li>문제: 기존 AWGN용 LLR은 impulsive한 log-normal 대기잡음 환경에서 성능 저하를 유발.</li><li>채널 모델: 간섭 신호를 <code>a(t) = A*e^n(t) * sin(2πf0t+θ(t))</code>로 모델링, envelope이 log-normal 분포(<code>log N(μ,σ)</code>).</li><li>핵심 기법: quadrature 성분 <code>x(t), y(t)</code>의 joint pdf <code>f_X,Y(x,y)</code>를 envelope-phase 변환으로 유도(식 9-10).</li><li>marginal pdf <code>f_X(x)</code>는 폐형해가 없어 <code>tanh-sinh quadrature</code>로 수치 적분(부록에 Matlab 스크립트 포함, 21-point).</li><li>LLR은 <code>λ(v_j) = log[f(w_j|v=1)/f(w_j|v=-1)]</code>로 정의, 수치 적분된 pdf를 대입해 계산.</li><li>비교 대상 기법: (a) 복조기 출력을 ±1로 클리핑하는 limiter, (b) 넓은 대역폭(N배)+limiter 조합.</li><li>별도 학습/최적화 절차 없음(closed-form pdf 부재로 수치적분만 수행).</li><li>결과: BEP=10^-3 기준 interference-adapted LLR이 무보정 대비 Eb/NI 약 10dB 이득, limiter 대비 약 3dB 이득.</li><li>한계: 특정 log-normal 대기잡음 모델 전용, LDPC 디코더/부호 자체는 변경 없이 시뮬레이션(BEP curve)만 제시, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>대기잡음 채널 전용 LLR 유도</td><td>대응 없음</td><td>Prime ECC의 채널 모델(AWGN/RBER/fixed-error)과 무관한 통신용 impulsive 채널 특화 기법</td></tr><tr><td>LDPC 부호(rate 1/2, n=64800 irregular)</td><td>대응 없음</td><td>표준 DVB-S2급 통신용 부호로 NAND용 고rate QC-LDPC와 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — LDPC는 기존 표준을 그대로 쓰고 논문 기여는 통신용 특정 잡음 채널의 복조기 LLR 유도뿐이라 NAND ECC와 접점이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7357596",
+  "title": "A log-likelihood ratio for improved receiver performance for VLF/LF communication in atmospheric noise",
+  "year": 2015,
+  "venue": "MILCOM",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 64800,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "VLF/LF 대기잡음(log-normal envelope) 채널에 맞춘 복조기 출력 LLR을 수치적으로 유도해 AWGN용 LLR 대비 성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 자체는 기존 표준 부호(rate 1/2, n=64800) 그대로 사용, 개선은 MSK 복조기의 채널별 LLR 계산식뿐이며 디코더/부호 구조 변경 없음",
+  "todo_check": "특정 대기잡음(log-normal, Vd=10dB) 채널 모델 전용이라 NAND 채널(비대칭 read 오류)과 무관, 이식 시사점 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7357596---a-log-likelihood-ratio-for-improved-receiver-performance-for-vlflf-communication-in-atmospheric-noise-2015-milcom">ieee:7357596 - A log-likelihood ratio for improved receiver performance for VLF/LF communication in atmospheric noise (2015, MILCOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

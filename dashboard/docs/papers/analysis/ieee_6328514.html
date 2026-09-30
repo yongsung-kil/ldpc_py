@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6328514</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6328514---a-hybrid-iterative-decoder-for-ldpc-codes-2012-ieee">ieee:6328514 - A hybrid iterative decoder for LDPC codes (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.667</td></tr><tr><td>부호length</td><td>648~1944</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>min-sum BP 실패 시 최저</td><td>QLLR</td><td>위치를 인공 erasure로 만들어 erasure iterative 복호로 error-floor 보정, iteration 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>인공 erasure 개수 X를 코드별로 시뮬 튜닝해야 하고 stopping set 종속, HW 미설계·gatecount 미제시</td></tr><tr><td>추가확인</td><td>erasure decoder 추가 hardware 비용과 X 튜닝의 NAND RBER 조건 일반화 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum BP 뒤에 인공 BEC/erasure 복호를 붙여 error-floor에서 총 iteration을 줄이는 post-processing으로, NAND binary LDPC 디코더에 원리상 이식 가능하나 X 튜닝·HW 미검증이 리스크.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: binary LDPC(IEEE 802.11n), BPSK, AWGN 채널, 수신값을 quantized LLR(<code>QLLR</code> <code>ξ</code>)로 변환.</li><li>문제: min-sum BP가 trapping set에 빠져 실패하면 iteration을 늘려도 못 벗어나므로, 총 iteration을 줄이며 성능 유지가 목표.</li><li>2단 구조: 1단 min-sum BP를 <code>I_BP</code> iter 수행, <code>ĉH^T=0</code>이면 성공 종료.</li><li>실패 시 2단: BP 출력 <code>ĉ</code> 중 <code>|QLLR|</code>가 가장 낮은 <code>X</code>개 좌표를 인공 BEC로 erasure(<code>Δ</code>) 처리해 <code>z</code> 생성.</li><li>erasure iterative 복호: parity-check가 단일 erasure를 포함하면 해당 비트를 정정, 반복.</li><li>정정된 비트가 원래 <code>ĉ</code>와 다르면 해당 <code>QLLR</code> 부호를 반전해 <code>ξ</code>를 갱신, 다음 HD cycle의 BP 입력으로 사용(<code>I_HD</code> cycle 반복).</li><li><code>X</code> 선택이 핵심: <code>X≤s(H)</code>(stopping distance)면 모든 erasure 정정 가능하나 너무 작으면 오류를 못 덮음. 코드별 최적 <code>X</code>는 시뮬로 결정(예 (648,432)→70).</li><li>density evolution으로 ε=X/N에 대한 erasure 복호 최소 iteration 산출.</li><li>결과: (648,432)서 2-cycle HD(총 50 BP iter)가 200-iter BP 대비 error-floor서 0.2dB 이내, (1296,864)는 2-cycle·25 iter로 동등 성능 → 훨씬 적은 iteration으로 등가 WER.</li><li>한계: HW 미설계, 시뮬만, 코드별 <code>X</code> 수동 튜닝 필요, stopping set 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum BP 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime ECC도 min-sum 사용, HD의 1단으로 그대로 재사용 가능</td></tr><tr><td>최저</td><td>QLLR</td><td>위치 선정·부호 반전(post-processing)</td><td>decoder.cpp <code>VN_Cal_HD()</code> / <code>Get_VNU_*</code> 주변</td><td>VN reliability 처리부 확장 지점, BP 실패 후 hook 필요</td></tr><tr><td>erasure iterative 복호(2단)</td><td>대응 없음</td><td>Prime ECC에 erasure/BEC 복호 경로 없음, 신규 모듈 필요</td></tr><tr><td>조기종료(syndrome/CRC)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>HD cycle 성공 판정과 유사, syndrome check 재사용</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — error-floor에서 avg iteration을 줄이는 post-processing 아이디어는 NAND 고rate binary LDPC에 이식 여지가 있으나, 인공 erasure 개수 X의 코드별 튜닝과 별도 erasure 복호 경로 추가가 필요하고 HW 비용이 미검증.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6328514",
+  "title": "A hybrid iterative decoder for LDPC codes",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "648~1944",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "min-sum BP 실패 시 최저 |QLLR| 위치를 인공 erasure로 만들어 erasure iterative 복호로 error-floor 보정, iteration 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "인공 erasure 개수 X를 코드별로 시뮬 튜닝해야 하고 stopping set 종속, HW 미설계·gatecount 미제시",
+  "todo_check": "erasure decoder 추가 hardware 비용과 X 튜닝의 NAND RBER 조건 일반화 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6328514---a-hybrid-iterative-decoder-for-ldpc-codes-2012-ieee">ieee:6328514 - A hybrid iterative decoder for LDPC codes (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

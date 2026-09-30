@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9537753</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9537753---convolutional-neural-network-cnn-based-detection-for-multi-level-cell-nand-flash-memory-2021-ieee-communications-letters">ieee:9537753 - Convolutional Neural Network (CNN)-Based Detection for Multi-Level-Cell NAND Flash Memory (2021, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>threshold-voltage PDF 없이 CNN으로 LLR 추정+MI 최대화 read-voltage(hard 3/soft 6) 설계</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>대상은 LLR추정/read-voltage(채널단)로 디코더 무변경·NN 학습셋 필요·PE/retention mismatch 시 재학습</td></tr><tr><td>추가확인</td><td>rate-9/10 protograph는 우리 고rate와 근접 — CNN 산출 LLR을 우리 2SD/3SD 테이블에 매핑 가능한지 확인</td></tr></tbody></table>
+<blockquote><p>총평: NAND MLC 직접 타깃의 CNN 기반 read-voltage/LLR 설계로 채널·soft-read 단(우리 channel.cpp) 이식은 가능하나, 디코더 무관하며 NN 재학습·추론 오버헤드로 HW 통합 부담이 크다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: MLC NAND flash 채널(program noise+RTN+retention noise), 4 threshold-voltage state {11,10,00,01}, 레벨 {1.4,2.6,3.2,3.93}V. ECC는 rate-<code>9/10</code> regular CW-3 protograph LDPC, length <code>4000</code>, BP 디코딩 max iter 25.</li><li>문제: 기존 read-voltage/LLR 설계(uniform quant, MMI)는 threshold-voltage PDF를 정확히 안다고 가정 → 별도 채널추정 필요, PE/retention 변화에 취약.</li><li>모델: 4개 state PDF를 가우시안 <code>psA(v)</code>로 모델, LLR은 read voltage 구간 적분식 <code>Lmsb</code>/<code>Llsb</code> (식2,3).</li><li>핵심기법 1단(CNN detection): <code>T-1=2</code> 1D conv layer(filter 5, ReLU)+FC, 입력 read-back 전압열 <code>v(K=50)</code>, softmax로 4 state a-posteriori <code>PNN(s|vk)</code> 출력. Adam+cross-entropy 학습.</li><li>핵심 식(6): 구간 <code>Vn</code>을 M등분해 average a-posteriori <code>PNN(si|Vn)=Σ PNN(si|qnm)/M</code>로 근사 → 구간 내 전압 효과 반영, 단일 양자화값 근사보다 정확.</li><li>LLR 산출(식7,8): 평균 a-posteriori로 MSB/LSB LLR 계산, 추론 후엔 CNN 없이 LLR 테이블만으로 read → read latency 절감.</li><li>핵심기법 2단(read-voltage 설계): coded bit과 LLR 간 mutual information <code>I(L,b)</code>(식9) 최대화로 hard read-voltage <code>{t1*,t2*,t3*}</code>를 bisection search로 도출(식10).</li><li>확장(soft): hard read-voltage 중심 overlap 영역 폭 <code>{W1*,W2*,W3*}</code>을 MI 최대화로 최적화해 soft read-voltage 6개 생성(식11).</li><li>결과: RNN-aided 및 uniform-quant보다 우수, mismatch 없을 때 optimal MMI에 근접. PE/retention mismatch 커지면 성능 저하 → 재학습/재호출 필요.</li><li>한계: HW 미설계·시뮬(keras+MATLAB)만, 디코더 자체는 무변경(채널/LLR 단), NN 학습셋·mismatch 재학습 부담.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CNN LLR 추정(soft-read LLR 산출)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>CNN 출력 LLR을 우리 soft-read LLR 양자화·threshold에 대응</td></tr><tr><td>MI 최대화 read-voltage 설계(hard 3/soft 6)</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>read 전압 offset/threshold 설계를 채널 모델에 반영 가능</td></tr><tr><td>iteration별 LLR 테이블 매핑</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>산출 LLR을 HD/2SD/3SD 테이블로 매핑</td></tr><tr><td>CNN(딥러닝) 추론 엔진 자체</td><td>대응 없음</td><td>NN 디코더/추론기는 우리 코드베이스에 없음</td></tr></tbody></table>
+<p>적용 가치: 중간 — NAND MLC soft-read LLR/read-voltage 설계라 우리 channel 단에 개념 이식은 가능하나, 디코더 무관·NN 재학습·추론 HW 부담으로 직접 채용 가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9537753",
+  "title": "Convolutional Neural Network (CNN)-Based Detection for Multi-Level-Cell NAND Flash Memory",
+  "year": 2021,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "protograph",
+  "code_rate": 0.9,
+  "code_length": "4000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "threshold-voltage PDF 없이 CNN으로 LLR 추정+MI 최대화 read-voltage(hard 3/soft 6) 설계",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "대상은 LLR추정/read-voltage(채널단)로 디코더 무변경·NN 학습셋 필요·PE/retention mismatch 시 재학습",
+  "todo_check": "rate-9/10 protograph는 우리 고rate와 근접 — CNN 산출 LLR을 우리 2SD/3SD 테이블에 매핑 가능한지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9537753---convolutional-neural-network-cnn-based-detection-for-multi-level-cell-nand-flash-memory-2021-ieee-communications-letters">ieee:9537753 - Convolutional Neural Network (CNN)-Based Detection for Multi-Level-Cell NAND Flash Memory (2021, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9789141</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9789141---iterative-hard-decision-decoding-algorithms-for-binary-reed-muller-codes-2022-ieee-access">ieee:9789141 - Iterative Hard-Decision Decoding Algorithms for Binary Reed-Muller Codes (2022, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>128~256</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>RM 부호용 반복 hard-decision bit-flipping(BF/NBF) + 다중비트 flip(MBF/NMBF), min-sum 착상 차용해 majority-logic 대비 0.55~0.81dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상 (O(sum_i C(m,i)·2^(m-i)) per iter, gatecount 없음)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 Reed-Muller 부호(LDPC 아님)이고 majority-logic 기반, hard-decision AWGN 시뮬뿐이라 NAND binary QC-LDPC와 부호·디코더 구조 무관</td></tr><tr><td>추가확인</td><td>MBF의 다중비트 flip(임계 <code>DTh</code>)·조기종료 착상이 LDPC weighted bit-flipping 디코더에 이식될 여지가 있는지(단 BF-LDPC는 성능열세)</td></tr></tbody></table>
+<blockquote><p>총평: Reed-Muller 부호용 hard-decision 반복 bit-flipping 디코더로, LDPC의 BF/min-sum 착상을 RM에 역차용했을 뿐 NAND binary QC-LDPC 이식 관점에서는 관련성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary Reed-Muller 부호 <code>RM(r,m)</code>(길이 <code>2^m</code>), 실험은 <code>RM(2,7)</code>(길이128), <code>RM(3,8)</code>(길이256), AWGN 채널, hard-decision 복호.</li><li>문제: 기존 majority-logic 복호는 저복잡도지만 성능 부족, hard-decision ML은 성능 좋으나 복잡도 폭증 → 그 중간을 노림.</li><li>착상: LDPC의 <strong>bit-flipping</strong>과 <strong>min-sum</strong> 아이디어를 RM 복호에 차용, 수신열의 reliability measure로 majority-logic을 보강.</li><li><strong>BF 알고리즘</strong>: 각 degree <code>γ</code>의 정보비트 <code>u_j</code> 투표(<code>hat u_{j,k}</code>)를 합해 reliability <code>R_j</code>를 구하고, 재인코딩된 <code>hat v</code>와 다른 위치의 거리 <code>D_l</code>이 최대인 1비트만 flip, 반복.</li><li>조기종료(Step 7): 연속 두 iteration의 갱신열이 동일(유효 codeword)하면 종료 → 빠른 수렴.</li><li><strong>NBF 알고리즘</strong>: <code>R_j</code> 갱신에 부호(sgn)뿐 아니라 크기(magnitude)를 min-sum 연산으로 반영하고, degree별 투표수 균형 위해 정규화 인자 <code>µγ</code>(=2µ_{γ+1})로 정규화 → BF 대비 성능↑.</li><li><strong>MBF/NMBF</strong>: 임계 <code>DTh</code>를 두어 거리 <code>D_l &gt; DTh</code>인 비트를 한 iteration에 <strong>여러 개 동시 flip</strong> → 필요 iteration 감소, 적절한 <code>DTh</code>면 BER 손실 미미(BLER 10^-4에서 0.02dB차).</li><li>구현 디테일: <code>µγ</code>를 2의 거듭제곱으로 잡으면 고정소수 구현에서 곱셈 제거(정수 덧셈만), BF/NBF/MBF/NMBF 복잡도 order 동일.</li><li>결과: <code>RM(2,7)</code>·<code>RM(3,8)</code>에서 NBF가 majority-logic 대비 각 0.55dB·0.81dB gain, BF는 최소 0.3dB gain; MBF/NMBF는 평균 iteration을 40~80% 감소(예 SNR7dB에서 9.44→2.07, 78% 감소).</li><li>한계: HW 미설계, hard-decision AWGN 시뮬뿐, 대상이 RM 부호(majority-logic 기반)라 LDPC 부호·디코더와 구조 다름, non-binary RM 확장은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flipping / 다중비트 flip(MBF)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 min-sum 기반 MPP, bit-flipping 디코더 미채택(BF-LDPC는 성능 열세)</td></tr><tr><td>min-sum 연산 착상</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum은 이미 보유(중복), 본 논문은 RM용으로 역차용한 것</td></tr><tr><td>조기종료(연속 iter 동일)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 CRC 기반 조기종료 보유, RM 유효codeword 판정과 방식 다름</td></tr><tr><td>RM majority-logic 복호 전체</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC 전용, RM/majority-logic 무관</td></tr><tr><td>정규화 인자 <code>µγ</code></td><td>대응 없음</td><td>RM degree별 투표 정규화, LDPC 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 대상이 LDPC가 아니라 Reed-Muller 부호이고 majority-logic 기반이며, LDPC의 BF/min-sum 착상을 RM에 역차용한 것이라 NAND binary QC-LDPC 디코더로 떼어 쓸 신기법이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9789141",
+  "title": "Iterative Hard-Decision Decoding Algorithms for Binary Reed-Muller Codes",
+  "year": 2022,
+  "venue": "IEEE Access",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "128~256",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "RM 부호용 반복 hard-decision bit-flipping(BF/NBF)+다중비트 flip(MBF/NMBF), min-sum 착상 차용해 majority-logic 대비 0.55~0.81dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상이 Reed-Muller 부호(LDPC 아님)이고 majority-logic 기반, hard-decision AWGN 시뮬뿐이라 NAND binary QC-LDPC와 무관",
+  "todo_check": "MBF의 다중비트 flip(임계 DTh)·조기종료 착상이 LDPC weighted bit-flipping 디코더에 이식될 여지가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9789141---iterative-hard-decision-decoding-algorithms-for-binary-reed-muller-codes-2022-ieee-access">ieee:9789141 - Iterative Hard-Decision Decoding Algorithms for Binary Reed-Muller Codes (2022, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

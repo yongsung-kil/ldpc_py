@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4289998</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4289998---parallel-weighted-bit-flipping-decoding-2007-ieee-communications-letters">ieee:4289998 - Parallel Weighted Bit-Flipping Decoding (2007, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.7~0.82</td></tr><tr><td>부호length</td><td>273~4095</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>매 iteration마다 하나의 비트만 뒤집는 기존 weighted bit-flipping(IMWBF)과 달리, 불만족 check node별로 가장 신뢰도 낮은 variable node에 flip 신호를 보내 누적한 뒤 threshold <code>Fth(k)</code> 이상인 비트들을 동시에(병렬로) 뒤집는 PWBF 알고리즘 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>finite-geometry(FG) LDPC 코드에만 실험, 일반 QC-LDPC(irregular, 고rate)에서의 성능은 미검증; threshold <code>Fth(k)</code>는 이론적 결정법 없이 시뮬레이션으로 고정값 최적화; 매 iteration 뒤집는 비트 수가 가변적이라 HW 구현 시 부담(저자도 한계로 명시)</td></tr><tr><td>추가확인</td><td>Prime ECC는 min-sum 기반 soft-decision 디코더인데, bit-flipping 계열(hard 판정 기반 flip)이 min-sum과 근본적으로 다른 알고리즘 패밀리라 통합 이식 가능성 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 순차적으로 1비트씩 뒤집는 기존 weighted bit-flipping을 다중 비트 병렬 flip으로 개선해 iteration 수를 크게 줄인(약 5회) 저복잡도 디코딩 알고리즘이나, FG-LDPC 특정 코드에서만 검증되었고 min-sum 계열인 Prime ECC와는 알고리즘 패밀리가 상이함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>(N,K)</code> LDPC 코드, rate <code>Rc=K/N</code>, regular <code>(dv,dc)</code> 파리티체크 행렬, BPSK 변조 후 AWGN 채널(<code>σ²=(2RcEb/N0)^-1</code>) 전송, hard-decision 초기값 <code>z=sgn(y)</code>.</li><li>문제: 기존 modified-WBF(IMWBF)는 매 iteration당 1비트만 flip하는 순차 전략이라 수렴이 느림(throughput 저해).</li><li>핵심 가정: 다중 비트를 동시에 flip하려면 "동일한 unsatisfied 제약에 짝수 개 변수를 뒤집으면 그 제약이 여전히 불만족으로 남는다"는 문제를 회피해야 함.</li><li>핵심 기법: 각 불만족 check node <code>m</code>이 가장 신뢰도 낮은(최대 <code>E_n(α)</code>) variable node <code>n*</code> 1개에만 "flip" 신호를 보냄(<code>f(m→n*)=1</code>), variable node는 여러 check로부터 받은 flip 신호를 누적해 <code>F_n = Σ_{m∈EM} f(m→n)</code>.</li><li>핵심 식: <code>E_n(α) = Σ_{m∈M(n)} (2s_m-1)|w_{n,m}| - α|y_n|</code>, <code>w_{n,m}=min_{i∈N(m)\n}|y_i|</code> (식 1,2) - 신뢰도 낮은 비트를 식별하는 IMWBF 기반 판정식.</li><li>판정/flip 규칙: <code>F_n ≥ F_th(k)</code>인 비트 집합 <code>F_k</code>를 병렬로 동시에 flip, <code>F_th(k)</code>는 iteration별 threshold(시뮬레이션으로 최적화, 논문 실험은 상수 고정 <code>F_th</code>로도 충분함을 확인).</li><li>부수 트릭: flip 후 syndrome/<code>E_n(α)</code> 갱신은 <code>s_m←1-s_m</code>, <code>E_n(α)←E_n(α)+2(1-2s_m)|w_{n,m}|</code> (식 3)로 국소 업데이트만 필요 (재계산 불필요).</li><li>최적화 절차: threshold <code>F_th(k)</code>는 이론적 결정법 없음(future work), 시뮬레이션 기반 고정값 사용; 복잡도 비교상 PWBF/IMWBF ratio <code>cr=(dc-1+dv·dc)/(N-1+dv·dc)&lt;1</code>.</li><li>결과: (1023,781) FG-LDPC와 (4095,3367) FG-LDPC에서 PWBF는 약 5 iteration만에 수렴, IMWBF 100~200 iteration 대비 우수하거나 근접한 BER 성능, 표준 BP 디코딩과 거의 동등한 성능·수렴성 확보. (273,191) 코드 WEP: PWBF 1.2e-5 vs MBWBF(단순 다중-flip) 1.2e-4.</li><li>한계: finite-geometry LDPC(고밀도 6-cycle 구조)에서만 검증, 매 iteration당 flip 비트 수가 가변적이라 HW 구현에 부담(저자가 <code>|F_k|&lt;F</code>로 상한 강제 시 성능 손실 미미함을 언급하나 정식 HW 설계는 없음), threshold 최적화의 이론적 근거 부재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PWBF 디코딩 알고리즘(병렬 다중 bit-flip)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 min-sum 기반이라 bit-flipping 계열 자체가 다른 알고리즘 패밀리 - 대안 디코딩 모드로 추가할 경우만 관련, 직접 대체는 부적합</td></tr><tr><td>flip 신호 누적/threshold 판정 <code>F_n≥F_th(k)</code></td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code>(iteration별 파라미터 테이블 개념)</td><td>iteration별 threshold 테이블 구조는 Prime ECC의 적응형 LLR 테이블과 유사한 패턴이나 값의 의미(flip count vs LLR)가 다름</td></tr><tr><td>병렬 다중 bit-flip(HW 친화)</td><td>디코더 HW 모델(pipeline, HCU)</td><td>완전병렬 flip 아이디어 자체는 참고 가능하나 가변 flip 개수는 Prime ECC의 고정 파이프라인 구조와 정합 난이도 있음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — Prime ECC는 min-sum 기반 soft-decision 디코더가 핵심이며, bit-flipping 계열은 근본적으로 다른 알고리즘 패밀리라 기존 파이프라인에 직접 이식하기 어렵고, 검증도 특정 FG-LDPC 코드에 한정됨.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4289998",
+  "title": "Parallel Weighted Bit-Flipping Decoding",
+  "year": 2007,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.7~0.82",
+  "code_length": "273~4095",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "불만족 check node별 최다 신뢰도 낮은 variable node에 flip 신호를 누적해 threshold 이상 비트들을 동시에 병렬 flip하는 PWBF 알고리즘 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "FG-LDPC 코드에만 실험, threshold는 이론적 결정법 없이 시뮬레이션 최적화, 매 iteration 가변 flip 비트 수는 HW 구현 부담",
+  "todo_check": "Prime ECC는 min-sum 기반이라 bit-flipping 계열과 알고리즘 패밀리가 상이함 - 통합 이식 가능성 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4289998---parallel-weighted-bit-flipping-decoding-2007-ieee-communications-letters">ieee:4289998 - Parallel Weighted Bit-Flipping Decoding (2007, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

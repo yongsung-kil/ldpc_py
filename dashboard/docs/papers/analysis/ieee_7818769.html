@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7818769</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7818769---cost-effective-fpga-implementation-for-hard-decision-ldpc-decoders-2016-telfor">ieee:7818769 - Cost Effective FPGA Implementation for Hard Decision LDPC Decoders (2016, TELFOR)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>irregular dv 지원 adaptive-threshold 다수결 VNU로 Gallager-B 부분병렬 QC-LDPC 디코더를 Min-Sum 2bit 대비 로직 2.5x·BRAM 25% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>3966 LUT-FF pairs + 9 BRAM @Virtex-7</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.342</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>hard-decision(1bit)이라 정정능력 낮음, WiMAX rate 1/2 저rate·error-floor/BER 곡선만 시뮬, ASIC 미검증</td></tr><tr><td>추가확인</td><td>Gallager-B 다수결 VNU가 우리 min-sum 대비 NAND RBER 영역에서 정정능력 손실 폭이 감내 가능한지 BER 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC 하드디시전 디코더의 저비용 VNU(마스킹 기반 카운터 다수결) HW 기법으로, 우리 min-sum 기반과 계열은 맞으나 hard-1bit라 정정능력 저하가 커 저비용 fallback 모드 참고 수준.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: WiMAX QC-LDPC rate 1/2, base matrix <code>B</code> 24열x12행, 확장인자 <code>z=96</code>(→length 2304), irregular(<code>dcn</code>=6~7, <code>dnv</code>=2~6).</li><li>문제: 메모리(비용/throughput/전력)가 LDPC HW 병목 → message당 1bit 저장하는 hard-decision으로 비용 절감(성능 penalty 감수).</li><li>알고리즘: Gallager-B, CN은 XOR 기반 <code>β=⊕α</code>, VN은 문턱값 <code>Th</code> 비교(다수결 majority voting)로 α, hard decision 갱신, flooded 스케줄.</li><li>핵심 기법: irregular dv 지원 다수결 VNU - 문턱 <code>hd_Th = floor(dnv/2)+2</code>(odd) 또는 <code>+1</code>(even), 채널정보를 합에서 제외.</li><li>구현 트릭: counter를 <code>hd_Th</code>로 초기화 후 β를 sign-extend(0→0,1→-1) 누적, counter=0 도달 시 후속 β 마스킹(underflow 방지, adder 비트수 최소화).</li><li>VNU 판정: cnt 값(0/1/2)·dv 홀짝·현재 β로 α와 hd 결정, tie 시 <code>hd=γ</code>(채널입력).</li><li>아키텍처: 부분병렬 flooded, 메모리 3종(LLR/α/β) word=<code>z</code>bit, <code>z</code> CNU + <code>z</code> VNU 병렬(각 dcn/dnv 메시지는 직렬), barrel shifter 2개(각 log z단)로 라우팅, 코드종속 정보는 ROM.</li><li>throughput 향상: dual code-word 처리로 CNU/VNU idle 제거.</li><li>결과: Virtex-7 VX485T, 3966 LUT-FF pairs + 9 BRAM, 358MHz, 10 iter에서 342Mbps, Min-Sum(2bit flooding) 대비 로직 2.5x·BRAM 25% 절감(ASIC이면 메모리 이득 더 큼).</li><li>한계: hard-1bit로 정정능력 낮음, BER/FER 시뮬만(수치 곡선), ASIC 미합성, rate 1/2 저rate.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Gallager-B VNU 다수결(카운터+마스킹)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등 (HD/2SD/3SD)</td><td>우리 HD 경로 대응, 단 min-sum이 아닌 majority-voting이라 알고리즘 상이</td></tr><tr><td>CN XOR 연산(β=⊕α)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min1/min2+sign 대비 순수 XOR로 단순화(정정력 낮음)</td></tr><tr><td>이터레이션/스케줄(flooded)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>스케줄 레이어 대응(우리는 dual-update 옵션)</td></tr><tr><td>z 병렬 + barrel shifter 라우팅</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>병렬/edge 라우팅 레이어, 우리는 z=32+GT/HCU 구조로 상이</td></tr><tr><td>adaptive threshold(iteration별 Th)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블과 개념 유사(단 hard 문턱)</td></tr><tr><td>soft/양자화</td><td>대응 없음</td><td>본 논문은 1bit hard, 우리 soft-2~3bit와 층위 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — binary QC-LDPC decoder HW로 계열은 맞으나 hard-1bit Gallager-B라 우리 min-sum(soft) 주경로 대비 정정능력이 낮아, 초저비용 fallback/저전력 모드나 VNU 마스킹 카운터 최적화 아이디어 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7818769",
+  "title": "Cost Effective FPGA Implementation for Hard Decision LDPC Decoders",
+  "year": 2016,
+  "venue": "TELFOR",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "2304",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "irregular dv 지원 adaptive-threshold 다수결 VNU로 Gallager-B 부분병렬 QC-LDPC 디코더를 Min-Sum 2bit 대비 로직 2.5x·BRAM 25% 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "3966 LUT-FF pairs + 9 BRAM @Virtex-7",
+  "parallelism": "부분",
+  "throughput_gbps": 0.342,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "hard-decision(1bit)이라 정정능력 낮음, WiMAX rate 1/2 저rate·error-floor/BER 곡선만 시뮬, ASIC 미검증",
+  "todo_check": "Gallager-B 다수결 VNU가 우리 min-sum 대비 NAND RBER 영역에서 정정능력 손실 폭이 감내 가능한지 BER 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7818769---cost-effective-fpga-implementation-for-hard-decision-ldpc-decoders-2016-telfor">ieee:7818769 - Cost Effective FPGA Implementation for Hard Decision LDPC Decoders (2016, TELFOR)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

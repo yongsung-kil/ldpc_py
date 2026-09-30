@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8242475</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8242475---memory-compact-high-speed-qc-ldpc-decoder-2017-ieee">ieee:8242475 - Memory Compact High-Speed QC-LDPC Decoder (2017, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>hard-decision과 extrinsic 메시지를 한 메모리 엔트리로 병합해 memory bank 수 축소·다중접근으로 throughput 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>LUT:56778 FF:86942, 82 BRAM(18Kb)@Virtex-5</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>CCSDS(8176,7154) 특정 부호·FPGA 전용, 정정성능 개선 아닌 순수 메모리/throughput 최적화</td></tr><tr><td>추가확인</td><td>Prime ECC의 z=32 병렬·HCU/GT 메모리 구조와 병합 엔트리 전략 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC 부분병렬 디코더의 메모리 뱅크를 hard-decision+extrinsic 병합으로 절감하고 throughput을 높이는 HW 기법으로, 부호성능은 무관하나 HW 메모리 최적화 관점에서 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 부분병렬 QC-LDPC 디코더(regular, circulant <code>L×L</code>) HW 아키텍처, CCSDS Near-Earth (8176,7154), col weight 4/row weight 32, <code>L=511</code>, 2×16 circulant array.</li><li>문제: LDPC는 긴 codeword가 필요해 메모리가 HW 전체를 지배, 특히 hard-decision용 memory bank가 큰 비중 차지.</li><li>복호 알고리즘: normalized MSA(NMSA), C2V <code>R_mn = α·sign·min|Q|</code>, V2C <code>Q_nm = C_n + ΣR</code>, normalized factor <code>α</code> 상수, 6bit 양자화.</li><li>기존 구조: extrinsic용 <code>m×n</code> RAMM, intrinsic용 <code>n</code> RAMF, hard-decision용 <code>m×n</code> RAMC → 총 <code>2mn+n</code> bank 필요.</li><li>핵심 기법 1 (RAMMC): CNU와 PCU가 동시 동작하며 같은 행의 extrinsic(V2C)과 hard-decision을 같은 주소로 접근한다는 관찰 → 둘을 한 엔트리(<code>p×(Q+1)</code>bit)로 병합해 RAMC <code>m×n</code> bank 제거, 주소 카운터도 공유.</li><li>핵심 기법 2 (RAMC compact): 최종 출력 시 RAMMC 양포트 충돌 회피 위해, VNU 단계에서 <code>n</code> hard-decision을 별도 compact bank C(엔트리당 <code>p×n</code>bit)에 함께 기록 → 출력 시 한 엔트리에서 n개 동시 획득.</li><li>구현 디테일: p-parallel(<code>p=8</code>), dual-port BRAM, CNU/VNU 각 7 pipeline stage, 1 iteration = <code>v+c+2⌈L/p⌉</code> clk.</li><li>병렬/스케줄: 2p개 32-input CNU, 32p개 5-input VNU, CNU-PCU와 VNU 교대, 2⌈L/p⌉ 깊이로 수신·복호·출력 동시 수행.</li><li>결과: Virtex-5 XC5VLX330, 250MHz, <code>I_m=14</code>에서 2Gbps, 총 573.44kbit(82 18Kb BRAM), LUT 56778/FF 86942 — 기존 대비 높은 throughput·양호한 area-to-throughput.</li><li>한계: 순수 메모리/throughput 최적화라 정정능력·iteration 개선 없음, 특정 CCSDS 부호·FPGA 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMSA C2V/V2C 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>Prime ECC의 min-sum과 동일 계열 연산, 알고리즘 자체는 중복</td></tr><tr><td>hard-decision+extrinsic 메모리 병합(RAMMC)</td><td>decoder.cpp LDPC HW 모델(z=32, pipeline)</td><td>메모리 뱅크 절감 아이디어를 z=32 병렬 pipeline 메모리에 참고 가능(중 난이도)</td></tr><tr><td>p-parallel/pipeline 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 이미 6-stage pipeline·GT/HCU 보유, 부분 중복</td></tr><tr><td>syndrome 기반 조기종료(stopping rules)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 CRC 조기종료 사용, syndrome방식과 접근 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 메모리 뱅크 병합 전략은 HW 면적 절감 관점에서 참고 가치가 있으나, Prime ECC는 이미 자체 병렬(z=32)·GT/HCU 메모리 구조를 보유하고 부호성능 개선은 없어 이식 우선순위는 중간.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:8242475",
+  "title": "Memory Compact High-Speed QC-LDPC Decoder",
+  "year": 2017,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "8176",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "hard-decision과 extrinsic 메시지를 한 메모리 엔트리로 병합해 memory bank 수 축소·다중접근으로 throughput 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "LUT:56778 FF:86942, 82 BRAM(18Kb)@Virtex-5",
+  "parallelism": "부분",
+  "throughput_gbps": 2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "CCSDS(8176,7154) 특정 부호·FPGA 전용, 정정성능 개선 아닌 순수 메모리/throughput 최적화",
+  "todo_check": "Prime ECC의 z=32 병렬·HCU/GT 메모리 구조와 병합 엔트리 전략 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8242475---memory-compact-high-speed-qc-ldpc-decoder-2017-ieee">ieee:8242475 - Memory Compact High-Speed QC-LDPC Decoder (2017, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

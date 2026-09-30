@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6385411</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6385411---fpga-prototyping-of-an-asip-ldpc-decoder-for-the-dvb-t2-standard-2012-dasip">ieee:6385411 - FPGA Prototyping of an ASIP LDPC Decoder for the DVB-T2 Standard (2012, DASIP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.9</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Plasma MIPS softcore + SIMD PU 행렬 기반 다표준 유연 LDPC 디코더를 ASIP로 설계·FPGA 프로토타이핑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>12807 FF + 41094 LUT @ XC6VLX240T (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.065Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>유연성/다표준 지향 SIMD 프로세서라 처리량 65Mbps로 낮고 NAND ECC의 고throughput 요구와 상반, offset MS 자체는 신규성 없음</td></tr><tr><td>추가확인</td><td>rate 2/5에서 error-floor 발생 언급 - NAND 고rate와 무관하나 long-frame 메모리(336 BRAM) 병목 구조 참고 여부</td></tr></tbody></table>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: DVB-T2 표준 전체 LDPC(길이 16200/64800, 다수 rate 2/5~9/10), FPGA(Xilinx Virtex-6 LX240T) 실시간 프로토타입.</li><li>문제: 전용 HW 디코더는 다표준(WiFi/WiMAX/DVB) 및 표준 진화에 유연 대응이 어려움.</li><li>접근: ASIP - 공개 MIPS softcore(Plasma) 컨트롤러 + 동종 SIMD PU 행렬(전용 디코더와 신규 ASIP의 중간)로 유연성+효율 절충.</li><li>아키텍처: horizontal layered decoding 채택, PU 하나가 CN 하나 연산 담당, PU마다 register file, <code>P</code>개 PU/블록메모리로 SIMD 병렬.</li><li>인터커넥트: PU-메모리 간 LLR 전송을 interleave <code>Π</code>/deinterleave <code>Π⁻¹</code> 네트워크로 수행, Plasma가 정적 스케줄러 역할(펌웨어 C코드).</li><li>명령어 확장: Plasma 명령셋에 11개 신규 명령 추가해 실행 사이클 효율 개선.</li><li>양자화: LLR/message에 <code>(5,7,5)</code> 스킴(sign1+mag2+frac2), HW복잡도-성능 절충.</li><li>복호 알고리즘: offset Min-Sum, 20 iteration 고정.</li><li>결과: 64 PU 구성(64800 long-frame), 12807 FF + 41094 LUT, 336 BRAM(36kbit), 80MHz에서 throughput 65Mbps, 고정소수 시뮬과 거의 동일 BER, rate 2/5에서 error-floor.</li><li>한계: 유연성 지향으로 throughput 낮음(65Mbps), 알고리즘 신규성 없음(offset MS), long-frame 메모리가 주 병목.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset Min-Sum layered 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리도 min-sum 보유, offset MS는 신규성 없음(중복 기여)</td></tr><tr><td><code>(5,7,5)</code> LLR 양자화</td><td>ecc_data.h <code>PARAM_LLR</code> / decoder.cpp <code>VN_Cal_HD()</code> 계열</td><td>양자화 층위는 닿으나 5비트 uniform은 Prime의 hard/2SD/3SD와 상이</td></tr><tr><td>SIMD PU 행렬 / 명령셋 확장</td><td>대응 없음</td><td>ASIP 프로세서 구조로, Prime의 고정 pipeline HW 모델과 아키텍처 상이</td></tr><tr><td>interleave/deinterleave 네트워크</td><td>GT.cpp <code>Make_GT_HW()</code> (edge 라우팅)</td><td>라우팅 개념만 유사, DVB-T2 다표준 인터리버는 우리 z=32 고정 구조와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 다표준 유연성을 위한 ASIP 프로세서 아키텍처로, 복호 알고리즘은 offset MS(이미 보유)이고 throughput이 낮아 고rate·고throughput NAND binary QC-LDPC ECC에 떼어 쓸 신규 요소가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6385411",
+  "title": "FPGA Prototyping of an ASIP LDPC Decoder for the DVB-T2 Standard",
+  "year": 2012,
+  "venue": "DASIP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.4~0.9",
+  "code_length": "16200~64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Plasma MIPS softcore + SIMD PU 행렬 기반 다표준 유연 LDPC 디코더를 ASIP로 설계·FPGA 프로토타이핑",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "12807FF+41094LUT@XC6VLX240T",
+  "parallelism": "부분",
+  "throughput_gbps": 0.065,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "유연성/다표준 지향 SIMD 프로세서라 처리량 65Mbps로 낮고 NAND ECC의 고throughput 요구와 상반, offset MS 자체는 신규성 없음",
+  "todo_check": "rate 2/5에서 error-floor 발생 언급 - NAND 고rate와 무관하나 long-frame 메모리(336 BRAM) 병목 구조 참고 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6385411---fpga-prototyping-of-an-asip-ldpc-decoder-for-the-dvb-t2-standard-2012-dasip">ieee:6385411 - FPGA Prototyping of an ASIP LDPC Decoder for the DVB-T2 Standard (2012, DASIP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

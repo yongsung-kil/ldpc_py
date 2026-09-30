@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10653194</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10653194---an-efficient-admm-based-penalized-decoding-algorithm-for-binary-ldpc-code-2024-cisce">ieee:10653194 - An efficient ADMM-based penalized decoding algorithm for binary LDPC code (2024, CISCE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.5</td></tr><tr><td>부호length</td><td>576~2640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>세그먼트 페널티함수(IPF) 기반 ADMM-LP 디코딩으로 iteration 수 감소 및 오류정정 성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM-LP는 실수(fractional) 연산 기반 볼록최적화 디코더로 min-sum 기반 HW 아키텍처와 근본적으로 이질적, 소형 코드(576~2640bit)만 검증</td></tr><tr><td>추가확인</td><td>페널티계수 β, μ가 코드별 수동 튜닝(differential evolution [12])되는 점의 일반화 가능성</td></tr></tbody></table>
+<blockquote><p>총평: ADMM 기반 LP 디코딩 계열로 iteration 감소와 waterfall 성능 개선을 보이지만, min-sum/BP 계열이 아닌 연속최적화(LP) 패러다임이라 NAND용 binary QC-LDPC HW 디코더로의 직접 이식은 사실상 불가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary LDPC 2종 — regular (2640,1320) Margulis 코드(rate 0.5), irregular (576,288) IEEE 802.16e 코드.</li><li>문제: 기존 ADMM-LP(linear programming) 디코딩은 error floor는 없앴지만 저-SNR 영역에서 BP 대비 오류정정 성능이 열세, 이를 개선하려 penalty function <code>g(x)</code>를 LP 목적함수에 추가한 ADMM-PD 계열이 있으나 penalty 도입이 복잡도/수렴속도를 저해.</li><li>가정: LP relaxation으로 codeword를 <code>[0,1]^n</code> 연속변수 <code>x</code>로 완화, check-node 제약을 check-polytope 투영(<code>ΠK_dj</code>)으로 처리, LLR <code>γ</code>를 목적함수 계수로 사용.</li><li>핵심 기법: 세그먼트 페널티함수(SPF) 설계 원칙(변수가 0.5 근방일 때는 기울기 작게, 0.5에서 멀 때는 기울기 크게)을 만족하는 해석적 해가 존재하는 improved penalty function(IPF) <code>f(t_i)=(t_i - e_i/2)^2</code>를 제안.</li><li>핵심 식: augmented Lagrangian <code>L(x,z,λ)=γᵀx+Σf(t_i)|x_i-0.5|+Σλ_j(P_jx-z_j)+(μ/2)Σ‖P_jx-z_j‖²</code>에 근접항 <code>(β/2)‖x-x^k‖²</code>를 추가해 ADMM 갱신 가속(변수 갱신식 (12)).</li><li>확장: variable-node 업데이트 <code>x^{k+1}</code>은 구간(<code>t_i≤e_i/2</code> vs <code>t_i&gt;e_i/2</code>)별 닫힌형 해로 계산, check-node 보조변수 <code>z^{k+1}</code>은 check-polytope 투영으로 계산.</li><li>구현 디테일: 없음(순수 실수 연산, 정수/비트폭 양자화 언급 없음) — 복잡도는 ADMM-PD와 동일 오더(코드 길이 n에 선형).</li><li>학습/최적화: penalty 계수 <code>μ=3.0</code>, <code>β=1.3</code>(c1)/<code>3.15</code>(c2)는 differential evolution([12] 기법 준용)으로 코드별 사전 튜닝, residual tolerance <code>10⁻⁶</code>, 최대 iteration 1000.</li><li>결과: c1(Margulis)에서 FER 10⁻³ 기준 SNR 약 1.74dB(ADMM-PD-l1 1.8dB 대비 개선), SNR 1.7dB에서 평균 iteration 약 21회(대비 ADMM-PD-l1 42/ADMM-PD-l2 29/ADMM-Lpbox 27회)로 유의미한 iteration 감소.</li><li>한계: 이론적 복잡도(선형 오더)만 언급, HW 구현·gatecount·throughput 전무, 시뮬레이션만 수행, 소형 코드(길이 576/2640)로만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 디코딩 알고리즘 전체</td><td>대응 없음</td><td>LP(연속최적화) 기반 디코더로 min-sum 이터레이션 구조(<code>decoder.cpp</code> <code>LDPC_Decoder()</code>)와 알고리즘 패러다임 자체가 다름</td></tr><tr><td>페널티함수 기반 variable-node 업데이트</td><td>대응 없음</td><td>min-sum VN 갱신(<code>VN_Cal_HD()</code>)과 수식/개념 모두 상이</td></tr><tr><td>check-polytope 투영</td><td>대응 없음</td><td>CN min-sum 연산(<code>CNU_Update_New_Mag()</code>)과 무관</td></tr><tr><td>iteration 종료 조건(residual tolerance)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료라는 목적만 유사, 구현 방식(residual norm vs CRC)은 완전히 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — ADMM/LP 디코딩은 실수 볼록최적화 기반으로 Prime ECC의 min-sum HW 아키텍처와 알고리즘·연산 구조가 근본적으로 달라 이식 불가.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10653194",
+  "title": "An efficient ADMM-based penalized decoding algorithm for binary LDPC code",
+  "year": 2024,
+  "venue": "CISCE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "576~2640",
+  "soft_quant": "무관",
+  "key_contribution": "세그먼트 페널티함수(IPF) 기반 ADMM-LP 디코딩으로 iteration 수 감소 및 오류정정 성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ADMM-LP는 실수 연산 기반 볼록최적화 디코더로 min-sum HW 아키텍처와 근본적으로 이질적, 소형 코드만 검증",
+  "todo_check": "페널티계수 β, μ가 코드별 수동 튜닝(differential evolution)되는 점의 일반화 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10653194---an-efficient-admm-based-penalized-decoding-algorithm-for-binary-ldpc-code-2024-cisce">ieee:10653194 - An efficient ADMM-based penalized decoding algorithm for binary LDPC code (2024, CISCE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

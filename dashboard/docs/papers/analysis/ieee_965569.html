@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_965569</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee965569---a-new-schedule-for-decoding-low-density-parity-check-codes-2001-ieee-globecom">ieee:965569 - A New Schedule for Decoding Low-Density Parity-Check Codes (2001, IEEE GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.36</td></tr><tr><td>부호length</td><td>1268</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>girth 기반 확률적 message-passing 스케줄(작은 girth 노드일수록 갱신 빈도 낮춤)로 복호 성능/복잡도 트레이드오프 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>short block(&lt;=10000bit)에서만 이득, 노드별 확률적 갱신은 flooding 대비 avg iteration 소폭 증가·HW pipeline 스케줄과 상충</td></tr><tr><td>추가확인</td><td>node별 girth 확률 갱신을 Prime ECC의 6-stage pipeline/dual-update 스케줄에 넣을 때 latency·제어 오버헤드</td></tr></tbody></table>
+<blockquote><p>총평: SPA 복호의 flooding 스케줄을 girth 기반 확률적 스케줄로 바꿔 short LDPC의 BER/MER·undetected error를 한 자릿수 개선한 sum-product 스케줄링 논문으로, 아이디어는 유효하나 min-sum·pipeline 고정된 Prime ECC HW 스케줄과 정합에는 검토 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN + BPSK 상 sum-product(BP) 복호되는 short-block LDPC의 message-passing 스케줄 개선(예제: (1268,456) construction-2A code, rate≈0.36).</li><li>문제: 관례적 flooding schedule(매 iteration 모든 symbol→check 갱신)은 short block(&lt;=10000bit)에서 작은 cycle 다수로 최적 APP에서 멀어짐.</li><li>핵심가정: cycle-free graph에서 girth <code>g_v</code>인 노드 <code>v</code>의 메시지는 <code>g_v/2</code> iteration 후 자기 자신으로 되돌아오며, 그 시점부터 local message와 종속되어 최적성이 깨짐.</li><li>핵심기법: 작은 girth 노드는 갱신 빈도를 낮춰 서로 다른 girth 노드가 "동일 빈도로 initial message를 double counting"하도록 타이밍 동기화.</li><li>확률적 구현: symbol node <code>v</code>에 확률 <code>p_v = g_min / g_v</code> 부여, 매 iteration(첫 회 제외) 확률 <code>p_v</code>로만 갱신하고 이후 check node 갱신; 첫 iteration은 flooding.</li><li>의미: 평균적으로 <code>g_min/2</code> iteration마다 노드 메시지가 자기 최소 cycle을 한 번 순회 → "equal double counting" 근사.</li><li>복잡도: iteration당 갱신 메시지가 flooding의 <code>2E</code>에서 <code>sum(d_v * g_min/g_v)</code>로 감소 → 회당 계산량은 동등 이하.</li><li>결과: (1268,456)에서 2.5 dB일 때 확률적 스케줄이 BER/MER를 flooding 대비 한 자릿수 이상 감소, undetected error도 크게 제거(Table II, 예 1.0dB에서 3.9%→0.6%).</li><li>avg iteration: 확률적 스케줄이 flooding보다 3회 이하로 소폭 증가(Table I).</li><li>한계: HW 미설계, 시뮬만; short block 특화 이득, 노드별 확률 스케줄은 규칙적 HW pipeline과 상충 소지.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>message-passing 스케줄(확률적 갱신)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄 변경 지점은 명확하나 Prime ECC는 dual-update(even/odd) 고정 스케줄·6-stage pipeline이라 노드별 확률 갱신 삽입에 제어 부담</td></tr><tr><td>girth 기반 노드 우선순위</td><td>대응 없음</td><td>girth 정보를 런타임 스케줄에 쓰는 모듈 없음(GT는 edge MUX 선택으로 목적 다름)</td></tr><tr><td>sum-product CN/VN 갱신식</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>VN_Cal_HD()</code></td><td>Prime ECC는 min-sum 근사라 full-SPA 식과 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 스케줄링으로 정정능력을 공짜로 올린다는 통찰은 유효하나, min-sum·dual-update·pipeline이 고정된 Prime ECC HW에 노드별 확률 스케줄을 넣으려면 제어 로직 재설계가 필요하고 short-block 특화 이득이라 고rate NAND 부호에서의 실효는 재검증 대상.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:965569",
+  "title": "A New Schedule for Decoding Low-Density Parity-Check Codes",
+  "year": 2001,
+  "venue": "IEEE GLOBECOM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.36,
+  "code_length": "1268",
+  "soft_quant": "무관",
+  "key_contribution": "girth 기반 확률적 message-passing 스케줄(작은 girth 노드일수록 갱신 빈도 낮춤)로 복호 성능/복잡도 트레이드오프 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "short block(&lt;=10000bit)에서만 이득, 노드별 확률적 갱신은 flooding 대비 avg iteration 소폭 증가·HW pipeline 스케줄과 상충",
+  "todo_check": "node별 girth 확률 갱신을 Prime ECC의 6-stage pipeline/dual-update 스케줄에 넣을 때 latency·제어 오버헤드"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee965569---a-new-schedule-for-decoding-low-density-parity-check-codes-2001-ieee-globecom">ieee:965569 - A New Schedule for Decoding Low-Density Parity-Check Codes (2001, IEEE GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

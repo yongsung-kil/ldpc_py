@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4804639</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4804639---flexible-ldpc-decoder-design-for-multigigabit-per-second-applications-2010-ieee-tcas-i">ieee_4804639 - Flexible LDPC Decoder Design for Multigigabit-per-Second Applications (2010, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8192</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>shift-LDPC용 유연 디코더: single-minimum MS + 4-bit 비균일 양자화 + Benes 순열망으로 다중 rate/length 지원, 3.6 Gbps</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>3.6Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호가 shift-LDPC(QC 아님)라 부호구조 이식성 낮음, single-min+4bit는 성능손실 동반(&lt;0.1dB), Benes망은 우리 z=32 고정구조와 상이</td></tr><tr><td>추가확인</td><td>single-minimum(min2 제거) 스킴을 우리 CNU에 적용 시 성능/면적 tradeoff, 4-bit 비균일 양자화 변환표를 우리 LLR 테이블에 정합</td></tr></tbody></table>
+<blockquote><p>총평: 다중 rate/length 유연성을 위한 shift-LDPC 전용 고속 디코더로, single-min·비균일 양자화 아이디어는 재사용 가능하나 부호구조/순열망은 우리 고정 QC-LDPC와 정합성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 shift-LDPC(Sha et al. 제안) <code>(8192,7168)</code> <code>(4,32)</code>-regular, rate 0.875, BPSK/AWGN, 최대 iteration 16.</li><li>문제: 대길이 QC-LDPC는 HW 복잡도가 급증하고, 다양한 rate/length를 지원하는 유연 고속 디코더는 메모리·라우팅이 병목.</li><li>shift-LDPC 구조: 왼쪽 서브행렬은 랜덤 순열행렬, 나머지는 단위행렬을 우측으로 1스텝 순환시프트한 순열행렬 → 상호연결이 단순.</li><li>핵심 기법 1: single-minimum MS — min1만 계산/저장하고 min2를 제거(offset MS 기반, scaling+offset 후처리), 약간의 성능손실로 HW 대폭 절감.</li><li>핵심 기법 2: 4-bit 비균일 양자화 — CNPU는 min만 찾으므로 비균일값 직접 사용, VNPU에서만 Exp/Comp 블록으로 5-bit 균일값 변환(식 2/3).</li><li>결과 1: single-min+4bit 비균일이 (6:3) 균일 normal MS 대비 FER 기준 0.1 dB 미만, BER 기준 0.03 dB 손실.</li><li>아키텍처: VNPU 배열 + CNPU 배열 + CNPU local shuffle network + 설정가능 global permutation network.</li><li>유연성: Benes 순열망(15단 크로스바)으로 서브행렬 블록크기/행수/열수 변경 지원, 7680 제어비트로 구성, 파이프라인 3분할.</li><li>결과 2: SMIC 0.18um, <code>(8192,7168)</code> 디코더가 16 iteration에서 최대 3.6 Gbps, die 13.9/13.1 mm2, single-min+4bit는 [19] 대비 면적 8.44% 절감.</li><li>비교: TAR(throughput-to-area) 지표로 기존 유연 디코더보다 우수, [20] 대비 185배, [22] 대비 두 자릿수 배 throughput.</li><li>한계: 부호는 무선/광통신용 shift-LDPC이며 NAND 고전 QC-LDPC와 구조 상이, 순열망 HW가 우리 고정 z=32 구조와 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>single-minimum MS(min2 제거)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 min1/min2 사용, min2 제거는 면적↓지만 재검증 필요</td></tr><tr><td>4-bit 비균일 양자화 Exp/Comp</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>Get_VNU_Table_Idx()</code></td><td>VNU 전후 양자화 변환, 메모리 절감 아이디어 이식 가능</td></tr><tr><td>offset MS scaling/offset 후처리</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>보정 파라미터 테이블 관리</td></tr><tr><td>Benes 설정가능 순열망</td><td>대응 없음</td><td>우리는 z=32 고정 QC 구조(HCU/GT), 유연 순열망 불필요</td></tr><tr><td>shift-LDPC 부호구조</td><td>대응 없음</td><td>우리는 binary QC-LDPC 고정, shift 구조 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — single-minimum·비균일 양자화의 면적/메모리 절감 아이디어는 디코더에 참고 가능하나, 핵심인 shift-LDPC 부호구조와 Benes 유연 순열망은 우리 고정 QC-LDPC HW와 정합성이 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4804639",
+  "title": "Flexible LDPC Decoder Design for Multigigabit-per-Second Applications",
+  "year": 2010,
+  "venue": "IEEE TCAS-I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.875,
+  "code_length": "8192",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "shift-LDPC용 유연 디코더: single-minimum MS + 4-bit 비균일 양자화 + Benes 순열망으로 다중 rate/length 지원, 3.6 Gbps",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 3.6,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "부호가 shift-LDPC(QC 아님)라 부호구조 이식성 낮음, single-min+4bit는 성능손실 동반(&lt;0.1dB), Benes망은 우리 z=32 고정구조와 상이",
+  "todo_check": "single-minimum(min2 제거) 스킴을 우리 CNU에 적용 시 성능/면적 tradeoff, 4-bit 비균일 양자화 변환표를 우리 LLR 테이블에 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4804639---flexible-ldpc-decoder-design-for-multigigabit-per-second-applications-2010-ieee-tcas-i">ieee_4804639 - Flexible LDPC Decoder Design for Multigigabit-per-Second Applications (2010, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

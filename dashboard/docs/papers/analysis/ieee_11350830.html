@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11350830</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11350830---fpga-based-implementation-of-low-complexity-qc-ldpc-for-real-time-50g-pon-systems-2025-acp-2025">ieee:11350830 - FPGA-based Implementation of Low-Complexity QC-LDPC for Real-Time 50G-PON Systems (2025, ACP 2025)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.844</td></tr><tr><td>부호length</td><td>17280</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>32-phase 스케줄 + 5단 파이프라인 + Z=3 병렬 서브모듈로 고정배선 라우팅을 써서 저자원 실시간 50Gbps QC-LDPC(17280,14592) 디코더 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>50</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>표준 50G-PON 부호(17280,14592)에 고정된 아키텍처 구현 논문으로 알고리즘 신규성 낮음, 우리 z=32/HCU 구조와 파라미터 상이</td></tr><tr><td>추가확인</td><td>T=552 VNU/3072 CNU, 32-phase conflict-free 스케줄 매핑이 우리 z=32·N_b=129 base matrix에 재사상 가능한지, gate count/BRAM 사용량</td></tr></tbody></table>
+<blockquote><p>총평: NMS 기반 binary QC-LDPC HW 실시간 구현(50Gbps 실측)으로 라우팅·파이프라인 스케줄 아이디어는 참고가치 있으나 표준 부호 고정 구현이라 알고리즘 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>50G-PON(ITU-T G.9804)용 표준 FEC인 binary QC-LDPC(17280,14592), rate≈0.844, H=3072×17664(12×69 array of 256×256 submatrix, CPM shift 또는 -1 zero)를 FPGA OLT/ONU에 구현.</li><li>문제: LDPC H-matrix가 커서 chip area/power가 커지고 실시간 50Gbps 처리가 어렵다 — 알고리즘 선택과 HW 아키텍처가 관건.</li><li>인코더는 14592 정보비트에 2688 parity 부가 후 384비트 puncturing해 17280 코드워드 생성.</li><li>디코더 알고리즘은 normalized min-sum(NMS) 기반 iterative message passing (VNU↔CNU).</li><li>병렬 구조: 병렬화 factor Z=3, 동일 디코딩 서브모듈 3개가 round-robin 입력, 405 클록 내 코드워드 처리로 throughput 극대화.</li><li>서브모듈은 5단 파이프라인 — Blockwise Cyclic Shift Registers(CCVM), VNU(3단), CNU(2단)를 fixed wiring으로 연결, 3072×552 공간을 5클록에 처리.</li><li>VNU가 채널 LLR을 내부 계산해 메모리 접근을 줄이고, fixed interconnect로 복잡한 라우팅 로직 제거.</li><li>H-matrix를 32 phase로 분할, 각 phase가 수직 슬라이스에 매핑되어 conflict-free로 동시 실행(T=552 VNU, 3072 CNU, 69열이라 1 iteration에 36클록).</li><li>결과: 388.8MHz에서 50Gbps, 실시간 optical gain ≈8.7dB(target BER 1e-2), 40Gbps error-free; OLT LUT 67%/FF 29%/8.47W, ONU LUT 74%/FF 35%/29.92W; ZTE·Fudan 대비 40배 throughput.</li><li>한계: 표준 부호에 고정된 아키텍처 구현으로 알고리즘 신규성 없음; ASIC gate count 미제시(FPGA 자원만), soft-decision 세부 양자화 비트폭 본문 미기술.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS 기반 CN 갱신</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 계열로 우리와 동일 계열, 정규화 factor는 이미 유사 보유</td></tr><tr><td>VNU 변수노드 갱신/LLR 내부계산</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, decoder.h <code>Get_VNU_*</code></td><td>채널 LLR 내부계산으로 메모리 접근 감소 아이디어 참고</td></tr><tr><td>이터레이션 message passing 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>골격 동일</td></tr><tr><td>32-phase conflict-free 스케줄/fixed wiring</td><td>대응 없음</td><td>우리는 z=32 row 병렬 + GT/HCU 구조, 32-phase column-slice 스케줄은 별도 아키텍처</td></tr><tr><td>H-matrix(256×256 CPM) 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC-LDPC PCM 로드 대응, 단 z=256 vs 우리 z=32</td></tr><tr><td>soft-read LLR 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-decision 지원부에 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — binary QC-LDPC NMS 디코더의 라우팅 최소화(fixed wiring)·phase 스케줄·파이프라인 아이디어는 HW 참고가치가 있으나, 표준 50G-PON 부호에 고정된 구현이고 z/base-matrix 파라미터가 우리와 달라 직접 이식은 재사상이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11350830",
+  "title": "FPGA-based Implementation of Low-Complexity QC-LDPC for Real-Time 50G-PON Systems",
+  "year": 2025,
+  "venue": "ACP 2025",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.844,
+  "code_length": "17280",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "32-phase 스케줄 + 5단 파이프라인 + Z=3 병렬 서브모듈로 고정배선 라우팅을 써서 저자원 실시간 50Gbps QC-LDPC(17280,14592) 디코더 구현",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 50,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "표준 50G-PON 부호(17280,14592)에 고정된 아키텍처 구현 논문으로 알고리즘 신규성 낮음, 우리 z=32/HCU 구조와 파라미터 상이",
+  "todo_check": "T=552 VNU/3072 CNU, 32-phase conflict-free 스케줄이 우리 z=32·N_b=129 base matrix에 재사상 가능한지, gate count/BRAM 사용량"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11350830---fpga-based-implementation-of-low-complexity-qc-ldpc-for-real-time-50g-pon-systems-2025-acp-2025">ieee:11350830 - FPGA-based Implementation of Low-Complexity QC-LDPC for Real-Time 50G-PON Systems (2025, ACP 2025)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

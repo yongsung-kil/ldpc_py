@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9401329</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_9401329---a-332-gbpsiter-reconfigurable-ldpc-decoder-fully-compliant-with-5g-nr-applications-2021-ieee-iscas">ieee_9401329 - A 33.2 Gbps/iter. Reconfigurable LDPC Decoder Fully Compliant with 5G NR Applications (2021, IEEE ISCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>19200~25344</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>row-based layered NMS 파이프라인의 데이터 의존 해저드를 instruction-level reordering + data-level rescheduling으로 제거해 stall 없이 고throughput 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.83M gate@28nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>33.2Gbps/iter</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G NR 특화(102 PCM, 2 base graph, 저rate 1/3~1/2)라 고rate NAND QC-LDPC와 부호/degree 분포 상이; block-parallel + RF 69.6% 메모리 구조가 우리 z=32/HCU와 다름</td></tr><tr><td>추가확인</td><td>reordering/rescheduling이 우리 dual-update·pipeline 6-stage 스케줄에서 성립하는지, 고rate/고degree PCM에서 "layer당 non-overlap CPM ≥3" 조건 충족 여부</td></tr></tbody></table>
+<blockquote><p>총평: row-based layered NMS 파이프라인의 Lpost/C2V 데이터 의존 stall을 명령·데이터 레벨 재정렬로 제거하는 스케줄링 기법. 5G NR 특화지만 layered NMS 자체는 우리 min-sum 디코더와 동종이라 파이프라인 스케줄 아이디어는 조건부 이식 가능(부호는 비이식).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR LDPC 전체 구성(2 base graph, 8 set index, 51 lifting size = 102 PCM) 지원 reconfigurable 디코더, 5-bit 양자화.</li><li>문제: irregular QC-LDPC(BG1 row degree 3~19, col degree 1~30) + 파이프라인의 데이터 의존 해저드가 latency를 늘려 고throughput 설계를 저해.</li><li>기반: row-based layered NMS, 1 iteration을 BG1 46 / BG2 42 sub-iteration(layer)으로 분할, block-parallel 아키텍처로 라우팅 복잡도 완화.</li><li>핵심 해저드: <code>Lpost</code> 갱신이 해당 layer의 GMS(global min &amp; sign)에 의존 → CNU가 GMS 얻는 데 <code>dc</code>(row degree) cycle, Lpost update가 파이프라인을 <code>dc</code> cycle stall.</li><li>기법 1 (instruction-level reordering): Lpost를 GMS 확보 즉시 갱신하지 않고 "다음 접근 시점"에 복원(update를 이전 stage로 이동) → GMS 의존 <code>dc</code> cycle 제거.</li><li>잔여 문제: 파이프라인 깊이·C2V↔Lpost 해저드로 여전히 3 cycle stall.</li><li>기법 2 (data-level rescheduling): (a) 각 layer에 non-overlap CPM ≥3 확보(check node rescheduling), (b) 각 layer 첫 3 cycle에 non-overlap CPM만 처리(variable node rescheduling)로 잔여 stall 제거, 복호성능 열화 없음.</li><li>HW: VNU를 PipeStage1(Lpost update)/PipeStage2(V2C)로 분할, CNU를 PipeStage3(accumulated sorter+sign), SyndromeUpdate/EarlyTermination 별도.</li><li>결과: FPGA(VCU1525) 6.7 Gbps/iter @111MHz; TSMC 28nm post-layout 33.2 Gbps/iter @556MHz, core 1.97mm², 2.83M gate, power 232mW, 조기종료 시 BG1 avg iter 14.44/9.12/5.</li><li>한계: 5G NR 저rate(1/3~1/2)·특정 PCM 전용, 정정성능·iteration 자체 개선 없음(스케줄링으로 stall latency만 개선), rescheduling이 "layer당 non-overlap CPM ≥3" 구조 조건에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>row-based layered NMS 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동종 min-sum, 스케줄만 상이(우리는 dual-update even/odd)</td></tr><tr><td>CNU GMS(min1/min2+sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유, 중복</td></tr><tr><td>instruction-level reordering / data-level rescheduling (파이프라인 stall 제거)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프 (pipeline 6-stage 모델)</td><td>조건부 이식: 우리 pipeline 스케줄에 layer 재정렬 아이디어 적용 검토 여지</td></tr><tr><td>조기종료(SyndromeUpdate/EarlyTermination)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>우리는 CRC 기반, 논문은 syndrome 기반 — 방식 상이</td></tr><tr><td>CPM/base graph 스케줄 재배치</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 종속, 5G PCM은 비이식</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered NMS 파이프라인의 데이터 의존 stall을 제거하는 reordering/rescheduling 아이디어는 우리 pipeline 6-stage 디코더의 latency 개선에 참고 가치가 있으나, 5G NR 특정 PCM·저rate·"non-overlap CPM ≥3" 구조 조건에 강하게 묶여 고rate NAND QC-LDPC로 그대로 옮기려면 재검증이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9401329",
+  "title": "A 33.2 Gbps/iter. Reconfigurable LDPC Decoder Fully Compliant with 5G NR Applications",
+  "year": 2021,
+  "venue": "IEEE ISCAS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.33~0.5",
+  "code_length": "19200~25344",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "row-based layered NMS 파이프라인의 데이터 의존 해저드를 instruction-level reordering + data-level rescheduling으로 제거해 stall 없이 고throughput 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.83M gate@28nm",
+  "parallelism": "부분",
+  "throughput_gbps": 33.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "5G NR 특화(102 PCM, 저rate 1/3~1/2)라 고rate NAND QC-LDPC와 부호/degree 분포 상이; block-parallel+RF 메모리 구조가 z=32/HCU와 다름",
+  "todo_check": "reordering/rescheduling이 우리 dual-update·pipeline 6-stage에서 성립하는지, 고rate/고degree PCM에서 layer당 non-overlap CPM ≥3 조건 충족 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_9401329---a-332-gbpsiter-reconfigurable-ldpc-decoder-fully-compliant-with-5g-nr-applications-2021-ieee-iscas">ieee_9401329 - A 33.2 Gbps/iter. Reconfigurable LDPC Decoder Fully Compliant with 5G NR Applications (2021, IEEE ISCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

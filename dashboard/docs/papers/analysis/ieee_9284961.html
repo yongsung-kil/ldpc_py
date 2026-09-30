@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9284961</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9284961---hard-input-fec-evaluation-using-markov-models-for-equalization-induced-correlated-errors-in-50g-pon-2021-ieeeosa-jocn">ieee:9284961 - Hard-input FEC evaluation using Markov models for equalization-induced correlated errors in 50G PON (2021, IEEE/OSA JOCN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.851</td></tr><tr><td>부호length</td><td>17152</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>이퀄라이저 유발 상관 에러를 4-state Fritchman Markov 모델로 재현해 hard-input LDPC 성능(OPSP)을 평가하고 precoding/L-interleaving 효과 비교</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>50G PON 광채널 ISI 상관에러 평가 전용, 부호/디코더 개선 아님, FPGA는 에러생성 평가용일 뿐 디코더 HW 설계 아님</td></tr><tr><td>추가확인</td><td>L-interleaving의 상관에러 완화가 NAND의 셀간 간섭성 버스트에도 유효한지(별도 검증 필요)</td></tr></tbody></table>
+<blockquote><p>총평: PON 이퀄라이저 상관에러 모델링·인터리빙 평가 논문으로 NAND binary LDPC 디코더/부호 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 50G PON NRZ 다운링크, 25 Gbaud APD, IEEE 802.3ca 기반 QC-LDPC(lifting <code>Z=256</code>, <code>N=17152</code>, <code>K=14592</code>, rate <code>R=0.851</code>), layered min-sum 최대 14 iter.</li><li>문제: CD/대역제한 ISI를 잡는 이퀄라이저(MLSE, CTLE+DFE)가 디코더 입력에 <strong>상관(버스트) 에러</strong>를 유발 → BSC 가정 대비 hard-input LDPC 성능 저하.</li><li>모델: 상관 에러를 error cluster distribution(ECD)로 특성화, 단순 2-state Gilbert 대신 4-state Fritchman Markov model(FMM)로 정밀 fit.</li><li>핵심기법: FMM(good 1 + bad 3 state) 전이행렬 <code>A</code>로 cluster 길이 확률 <code>pn</code> 유도(식 2), <code>g</code>는 평균 BER <code>Pe</code> 맞추는 정규화 파라미터.</li><li>핵심식: <code>p1=(1-g)(1-ε1-b1)</code>, <code>pn=b1·pn-1+...</code> — 측정 ECD(cluster 1~3)와 asymptotic slope를 재현하도록 <code>bi,εi</code> 커브피팅.</li><li>확장: FMM을 FPGA 생성모델로 써서 output BER <code>1E-12</code>까지 hard-input LDPC 성능을 통계적으로 평가.</li><li>트릭: precoding(차분부호화)은 error-loading을 좁혀 성능 개선하나 상관 약할 땐 평균 BER↑로 악화; L-interleaving(L codeword 비트 인터리빙)은 error loading을 binomial(BSC)로 근접.</li><li>최적화 절차: 없음(모델 fit은 수동 커브피팅).</li><li>결과: 상관에러로 인한 OPSP 0.3~0.6 dB, Ω-interleaving은 미미한 개선, <code>L=4</code> bit-interleaving으로 OPSP를 BSC 대비 &lt;0.05 dB로 축소.</li><li>한계: 부호/디코더 자체 개선 없음, 광 PON 특화 채널, FPGA는 에러생성·평가 프레임워크(디코더 HW 아키텍처 미공개).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered min-sum LDPC 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC도 min-sum이나 논문은 디코더 개선 아닌 평가 대상으로만 사용</td></tr><tr><td>QC-LDPC 부호(Z=256, 802.3ca)</td><td>대응 없음</td><td>Prime ECC는 자체 고정 H-matrix(z=32), 802.3ca 부호 이식 대상 아님</td></tr><tr><td>FMM 상관에러/버스트 채널 생성</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>Prime ECC 채널은 AWGN/RBER/fixed로 상관 버스트 미지원(개념 참고만 가능)</td></tr><tr><td>L-interleaving / precoding</td><td>대응 없음</td><td>컨트롤러 상위 계층 기법, Prime ECC 디코더 모듈 범위 밖</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 광 PON 이퀄라이저 상관에러 평가 방법론이라 NAND binary QC-LDPC의 부호설계/디코더/HW에 떼어 쓸 알고리즘 기여가 없음(상관에러 모델링 개념만 간접 참고 가능).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9284961",
+  "title": "Hard-input FEC evaluation using Markov models for equalization-induced correlated errors in 50G PON",
+  "year": 2021,
+  "venue": "IEEE/OSA Journal of Optical Communications and Networking",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.851,
+  "code_length": "17152",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "이퀄라이저 유발 상관에러를 4-state Fritchman Markov 모델로 재현해 hard-input LDPC OPSP를 평가하고 precoding/L-interleaving 효과 비교",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "50G PON 광채널 ISI 상관에러 평가 전용, 부호/디코더 개선 아님, FPGA는 에러생성 평가용",
+  "todo_check": "L-interleaving의 상관에러 완화가 NAND 셀간 간섭 버스트에도 유효한지 별도 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9284961---hard-input-fec-evaluation-using-markov-models-for-equalization-induced-correlated-errors-in-50g-pon-2021-ieeeosa-jocn">ieee:9284961 - Hard-input FEC evaluation using Markov models for equalization-induced correlated errors in 50G PON (2021, IEEE/OSA JOCN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

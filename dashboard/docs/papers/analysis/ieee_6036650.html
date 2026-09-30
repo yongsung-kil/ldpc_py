@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6036650</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_6036650---investigation-on-normalized-factor-and-finite-word-length-for-80211n-ldpc-decoding-2011-ieee-conf">ieee_6036650 - Investigation on Normalized Factor and Finite Word-length for 802.11n LDPC Decoding (2011, IEEE conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>802.11n rate별 normalized min-sum factor(1.15~1.35)를 확률이론으로 도출, VN 메시지 워드길이 9→7bit 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11n 특정 부호·rate에 tuning된 factor, 5bit 입력/7bit VN 양자화 스킴이 NAND soft-read(1~3bit) 스펙과 비트폭 상이</td></tr><tr><td>추가확인</td><td>Prime ECC의 magnitude 양자화 테이블·2SD/3SD 스킴과 5/7bit VN 워드길이 정합 및 factor 재도출 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: normalized min-sum factor 이론 도출과 VN 워드길이 축소를 다룬 실용 논문으로 min-sum·양자화 레이어에 개념적으로 닿으나, factor scaling은 Prime ECC 기보유 min-sum과 겹치고 802.11n·고비트폭 양자화라 이식가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 802.11n LDPC(codeword length 1944, rate 1/2·2/3·3/4·5/6, QC-LDPC 81×81 순환행렬), AWGN/BPSK, layered decoding 12 layer.</li><li>문제: LLR-BP는 <code>tanh</code> 연산으로 HW 구현이 비싸고, UMP BP-based(min-sum)는 CN magnitude 과대추정으로 성능 손실 -&gt; 보상 factor 필요.</li><li>가정: CN 입력이 i.i.d.이며 SNR·code rate 종속, 첫 iteration soft값 정확도가 전체 복호 성능을 좌우.</li><li>핵심기법1: normalized BP-based <code>L(rmn)=L_UMP(rmn)/α</code>, <code>α&gt;1</code>; UMP min-sum <code>(6)</code>(sign 곱 × 최소 magnitude)의 과대추정을 나눗셈으로 보정.</li><li>핵심식: <code>α = E(|L2|)/E(|L1|)</code> — 정확 CN 출력 <code>L1</code>(식3, tanh)과 min-sum 근사 <code>L2</code>(식6)의 기대 magnitude 비를 확률적으로 계산.</li><li>핵심기법2: <code>E(L1)</code>은 <code>m_k</code> 급수(식11), <code>E(L2)</code>는 <code>min</code> 통계 적분(식12)으로 근사, <code>sigma^2</code>는 rate·SNR 함수.</li><li>부수 트릭: rate별 단일 factor(1.15/1.25/1.3/1.35)를 첫 iteration에서 고정해 모든 SNR·iteration에 재사용(다중 factor로 HW 복잡도 증가 회피).</li><li>양자화 분석: R=1/2(최대 column weight 11)만 분석 — 5bit 입력 + 최대 11값 합산으로 이론상 9bit VN 필요하나, VN 메시지 통계분포(Fig7/Table2)상 4iter 후 8bit는 1% 미만이라 7bit(sign 1bit 포함)로 충분.</li><li>결과: normalized min-sum이 LLR-BP와 유사 성능(Fig6); VN 7bit로 9bit 대비 유사 성능, 1bit 절감으로 구현 면적 ~10% 절약; 6bit는 BER 10^-7에서 error floor.</li><li>한계: HW 미설계(면적은 정성적 추정), 802.11n 특정 부호에 tuning, 고비트폭(5/7bit) 양자화로 NAND soft-read 스펙과 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>normalized min-sum CN 연산(factor scaling)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum(min1/min2+sign XOR) 보유, scaling factor 미명시라 factor 도입 여지 있으나 기법 중복</td></tr><tr><td>VN 메시지 워드길이/양자화 분석</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>VN magnitude 양자화 테이블에 대응, 다만 802.11n 5/7bit ≠ NAND 2SD/3SD 비트폭</td></tr><tr><td>rate별 factor 테이블(SNR/iteration 무관 고정)</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR 테이블과 개념적 대응, factor 도출식은 참고 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — normalized factor 도출식과 VN 워드길이 통계 분석 방법론은 Prime ECC의 min-sum scaling·양자화 테이블 튜닝에 참고할 만하나, min-sum scaling은 기보유에 가깝고 factor/비트폭이 802.11n·고비트폭에 특화되어 NAND 고rate·저비트 soft-read로 재도출이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6036650",
+  "title": "Investigation on Normalized Factor and Finite Word-length for 802.11n LDPC Decoding",
+  "year": 2011,
+  "venue": "IEEE conf.",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "802.11n rate별 normalized min-sum factor(1.15~1.35)를 확률이론으로 도출, VN 메시지 워드길이 9→7bit 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "802.11n 특정 부호·rate에 tuning된 factor, 5bit 입력/7bit VN 양자화 스킴이 NAND soft-read(1~3bit) 스펙과 비트폭 상이",
+  "todo_check": "Prime ECC의 magnitude 양자화 테이블·2SD/3SD 스킴과 5/7bit VN 워드길이 정합 및 factor 재도출 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_6036650---investigation-on-normalized-factor-and-finite-word-length-for-80211n-ldpc-decoding-2011-ieee-conf">ieee_6036650 - Investigation on Normalized Factor and Finite Word-length for 802.11n LDPC Decoding (2011, IEEE conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

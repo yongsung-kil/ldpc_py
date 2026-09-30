@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5541818</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5541818---a-modified-min-sum-algorithm-for-low-density-parity-check-codes-2010-ieee">ieee:5541818 - A Modified Min-Sum Algorithm for Low-Density Parity-Check Codes (2010, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>864</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>min-sum의 근사 손실을 check node가 아닌 variable node 메시지에 곱셈 modified factor <code>α</code>로 보상(채널 메시지는 미변경)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>cycle당 곱셈 1회 추가</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>normalized/offset min-sum(check node 보상)과 성능 유사·아이디어 인접, α는 H마다 사전 시뮬로 고정하는 단일 스칼라</td></tr><tr><td>추가확인</td><td>Prime ECC의 iteration별 LLR 테이블/양자화와 α 곱셈이 정수 파이프라인에서 정합되는지, 우리 고rate 코드에서 α 최적값</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 근사 보상을 VN 메시지에 스칼라 α로 넣어 BP급 BER·iteration에 근접시키는 저비용 변형으로, Prime ECC min-sum 성능 개선에 접목 검토 가치가 있으나 normalized min-sum과 개념 인접.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular (N,K,d_c,d_v) LDPC, 예제 (864,432) col-weight 3/row-weight 6, AWGN, <code>I_max=51</code>.</li><li>문제: min-sum(UMP BP)은 check node 메시지를 최소 magnitude로 근사 → BP 대비 BER 10^-5에서 약 0.4~1dB 열화.</li><li>기존 보상: normalized/offset min-sum[7]은 <strong>check node</strong> 메시지에 factor 곱/offset 감산으로 보정.</li><li>핵심 관찰: 최종 판정은 variable node 메시지 기반 → CN 메시지가 다소 부정확해도 VN 메시지가 최적에 근접하면 유효 codeword 획득 가능.</li><li>핵심 기법: VN 갱신식 (4)를 <code>L(q_nm) = L(P_n) + α·Π_{m'∈M(n)\m} L(r_m'n)</code> 로 수정, 곱셈 factor <code>α</code>를 VN 메시지의 CN 기여분에만 곱함.</li><li>[8] 대비 차별점: [8]의 곱셈 보상은 채널 메시지 <code>L(P_n)</code>까지 변형했으나, 본 방법은 채널 메시지는 건드리지 않음(단순화 불필요분 보존).</li><li><code>α</code> 결정: H가 정해지면 복호 전 시뮬로 최적 α 사전 확정 → 복호 중 cycle당 곱셈 1회만 추가(복잡도 증가 미미). <code>α=1</code>이면 표준 min-sum.</li><li>최적화: (864,432)에서 α=0.7~1 구간 BER 개선, 대표값 α=0.8 선택(SNR별 최적 α 상이).</li><li>결과: modified min-sum이 BP와 거의 동일 BER, avg iteration은 min-sum이 BP보다 ~10 cycle 많은 반면 modified는 BP보다 2 cycle만 많음.</li><li>한계: HW 미설계, Matlab급 시뮬만, α는 코드/SNR 종속 단일 스칼라, regular 소규모 코드 1종만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VN 메시지에 modified factor α 곱셈</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 갱신 경로에 스칼라 곱 삽입 지점 존재, 정수 파이프라인 정합 필요</td></tr><tr><td>min-sum CN 근사(min1/min2)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>보상 대상인 min-sum CN 연산과 직접 대응</td></tr><tr><td>α 값 사전 최적화</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>local_opt.cpp</code></td><td>Prime ECC는 iteration별 LLR 테이블/자동최적화 보유, α를 테이블화 검토 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 근사 손실을 VN측 스칼라 곱으로 보상하는 저비용 아이디어로 Prime ECC의 <code>VN_Cal</code> 경로에 접목 가능하나, Prime ECC가 이미 iteration별 적응형 LLR 테이블을 보유하여 normalized min-sum 계열과 중복 소지가 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5541818",
+  "title": "A Modified Min-Sum Algorithm for Low-Density Parity-Check Codes",
+  "year": 2010,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "864",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "min-sum의 근사 손실을 check node가 아닌 variable node 메시지에 곱셈 modified factor α로 보상(채널 메시지는 미변경)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "cycle당 곱셈 1회 추가",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "normalized/offset min-sum(check node 보상)과 성능 유사·아이디어 인접, α는 H마다 사전 시뮬로 고정하는 단일 스칼라",
+  "todo_check": "Prime ECC의 iteration별 LLR 테이블/양자화와 α 곱셈이 정수 파이프라인에서 정합되는지, 우리 고rate 코드에서 α 최적값"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5541818---a-modified-min-sum-algorithm-for-low-density-parity-check-codes-2010-ieee">ieee:5541818 - A Modified Min-Sum Algorithm for Low-Density Parity-Check Codes (2010, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

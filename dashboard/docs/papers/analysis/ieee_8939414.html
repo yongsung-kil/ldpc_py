@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8939414</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8939414---a-novel-graph-expansion-and-a-decoding-algorithm-for-nb-ldpc-codes-2020-ieee-transactions-on-communications">ieee:8939414 - A Novel Graph Expansion and a Decoding Algorithm for NB-LDPC Codes (2020, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.89</td></tr><tr><td>부호length</td><td>32~1998</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Non-binary(GF(2^p)) LDPC의 Q-ary Tanner graph를 coset 확률 기반 binary graph로 확장하여 QSPA 대비 큰 복잡도 절감(check node O(2^p))을 min-sum급 성능 손실로 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>non-binary GF(2^p) LDPC 전용 알고리즘으로 Prime ECC는 binary LDPC이므로 핵심 아이디어(coset 확장, 이진 Tanner graph 변환)가 직접 이식 불가</td></tr><tr><td>추가확인</td><td>Microsemi(NAND 회사) 저자 참여로 NAND ECC 맥락은 있으나 본문 시뮬레이션은 통신용 코드(GF(2^3), GF(2^4)) 기준이라 NAND 적용 근거는 간접적임</td></tr></tbody></table>
+<blockquote><p>총평: NB-LDPC 디코더의 복잡도를 binary 연산 수준으로 낮추는 알고리즘 논문으로 아이디어는 흥미로우나, Prime ECC가 이미 binary LDPC이므로 non-binary 대상 기법 자체는 이식 대상이 아님(참고용).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>GF(2^p)</code> 위에서 정의된 non-binary LDPC(NB-LDPC) 부호, BI-AWGN 채널, 시뮬레이션 부호는 rate 1/2~0.89, 길이 32~1998 심볼(<code>GF(2^3)</code>, <code>GF(2^4)</code>).</li><li>문제: 기존 QSPA(Q-ary sum-product)는 복잡도 <code>O(q^2)</code>로 과도하며, FFT-QSPA(<code>O(q log q)</code>)도 여전히 non-binary 연산(확률벡터 permutation/convolution)이 필요해 HW 구현 부담이 큼.</li><li>핵심 가정/모델: <code>K=GF(2^p)</code>의 가법 부분군 <code>H</code>(order <code>2^{p-1}</code>)의 proper coset <code>C_H</code>를 이용, 심볼이 특정 coset에 속할 확률을 이진 확률변수로 재정의하면 check node의 convolution 연산이 binary LDPC의 XOR 연산(<code>p_out = p1(1-p2)+(1-p1)p2</code>)과 동일해짐.</li><li>핵심 기법: 하나의 <code>GF(2^p)</code> 노드를 <code>(2^p-1)</code>개 binary 노드(각 coset 대응)로 확장하는 새로운 binary Tanner graph 변환("graph expansion"). 추가로 coset 확률 간 의존성을 포착하기 위해 <code>(2^p-1,p)</code> 로컬 부호(coset representation, 심플렉스 부호의 쌍대부호)의 parity-check로 <code>(2^p-p-1)</code>개의 local check node를 삽입.</li><li>핵심 식: local check 행렬(<code>H_local</code>)의 girth를 6 이상으로 만들도록 row 조작(예: <code>(7,3)</code> 코드에서 row weight 3, girth≥6 확보)하여 message passing에 적합하게 함; global/local check node를 구분해 가중치 <code>w_l</code>(local), <code>β</code>(초기 추정 스케일)로 보정.</li><li>확장 알고리즘 CPbD(Coset Probability based Decoding): SPA(sum-product)를 binary 확장 그래프 위에서 수행하되, 전송되지 않는 <code>(2^p-p-1)</code>개 parity bit는 채널 LLR로부터 tanh 기반 계산식(식 7,11)으로 초기 추정.</li><li>부수 트릭: min-sum 근사(CPbD-MS) 적용 시 정규화 인자 <code>δ</code>(0&lt;δ≤1) 사용, <code>w_l=1/2^r</code> 형태로 두면 스케일링이 단순 bit-shift로 구현 가능(HW 친화).</li><li>최적화 절차: <code>β</code>, <code>w_l</code>, <code>δ</code> 등 하이퍼파라미터는 코드별 시뮬레이션으로 결정(학습 알고리즘 없음, grid search 수준).</li><li>결과: rate 1/2 <code>GF(2^3)</code> 부호(C1)에서 CPbD-M이 QSPA 대비 FER 10^-4 기준 0.3dB 이내 손실, min-max 대비 0.1dB 우위; CPbD-MS는 QSPA 대비 iteration당 decoding latency 33~80% 감소(코드별); check node 복잡도 <code>O(2^p)</code>로 QSPA류(<code>O(2^{2p})</code>, <code>O(2^p p)</code>) 대비 크게 절감.</li><li>한계: non-binary LDPC 전용 알고리즘(binary LDPC에는 원천적으로 적용 대상 아님), HW 구현은 "적합함"만 논의하고 실제 합성/FPGA 검증 없음, 메모리 이득은 없음("do not offer any advantage in memory"으로 본문 명시)을 저자가 인정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NB-LDPC(GF(2^p)) Tanner graph → binary graph 확장</td><td>대응 없음</td><td>Prime ECC는 처음부터 binary QC-LDPC이므로 non-binary→binary 변환 자체가 불필요</td></tr><tr><td>Coset probability 기반 binary check node 연산</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>최종 결과가 binary LDPC check node 연산(XOR 기반)으로 수렴한다는 점은 개념적으로 유사하나, 실제로는 non-binary 심볼 문제를 binary로 "변환"하는 절차이므로 이미 binary인 Prime ECC엔 대응할 대상이 없음</td></tr><tr><td>min-sum 근사 + 정규화 인자 δ (CPbD-MS)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 Prime ECC가 min-sum + 정규화 계열을 보유(§3), 중복 기여로 추천도 낮음</td></tr><tr><td>로컬 코드(girth 확보) 삽입</td><td>대응 없음</td><td>non-binary 심볼 표현의 의존성 포착용 특수 구조, binary LDPC 설계와 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — non-binary LDPC 전용 복잡도 절감 기법으로, 이미 binary QC-LDPC인 Prime ECC 3.1에는 적용 대상 자체가 없음(도메인 불일치).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8939414",
+  "title": "A Novel Graph Expansion and a Decoding Algorithm for NB-LDPC Codes",
+  "year": 2020,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.89",
+  "code_length": "32~1998",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Non-binary(GF(2^p)) LDPC의 Q-ary Tanner graph를 coset 확률 기반 binary graph로 확장하여 QSPA 대비 큰 복잡도 절감(check node O(2^p))을 min-sum급 성능 손실로 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "non-binary GF(2^p) LDPC 전용 알고리즘으로 Prime ECC는 binary LDPC이므로 핵심 아이디어(coset 확장, 이진 Tanner graph 변환)가 직접 이식 불가",
+  "todo_check": "Microsemi(NAND 회사) 저자 참여로 NAND ECC 맥락은 있으나 본문 시뮬레이션은 통신용 코드(GF(2^3), GF(2^4)) 기준이라 NAND 적용 근거는 간접적임"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8939414---a-novel-graph-expansion-and-a-decoding-algorithm-for-nb-ldpc-codes-2020-ieee-transactions-on-communications">ieee:8939414 - A Novel Graph Expansion and a Decoding Algorithm for NB-LDPC Codes (2020, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

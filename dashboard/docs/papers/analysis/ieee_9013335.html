@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9013335</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9013335---on-mutual-information-maximizing-quantized-belief-propagation-decoding-of-ldpc-codes-2019-isitieee">ieee:9013335 - On Mutual Information-Maximizing Quantized Belief Propagation Decoding of LDPC Codes (2019, ISIT/IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MIM-LUT의 대형 LUT를 reconstruction function+덧셈+SDQ 임계값으로 대체해 메모리 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>regular (6,32) LDPC 예제 1종 시뮬만, HW 미설계, RF/임계값 설계 상세는 확장판[20] 참조</td></tr><tr><td>추가확인</td><td>ϕc/ϕv/ϕch·Γ 설계·정수 스케일링 절차와 QC-LDPC/irregular 일반화 여부 확장판 확인</td></tr></tbody></table>
+<blockquote><p>총평: LUT 없이 mapping+덧셈으로 3~4bit MIM 디코딩을 구현해 float BP를 고SNR에서 능가, min-sum 계열 저bit 디코더 개선에 유용하나 HW 미설계·regular 부호 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular (6,32) LDPC, length <code>2048</code>, rate <code>0.84</code>, BPSK/AWGN, 최대 10 iteration, 메시지당 3/4bit (<code>|L|=|R|=|S|=8/16</code>).</li><li>문제: MIM-LUT 디코딩은 큰 LUT 메모리가 필요하고, 이를 작은 표로 분해하면 MI 최대화가 손상되어 성능이 열화됨.</li><li>모델: binary-input DMC를 MI 최대화 기준으로 양자화(<code>Q*=argmax I(X;Z)</code>), density evolution으로 <code>PR|X</code>, <code>PS|X</code> 추적.</li><li>핵심기법 CN: reconstruction function <code>ϕc(r)</code>(부호=LLR 부호, 크기 ∝ 1/|LLR|)로 심볼→수치 매핑 후 <code>Φc(r)</code>로 부호 XOR·절댓값 합산.</li><li>이후 threshold set <code>Γc</code>(SDQ <code>Λc</code>) 로 <code>Φc(r)</code>를 출력심볼 <code>S</code>로 양자화 → LUT 없이 <code>Qc</code> 완성.</li><li>핵심기법 VN: <code>ϕv(s)∝LLR(s)</code>, <code>ϕch(l)∝LLR(l)</code> 로 매핑, <code>Φv(l,s)=ϕch(l)+Σϕv(si)</code> 덧셈 합산 후 <code>Γv</code>로 양자화.</li><li>최적성: <code>ϕ*c</code>(식20), <code>ϕ*v</code>/<code>ϕ*ch</code>(식33) 선택 시 각각 <code>I(X;S)</code>, <code>I(X;R)</code>를 최대화(Theorem 1,2). ϕ를 정수 범위로 스케일링해 구현.</li><li>저장복잡도: <code>Qc</code> O(|R|+|S|), <code>Qv</code> O(|S|+|L|+|R|) 로 LUT 대비 무시가능 수준. CN 갱신 O(dc+⌈log2|S|⌉), binary tree 병렬 가능.</li><li>결과: 4bit MIM-QBP가 4bit max-LUT를 능가, 3bit MIM-QBP가 고SNR에서 float BP를 능가(최대 10 iter, BER/FER Fig.4).</li><li>한계: regular 부호 1예제 시뮬만, HW 미설계, gate/throughput 수치 없음, QC/irregular 일반화 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 갱신(<code>ϕc</code>,<code>Φc</code>,<code>Γc</code>)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 대체 저bit CN 연산으로 검토 가능</td></tr><tr><td>VN 갱신/양자화(<code>ϕv</code>,<code>ϕch</code>,<code>Φv</code>,<code>Γv</code>)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>soft 2~3bit VN 처리·양자화에 대응</td></tr><tr><td>iteration별 임계값/RF 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR/임계값 테이블 구조와 정합</td></tr><tr><td>채널 양자화 임계값(<code>τ1..τ7</code>)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>AWGN soft-read threshold 설계에 대응</td></tr><tr><td>전체 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 스케줄 통합점</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — LUT 없이 덧셈·임계값만으로 3bit 디코더가 float BP를 능가하는 점은 저bit min-sum 개선에 매력적이나, regular 부호 시뮬 검증뿐이고 Prime ECC의 고rate QC-LDPC·HD/2SD/3SD 구조로의 이식·재설계 부담이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9013335",
+  "title": "On Mutual Information-Maximizing Quantized Belief Propagation Decoding of LDPC Codes",
+  "year": 2019,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MIM-LUT의 대형 LUT를 reconstruction function+덧셈+SDQ 임계값으로 대체해 메모리 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "regular (6,32) LDPC 예제 1종 시뮬만, HW 미설계, RF/임계값 설계 상세는 확장판[20] 참조",
+  "todo_check": "ϕc/ϕv/ϕch·Γ 설계·정수 스케일링 절차와 QC-LDPC/irregular 일반화 여부 확장판 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9013335---on-mutual-information-maximizing-quantized-belief-propagation-decoding-of-ldpc-codes-2019-isitieee">ieee:9013335 - On Mutual Information-Maximizing Quantized Belief Propagation Decoding of LDPC Codes (2019, ISIT/IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

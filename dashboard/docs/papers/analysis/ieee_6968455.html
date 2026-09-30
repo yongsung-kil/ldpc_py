@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6968455</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6968455---efficient-implementation-of-low-density-parity-check-codes-for-satellite-ground-terminals-2014-icacci">ieee:6968455 - Efficient Implementation of Low Density Parity Check Codes for Satellite Ground Terminals (2014, ICACCI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.25~0.9</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>DVB-S2 IRA LDPC 인코더/디코더의 부분병렬·FIFO 파이프라인 HW 구조 및 psi(x) LUT 압축</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB-S2 IRA·6bit soft·full Sum-Product(psi LUT) 전제로 NAND 고rate binary QC-LDPC와 부호구조·연판정 비용이 모두 상이</td></tr><tr><td>추가확인</td><td>psi(x) 24x6 LUT 압축 기법이 NAND용 min-sum 대신 SPA 채택 시에만 의미 있는지</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 위성용 IRA LDPC의 FPGA 인코더/디코더 구현으로 부호구조·연판정 전제가 NAND ECC와 달라 직접 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 DVB-S2 IRA(Irregular Repeat-Accumulate) LDPC, Normal frame <code>N=64800</code>(Short <code>N=16200</code>), <code>M=360</code>, 11개 code rate.</li><li>문제: G 행렬이 sparse하지 않아 인코딩 복잡도가 높고 대형 프레임에서 순차 처리 시 latency 과다.</li><li>인코딩은 PCM의 하삼각 staircase(dual-diagonal) 구조 <code>B</code>를 이용해 <code>Pr = sum(m_z) XOR Pr-1</code> 식으로 G 없이 직접 수행.</li><li>Gomes 방식의 partially-parallel bit-node(vertical) 처리로 <code>M</code>개 정보노드를 동시 처리, barrel shifter로 circulant 회전 후 PARITY RAM 누적.</li><li>디코딩은 full Sum-Product(Belief Propagation): LLR 초기화 후 CN update식 <code>psi(x)=-ln tanh(|x|/2)</code>와 sign XOR 사용.</li><li>BN update식 (6),(7)로 LLR 갱신·hard decision, parity check 만족 또는 iteration 한계(50)까지 반복.</li><li>LLR은 6bit 가변정밀 양자화(불신뢰 영역 finer, 신뢰 영역 coarse).</li><li>HW 트릭: psi(x)를 LUT로 구현, Zhang 26x6 LUT를 Oh&amp;Parhi 가변양자화로 24x6(75% 축소), 메시지 메모리 폭 6-&gt;5bit(1sign+4mag) 축소.</li><li>메모리 구조: TOP RAM(matrix A edge) + BOTTOM RAM(matrix B edge), 시프트 오프로딩으로 shuffle network 1개 제거해 throughput 개선.</li><li>결과: Virtex-6 FPGA 이식, 인코더 LUT 3070/250MHz(기존 대비 축소), rate 3/5에서 BER 10^-8 시 6dB coding gain(실측). 고정소수점에서 rate 1/4,1/3,2/5 열화, 나머지 error floor는 10^-6 이하로 외부 BCH로 제거 가능. 정정능력 자체 개선은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| full Sum-Product psi(x) CN update | 대응 없음 | Prime ECC는 min-sum 채택, full-tanh SPA 미사용 |
+| psi(x) 24x6 LUT 가변양자화·메시지폭 축소 | decoder.cpp VN_Cal_HD() 등 / ecc_data.h PARAM_LLR | 양자화 아이디어는 참고 가능하나 SPA 전제라 직접 대응 낮음 |
+| dual-diagonal(staircase B) 인코딩 | encoder.cpp LDPC_encoder_4KB(), Generate_PCM_encoding() | Prime ECC도 dual-diagonal 사용, 개념 중복 |
+| partially-parallel(M=360) bit-node 처리 | 디코더 HW 모델(z=32) | 병렬 개념 유사하나 lifting 단위·구조 상이 |
+| TOP/BOTTOM RAM shift 오프로딩 라우팅 | GT.cpp Make_GT_HW() | edge 라우팅 최적화 개념만 유사, IRA 특화 |</code></pre>
+<p>적용 가치: 낮음 - DVB-S2 IRA·6bit soft·full Sum-Product 전제가 NAND용 고rate binary QC-LDPC + min-sum과 어긋나며 dual-diagonal 인코딩 등은 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6968455",
+  "title": "Efficient Implementation of Low Density Parity Check Codes for Satellite Ground Terminals",
+  "year": 2014,
+  "venue": "ICACCI",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.25~0.9",
+  "code_length": "64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "DVB-S2 IRA LDPC 인코더/디코더의 부분병렬·FIFO 파이프라인 HW 구조 및 psi(x) LUT 압축",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "DVB-S2 IRA·6bit soft·full Sum-Product(psi LUT) 전제로 NAND 고rate binary QC-LDPC와 부호구조·연판정 비용이 모두 상이",
+  "todo_check": "psi(x) 24x6 LUT 압축 기법이 NAND용 min-sum 대신 SPA 채택 시에만 의미 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6968455---efficient-implementation-of-low-density-parity-check-codes-for-satellite-ground-terminals-2014-icacci">ieee:6968455 - Efficient Implementation of Low Density Parity Check Codes for Satellite Ground Terminals (2014, ICACCI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

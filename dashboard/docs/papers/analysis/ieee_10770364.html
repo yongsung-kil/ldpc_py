@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10770364</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10770364---an-improved-check-polytope-projection-penalized-algorithm-for-admm-decoding-of-ldpc-codes-2024-ieee-icspcc">ieee:10770364 - An Improved Check Polytope Projection Penalized Algorithm for ADMM Decoding of LDPC Codes (2024, IEEE ICSPCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check polytope projection penalized ADMM 디코딩에서 l1-norm 거리 제약조건으로 even-vertex 오분류를 줄여 over-relaxation 결합 시 성능 저하를 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM-LP 디코딩은 min-sum 기반 message-passing과 구조가 달라 Prime ECC 3.1(min-sum 디코더)에 직접 이식 불가</td></tr><tr><td>추가확인</td><td>논문 표기 코드가 Margulis/802.16e 표준 규격이라 QC-LDPC 여부 본문 명시 없음(802.16e는 통상 QC구조이나 본문 미언급으로 irregular 처리)</td></tr></tbody></table>
+<blockquote><p>총평: ADMM-LP 계열 디코더의 projection 근사 개선 논문으로, min-sum 기반 NAND binary QC-LDPC 디코더 구조와 근본적으로 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC 부호 <code>C</code>(길이 <code>n</code>, 정보비트 <code>k</code>)를 AWGN+BPSK 채널에서 ADMM 기반 LP(Linear Programming) 완화 디코딩으로 복호.</li><li>LP decoding은 우수한 이론적 성질(ML 인증 등)을 갖지만 check polytope <code>dj</code>(길이 <code>dj</code> 짝수-가중치 이진벡터의 convex hull) 위로의 Euclidean projection 계산이 가장 복잡한 연산.</li><li>기존 Liu et al.의 check polytope projection penalized 알고리즘(EVA)은 벡터 <code>v</code>를 가장 가까운 vertex <code>VT</code>로 근사하고, <code>VT</code>가 짝수-vertex면 그대로 투영결과로 채택해 계산을 단순화.</li><li>문제: over-relaxation(<code>ω=1.9</code>) 기법과 결합 시 과도한 penalty로 fractional point 수렴이 느려져 FER 성능이 악화.</li><li>제안 기법(Algorithm 2, ADMM-C-I-CSA): 투영벡터 <code>v</code>와 <code>VT</code> 사이의 정규화 l1-norm 거리 <code>t = (1/dj)Σ|vi - VTi|</code>를 계산, <code>t &lt; Q</code>일 때만 even-vertex를 그대로 채택하고 그 외에는 CSA(cut search algorithm)로 정확 투영을 계산.</li><li><code>t &lt; Q</code> 제약으로 "check polytope에서 먼 점"에 대한 과잉 penalty를 제한 → even-vertex 오채택 비율 감소.</li><li>threshold <code>Q</code>는 코드별 실험적 튜닝값 사용(C1/C2: <code>Q=0.4</code>, C3: <code>Q=0.45</code>), l1-norm은 l2-norm과 성능 유사하나 제곱·제곱근 연산이 없어 복잡도 낮음.</li><li>별도 학습/최적화 절차 없음(Q는 Table I 기반 trade-off로 수동 선택).</li><li>결과: Margulis(2640,1320) 등 3개 코드에서 ADMM-I-CSA 대비 FER 개선(SNR 5dB, FER~1e-5에서 0.15dB 이득), 평균 반복횟수 최대 43.6% 감소, ADMM-CSA 대비 평균 디코딩 시간 22.9%-52% 단축.</li><li>한계: 순수 알고리즘/시뮬레이션 결과뿐(FPGA/ASIC 미검증), threshold <code>Q</code>는 코드마다 수동 튜닝 필요, HW 구현·gatecount·throughput 언급 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 디코딩 전체 프레임워크</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing 디코더로, LP-relaxation/ADMM 기반 구조 자체가 없음</td></tr><tr><td>check polytope Euclidean projection</td><td>대응 없음</td><td>min-sum CNU(<code>CNU_Update_New_Mag()</code>)와 수학적 개념이 상이(투영 연산 없음)</td></tr><tr><td>soft LLR 입력(연속값)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>Prime ECC는 양자화된 LLR 테이블 기반(soft-4bit+ 미지원)이라 연속값 ADMM 입력과 직접 대응 어려움</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — ADMM-LP 디코딩 패러다임 전체가 Prime ECC의 min-sum 기반 HW 아키텍처와 구조적으로 이질적이며, soft-4bit+ 연판정을 요구해 NAND binary QC-LDPC 이식 실익이 적음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10770364",
+  "title": "An Improved Check Polytope Projection Penalized Algorithm for ADMM Decoding of LDPC Codes",
+  "year": 2024,
+  "venue": "IEEE ICSPCC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "576~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check polytope projection penalized ADMM 디코딩에서 l1-norm 거리 제약조건으로 even-vertex 오분류를 줄여 over-relaxation 결합 시 성능 저하를 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "ADMM-LP 디코딩은 min-sum 기반 message-passing과 구조가 달라 Prime ECC 3.1(min-sum 디코더)에 직접 이식 불가",
+  "todo_check": "논문 표기 코드가 Margulis/802.16e 표준 규격이라 QC-LDPC 여부 본문 명시 없음(802.16e는 통상 QC구조이나 본문 미언급으로 irregular 처리)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10770364---an-improved-check-polytope-projection-penalized-algorithm-for-admm-decoding-of-ldpc-codes-2024-ieee-icspcc">ieee:10770364 - An Improved Check Polytope Projection Penalized Algorithm for ADMM Decoding of LDPC Codes (2024, IEEE ICSPCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8434235</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8434235---analysis-of-the-joint-viterbi-detectordecoder-jvdd-over-a-coded-awgnisi-system-as-an-ldpc-alternative-2019-ieee-trans-broadcasting">ieee:8434235 - Analysis of the Joint Viterbi Detector/Decoder (JVDD) Over a Coded AWGN/ISI System as an LDPC Alternative (2019, IEEE Trans. Broadcasting)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>64</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>trellis 기반 JVDD의 type-1(thresholding) 오류확률을 metric 분포(log-normal/지수) 모델로 예측하는 분석기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 복호를 아예 대체하는 trellis 검출/복호기이며 AWGN/ISI(자기기록/무선) 타깃, binary QC-LDPC 이식 대상 아님</td></tr><tr><td>추가확인</td><td>없음(이식 무관)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC를 대체하는 JVDD 알고리즘의 오류 예측 분석 논문으로, Prime ECC의 min-sum QC-LDPC 파이프라인과 접점 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 AWGN + 4-tap ISI([1,2,2,1]) 채널, 랜덤 생성된 CWL=64·M=13·R=0.8 코드(LDPC용 저밀도/짧은사이클 설계 아님).</li><li>문제: LDPC의 turbo-equalization(IDD=SOVA/BCJR + SPA)에서 SPA 복호부가 준최적 → 이를 대체하는 JVDD가 짧은 블록에서 IDD를 능가하나 DE/EXIT 같은 성능분석 도구가 부재.</li><li>JVDD 정의: LDPC 디코더 박스를 제거하고 검출+복호를 채널 trellis 하나에서 결합, 목표는 최소 metric 합법 코드워드(MMLC, <code>cH^T=0</code> 만족)를 반환.</li><li>핵심 동작: Viterbi로 저metric survivor 경로 유지 + trellis 특정 시점(H 각 행의 마지막 1 위치)에서 parity check로 불법 경로 제거, threshold(min metric + <code>th</code> 초과 폐기)로 리스트 크기 관리.</li><li>오류 정의: Type-1(thresholding으로 MMLC 상실, JVDD 고유), Type-2(MMLC 유지하나 잡음으로 송신 코드워드 아님, 모든 복호기 공통) — 본 논문은 Type-1만 분석.</li><li>핵심 관찰: min metric과 correct metric은 log-normal 분포(<code>f(x)=exp(-(logx-μ)²/2σ²)/(xσ√2π)</code>), 둘의 차이 분포는 2-파라미터 지수형(<code>f(x)=A·e^{-Bx}</code>, k에 거의 무관, 0에 delta-spike).</li><li>오류확률: MMLC 상실 = 차이분포가 <code>th</code> 초과 사건, <code>P(X_k&gt;th)=(A_k/B_k)exp(-B_k·th)</code>를 모든 k에 누적하여 전체 FER 예측(식7).</li><li>파라미터 추적: μ는 log 함수, σ²는 지수 함수로 k에 따라 부드럽게 진화하나 차이분포 <code>A_k,B_k</code>는 매끄러운 추세 없어 각 k의 실측값 사용.</li><li>결과: 100,000 프레임 Monte-Carlo(CWL=64)와 예측 FER 비교, 작은 threshold(th=5)에서 잘 일치(Type-1 지배 가정 유효), 큰 threshold·고SNR에서는 Type-2 미포함으로 괴리.</li><li>한계: HW 미설계, Type-2 오류 미포함(향후 과제), 단일 짧은 코드(CWL=64)만, LDPC 복호 기법이 아니라 대체 알고리즘이라 QC-LDPC 이식 대상이 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>JVDD trellis 검출/복호 알고리즘</td><td>대응 없음</td><td>Prime ECC는 factor-graph min-sum, trellis Viterbi 미보유</td></tr><tr><td>metric 분포 기반 FER 예측 분석</td><td>대응 없음</td><td>성능 분석 도구, 코드베이스 모듈 아님</td></tr><tr><td>parity check(<code>cH^T=0</code>) 위 trellis 스케줄</td><td>대응 없음</td><td>복호 스케줄이 min-sum 이터레이션과 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 디코더 자체를 대체하는 trellis 기반 검출/복호기의 오류 예측 분석으로, NAND binary QC-LDPC min-sum 파이프라인에 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8434235",
+  "title": "Analysis of the Joint Viterbi Detector/Decoder (JVDD) Over a Coded AWGN/ISI System as an LDPC Alternative",
+  "year": 2019,
+  "venue": "IEEE Trans. Broadcasting",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.8,
+  "code_length": "64",
+  "soft_quant": "무관",
+  "key_contribution": "trellis 기반 JVDD의 type-1(thresholding) 오류확률을 metric 분포(log-normal/지수) 모델로 예측하는 분석기법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 복호를 아예 대체하는 trellis 검출/복호기이며 AWGN/ISI(자기기록/무선) 타깃, binary QC-LDPC 이식 대상 아님",
+  "todo_check": "없음(이식 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8434235---analysis-of-the-joint-viterbi-detectordecoder-jvdd-over-a-coded-awgnisi-system-as-an-ldpc-alternative-2019-ieee-trans-broadcasting">ieee:8434235 - Analysis of the Joint Viterbi Detector/Decoder (JVDD) Over a Coded AWGN/ISI System as an LDPC Alternative (2019, IEEE Trans. Broadcasting)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

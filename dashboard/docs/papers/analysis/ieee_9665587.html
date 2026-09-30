@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9665587</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9665587---an-enhanced-check-node-architecture-for-5g-new-radio-ldpc-decoders-2021-ieee-icecs">ieee:9665587 - An Enhanced Check-Node Architecture for 5G New Radio LDPC Decoders (2021, IEEE ICECS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25</td></tr><tr><td>부호length</td><td>2080</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>고차수 CNU를 저차수+다단(phase)로 분할해 면적↓·주파수↑, CN 차수별 selective offset로 OMS 성능↑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.5mm2@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.285Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>이득이 5G BG1/BG2의 극단적 CN 차수 불규칙성(3~19)에 특화 — Prime ECC는 near-regular고rate라 phase 분할 이득이 작음</td></tr><tr><td>추가확인</td><td>CN 차수별 selective offset(고차수 CN에만 offset) 개념이 우리 near-regular QC-LDPC min-sum에 적용 시 waterfall 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 5G irregular QC-LDPC용 min-sum/OMS CNU HW 최적화로, phased-CNU는 우리 near-regular 부호엔 이득이 제한적이나 selective offset·min1/min2 CNU 구조는 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G NR QC-LDPC(3GPP BG1/BG2, base matrix + <code>Z×Z</code> circulant, expansion factor <code>Z</code>), layered scheduling, min-sum 계열 복호.</li><li>문제: 5G LDPC는 CN 차수가 매우 불규칙(BG1 <code>dc</code> 3~19, degree-19는 46행 중 4행뿐)이라 conventional CNU를 <code>dcmax</code>로 구현하면 HW 이용률이 낮고 critical path가 길다.</li><li>채널 모델: BPSK/AWGN, 입력은 <code>γn=[µ·yn]</code> 로 양자화, <code>q</code>-bit 정수 집합, channel scale factor <code>µ</code> 최적화.</li><li>핵심 기법 1: CNU를 <code>dc&lt;dcmax</code> 입력으로 구현하고 고차수 CN 연산을 여러 phase로 분할(예: degree-19를 10입력 CNU로 2 phase 처리), phase 간 <code>min1/min2/index</code> tentative 값을 메모리에 저장.</li><li>효과 식: 정규화 복잡도 <code>C=dc/dcmax</code>, 정규화 throughput <code>T=2L/(2L+σ)</code> (<code>σ</code>=추가 클록). BG1에서 degree 10 구현 시 복잡도 50%↓, throughput 10%↓.</li><li>핵심 기법 2: CN 차수별로 <strong>selective offset factor</strong> 적용 — 고차수 이웃 VN을 가진 CN(첫 4 layer, <code>l&lt;5</code>)에만 <code>λ=1</code>, 나머지 <code>λ=0</code>.</li><li>근거: 5G 부호의 심한 irregularity로 일괄 offset이 성능 손실을 유발, 특히 extension part의 degree-1 VN 오류확률이 다른 VN 대비 10³배 높음.</li><li>구현 디테일: CNU는 min1/min2 finder + 각 입력 offset MUX(<code>α</code>), phase별 enable(<code>en</code>), <code>index</code> 비교 로직으로 구성 (Fig.4).</li><li>결과: 90nm ASIC 합성, BG2(<code>K=520, Z=52, R=0.25, N=2080</code>)에서 제안(CNU degree 6) 면적 2.5mm²·204MHz·1.285Gbps vs conventional(degree 10) 3.6mm²·184MHz·1.275Gbps → 복잡도 ~30%↓·주파수 10%↑, 성능은 quantized OMS가 floating OMS/MS 능가하고 SP에 근접.</li><li>한계: phase 분할은 iteration당 클록 증가(latency 악화 방향), 이득이 5G의 극단적 차수 불규칙성에 크게 의존, <code>Itmax=15</code> 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min1/min2 + sign 연산 (OMS CNU)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN 코어 동일 계열, 직접 대응</td></tr><tr><td>고차수 CNU phase 분할 (fewer inputs, multi-cycle)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>HCU(half-column)와 유사 발상이나 우리 부호는 near-regular라 이득 제한</td></tr><tr><td>CN 차수별 selective offset factor</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code> / ecc_data.h <code>PARAM_LLR</code></td><td>적응형 LLR/offset 테이블과 개념 유사, 참고 가치</td></tr><tr><td>layered scheduling + barrel shifter 라우팅</td><td>decoder.cpp (z=32 circulant, Dual-Update)</td><td>layered/QC 라우팅은 이미 보유(중복)</td></tr><tr><td>입력 양자화(<code>µ</code>, <code>q</code>-bit)</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>양자화·scale factor 개념 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC-LDPC min-sum/OMS CNU HW라 우리 <code>decoder.cpp</code> CNU와 직접 닿는다. 다만 핵심 신규성인 phased-CNU는 5G BG1/BG2의 극단적 CN 차수 불규칙성(3~19)을 노린 것이라 near-regular 고rate인 Prime ECC에는 이득이 작고, 오히려 차수별 selective offset 아이디어가 우리 적응형 LLR에 접목할 만하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9665587",
+  "title": "An Enhanced Check-Node Architecture for 5G New Radio LDPC Decoders",
+  "year": 2021,
+  "venue": "IEEE ICECS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.25,
+  "code_length": "2080",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "고차수 CNU를 저차수+다단(phase)로 분할해 면적↓·주파수↑, CN 차수별 selective offset로 OMS 성능↑",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.5mm2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1.285,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "이득이 5G BG1/BG2의 극단적 CN 차수 불규칙성(3~19)에 특화 — Prime ECC는 near-regular고rate라 phase 분할 이득이 작음",
+  "todo_check": "CN 차수별 selective offset(고차수 CN에만 offset) 개념이 우리 near-regular QC-LDPC min-sum에 적용 시 waterfall 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9665587---an-enhanced-check-node-architecture-for-5g-new-radio-ldpc-decoders-2021-ieee-icecs">ieee:9665587 - An Enhanced Check-Node Architecture for 5G New Radio LDPC Decoders (2021, IEEE ICECS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

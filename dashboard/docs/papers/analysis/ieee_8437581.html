@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8437581</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_8437581---sparse-graphs-for-belief-propagation-decoding-of-polar-codes-2018-ieee-isit">ieee_8437581 - Sparse Graphs for Belief Propagation Decoding of Polar Codes (2018, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>256~32768</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>polar code의 encoding factor graph를 pruning해 희소 LDPC-like H를 만들어 일반 BP(SPA)로 반복복호 가능하게 함</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>polar code 전용 그래프 pruning으로 QC-LDPC와 무관, full-tanh SPA·VNH 개념은 Prime ECC(min-sum) 구조에 없음</td></tr><tr><td>추가확인</td><td>pruning으로 생기는 고차수 CN이 min-sum 기반 HW에 부담인지, NAND 대상엔 애초 폴라코드 미채택</td></tr></tbody></table>
+<blockquote><p>총평: polar code를 희소 그래프에서 일반 LDPC BP로 복호하는 기법으로 대상이 폴라코드·5G라 NAND binary QC-LDPC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 systematic polar code <code>P(N,k)</code>(rate 0.5, N=256~32768)이며 5G 제어채널용으로 채택된 부호다.</li><li>풀려는 문제: polar의 SC/SCL 복호는 직렬이라 latency가 크고 soft-out이 없어 반복복호에 부적합하며, generator 기반 factor graph는 stage가 <code>log2 N</code>개라 비효율적이다.</li><li>핵심 가정: polar generator matrix <code>G</code>의 frozen 인덱스 열로 만든 H는 매우 dense(check degree 최대 N)하여 일반 SPA가 실패한다(Fig.1).</li><li>핵심 기법: encoding factor graph를 bipartite VN/CN 그래프로 재해석하고, CND/VND 업데이트식(Eq.1 full-<code>tanh</code> <code>φ</code>, Eq.2)만으로 pruning을 수행한다.</li><li>VN을 채널 VN(VNCH), hidden VN(VNH, <code>Lch=0</code>), frozen VN(<code>Lch=∞</code>)으로 분류한다 — VNH는 polar 전용 구조로 LDPC엔 없다.</li><li>pruning 규칙: frozen VN 제거, degree-1 CN·VN 제거, degree-2 VNH·CN을 merge하여 H가 더 안 변할 때까지 반복 (Algorithm 1).</li><li>결과 H는 여전히 희소하며 stage가 1개로 축소, 예로 <code>P(8,4)</code>의 H가 24×32→5×9, 전체적으로 약 83~85% 크기 감소.</li><li>최적화/학습 절차는 없으며, pruning으로 생긴 고차수 CN을 최대 CN degree 제한으로 추가 정제할 수 있다.</li><li>결과: short~intermediate 길이에서 Arikan 원 BP 대비 BER 손실 미미(iteration 많으면 소멸), 동일 BER에서 활성 CN 수·메시지 수·동기화 step(latency) 감소로 메모리·latency 이점.</li><li>한계: HW 미설계(시뮬만), 평균 iteration은 오히려 증가(Iavg 3.8→10.9), full-<code>tanh</code> SPA 기반, polar code 전용이라 정정능력 자체 향상은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>polar factor graph pruning / H 생성</td><td>대응 없음</td><td>polar 전용 encoding graph 축소로 QC-LDPC 고정 부호구조와 무관</td></tr><tr><td>BP/SPA(full-tanh CND) 반복복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 근사라 full-<code>tanh</code> SPA와 알고리즘 계열이 다름</td></tr><tr><td>H-matrix/부호구조 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>논문은 polar 유래 비정형 H, QC-LDPC circulant 구조와 이질적</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — polar code(5G) 전용 그래프 pruning + full-<code>tanh</code> SPA로, NAND binary QC-LDPC(min-sum) 코드베이스에 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8437581",
+  "title": "Sparse Graphs for Belief Propagation Decoding of Polar Codes",
+  "year": 2018,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "256~32768",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "polar code의 encoding factor graph를 pruning해 희소 LDPC-like H를 만들어 일반 BP(SPA)로 반복복호 가능하게 함",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "polar code 전용 그래프 pruning으로 QC-LDPC와 무관, full-tanh SPA·VNH 개념은 Prime ECC(min-sum) 구조에 없음",
+  "todo_check": "pruning으로 생기는 고차수 CN이 min-sum HW에 부담인지, NAND엔 폴라코드 미채택"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_8437581---sparse-graphs-for-belief-propagation-decoding-of-polar-codes-2018-ieee-isit">ieee_8437581 - Sparse Graphs for Belief Propagation Decoding of Polar Codes (2018, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

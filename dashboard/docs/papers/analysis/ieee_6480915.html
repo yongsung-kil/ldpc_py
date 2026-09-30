@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6480915</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6480915---gallager-b-decoder-on-noisy-hardware-2013-ieee-trans-communications">ieee:6480915 - Gallager B Decoder on Noisy Hardware (2013, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>faulty gate 환경 Gallager B 디코더의 최종 SER을 density evolution으로 해석, CN/VN 오류율 자원배분 지침 도출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Gallager B(hard-decision)는 우리 min-sum 대비 성능 낮아 미채택, 기여는 noisy-HW 신뢰성 해석뿐 정정능력 개선 아님</td></tr><tr><td>추가확인</td><td>NAND 컨트롤러의 soft-error/전압마진 완화 시 VN 우선 보호(pMAJ 민감) 관점이 우리 HW 신뢰성 검토에 참고되는지</td></tr></tbody></table>
+<blockquote><p>총평: faulty gate 하 Gallager B의 SER을 이론적으로 정량화하고 VN 오류가 CN보다 지배적임을 밝힌 신뢰성 해석 논문으로, hard-decision·이론 중심이라 우리 min-sum QC-LDPC 디코더 성능 이식엔 직접 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular LDPC(binary/non-binary Fq) Gallager B 디코더 — 실험은 binary(n=8000,m=4000,rate 0.5,<code>dv=3</code>/<code>dc=6</code>), PG-LDPC(len 1053,<code>dv=dc=33</code>), non-binary F4(len 1000). BSC 채널, hard-1bit 메시지.</li><li>문제: 통신이론은 수신단 처리를 무오류로 가정하나, 미세공정 CMOS는 alpha 입자·전압마진 축소로 게이트 자체가 확률적 오류 — noisy HW에서 디코더 성능을 정량화 필요.</li><li>모델: von Neumann transient error — CN 연산은 <code>pXOR</code>, VN 연산은 <code>pMAJ</code> 확률로 매 사용마다 독립 오류, q-ary 대칭채널 <code>p0</code>.</li><li>핵심 기법: cycle-free Tanner 가정 하 density evolution으로 iteration별 평균오류 <code>pi</code>의 재귀식 <code>pi+1=f(pi)</code> 유도(Theorem 1), <code>γq(pi)</code>·<code>αq(pi)</code> 함수로 표현.</li><li>식 의미: <code>f(pi)</code>의 고정점(<code>f(t)=t</code>)이 최종 SER — 안정/불안정 고정점 분석으로 디코더 유용 구간(<code>τ1≤p0≤τ2</code>) 결정.</li><li>최적 임계값: Theorem 2로 iteration별 최적 threshold <code>b*i+1</code> 유도, Theorem 3은 실용영역에서 <code>b* = (dv+1)/2</code>(잡음 무관, Gallager 무오류 값과 동일)로 고정 가능함 증명.</li><li>저잡음 근사: Theorem 5/6으로 <code>lim pi</code>를 pMAJ·pXOR의 1~2차 전개 — <code>dv=3</code>은 <code>≈(2p0pXOR+pMAJ)/(1-2p0(dc-1))</code>, <code>dv≥4</code>는 <code>≈pMAJ</code>.</li><li>핵심 결론: 최종 SER은 VN 오류(pMAJ)에 훨씬 민감 — VN에 신뢰성 높은 연산자 우선 배분, 고 dv·저 dc 부호가 noisy HW에 유리.</li><li>검증: MATLAB 시뮬 + BEE3 FPGA 에뮬레이션(SRC 1 + RRC 8, flip-flop 오류주입)에서 이론 예측 BER/SER과 근접 일치.</li><li>한계: HW 미설계(자원배분 해석뿐), throughput/gatecount 없음, 유한길이 cycle 의존성 무시, 필드크기 q가 오류율에 미치는 영향 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Gallager B 디코딩 이터레이션</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>우리는 min-sum(soft) — hard-decision Gallager B는 성능 열위로 미채택, 알고리즘 이식 대상 아님</td></tr><tr><td>VN majority threshold <code>b*</code></td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>우리 VN 처리와 개념 다름(bit-flip vs LLR), 직접 대응 약함</td></tr><tr><td>faulty gate 신뢰성 모델(pMAJ/pXOR)</td><td>대응 없음</td><td>HW 신뢰성/soft-error 해석 — 우리 bit-exact 시뮬레이터엔 대응 모듈 없음</td></tr><tr><td>non-binary(GF(q)) LDPC 확장</td><td>대응 없음</td><td>binary 전용 코드베이스 범위 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision Gallager B는 우리 soft min-sum 대비 정정성능이 낮아 알고리즘 자체 이식 가치가 없고, 논문 기여는 정정능력이 아닌 faulty-HW 신뢰성 자원배분 해석이라 Prime ECC 디코더 성능 개선과 직접 연결되지 않는다. VN을 CN보다 우선 보호한다는 통찰만 HW 신뢰성 검토에 간접 참고.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6480915",
+  "title": "Gallager B Decoder on Noisy Hardware",
+  "year": 2013,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "faulty gate 환경 Gallager B 디코더의 최종 SER을 density evolution으로 해석, CN/VN 오류율 자원배분 지침 도출",
+  "hw_designed": "X",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Gallager B(hard-decision)는 우리 min-sum 대비 성능 낮아 미채택, 기여는 noisy-HW 신뢰성 해석뿐 정정능력 개선 아님",
+  "todo_check": "NAND 컨트롤러 soft-error/전압마진 완화 시 VN 우선 보호(pMAJ 민감) 관점의 참고 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6480915---gallager-b-decoder-on-noisy-hardware-2013-ieee-trans-communications">ieee:6480915 - Gallager B Decoder on Noisy Hardware (2013, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

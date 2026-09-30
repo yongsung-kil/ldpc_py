@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1464593</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1464593---a-memory-based-architecture-for-fpga-implementations-of-low-density-parity-check-convolutional-decoders-2005-ieee-iscasisit급-conf">ieee:1464593 - A Memory-Based Architecture for FPGA Implementations of Low-Density Parity-Check Convolutional Decoders (2005, IEEE (ISCAS/ISIT급 conf))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LDPC-CC 디코더의 delay-line을 순환버퍼(dual-port RAM)로 대체한 메모리 기반 FPGA 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>2388 LE + 24576bit@Stratix EP1S80(processor당)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.12</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC-CC(convolutional) 전용, block QC-LDPC와 부호 구조 이질, streaming 무선 타깃</td></tr><tr><td>추가확인</td><td>순환버퍼 3x-clock 스케줄링이 QC-LDPC block 디코더에는 무관 (구조 상이)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC-CC 디코더의 register-intensive delay line을 순환버퍼로 대체한 FPGA HW 기법, block QC-LDPC(Prime ECC)엔 구조가 이질적이라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC-CC(convolutional LDPC), regular (3,6) rate 1/2, memory <code>M=128</code>, LLR wordlength W=6~8bit, AWGN/BPSK, streaming/packet 통신 타깃.</li><li>문제: LDPC-CC 디코더는 processor당 <code>M+1</code> 길이 delay line이 필요해 register-intensive → FPGA에서 LE 낭비(단일 processor 13246 LE, 16%).</li><li>부호식: code-bit <code>v(nM+φ)</code>가 이전 정보/코드 비트의 GF(2) parity-check로 생성, parity-check matrix가 lower-diagonal → 인코딩 단순·저지연.</li><li>복호: message-passing, iteration 대신 물리적으로 독립된 processor(delay element+CN 1개+VN 1개)를 타일링, processor i-1 출력이 i 입력(LLR 전달).</li><li>핵심 기법: FIFO delay line을 순환버퍼(circular buffer)로 대체, on-chip dual-port RAM + 포인터 <code>p(t)</code> 추적으로 구현.</li><li>메모리 분할: 순환버퍼를 8개 columnar RAM(높이 P, 폭 W)으로 분할, 정보 LLR 4 + 코드 LLR 4 저장.</li><li>주소생성: ROM이 phase φ별 offset <code>δ</code> 6개 제공, <code>µ=(p(t)-δ) mod P</code>로 순환버퍼 주소 계산, read 주소는 t+Δp에 write 주소로 재사용.</li><li>오버클럭: 한 baud period에 모든 메모리 연산 수행 위해 RAM을 base clock의 x3(최대 128MHz)로 구동, MUX A~E로 클록도메인 전환.</li><li>결과: 메모리 기반이 register 기반 대비 5배 이상 효율(processor당 2388 LE, 3%), 최대 33 processor 수용, throughput 120Mb/s, BER 2x10^-6 @ Eb/N0=3dB(FPGA 실측, Matlab과 일치).</li><li>한계: 저자 지식상 최초 LDPC-CC HW 디코더, block LDPC 대비 BER는 열세, sign-min 근사·유한정밀도 열화. NAND/SSD 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>message-passing 복호 (tanh/sign-min CN)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>낮음: Prime ECC는 block QC-LDPC min-sum, convolutional processor 파이프라인과 구조 이질</td></tr><tr><td>LLR 순환버퍼/메모리 라우팅 (dual-port RAM, x3 clock)</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>낮음: LDPC-CC delay-line 전용 최적화, QC-LDPC block 병렬구조에 부적합</td></tr><tr><td>soft LLR 양자화 (W=6~8bit)</td><td><code>channel.cpp</code> LLR 테이블 (<code>PARAM_LLR</code>)</td><td>낮음: 일반 LLR 양자화 수준, 이미 보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC-CC(convolutional) 디코더의 delay-line을 순환버퍼로 바꾼 FPGA HW 기법으로, Prime ECC의 block QC-LDPC(z=32 병렬, min-sum)와는 부호 구조·디코더 아키텍처가 근본적으로 다르다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1464593",
+  "title": "A Memory-Based Architecture for FPGA Implementations of Low-Density Parity-Check Convolutional Decoders",
+  "year": 2005,
+  "venue": "IEEE (conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LDPC-CC 디코더의 delay-line을 순환버퍼(dual-port RAM)로 대체한 메모리 기반 FPGA 아키텍처",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "2388 LE + 24576bit@Stratix EP1S80(processor당)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.12,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "LDPC-CC(convolutional) 전용, block QC-LDPC와 부호 구조 이질, streaming 무선 타깃",
+  "todo_check": "순환버퍼 3x-clock 스케줄링이 QC-LDPC block 디코더에는 무관 (구조 상이)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1464593---a-memory-based-architecture-for-fpga-implementations-of-low-density-parity-check-convolutional-decoders-2005-ieee-iscasisit급-conf">ieee:1464593 - A Memory-Based Architecture for FPGA Implementations of Low-Density Parity-Check Convolutional Decoders (2005, IEEE (ISCAS/ISIT급 conf))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

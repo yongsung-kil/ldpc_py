@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8074180</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8074180---non-zero-syndrome-parallel-concatenated-gallager-codes-2017-ieee-iccpct">ieee:8074180 - Non Zero Syndrome Parallel Concatenated Gallager Codes (2017, IEEE ICCPCT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>600</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>reversed(또는 interleaved) 메시지로 zero/non-zero syndrome 성분부호 결합, BSC에서 성분 메시지 독립화로 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BSC + hard-decision BFA만 검증, AWGN/soft-decision·HW 미검증, 병렬 concatenation 구조라 QC-LDPC 구조와 이질적</td></tr><tr><td>추가확인</td><td>reversed-message 독립화 아이디어가 NAND soft LLR/AWGN 환경에서도 유효한지(저자도 future work로 지목)</td></tr></tbody></table>
+<blockquote><p>총평: BSC 전용 hard-decision PCGC 부호구성법으로 NAND binary QC-LDPC 파이프라인과 이질적, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 장블록 LDPC의 인코딩/디코딩 복잡도를 낮추려는 Parallel Concatenated Gallager Code(PCGC), 성분부호는 PEG 구성 200x400, MCW 3, girth 8, rate 0.5, dedicated LDPC frame length 600.</li><li>문제: 기존 non-zero syndrome PCGC는 성분부호 간 extrinsic 메시지가 상관되어(공통 systematic bit) iterative 성능이 dedicated LDPC보다 나빴다.</li><li>non-zero syndrome LDPC: codeword가 주어진 non-zero syndrome S에 대한 <code>HC=S</code> 해공간에 존재, 생성행렬은 augmented <code>[H S]</code>의 RREF에서 얻음(메시지에 '1' 1비트 append).</li><li>핵심기법: 두 번째 성분 인코더 입력으로 <strong>reversed message block</strong>을 사용해 parity-check 식을 완전히 다르게 만들어 bit node가 받는 메시지를 독립화.</li><li>식 의미: 예 <code>b6 = b7 ⊕ ...</code>처럼 두 성분에 공통 systematic bit(b7)가 오류나면 양쪽 extrinsic가 동시에 오염 → reverse로 이 공통성 제거.</li><li>확장: reverse 대신 random interleaver를 써도 독립화 가능(성능 유사, 단 delay·복잡도 증가).</li><li>구현 디테일: 디코더는 성분부호용 단순 LDPC 디코더 + bit node당 Reg1(zero)/Reg2(non-zero) 2조 레지스터, super-iteration으로 두 성분 교대 local iteration.</li><li>복호 알고리즘은 modified Bit Flipping Algorithm(BFA): extrinsic는 1의 개수 - 0의 개수, parity/systematic bit 별도 갱신, non-zero syndrome bit sj를 check node 계산에 포함.</li><li>결과: 제안 PCGC가 기존 non-zero syndrome PCGC 및 동일 rate/frame length dedicated LDPC보다 BSC에서 BER 우수(정량 gain은 그림상, 본문 수치 미상).</li><li>한계: BSC + hard-decision BFA만 시뮬, AWGN/fading·soft-decision은 future work, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>non-zero syndrome 성분부호 생성(<code>[H S]</code> RREF 생성행렬)</td><td>대응 없음</td><td>Prime ECC는 dual-diagonal QC-LDPC 인코딩, non-zero syndrome/PCGC 구성 없음</td></tr><tr><td>reversed/interleaved 메시지 병렬 concatenation 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 고정 QC-LDPC라 concatenation 구조 이식은 재설계·재검증 부담 큼(§4 부호설계 난이도 높음)</td></tr><tr><td>modified Bit Flipping Algorithm(BFA) 반복복호</td><td>대응 없음</td><td>Prime ECC는 min-sum message passing, BFA 미사용</td></tr><tr><td>super-iteration 교대 스케줄 + Reg1/Reg2</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프 개념만 겹칠 뿐, 2-성분 교대 구조는 상이</td></tr><tr><td>syndrome 조건 종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료 개념 유사하나 syndrome-based vs CRC-based로 상이</td></tr></tbody></table>
+<p>적용 가치: 낮음 — BSC 전용 hard-decision BFA PCGC 부호구성법으로, Prime ECC의 고rate binary QC-LDPC + min-sum + dual-diagonal 파이프라인과 부호구조·복호알고리즘 모두 이질적이다. HW·soft-decision 검증도 없어 떼어 쓸 요소가 사실상 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8074180",
+  "title": "Non Zero Syndrome Parallel Concatenated Gallager Codes",
+  "year": 2017,
+  "venue": "IEEE ICCPCT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "600",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "reversed(또는 interleaved) 메시지로 zero/non-zero syndrome 성분부호 결합, BSC에서 성분 메시지 독립화로 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BSC + hard-decision BFA만 검증, AWGN/soft-decision·HW 미검증, 병렬 concatenation 구조라 QC-LDPC 구조와 이질적",
+  "todo_check": "reversed-message 독립화 아이디어가 NAND soft LLR/AWGN 환경에서도 유효한지(저자도 future work로 지목)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8074180---non-zero-syndrome-parallel-concatenated-gallager-codes-2017-ieee-iccpct">ieee:8074180 - Non Zero Syndrome Parallel Concatenated Gallager Codes (2017, IEEE ICCPCT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

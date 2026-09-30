@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8014470</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8014470---iterative-low-complexity-algorithm-for-ldpc-systems-in-the-presence-of-phase-noise-2017-ieee-wcl">ieee:8014470 - Iterative Low Complexity Algorithm for LDPC Systems in the Presence of Phase Noise (2017, IEEE WCL)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>위상잡음을 원형(복소) 확률변수로 변환해 저복잡도 SPA 메시지로 위상추정, 코드그래프와 결합</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>3M+51 ops, 2M+4 mem access/iter (M=변조차수)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Wiener 위상잡음/PSK 무선채널 전용 검출기, LDPC 디코더 자체는 표준 SPA로 무변경</td></tr><tr><td>추가확인</td><td>없음 (이식가치 낮아 추가확인 불요)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 코드그래프와 결합한 위상잡음 검출기(circular RV) 저복잡도화로, 대상은 detector(other)이고 NAND용 QC-LDPC 디코더에 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC(rate 0.5, MacKay (3,6)) 부호화+M-ary PSK(BPSK/QPSK/8-PSK) 심볼, Wiener 위상잡음 채널 <code>y_n=x_n·e^{jφ_n}+w_n</code>.</li><li>문제: 강한 위상잡음(σφ up to 0.1 rad/symbol)이 성능 저하, 기존 이산샘플/Tikhonov 근사는 복잡도 높음.</li><li>모델: 위상 <code>φ_n=φ_{n-1}+Δφ_n</code>(가우시안 증분), posterior <code>p(b,x,φ|y)</code>를 code graph+phase graph 결합 factor graph로 표현.</li><li>핵심기법: 위상잡음을 선형영역이 아닌 복소 원형변수 <code>X_{φn}=e^{jφ_n}</code>로 변환(bijection), SPA 메시지를 복소가우시안 <code>CN(·)</code>으로 구성.</li><li>핵심식: <code>m_{p→Xφ}∝CN(e^{jφ};M,V)</code> - 원형변수로 forward/backward/코드그래프 메시지를 닫힌형 평균·분산 파라미터로 전파.</li><li>확장: 두 가지 구현(위상추정 후 y 보정 / mean·variance로 코드그래프 확률 전달), 임의 변조셋 확장 용이.</li><li>구현 디테일: 20심볼당 pilot 1개, 복소 가우시안 곱·적분 property(A.1~A.4)로 메시지 폐형 유도.</li><li>최적화: 없음(학습 절차 없음, 해석적 메시지 유도만).</li><li>결과: BPSK/QPSK/8-PSK에서 Tikhonov와 유사 BER, 복잡도는 3M+51 ops·2M+4 mem/iter로 Tikhonov(17M+17 ops) 대비 고차변조에서 낮음.</li><li>한계: HW 미설계, 시뮬만, Wiener 위상잡음+PSK 무선채널 특화(LDPC 디코더 자체는 표준, 미변경).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>위상잡음 원형변수 SPA 검출기</td><td>대응 없음</td><td>우리 코드에 위상추정/detector·factor graph 없음</td></tr><tr><td>표준 LDPC 복호(코드그래프)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문은 표준 SPA 그대로 사용, 개선 없음</td></tr><tr><td>복소가우시안 메시지 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>무선 위상채널 전용, NAND read LLR와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - Wiener 위상잡음/PSK 무선 검출기 기법으로, LDPC 디코더 자체는 표준 무변경이며 NAND QC-LDPC ECC에 이식가치 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8014470",
+  "title": "Iterative Low Complexity Algorithm for LDPC Systems in the Presence of Phase Noise",
+  "year": 2017,
+  "venue": "IEEE Wireless Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "4000",
+  "soft_quant": "무관",
+  "key_contribution": "위상잡음을 원형(복소) 확률변수로 변환해 저복잡도 SPA 메시지로 위상추정, 코드그래프와 결합",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "3M+51 ops, 2M+4 mem access/iter (M=변조차수)",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Wiener 위상잡음/PSK 무선채널 전용 검출기, LDPC 디코더 자체는 표준 SPA로 무변경",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8014470---iterative-low-complexity-algorithm-for-ldpc-systems-in-the-presence-of-phase-noise-2017-ieee-wcl">ieee:8014470 - Iterative Low Complexity Algorithm for LDPC Systems in the Presence of Phase Noise (2017, IEEE WCL)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

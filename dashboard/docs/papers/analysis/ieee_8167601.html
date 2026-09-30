@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8167601</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8167601---a-novel-high-throughput-low-complexity-bit-flipping-decoder-for-ldpc-codes-2017-atc">ieee:8167601 - A Novel High-Throughput, Low-Complexity Bit-Flipping Decoder for LDPC Codes (2017, ATC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>155~1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>전역 sorting(MF) 제거한 병렬 확률적 비트플립(PPBF), 모든 에너지레벨에 확률 flip 적용</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>15.81Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC 채널·hard-decision 전용, dv=3 regular 코드 예시, min-sum 계열과 별개 알고리즘</td></tr><tr><td>추가확인</td><td>NAND soft-read(2~3bit) 환경에서 hard BF의 정정능력 부족 여부, 확률벡터 p 최적화 부담</td></tr></tbody></table>
+<blockquote><p>총평: 전역연산 제거로 완전병렬·저면적·고throughput을 달성한 hard-decision BF 디코더로, error-floor 개선과 오실레이션 breaking이 매력적이나 BSC/1bit 한정이라 NAND soft-LDPC 주경로 대체는 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC 상의 regular LDPC(<code>dv=3, dc=6</code>), 테스트 코드 Tanner <code>N=155</code> 및 <code>dv3R050N1296</code> (<code>N=1296, rate 0.5</code>).</li><li>문제: GDBF/PGDBF는 전역 최대에너지 탐색(Maximum Finder, MF)이 필요해 critical path가 길어지고 코드길이 확장 시 주파수·throughput이 제한됨.</li><li>모델: 각 비트가 crossover 확률 <code>α</code>로 뒤집히는 BSC, hard-decision 1bit 메시지 전달.</li><li>핵심기법: CN은 이웃 VN의 XOR parity(<code>Eq.1</code>), 각 VN은 에너지 <code>En = (vn⊕yn) + Σ cm</code>(<code>Eq.2</code>, 0~dv+1)를 계산.</li><li>의미: 에너지가 높을수록 오류 가능성이 높으므로 flip 확률을 높게 배정 → 전역비교 없이 국소적으로 flip 판정.</li><li>확장: PGDBF와 달리 최대에너지 VN만이 아니라 모든 에너지레벨 <code>e</code>에 대해 확률 <code>pe</code>로 flip (<code>p={0,0.01,0.1,0.9,1}</code>), 전역 sorting 불필요.</li><li>구현 트릭: LFSR 대신 CSTS(Cyclic Shift Truncated Sequence) 짧은 레지스터 <code>Rt</code>(S&lt;N)와 cross-bar로 확률신호 생성, PCU 로직게이트로 p1/p2/p3 실현.</li><li>확률벡터 p는 경험적 최적화값 사용(이론분석은 별도 논문으로 미룸).</li><li>결과: Tanner에서 GDBF 대비 LUT 54%↓·Fmax 85%↑, N=1296에서 PGDBF 대비 LUT 23.9%↓·throughput 60.5%↑(15.81 vs 9.85 Gbps), 성능은 PGDBF와 동등하며 error-floor에서 4비트 트랩셋 패턴 추가 정정.</li><li>한계: BSC·hard-decision 전용, 확률벡터 p 최적화·이론분석 미완, dv=3 특정 코드 시연.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>확률적 병렬 비트플립 디코딩 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>min-sum 대체 알고리즘: 별도 경로로만 접목 가능(성능 트레이드오프)</td></tr><tr><td>CN parity(XOR) 연산</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>하드결정 parity는 min-sum sign 처리와 유사 위치</td></tr><tr><td>VN 에너지·flip 처리</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>HD 경로와 개념 대응, 다만 에너지+확률 flip은 재구현 필요</td></tr><tr><td>종료판정(신드롬 0)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code> / <code>full_CRC.cpp</code></td><td>조기종료는 이미 보유(개념 중복)</td></tr><tr><td>확률신호 생성(CSTS/난수)</td><td><code>random.cpp</code></td><td>XOR25 난수와 유사 위치, 크로스바/PCU는 추가 구현</td></tr><tr><td>HW edge/MUX 라우팅</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>완전병렬 라우팅 사상 참고 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision BSC BF 디코더로, Prime ECC의 soft(2/3SD) min-sum 주경로와 성능·연판정 축이 달라 직접 대체는 어렵고 별도 저전력 fallback 경로로만 참고 가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8167601",
+  "title": "A Novel High-Throughput, Low-Complexity Bit-Flipping Decoder for LDPC Codes",
+  "year": 2017,
+  "venue": "ATC (International Conference on Advanced Technologies for Communications)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "155~1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "전역 sorting(MF) 제거한 병렬 확률적 비트플립(PPBF), 모든 에너지레벨에 확률 flip 적용",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 15.81,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC 채널·hard-decision 전용, dv=3 regular 코드 예시, min-sum 계열과 별개 알고리즘",
+  "todo_check": "NAND soft-read(2~3bit) 환경에서 hard BF의 정정능력 부족 여부, 확률벡터 p 최적화 부담"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8167601---a-novel-high-throughput-low-complexity-bit-flipping-decoder-for-ldpc-codes-2017-atc">ieee:8167601 - A Novel High-Throughput, Low-Complexity Bit-Flipping Decoder for LDPC Codes (2017, ATC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

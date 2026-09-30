@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9615831</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9615831---llr-metrics-for-1024-qam-soft-decision-implementation-in-ieee-80211ax-wi-fi-6-2021-isncc">ieee:9615831 - LLR Metrics for 1024-QAM Soft-Decision: Implementation in IEEE 802.11ax (Wi-Fi 6) (2021, ISNCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>648~1944</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>1024-QAM Gray 매핑 성상을 두 PAM으로 분해해 비트별 piecewise-linear 근사로 저복잡도 soft-demapper LLR 도출 (Viterbi/LDPC 공용)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Wi-Fi 802.11ax MIMO/OFDM 1024-QAM demapper 전용 - NAND는 QAM 성상 없음, LDPC는 802.11ac 표준 부호를 log-SPA로 그대로 사용(기여 아님)</td></tr><tr><td>추가확인</td><td>없음 (QAM demapper라 NAND read/LLR 경로와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 고차 QAM(1024-QAM) soft-demapper의 저복잡도 LLR 근사 논문 - 대상이 변조 demapper이고 LDPC는 off-the-shelf라 NAND binary QC-LDPC 이식 대상 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 802.11ax(Wi-Fi 6) TxBF MIMO/OFDM PHY, 1024-QAM(MCS10 r=3/4, MCS11 r=5/6), SVD precoder + MMSE MIMO 검출.</li><li>문제: 고차 성상 Log-MAP demapper는 복잡도 과다, Max-Log-MAP도 <code>O(2^m)</code>급이라 1024-QAM에 부적합.</li><li>채널모델: MMSE 검출기 출력의 스트림간 간섭+잡음을 zero-mean Gaussian(표준편차 <code>σ_i</code>)으로 근사해 조건부 pdf 유도.</li><li>핵심기법: 1024-QAM Gray 성상을 in-phase(b4~b0)·quadrature(b9~b5) 두 5-bit PAM으로 분해, 대칭성 이용해 I 성분 metric을 Q에 재사용.</li><li>핵심식: <code>LLR = (2/σ²)·λ</code>, <code>λ</code>는 후보 심볼과 정규화 검출출력 <code>l</code>의 최소거리차 <code>min(l−Y)</code>를 min-log 근사한 값.</li><li>저복잡도화: 각 비트 <code>λ</code>를 최근접점 2개 차이로 단순화 후 piecewise-linear 함수(Table I·III~VI)로 표현, b4는 <code>λ=l</code>(unit-slope 직선) 절편(0,0) 근사.</li><li>구현디테일: b3~b0는 중첩 절대값 형태(<code>−||l|−16Δ|+8Δ</code> 등)로 표현해 곱셈 없이 가감·비교로 계산.</li><li>검증부호: 802.11ac LDPC(길이 648/1296/1944)를 log-domain SPA(max iter 50), BCC는 soft Viterbi로 복호.</li><li>결과: 제안 근사 metric이 Matlab qamdemod 대비 PER 근접, LDPC가 BCC 대비 3.5~4 dB 이득, TGn-D [8/16,1,1] 채널에서 검증.</li><li>한계: HW 미설계·시뮬(Matlab)만, Wi-Fi MIMO/OFDM 1024-QAM demapper 전용이라 NAND 채널·QC-LDPC 디코더/부호설계와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>1024-QAM piecewise-linear soft-demapper LLR</td><td>대응 없음</td><td>NAND는 QAM 변조·성상이 없어 QAM demapper 대응 모듈 없음</td></tr><tr><td>검출출력→채널 LLR 생성(양자화)</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>개념상 채널 LLR단이나 QAM 기반이라 NAND read LLR로 직접 이식 불가</td></tr><tr><td>LDPC log-SPA 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>표준 802.11ac 부호를 SPA로 복호할 뿐 논문 기여 아님(Prime ECC는 min-sum)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 기여의 본질이 고차 QAM demapper LLR 근사이고 LDPC는 표준 부호를 off-the-shelf로 사용하므로, NAND binary QC-LDPC의 부호설계·디코더·HW 어느 레이어에도 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9615831",
+  "title": "LLR Metrics for 1024-QAM Soft-Decision: Implementation in IEEE 802.11ax (Wi-Fi 6)",
+  "year": 2021,
+  "venue": "ISNCC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "648~1944",
+  "soft_quant": "무관",
+  "key_contribution": "1024-QAM Gray 매핑 성상을 두 PAM으로 분해해 비트별 piecewise-linear 근사로 저복잡도 soft-demapper LLR 도출 (Viterbi/LDPC 공용)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Wi-Fi 802.11ax MIMO/OFDM 1024-QAM demapper 전용 - NAND는 QAM 성상 없음, LDPC는 802.11ac 표준 부호를 log-SPA로 그대로 사용(기여 아님)",
+  "todo_check": "없음 (QAM demapper라 NAND read/LLR 경로와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9615831---llr-metrics-for-1024-qam-soft-decision-implementation-in-ieee-80211ax-wi-fi-6-2021-isncc">ieee:9615831 - LLR Metrics for 1024-QAM Soft-Decision: Implementation in IEEE 802.11ax (Wi-Fi 6) (2021, ISNCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

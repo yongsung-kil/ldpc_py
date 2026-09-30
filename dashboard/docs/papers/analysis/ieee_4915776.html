@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4915776</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4915776---a-low-complexity-hybrid-ldpc-code-encoder-for-ieee-8023an-10gbase-t-ethernet-2009-ieee-trans-signal-processing">ieee:4915776 - A Low-Complexity Hybrid LDPC Code Encoder for IEEE 802.3an (10GBase-T) Ethernet (2009, IEEE Trans. Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>G matrix 방식과 Richardson-Urbanke(RU) 방식을 결합한 Hybrid 인코더로 열교환(column swap) 없이 면적·ROM·전력을 크게 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>11056 XOR + 1620 AND gates, ROM 104976 bits (미상 공정)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 인코더 아키텍처 논문으로 디코더 성능(정정능력·error-floor)에는 관여하지 않음</td></tr><tr><td>추가확인</td><td>IEEE 802.3an (2048,1723) 고정 코드 기반 설계로, 다른 H-matrix로 일반화 시 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: column swap 없이 시스터매틱 인코딩을 유지하면서 G-matrix법과 RU법을 결합해 면적/ROM/전력을 절감한 인코더 아키텍처 논문. 디코더와 독립적이며 Prime ECC의 dual-diagonal 인코더와는 다른 접근이라 이식 시 재설계 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 IEEE 802.3an 10GBase-T 표준의 (2048,1723) rate≈0.84 QC-LDPC 코드.</li><li>기존 G-matrix 곱셈법은 저장공간(ROM)이 크고, RU(Richardson-Urbanke)법은 critical path가 길고 column swap 시 비시스터매틱이 되는 문제가 있음.</li><li>H-matrix를 approximate lower triangular form(<code>[A B T; C D E]</code>)으로 변환 후, <code>p1</code>(패리티 첫 부분)은 G-matrix 곱으로, <code>p2</code>는 RU의 back-substitution으로 계산하는 Hybrid 구조를 제안.</li><li><code>p1 = -φ^{-1}(-CA^{-1}s + Es)</code> 식은 G-matrix로 미리 계산해두어 T가 singular해도 역행렬 불필요.</li><li><code>p2</code>는 T가 하삼각(lower triangular)이므로 back-substitution으로 순차 계산 (<code>Ap1 + Bp2 + Cs = 0</code> 형태의 해).</li><li>L-parallel back-substitution 시 critical path가 L에 비례해 증가하는 문제를 look-ahead 기법(수식 재조합, 1비트 추가 저장)으로 완화.</li><li>ROM 구현을 PLA(NAND-NOR)식과 shift-register식 두 가지로 비교, shift-register가 병렬도가 높을 때 전력 효율이 더 좋음을 분석.</li><li>별도 학습/최적화 절차 없음 (고정 H-matrix 기반 아키텍처 설계).</li><li>결과: G-matrix법 대비 게이트 수 74%, ROM 저장량 10%(추가 HW로 52488bit까지 축소 가능), 전력 약 82% 절감, critical path는 유사~소폭 개선.</li><li>한계: 특정 (2048,1723) 코드에 특화된 사례 연구이며 65-90nm ASIC 실제 합성 결과는 미확보(분석적 전력 모델만 사용), 디코더 설계는 다루지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Hybrid(G-matrix+RU) 인코딩 구조</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 고정 인코더를 사용하며 본 논문의 G/RU 혼합 back-substitution 구조와는 다른 방식</td></tr><tr><td>H-matrix lower-triangular 변환, column swap 회피</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호 PCM 구조가 이미 고정되어 있어 이식 난이도 높음</td></tr><tr><td>ROM(PLA/shift-register) 저장구조 최적화</td><td>대응 없음</td><td>Prime ECC 시뮬레이터는 클록레벨 bit-exact 모델이나 인코더 ROM 저장구조를 별도 최적화 대상으로 다루지 않음</td></tr></tbody></table>
+<p>적용 가치: <code>낮음</code> — 순수 인코더 면적/전력 최적화이며 디코더 정정성능과 무관하고, Prime ECC의 인코더 구조(dual-diagonal, 고정 H-matrix)와 접근 방식이 달라 이식 난이도(§4 "인코더: 중~높음")가 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4915776",
+  "title": "A Low-Complexity Hybrid LDPC Code Encoder for IEEE 802.3an (10GBase-T) Ethernet",
+  "year": 2009,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.84,
+  "code_length": 2048,
+  "soft_quant": "무관",
+  "key_contribution": "G-matrix법과 RU법을 결합한 Hybrid 인코더로 column swap 없이 면적·ROM·전력 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "11056 XOR + 1620 AND gates, ROM 104976 bits",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 인코더 아키텍처 논문으로 디코더 정정성능·error-floor에는 관여하지 않음",
+  "todo_check": "IEEE 802.3an (2048,1723) 고정 코드 기반이라 다른 H-matrix로 일반화 시 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4915776---a-low-complexity-hybrid-ldpc-code-encoder-for-ieee-8023an-10gbase-t-ethernet-2009-ieee-trans-signal-processing">ieee:4915776 - A Low-Complexity Hybrid LDPC Code Encoder for IEEE 802.3an (10GBase-T) Ethernet (2009, IEEE Trans. Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

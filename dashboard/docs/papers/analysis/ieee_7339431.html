@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7339431</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7339431---protograph-based-ldpc-code-design-for-shaped-bit-metric-decoding-2016-ieee-jsac">ieee:7339431 - Protograph-Based LDPC Code Design for Shaped Bit-Metric Decoding (2016, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>biAWGN surrogate + P-EXIT + differential evolution으로 BICM/probabilistic shaping용 protograph LDPC 부호와 bit-mapping을 joint 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>고차 ASK 변조·확률적 shaping·bit-metric decoding 전용 부호설계라 NAND binary(BPSK 등가) soft-read와 무관</td></tr><tr><td>추가확인</td><td>biAWGN surrogate+DE 최적화 절차가 우리 고rate QC-LDPC-BC 단일 채널 설계에 재활용 여지 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 고차변조 BICM+shaping용 protograph LDPC 부호설계 논문으로, 다중 bit-channel/변조 특화라 NAND용 단일 binary QC-LDPC-BC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2^m-ASK(4/8/64-ASK) BICM + bit-metric decoding(BMD), rate <code>c=(m-1)/m</code>~5/6, QC-LDPC blocklength 16200/64800, 100 iteration.</li><li>문제: 각 bit-level이 서로 다른 BICM bit-channel을 겪고 불균등 오류보호가 필요, off-the-shelf 부호+매핑 최적화로는 부족.</li><li>모델: 이산 AWGN <code>Y=ΔX+Z</code>, probabilistic shaping으로 capacity-achieving 분포 <code>PX*</code> 근사(distribution matcher), BRGC 라벨링.</li><li>핵심기법: 각 bit-channel을 uniform biAWGN surrogate로 대체 — 조건부 엔트로피 <code>H(Bi|Li)</code>를 맞추도록 surrogate 잡음분산 <code>σi</code> 설정, protograph basematrix <code>A</code>에 bit-mapping을 내장.</li><li>핵심식: rate backoff <code>RBMD−R=(1−c)m−ΣH(Bi|Li)</code> — 조건부 엔트로피 집합이 성능을 결정하므로 surrogate 설계 기준.</li><li>확장: BEC surrogate는 "proper" 실패(매핑 변경으로 개선 가능), biAWGN surrogate는 proper라 등가로 채택.</li><li>구현 디테일: bit-level당 최대 D개 서로 다른 variable degree 허용(N=D·m), degree-2 변수노드 수를 M 이하로 제한(min-distance 보호).</li><li>학습/최적화: P-EXIT로 iterative decoding threshold 계산 후 differential evolution(population M·N·10, 1000 세대)으로 basematrix 최적화, Monte-Carlo DE로 검증.</li><li>결과: uniform 입력 rate 1/2·3/4 부호는 Zhang-Kschischang MET 부호와 동등, shaped 8-ASK(2/3)/64-ASK(5/6)는 0.5·log2(1+SNR)에서 0.63/0.69dB 이내, DVB-S2 대비 0.1~0.25dB 우위.</li><li>한계: HW 미설계·시뮬만, 고차 ASK 변조·shaping·BICM 전용, 순수 binary hard/soft NAND read 시나리오 미대응.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph basematrix + lifting(QC-LDPC 생성)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC 리프팅 개념은 공유하나 우리는 고정 고rate H-matrix, 다중 bit-channel 매핑 불필요</td></tr><tr><td>P-EXIT + differential evolution 부호최적화</td><td>대응 없음</td><td>우리 코드베이스는 부호설계 자동화 툴 미보유, threshold 최적화 파이프라인 없음</td></tr><tr><td>biAWGN surrogate / bit-metric decoding</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>우리 채널은 단일 binary AWGN/RBER, 다중 bit-level surrogate 개념 부적합</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 고차변조 BICM·확률적 shaping 특화 부호설계로, NAND용 단일 binary QC-LDPC-BC 디코더/HW에 떼어 쓸 알고리즘·HW 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7339431",
+  "title": "Protograph-Based LDPC Code Design for Shaped Bit-Metric Decoding",
+  "year": 2016,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "protograph",
+  "code_rate": null,
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "biAWGN surrogate + P-EXIT + differential evolution으로 BICM/probabilistic shaping용 protograph LDPC 부호와 bit-mapping을 joint 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "고차 ASK 변조·확률적 shaping·bit-metric decoding 전용 부호설계라 NAND binary(BPSK 등가) soft-read와 무관",
+  "todo_check": "biAWGN surrogate+DE 최적화 절차가 우리 고rate QC-LDPC-BC 단일 채널 설계에 재활용 여지 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7339431---protograph-based-ldpc-code-design-for-shaped-bit-metric-decoding-2016-ieee-jsac">ieee:7339431 - Protograph-Based LDPC Code Design for Shaped Bit-Metric Decoding (2016, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

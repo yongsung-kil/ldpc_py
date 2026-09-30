@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5600988</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5600988---gaussian-approximation-for-ldpc-codes-under-group-shuffled-belief-propagation-decoding-2010-ieee">ieee:5600988 - Gaussian Approximation for LDPC Codes under Group Shuffled Belief Propagation Decoding (2010, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>960</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Group Shuffled BP(GSBP) 복호의 수렴을 Gaussian Approximation으로 해석, BP대비 빠른 수렴을 이론 입증</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 asymptotic 해석(랜덤 H 가정), full tanh-BP 기반이라 min-sum HW와 직접 대응 안 됨</td></tr><tr><td>추가확인</td><td>GSBP shuffled 스케줄 자체는 참고문헌2에 있음, 본 논문은 해석 도구뿐</td></tr></tbody></table>
+<blockquote><p>총평: shuffled/그룹 스케줄로 iteration을 줄이는 아이디어는 참고 가치 있으나 본 논문은 이론 해석뿐이라 이식 대상 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 이진 <code>(N,K)</code> LDPC, BPSK/biAWGN(분산 <code>σ2</code>), 예시 <code>(480,960)(3,6)</code> 및 irregular 앙상블(rate 1/2).</li><li>문제: 표준 BP는 수렴에 많은 iteration이 필요 → GSBP로 가속하되 그 수렴을 이론적으로 증명할 도구 필요.</li><li>모델: cycle-free 가정 하 메시지가 i.i.d. Gaussian, 대칭조건 <code>2m=σ2</code>로 평균만 추적(GA).</li><li>핵심 기법: BN을 <code>G</code>개 그룹으로 나눠 순차 갱신(그룹 내 병렬) → 같은 iteration 내에서 갱신 결과가 즉시 반영되는 GSBP 스케줄.</li><li>의미: 그룹 g 갱신 시 이전 그룹(V1)은 이미 갱신된 최신 메시지, 이후 그룹(V2)은 (l-1) 메시지 → tanh rule을 V1/V2로 분리(식 2).</li><li>확장: degree-j CN이 V1에 k개 이웃을 가질 확률 <code>Pj,k=(g/G)^k(1-g/G)^{j-1-k}</code>로 CN 평균 <code>mu</code> 유도(식 8~11).</li><li>구현 디테일: Chung의 <code>φ(x)</code> 함수로 CN 평균 갱신, BN 평균 <code>m_{v,i,g}=mu0+(i-1)mu</code>(식 12).</li><li>최적화: 앙상블 degree 분포 <code>(λ(x),ρ(x))</code>와 <code>mu0=2/σ2</code>로 오류확률 <code>Pe</code>가 결정, threshold 초과 시 <code>Pe→0</code>.</li><li>결과: <code>(480,960)</code>서 G=2가 BP대비 BER 10^-4서 0.22dB 이득, irregular서 Eb/N0=0.81dB에 BP 79 iter vs GSBP G=8 40 iter(약 2배 빠름), 복잡도 증가 없음.</li><li>한계: HW 미설계, 랜덤 H 가정 asymptotic 해석뿐, 유한길이 QC-LDPC 이식성은 별도 검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GSBP 그룹 순차 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 Dual-Update(parity even/odd 교대) 스케줄과 유사 계열, 그룹 shuffled는 미보유</td></tr><tr><td>tanh rule CN 갱신</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum 근사, full tanh는 대응 없음</td></tr><tr><td>GA 수렴 해석 도구</td><td>대응 없음</td><td>설계 시 분석용, 코드베이스에 해석기 없음</td></tr></tbody></table>
+<p><strong>적용 가치</strong>: <code>낮음</code> — GSBP는 이미 보유한 Dual-Update와 유사한 스케줄 최적화 계열이고, 본 논문은 부호설계·HW 없는 순수 이론 해석이라 코드 이식 대상이 아님.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5600988",
+  "title": "Gaussian Approximation for LDPC Codes under Group Shuffled Belief Propagation Decoding",
+  "year": 2010,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "960",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Group Shuffled BP(GSBP) 복호의 수렴을 Gaussian Approximation으로 해석, BP대비 빠른 수렴을 이론 입증",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "순수 asymptotic 해석(랜덤 H 가정), full tanh-BP 기반이라 min-sum HW와 직접 대응 안 됨",
+  "todo_check": "GSBP shuffled 스케줄 자체는 참고문헌2에 있음, 본 논문은 해석 도구뿐"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5600988---gaussian-approximation-for-ldpc-codes-under-group-shuffled-belief-propagation-decoding-2010-ieee">ieee:5600988 - Gaussian Approximation for LDPC Codes under Group Shuffled Belief Propagation Decoding (2010, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

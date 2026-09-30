@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1406158</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1406158---belief-propagation-decoding-of-reed-solomon-codes-a-bit-level-soft-decision-decoding-algorithm-2005-ieee-trans-broadcasting">ieee:1406158 - Belief Propagation Decoding of Reed-Solomon Codes; a Bit-Level Soft Decision Decoding Algorithm (2005, IEEE Trans. Broadcasting)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.29~0.71</td></tr><tr><td>부호length</td><td>7~255</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>RS 코드의 binary image에 대해 Vardy 분해로 희소 H-matrix를 구성해 BP(belief propagation)로 비트단위 연판정 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>RS binary image 희소행렬 구성이 핵심이며 고rate RS(255,223)엔 Vardy 기법 적용 불가, LDPC 자체 부호설계가 아님</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: Reed-Solomon 코드의 bit-level 연판정 복호를 BP로 수행. 테스트 부호 RS(7,2)(dual RS(7,5)), RS(255,32)(legacy RS(255,223)의 dual).</li><li>문제: 심볼단위 SDD(Forney GMD, Chase)는 비트 신뢰도 정보 손실 → 비트단위 연판정으로 ~2dB 추가 이득 노림.</li><li>핵심 이슈: RS 부호의 binary image에 대한 희소 parity check matrix를 얻는 것이 관건(BP는 희소 H가 있어야 효과).</li><li>구성법: RS를 최대 binary BCH subfield subcode와 coset들로 분해(Vardy 기법), BCH 생성행렬 <code>B</code> + "glue vector" 부행렬로 binary image 생성행렬 구성(Eq.4), 다수 0-부행렬로 희소화.</li><li>BP 튜토리얼: Pearl belief propagation을 Bayesian network(polytree)에서 <code>π</code>(top-down)·<code>λ</code>(bottom-up) 메시지 전파로 belief(=posterior) 계산(Eq.14-16).</li><li>LDPC/RS binary image의 BN은 loopy이나 loopy BP도 실용적 성능(turbo와 동치).</li><li>결과1: RS(7,2)는 진짜 희소 H(대부분 열 2~3개 nonzero) → BP가 hard-decision Euclidean 대비 2dB+ 이득.</li><li>결과2: RS(255,32)는 행당 평균 nonzero ~80(행 길이 2040)로 상대적 희소하나 절대 nonzero 수가 많아 성능 부진.</li><li>핵심 관찰: BP 효율은 행·열의 nonzero 절대 개수에 좌우, 상대 밀도는 덜 중요. 고rate CCSDS RS(255,223)엔 BCH subcode 부재/glue 과다로 Vardy 기법 미적용.</li><li>한계: 순수 시뮬(SER/CER), HW 미설계, LDPC 부호설계가 아니라 RS→binary image 희소행렬 구성이 병목.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(sum-product) 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 Min-Sum이며 대상 부호가 RS라 직접 대응 아님</td></tr><tr><td>RS binary image 희소 H 구성(Vardy 분해)</td><td>대응 없음 (우리는 고정 QC-LDPC H, RS 아님)</td><td>낮음</td></tr><tr><td>희소 parity check matrix 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H 로드 위치만 대응, RS binary image는 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — RS 부호의 binary image에 BP를 적용하는 기법으로, 대상 부호가 RS이고 고rate RS엔 희소행렬 구성 자체가 불가하며 HW 설계도 없다. Prime ECC의 binary QC-LDPC 부호설계·Min-Sum HW와 무관.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1406158",
+  "title": "Belief Propagation Decoding of Reed-Solomon Codes; a Bit-Level Soft Decision Decoding Algorithm",
+  "year": 2005,
+  "venue": "IEEE Trans. Broadcasting",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": "0.29~0.71",
+  "code_length": "7~255",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "RS 코드의 binary image에 Vardy 분해로 희소 H-matrix를 구성해 BP로 비트단위 연판정 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "RS binary image 희소행렬 구성이 핵심이며 고rate RS(255,223)엔 Vardy 기법 적용 불가, LDPC 부호설계가 아님",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1406158---belief-propagation-decoding-of-reed-solomon-codes-a-bit-level-soft-decision-decoding-algorithm-2005-ieee-trans-broadcasting">ieee:1406158 - Belief Propagation Decoding of Reed-Solomon Codes; a Bit-Level Soft Decision Decoding Algorithm (2005, IEEE Trans. Broadcasting)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

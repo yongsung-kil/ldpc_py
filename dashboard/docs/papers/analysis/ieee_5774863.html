@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5774863</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5774863---memory-size-reduction-for-ldpc-layered-decoders-2010-asicon">ieee:5774863 - Memory Size Reduction for LDPC Layered Decoders (2010, ASICON)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>layered min-sum 디코더에 3-level 계층 메모리(local reg/register file/main mem)+신호 라우팅 제어로 메모리 비트 최대 34.9% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>373k@180nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.118Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11n/16e 통신 QC-LDPC 대상, 정정성능 개선 없음(순수 HW 면적/메모리), 74MHz·0.118Gbps로 NAND 목표대비 저속</td></tr><tr><td>추가확인</td><td>3-level 메모리·min/min2/index/flag 저장 구조가 우리 z=32 pipeline 메모리 대비 실질 절감되는지, 7bit sign-mag 양자화 정합</td></tr></tbody></table>
+<blockquote><p>총평: layered min-sum 디코더의 메모리 면적 최적화 HW 논문으로 정정성능 기여는 없으나 계층 메모리+신호 라우팅 절감 아이디어는 우리 HW 메모리 설계 참고 가치가 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11n/802.16e QC-LDPC layered 디코더 HW. code length 576~2304bit, rate 1/2~5/6, sub-matrix <code>z_f</code>=24~96(22 모드). sub-matrix는 zero 또는 cyclic-shift identity.</li><li>문제: long code(N≥1Kbit) LDPC는 성능 우수하나 메모리가 디코더 면적을 지배 → 메모리 크기 절감이 저면적·저전력 핵심.</li><li>알고리즘: log-domain SPA(사실상 min-sum) — VN update는 <code>min(b_ij, min b)</code> + sign XOR, CN update는 <code>L(c_i)+ΣL(r_ji)</code>. 곱셈을 누산·min으로 대체.</li><li>HW 4단계: CN pre(min/min2/index 산출), CN post(현재 위치가 min 위치면 min2로 대체), VN pre(열 누산), VN post(누산에서 현재 위치 차감).</li><li>아키텍처: H를 12 sub-row × 24 sub-col(각 96×96)로 배치, 2 sub-col=1 processing col. 초기 idle 축소 위해 sub-col 처리부터 시작하는 layered 방식.</li><li>BNP/CNP: BNP는 (3,2) compressor+local reg로 열당 12 cycle 누산. CNP는 MUX A(감산조건)/MUX B(등호조건)+3-input XOR로 행당 12 cycle에 min 선택. 2×96 BNP + 96 CNP로 2 sub-matrix 동시 처리.</li><li>핵심 기여 — 3-level 메모리: (a) 처리셀 local register, (b) BNP↔CNP 데이터 전달·현재 열 보관하는 register file(값당 7bit sign-magnitude, Matlab로 충분성 확인), (c) H의 sign/min/index/min2/nonzero-flag만 저장하는 main memory.</li><li>제어: VN pre/post, CN pre/post 4상태를 enable(bnp/cnp_a/p_en)+counter로 구동, 상태 중첩 실행(VN_P와 CN_A 동시)으로 처리율 유지.</li><li>결과: UMC 0.18um, 74MHz, post-layout 21.16mm², 373k gate, 58.5Kbit register, 118Mbps@10iter. 기존 [9]/[10] 대비 메모리 비트 13.4%/34.9% 절감.</li><li>한계: 정정성능 개선 없음(순수 면적/메모리 최적화), 통신용 QC-LDPC(802.11n/16e) 특화, 74MHz·0.118Gbps로 저속. NAND 미언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>log-domain min-sum(min/min2+sign XOR)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리가 이미 보유한 min-sum과 동일, 신규 기여 아님</td></tr><tr><td>VN 처리·양자화(7bit sign-mag)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>우리는 2~3bit soft·magnitude 테이블, 논문은 7bit로 정합 검토 필요</td></tr><tr><td>layered 스케줄/BNP·CNP 상태제어</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 dual-update/pipeline 스케줄과 개념 유사, 구조 다름</td></tr><tr><td>3-level 계층 메모리 / min·index·flag 저장</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>HW 메모리 최적화 아이디어로 참고, 직접 함수 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum/layered 자체는 우리가 보유해 신규성이 낮으나, 3-level 계층 메모리와 min/min2/index/flag만 저장하는 main memory 구조는 우리 QC-LDPC HW의 메모리 면적 절감 참고 가치가 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5774863",
+  "title": "Memory Size Reduction for LDPC Layered Decoders",
+  "year": 2010,
+  "venue": "ASICON",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "layered min-sum 디코더에 3-level 계층 메모리+신호 라우팅 제어로 메모리 비트 최대 34.9% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "373k@180nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.118,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "802.11n/16e 통신 QC-LDPC 대상, 정정성능 개선 없음(순수 HW 면적/메모리), 74MHz·0.118Gbps로 저속",
+  "todo_check": "3-level 메모리·min/min2/index/flag 저장 구조가 우리 z=32 pipeline 메모리 대비 실질 절감되는지, 7bit sign-mag 양자화 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5774863---memory-size-reduction-for-ldpc-layered-decoders-2010-asicon">ieee:5774863 - Memory Size Reduction for LDPC Layered Decoders (2010, ASICON)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

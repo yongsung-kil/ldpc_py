@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10765523</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10765523---fpga-implementation-of-qc-ldpc-decoder-with-rapid-cyclic-shifter-for-cv-qkd-systems-2024-ccisp">ieee:10765523 - FPGA Implementation of QC-LDPC Decoder with Rapid Cyclic Shifter for CV-QKD Systems (2024, CCISP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>syndrome 기반 NMSA와 1클록 임의크기 순환천이기(RCS)로 QC-LDPC 디코더의 자원사용을 최대 65% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>124625 LUT + 30625 FF + 147 BRAM@Xilinx Virtex-7</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>68.5Mbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CV-QKD IEEE802.11n 부호(rate 1/2, 16bit 고정소수점) 대상이라 NAND 고rate 부호와 직접 정합은 낮음</td></tr><tr><td>추가확인</td><td>RCS의 좌/우 시프트 합성 구조가 Prime ECC의 z=32 고정 shift 구조 대비 실제 게이트 이득이 있는지 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: 순환천이기(RCS) HW 최적화 논문으로 min-sum 알고리즘 자체 개선은 없어 NAND ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>CV-QKD 시스템의 information reconciliation용 QC-LDPC 디코더, IEEE 802.11n 부호(길이 1944, rate 1/2) 사용.</li><li>기존 QSN(circular-shift network) 기반 순환천이 구조는 하드웨어 자원 소모가 크다는 문제를 해결하려 함.</li><li>syndrome 기반 normalized min-sum(S-NMSA)으로 채널 noise variance 기반 LLR 초기화 후 반복 복호.</li><li>CN 갱신식 <code>Lc2vi(kj) = (1-Sj)·(∏sgn(Lv2cj))·min(|Lv2cj|)·α</code> — syndrome Sj와 정규화 계수 α를 반영한 min-sum.</li><li>VN 갱신은 계층형 덧셈 트리(hierarchical tree) 구조로 Dv개의 Lv2c를 병렬 계산.</li><li>부호화 전 base PCM Hb를 전처리해 offset/address 행렬(Offset1/2, Addr1/2)로 정규화하여 반복 인덱스 재계산을 제거.</li><li>핵심 기법: Rapid Cyclic Shifter(RCS)는 Z×Z CPM을 좌/우 시프트로 분해 후 1클록에 합성 — 128비트 데이터를 1클록에 처리(기존 barrel shifter는 6클록 필요).</li><li>학습/최적화 절차 없음(순수 HW 아키텍처 설계).</li><li>결과: RCS가 128×128 네트워크 기준 LUT 65% 절감(8704 vs 기존 IBN 14329), throughput 68.5Mbps@250MHz, 기존 IR-QC-LDPC 대비 2.2배 throughput.</li><li>한계: rate 1/2 고정 부호 1종만 검증, error-floor/평균 iteration 수치 보고 없음, ASIC 합성 결과 없음(FPGA만).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>S-NMSA (min-sum + 정규화)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum + normalization 보유, 중복 기여</td></tr><tr><td>Rapid Cyclic Shifter(RCS)</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 lifting으로 임의크기 shift network 불필요</td></tr><tr><td>PCM 전처리(offset/address 행렬)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 로드 시 참고 가능하나 QC 구조 고정이라 이식 난이도 높음</td></tr><tr><td>VN 계층 덧셈 트리</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>병렬 가산 구조는 이미 유사 형태로 구현</td></tr><tr><td>syndrome 기반 조기종료</td><td><code>partial_CRC.cpp</code>, <code>full_CRC.cpp</code></td><td>유사 목적(조기종료)이나 syndrome 기반 방식은 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — RCS는 임의 크기 QC 매트릭스 지원용 범용 shift network이나 Prime ECC는 이미 z=32 고정 병렬 구조를 채택해 이식 필요성이 낮고, 디코더 알고리즘(S-NMSA)도 기존 min-sum/정규화 기법과 중복.</p></blockquote>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:10765523",
+  "title": "FPGA Implementation of QC-LDPC Decoder with Rapid Cyclic Shifter for CV-QKD Systems",
+  "year": 2024,
+  "venue": "CCISP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 1944,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "syndrome 기반 NMSA와 1클록 임의크기 순환천이기(RCS)로 QC-LDPC 디코더의 자원사용을 최대 65% 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "124625 LUT + 30625 FF + 147 BRAM@Xilinx Virtex-7",
+  "parallelism": "부분",
+  "throughput_gbps": 0.0685,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CV-QKD IEEE802.11n 부호(rate 1/2, 16bit 고정소수점) 대상이라 NAND 고rate 부호와 직접 정합은 낮음",
+  "todo_check": "RCS의 좌/우 시프트 합성 구조가 Prime ECC의 z=32 고정 shift 구조 대비 실제 게이트 이득이 있는지 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10765523---fpga-implementation-of-qc-ldpc-decoder-with-rapid-cyclic-shifter-for-cv-qkd-systems-2024-ccisp">ieee:10765523 - FPGA Implementation of QC-LDPC Decoder with Rapid Cyclic Shifter for CV-QKD Systems (2024, CCISP)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11263820</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11263820---belief-propagation-decoding-of-primitive-rateless-codes-2026-ieee-communications-letters">ieee:11263820 - Belief Propagation Decoding of Primitive Rateless Codes (2026, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.31~0.67</td></tr><tr><td>부호length</td><td>32~128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Golomb ruler 기반 primitive polynomial로 4-cycle-free PCM을 만들고, 채널 LLR 정렬+가우스소거로 얻은 두 번째 PCM에서 병렬 BP를 수행해 유클리드 거리로 후보 선택하는 double-bases 디코더 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>짧은 블록길이(URLLC/mMTC) primitive rateless code 전용 기법으로 NAND용 고전 LDPC와 부호 자체가 다름(LDPC 아님)</td></tr><tr><td>추가확인</td><td>double-bases BP의 두 PCM 병렬 실행 아이디어가 LDPC용 multiple-bases BP(MBBP)에 일반화 가능한지 여부</td></tr></tbody></table>
+<blockquote><p>총평: URLLC/mMTC 짧은 패킷용 primitive rateless code(비-LDPC) 전용 BP 디코딩 기법으로, NAND 고전 binary LDPC ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 primitive rateless (PR) code — GF(2) 위 primitive polynomial 기반 m-sequence로 생성되는 rate-compatible 짧은 블록 부호(길이 32~128, URLLC/mMTC 타깃), LDPC와는 별개의 대수적 부호.</li><li>문제: 대수적 부호(RM, BCH, PR)는 PCM이 조밀해 4-cycle 등 짧은 사이클이 많아 BP 성능이 저하되고, 기존 해법(MBBP)은 다중 PCM 구성이 계산량이 크고 비확장적임.</li><li>채널 모델은 BI-AWGN + BPSK, 디코더는 damped normalized min-sum(NMS): <code>L_c(l→v) = λL_c(l-1→v) + γ(1-λ)·min|L_v'|·sgn(...)</code> (스케일 γ, 댐핑 λ=0.7).</li><li>핵심 기법 1단: primitive polynomial <code>p(x)</code>의 support 집합이 Golomb ruler(모든 pairwise 차분이 유일)이면 임의의 rate에서 표준 PCM이 4-cycle-free임을 이용, 최대 허용 weight <code>wp/2 &lt; k</code> 조건 하 탐색 알고리즘(Algorithm 1)으로 해당 다항식을 구성.</li><li>핵심 기법 2단(double-bases): 수신 LLR 크기 내림차순 정렬 permutation <code>π1</code>을 표준 PCM <code>H1</code>에 적용 후 Gaussian elimination으로 <code>H2=[P̃|I_{n-k}]</code> 생성 — 신뢰도 낮은 비트를 degree-1 변수노드로 만들어 국소적으로 쉽게 정정.</li><li>두 PCM(<code>H1</code>, <code>H2</code>)에서 각각 BP를 최대 <code>Imax</code> 반복 병렬 수행해 두 후보 codeword를 얻고, 수신신호와 유클리드 거리가 더 짧은 쪽을 최종 선택.</li><li>복잡도: 표준 BP는 <code>O(|E|·Imax)</code>, MBBP는 N개 PCM에 비례하는 <code>O(ΣN|Ei|Imax)</code>인 반면, double-bases는 정렬/GE 비용 <code>O(n log n)+O(n·min(k,n-k)^2)</code> + 2개 PCM BP 비용만 필요해 PCM 수를 2개로 고정.</li><li>학습/최적화 절차 없음(구성적 설계 + 결정론적 GE).</li><li>결과: PR(24,64)에서 double-bases BP가 near-ML 성능 달성(MBBP는 동등 성능에 4개 PCM 필요), 표준 BP 대비 약 1dB 이득, PR(64,128) 576 edges가 RM(64,128) 1246 edges 대비 우수, PR(20,128)이 Polar CA-SCL(L=32) 대비 낮은 SNR에서 우수.</li><li>한계: LDPC가 아닌 PR code 전용(NAND 표준 LDPC와 부호 구조 자체가 다름), 매우 짧은 블록길이(≤128) 및 URLLC/mMTC向 시뮬레이션뿐이며 HW 구현·gatecount·throughput 분석 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>double-bases BP(두 PCM 병렬 디코딩 + 유클리드 거리 선택)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>개념적으로 multiple-decoding-attempt 구조와 유사하나, PR code 고유의 두 번째 PCM 생성 방식(LLR 정렬+GE)은 QC-LDPC 고정 PCM 구조와 맞지 않음</td></tr><tr><td>damped normalized min-sum (NMS)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 보유한 min-sum 계열, 댐핑 인자만 추가된 변형으로 중복 기여</td></tr><tr><td>Golomb ruler 기반 4-cycle-free PCM 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>PR code 전용 대수적 구성법으로 QC-LDPC 구조에 이식 불가</td></tr><tr><td>Gaussian elimination 기반 2번째 PCM 생성</td><td>대응 없음</td><td>PR code의 rateless 특성에 특화된 기법, 고정 rate QC-LDPC에는 부적합</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — LDPC가 아닌 primitive rateless code 전용 기법이며, NAND 표준 binary QC-LDPC의 고정 PCM 구조와 근본적으로 다른 부호 계열이라 이식 실익이 적음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11263820",
+  "title": "Belief Propagation Decoding of Primitive Rateless Codes",
+  "year": 2026,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "32~128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Golomb ruler 기반 primitive polynomial로 4-cycle-free PCM을 구성하고, LLR 정렬+GE로 얻은 두 번째 PCM과 병렬 BP를 수행해 유클리드 거리로 후보를 선택하는 double-bases 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "짧은 블록길이(URLLC/mMTC) primitive rateless code 전용 기법으로 NAND용 고전 LDPC와 부호 자체가 다름(LDPC 아님)",
+  "todo_check": "double-bases BP의 두 PCM 병렬 실행 아이디어가 LDPC용 multiple-bases BP(MBBP)에 일반화 가능한지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11263820---belief-propagation-decoding-of-primitive-rateless-codes-2026-ieee-communications-letters">ieee:11263820 - Belief Propagation Decoding of Primitive Rateless Codes (2026, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10677441</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10677441---list-based-optimization-of-proximal-decoding-for-ldpc-codes-2024-ieee-communications-letters">ieee:10677441 - List-Based Optimization of Proximal Decoding for LDPC Codes (2024, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>204</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>proximal decoding의 진동(oscillation) 특성을 이용해 오류 가능성 높은 N개 비트를 식별, ML-in-the-list로 재복호해 최대 1dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BP(200회 반복) 대비 오히려 1.7dB 열위이며 min-sum 기반 Prime ECC와 알고리즘 패러다임(gradient-descent 최적화 vs message-passing)이 근본적으로 상이</td></tr><tr><td>추가확인</td><td>오류비트 식별에 쓰인 "gradient oscillation height" 지표를 min-sum LLR 진동/불안정성 검출에 유사하게 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: proximal decoding(비선형 최적화 기반 LDPC 복호)의 수렴 실패 구간을 ML-in-the-list로 보정하는 기법으로, min-sum message-passing 계열인 Prime ECC와 알고리즘 기반이 달라 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN 채널, BPSK 변조, (3,6)-regular LDPC <code>[n=204, k=102]</code> 부호에 대해 proximal decoding(최적화 기반 복호, message-passing 아님) 적용.</li><li>문제: proximal decoding은 반복이 진행될수록 추정치가 정답 부호어 근처에서 진동(oscillate)하며 수렴 실패(DFR)가 프레임에러(FER)를 지배 — 소수 비트만 오결정된 채 정체.</li><li>가정: code-constraint polynomial <code>h(x̃)</code> (bipolar+parity 제약)와 채널 negative log-likelihood <code>L(y|x̃)</code>를 결합한 목적함수 <code>g(x̃)=L(y|x̃)+γh(x̃)</code>를 두 단계 gradient-descent(<code>r←s−ω∇L</code>, <code>s←Π_η(r−γ∇h(r))</code>)로 최소화(Wadayama-Takabe 원 알고리즘).</li><li>핵심 기법: 반복 종료 시점 두 gradient(<code>∇L</code>, <code>∇h</code>)의 진동 높이 <code>Δ_i(h) = |(∇h)_i[K]−(∇h)_i[K−1]|</code>를 계산, 값이 작은(=진동이 거의 없는=수렴 정체) 하위 <code>N</code>개 인덱스를 오류 유력 비트로 선정.</li><li>진동 높이가 낮을수록 실제 오결정 확률이 높다는 것을 Monte Carlo로 실증(Fig.4) — 이 지표가 "어느 비트를 다시 볼지"를 정하는 리스트 생성 기준.</li><li>확장: 선정된 <code>N</code>개 비트 위치에 대해 전수(2^N) 후보 부호어를 생성(<code>ML-in-the-list</code>), parity를 만족하는 후보 중 correlation <code>⟨1−2ĉ, y⟩</code>이 최대인 것을 최종 출력(Algorithm 2).</li><li>구현 디테일: 발산 방지용 hypercube clipping <code>Π_η</code>(η=1.5)를 매 반복 적용, 오류비트 개수 <code>N=8</code>을 실험적으로 선택(SNR별 N∈{4,6,8,10,12} 비교 후 결정).</li><li>별도 학습/최적화 절차 없음 — 파라미터(γ=0.05, ω=0.05, η=1.5, K=200, N=8)는 사전 그리드서치로 고정.</li><li>결과: 기존 proximal decoding 대비 FER 10^-6에서 최대 약 1dB 이득, 그러나 동일 코드에서 BP(200 iter)가 개선 기법보다 약 1.7dB 우수.</li><li>한계: HW 미설계·시뮬레이션뿐, 코드 길이-이득 간 명확한 관계 미관측, BP 대비 절대 성능 열위이며 massive MIMO 등 BP 적용 어려운 특수 상황에서만 선형연산 이점을 주장.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>proximal decoding (gradient-descent 기반 MAP 복호)</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing 구조(<code>decoder.cpp</code> <code>LDPC_Decoder()</code>)이며 비선형 최적화 기반 복호와 아키텍처가 근본적으로 다름</td></tr><tr><td>ML-in-the-list 재복호(오류비트 전수탐색)</td><td>대응 없음</td><td>HW상 2^N 후보 parity 재검사는 Prime ECC의 iterative C2V/V2C 구조와 무관</td></tr><tr><td>오류비트 식별용 진동높이 지표</td><td>대응 없음(개념적으로만 <code>decoder.cpp</code> LLR 안정성 추적과 유사)</td><td>표에 명시된 함수 없음 — 이식하려면 완전히 새 모듈 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — 알고리즘 패러다임 자체가 Prime ECC의 min-sum message-passing과 이질적이며, 정량 성능도 BP 대비 열위, HW 검증도 없어 이식 실익이 작음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10677441",
+  "title": "List-Based Optimization of Proximal Decoding for LDPC Codes",
+  "year": 2024,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "204",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "proximal decoding의 진동(oscillation) 특성을 이용해 오류 가능성 높은 N개 비트를 식별, ML-in-the-list로 재복호해 최대 1dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BP(200회 반복) 대비 오히려 1.7dB 열위이며 min-sum 기반 Prime ECC와 알고리즘 패러다임(gradient-descent 최적화 vs message-passing)이 근본적으로 상이",
+  "todo_check": "오류비트 식별에 쓰인 gradient oscillation height 지표를 min-sum LLR 진동/불안정성 검출에 유사하게 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10677441---list-based-optimization-of-proximal-decoding-for-ldpc-codes-2024-ieee-communications-letters">ieee:10677441 - List-Based Optimization of Proximal Decoding for LDPC Codes (2024, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

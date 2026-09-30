@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8259607</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8259607---an-improvement-of-decoding-time-of-ordered-statistic-decoding-for-medium-length-ldpc-codes-2017-icdt4th-acdt-컨퍼런스">ieee:8259607 - An Improvement of Decoding Time of Ordered Statistic Decoding for Medium Length LDPC Codes (2017, ICDT/4th ACDT 컨퍼런스)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>256~1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>OSD 조합탐색의 조기중단을 "coincidence rate" 기반 stopping condition으로 개선해 복호시간 10~200배 단축</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G 중간길이 코드 대상 SPA 후처리 OSD - Gaussian elimination + 조합탐색 기반이라 고rate·긴 NAND QC-LDPC HW에 부적합</td></tr><tr><td>추가확인</td><td>c0 임계값이 SNR/loop별 튜닝 테이블 의존 - NAND 동작점(고rate, RBER)에서 재도출 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 중간길이 코드의 near-MLD OSD 후처리 속도 개선으로, 고rate·partially-parallel NAND QC-LDPC HW 디코더와 구조·복잡도가 맞지 않아 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 중간길이(수백~수천 bit) LDPC, <code>(n,k)</code>=(256,129)/(512,257)/(1024,513), regular (4,8) 등, BPSK/AWGN. SPA 복호가 MLD 대비 BER 열위인 5G급 코드.</li><li>문제: SPA는 중간길이에서 MLD 대비 BER 열위이고, OSD(Fossorier)는 정확하나 조합탐색 비용이 큼.</li><li>기법 1(OSD 리뷰): SPA 출력 신뢰도 <code>γ</code> 정렬 후 k-MRIP(가장 신뢰 높은 k bit) 선택, Gaussian elimination으로 systematic화, <code>l0</code>까지 bit-flip 조합을 탐색해 <code>C(x)=Σ r_i x_i</code> 최대화하는 codeword 탐색.</li><li>핵심 관찰: k-MRIP는 오류가 적어(예 2.0dB에서 오류&lt;2 확률 86.98%) 작은 <code>l0</code>로도 충분 → 탐색 축소 여지.</li><li>핵심 기법 2(제안): "coincidence rate" <code>R(x)</code> 도입 - hard-decision <code>z</code>와 OSD 결과 <code>x</code>의 중하위 <code>n-k</code> 구간 일치율. MLD와 일치하면 <code>R(x)</code>가 1에 근접.</li><li>정지조건: 각 loop에서 <code>R(x) &gt; c0</code>이면 즉시 정지. <code>c0</code>는 오판 확률 최소화, <code>argmax_c{p2,C(c) - p1,W(c)}</code>로 결정.</li><li>부수: <code>p2,C</code>, <code>p1,W</code>를 시뮬 빈도 <code>n2,C</code>, <code>n1,W</code>로 근사해 <code>c0</code>를 SNR·loop별 테이블(Table II~IV, 약 0.80~0.89)로 산출.</li><li>최적화: 별도 학습 없음 - Monte-Carlo 빈도 통계로 <code>c0</code> 결정.</li><li>결과: BER는 Fossorier와 거의 동등하면서 stopping 파트 CPU time을 (256,129)에서 32~69배, (512,257)에서 78~198배 단축(전체는 SPA+stopping).</li><li>한계: HW 미설계(CPU 시뮬만), gate/throughput 없음, SNR별 <code>c0</code> 튜닝 필요, Gaussian elimination 기반 조합탐색이라 HW 병렬 구조와 이질적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA(Sum-Product) 기본 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 근사라 full-tanh SPA와 상이, 접점 약함</td></tr><tr><td>OSD 조합탐색 후처리</td><td>대응 없음</td><td>reliability-based OSD/Gaussian elimination 후처리 없음</td></tr><tr><td>coincidence-rate 조기정지 조건</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료라는 목적만 유사, 방식(CRC vs R(x) 임계)은 완전히 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - full-SPA 위에 얹는 OSD 조합탐색 후처리로, min-sum 기반 고rate NAND QC-LDPC HW 디코더에 이식하기엔 복잡도·구조가 부적합하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8259607",
+  "title": "An Improvement of Decoding Time of Ordered Statistic Decoding for Medium Length LDPC Codes",
+  "year": 2017,
+  "venue": "4th ACDT (conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "256~1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "OSD 조합탐색의 조기중단을 coincidence rate 기반 stopping condition으로 개선해 복호시간 10~200배 단축",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "5G 중간길이 코드 대상 SPA 후처리 OSD - Gaussian elimination + 조합탐색 기반이라 고rate·긴 NAND QC-LDPC HW에 부적합",
+  "todo_check": "c0 임계값이 SNR/loop별 튜닝 테이블 의존 - NAND 동작점(고rate, RBER)에서 재도출 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8259607---an-improvement-of-decoding-time-of-ordered-statistic-decoding-for-medium-length-ldpc-codes-2017-icdt4th-acdt-컨퍼런스">ieee:8259607 - An Improvement of Decoding Time of Ordered Statistic Decoding for Medium Length LDPC Codes (2017, ICDT/4th ACDT 컨퍼런스)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

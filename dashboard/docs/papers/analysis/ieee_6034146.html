@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6034146</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6034146---a-reliability-based-computation-method-for-the-weight-distribution-of-ldpc-codes-using-the-probabilistic-algorithm-2011-isit">ieee:6034146 - A Reliability-Based Computation Method for the Weight Distribution of LDPC Codes Using the Probabilistic Algorithm (2011, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504~4896</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>modified Stern 알고리즘으로 찾은 저무게 codeword 빈도로 무게분포 Aw를 최대가능도 추정하고 실패확률까지 산출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>부호 분석용 오프라인 도구(최소거리·저무게 무게분포 추정), 복호기·HW 아님, 긴 부호/큰 w에서 실패확률↑</td></tr><tr><td>추가확인</td><td>Prime ECC의 고rate QC-LDPC H-matrix 최소거리/error-floor 사전검증 툴로 활용 가능성만</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 부호의 저무게 weight distribution을 확률적 codeword 탐색(modified Stern)+MLE로 실패확률과 함께 추정하는 오프라인 분석 도구 — 복호·HW 무관, Prime ECC 부호 검증 보조로만 간접 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 binary (n,k) LDPC 부호의 <strong>weight distribution</strong> <code>{A_w}</code>(무게 w codeword 개수), 특히 ML 복호 성능 평가에 중요한 저무게(low-weight) 부분.</li><li>문제: 기존 error-impulse 계열(NNCS[6], modified EI[9])은 저무게 codeword를 "발견"만 할 뿐 특정 무게 codeword의 <strong>개수 A_w를 결정하는 스킴이 없음</strong>.</li><li>기반 도구 — modified Stern's algorithm[11]: Gaussian elimination으로 <code>H'=[E_{n-k-δ} Z; X Y]</code> 형태를 만들고, 정보집합 <code>I_X,I_Y</code>에서 각 p개, <code>L</code>에서 0, <code>R_Z</code>에서 ≤s개로 무게를 제약해 저무게 codeword <code>c'</code> 생성 (hash table로 <code>Λ_{I_X|L}=Λ_{I_Y|L}+Λ_{R_Z|L}</code> 매칭).</li><li>발견확률 모델: 무게 w codeword 1개를 파라미터 (p,l,s,δ)로 찾을 확률 <code>π_{w,p,l,s,δ}</code>(식 (8)), δ 빈도 평균 <code>π̄_{w,p,l,s}</code>(식 (9)).</li><li>핵심 정리 1: C에 무게 w codeword가 <code>A_w</code>개일 때 r 반복 중 <code>B_w</code>번 발견될 확률은 이항분포 <code>Pr(B_w|A_w)=C(R,B_w)(A_w Π)^{B_w}(1-A_w Π)^{R-B_w}</code>, <code>Π=π̄/N̄</code> (식 (12)~(15)).</li><li>추정: 관측 <code>B_w</code>에 대해 <code>Pr(B_w|A_w)</code>를 최대화하는 <code>Â_w</code>를 무게분포로 선택(최대가능도, Fig.1).</li><li>실패확률: 정리 2/Corollary 1 — Bayes로 <code>Pr(Â_w|B_w)</code> 계산, <code>ε_w=1-Pr(Â_w|B_w)</code>; distinct codeword 수 <code>B_w</code> 이하 확률은 0으로 두어 개선.</li><li>범위 추정: <code>A_w</code>를 <code>[Â_w⁻,Â_w⁺]</code> 구간으로 두었을 때의 실패확률 식 (24),(25).</li><li>결과(수치): MacKay (504,252)/(1008,504), Ramanujan-Margulis (4896,2474) 부호에서 저무게 무게분포를 매우 작은 실패확률(C1의 최소무게 &lt;10⁻¹⁰⁰ 수준)로 결정; 무게 커지면 실패확률 상승.</li><li>한계: 순수 오프라인 부호 분석/최소거리·무게분포 추정 알고리즘, 복호기·HW·NAND 실측 없음, BSC/soft-read 등 채널 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| weight distribution / 최소거리 추정 도구 | 대응 없음 | Prime ECC는 복호 시뮬레이터, 무게분포·최소거리 산출 기능 없음 |
+| modified Stern 저무게 codeword 탐색 | 대응 없음 | 부호 오프라인 분석용, 복호 이터레이션(min-sum)과 무관 |
+| H-matrix 기반 부호 성질 평가 | ecc_top.cpp Load_PCM() (간접) | 우리 QC-LDPC H-matrix의 최소거리/error-floor 사전점검 보조로만 개념적 연결 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — LDPC 부호의 저무게 weight distribution을 실패확률과 함께 추정하는 오프라인 분석 도구로, 복호·HW 요소가 없어 이식 대상 아님. 다만 Prime ECC QC-LDPC H-matrix의 최소거리/error-floor 사전 검증에 외부 보조 툴로 참고할 여지는 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6034146",
+  "title": "A Reliability-Based Computation Method for the Weight Distribution of LDPC Codes Using the Probabilistic Algorithm",
+  "year": 2011,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "504~4896",
+  "soft_quant": "무관",
+  "key_contribution": "modified Stern 알고리즘으로 찾은 저무게 codeword 빈도로 무게분포 Aw를 최대가능도 추정하고 실패확률까지 산출",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "부호 분석용 오프라인 도구(최소거리·저무게 무게분포 추정), 복호기·HW 아님, 긴 부호/큰 w에서 실패확률↑",
+  "todo_check": "Prime ECC의 고rate QC-LDPC H-matrix 최소거리/error-floor 사전검증 툴로 활용 가능성만"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6034146---a-reliability-based-computation-method-for-the-weight-distribution-of-ldpc-codes-using-the-probabilistic-algorithm-2011-isit">ieee:6034146 - A Reliability-Based Computation Method for the Weight Distribution of LDPC Codes Using the Probabilistic Algorithm (2011, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

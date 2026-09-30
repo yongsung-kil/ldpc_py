@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4036259</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4036259---turbo-like-decoding-algorithm-for-structured-ldpc-codes-2006-isit">ieee:4036259 - Turbo-like Decoding Algorithm for Structured LDPC codes (2006, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>partial dual-diagonal parity 구조를 갖는 structured(QC-)LDPC 코드를 GRA(Generalized Repeat-Accumulate)로 재해석해 turbo-like decoder(TLD)를 유도하고 contention-free 인터리버로 병렬 고속 디코딩을 구현</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate가 높아질수록(2/3, 3/4) dual-diagonal parity portion이 줄어 TLD의 SBP 대비 성능 이득이 감소함(고rate NAND ECC에는 이득이 제한적)</td></tr><tr><td>추가확인</td><td>실제 gatecount/throughput 수치 미제시, TLD와 min-sum 기반 디코더의 직접적 복잡도 비교 부재</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC를 turbo-like(SPC-ACC trellis) 구조로 재해석해 병렬 고속 디코딩과 저rate에서의 성능 이득을 보였으나, 고rate 영역(NAND ECC 대역)에서는 이득이 줄어들고 min-sum 대비 우위인지는 불명확함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.16e/802.11n 스타일 structured LDPC(QC-LDPC): base matrix <code>Hb</code>(<code>mb×nb</code>)를 <code>z</code>배 확장(<code>z×z</code> shifted identity/all-zero 블록)해 만든 <code>H</code>(<code>M×N</code>, <code>M=mb·z</code>, <code>N=nb·z</code>).</li><li>표준 SBP(belief propagation)는 구조를 활용하지 못해 고속화 여지가 제한적이라는 문제의식에서, GRA(Generalized Repeat-Accumulate) 코드처럼 처리 가능함을 보이려 함.</li><li>채널은 BPSK/QPSK-modulated AWGN, 표준 LDPC 코드(rate 1/2, 2/3, 3/4) 그대로 사용.</li><li><code>H = [H_GRA | H_p2]</code>로 분해(<code>식 (4)</code>), 비-dual-diagonal 열(parity bit <code>x6</code>)을 먼저 계산 후 나머지 parity bit는 repetition-SPC-ACC(반복→인터리브→single-parity-check→accumulator) 구조로 back-substitution.</li><li>핵심 파라미터 <code>Q</code>(열별 반복횟수), <code>J</code>(행별 SPC 입력수), 인터리버 <code>ρ</code>(<code>식 (5)</code>, 길이 <code>W</code>=<code>H_GRA</code>의 1의 개수)로 GRA-like 인코더/디코더를 완전히 정의.</li><li>디코더는 두 constituent decoder(반복 디코더 + trellis 기반 SPC-ACC 디코더)가 extrinsic LLR을 (역)인터리버로 교환하는 turbo-like 반복 구조(TLD).</li><li>structured LDPC 확장 시 <code>z</code>개의 base-matrix GRA 인코더/디코더가 vector interleaver(shift 값 <code>R_bm</code> + 열치환 <code>ρ</code>)로 연결되며, 이는 contention-free(CF) inter-window shuffle 인터리버로 재해석되어(<code>식 (8),(9)</code>) <code>z</code>-way 병렬 프로세서에서 메모리 충돌 없이 동작.</li><li>별도 학습/최적화 절차 없음(구조적 유도, 기존 표준 코드에 적용).</li><li>IEEE 802.16e N=2304(z=96) 코드로 20회 반복 FER 비교 시 저rate(1/2)에서 TLD가 SBP를 능가하며, rate가 오를수록(2/3, 3/4) trellis puncturing이 늘어 이득이 감소.</li><li>HW 구현이나 gatecount/throughput 수치는 제시하지 않으며(순수 알고리즘/FER 시뮬), min-sum 계열 디코더와의 직접 비교도 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>structured LDPC(base matrix + shift, QC-LDPC) 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC의 <code>PCM_b</code>(base+shift) 구조와 개념적으로 동일</td></tr><tr><td>turbo-like decoder(SPC-ACC trellis 기반 반복 디코딩)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>기존 min-sum CN 연산과 다른 대체 디코딩 방식으로, 도입 시 CNU 로직 자체 교체 필요</td></tr><tr><td>contention-free 인터리버(병렬 메모리 접근)</td><td>디코더 HW 모델(z=32 병렬, HCU)</td><td>병렬 처리 시 메모리 충돌 회피 개념은 Prime ECC의 row 단위 병렬 구조와 유사하나 직접 대응 모듈 없음</td></tr><tr><td>GRA-like 인코딩(dual-diagonal 기반)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>dual-diagonal 인코딩 개념은 유사하나 partial dual-diagonal 처리 방식은 상이</td></tr></tbody></table>
+<p>적용 가치: 중간 — QC-LDPC 구조 자체는 Prime ECC와 유사하지만, 제안된 turbo-like(SPC-ACC trellis) 디코딩은 기존 min-sum 기반 CNU를 대체하는 별개 알고리즘이라 이식에는 상당한 재설계가 필요하고, 고rate(NAND급) 영역에서는 이득이 줄어드는 한계가 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4036259",
+  "title": "Turbo-like Decoding Algorithm for Structured LDPC codes",
+  "year": 2006,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": 2304,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "partial dual-diagonal parity 구조를 갖는 structured(QC-)LDPC 코드를 GRA(Generalized Repeat-Accumulate)로 재해석해 turbo-like decoder(TLD)를 유도하고 contention-free 인터리버로 병렬 고속 디코딩을 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "rate가 높아질수록(2/3, 3/4) dual-diagonal parity portion이 줄어 TLD의 SBP 대비 성능 이득이 감소함(고rate NAND ECC에는 이득이 제한적)",
+  "todo_check": "실제 gatecount/throughput 수치 미제시, TLD와 min-sum 기반 디코더의 직접적 복잡도 비교 부재"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4036259---turbo-like-decoding-algorithm-for-structured-ldpc-codes-2006-isit">ieee:4036259 - Turbo-like Decoding Algorithm for Structured LDPC codes (2006, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

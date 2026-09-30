@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7589691</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7589691---fpga-implementation-of-regular-random-ldpc-codes-2016-ieee">ieee:7589691 - FPGA Implementation of Regular Random LDPC Codes (2016, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LU분해 기반 고속 인코딩 + log-domain(LLR) SPA 복호의 FPGA 상태기계 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>교과서 수준 log-domain SPA + LU 인코딩, FPGA gatecount/throughput 수치 없음, ModelSim 기능검증만</td></tr><tr><td>추가확인</td><td>실제 합성 자원량/클럭·처리율 수치 부재 (본문에 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 표준 regular random LDPC의 log-domain SPA를 FPGA 상태기계로 구현한 교육적 사례로, Prime ECC에 새로 이식할 기법이 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: binary regular random LDPC, 정보 1000비트·부호 2000비트(rate 1/2), 행가중치 6·열가중치 3, AWGN/BPSK 채널.</li><li>문제의식: 인코딩·복호 복잡도를 낮추면서 성능 유지 — 특히 인코딩 비용과 FPGA 자원의 상충 해소.</li><li>채널 모델: 정상 무기억 가우시안 채널, 잡음 <code>N(0,σ²)</code>, 초기 LLR <code>Lch(x)=2a/σ²</code>.</li><li>인코딩: 검사행렬을 행/열가중치 곱 최소를 주성분으로 하는 상·하삼각(LU) 분해로 재구성해 고속 인코딩 실현.</li><li>복호: log-domain(LLR) 알고리즘 — 곱셈을 덧셈으로 치환, 초기화 시 정규화 불필요로 연산량 절감.</li><li>검사노드 갱신: <code>Lr(m→n)=2·artanh(∏ tanh(Lq(n'→m)/2))</code> (교과서 SPA 검사식).</li><li>변수노드 갱신: <code>Lq(n→m)=Lch(xn)+Σ Lr(m'→n)</code>, 판정은 <code>Lq(n)</code>을 0과 비교.</li><li>HW 구조: INU(초기화)/CNU(검사)/VNU(변수)/DEU(판정) 유닛 + 각 단계별 RAM, 변수노드 접근은 랜덤 시퀀스 주소변환기로 매핑.</li><li>검증: C++ 참조 데이터(초기화/검사/변수/판정 파일)와 ModelSim 결과를 pass/fail 비교하는 기능 검증만 수행.</li><li>한계: 합성 자원량·처리율·BER 곡선 등 정량 결과가 본문에 없고, 그림 위주라 수치 확인 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>log-domain SPA 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>교과서 SPA(full-tanh)로 Prime ECC의 min-sum과 상이, 이식 가치 없음</td></tr><tr><td>검사노드 tanh 갱신식</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2) 근사 사용, full-tanh는 미채택</td></tr><tr><td>LU분해 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>Prime ECC는 dual-diagonal 인코딩 고정, LU 방식 불필요</td></tr><tr><td>변수노드 랜덤주소 라우팅</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC circulant 구조로 라우팅 정형화됨</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 표준 log-domain SPA + LU 인코딩의 FPGA 구현으로 Prime ECC(QC-LDPC, min-sum, dual-diagonal)에 새로 더할 기법이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7589691",
+  "title": "FPGA Implementation of Regular Random LDPC Codes",
+  "year": 2016,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2000",
+  "soft_quant": "무관",
+  "key_contribution": "LU분해 기반 고속 인코딩 + log-domain(LLR) SPA 복호의 FPGA 상태기계 구현",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "교과서 수준 log-domain SPA + LU 인코딩, FPGA gatecount/throughput 수치 없음, ModelSim 기능검증만",
+  "todo_check": "실제 합성 자원량/클럭·처리율 수치 부재 (본문에 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7589691---fpga-implementation-of-regular-random-ldpc-codes-2016-ieee">ieee:7589691 - FPGA Implementation of Regular Random LDPC Codes (2016, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

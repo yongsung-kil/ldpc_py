@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6835452</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6835452---energy-efficient-ldpc-layered-decoder-2013-ieee">ieee:6835452 - Energy-Efficient LDPC Layered Decoder (2013, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>이웃 변수노드 belief 하한(min+α·smin)이 lazy threshold를 넘으면 해당 체크노드 처리를 sleep 시켜 불필요한 CNP를 건너뛰어 반복·전력 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LBP+normalized min-sum 계층 스케줄 전제라 Prime ECC의 dual-update/GT 스케줄과 정합 필요, HW 미설계이고 BER은 LBP 동등(성능 gain 없음)</td></tr><tr><td>추가확인</td><td>lazy threshold(Lth) 최적값이 우리 고rate H-matrix·HD/2SD/3SD LLR 테이블에서도 동일 절감·무손실 유지되는지, GT와 sleep 로직 중복 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 계층 디코더에 얹는 "게으른" CNP skip으로 avg iteration·전력을 줄이는 저비용 기법, Prime ECC 디코더 루프에 시도해볼 만함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(n,k)</code> QC-LDPC, WiMAX 코드 <code>n=2304</code>(rate 1/2, 3/4), AWGN+BPSK, layered belief propagation(LBP) + normalized min-sum(<code>α=0.75</code>), semi-parallel(<code>mb</code> CNP 병렬).</li><li>문제: LBP 디코더의 전력 소비가 green comm 요구를 못 맞춤. RBP류는 반복·error-floor는 좋아지나 저장·정렬·LUT로 복잡도 증가.</li><li>관찰: 대부분 변수노드는 소수 반복 후 높은 신뢰도에 도달 → 그 CNP는 재계산해도 belief 변화가 미미.</li><li>핵심 기법: CN belief 절대값 하한이 <code>min(i)+α·smin(i)</code>(식 14, <code>min</code>=최소·<code>smin</code>=차소 크기)임을 유도하고, 이 하한을 lazy threshold <code>Lth</code>와 직접 비교.</li><li>lazy condition: <code>Si·(min(i)+α·smin(i)) &gt; Lth</code> (식 15) 만족 시 이웃 VN 전부 충분히 신뢰 → 해당 layer를 유효집합 <code>Va</code>에서 제거(<code>Va=Va\b</code>).</li><li>EELD 절차: 각 block-row CNP는 <code>Va</code>의 layer만 순차 처리, <code>Va</code>가 비면(식 16) 그 CNP를 sleep. 모든 CNP가 sleep이면(식 18) 정지조건 확인, 미충족 시 전 CNP 재기동(step 3).</li><li>구현 이점: 모든 belief를 비교하지 않고 하한 하나만 비교하므로 추가 복잡도 경미.</li><li>최적화: power efficiency <code>PE</code>(식 20/21)는 H, <code>Lth</code>, <code>Eb/N0</code>, <code>Tmax</code>의 함수이고 <code>Lth</code>에 대해 볼록 → steepest descent/볼록 최적화로 시뮬 없이 최적 <code>Lth</code> 도출. <code>Lth</code>는 <code>Eb/N0</code>와 무관(고정 가능, 예 <code>Lth=4.0</code>).</li><li>결과: WiMAX(2304) fall region에서 PE가 LBP 대비 rate1/2 28%(0.50→0.36), rate3/4 25%(0.51→0.38) 개선, avg iteration 감소, BER은 LBP와 동등(무손실).</li><li>한계: HW 미설계·gate count 없음, 시뮬(AWGN/BPSK)뿐, 정정성능 개선은 없음(전력·반복만), 코드별 <code>Lth</code> 튜닝 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>lazy CNP skip / 동적 스케줄 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>반복 루프에 sleep/skip 조건 삽입으로 이식 가능(가장 쉬운 레이어)</td></tr><tr><td>normalized min-sum CN 하한(min/smin)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>이미 min1/min2 보유, <code>min(i)+α·smin(i)</code> 하한 산출 재사용 가능</td></tr><tr><td>belief vs lazy threshold 비교</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR threshold 테이블과 유사 구조라 lazy threshold 접목 지점</td></tr><tr><td>CNP edge/skip HW 선택</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Graph Thinning의 edge 축소와 목적 중첩, 중복/시너지 확인 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 계층 디코더에 낮은 비용으로 얹어 avg iteration·전력을 줄이는 기법이라 Prime ECC 디코더 루프에 실험 가치가 있으나, 정정성능 gain은 없고 우리 dual-update/GT 스케줄과의 정합·중복 검토가 필요하다.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:6835452",
+  "title": "Energy-Efficient LDPC Layered Decoder",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": 2304,
+  "soft_quant": "무관",
+  "key_contribution": "이웃 변수노드 belief 하한(min+α·smin)이 lazy threshold를 넘으면 해당 체크노드 처리를 sleep 시켜 불필요한 CNP를 건너뛰어 반복·전력 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LBP+normalized min-sum 계층 스케줄 전제라 Prime ECC의 dual-update/GT 스케줄과 정합 필요, HW 미설계이고 BER은 LBP 동등(성능 gain 없음)",
+  "todo_check": "lazy threshold(Lth) 최적값이 우리 고rate H-matrix·HD/2SD/3SD LLR 테이블에서도 동일 절감·무손실 유지되는지, GT와 sleep 로직 중복 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6835452---energy-efficient-ldpc-layered-decoder-2013-ieee">ieee:6835452 - Energy-Efficient LDPC Layered Decoder (2013, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

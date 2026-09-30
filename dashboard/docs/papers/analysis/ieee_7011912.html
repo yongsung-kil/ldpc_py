@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7011912</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7011912---asic-design-of-77-gbps-multi-mode-ldpc-decoder-for-ieee-80211ac-2014-iscit">ieee:7011912 - ASIC Design of 7.7 Gbps Multi-Mode LDPC Decoder for IEEE 802.11ac (2014, ISCIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83 (1/2,2/3,3/4,5/6)</td></tr><tr><td>부호length</td><td>648~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>H-독립 multi-mode Min-Sum 디코더 아키텍처 + LLR 양자화 범위(E) 튜닝</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>8.2mm2@90nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>7.7Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>무선(802.11ac) 특화 다중모드가 주목적, NAND 고rate·soft-read 비용 고려 없음</td></tr><tr><td>추가확인</td><td>제안 E=2.3~4.6 truncation 범위가 NAND LLR 테이블(PARAM_LLR)에 이식 시 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: H-독립 partial-parallel Min-Sum 디코더 구조와 LLR 양자화 truncation 범위 튜닝은 참고 가치 있으나 무선 다중모드 특화라 NAND 직접 이식은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 IEEE 802.11ac WiFi PHY, 구조적(structured) QC-LDPC, 4 code-rate(1/2·2/3·3/4·5/6) × 3 length(648·1296·1944), 총 12 모드, 모두 <code>C=24</code>.</li><li>문제: 무선 표준은 다수 rate/length(=여러 H) 지원 필요하나 기존 LDPC 디코더 HW는 특정 H에 종속되어 모드마다 회로 재설계·디버깅 부담이 큼.</li><li>핵심 아이디어: submatrix 내 variable node를 wide signal <code>Arc</code>로 concat하고, <code>Prc</code> 만큼 circular shift(CSR)해 노드 위치를 대각(diagonal)으로 고정 → CN/VN 업데이트 회로를 H값과 독립화.</li><li>CN Update는 Min-Sum <code>B'z = min|A| × ∏sgn(A)</code> (식 7)로 열 집합 최소값·부호곱 계산, 이후 CSL로 원위치 복원.</li><li>VN Update는 열 방향 check node 합 <code>Az</code>에서 자기 기여를 빼 <code>A'zc = Az - Bzc</code> (식 8,9).</li><li>아키텍처 블록(MUX/CSR/CN-UPDATE/CSL/PRE/VN-UPDATE)은 모두 H-독립, H는 P-ROM에만 저장 → 새 모드는 ROM 추가만으로 지원.</li><li>한 iteration에 <code>R+3</code> 클록 소요, throughput = <code>Z(C-R)/(L(R+3))</code> bpc → 고rate(작은 R)일수록 throughput 증가.</li><li>LLR 양자화: <code>D=4</code>bit, 값 범위를 [-E,E]로 truncate. E가 작을수록 해상도↑이나 너무 작으면 truncation 오류↑. 제안 <code>2.3&lt;E&lt;4.6</code>.</li><li>결과: 90nm ASIC 합성, 500MHz에서 15.4bpc=7.7Gbps, area 8.2mm2, 효율 1.89 bpc/mm2(선행 대비 최고). PER은 BCC 대비 LDPC로 1.1~1.5dB, 양자화로 최대 1.7dB 개선.</li><li>한계: 무선 802.11ac 특화, 시뮬+ASIC합성(실측 아님), error-floor·avg-iteration 논의 없음(고정 L=15).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum CN Update (식7)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Min-Sum은 이미 보유, 중복</td></tr><tr><td>VN Update / check node 합 (식8,9)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>LDPC_Decoder()</code></td><td>표준 message-passing, 중복</td></tr><tr><td>LLR 양자화 범위(E) truncation</td><td>ecc_data.h <code>PARAM_LLR</code>, channel.cpp <code>Set_LLR_Th()</code></td><td>truncation 범위 튜닝 아이디어 참고 가능</td></tr><tr><td>circular shift(CSR/CSL) H-독립 라우팅</td><td>decoder.cpp (z=32 row 병렬)</td><td>HW arch 참고, 구조 상이</td></tr><tr><td>P-ROM 기반 다중모드 H 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC은 단일 H 고정, 다중모드 불필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Min-Sum·VN 처리·shift 라우팅은 이미 보유하고 다중모드 지원은 NAND 단일 H 환경에 불필요하며, 유일하게 참고할 LLR truncation 범위(E) 튜닝도 무선 채널 기준이라 NAND soft-read 재검증 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7011912",
+  "title": "ASIC Design of 7.7 Gbps Multi-Mode LDPC Decoder for IEEE 802.11ac",
+  "year": 2014,
+  "venue": "ISCIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "648~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "H-독립 multi-mode Min-Sum 디코더 아키텍처 + LLR 양자화 범위(E) 튜닝",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "8.2mm2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 7.7,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "무선(802.11ac) 특화 다중모드가 주목적, NAND 고rate·soft-read 비용 고려 없음",
+  "todo_check": "제안 E=2.3~4.6 truncation 범위가 NAND LLR 테이블에 이식 시 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7011912---asic-design-of-77-gbps-multi-mode-ldpc-decoder-for-ieee-80211ac-2014-iscit">ieee:7011912 - ASIC Design of 7.7 Gbps Multi-Mode LDPC Decoder for IEEE 802.11ac (2014, ISCIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

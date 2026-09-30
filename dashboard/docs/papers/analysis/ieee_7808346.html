@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7808346</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7808346---high-rate-ldpc-based-decoder-architectures-with-high-speed-adc-for-c-ran-optical-fronthaul-2016-ieee-iccce">ieee:7808346 - High Rate LDPC Based Decoder Architectures with High Speed ADC for C-RAN Optical Fronthaul (2016, IEEE ICCCE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>1000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>고rate LDPC용 mixed-GDBF(single/multiple 전환) + 2-bit ADC 양자화, 1-iteration 복호로 latency 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.5~2.5</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>GDBF는 Min-Sum과 다른 계열(SGDBF는 MS 대비 0.5dB 손해), error≥3에서 girth 낮아 정정 실패</td></tr><tr><td>추가확인</td><td>Prime ECC(min-sum) 대비 GDBF 성능/면적 트레이드오프, 2-bit ADC 양자화가 NAND soft-read와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 고rate(0.9) QC-LDPC용 hard/2-bit GDBF 복호와 1-iteration·mixed-flip latency 절감 - NAND 저비트 read와 결이 맞으나 Prime ECC의 min-sum 계열과 알고리즘이 달라 이식성 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: C-RAN 광 fronthaul(self-seeded RSOA WDM, D-RoF/CPRI)용 고throughput LDPC FEC. 목표 2.5~10 Gb/s.</li><li>문제: BP/Min-Sum(soft)은 고속에 연산량 과다. hard-decision bit-flipping 계열로 복잡도 낮추되 성능 유지 필요.</li><li>채널/부호: binary-input AWGN, QC(3,30) regular, rate 0.9, 크기 (1000,900). RD와 QC 성능 유사해 QC 채택.</li><li>핵심기법: Gradient Descent Bit Flipping(GDBF). metric <code>f(x)=Σx_k·y_k + Σ_i Π_j x_j</code>를 최대화, bit별 inversion function <code>Δk_GDBF = x_k·y_k + Σ_{i∈M(k)} Π x_j</code> 최소 bit을 flip.</li><li>확장: 신뢰도 <code>B_i=Σ|y_j|</code> 가중한 WGDBF/IWGDBF metric으로 성능 개선.</li><li>mixed-GDBF: single-flip과 multiple-flip을 전환. 고rate는 single→multiple(오류 ~4개일 때 전환), 저rate는 multiple→single(~5개). unstable oscillation 회피.</li><li>양자화: 2-bit ADC(4 심볼 00/01/10/11) 채택. threshold δ 최적화(rate 0.9에서 δ=0.2, 전rate 0.2~0.3 무난). 1-bit ADC는 GDBF 이점 없어 제외.</li><li>1-iteration 복호: 개선된 inversion function으로 단 1회 반복 복호 제안, 오류 1~2개는 완전 정정(error≥3은 low girth로 실패).</li><li>결과: 입력 BER 10^-4에서 출력 BER 10^-9, 1 iteration 후 BER 최소 10^-7. SGDBF는 MS 대비 BER 10^-3에서 0.5dB 손해. Spartan FPGA 500Mb/s(serial), 병렬버퍼 5개로 시뮬 2.5Gb/s.</li><li>한계: FPGA는 syndrome 계산까지, 완전 구현은 future work. gatecount·정확 자원수치 없음. error≥3 정정불가(girth-4/6 제거 필요).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GDBF/mixed-GDBF 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이터레이션 루프 위치는 동일하나 알고리즘이 min-sum이 아닌 bit-flipping - 계열 상이</td></tr><tr><td>inversion function / syndrome flip</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>CN/VN 연산 대체 관점 - Prime ECC는 min1/min2 magnitude, BF는 syndrome 합</td></tr><tr><td>2-bit ADC 양자화 / threshold δ</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>2SD/3SD soft-read threshold와 유사 - NAND read 비용 관점 정합 가능</td></tr><tr><td>1-iteration / mixed-flip latency 절감</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>avg iteration·latency 감소 아이디어 - 관심 영역이나 BF 특성상 성능 한계</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 고rate QC-LDPC·2-bit 양자화·1-iteration latency 절감은 NAND ECC 관심사와 결이 맞으나, Prime ECC가 이미 min-sum 기반이고 GDBF는 성능 열위(MS 대비 0.5dB)라 전면 이식보다는 초저latency 옵션 참고용.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7808346",
+  "title": "High Rate LDPC Based Decoder Architectures with High Speed ADC for C-RAN Optical Fronthaul",
+  "year": 2016,
+  "venue": "IEEE ICCCE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "1000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "고rate LDPC용 mixed-GDBF(single/multiple 전환) + 2-bit ADC 양자화, 1-iteration 복호로 latency 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": "0.5~2.5",
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "GDBF는 Min-Sum과 다른 계열(SGDBF는 MS 대비 0.5dB 손해), error≥3에서 girth 낮아 정정 실패",
+  "todo_check": "Prime ECC(min-sum) 대비 GDBF 성능/면적 트레이드오프, 2-bit ADC 양자화가 NAND soft-read와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7808346---high-rate-ldpc-based-decoder-architectures-with-high-speed-adc-for-c-ran-optical-fronthaul-2016-ieee-iccce">ieee:7808346 - High Rate LDPC Based Decoder Architectures with High Speed ADC for C-RAN Optical Fronthaul (2016, IEEE ICCCE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

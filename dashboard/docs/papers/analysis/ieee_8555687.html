@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8555687</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8555687---a-distributed-crc-early-termination-scheme-for-high-throughput-qc-ldpc-codes-2018-ieee">ieee:8555687 - A Distributed CRC Early Termination Scheme for High Throughput QC-LDPC Codes (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>8448</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>정보비트 CRC를 segment 선형결합으로 분해하여 layered iteration의 각 layer에 분산 계산, iteration 종료 지연 제거</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>BLER 자체는 무개선(종료 스킴), gatecount/throughput 수치 없음, base matrix 오프라인 스케줄 필요, Prime의 partial-CRC 조기종료와 목적 중복</td></tr><tr><td>추가확인</td><td>Prime의 4-point partial CRC 대비 layer 분산방식의 추가 이득, controller/LUT 오버헤드, Z=384 대비 Prime z=32 스케일 정합</td></tr></tbody></table>
+<blockquote><p>총평: CRC 조기종료를 layer 단위로 분산해 종료 latency를 없애는 HW 친화 기법으로 Prime의 partial-CRC 조기종료를 강화할 직접 참고가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 3GPP NR QC-LDPC(base matrix 5×27, 46×68, <code>Z=384</code>, <code>L=8448</code>), layered BP 복호, min/max iteration 2/12.</li><li>문제: 전통 CRC 조기종료는 iteration 끝에서 CRC를 계산하므로 CRC latency만큼 불필요한 복호가 발생.</li><li>모델: 정보비트에 CRC 부착(<code>G(x)=x²⁴+x²³+x⁶+x⁵+x+1</code>), layered 복호에서 각 layer가 base matrix 한 행에 대응.</li><li>핵심기법: CRC의 선형성으로 <code>A(x)</code>를 <code>L/Z</code>개 비중첩 segment로 분해, <code>C[A(x)]=ΣC[C[Aj(x)]C[x^...]]</code>로 부분 CRC를 누적(Lemma 1,2).</li><li>Lemma 3: <code>gD=1</code>이면 <code>C[B(x)]=0 ⇔ C[A(x)]=0</code> — segment 기반 <code>C[B(x)]</code>로 종료 판정 가능, LUT 메모리를 factor Z만큼 절감.</li><li>핵심기법 2단: 이후 layer에서 갱신 안 되는 컬럼집합 <code>Λj=(Φj∩...∩Φ_{M-1})</code>이 비면 해당 segment <code>Pk</code> 계산을 iteration 종료 전 조기 착수(Lemma 4).</li><li>구현 디테일: CRC 병렬도 R비트, <code>W=Z/R</code> 클록마다 새 Pk 처리, 마지막 갱신시각 정렬 후 스케줄(식17,18), base matrix 불변이라 오프라인 계산.</li><li>최적화: 별도 학습 없음, controller가 Pk 계산 시점을 결정하는 결정론적 스케줄.</li><li>결과: BLER는 전통 스킴과 거의 동일, avg iteration은 64QAM 5×27에서 PCE 대비 14.5%·전통 CRC 대비 4.5%, QPSK 46×68에서 PCE 대비 11.2%·전통 CRC 대비 1.4% 감소.</li><li>한계: 정정능력 무개선(순수 종료 스킴), gatecount/throughput 절대수치 없음, controller·LUT 오버헤드 발생, NR/AWGN 검증(NAND 직접 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>분산 CRC 조기종료(segment 누적)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>Prime의 partial CRC 4-termination을 layer 분산 계산으로 확장 가능한 직접 대응</td></tr><tr><td>layered iteration 스케줄 내 CRC 착수</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프 내 조기종료 판정 시점 제어와 대응</td></tr><tr><td>Λj/컬럼집합 기반 착수시점(base matrix 종속)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 구조에서 오프라인 스케줄 도출</td></tr><tr><td>C[B(x)] LUT 메모리 절감</td><td>partial_CRC.cpp</td><td>CRC LUT 설계 최적화 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Prime ECC가 이미 partial-CRC 4-termination 조기종료를 보유해 목적이 중복되나, layer 단위 분산으로 종료 latency를 더 줄이는 기법은 partial_CRC 모듈 강화에 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8555687",
+  "title": "A Distributed CRC Early Termination Scheme for High Throughput QC-LDPC Codes",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": 8448,
+  "soft_quant": "무관",
+  "key_contribution": "정보비트 CRC를 segment 선형결합으로 분해하여 layered iteration의 각 layer에 분산 계산, iteration 종료 지연 제거",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "BLER 자체는 무개선(종료 스킴), gatecount/throughput 수치 없음, base matrix 오프라인 스케줄 필요, Prime의 partial-CRC 조기종료와 목적 중복",
+  "todo_check": "Prime의 4-point partial CRC 대비 layer 분산방식의 추가 이득, controller/LUT 오버헤드, Z=384 대비 Prime z=32 스케일 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8555687---a-distributed-crc-early-termination-scheme-for-high-throughput-qc-ldpc-codes-2018-ieee">ieee:8555687 - A Distributed CRC Early Termination Scheme for High Throughput QC-LDPC Codes (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

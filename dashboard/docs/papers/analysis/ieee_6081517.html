@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6081517</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6081517---investigation-of-simple-threshold-shifting-for-bit-flip-decoding-2011-ieee-conf">ieee:6081517 - Investigation of simple threshold shifting for bit-flip decoding (2011, IEEE (conf))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GDBF adaptive-threshold에 coarse/fine 두 scaling(θ) 스위칭+조기종료로 iteration 대폭 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>bit-flipping 계열(BF/GDBF)로 Prime ECC의 min-sum과 다른 디코더 패밀리, BER는 BP/min-sum 대비 열위</td></tr><tr><td>추가확인</td><td>dual-scaling 이득이 고rate QC-LDPC/soft-read에서도 유지되는지, HW 게이트·면적</td></tr></tbody></table>
+<blockquote><p>총평: bit-flip 디코더의 threshold scaling(θ=2^-m shift-add)에 dual step-size 스위칭을 더해 iteration을 58→8로 줄인 저복잡도 기법이나, min-sum 기반 Prime ECC와 디코더 패밀리가 달라 이식성 하(θ 스위칭 아이디어만 참고 가치).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 저복잡도 bit-flipping LDPC 복호, AWGN/BPSK, 예제 Code1 PEGReg252x504 (<code>M=252,N=504</code>, rate 1/2), Code2 HRGC 273.</li><li>문제: BP는 성능 좋으나 복잡도 큼; bit-flip은 저복잡도지만 iteration 많아 수렴 느림.</li><li>모델: syndrome <code>s_m=Σ x_n H_mn</code>, inversion function <code>E_n=Σ_{i∈M(n)} Π_{j∈N(i)} x_j</code> (실패 체크 수 기반, GDBF는 <code>+x_n y_n</code> 상관항 추가).</li><li>핵심 기법(ATBF): 비트별 threshold <code>λ_n</code>, <code>E_n≥λ_n</code>이면 flip, 아니면 threshold를 <code>λ_n(k+1)=θλ_n(k)</code>로 낮춤 (gradient descent, min-search 불필요).</li><li>핵심 식: <code>θ=Σ_{l=1}^{L} 2^{-l}</code> — scaling을 곱셈기 없이 shift+add L개로 구현 (예: 0.625 = 1/2 + 1/8, shift 1·3).</li><li>확장(DSSA): coarse(θ1=0.5, 큰 step)와 fine(θ2=0.97, 작은 step)을 objective function <code>f(x,k)</code> 비교로 스위칭, 좋은 branch 채택 후 coarse decoder off.</li><li>구현 디테일: 비트 프로세서 자율(비트간 독립), 조기종료 <code>f(x,k)=f(x,k-11 or -10)</code>이면 halt(진동 대비 2조건).</li><li>최적화: θ는 code·SNR 종속으로 1000블록 평균 flipping threshold 관찰로 추정, 학습형 아님.</li><li>결과: dual θ=0.625/0.97이 단일 θ=0.97과 BER 동등하나 avg iteration 6dB에서 58→8; early-stop은 4dB에서 43→15로 감소.</li><li>한계: HW 미설계, 시뮬만, low column-weight(=3) 코드 대상, BER는 IRRWBF/BP 대비 열위, soft-read 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flip / GDBF 복호 알고리즘</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing, bit-flip 패밀리 미구현</td></tr><tr><td>adaptive threshold(θ) 이터레이션별 갱신</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration 구간별 threshold 테이블 개념은 유사하나 대상량(LLR vs flip-threshold) 다름</td></tr><tr><td>조기종료(objective function 정체)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC는 CRC 기반 조기종료로 이미 보유, 방식 상이</td></tr><tr><td>저복잡도 shift-add scaling(2^-m)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>min-sum normalized/scaling factor 참고 여지 있으나 bit-flip 전용</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — dual step-size scaling으로 iteration을 줄이는 아이디어는 흥미롭지만 bit-flipping 디코더 전용이라 min-sum 기반 Prime ECC에 직접 이식 불가, BER도 BP 대비 열위이며 NAND soft-read 미고려.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6081517",
+  "title": "Investigation of simple threshold shifting for bit-flip decoding",
+  "year": 2011,
+  "venue": "IEEE (conf)",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "504",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GDBF adaptive-threshold에 coarse/fine 두 scaling(θ) 스위칭+조기종료로 iteration 대폭 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "bit-flipping 계열(BF/GDBF)로 Prime ECC의 min-sum과 다른 디코더 패밀리, BER는 BP/min-sum 대비 열위",
+  "todo_check": "dual-scaling 이득이 고rate QC-LDPC/soft-read에서도 유지되는지, HW 게이트·면적"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6081517---investigation-of-simple-threshold-shifting-for-bit-flip-decoding-2011-ieee-conf">ieee:6081517 - Investigation of simple threshold shifting for bit-flip decoding (2011, IEEE (conf))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

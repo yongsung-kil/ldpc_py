@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6190085</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6190085---complexity-analysis-of-interior-point-methods-for-lp-decoding-2011-asilomar">ieee:6190085 - Complexity analysis of interior point methods for LP decoding (2011, Asilomar)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>816</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LP 디코딩 solver(LIPSOL) 구현 최적화로 반복당 복잡도를 O(m·2^dc-1)→O(n^2)로 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LP 디코딩(interior point) 전용 최적화 — min-sum 기반 Prime ECC와 알고리즘 계열 자체가 다름</td></tr><tr><td>추가확인</td><td>실제 코드 길이·rate별 runtime 표는 그림에만 있어 본문 수치 확인 불가</td></tr></tbody></table>
+<blockquote><p>총평: LP 디코딩 solver 구현 최적화 논문으로, min-sum 기반 NAND QC-LDPC ECC와 계열이 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 이진 선형블록부호(LDPC)의 LP 디코딩(LPD): Feldman의 relaxed LP로 ML codeword를 찾음. 예제 부호는 PG/AB/Tanner/MacKay 구성(최대 <code>(816,408,6)</code>).</li><li>문제: LPD는 message-passing 대비 정정성능·ML certificate 이점이 있으나 제약 수가 check degree에 지수적(<code>|Oj|=2^(dc-1)</code>)이라 복잡도가 과도. 특히 고rate 부호에서 심각.</li><li>기존 연구는 LP 문제 자체를 완화/제약축소했으나, 이 논문은 <strong>solver 구현</strong>을 최적화하는 접근.</li><li>primal LPD <code>min γ^T x</code> (식1~3)와 dual LPD(식4)를 행렬 표현. dual은 short-wide 행렬 <code>B</code>의 열을 처리해 LIPSOL에서 훨씬 빠름.</li><li>iPD-MPC: Mehrotra predictor-corrector primal-dual의 precomputation을 재구성. KKT Newton step(식6)을 Cholesky로 푸는 핵심식(식8)의 행렬을 n×n symmetric으로 축소.</li><li>이로써 primal/dual 두 formulation 모두 동일 속도로 수렴, LIPSOL보다 빠름.</li><li>iGD-NM: 메모리 제한 시스템용. gradient descent + Newton 하이브리드에 adaptive log-barrier(<code>fP_LB = fP - (1/K)log(g(x))</code>, <code>K=20~50</code>) 적용.</li><li>Newton period <code>R=5</code>, <code>K</code> 성장인자 <code>α≈2</code>, threshold <code>ρ≈10^-3</code>. 작은 K로 시작해 수렴 시 K를 키워 초기 빠른 수렴+정확성 보장(runtime 약 50% 감소).</li><li>종료조건을 optimality convergence(잔차 ~10^-6) 대신 codeword convergence(잔차 ~10, 모든 parity 만족)로 완화.</li><li>결과: 두 방법 모두 O(n^2) 복잡도로 LIPSOL 대비 runtime 우위(AWGN, SNR 2~3dB, 코드당 100 datapoint 평균). 한계: HW 미설계, MATLAB 시뮬만, min-sum 계열과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LP 디코딩 solver (interior point)</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing 디코더, LP/interior point 미사용</td></tr><tr><td>종료조건(codeword convergence)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>개념적으로 parity 만족 조기종료와 유사하나 LP 잔차 기반이라 직접 대응 아님</td></tr><tr><td>반복당 복잡도 최적화</td><td>대응 없음</td><td>solver 선형대수 최적화로 min-sum CN/VN 연산과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LP 디코딩 solver 구현 최적화로, min-sum 기반 Prime ECC 3.1의 디코더 알고리즘과 계열이 완전히 달라 이식 대상이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6190085",
+  "title": "Complexity analysis of interior point methods for LP decoding",
+  "year": 2011,
+  "venue": "Asilomar",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "816",
+  "soft_quant": "무관",
+  "key_contribution": "LP 디코딩 solver(LIPSOL) 구현 최적화로 반복당 복잡도를 O(m·2^dc-1)에서 O(n^2)로 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "LP 디코딩(interior point) 전용 최적화 — min-sum 기반 Prime ECC와 알고리즘 계열 자체가 다름",
+  "todo_check": "실제 코드 길이·rate별 runtime 표는 그림에만 있어 본문 수치 확인 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6190085---complexity-analysis-of-interior-point-methods-for-lp-decoding-2011-asilomar">ieee:6190085 - Complexity analysis of interior point methods for LP decoding (2011, Asilomar)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10316146</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10316146---on-the-serial-concatenation-of-ldpc-codes-2023-telsiks">ieee:10316146 - On the Serial Concatenation of LDPC Codes (2023, TELSIKS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.25~0.5</td></tr><tr><td>부호length</td><td>4320~8840</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>외부 오류정정 LDPC + 내부 오류감소 LDPC의 직렬 연접 + woven-like 복호로 저rate에서 5G LDPC 능가</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>저rate(1/4~1/2) 통신용 연접 구조, NAND 고rate binary QC-LDPC와 무관, HW 미설계·시뮬만</td></tr><tr><td>추가확인</td><td>참조 [7]의 protograph 최적화 알고리즘 상세(이 논문은 bird-view 서술만)</td></tr></tbody></table>
+<blockquote><p>총평: 저rate 통신용 LDPC 직렬연접(woven-like) 구성법 논문으로, NAND 고rate binary QC-LDPC ECC와 목표 rate/구조가 정반대라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN/BPSK 채널, 외부(정정용) LDPC + 내부(오류감소용) LDPC의 직렬 연접(serial concatenation) + 코드 간 랜덤 인터리버(permutation <code>P</code>); 예시 <code>N=4420, R≈1/4</code>, <code>N=8840, R≈1/4</code>, <code>N=4350, R≈1/2</code>.</li><li>문제: 저rate에서 5G LDPC의 error-floor·복호 복잡도를 낮추면서 정정성능을 유지/개선하려 함.</li><li>모델: 내부 LDPC는 디코드가 아니라 outer 디코더용 super-channel의 BER을 낮추는 "error-reducing" 역할, outer는 error-correcting 역할로 분리.</li><li>핵심기법 1단: woven-like 반복 복호 - inner/outer 모두 SISO(soft-in soft-out) 디코더, extrinsic LLR <code>L_out</code>을 다음 iteration inner 입력으로 되먹임.</li><li>핵심 식: inner 입력 = <code>[L_ch | L_out(prev)]</code> 연결, <code>L_in = D_in(...)</code>, <code>L_out = D_out(P^-1(L_in))</code> 교대; extrinsic 교환으로 super-channel 개선.</li><li>확장: inner/outer 각각의 protograph를 최적화 대상으로 삼음(이전 논문[7]은 inner만, 본 논문은 outer도 최적화).</li><li>구현 디테일: outer는 ACE 리프팅, inner는 [10] 리프팅; outer의 parity 심볼을 5G식 puncturing(수신 LLR을 0 세팅)해 rate 조정.</li><li>최적화 절차: protograph의 랜덤 위치 flip → 확장 → AWGN에서 target FER 달성 SNR 측정 → best 갱신, 지역최소 회피 위해 flip 개수 증가.</li><li>결과: <code>R≈1/4</code>에서 Eb/No 0.9 dB 이상부터 5G LDPC 능가, error-floor 없음; woven-like 복호는 동일 iteration 대비 BP 대비 최대 35% 복잡도 절감(Table I: 25~36%); 3단계 최적화로 약 1.2 dB gain.</li><li>한계: HW 미설계, 시뮬만, 저rate(1/4~1/2) 통신 특화로 NAND 고rate ECC와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph 기반 부호구조 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>inner/outer 연접 H-matrix는 우리 고정 QC-LDPC와 구조 상이, 재검증 부담 큼</td></tr><tr><td>woven-like 반복 복호(2-code SISO)</td><td>대응 없음</td><td>단일 QC-LDPC min-sum 루프와 이질적, 연접 디코더 미보유</td></tr><tr><td>protograph flip 최적화</td><td>대응 없음</td><td>H-matrix 설계 자동화 미보유(우리는 고정 PCM)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 저rate 통신용 연접 LDPC 구성법이라 NAND 고rate binary QC-LDPC 단일부호 파이프라인과 정합점이 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10316146",
+  "title": "On the Serial Concatenation of LDPC Codes",
+  "year": 2023,
+  "venue": "TELSIKS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "protograph",
+  "code_rate": null,
+  "code_length": "4320~8840",
+  "soft_quant": "무관",
+  "key_contribution": "외부 오류정정 LDPC + 내부 오류감소 LDPC 직렬연접 + woven-like 복호로 저rate에서 5G LDPC 능가",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "저rate(1/4~1/2) 통신용 연접 구조, NAND 고rate binary QC-LDPC와 무관, HW 미설계·시뮬만",
+  "todo_check": "참조 [7]의 protograph 최적화 알고리즘 상세(이 논문은 bird-view 서술만)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10316146---on-the-serial-concatenation-of-ldpc-codes-2023-telsiks">ieee:10316146 - On the Serial Concatenation of LDPC Codes (2023, TELSIKS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

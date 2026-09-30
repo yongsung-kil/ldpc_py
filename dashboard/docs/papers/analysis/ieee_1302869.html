@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1302869</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1302869---quantization-and-quantization-sensitivity-of-soft-output-product-codes-for-fast-speed-applications-2004-ieee-isitconf">ieee:1302869 - Quantization and Quantization Sensitivity of Soft-Output Product Codes for Fast-Speed Applications (2004, IEEE ISIT/Conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.879~0.938</td></tr><tr><td>부호length</td><td>256~1024</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>TPC/SPC 소프트출력 디코더에 대해 uniform vs hybrid 양자화를 min-sum/mod-min-sum/sum-product별로 비교, (3,1) uniform+min-sum이 공간·성능·복잡도 최적임을 제시</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>대상이 LDPC 아닌 2D TPC/SPC product code; 고정소수점 시뮬만, RTL/gate 없음; scaling factor가 SNR에 민감(고정 어려움)</td></tr><tr><td>추가확인</td><td>(3,1) min-sum 워드길이·scaling 결론이 Prime ECC QC-LDPC min-sum LLR 양자화 테이블에 그대로 대응되는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC가 아닌 product code 대상이나, min-sum 대비 sum-product·mod-min-sum의 양자화 워드길이/scaling 트레이드오프 데이터는 Prime ECC min-sum LLR 양자화 설계의 정성적 참고자료로 유효.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 2D TPC/SPC(단일 패리티체크 product code, 예 <code>(16,15)^2</code>, <code>(32,31)^2</code>), 고rate, AWGN+BPSK, iterative SISO(message-passing) 복호.</li><li>문제: 고속 VLSI 구현을 위한 고정소수점 양자화가 소프트출력 디코더 성능에 미치는 영향과 최적 워드길이 전략 규명.</li><li>비교 알고리즘 3종: sum-product(<code>f</code>-function/tanh-rule), min-sum(비선형 correction factor 무시, <code>sgn·min</code>), modified min-sum(고정값 correction <code>c=0.5</code>로 1-bit 보상).</li><li>핵심 check 연산 <code>L(u1)⊞L(u2)=sgn·sgn·min(|·|,|·|)+log((1+e^-|x1|)/(1+e^-|x2|))</code>; min-sum은 correction 항 생략.</li><li>양자화 스킴1(uniform): <code>(p,q)</code> 정수 p비트·소수 q비트+sign, LLR range·precision 결정; scaling factor로 saturation/quant-noise 균형.</li><li>sum-product의 <code>f(z)</code>는 waterfall/floor 두 slope 영역 → 균일 양자화 비효율, <code>(3,5)</code> best지만 9비트로 고비용.</li><li>양자화 스킴2(hybrid): 두 uniform 양자기 결합, |f(z)|&lt;1이면 <code>(1,q1)</code>, else <code>(p2,q2)</code>; <code>(4,2)/(1,5)</code>가 <code>(3,5)</code>와 동등 성능을 더 적은 비트로 달성.</li><li>min-sum/mod-min-sum은 선형연산뿐이라 uniform만으로 충분; <code>(3,1)</code> uniform min-sum이 <code>(3,5)</code> sum-product 대비 약간 열세지만 HW 크게 절감.</li><li>mod-min-sum의 1-bit correction은 개선 미미(추가 비트값 없음); scaling factor는 SNR에 민감(4dB에서 ~0.8, 저SNR→1 근접), code rate엔 둔감.</li><li>결론: 공간·성능·복잡도 종합해 <code>(3,1) uniform min-sum</code> 채택; iteration 3회로 대부분 이득 확보(정성).</li><li>한계: LDPC가 아닌 product code, 시뮬만(HW·gate·throughput 없음), scaling factor 채널의존성으로 고정 파라미터화 어려움.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum check 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min1/min2+sign XOR min-sum 사용, 양자화 워드길이 비교 참고</td></tr><tr><td>LLR 고정소수점 <code>(p,q)</code> 양자화·워드길이</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft LLR magnitude 양자화 테이블 설계 정성 참고</td></tr><tr><td>iteration별 scaling/gain factor</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>SNR/구간별 LLR threshold 테이블 튜닝 관점과 연결</td></tr><tr><td>sum-product <code>f</code>-function/hybrid 양자화</td><td>대응 없음</td><td>Prime ECC는 full-tanh SPA 미채택</td></tr><tr><td>TPC/SPC product code 구조</td><td>대응 없음</td><td>비LDPC 부호구조, 부호설계 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 부호는 LDPC가 아니지만 min-sum LLR 양자화 워드길이/scaling 민감도 데이터는 Prime ECC min-sum LLR 테이블 설계의 정성적 근거로 참고 가능하며, 신규 기법 이식 대상은 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1302869",
+  "title": "Quantization and Quantization Sensitivity of Soft-Output Product Codes for Fast-Speed Applications",
+  "year": 2004,
+  "venue": "IEEE Conf (ISIT)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "256~1024",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "TPC/SPC 소프트출력 디코더의 uniform vs hybrid 양자화를 min-sum/mod-min-sum/sum-product별 비교, (3,1) uniform min-sum이 공간·성능·복잡도 최적",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "대상이 LDPC 아닌 2D TPC/SPC product code; 고정소수점 시뮬만; scaling factor가 SNR에 민감",
+  "todo_check": "(3,1) min-sum 워드길이·scaling 결론이 Prime ECC QC-LDPC min-sum LLR 양자화 테이블에 그대로 대응되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1302869---quantization-and-quantization-sensitivity-of-soft-output-product-codes-for-fast-speed-applications-2004-ieee-isitconf">ieee:1302869 - Quantization and Quantization Sensitivity of Soft-Output Product Codes for Fast-Speed Applications (2004, IEEE ISIT/Conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

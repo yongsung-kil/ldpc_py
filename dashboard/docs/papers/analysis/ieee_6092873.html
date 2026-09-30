@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6092873</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6092873---design-of-fixed-point-processing-based-ldpc-codes-using-exit-charts-2011-ieee">ieee:6092873 - Design of Fixed-Point Processing Based LDPC Codes Using EXIT Charts (2011, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>500</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>EXIT chart로 FP(x,y,z) 고정소수점 LLR operand width를 채널SNR/iteration 무관하게 결정, 총 OW 6bit(FP(3,4,2)) 권고</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>성능 개선이 아닌 양자화폭 결정 방법론, EXIT는 DE 계열 근사라 short/QC-LDPC error-floor는 미포착, 총 6bit은 NAND soft-read 3bit 대비 큼</td></tr><tr><td>추가확인</td><td>Prime ECC의 2SD/3SD LLR 테이블 대비 clip/fraction 분리 설계 적용 시 이득, EXIT 방법론이 고rate QC-LDPC에 그대로 성립하는지</td></tr></tbody></table>
+<blockquote><p>총평: BER 시뮬 없이 EXIT chart로 FP LLR operand width(정수/소수/clip 분리)를 100배 빠르게 결정하는 방법론, 성능개선은 아니나 Prime ECC LLR 양자화 설계 검증 도구로 활용 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: half-rate length-500 regular LDPC (dv=3 예시), AWGN/BPSK, Log-SPA 및 min-sum(MSA) 복호의 고정소수점(FP) 구현.</li><li>문제: FP LLR의 operand width(OW)를 낮추면 memory·datapath 면적·전력이 줄지만 과도하면 성능 저하 → 최소 OW를 찾아야 하는데 기존 BER 시뮬은 SNR·iteration 범위를 다 돌려야 해 매우 느리고 저하 원인도 불명.</li><li>핵심 가정: LLR을 2의 보수 <code>FP(x,y,z)</code>로 표기 — <code>y</code>=정수부(dynamic range), <code>z</code>=소수부(fine resolution), <code>x</code>=a priori LLR clipping 범위(x≤y). boxplus의 <code>log(1+e^-c)</code> 항은 LUT로 근사(z가 LUT 설계 좌우).</li><li>핵심 기법: BER 시뮬 대신 EXIT chart 사용 — VND/CND EXIT function의 mutual information <code>I(x̃;x)</code>로 성능을 반영, iterative decoding 시뮬 불필요·code length·iteration 무관.</li><li>판정 기준: MSA가 Log-SPA 대비 유발하는 MI 저하 0.005를 허용 상한으로 삼아, 그보다 저하가 작으면 해당 OW 허용.</li><li>z(소수부) 단독: CND는 z≥2, VND는 z≥1이면 저하 미미 → 아키텍처 단순화 위해 공통 <code>z=2</code> 권고.</li><li>x(clipping) 단독: x∈{1,2}이면 a priori LLR 포화로 VND가 hard-decision化, dv=2일 때 EXIT (1,1) 미도달(터널 안 열림) → <code>x=3</code> 권고.</li><li>y(정수부) 결합: x=3,z=2 고정 하에 y∈{3,4,5} 검토, 저하가 큰 dv에서 두드러지며 <code>y=4</code> 충분 → 최종 <code>FP(3,4,2)</code> 권고.</li><li>결과: FP(3,4,2)로 총 OW y+z=6bit; EXIT 방식이 BER 시뮬 대비 연산 약 100배 감소(예: 8×10^8 vs 10^11 VND ops), [7]~[13] 결론과 부합.</li><li>한계: HW 미설계, EXIT는 저하 크기뿐 아니라 원인(clip droop 등)까지 보이나 error-floor·short-code 효과는 미포착, regular random PCM 기준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FP LLR operand width(정수/소수/clip 분리) 설계</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>LLR 양자화 폭·threshold 테이블 설계·검증에 직결</td></tr><tr><td>min-sum CND boxplus 근사</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>MSA vs Log-SPA MI 격차가 양자화 허용 기준으로 재사용 가능</td></tr><tr><td>VN 양자화(HD/2SD/3SD)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, decoder.h <code>Get_VNU_*</code></td><td>operand width가 VN 양자화 테이블 폭 결정</td></tr><tr><td>LLR LUT 설계</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>log(1+e^-c) LUT은 iteration별 LLR 테이블 인덱싱과 유사</td></tr></tbody></table>
+<p>적용 가치: 중간 — 성능 향상 기법은 아니나, EXIT 기반 operand-width 결정법은 Prime ECC의 LLR 양자화/테이블(2SD/3SD) 폭을 BER 시뮬 없이 빠르게 검증하는 방법론으로 재사용 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6092873",
+  "title": "Design of Fixed-Point Processing Based LDPC Codes Using EXIT Charts",
+  "year": 2011,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "500",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "EXIT chart로 FP(x,y,z) 고정소수점 LLR operand width를 채널SNR/iteration 무관하게 결정, 총 OW 6bit(FP(3,4,2)) 권고",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "성능 개선이 아닌 양자화폭 결정 방법론, EXIT는 DE 계열 근사라 short/QC-LDPC error-floor는 미포착, 총 6bit은 NAND soft-read 3bit 대비 큼",
+  "todo_check": "Prime ECC의 2SD/3SD LLR 테이블 대비 clip/fraction 분리 설계 적용 시 이득, EXIT 방법론이 고rate QC-LDPC에 그대로 성립하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6092873---design-of-fixed-point-processing-based-ldpc-codes-using-exit-charts-2011-ieee">ieee:6092873 - Design of Fixed-Point Processing Based LDPC Codes Using EXIT Charts (2011, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

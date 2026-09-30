@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6082675</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6082675---analysis-of-early-stopping-method-applied-to-horizontal-shuffling-scheduling-scheme-of-dvb-s2-ldpc-code-2011-ictc">ieee:6082675 - Analysis of Early Stopping Method applied to Horizontal Shuffling Scheduling Scheme of DVB-S2 LDPC code (2011, ICTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64800, 16200</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>HSS(layered) 복호에 CAET(sign-change-rate 기반) 조기종료를 결합해 평균 iteration 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB-S2 전용 부호·rate, HW 미설계, CAET/HSS 모두 기존 기법의 조합 분석에 불과</td></tr><tr><td>추가확인</td><td>Prime ECC의 partial/full CRC 조기종료 대비 SCR 기반 CAET의 오정지율(RI) 실이득 여부</td></tr></tbody></table>
+<blockquote><p>총평: 위성방송용 layered LDPC에 sign-change-rate 조기종료를 붙여 iteration을 줄인 분석 논문으로, Prime ECC는 이미 layered(Dual-Update)+CRC 조기종료를 보유해 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-S2 표준 LDPC 부호 <code>(64800,32400)</code>, <code>(16200,7200)</code> (rate 0.5), Offset Min-Sum 복호.</li><li>풀려는 문제: 위성 채널은 재전송 비용이 커 강한 FEC가 필요하나 LDPC 복호 iteration 수가 많아 속도 저하.</li><li>HSS(Horizontal Shuffling Scheduling = layered) 스케줄은 갱신된 V2C 메시지를 같은 iteration 내에서 즉시 사용해 FS(flooding)보다 LLR 수렴이 빠름(요구 iteration 약 2배 감소).</li><li>STEP: 첫 check node에 대해 C2V(<code>M_cv</code>) offset min-sum 갱신(식3: <code>min(|·|,|·|)-offset</code>, sign XOR) → 연결된 V2C 갱신 → SO 계산 → 다음 iteration 반영.</li><li><code>N-K</code> step을 모두 수행하면 한 iteration 완료(HSS 구조).</li><li>CAET(Channel-Adaptive Early Termination): 초기 iteration <code>Ite</code>와 SCR threshold <code>Thr</code>를 설정.</li><li>매 iteration 후 각 비트 HD의 sign을 계산, 직전 iteration과 sign이 바뀐 비율 SCR = <code>Σ|S_k - S_{k-1}|/N</code> 을 구함(식8).</li><li>정지조건: <code>k ≥ Ite</code> 이고 <code>SCR ≤ Thr</code> 이거나 <code>k ≥ Imax</code> 이면 종료. SCR→0 이면 decodable.</li><li>Risk Index <code>RI</code>(식7)로 분석해 두 부호 모두 최소 iteration 9 필요, <code>Ite=9</code>, <code>Thr</code>=18%(64800)/5%(16200) 선택.</li><li>결과: EbNo 1.0~2.2dB에서 평균 iteration 효과적 감소, BER 10^-7(quasi-error-free) 수용 가능. HW 미설계, 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>HSS(layered) 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (Dual-Update 스케줄)</td><td>Prime ECC 이미 layered 계열 스케줄 보유</td></tr><tr><td>Offset Min-Sum C2V 갱신</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 자체는 이미 보유, offset은 미확인</td></tr><tr><td>CAET(SCR 기반 조기종료)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC는 CRC 기반 조기종료 사용 - 대체 접근</td></tr><tr><td>HD/sign 계산</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>SCR 계산에 HD sign 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — layered 스케줄과 조기종료를 모두 이미 보유하며, SCR 기반 CAET는 CRC 조기종료 대비 명확한 이점이 없고 부호도 DVB-S2 전용.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6082675",
+  "title": "Analysis of Early Stopping Method applied to Horizontal Shuffling Scheduling Scheme of DVB-S2 LDPC code",
+  "year": 2011,
+  "venue": "ICTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "64800, 16200",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "HSS(layered) 복호에 CAET(sign-change-rate 기반) 조기종료를 결합해 평균 iteration 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "DVB-S2 전용 부호·rate, HW 미설계, CAET/HSS 모두 기존 기법의 조합 분석에 불과",
+  "todo_check": "Prime ECC의 partial/full CRC 조기종료 대비 SCR 기반 CAET의 오정지율(RI) 실이득 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6082675---analysis-of-early-stopping-method-applied-to-horizontal-shuffling-scheduling-scheme-of-dvb-s2-ldpc-code-2011-ictc">ieee:6082675 - Analysis of Early Stopping Method applied to Horizontal Shuffling Scheduling Scheme of DVB-S2 LDPC code (2011, ICTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

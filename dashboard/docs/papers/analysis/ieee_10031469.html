@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10031469</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10031469---low-power-decoder-architecture-of-product-code-for-storage-controller-2022-isocc">ieee:10031469 - Low Power Decoder Architecture of Product Code for Storage Controller (2022, ISOCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>오류의심 비트 LLR만 SRAM에 read/write, read/write 위치 분리로 디코더 SRAM 전력·면적 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Hamming product code + Chase-Pyndiah 전용 아키텍처로 QC-LDPC 디코더에 직접 이식 불가, rate/length·gatecount·throughput 본문 미기재</td></tr><tr><td>추가확인</td><td>LLR read/write 위치 분리 SRAM 뱅킹 개념이 Prime ECC LLR 메모리에 응용 가능한지(구조 상이)</td></tr></tbody></table>
+<blockquote><p>총평: 3D NAND용이나 부호가 Hamming product code(비-LDPC)이고 기여가 Chase-Pyndiah 전용 SRAM LLR 라우팅 전력 최적화라 QC-LDPC 이식가치 낮음. 다만 NAND 직접 타깃·전력 관점은 참고 여지.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 3D NAND 플래시 스토리지 컨트롤러 내 ECC 디코더, Hamming product code(행·열 각각 Hamming component code) + Chase-Pyndiah soft-in/soft-out.</li><li>문제: 3D NAND 층수↑ → BER↑ → LDPC급 정정력 필요하나 전력↑. 동일 면적·정정력에서 전력을 줄이려 함.</li><li>모델: product code는 행/열 순차 복호로 복잡도 절감, Chase-Pyndiah가 의심비트 LLR을 반복 갱신.</li><li>핵심기법: iteration 내 필요한 오류의심 비트 LLR만 SRAM에서 read, 다음 iteration용 LLR을 write — 전체 LLR을 레지스터에 두지 않고 SRAM에 순차 관리.</li><li>의미: 행 복호는 SRAM read가 순차적이나 열 복호에서 write 위치가 여러 column codeword로 흩어져 예측 불가 → read/write 위치를 물리적으로 분리한 뱅크 구조 필요.</li><li>구조 디테일: key당 LLR 6개 제한, 초과(extension) 예외는 별도 공간 할당(정정력 확보), static 할당은 read/write 분리·extension 할당은 공용.</li><li>학습/최적화: 없음(아키텍처 설계).</li><li>결과: 동일 면적·정정력·throughput 조건에서 conventional 대비 평균 전력 최대 22.4%↓(오류수 150/200/250에서 0.782/0.781/0.776 비율).</li><li>검증: ASIC 전력을 동일 동작주파수에서 측정 비교(합성 기반).</li><li>한계: 부호가 LDPC 아닌 Hamming product code, rate/length/gatecount/throughput 본문 미기재, 정정력 향상은 아님(전력만).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Chase-Pyndiah product code 복호</td><td>대응 없음</td><td>Prime ECC는 binary QC-LDPC min-sum, product code/turbo 미대응</td></tr><tr><td>의심비트 LLR SRAM read/write 관리</td><td>decoder.cpp LLR 테이블 참조 / ecc_data.h <code>PARAM_LLR</code></td><td>LLR 메모리 관리라는 점만 개념적 유사, 라우팅 구조 상이</td></tr><tr><td>read/write 위치 분리 SRAM 뱅킹</td><td>대응 없음</td><td>Prime ECC HW 모델(z=32, HCU, GT)과 메모리 구조 다름</td></tr></tbody></table>
+<p>적용 가치: 낮음 — NAND 직접 타깃이나 부호(Hamming product code)·알고리즘(Chase-Pyndiah)이 Prime ECC의 QC-LDPC min-sum과 무관하고 기여가 해당 부호 전용 SRAM 라우팅 전력 최적화라 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10031469",
+  "title": "Low Power Decoder Architecture of Product Code for Storage Controller",
+  "year": 2022,
+  "venue": "ISOCC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "오류의심 비트 LLR만 SRAM에 read/write, read/write 위치 분리로 디코더 SRAM 전력·면적 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "Hamming product code + Chase-Pyndiah 전용 아키텍처로 QC-LDPC 디코더에 직접 이식 불가",
+  "todo_check": "read/write 위치 분리 SRAM 뱅킹 개념이 Prime ECC LLR 메모리에 응용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10031469---low-power-decoder-architecture-of-product-code-for-storage-controller-2022-isocc">ieee:10031469 - Low Power Decoder Architecture of Product Code for Storage Controller (2022, ISOCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7527440</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7527440---bit-flipping-ldpc-under-noise-conditions-and-its-application-to-physically-unclonable-functions-2016-ieee">ieee:7527440 - Bit-flipping LDPC under noise conditions and its application to Physically Unclonable Functions (2016, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.25</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>핵심기여</td><td>Boolean/다수결 기반 bit-flip(hard) LDPC 복호 회로를 FPGA에 구현, PUF 후처리용 컴팩트·noise 내성 ECC 제시</td></tr><tr><td>한계,주의</td><td>PUF 보안 후처리 특화·단신 부호(128bit)·bit-flip 알고리즘으로 min-sum 대비 정정능력 열세, error-floor 심함</td></tr><tr><td>추가확인</td><td>soft/floating 대비 성능 손실 폭과 (32,8)/(32,4bit) 회로 게이트수(본문에 수치 없음)</td></tr></tbody></table>
+<blockquote><p>총평: PUF용 컴팩트 hard-decision bit-flip LDPC 회로 — NAND ECC 무관, 우리 min-sum 대비 정정력 낮아 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: PUF(SRAM 등) 데이터의 intra-chip 변동을 보정하는 컴팩트 LDPC 후처리 회로. 예제 (32,8), 코드길이 128bit(및 9600bit), 4bit 정밀도.</li><li>문제: LDPC는 정정력은 강하나 soft-decision belief propagation은 면적·전력이 크고 error-floor가 있음. PUF에는 컴팩트·저면적 회로가 필요.</li><li>모델: 읽기전압 threshold로 각 변수노드 값을 0/1로 판정, <code>Hy^T=0</code>·<code>y=xG</code> 부호화, 오류 있으면 <code>Hy^T≠0</code>.</li><li>핵심 기법: soft 대신 bit-flip(hard) 방식 — 메시지가 0/1로만 교환되고 다수결(majority decision)로 노드값 갱신. CN은 Boolean 합(parity, 식 1-a), VN은 <code>{riα,...,qα}</code> 중 0의 개수로 다수결 갱신.</li><li>종료: <code>Hq^T=0</code> 만족 시 종료, 아니면 반복.</li><li>회로: 복호기가 XOR 다단(Boolean), AND/OR/XOR(다수결), 단일 배선 상호연결, D-FF 래치로 구성 → 단순 CMOS로 컴팩트 구현. (32,8) 2bit 정밀도 예시.</li><li>구현/검증: RTL 합성 회로도, 논리 시뮬 + FPGA(Altera Cyclone IV) 검증. C 모델로 PUF 데이터→SNR 변환해 성능 평가.</li><li>noise 분석: 잡음률 0.001~0.01에서 잔류오류가 무잡음보다 낮아지는 noise tolerance 관찰, 잡음률 ~0.005에서 오류 최소 — closed-loop(local minimum) 탈출 효과로 해석.</li><li>결과: 4bit hard가 floating(soft) 대비 성능 열세, SNR 6dB 이상에서 명확한 error floor. 반복 증가 시 5dB 이하에서 오류가 오히려 증가하는 구간 존재.</li><li>한계: PUF 보안 후처리 특화, 단신 부호, HW는 FPGA까지만, 정정능력 개선 아닌 컴팩트성/보안 복잡도 강조. 게이트수·throughput 미보고.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flip(hard) 다수결 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>VN_Cal_HD()</code></td><td>우리는 min-sum(min1/min2) HD를 이미 보유, bit-flip 다수결은 정정력 열세라 대체 이득 없음</td></tr><tr><td>CN parity Boolean 연산</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>sign 처리와 개념 유사하나 magnitude 없는 단순화라 우리 것보다 약함</td></tr><tr><td>PUF 후처리/보안 복잡도</td><td>대응 없음</td><td>Prime ECC는 NAND ECC 전용, PUF 보안 목적 요소 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision bit-flip 복호는 우리가 이미 보유한 min-sum보다 정정력이 낮고, 대상이 PUF 보안 후처리라 NAND binary QC-LDPC ECC와 무관하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7527440",
+  "title": "Bit-flipping LDPC under noise conditions and its application to Physically Unclonable Functions",
+  "year": 2016,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.25,
+  "code_length": "128",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "Boolean/다수결 기반 bit-flip(hard) LDPC 복호 회로를 FPGA에 구현, PUF 후처리용 컴팩트·noise 내성 ECC 제시",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "PUF 보안 후처리 특화·단신 부호(128bit)·bit-flip 알고리즘으로 min-sum 대비 정정능력 열세, error-floor 심함",
+  "todo_check": "soft/floating 대비 성능 손실 폭과 (32,8)/(32,4bit) 회로 게이트수(본문에 수치 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7527440---bit-flipping-ldpc-under-noise-conditions-and-its-application-to-physically-unclonable-functions-2016-ieee">ieee:7527440 - Bit-flipping LDPC under noise conditions and its application to Physically Unclonable Functions (2016, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

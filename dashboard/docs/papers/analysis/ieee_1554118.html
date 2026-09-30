@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1554118</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1554118---interconnection-network-for-structured-low-density-parity-check-decoders-2005-apcc-2005">ieee:1554118 - Interconnection Network for Structured Low-Density Parity-Check Decoders (2005, APCC 2005)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>group-and-permute LDPC 디코더용 self-routed Benes 네트워크 + edge-coloring 스케줄·사전계산 스위칭코드로 출력충돌 회피</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>재구성형(multi-code) 유연 네트워크 지향 - 고정 QC-LDPC인 Prime ECC엔 과설계, 구현·합성 결과 없음(이론)</td></tr><tr><td>추가확인</td><td>고정 부호에서 Benes 대비 하드와이어드 라우팅(GT MUX)이 항상 저비용인지 정량 비교</td></tr></tbody></table>
+<blockquote><p>총평: LDPC HW의 실병목인 라우팅/메모리 충돌을 Benes 재구성 네트워크로 푸는 이론 제안 - 고정 부호 NAND ECC엔 유연성이 불필요해 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: group-and-permute 구조화 LDPC(행/열을 동일크기 그룹으로 나눠 순열 연결), 예시 8 row·16 column 그룹, 열weight <code>j=3</code>/행weight <code>k=6</code>(rate~1/2).</li><li>문제: SIMD 노드가 동시에 메시지를 쏟아내 목적지 충돌 발생 - 완전연결망은 <code>O(N^2)</code>로 비현실적.</li><li>관찰: 모든 group-and-permute 부호는 동일 구조라 generic vector 아키텍처로 실행 가능, 순열은 girth/최소거리에 영향(circular 순열 최대 girth 12).</li><li>핵심 기법: vector-slice 처리노드 사이에 self-routed <strong>Benes 네트워크</strong>(back-to-back butterfly, <code>O(N logN)</code> 2x2 스위치, rearrangeable) 삽입, 크기 <code>S=N/2</code>=check node 수.</li><li>충돌 회피: bipartite <strong>edge-coloring</strong>으로 메시지를 목적지 미공유 그룹(k개)으로 분할해 시간 스케줄.</li><li>라우팅: looping 알고리즘으로 스위칭 코드 사전계산, 메시지에 라우팅 비트 포함해 self-routing(스위치가 i번째 비트로 상/하 경로 결정).</li><li>정적성 활용: 부호 수명 동안 연결이 불변 → 스케줄·스위칭코드를 1회 계산해 저장, 순열당 메모리 <code>O(NlogN)</code> bit.</li><li>아키텍처: Benes를 PE vector slice와 FIFO 버퍼가 감싸고(fig4), bit node 메시지를 FIFO로 mux/demux, 목적지에서 재정렬.</li><li>결과: 정성 비교만 - Benes는 banyan보다 비싸나 non-blocking banyan(Batcher <code>O(N log^2 N)</code>)보다 저비용·저지연, fault-tolerant(N/2 경로). BER/합성 결과 없음.</li><li>한계: 순수 아키텍처 이론(구현·게이트카운트·BER 없음), 재구성형 유연망 지향(빠르게 바뀌는 무선 응용 겨냥).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>self-routed 상호연결 네트워크</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>HW edge/MUX 라우팅 대응 - Prime ECC는 고정 MUX 씨닝 사용</td></tr><tr><td>edge-coloring 메시지 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>충돌회피 스케줄 관점만 참고</td></tr><tr><td>메모리 뱅크/충돌 회피·FIFO</td><td>디코더 HW 모델(z=32)</td><td>라우팅/메모리 병목 대응이나 구조 상이</td></tr><tr><td>부호구조(group-and-permute) 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC 순열 구조 로드 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - Benes 재구성 네트워크는 다중 부호 유연성이 목적인데 Prime ECC는 단일 고정 QC-LDPC라 하드와이어드 라우팅(GT MUX)이 더 싸고, 본 논문은 구현·성능 결과가 없는 이론 제안이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1554118",
+  "title": "Interconnection Network for Structured Low-Density Parity-Check Decoders",
+  "year": 2005,
+  "venue": "APCC 2005",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "group-and-permute LDPC 디코더용 self-routed Benes 네트워크 + edge-coloring 스케줄·사전계산 스위칭코드로 출력충돌 회피",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "재구성형(multi-code) 유연 네트워크 지향 - 고정 QC-LDPC인 Prime ECC엔 과설계, 구현·합성 결과 없음(이론)",
+  "todo_check": "고정 부호에서 Benes 대비 하드와이어드 라우팅(GT MUX)이 항상 저비용인지 정량 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1554118---interconnection-network-for-structured-low-density-parity-check-decoders-2005-apcc-2005">ieee:1554118 - Interconnection Network for Structured Low-Density Parity-Check Decoders (2005, APCC 2005)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

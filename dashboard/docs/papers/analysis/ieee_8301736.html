@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8301736</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8301736---design-of-nested-protograph-based-ldpc-codes-with-low-error-floors-2018-ieee-iccisit-workshop">ieee:8301736 - Design of Nested Protograph-Based LDPC Codes with Low Error-Floors (2018, IEEE ICC/ISIT workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5 (subcode 0.375)</td></tr><tr><td>부호length</td><td>4880</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>dominant absorbing set을 유발하는 variable node를 targeted shortening으로 제거해 nested 부호 전체의 error-floor를 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>nested 코드 특화(joint channel/network coding용), highly irregular 구조 전제 — 우리 고rate QC-LDPC의 dominant AS가 명확치 않으면 효용↓</td></tr><tr><td>추가확인</td><td>Prime ECC H-matrix의 dominant absorbing set 실측 후보와 shortening 시 rate 손실·신규 harmful 구조 생성 여부</td></tr></tbody></table>
+<blockquote><p>총평: absorbing set 제거로 error-floor를 낮추는 그래프 수정 기법 자체는 유용하나, nested 부호에 특화되어 우리 단일 고rate QC-LDPC로의 직접 이식 가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 network coding용 <strong>nested protograph LDPC</strong> — <code>12×16</code> base matrix를 <code>M=305</code>로 lifting해 <code>3660×4880</code> PCM 생성, global rate <code>R=0.5</code>, subcode <code>R1=R2=0.375</code>.</li><li>문제: 좋은 waterfall에도 불구하고 1.5~2.0 dB부터 error-floor가 발생(BER <code>1e-5</code>~<code>1e-6</code>에서 flatten), 광통신·데이터 저장 등 저 BER 요구 앱에 부적합.</li><li>채널/복호 모델: BPSK on binary-input AWGN, <code>sum-product(SPA)</code>, 최대 100 iteration.</li><li>핵심 기법: 시뮬레이션으로 dominant error location sequence <code>E={322,522,582,1969,2055,2061}</code>를 식별 — 이는 <code>(6,0) absorbing set</code>(Hamming weight 6, 12-cycle)에 대응.</li><li>이 object가 SPA의 오류 정정을 막으며(BEC에선 stopping set), 고SNR에서 수집 오류의 23~93%를 차지 → 제거 대상 확정.</li><li>핵심 기법 2단: <strong>graph shortening</strong> — AS에 속한 variable node 1개(예: 582)와 인접 edge를 모든 nested 부호에서 제거해 object를 '깨뜨림', rate는 <code>0.5→0.4999</code>로 극소 감소.</li><li>구현 디테일: 노드 제거 시 degree-1 노드나 더 작은 신규 AS 생성을 피하도록 주의 — subcode마다 관여 check node가 다름.</li><li>다단계 확장: 2차로 <code>(5,1) AS</code> <code>E2={490,1368,2866,3825,4235}</code> 제거(node 4235), rate <code>→0.4998</code>. 필요 시 반복 적용 가능.</li><li>결과: 1차 수정으로 2~3 dB error-floor 영역에서 global·subcode 모두 BER/FER 유의미 개선, rate 손실은 극소. 2차는 개선폭 작음(dominant error 다중도 2~9%).</li><li>한계: HW 미설계, 시뮬만, AWGN·SPA 전제, nested 구조·highly irregular 코드에 특화(structured regular array code엔 효용 적다고 명시).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dominant absorbing set 식별(시뮬 기반 오류 위치 수집)</td><td>corner.cpp (수렴실패 추적)</td><td>수렴 실패 error location 추적에 활용 가능, 그러나 AS 분류 로직은 미보유</td></tr><tr><td>variable node 제거(그래프 shortening)로 H-matrix 수정</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 로드 단계에서 shortening 반영 가능하나 QC 구조 고정 재검증 부담</td></tr><tr><td>nested/protograph 부호 구성</td><td>대응 없음</td><td>Prime ECC는 단일 고rate QC-LDPC(부호 고정), nested 개념 미대응</td></tr><tr><td>SPA 복호 성능(error-floor)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 min-sum(SPA 아님) — error-floor 지표 비교 가능하나 복호 알고리즘 상이</td></tr></tbody></table>
+<p><strong>적용 가치</strong>: 낮음 — absorbing set 제거로 error-floor를 낮추는 발상은 참고할 만하나, nested·protograph·SPA 특화이고 고정된 QC-LDPC H-matrix를 shortening하는 것은 재검증 부담이 커서 Prime ECC로의 직접 이식 가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8301736",
+  "title": "Design of Nested Protograph-Based LDPC Codes with Low Error-Floors",
+  "year": 2018,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": 0.5,
+  "code_length": "4880",
+  "soft_quant": "무관",
+  "key_contribution": "dominant absorbing set을 유발하는 variable node를 targeted shortening으로 제거해 nested 부호 전체의 error-floor를 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "nested 코드 특화(joint channel/network coding), highly irregular 전제 — 단일 고rate QC-LDPC로의 직접 이식 효용 제한",
+  "todo_check": "Prime ECC H-matrix의 dominant absorbing set 후보 실측 및 shortening 시 rate 손실·신규 harmful 구조 생성 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8301736---design-of-nested-protograph-based-ldpc-codes-with-low-error-floors-2018-ieee-iccisit-workshop">ieee:8301736 - Design of Nested Protograph-Based LDPC Codes with Low Error-Floors (2018, IEEE ICC/ISIT workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

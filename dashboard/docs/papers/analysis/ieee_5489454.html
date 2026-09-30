@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5489454</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5489454---fpga-implementation-of-high-performance-ldpc-decoder-using-modified-2-bit-min-sum-algorithm-2010-iccrd">ieee:5489454 - FPGA Implementation of High Performance LDPC Decoder using Modified 2-bit Min-Sum Algorithm (2010, ICCRD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648~1200</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>VN은 고정밀 LLR 후 임계값(Tm)으로 2bit 맵핑, scaling 제거한 modified 2-bit min-sum</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>33345 slices@Virtex4(1200bit), 7755 slices@Virtex5(648bit)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>10.2Gbps(avg@4dB, 1200bit), 5.4Gbps(avg, 648bit FPGA실측)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Tm/W/w를 Monte Carlo로 부호별 튜닝 필요, rate-1/2 (3,6) 저rate 부호 대상</td></tr><tr><td>추가확인</td><td>Prime ECC 고rate QC-LDPC(~0.9)에서 2bit 맵핑 이득 재검증, 3SD 대비 성능 비교</td></tr></tbody></table>
+<blockquote><p>총평: 2bit 메시지로 배선 절감하면서 4bit LLR 내부연산으로 3bit MSA급 BER 달성 + 10Gbps FPGA 실측. 저정밀 message-passing 이식 관점에서 참고가치 있으나 부호rate/양자화 재튜닝 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate-1/2 (3,6)-regular LDPC (length 1200bit 및 WLAN 648bit), BPSK/AWGN, 완전병렬 FPGA 디코더.</li><li>문제: 2-bit min-sum(MSA)은 배선/면적을 크게 줄이나 3-bit MSA 대비 BER 손실이 큼 — 2bit 정밀도 유지하며 성능 회복.</li><li>핵심 기법(MMS2): 변수노드는 <strong>고정밀(4bit) LLR로 합산</strong> 후 임계값 <code>Tm</code>으로 2bit(부호1+크기1)로 맵핑, 노드간에는 2bit만 전송.</li><li>맵핑 함수: <code>g(y)</code>가 LLR합을 <code>Tm</code> 기준으로 2bit로 양자화(식2), <code>f(x)</code>가 수신 2bit를 상수 <code>±W</code>/<code>±w</code>로 역맵핑해 다음 합산에 사용(식3).</li><li>파라미터: <code>Tm</code>, <code>W</code>, <code>w</code>는 Monte Carlo 시뮬로 최적화(예: <code>Tm=2</code>, <code>W=3</code>, <code>w=1</code>) — 부호별 튜닝.</li><li>체크노드: 부호는 XOR(<code>Sk=⊕Vl(s)</code>), 크기는 AND(<code>Mk=&amp;Vl(m)</code>)로 최소값 근사, 출력 <code>Ck={Sk,Mk}</code> 단순 concatenation.</li><li>[9] 대비 개선점: <strong>scaling factor 오버헤드 제거</strong>, VN에 고정밀 LLR 사용, CN에 단순 로직 채택 — 2bit 라우팅 유지하며 성능↑.</li><li>성능: 2-bit MSA 대비 10^-5 BER에서 <strong>1.5dB 이득</strong> + 평균 iteration 감소, 3-bit MSA 대비 0.3dB 손실.</li><li>HW 결과: Verilog 완전병렬, Virtex4(1200bit) 대비 [12] 3bit MSA 대비 slice 18%·LUT 16%·reg 17% 절감, 최대주파수 123MHz(23%↑), avg 10.2Gbps@4dB(iter 7.2); Virtex5 648bit 실측 113MHz/5.4Gbps(iter 6.8).</li><li>한계: rate-1/2 (3,6) 저rate 부호 한정, 맵핑 상수 부호별 재튜닝 필요, NAND 직접 실험 아님(WLAN/통신 타깃).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>modified 2-bit min-sum 반복루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>min-sum 이터레이션 자체 이미 보유, 저정밀 맵핑만 변형</td></tr><tr><td>CN 부호XOR/크기AND 근사</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 대신 AND-근사 — 정밀도 저하 트레이드오프 참고</td></tr><tr><td>VN 고정밀 합산 후 2bit 맵핑(Tm/W/w)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>2SD/3SD LLR 테이블에 대응 — 임계값 맵핑을 테이블화 가능</td></tr><tr><td>iteration별 LLR 임계값 튜닝</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>Prime ECC의 iteration 구간별 LLR threshold와 개념 유사</td></tr><tr><td>2bit 배선 축소(라우팅)</td><td>HW 디코더 모델(z=32)</td><td>메시지폭 축소로 라우팅 절감 아이디어 참고(우리 구조 정합 필요)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 2bit 메시지로 라우팅/면적을 줄이면서 성능을 회복하는 저정밀 min-sum 변형이라 우리 min-sum/LLR 테이블에 대응이 명확. 다만 저rate (3,6) 부호·부호별 튜닝 파라미터라 고rate QC-LDPC 재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5489454",
+  "title": "FPGA Implementation of High Performance LDPC Decoder using Modified 2-bit Min-Sum Algorithm",
+  "year": 2010,
+  "venue": "ICCRD",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "648~1200",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "VN은 고정밀 LLR 후 임계값(Tm)으로 2bit 맵핑, scaling 제거한 modified 2-bit min-sum",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "33345 slices@Virtex4(1200bit), 7755 slices@Virtex5(648bit)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 10.2,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "Tm/W/w를 Monte Carlo로 부호별 튜닝 필요, rate-1/2 (3,6) 저rate 부호 대상",
+  "todo_check": "Prime ECC 고rate QC-LDPC(~0.9)에서 2bit 맵핑 이득 재검증, 3SD 대비 성능 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5489454---fpga-implementation-of-high-performance-ldpc-decoder-using-modified-2-bit-min-sum-algorithm-2010-iccrd">ieee:5489454 - FPGA Implementation of High Performance LDPC Decoder using Modified 2-bit Min-Sum Algorithm (2010, ICCRD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

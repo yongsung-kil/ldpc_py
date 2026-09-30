@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6206896</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6206896---particle-swarm-optimization-applied-to-designing-ldpc-codes-for-wireless-communications-2011-ietieee-conf">ieee:6206896 - Particle Swarm Optimization Applied to Designing LDPC Codes for Wireless Communications (2011, IET/IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>PSO로 irregular LDPC의 변수/체크노드 차수분포(threshold 최소화) 최적화 + 가우시안근사 threshold 정밀 수치계산</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무한부호길이 asymptotic threshold만 다룸, 유한길이/HW/실측 전무, 무선 채널(AWGN) 타깃</td></tr><tr><td>추가확인</td><td>최적화된 차수분포의 구체 수치(Figure/표)와 실제 threshold 개선폭 확인 필요 (본문에 수치 없음)</td></tr></tbody></table>
+<blockquote><p>총평: PSO를 차수분포 최적화 fitness 탐색에 쓴 순수 부호설계 이론 논문 — NAND binary QC-LDPC 이식 가치 거의 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 무한길이 irregular LDPC의 차수분포 <code>(λ(x), ρ(x))</code> 최적 설계로, 무선통신용 부호를 목표로 한다.</li><li>풀려는 문제: GA/EA는 방대한 해공간 탐색으로 수렴이 느리고 fitness(=threshold) 평가 비용이 병목이다.</li><li>채널은 AWGN, 전송신호를 all-1 codeword로 가정하여 density evolution이 채널파라미터 <code>m_ch = 2/σ²</code>에만 의존하도록 단순화한다.</li><li>핵심 기법: PSO로 각 particle(차수분포 해)의 속도 <code>v_i</code>를 <code>pbest_i</code>, <code>gbest</code>로 갱신하며 위치(차수계수)를 업데이트, 관성 <code>w</code>를 반복에 따라 <code>w_max=0.9→w_min≈0.4</code>로 감소시킨다.</li><li>fitness는 부호의 SNR threshold이며, threshold가 낮을수록 좋은 부호 → 탐색 목표는 최소 threshold 차수분포다.</li><li>제약: code rate 제약 <code>Σρ_k/k = (1-R)Σλ_j/j</code>, 정규화 제약, 그리고 <code>ρ(x)</code>를 2항(<code>ρx^{k-1}+(1-ρ)x^k</code>)으로 가정해 λ만 주면 ρ가 결정된다.</li><li>threshold는 두 곡선 <code>f1(x)</code>(차수분포로 결정), <code>f2(x)=κ(x-m_ch)</code>(SNR으로 결정)의 접점(기울기=1)으로 찾는다.</li><li>최적화 절차: 가우시안근사로 <code>Φ(m)=E[tanh(N/2)]</code>를 사다리꼴 적분(변수변환 <code>u=e^v</code>, 44구간/[-3.3,3.3], 9자리 정확도)으로 정밀 계산해 시뮬 없이 threshold 도출.</li><li>결과: 시뮬 없이 regular/irregular 부호의 threshold를 정밀 계산 가능, PSO가 전통 GA/EA보다 빠르고 정확하다고 주장(정량 수치는 본문 미제시).</li><li>한계: 유한길이 부호·디코더 HW·BER 실측이 전혀 없고, 무한길이 asymptotic 이론에 국한된다.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>차수분포/부호 구성 최적화</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix 로드)</td><td>낮음 — Prime ECC는 고정 QC-LDPC H-matrix, 차수분포 재설계 여지 적음</td></tr><tr><td>density evolution/threshold 계산</td><td>대응 없음</td><td>오프라인 부호설계 도구, 런타임 디코더와 무관</td></tr><tr><td>PSO 최적화 루프</td><td>대응 없음</td><td>코드베이스에 최적화 탐색 모듈 없음(<code>local_opt.cpp</code>는 LLR 자동최적화로 성격 다름)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무한길이 asymptotic 차수분포 설계 이론이며, Prime ECC의 고정 QC-LDPC binary 부호·디코더·HW 어느 레이어에도 직접 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6206896",
+  "title": "Particle Swarm Optimization Applied to Designing LDPC Codes for Wireless Communications",
+  "year": 2011,
+  "venue": "IEEE/IET Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "PSO로 irregular LDPC 차수분포(threshold 최소화) 최적화 + 가우시안근사 threshold 정밀 수치계산",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무한부호길이 asymptotic threshold만 다룸, 유한길이/HW/실측 전무, 무선 AWGN 타깃",
+  "todo_check": "최적화된 차수분포 수치와 실제 threshold 개선폭 확인 필요(본문 수치 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6206896---particle-swarm-optimization-applied-to-designing-ldpc-codes-for-wireless-communications-2011-ietieee-conf">ieee:6206896 - Particle Swarm Optimization Applied to Designing LDPC Codes for Wireless Communications (2011, IET/IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

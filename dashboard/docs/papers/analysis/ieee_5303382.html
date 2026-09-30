@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5303382</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5303382---multi-layer-perceptron-neural-networks-decoder-for-ldpc-codes-2009-ieee">ieee:5303382 - Multi Layer Perceptron Neural Networks Decoder for LDPC Codes (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>10</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Tanner graph 구조를 그대로 2계층 MLP 신경망으로 구성해 확률 계산 없이 gradient descent로 수신벡터를 반복 보정하는 새로운 LDPC 디코더 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(10,5) 극단적으로 짧은 코드 1개 예제만 검증, SPA 대비 BER이 전반적으로 더 나쁨(Table I)</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 초기 개념증명 수준의 NN 기반 디코더로 성능·규모·HW 모두 미흡해 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 논문 서두 예시인 (10,5) 소형 binary irregular LDPC(Tanner graph 예시), AWGN 채널, BPSK 미기재.</li><li>기존 SP/APP 등 확률 기반 디코더 대신, 확률 계산 없이 신경망 학습으로 디코딩하는 새로운 접근을 제안.</li><li>채널모델: 수신벡터 <code>r = c + n</code> (표준 AWGN 가산잡음).</li><li>핵심 기법: 입력층(수신벡터)-출력층(체크노드) 2계층 MLP를 Tanner graph/H-matrix 구조 그대로 구성, 각 체크노드는 연결된 변수노드들의 XOR 관계를 근사.</li><li>XOR 근사식 <code>x⊕y = x(1-y)+y(1-x)</code>를 differentiable하게 정의해 gradient descent로 오차함수 <code>E = 1/2 Σ Oi^2</code>(목표값 0)를 최소화하도록 수신벡터 성분을 반복 갱신.</li><li>확장 없음 — 단일 2계층 구조만 제시.</li><li>부수 트릭: iteration 종료조건으로 <code>E ≤ 0.2</code> 임계값 사용(최대 200회), 수렴 후 수신벡터 성분을 0/1로 하드 매핑.</li><li>학습/최적화: gradient descent로 매 반복마다 입력 성분(사실상 LLR 아닌 벡터값) <code>ΔCj = -η·∂E/∂Cj</code>를 갱신(가중치 학습 아닌 입력 최적화).</li><li>결과: η=0.008~0.04, SNR=11~14dB에서 BER 4.2e-3~2.75e-5 수준으로 SPA(3.7e-3~2.1e-5) 대비 전반적으로 열세.</li><li>한계: (10,5) 초소형 코드 1개만 검증, HW/파이프라인/양자화 전무, 저자 스스로 "simple prototype"이라 명시하며 성능 개선 여지가 크다고 언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| MLP 기반 XOR 근사 디코더 전체 | 대응 없음 | 프로파일에 "NN/딥러닝 디코더는 대응 없음"으로 명시된 판정 필터 대상 |
+| gradient descent 기반 수신벡터 보정 | 대응 없음 | min-sum/message-passing 구조와 근본적으로 다른 방식 |</code></pre>
+<p>적용 가치: 낮음 — Prime ECC는 min-sum 기반 message-passing HW 시뮬레이터로, NN 전면 대체 디코더는 이미 판정 필터에서 이식성 하로 분류됨.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5303382",
+  "title": "Multi Layer Perceptron Neural Networks Decoder for LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 10,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Tanner graph를 2계층 MLP로 구성해 확률 계산 없이 gradient descent로 수신벡터를 반복 보정하는 신규 LDPC 디코더 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "(10,5) 극소형 코드 1개 예제만 검증, SPA 대비 BER 전반적으로 열세",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5303382---multi-layer-perceptron-neural-networks-decoder-for-ldpc-codes-2009-ieee">ieee:5303382 - Multi Layer Perceptron Neural Networks Decoder for LDPC Codes (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

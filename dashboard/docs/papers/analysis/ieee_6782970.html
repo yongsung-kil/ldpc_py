@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6782970</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6782970---high-throughput-dual-shift-stochastic-detection-quasi-cyclic-ldpc-decoder-2013-icics">ieee:6782970 - High-Throughput Dual-Shift Stochastic-Detection Quasi-Cyclic LDPC Decoder (2013, ICICS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4489</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>dual-shift cyclic generation(양방향 circulant 생성으로 H복제 clock 반감) + stochastic-detection 비교기(양자화값 이진패턴 매칭으로 min/sub-min 탐색을 1 clock으로 축소)로 throughput ~300% 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>16.5</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>FPGA(LUT/register)만, ASIC gatecount·전력 없음, mirror-paradigm RS-based QC-LDPC 부호에 종속(우리 base+shift 구조와 상이), dual-shift는 서브모듈 유닛 2배로 면적 증가</td></tr><tr><td>추가확인</td><td>stochastic-detection(threshold 0.5, 6-bit)이 우리 min1/min2 min-sum과 정합되는지 및 BER&lt;5% 손실이 고rate에서 유지되는지, dual-shift가 z=32 circulant 병렬구조에 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NVM 스토리지 타깃 rate-0.9 4489-bit QC-LDPC 디코더로 NAND 직접 관련성 높고, min/sub-min 탐색을 이진패턴 매칭 1 clock으로 줄이는 stochastic-detection 비교기는 CN min-sum HW 최적화 관점에서 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NVM 스토리지용 rate-0.9 4489-bit(4489,4087) mirror-paradigm RS-based QC-LDPC, 6×67 base matrix, TPMP(two-phase message passing) partial-parallel 디코더, 6-bit 균일양자화(sign 1 + int 2 + frac 3), N_ITR 최대 10.</li><li>문제: QC-LDPC 디코더 throughput 효율 <code>TEFF = f_MAX·L_CODE/(t_OCD·N_ITR)</code>에서 f_MAX·t_OCD가 병목 - min/sub-min 산출용 cascaded tree comparator가 critical path 지연·면적 증가.</li><li>모델: Box-Muller AWGN 채널 HW Monte Carlo, syndrome detector 기반 종료, TPMP 스케줄.</li><li>기법1 (dual-shift cyclic generation): 기존 circulant 생성은 한 방향 1-shift/clock로 CS clock 소요 → 좌/우 양방향 동시 shift로 H-matrix 복제 clock을 절반(CS=11 → 11clock→6clock)으로 축소, 병렬 thread 2배.</li><li>의미: circulant 복제 지연이 t_OCD의 큰 부분이므로 dual-shift로 반감 → throughput 2배 잠재력(단 서브모듈 유닛·counter·메모리도 2배).</li><li>기법2 (stochastic-detection of local minima): 6-bit 유한정밀 하에 local minima는 이진패턴 유한집합으로 축소, threshold 0.5 미만 집합 <code>℘={"000000","000001","000010","000011"}</code> 존재여부만 검사 → bit-wise 비교 대신 패턴매칭으로 min/sub-min 탐색을 log(row weight)에서 1 clock으로 축소.</li><li>구현 디테일: cascaded comparator 제거로 critical path·logic 감소, mirror-paradigm으로 dual-shift가 유발하는 address generation counter 증가를 상쇄.</li><li>학습/최적화: 없음(구조적 HW 최적화).</li><li>결과: Virtex-6 ML-605 FPGA, 대비 디코더들 대비 t_OCD=70 최소·f_MAX=257.3MHz 최고, Max TEFF 16.5Gb/s(약 300% 향상), routing complexity Medium, BER 손실 &lt;5%, ideal MATLAB 대비 0.2dB 이내.</li><li>한계: FPGA(LUT/slice)만·ASIC gatecount/전력 미보고, RS-based mirror-paradigm 부호에 종속, 정정능력 개선 아닌 throughput/latency 개선, dual-shift는 면적 증가 수반.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>stochastic-detection min/sub-min 비교기</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min1/min2 min-sum CN 연산의 HW 비교 최적화 대안 - 6-bit 패턴매칭 아이디어 참고</td></tr><tr><td>6-bit 양자화 / VN 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>우리 magnitude 양자화 테이블과 정밀도 비교, soft 2/3SD와 폭 상이</td></tr><tr><td>dual-shift circulant 생성 / H복제</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 z=32 circulant shift 로드와 관련, 양방향 생성은 우리 병렬구조 재검토 필요</td></tr><tr><td>TPMP partial-parallel 디코더 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 스케줄·pipeline 참고, 우리 6-stage pipeline과 정합 필요</td></tr><tr><td>조기종료(syndrome detector)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>우리 partial/full CRC 조기종료와 목적 유사(syndrome vs CRC)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - NAND(NVM) rate-0.9 QC-LDPC 직접 타깃이고 stochastic-detection 비교기가 min-sum CN HW 지연을 줄이는 아이디어는 참고할 만하나, RS-based mirror-paradigm 부호·양방향 circulant 생성이 우리 base+shift z=32 고정구조와 정합 여부 재검증이 필요함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6782970",
+  "title": "High-Throughput Dual-Shift Stochastic-Detection Quasi-Cyclic LDPC Decoder",
+  "year": 2013,
+  "venue": "ICICS",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "4489",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "dual-shift cyclic generation(양방향 circulant 생성으로 H복제 clock 반감) + stochastic-detection 비교기(양자화값 이진패턴 매칭으로 min/sub-min 탐색을 1 clock으로 축소)로 throughput ~300% 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 16.5,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "FPGA(LUT/register)만, ASIC gatecount·전력 없음, mirror-paradigm RS-based QC-LDPC 부호에 종속(우리 base+shift 구조와 상이), dual-shift는 서브모듈 유닛 2배로 면적 증가",
+  "todo_check": "stochastic-detection(threshold 0.5, 6-bit)이 우리 min1/min2 min-sum과 정합되는지 및 BER&lt;5% 손실이 고rate에서 유지되는지, dual-shift가 z=32 circulant 병렬구조에 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6782970---high-throughput-dual-shift-stochastic-detection-quasi-cyclic-ldpc-decoder-2013-icics">ieee:6782970 - High-Throughput Dual-Shift Stochastic-Detection Quasi-Cyclic LDPC Decoder (2013, ICICS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

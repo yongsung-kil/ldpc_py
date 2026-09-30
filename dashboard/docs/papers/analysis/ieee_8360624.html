@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8360624</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8360624---flexible-wom-codes-for-nand-flash-memory-based-on-raptor-like-codes-2018-jcn">ieee:8360624 - Flexible WOM Codes for NAND Flash Memory Based on Raptor-Like Codes (2018, JCN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.235~0.502</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>raptor-like RC-LDGM(BEQ) 다중 rate 코드로 NAND 2-write WOM 재기록 효율 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC가 아닌 WOM(재기록) 코드 - erasure quantization용 LDGM, 오류정정 디코더와 무관</td></tr><tr><td>추가확인</td><td>없음 (Prime ECC 오류정정 파이프라인과 목적 자체가 다름)</td></tr></tbody></table>
+<blockquote><p>총평: NAND 수명연장용 WOM 재기록 코드 논문으로 binary LDPC ECC 정정 파이프라인과 목적이 달라 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 SLC/MLC NAND flash로 블록당 <code>L=128</code> 페이지, 페이지당 <code>k=8192</code> bit, 2회 write(1회 rewrite) 지원.</li><li>풀려는 문제: 기존 WOM 코드[14]는 단일 LDGM 고정 rate라 invalid 페이지의 unprogrammed 비율이 rate보다 낮으면 재기록 실패 → 페이지를 버리게 됨.</li><li>모델: NAND를 WOM 장치로 보고, 재기록을 binary erasure quantization(BEQ) 문제로 정식화. cell state를 erasure location vector <code>v</code>로 취급.</li><li>핵심 기법: BEQ 인코딩을 LDGM 생성행렬 <code>G_Q</code>(dual LDPC의 <code>H</code>) 상의 message-passing으로 수행. <code>z=mH_Q^{-1}</code>, <code>r=BEC(z,v)</code>, <code>u=Q(r)</code>, <code>x=uG_Q+z</code>.</li><li>핵심 식: 재기록 성공 조건은 erasure 패턴 <code>r</code>이 이분그래프의 stopping set을 포함하지 않는 것 → BP quantizer가 무손실 <code>D(r,uG_Q)=0</code> 해를 찾음.</li><li>확장(다중 rate): <code>β+1</code>개 multi-rate BEQ 코드 <code>C(Q_0)..C(Q_β)</code>를 순차 적용, 실패 시 invalid 페이지를 추가해 길이를 늘리고 rate <code>R_{2,i}=1/(2+α+i)</code>를 낮춤.</li><li>구현 트릭: fractional page <code>α</code>(0.125/0.25)로 유한길이 성능저하 보정, page selection으로 rewritable 페이지(local stopping set 없는)를 사전 선별.</li><li>코드 구성: R4JA rate-1/2 base matrix를 protograph extension+puncturing으로 raptor-like RC-LDGM 구성, PEXIT(over BEC)로 최적 threshold protograph 선택, CPEG(lifting 1024, girth≥8)로 lifting.</li><li>결과: writing efficiency <code>η</code>가 Rivest-Shamir(고정 1.333) 대비 최대 1.469(α=0.125)로 상승, θ 증가 시 1.311→1.443, MLC LLH에서 1.234.</li><li>한계: HW 미설계, 수치 시뮬만, 오류정정이 아닌 재기록(WOM) 목적 - Prime ECC의 LDPC 오류정정과 층위가 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BEQ/WOM 재기록 인코딩 (LDGM message passing)</td><td>대응 없음</td><td>Prime ECC는 오류정정 LDPC 디코더/인코더로 WOM 재기록 계층 없음</td></tr><tr><td>raptor-like RC-LDGM protograph 구성</td><td>대응 없음</td><td>부호설계가 erasure quantization용이라 QC-LDPC ECC H-matrix와 목적 상이</td></tr><tr><td>page selection (invalid page 재사용)</td><td>대응 없음</td><td>컨트롤러/FTL 층 기능, ECC 엔진 범위 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — WOM 재기록 코드로 NAND 수명연장을 다루나 오류정정 LDPC 디코더/인코더와 목적·계층이 달라 Prime ECC 이식 대상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8360624",
+  "title": "Flexible WOM Codes for NAND Flash Memory Based on Raptor-Like Codes",
+  "year": 2018,
+  "venue": "JCN",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "protograph",
+  "code_rate": "0.235~0.502",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "raptor-like RC-LDGM(BEQ) 다중 rate 코드로 NAND 2-write WOM 재기록 효율 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC가 아닌 WOM(재기록) 코드 - erasure quantization용 LDGM, 오류정정 디코더와 무관",
+  "todo_check": "없음 (Prime ECC 오류정정 파이프라인과 목적 자체가 다름)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8360624---flexible-wom-codes-for-nand-flash-memory-based-on-raptor-like-codes-2018-jcn">ieee:8360624 - Flexible WOM Codes for NAND Flash Memory Based on Raptor-Like Codes (2018, JCN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

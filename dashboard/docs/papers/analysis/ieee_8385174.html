@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8385174</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8385174---a-multi-gbs-frame-interleaved-ldpc-decoder-with-path-unrolled-message-passing-in-28-nm-cmos-2018-ieee-trans-vlsi-systems">ieee:8385174 - A Multi-Gb/s Frame-Interleaved LDPC Decoder With Path-Unrolled Message Passing in 28-nm CMOS (2018, IEEE Trans. VLSI Systems)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.8125</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CN update를 연결 VN들에 시간분산(path-unrolling)해 flooding Min-Sum을 재정식화, macrocolumn 간 국소배선만 사용해 라우팅/permutation logic 제거</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>837Kgate+160Kb SRAM@28nm (1.99mm^2 P&amp;R / 3.41mm^2 fab)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>6.78</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11ad(rate 0.5~0.8125, N=672) 무선 특화 + 고면적(dark silicon) 트레이드오프, 알고리즘상 BER 개선 없음(순수 HW arch)</td></tr><tr><td>추가확인</td><td>z=42 QC 구조·8-layer 기반 배선이 Prime ECC의 z_sb=32/HCU/GT 파이프라인과 정합 가능한지, soft-read 비용</td></tr></tbody></table>
+<blockquote><p>총평: fabricated 28nm ASIC로 QC 구조를 이용해 flooding Min-Sum의 CN update를 시간분산(path-unroll)하여 배선·permutation logic을 국소화한 HW arch 논문으로, 정정능력 개선은 없으나 Prime ECC의 라우팅/파이프라인 설계에 아키텍처적 참고 가치가 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11ad(60GHz) QC-LDPC, 고정 block length <code>n=672</code>, 4개 rate(1/2, 5/8, 3/4, 13/16), 목표 6.757 Gb/s, 프레임 latency 1μs, BIAWGNC, 입력 LLR 5-bit 양자화.</li><li>문제: sub-45nm에서 배선 스케일링 정체로 unstructured routing이 전력 지배 → 200MHz급 저클록에서 multi-Gb/s를 내려면 기존 CN/VN 분리 아키텍처의 congested interconnect가 병목.</li><li>핵심 기법: flooding Min-Sum의 CN update를 시간에 걸쳐 unroll - 하나의 CN에 연결된 VN들(집합 <code>N(c)</code>)을 따라 닫힌 경로로 순회하며 CN 연산을 VN들에 분산(path-unrolled), 명시적 <code>m_cv</code>/<code>L_vc</code> 메시지를 배선하지 않음.</li><li>재정식화: piecewise time-distributed Min-Sum - CN phase에서 <code>s_c(t)</code>, <code>min1_c(t)</code>, <code>min2_c(t)</code>, <code>p_c(t)</code>를 T=n/q 컬럼에 걸쳐 순차 갱신, VN phase에서 그 값을 경로에 broadcast해 <code>m_cv</code>(식 2), LLR·hard decision 계산. 결과는 표준 Min-Sum과 동일.</li><li>구조: 동종 CN+VN 결합 처리유닛의 systolic array, macrocolumn별 column slice(각 42 유닛), 인접 컬럼 간 하드와이어 cyclic permutation망(멀티플렉서 fan-out 없음), all-zero submatrix엔 bypass routing.</li><li>멀티rate: 4 rate가 단일 8-layer base matrix에서 파생 → 동일 배선을 재사용, 비활성 layer는 clock gating으로 off(rate 1/2=8×42=336 CN path, rate 13/16=126).</li><li>파이프라인/프레임 인터리빙: 8 프레임 인터리브로 100%(13/16은 75%) HW 이용률, 2컬럼마다 pipeline register, I/O frame buffering(16-frame depth)으로 idle 없이 연속 복호.</li><li>조기종료: 시작 컬럼 t=0에서 프레임별 독립 parity check, coarse-grained clock gating으로 종료 프레임의 column slice off → 고SNR에서 전력 절감(1~3 iter에 다수 종료).</li><li>결과(실측, 28nm, 0.9V, 202MHz): 6.78 Gb/s, energy efficiency 1.53(rate 13/16)~4.12(rate 1/2) pJ/bit/iter, 조기종료 시 전력 최대 2.93× 절감, DVFS로 1.1~3.1 pJ/bit/iter, 802.11ad 동종 5개 대비 최고 정규화 에너지효율.</li><li>한계: 정정능력(BER) 개선 없음(순수 arch, Normalized/Offset MS는 scope 밖), 802.11ad 무선·N=672 특화, 배선축소 대가로 고면적(dark silicon), latency는 사양 충족 수준(동등).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>path-unrolled/time-distributed Min-Sum 재정식화</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>CN update를 VN 경로에 분산하는 스케줄로, 이터레이션 루프 스케줄링 개편 지점과 직결</td></tr><tr><td>CN min1/min2/sign 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum(min1/min2+sign XOR)과 동일 연산의 시간분산 배치</td></tr><tr><td>macrocolumn 국소배선/permutation 제거 (HW arch)</td><td>대응 없음</td><td>Graph Thinning([GT.cpp] <code>Make_GT_HW()</code>)이 edge 축소로 유사 목적이나 path-unroll 라우팅 구조 자체는 대응 모듈 없음</td></tr><tr><td>조기종료(parity check)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC는 CRC 기반, 본 논문은 syndrome parity 기반 - 목적 동일, 방식 상이</td></tr><tr><td>QC H-matrix 컬럼 분할/로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC macrocolumn 매핑이 base+shift 로드와 정합</td></tr></tbody></table>
+<p>적용 가치: 중간 - QC 구조를 이용한 라우팅 국소화·time-distributed 스케줄이 Prime ECC 파이프라인(z_sb=32/HCU/GT)과 개념적으로 정합하나, 정정능력 개선은 없고 z=42/802.11ad 특화라 HW arch 아이디어(배선-면적 트레이드오프) 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8385174",
+  "title": "A Multi-Gb/s Frame-Interleaved LDPC Decoder With Path-Unrolled Message Passing in 28-nm CMOS",
+  "year": 2018,
+  "venue": "IEEE Trans. VLSI Systems",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.8125",
+  "code_length": "672",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CN update를 연결 VN들에 시간분산(path-unrolling)해 flooding Min-Sum을 재정식화, macrocolumn 간 국소배선만 사용해 라우팅/permutation logic 제거",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "837Kgate+160Kb SRAM@28nm (1.99mm^2 P&amp;R / 3.41mm^2 fab)",
+  "parallelism": "부분",
+  "throughput_gbps": 6.78,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "802.11ad(rate 0.5~0.8125, N=672) 무선 특화 + 고면적(dark silicon) 트레이드오프, 알고리즘상 BER 개선 없음(순수 HW arch)",
+  "todo_check": "z=42 QC 구조·8-layer 기반 배선이 Prime ECC의 z_sb=32/HCU/GT 파이프라인과 정합 가능한지, soft-read 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8385174---a-multi-gbs-frame-interleaved-ldpc-decoder-with-path-unrolled-message-passing-in-28-nm-cmos-2018-ieee-trans-vlsi-systems">ieee:8385174 - A Multi-Gb/s Frame-Interleaved LDPC Decoder With Path-Unrolled Message Passing in 28-nm CMOS (2018, IEEE Trans. VLSI Systems)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

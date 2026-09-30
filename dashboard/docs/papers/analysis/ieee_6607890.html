@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6607890</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6607890---an-improved-normalized-min-sum-algorithm-for-ldpc-codes-2013-ieee-conference">ieee:6607890 - An Improved Normalized Min-Sum Algorithm for LDPC Codes (2013, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>min_1st·min_2nd에 서로 다른 정규화 계수 2개(λ1,λ2)를 적용해 NMS보다 BP에 근접</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>정규화 계수를 Monte Carlo로 사전 추정해야 하고 HW 미설계·8bit 양자화 가정, 개선폭 약 0.1dB로 완만</td></tr><tr><td>추가확인</td><td>Prime ECC의 min1/min2 magnitude 양자화 테이블에 λ1/λ2 이중계수 적용 시 면적·성능 실측</td></tr></tbody></table>
+<blockquote><p>총평: min-sum의 min_1st/min_2nd에 별도 정규화 계수를 두는 저비용 개선으로, Prime ECC의 min-sum CN 연산에 바로 얹을 수 있어 이식성 상.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 log-domain min-sum 계열 LDPC 디코더로, CN 갱신 시 min_1st(<code>z2</code>)·min_2nd(<code>z1</code>)만 유지해 메모리를 줄인다.</li><li>문제: MS는 CN 메시지를 과대추정(overestimation)해 BP 대비 손실이 있고, 기존 NMS는 단일 정규화 계수 <code>λ</code>로 이를 보정하나 근사가 여전히 부족하다.</li><li>참값(BP) CN 갱신은 <code>L(rji)=Π aij · 2 tanh⁻¹(Π tanh(L(qij)/2))</code> (식1), MS 근사는 <code>Π aji' · min|L(qji)|</code> (식2)로, 항상 <code>|L2|&gt;|L1|</code>이라 λ&lt;1로 축소한다.</li><li>핵심 기법 <strong>IN-MS</strong>: min_1st와 min_2nd 각각에 다른 계수 <code>λ1, λ2</code>(둘 다 0&lt;·&lt;1)를 곱해, index=min일 때 <code>λ1·min_2nd</code>, 그 외 <code>λ2·min_1st</code> (식11).</li><li>계수 결정: <code>λ1 = E(|z4|)/E(|z2|)</code>, <code>λ2 = E(|z3|)/E(|z1|)</code> — 각 자리별 근사값 <code>z3,z4</code>의 평균 magnitude와 일치시키는 기준(식9,10).</li><li><code>E(|z1..z4|)</code>는 Monte Carlo 시뮬로 사전 추정한다.</li><li>VN 갱신 <code>L(qij)=LLRi+Σ_{j'≠j} L(rji)</code> (식12), 신뢰도 <code>L(Qi)=LLRi+Σ L(rji)</code> (식13), 최종 hard-decision.</li><li>HW 친화: 곱셈을 shift+add로 대체(예: 0.75a = a&gt;&gt;1 + a&gt;&gt;2), NMS와 IN-MS의 곱셈 복잡도가 동일해 <strong>디코딩 복잡도 증가 없음</strong>.</li><li>결과: (8000,4000,3,6) regular 및 2304bit rate-1/2 IEEE 802.16e QC-LDPC 고정소수점 시뮬에서 NMS 대비 약 0.1dB 개선(BER 10⁻⁶), 평균 iteration 수도 NMS보다 감소. 사용 계수 λ=0.8125(NMS), (λ1,λ2)=(0.84375,0.78125).</li><li>한계: HW 미설계(시뮬만), 계수 사전 추정 필요, 8bit 양자화 시 부동소수점 대비 약 0.1dB 손실, 개선폭이 완만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum(min1/min2) 정규화</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min1/min2 magnitude 계산에 λ1/λ2 이중계수 직접 적용</td></tr><tr><td>min_1st/min_2nd 별 정규화 계수 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>기존 magnitude 양자화 테이블에 계수 반영 가능</td></tr><tr><td>VN 갱신/신뢰도 계산</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>표준 VN 갱신과 동일, 변경 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — min-sum CN 연산의 min1/min2에 이중 정규화 계수를 두는 저비용 기법으로 Prime ECC 디코더에 곧바로 얹어 waterfall·iteration을 개선할 여지.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6607890",
+  "title": "An Improved Normalized Min-Sum Algorithm for LDPC Codes",
+  "year": 2013,
+  "venue": "IEEE (conference)",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "min_1st·min_2nd에 서로 다른 정규화 계수 2개(λ1,λ2)를 적용해 NMS보다 BP에 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "정규화 계수를 Monte Carlo로 사전 추정해야 하고 HW 미설계·8bit 양자화 가정, 개선폭 약 0.1dB로 완만",
+  "todo_check": "Prime ECC의 min1/min2 magnitude 양자화 테이블에 λ1/λ2 이중계수 적용 시 면적·성능 실측"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6607890---an-improved-normalized-min-sum-algorithm-for-ldpc-codes-2013-ieee-conference">ieee:6607890 - An Improved Normalized Min-Sum Algorithm for LDPC Codes (2013, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

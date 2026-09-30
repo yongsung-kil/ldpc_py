@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5117901</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5117901---node-operation-reduced-decoding-for-ldpc-codes-2009-ieee-vtc-spring-2009-계열-추정">ieee:5117901 - Node Operation Reduced Decoding For LDPC Codes (2009, IEEE (VTC-Spring 2009 계열 추정))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>적응형 threshold 기반 조기종료 기준과 dual-syndrome 노드 비활성화 기법을 결합해 표준 BP 대비 최대 80.06% 노드 연산을 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 합성/gatecount 없음(counters/comparators로 구현 가능하다는 서술뿐), IEEE 802.16e (2304,1152) 단일 코드·AWGN 채널만 검증</td></tr><tr><td>추가확인</td><td>Prime ECC의 Partial CRC 조기종료·적응형 LLR과 본 논문의 Nspc 기반 adaptive threshold·dual-syndrome deactivation의 중복도 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 표준 BP의 parity-check 단계만 활용한 저비용 조기종료+노드 비활성화 결합 기법으로 iteration/노드연산 절감 효과가 크지만, HW 검증이 없고 Prime ECC의 기존 조기종료·스케줄링 기법과 개념적으로 겹칠 가능성이 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.16e (2304, 1152) 코드(rate 1/2), AWGN 채널에서 표준 BP(belief propagation) 디코더를 대상으로 한다.</li><li>기존 조기종료 기법은 평균 iteration 수만 줄이고 iteration 내 모든 노드 연산은 그대로 수행한다는 한계, 그리고 고정 threshold는 SNR별 성능 열화를 유발한다는 문제를 다룬다.</li><li>채널/노이즈 가정은 표준 AWGN, 별도 특수 모델 없음.</li><li>핵심 기법 1단(적응형 threshold 조기종료): 매 iteration의 만족된 parity check 수 <code>Nspc = M - Σsi</code>를 측정, <code>Nspc</code>가 <code>Tmin</code> 미만이면 <code>T=M</code>(항상 계속), <code>Tmax</code> 초과면 <code>T=0</code>(중단 비활성화), 그 사이면 <code>T = M - (Nspc-Tmin)×d</code>로 threshold를 적응 조정.</li><li><code>Nspc</code>가 클수록(코드워드가 덜 손상됨) 낮은 threshold를 적용해 과도한 지속 디코딩을 방지 - 채널조건 의존성을 제거하는 것이 핵심 의도. (2304,1152) 코드에서 <code>Tmin=625, Tmax=675, d=6</code> 사용.</li><li>핵심 기법 2단(노드 비활성화, dual-syndrome): <code>u</code> iteration마다 전체 노드를 reliable로 재초기화(Step1), 최근 2개 iteration(<code>i</code>,<code>i-1</code>) 모두에서 unsatisfied인 parity check에 연결된 bit/check node를 unreliable로 표시(Step2, dual-syndrome), unreliable bit node에 연결된 check node는 reliable이어도 unreliable로 correction(Step3) - 이후 iteration에서 reliable 노드는 비활성화되어 연산 생략.</li><li>부수 구현 디테일: 두 기법 모두 표준 BP의 내재적 parity-check 단계만 활용해 counter/comparator만으로 구현 가능하다고 서술(HW 합성은 없음).</li><li>별도 학습 절차 없음 - <code>Tmin, Tmax, d, u</code> 등은 시뮬레이션으로 결정되는 고정 파라미터.</li><li>결과: 표준 BP 대비 최대 80.06% 노드 연산 절감(SNR 0~2.5dB), adaptive threshold 단독 대비 node deactivation 추가로 최대 37.85% 추가 절감; dual-syndrome 방식이 single-syndrome 대비 BER 열화 없이 유사한 연산 절감 달성.</li><li>한계: 실제 HW 합성/gatecount/throughput 결과 없음(시뮬레이션뿐), 단일 코드·단일 채널 모델만 검증, 저SNR에서 우수하나 고SNR에서는 타 기법([10])이 더 나음(향후 결합 필요성 언급).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>적응형 threshold 조기종료(Nspc 기반)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료 아이디어 자체는 Partial/Full CRC와 유사 목적이나, syndrome count 기반 adaptive threshold는 CRC 방식과 다른 별도 메커니즘</td></tr><tr><td>Dual-syndrome 노드 비활성화(선택적 연산 스킵)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>노드별 선택적 업데이트로 연산량 감소 - min-sum 이터레이션 루프에 조건부 스킵 로직 추가하는 형태로 참고 가능</td></tr><tr><td>iteration별 적응형 threshold 파라미터(Tmin/Tmax/d)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR threshold 테이블 구조와 유사한 파라미터 테이블 개념</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 조기종료·선택적 노드 업데이트라는 목표는 Prime ECC의 Partial CRC/적응형 LLR과 개념적으로 겹치나, syndrome-count 기반 adaptive threshold와 dual-syndrome deactivation은 저비용 대안으로 참고할 가치가 있음. HW 실증 부재가 리스크.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5117901",
+  "title": "Node Operation Reduced Decoding For LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 2304,
+  "soft_quant": "무관",
+  "key_contribution": "적응형 threshold 기반 조기종료 기준과 dual-syndrome 노드 비활성화 기법을 결합해 표준 BP 대비 최대 80.06% 노드 연산을 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 합성/gatecount 없음(counters/comparators로 구현 가능하다는 서술뿐), IEEE 802.16e (2304,1152) 단일 코드·AWGN 채널만 검증",
+  "todo_check": "Prime ECC의 Partial CRC 조기종료·적응형 LLR과 본 논문의 Nspc 기반 adaptive threshold·dual-syndrome deactivation의 중복도 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5117901---node-operation-reduced-decoding-for-ldpc-codes-2009-ieee-vtc-spring-2009-계열-추정">ieee:5117901 - Node Operation Reduced Decoding For LDPC Codes (2009, IEEE (VTC-Spring 2009 계열 추정))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

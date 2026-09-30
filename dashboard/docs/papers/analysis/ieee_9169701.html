@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9169701</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9169701---machine-learning-for-llr-estimation-in-flash-memory-with-ldpc-codes-2021-ieee-tcas-ii">ieee:9169701 - Machine Learning for LLR Estimation in Flash Memory With LDPC Codes (2021, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.94</td></tr><tr><td>부호length</td><td>34816</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>소프트리드 구간별 syndrome counter Cn,q를 입력으로 NN(회귀/분류)이 LLR을 추정 - Sharon[4]의 고비용 온라인 최적화를 오프라인 학습 저복잡도로 대체, irregular까지 확장</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LLR 추정만 개선(디코더 알고리즘 불변), NN 오프라인 학습이 전 동작조건(P/E·retention·온도) 커버 필요, HW 미설계</td></tr><tr><td>추가확인</td><td>구간별 NN 1개씩 vs 통합, Cn,q 특징의 QC-LDPC 적용 시 girth 독립성 가정 유효성, fixed-point 분류출력의 Prime ECC LLR 테이블 연동</td></tr></tbody></table>
+<blockquote><p>총평: NAND 소프트리드 LLR을 syndrome counter로부터 NN이 추정하는 채널/LLR 레이어 기법으로 Prime ECC의 채널·LLR 테이블에 접목 여지가 있으나, min-sum 디코더 코어는 그대로라 이식은 채널단 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 NAND flash(MLC/TLC), soft read로 셀당 <code>N-1</code>회 임계전압 판정해 <code>N=7</code> 양자화 구간 생성, 각 구간별 LLR 필요.</li><li>문제: 소수 read로 LLR을 정확히 얻기 어렵고, 기존 histogram/Gaussian 모델[3]은 read 다수 필요, Sharon[4]의 regular-LDPC 활용법은 온라인 최적화가 고비용.</li><li>핵심 모델: 구간 <code>n</code>에서 <code>q</code>개 unsatisfied check에 연결된 셀 수 <code>Cn,q</code>가 그 구간 error rate <code>pn</code>(=<code>En/Cn</code>) 정보를 담음(식 3~7, <code>|Ln|=log((1-pn)/pn)</code>).</li><li>핵심 기법: 온라인 최적화 대신 <code>Cn,q</code>(작은 2D 이미지)를 입력으로 NN이 LLR <code>Ln</code>을 출력하도록 오프라인 학습 - 실시간엔 순전파만.</li><li>핵심 식: <code>|Ln| = log((1-pn)/pn)</code> - LLR 추정 = 구간 error rate 추정과 등가.</li><li>확장: (a) 회귀 NN(2D conv, tanh, MSE) 또는 (b) 분류 NN(Lloyd-Max로 <code>Sn=8</code> 양자화, softmax) - 분류출력은 fixed-point LDPC 디코더에 직접 사용 가능.</li><li>구현 디테일: 구간 <code>n</code>마다 별도 NN, 은닉층 2개×16노드, <code>Lmax=10</code>(무오류 구간=무한신뢰).</li><li>학습: 0~4000 P/E cycle 범위 10^6 샘플, genie-aided LLR(구간별 오류 카운트)을 교사, 80/20 train/val, 10 epoch, 오프라인.</li><li>결과: regular <code>(dv=3,dc=51)</code> rate 16/17 (32768 info+2048 parity)와 irregular DVB-S2 <code>(64800,58320)</code> rate 9/10 모두에서 SP디코더(50 iter) CER이 fixed/histogram 대비 우수, genie-aided 대비 손실 미미.</li><li>한계: HW 미설계·시뮬만, 디코더 알고리즘 자체는 불변(LLR 입력 품질만 개선), 학습이 전 동작조건을 커버해야 함.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>soft-read LLR 추정/양자화</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>LLR/threshold 생성부에 NN 추정기 대체 접목 여지 - 접점 명확</td></tr><tr><td>구간별 LLR 테이블 산출</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>분류 NN의 양자화 LLR을 iteration/구간 LLR 테이블로 매핑 가능</td></tr><tr><td>syndrome counter Cn,q 추출</td><td>decoder.cpp <code>C2V_Cal()</code>(check 충족 판정)</td><td>unsatisfied check 카운트는 디코더 신드롬에서 획득 - 특징 추출 접점</td></tr><tr><td>NN 추정기 자체</td><td>대응 없음</td><td>Prime ECC에 NN 인프라 없음, 신규 도입 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - NAND 직접 타깃이며 채널/LLR 테이블(<code>channel.cpp</code>, <code>PARAM_LLR</code>)에 접목 가능하나, min-sum 디코더 코어는 불변이고 NN 추정기·학습 파이프라인을 신규 도입해야 해 이식은 채널단으로 한정됨.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9169701",
+  "title": "Machine Learning for LLR Estimation in Flash Memory With LDPC Codes",
+  "year": 2021,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.94,
+  "code_length": "34816 (regular 16/17); DVB-S2 irregular 64800/58320 rate 9/10",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "소프트리드 구간별 syndrome counter Cn,q를 입력으로 NN(회귀/분류)이 LLR을 추정 - Sharon[4]의 고비용 온라인 최적화를 오프라인 학습 저복잡도로 대체, irregular까지 확장",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "LLR 추정만 개선(디코더 알고리즘 불변), NN 오프라인 학습이 전 동작조건(P/E·retention·온도) 커버 필요, HW 미설계",
+  "todo_check": "구간별 NN 1개씩 vs 통합, Cn,q 특징의 QC-LDPC 적용 시 girth 독립성 가정 유효성, fixed-point 분류출력의 Prime ECC LLR 테이블 연동"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9169701---machine-learning-for-llr-estimation-in-flash-memory-with-ldpc-codes-2021-ieee-tcas-ii">ieee:9169701 - Machine Learning for LLR Estimation in Flash Memory With LDPC Codes (2021, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

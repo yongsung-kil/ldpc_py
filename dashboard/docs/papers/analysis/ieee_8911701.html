@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8911701</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8911701---information-preserving-quantization-and-decoding-for-satellite-aided-5g-communications-2019-ieee-conference">ieee:8911701 - Information Preserving Quantization and Decoding for Satellite-Aided 5G Communications (2019, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2640</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Information Bottleneck(FAVIB) 기반 3bit 양자화 + LUT-MP 디코더로 float BP에 근접(0.3dB)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>위성/5G forward-link 특화(compress-and-forward relay), NAND 채널·에러모델과 무관하고 HW 미설계</td></tr><tr><td>추가확인</td><td>LUT-MP 디코더(discrete DE) 자체는 binary LDPC 이식가능하나 이미 적응형 LLR 테이블 보유로 신규성 낮음</td></tr></tbody></table>
+<blockquote><p>총평: 위성 5G forward-link용 IB 양자화+LUT-MP 디코더로 저bit MP 디코더 아이디어는 일반적이나 NAND 시나리오와 무관하고 이미 보유 기법(적응형 LLR 테이블)과 중복돼 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템: 비지상망(NTN) 위성 5G 업링크. UE→relay node(RN)→위성 2-hop. RN이 access link 신호를 저bit 양자화해 rate-limited forward link(FL)로 전달. 부호는 <code>(dv=3, dc=6)</code> regular LDPC, <code>N=2640</code>, <code>R=0.5</code>.</li><li>문제: FL rate 제한으로 저bit 양자화 필요하고, FL이 error-prone(BSC, bit-flip <code>Pe</code>)일 때 성능 저하를 막아야 함. 디코더 복잡도(iterative MP)도 병목.</li><li>모델: access channel과 FL을 각각 DMC(<code>py|x</code>, <code>pr|z</code>)로 모델링, access는 fine-quantized AWGN. FL은 <code>log2|Z|</code> bit tuple을 BSC로 전송.</li><li>핵심 기법 1단: Information Bottleneck(IB) 기반 스칼라 양자화. 목적함수는 상호정보 <code>I(x;z)</code> 최대화 s.t. <code>|Z|≤Nz</code>, <code>β→∞</code>. 결정론적 양자화 시 동적계획법으로 최적해.</li><li>핵심 식: IB functional로 압축률 <code>I(y;z)</code>와 관련정보 <code>I(x;z)</code> 간 트레이드오프를 <code>β</code>로 조절.</li><li>핵심 기법 2단(FAVIB): Forward-Aware Vector IB로 FL 통계 <code>pr|z</code>까지 포함해 e2e 상호정보 <code>I(x;r)</code> 최대화. 미사용 label로 인한 내재적 error protection 효과(COVQ와 등가).</li><li>구현 디테일: 위성 디코더는 e2e 통계 <code>pr|x=Σ pz|x·pr|z</code>를 알고 있다고 가정. FP-MP는 discrete LLR <code>L(r)</code> 계산, LUT-MP는 r을 직접 처리(LLR 계산 생략).</li><li>학습/최적화: discrete Density Evolution으로 반복별 VN/CN/final-decision 3분해 LUT 생성. 부호 앙상블 threshold <code>σn</code>에 맞춰 최적화, 모든 SNR에 동일 LUT 사용.</li><li>결과: 3bit FAVIB가 UQ/Lloyd-Max/IB 대비 약 1.2dB 이득(FL 에러 시). 3bit FAVIB+3bit LUT-MP는 무양자화 FP-MP 대비 0.4dB 손실, 64bit double FP-MP 대비 약 0.3dB 손실.</li><li>한계: 시뮬레이션만(HW 미설계), 위성 relay/forward-link 특화 채널·에러모델, throughput/gatecount 등 HW 지표 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LUT-MP 디코더 (discrete DE, VN/CN LUT)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>LUT 기반 MP는 min-sum과 다른 계열, 이식 시 CN/VN 연산 전면 교체 필요</td></tr><tr><td>IB/FAVIB 채널 양자화 (soft-info)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>양자화 threshold 설계 관점 접점 있으나 위성 FL 채널모델 전제</td></tr><tr><td>반복별 LUT 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>Get_VNU_Table_Idx()</code></td><td>iteration별 테이블은 이미 적응형 LLR로 보유, 중복</td></tr><tr><td>HW arch (throughput)</td><td>대응 없음</td><td>본 논문은 HW 미설계, 588Gb/s 인용만</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 저bit MP 디코더 발상은 유효하나 위성/5G forward-link 채널 특화이고 Prime ECC가 이미 적응형 LLR 테이블을 보유해 신규 이식 가치가 낮다.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:8911701",
+  "title": "Information Preserving Quantization and Decoding for Satellite-Aided 5G Communications",
+  "year": 2019,
+  "venue": "IEEE (conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2640",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Information Bottleneck(FAVIB) 기반 3bit 양자화 + LUT-MP 디코더로 float BP에 근접(0.3dB)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "위성/5G forward-link 특화(compress-and-forward relay), NAND 채널·에러모델과 무관하고 HW 미설계",
+  "todo_check": "LUT-MP 디코더(discrete DE) 자체는 binary LDPC 이식가능하나 이미 적응형 LLR 테이블 보유로 신규성 낮음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8911701---information-preserving-quantization-and-decoding-for-satellite-aided-5g-communications-2019-ieee-conference">ieee:8911701 - Information Preserving Quantization and Decoding for Satellite-Aided 5G Communications (2019, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

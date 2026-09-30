@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6165020</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6165020---a-single-routing-layered-ldpc-decoder-for-10gbase-t-ethernet-in-130nm-cmos-2012-ieee-a-sscc">ieee:6165020 - A Single-Routing Layered LDPC Decoder for 10Gbase-T Ethernet in 130nm CMOS (2012, IEEE A-SSCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>single routing network(SRN)로 배선복잡도·전력 절감 + pipelined layered/multi-block + digit-serial + layered용 조기종료 회로</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>122435 equiv-gates(SRN)@130nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>9.48Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.3an (2048,1723) 고정부호·NMS만, error-floor·NAND read 미검증, 4페이지 컨퍼런스라 세부 부족</td></tr><tr><td>추가확인</td><td>SRN 2단 순열구조가 Prime ECC z=32/N_b=129 QC 구조에 매핑되는지, digit-serial이 min-sum 파이프라인과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 10Gbase-T용 layered min-sum 디코더 칩. NMS·layered·조기종료는 Prime ECC 기보유지만, 배선복잡도를 SRN으로 줄이는 HW arch 아이디어는 라우팅 병목 관점에서 참고가치 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.3an 10Gbase-T의 (2048,1723) LDPC, <code>H</code>는 384×2048 sparse(row-weight 32, col-weight 6, 12288 edges), rate≈0.84 고rate QC형 부호.</li><li>문제: 고throughput 병렬 LDPC 디코더는 랜덤 배선복잡도·전력·pipeline stall이 병목.</li><li>복호: BP를 normalized min-sum(NMS)으로 근사, CNU는 first two-min+sign+index 형태로 저장([12]식), 정규화계수 0.5(시뮬 결정).</li><li>핵심1 SRN(single routing network): CN-to-BN/BN-to-CN 양방향 랜덤 배선을 posterior 메시지 라우팅 기준 하나로 병합 — 2048개 6-to-1 MUX 2벌 → 2048개 7-to-1 MUX 1벌.</li><li>효과: 로직 41.1%↓, 글로벌 랜덤 배선 41.67%↓; SRN 2단(1단 고정 interconnect로 64×32 순열, 2단 7-to-1 MUX)으로 글로벌 배선을 1단에만 국한.</li><li>핵심2: pipelined layered scheduling + multi-block(7블록) 병렬처리로 layered의 pipeline stall 제거(SISO 5-stage: sub1/update3/add1).</li><li>핵심3 digit-serial: posterior 6-bit를 3-bit MSB→3-bit LSB로 q/2 직렬 처리 → SISO 32개로 축소, layer당 2 cycle, 1 iteration당 12 cycle.</li><li>조기종료: layered decoding에 적합한 early-termination 회로 설계(세부 미기술).</li><li>결과: 130nm 1P8M, core 18.4mm²(배선 14%↓), 9.48Gbps@278MHz/5iter, 774mW@1.2V/80MHz, 56.7pJ/bit/iter; 6-bit posterior/5-bit extrinsic 양자화, 총 메모리 206976-b.</li><li>한계: 특정 802.3an 고정부호, error-floor·NAND read 조건 미검증, 4페이지 컨퍼런스라 정량 세부 부족.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS CNU(2-min+sign+index)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>낮음 - min-sum·2-min 구조 이미 보유(중복)</td></tr><tr><td>layered scheduling / SISO 업데이트</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>낮음 - Dual-Update 등 스케줄 옵션 기보유</td></tr><tr><td>SRN 라우팅 병합 / digit-serial</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>중 - 배선축소는 GT(edge 선택)와 결이 유사, QC 순열구조 매핑 시 참고</td></tr><tr><td>posterior/extrinsic 6-bit 양자화</td><td>ecc_data.h <code>PARAM_LLR</code>, channel.cpp <code>Set_LLR_Th()</code></td><td>낮음 - soft 양자화는 이미 보유</td></tr><tr><td>layered용 early-termination</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>낮음 - CRC 조기종료 기보유(방식 상이)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - NMS·layered·조기종료·soft 양자화는 Prime ECC가 이미 보유해 중복이나, 랜덤 배선을 SRN 2단 순열로 병합해 로직·글로벌 배선을 40%대 줄이는 HW arch 아이디어는 라우팅 병목(GT) 관점에서 참고가치가 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6165020",
+  "title": "A Single-Routing Layered LDPC Decoder for 10Gbase-T Ethernet in 130nm CMOS",
+  "year": 2012,
+  "venue": "IEEE A-SSCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "single routing network(SRN)로 배선복잡도·전력 절감 + pipelined layered/multi-block + digit-serial + layered용 조기종료 회로",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "122435 equiv-gates(SRN)@130nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 9.48,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "802.3an (2048,1723) 고정부호·NMS만, error-floor·NAND read 미검증, 4페이지 컨퍼런스라 세부 부족",
+  "todo_check": "SRN 2단 순열구조가 Prime ECC z=32/N_b=129 QC 구조에 매핑되는지, digit-serial이 min-sum 파이프라인과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6165020---a-single-routing-layered-ldpc-decoder-for-10gbase-t-ethernet-in-130nm-cmos-2012-ieee-a-sscc">ieee:6165020 - A Single-Routing Layered LDPC Decoder for 10Gbase-T Ethernet in 130nm CMOS (2012, IEEE A-SSCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

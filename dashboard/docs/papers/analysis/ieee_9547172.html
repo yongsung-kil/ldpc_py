@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9547172</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9547172---piecewise-linear-interpolation-based-log-bp-algorithm-for-5g-ldpc-codes-2021-ieee-bmsb">ieee:9547172 - Piecewise Linear Interpolation based LOG-BP algorithm for 5G LDPC codes (2021, IEEE BMSB)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.333~0.8</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>BP horizontal step의 비선형함수 <code>F(x)=-ln(tanh(x/2))</code>를 구간 선형근사(PLI)로 대체하고 MMSE 기준 segment point 선택으로 HW친화 near-BP 복호 구현</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>5G-NR·AWGN·QPSK 시뮬 한정, 복잡도는 연산수 상대비교(add/mul/div unit)뿐 gate count/공정·throughput 실측 없고 HW 미설계</td></tr><tr><td>추가확인</td><td>segment table(D=3, 6구간 a/b) 방식이 우리 min-sum 대비 정확도·면적 이득이 실제 있는지, magnitude 양자화 테이블과 통합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: BP CN 연산의 <code>-ln(tanh)</code> 함수를 구간선형+MMSE로 근사한 HW친화 near-BP 알고리즘. NMS보다 정확하고 우리 min-sum CN 대안으로 간접 참고가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G-NR raptor-like LDPC(BG1 46×68, BG2 42×52), QPSK/AWGN, rate 5/15~12/15, sub-matrix size 72·384, binary LDPC의 복호 알고리즘.</li><li>문제: BP는 CN(horizontal) 연산의 <code>tanh</code>/<code>tanh^-1</code> 지수연산으로 복잡도 과다, MS는 over-estimation으로 coding gain 손실, NMS는 고정 factor 보정이나 여전히 성능 결함.</li><li>모델: BP CN 갱신 <code>E=2 tanh^-1(∏ tanh(T/2))</code>(식3)를 log-domain으로 전개.</li><li>기법1(LOG-BP): 부호/절댓값 분리 후 <code>F(x)=-ln(tanh(x/2))</code> 정의(식13), 이 함수는 <code>(0,∞)</code>에서 단조감소·자기역함수(<code>F^-1=F</code>, 식15), 고정점 <code>x_f=0.8813</code>(식17). CN 갱신을 <code>E=sgn·F(∑ F(|T|))</code>로 치환(식18).</li><li>핵심식: <code>F^-1=F</code> 대칭성 덕에 horizontal step을 <code>F</code>의 합만으로 표현 가능 → 지수/로그 연산을 함수 근사 1회로 축소.</li><li>기법2(PLI): <code>F(x)</code>를 <code>2D+2</code> 구간의 선형함수 <code>Fhat(x)=a_j·x+b_j</code>로 근사(식26), 대칭성/고정점/overflow 보호(<code>Kmax=F(xs)</code>, <code>Kmin=0</code>) 3속성 유지.</li><li>부수트릭: overflow 보호로 <code>x≤xs</code>는 <code>Kmax</code>, <code>x&gt;xl</code>은 <code>Kmin=0</code>으로 clamp — 큰 수 정규화·작은 수 zeroing이 성능손실 미미(참고 [18]).</li><li>최적화(MMSE): segment point를 <code>min E[(Fhat-F)^2]</code>(식31~32)로 선택, greedy로 국소최적 점 추가(Algorithm 1), 0 근처 밀집·극단 slope 회피 위해 2단계로 점 생성.</li><li>결과: D=3(6구간, 표II slope/intercept 제공)에서 BP와 BLER 거의 일치(gap&lt;0.05dB), NMS 대비 rate 5/15에서 +0.3dB·rate 12/15에서 +0.07dB(size 384), MMSE 선택이 random 대비 0.05~0.1dB 이득. 연산자원은 BP의 20% 미만(표I: PLI-LOG-BP add=K, comp=K vs BP add=3K).</li><li>한계: 순수 알고리즘·시뮬(AWGN/QPSK), gate count/공정·throughput 실측 없음, HW 미설계(연산 unit 상대비교만).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN horizontal step 근사(<code>F(x)</code> PLI 대체)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>우리 min-sum CN magnitude 연산을 대체할 수 있는 대안 CN 근사, 교체 지점 명확</td></tr><tr><td>segment 선형근사 LUT(a/b, Kmax/Kmin)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>구간 LUT 저장·참조 방식이 우리 magnitude 양자화 테이블과 유사, 통합 검토 대상</td></tr><tr><td>부호 구조(raptor-like BG1/BG2)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호구조는 우리 고정 QC-LDPC와 상이, 알고리즘만 이식</td></tr><tr><td>MMSE 기반 segment point 선택</td><td>대응 없음</td><td>오프라인 설계 도구(테이블 산출), 런타임 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CN 연산을 min-sum이 아닌 구간선형 <code>-ln(tanh)</code> 근사로 대체하면 NMS보다 정확하면서 HW친화적일 수 있어 우리 min-sum CN 대안으로 간접 재사용 여지가 있으나, 5G-NR·AWGN 시뮬 한정이고 HW 미설계이며 우리 magnitude 양자화 방식 대비 실이득(면적/정확도) 검증이 필요하다.</p>
+<pre><code>{
+  "id": "ieee:9547172",
+  "title": "Piecewise Linear Interpolation based LOG-BP algorithm for 5G LDPC codes",
+  "year": 2021,
+  "venue": "IEEE BMSB",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.333~0.8",
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "BP horizontal step의 비선형함수 F(x)=-ln(tanh(x/2))를 구간 선형근사(PLI)로 대체하고 MMSE 기준 segment point 선택으로 HW친화 near-BP 복호를 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "5G-NR·AWGN·QPSK 시뮬 한정, 복잡도는 연산수 상대비교뿐 gate count/공정·throughput 실측 없고 HW 미설계",
+  "todo_check": "segment table(D=3, 6구간 a/b) 방식이 우리 min-sum 대비 정확도·면적 이득이 실제 있는지, magnitude 양자화 테이블과 통합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9547172---piecewise-linear-interpolation-based-log-bp-algorithm-for-5g-ldpc-codes-2021-ieee-bmsb">ieee:9547172 - Piecewise Linear Interpolation based LOG-BP algorithm for 5G LDPC codes (2021, IEEE BMSB)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

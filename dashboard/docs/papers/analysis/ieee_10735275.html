@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10735275</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10735275---erasure-decoding-for-quantum-ldpc-codes-via-belief-propagation-with-guided-decimation-2024-allerton">ieee:10735275 - Erasure Decoding for Quantum LDPC Codes via Belief Propagation with Guided Decimation (2024, Allerton)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1600~2025</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Quantum LDPC 부호의 erasure channel 디코딩에 BPGD(BP+guided decimation)를 적용하고 LLR 조정·damping으로 성능을 VH 디코더 수준까지 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>quantum stabilizer code(CSS/HGP/lifted-product) 전용이며 erasure channel 및 non-binary 문맥이라 NAND binary LDPC와 부호모델 자체가 다름</td></tr><tr><td>추가확인</td><td>damping/LLR 스케일링(copt, γ) 아이디어가 classical binary LDPC의 non-convergence 개선에도 유사하게 쓰일 수 있는지 별도 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: Quantum erasure channel 전용 BPGD 디코딩 연구로 NAND binary LDPC와는 채널·부호모델이 근본적으로 달라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>Quantum CSS/stabilizer 코드(HGP, lifted-product)를 대상으로 X-/Z-type 오류를 classical LDPC decoding으로 분리해 처리.</li><li>Quantum erasure channel에서 각 큐비트가 확률 <code>p</code>로 erasure되며, decoder는 erasure 위치를 알고 있으나 오류값은 모름.</li><li>기존 BP는 stabilizer 코드의 commutativity 제약으로 인한 short cycle 때문에 수렴이 어려움 (stopping set 문제).</li><li>핵심 기법: BPGD(Belief Propagation with Guided Decimation) - BP를 T iteration 실행 후 미수렴 시 가장 신뢰도(<code>|LLR|</code>) 높은 변수노드를 decimate(hard-fix)하며 반복.</li><li>Erasure channel에 맞춘 초기화: erased 비트는 <code>llrmin≈0</code>, non-erased 비트는 <code>llrmax=25</code>로 초기 LLR 설정 (Algorithm 1).</li><li>확장 1: 초기 LLR 스케일링 <code>llrmax' = copt*llrmax</code> (copt&lt;1)로 non-erased 비트의 과신을 낮춰 수렴률 개선.</li><li>확장 2: variable-to-check 메시지에 damping factor <code>γ</code>를 적용한 가중평균(<code>(1-γ)*old + γ*new</code>)으로 진동 억제 및 수렴 개선.</li><li>최적 파라미터(copt, γ)는 erasure rate 구간별 grid search로 실험적으로 결정 (표 1~3).</li><li>결과: [[1600,64]], [[2025,81]] HGP 코드 및 [[882,24]] B1 lifted-product 코드에서 BPGD가 peeling/pruned-peeling을 능가, 조정된 BPGD는 VH 디코더에 근접(ML 성능 근접).</li><li>한계: 순수 시뮬레이션(HW 미설계), quantum erasure 채널·CSS stabilizer 구조 전용이라 classical NAND binary LDPC 채널 모델과 직접 대응 어려움.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| BPGD 디코딩 전체 (quantum erasure) | 대응 없음 | quantum stabilizer 코드 전용, binary QC-LDPC와 부호모델 불일치 |
+| damping / LLR 스케일링(copt, γ) | `decoder.cpp` `LDPC_Decoder()` (개념적 참고) | non-convergence 완화 아이디어는 classical min-sum에도 원용 가능하나 본문은 quantum 특화 |
+| erasure 채널 초기 LLR 설정 | `channel.cpp` `Set_LLR_Th()` (개념적 참고) | NAND에는 erasure channel 자체가 없어 직접 대응 없음 |</code></pre>
+<blockquote><p>적용 가치: 낮음 — quantum LDPC의 erasure channel 전용 디코딩 기법으로 NAND binary QC-LDPC의 부호모델·채널모델과 근본적으로 달라 직접 이식 불가. damping/LLR 조정이라는 아이디어 수준의 참고 가치만 존재.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10735275",
+  "title": "Erasure Decoding for Quantum LDPC Codes via Belief Propagation with Guided Decimation",
+  "year": 2024,
+  "venue": "Allerton",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1600~2025",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Quantum LDPC 부호의 erasure channel 디코딩에 BPGD를 적용하고 LLR 조정·damping으로 성능을 VH 디코더 수준까지 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "quantum stabilizer code(CSS/HGP/lifted-product) 전용이며 erasure channel 및 non-binary 문맥이라 NAND binary LDPC와 부호모델 자체가 다름",
+  "todo_check": "damping/LLR 스케일링(copt, γ) 아이디어가 classical binary LDPC의 non-convergence 개선에도 유사하게 쓰일 수 있는지 별도 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10735275---erasure-decoding-for-quantum-ldpc-codes-via-belief-propagation-with-guided-decimation-2024-allerton">ieee:10735275 - Erasure Decoding for Quantum LDPC Codes via Belief Propagation with Guided Decimation (2024, Allerton)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

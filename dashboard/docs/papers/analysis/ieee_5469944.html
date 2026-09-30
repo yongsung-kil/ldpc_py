@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5469944</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5469944---low-error-rate-ldpc-decoders-2009-asilomar-2009">ieee:5469944 - Low Error Rate LDPC Decoders (2009, Asilomar 2009)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.84~0.90</td></tr><tr><td>부호length</td><td>2048~2209</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>FPGA(BEE2) HW emulation으로 error-floor의 error-inducing noise/state를 포착·분석, absorbing set 기반 error 분류 후 two-domain 양자화·min-sum·post-processing으로 error floor를 수 자릿수 낮춤</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.48Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>post-processing 상세 알고리즘/파라미터는 [17] 참조 필요(본문은 개념 수준), 대상 부호가 RS-LDPC/array-based(NAND QC-LDPC와 구조 상이), FPGA emulation 중심이라 C++ bit-exact 시뮬엔 방법론만 이식</td></tr><tr><td>추가확인</td><td>[17]의 정확한 perturbation 규칙·파라미터, Prime ECC 부호의 dominant absorbing set 스펙트럼, two-domain 양자화가 2~3bit soft에도 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: absorbing set 기반 error-floor 분석과 satisfied/unsatisfied check 신뢰도 섭동 post-processing으로 binary LDPC min-sum 디코더의 error floor를 낮추는, NAND ECC 관심사(error-floor)에 직결되는 고가치 방법론이나 정확한 알고리즘은 참고문헌에 있어 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 (6,32)-regular (2048,1723) RS-LDPC 및 (5,47)-regular (2209,1978) array-based LDPC, binary-input AWGN, sum-product/min-sum message passing을 layered 구조 4/6/8-bit wordlength로 FPGA(Xilinx Virtex-II Pro, BEE2) 구현.</li><li>문제: 실용 LDPC 디코더는 낮은 BER에서 error floor가 존재하고, SW 시뮬은 속도 부족으로 error floor 영역을 관측·분석하기 어려움.</li><li>채널 모델: AWGN, all-zero codeword 가정, BPSK({0,1}→{1,-1}); prior LLR 통계를 수집.</li><li>핵심 기법(HW emulation): FPGA로 SW 대비 수 자릿수 빠르게 복호(480 Mb/s@100MHz)해 실패 시 noise realization과 iteration별 soft-decision을 block RAM에 기록, Matlab reference로 재현·분석.</li><li>error 분류: implementation-induced oscillation error(양자화 동역학) vs code-intrinsic absorbing error(local minimum) — 후자가 error floor 지배.</li><li>absorbing set 정의: <code>(a,b)</code> set은 크기 a의 VN 부분집합 D로 odd-degree 이웃 check가 b개, 각 원소가 O(D)보다 F\O(D)에 더 많이 연결; 저weight·고 a/b(안정) set이 error floor 지배.</li><li>개선 트릭 1: two-domain 양자화(HW 증가 없음)로 dominant absorbing set을 (4,8)/(5,9)→(8,6)/(8,8) 등 고weight로 이동시켜 floor 완화; min-sum 근사도 saturation 회피로 floor 개선.</li><li>개선 트릭 2(post-processing): absorbing set 비트는 satisfied check 2개(오검출)+unsatisfied 1개에 연결 — satisfied check 메시지 신뢰도↓, unsatisfied↑로 작은 섭동을 주어 비트 복구, prior LLR 분포(중심이 0 약간 아래)가 소량 섭동으로 충분함을 확인.</li><li>결과: (2048,1723)에서 4-bit modified min-sum baseline의 error floor가 post-processing(10 iter) 후 제거, 실패당 평균 error weight가 고SNR에서 8로 수렴((8,8) absorbing set 지배 확인), 참고 chip[18]은 post-processing 포함 47 Gb/s near-ML.</li><li>한계: post-processing 상세 규칙/파라미터는 [17], 정량 gate/ASIC 없음(FPGA resource만), 대상 부호가 NAND QC-LDPC와 다른 통신·스토리지용 구조.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| post-processing(satisfied/unsatisfied check 메시지 섭동) | decoder.cpp LDPC_Decoder() | 이터레이션 루프 뒤 error-floor 대책 후처리로 삽입 가능, min-sum 메시지 신뢰도 조정 |
+| CN 메시지 신뢰도 조정(min-sum) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal() | satisfied/unsatisfied check magnitude 섭동을 CN 연산에서 구현 |
+| two-domain 양자화 개선 | channel.cpp Set_LLR_Th(), ecc_data.h PARAM_LLR | 양자화/LLR 테이블 재설계로 absorbing set 이동(단 Prime ECC는 2~3bit) |
+| absorbing set/수렴실패 error 포착·분석 | corner.cpp | 수렴실패 추적과 개념적 대응(error trace/absorbing set 통계) |
+| FPGA HW emulation 플랫폼(BEE2) | 대응 없음 | Prime ECC는 C++ bit-exact 시뮬로 FPGA emulation 층과 상이 |</code></pre>
+<p>적용 가치: 높음 — absorbing set 기반 error-floor 분석과 check 메시지 섭동 post-processing은 Prime ECC min-sum 디코더의 error floor를 낮추는 데 직접 관계된 NAND ECC 핵심 관심사이나, 정확한 섭동 규칙·파라미터는 [17]에서 보완 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5469944",
+  "title": "Low Error Rate LDPC Decoders",
+  "year": 2009,
+  "venue": "Asilomar 2009",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "FPGA(BEE2) HW emulation으로 error-floor의 error-inducing noise/state를 포착·분석, absorbing set 기반 error 분류 후 two-domain 양자화·min-sum·post-processing으로 error floor를 수 자릿수 낮춤",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.48,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "post-processing 상세 알고리즘/파라미터는 [17] 참조 필요(본문은 개념 수준), 대상 부호가 RS-LDPC/array-based(NAND QC-LDPC와 구조 상이), FPGA emulation 중심이라 C++ bit-exact 시뮬엔 방법론만 이식",
+  "todo_check": "[17]의 정확한 perturbation 규칙·파라미터, Prime ECC 부호의 dominant absorbing set 스펙트럼, two-domain 양자화가 2~3bit soft에도 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5469944---low-error-rate-ldpc-decoders-2009-asilomar-2009">ieee:5469944 - Low Error Rate LDPC Decoders (2009, Asilomar 2009)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

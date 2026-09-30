@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4601964</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4601964---maximizing-the-throughput-area-efficiency-of-fully-parallel-low-density-parity-check-decoding-with-c-slow-retiming-and-asynchronous-deep-pipelining-2007-ieee">ieee:4601964 - Maximizing the Throughput-Area Efficiency of Fully-Parallel Low-Density Parity-Check Decoding with C-Slow Retiming and Asynchronous Deep Pipelining (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>fully-parallel LDPC 디코더의 피드백 루프(iterative decoding)에 C-slow retiming을 적용하고 이를 비동기(asynchronous) micropipeline으로 변환해, 기존 동기식 구현 대비 throughput 4배를 면적 오버헤드 80%만으로 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상(pre-layout area 비교, 공정 0.18um)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상(2Gbps 대비 4배, 정확한 Gbps 수치는 그림에만 제시)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>디코딩 알고리즘 자체(Log-BP, tanh 기반)는 표준이며 기여는 순수 HW 파이프라이닝/타이밍 기법(C-slow retiming + 비동기 micropipeline)에 국한, fully-parallel(비 row-parallel) 아키텍처 전제라 Prime ECC의 z=32 반병렬 구조와는 전제가 다름</td></tr><tr><td>추가확인</td><td>비동기(clockless) 설계가 Prime ECC의 동기식 bit-exact 클록 레벨 시뮬레이션 모델과 근본적으로 다른 설계 패러다임이라 통합 난이도 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: 알고리즘은 표준 BP이나, iterative 피드백 루프에 C-slow retiming과 비동기 micropipeline을 결합해 throughput-area 효율을 크게 높인 HW 파이프라이닝 기법으로, 동기식 파이프라인 depth 최적화 아이디어(§C-slow retiming)는 참고 가치가 있으나 비동기 설계 자체는 Prime ECC 아키텍처와 이질적이다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 1024-bit rate-1/2 LDPC(1024 variable node, 512 check node) fully-parallel 디코더의 throughput-area 효율 극대화.</li><li>문제: fully-parallel 구현은 최대 throughput을 내지만 실리콘 면적/배선혼잡/클록 스큐 문제로 code length가 커질수록 효율이 급격히 저하됨.</li><li>핵심 가정: iterative decoding은 각 입력 메시지가 서로 독립적으로 디코딩되는 태스크이며 반복횟수(iteration count <code>M</code>)가 고정이라는 특성을 이용하면 피드백 루프도 파이프라이닝 가능.</li><li>핵심 기법 1단: <code>C-slow retiming</code> - 루프/IO 레지스터를 <code>C</code>개 연속 레지스터로 교체해 서로 다른 독립 데이터 스트림 <code>C</code>개를 인터리빙 처리, 클록 주기를 <code>T' = Tlogic + TSU + TCKQ + Tskew</code>로 단축 (<code>Tlogic</code>은 원 combinational delay/pipeline depth).</li><li>스케줄링 식: <code>Tload=(C-1)×M</code>, <code>T1st=Tload+M</code>, throughput은 <code>M/C</code> iteration당 1 메시지(비파이프라인 대비 <code>C</code>배 향상 잠재력); <code>M</code>이 <code>C</code>로 나누어떨어지면 <code>M/C</code> iteration마다 새 입력 스케줄.</li><li>핵심 기법 2단: 위 동기식 C-slow 파이프라인을 <code>asynchronous micropipeline</code>(Sutherland 방식, request/acknowledgement handshake + C-element)으로 변환해 글로벌 클록 없이 지역적 데이터 전송, PVT 변이에 강건.</li><li>구현 디테일: VNU-CNU 경로에 input MUX/DEMUX + counter로 C-slow 스케줄에 따른 select 신호 생성, message extension register로 <code>C</code>개 독립 스트림의 입력 메시지 보관.</li><li>최적화 절차: Synopsys Design Compiler <code>pipeline_retime</code> 커맨드로 다양한 pipeline depth에 대해 합성, absolute cost function(<code>area×clock_period</code>) 및 relative cost function(면적 오버헤드 대비 지연 개선)으로 최적 depth 탐색(최소 비용은 초기 클록주기 8ns, depth 6).</li><li>결과: 기존 발표된 동기식 구현(2Gbps, 클록주기 8ns) 대비 클록주기 2ns에서 throughput 4배, 면적 오버헤드는 약 80%(비동기 오버헤드는 CNU/VNU 대비 약 3.8%로 무시 가능).</li><li>한계: 정정성능(BER/error-floor) 개선 없음(순수 타이밍/아키텍처 논문), 비동기 설계 검증은 pre-layout 시뮬레이션 수준이며 실측/ASIC 합성 후 공정변이 실증은 제한적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>C-slow retiming(피드백 루프 파이프라이닝)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>파이프라이닝 개념은 Prime ECC의 6-stage pipeline과 유사 목적이나, 완전병렬 fully-parallel 아키텍처 전제로 z=32 반병렬 구조에는 직접 적용 어려움</td></tr><tr><td>비동기 micropipeline(clockless, handshake)</td><td>대응 없음</td><td>Prime ECC는 클록 레벨 bit-exact 동기식 시뮬레이터로 비동기 설계 패러다임 자체가 대응 없음</td></tr><tr><td>VNU/CNU 표준 Log-BP(tanh 기반)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 이미 Min-Sum 채택, full-BP/tanh는 구식 중복 기여</td></tr><tr><td>pipeline depth 최적화(cost function 기반)</td><td><code>decoder.cpp</code> pipeline(col_M1/Z/P1~P4)</td><td>파이프라인 단수 최적화 방법론은 Prime ECC HW 모델에 참고 가능하나 fully-parallel 전용</td></tr></tbody></table>
+<p>적용 가치: 중간 — 알고리즘 개선은 없지만 iterative 피드백 루프의 파이프라이닝(C-slow retiming) 아이디어는 Prime ECC의 pipeline 구조 최적화에 참고할 여지가 있음. 다만 비동기(clockless) 설계와 fully-parallel 아키텍처 전제는 Prime ECC의 동기식 반병렬(z=32) bit-exact 모델과 이질적이라 직접 이식은 어려움.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4601964",
+  "title": "Maximizing the Throughput-Area Efficiency of Fully-Parallel Low-Density Parity-Check Decoding with C-Slow Retiming and Asynchronous Deep Pipelining",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": 1024,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "fully-parallel LDPC 디코더의 피드백 루프(iterative decoding)에 C-slow retiming을 적용하고 이를 비동기(asynchronous) micropipeline으로 변환해, 기존 동기식 구현 대비 throughput 4배를 면적 오버헤드 80%만으로 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상(pre-layout area 비교, 공정 0.18um)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "디코딩 알고리즘 자체(Log-BP, tanh 기반)는 표준이며 기여는 순수 HW 파이프라이닝/타이밍 기법(C-slow retiming + 비동기 micropipeline)에 국한, fully-parallel(비 row-parallel) 아키텍처 전제라 Prime ECC의 z=32 반병렬 구조와는 전제가 다름",
+  "todo_check": "비동기(clockless) 설계가 Prime ECC의 동기식 bit-exact 클록 레벨 시뮬레이션 모델과 근본적으로 다른 설계 패러다임이라 통합 난이도 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4601964---maximizing-the-throughput-area-efficiency-of-fully-parallel-low-density-parity-check-decoding-with-c-slow-retiming-and-asynchronous-deep-pipelining-2007-ieee">ieee:4601964 - Maximizing the Throughput-Area Efficiency of Fully-Parallel Low-Density Parity-Check Decoding with C-Slow Retiming and Asynchronous Deep Pipelining (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

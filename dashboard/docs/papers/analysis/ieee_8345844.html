@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8345844</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8345844---improved-low-power-ldpc-fec-for-coherent-optical-systems-2017-ecocieee">ieee:8345844 - Improved Low-Power LDPC FEC for Coherent Optical Systems (2017, ECOC/IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호length</td><td>36000</td></tr><tr><td>부호rate</td><td>0.833</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>prior-LLR을 보존·활용해 trapping-set/error-floor 정정을 강화한 저전력 message-passing 디코더 PAD</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>7.72mm2@28nm FD-SOI (core 6.74)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.16Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>dv=4 코드 특화, im=74로 수렴 느려 throughput/energy가 AD 대비 ~50% 악화, coherent optical(광통신) 타깃</td></tr><tr><td>추가확인</td><td>prior-LLR(κv,λv) 저장·λv 클램핑이 Prime 고rate dv=17 QC-LDPC에서도 error-floor 이득 있는지 재검증</td></tr></tbody></table>
+<blockquote><p>총평: prior-LLR 보존으로 trapping-set/error-floor를 잡는 저전력 hybrid message-passing 디코더로 binary QC-LDPC HW에 개념 이식 가치가 있으나 dv=4·광통신 특화로 재검증 필요, 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: coherent optical FEC용 (36000,30000) regular QC-LDPC(dv=4, dc=24, rate 5/6, 20% OH), finite-field subset법 구성, BPSK/AWGN, 5bit 고정소수(1sign·3int·1frac) 양자화.</li><li>문제: SD-LDPC 디코더가 long-haul 100Gbps 링크 에너지의 15~20% 소비하고 ASIC 면적 큼 → 성능/복잡도 절충 필요, 기존 AD 알고리즘 개선.</li><li>모델: VN 메모리 <code>Mv</code>를 채널 LLR로 초기화, VN↔CN이 <strong>binary 메시지</strong> <code>bv→c/bc→v</code> 교환(bit-flipping 계열), CN은 parity <code>pc = ⊕ bv→c</code>.</li><li>핵심기법(PAD): AD에 <strong>prior 정보 보존</strong> 추가 — 초기 부호 <code>κv=sgn(Mv)</code>와 크기 <code>λv=max(γ1,|Mv|)</code>를 저장, VN 갱신 합 <code>σ</code>에 prior 기여 <code>ρ</code>를 조건부 주입.</li><li>핵심식: <code>Mv ← Mv + s·σ ∓ δ</code> (degeneration factor δ, scaling s); 진전 없으면 δ를 γ0→γ1로 키워 trapping set 탈출.</li><li>확장: prior 부호 κv를 λv≥T1이면 매 iteration, T0&lt;λv&lt;T1이면 매 4번째 iteration만 σ에 기여; 미충족 parity 수가 τ 미만이면 register로 비활성(잘못된 prior 간섭 방지).</li><li>트릭: <code>|Mv| ≤ λv</code>로 클램핑 → 잘못된 VN이 최대 magnitude로 커지는 특정 trapping set 정정력↑, λv는 γ1 이상으로 하한(정답 bit mass-flip 방지).</li><li>최적화: free param(s=0.5, γ0/γ1=0.5/3.0, τ=64, T0/T1=4.0/7.5, im=74)은 구현서 실험적 고정.</li><li>결과: BER 10^-15에서 NCG 11.0dB 추정(Shannon 1.65dB 이내), AD 대비 +0.4dB·NMSA와 격차 0.4dB; 28nm FD-SOI 7.72mm2, 160Gbps, 3.37 pJ/bit(타 SD-LDPC 20~60 pJ/bit 대비 낮음).</li><li>한계: AD 대비 면적·에너지 ~50%↑, dv=4의 느린 수렴으로 im=74·throughput 저하, 광통신 특화·prior 기반이라 error-floor 이득이 코드 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PAD 반복 복호 루프 전체</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>prior-assist message-passing을 iteration 루프에 삽입 가능(min-sum 대체/보완)</td></tr><tr><td>binary CN parity/메시지 (<code>pc=⊕bv→c</code>)</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime은 min-sum magnitude 전달, PAD는 binary bit-flip 계열이라 CN 연산 상이</td></tr><tr><td>prior κv/λv 저장·클램핑, VN σ 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>VN 처리부에 prior LLR 저장·클램프 로직 추가 지점</td></tr><tr><td>iteration별 threshold(T0/T1)·δ 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>Prime의 iteration구간별 LLR threshold 테이블과 유사 구조로 매핑 가능</td></tr><tr><td>완전병렬 HW·5bit 양자화</td><td>디코더 HW 모델(z=32)</td><td>Prime은 row 단위 z=32 병렬, PAD는 완전병렬이라 arch 정합 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — prior-LLR 보존으로 trapping-set/error-floor를 잡는 아이디어와 저전력 ASIC 실측(3.37 pJ/bit)은 NAND binary QC-LDPC 디코더에 매력적이나, dv=4·완전병렬·광통신 특화라 Prime의 고rate dv=17·z=32 min-sum 구조에서 error-floor 이득과 HW 정합을 재검증해야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8345844",
+  "title": "Improved Low-Power LDPC FEC for Coherent Optical Systems",
+  "year": 2017,
+  "venue": "ECOC/IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.833,
+  "code_length": "36000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "prior-LLR을 보존·활용해 trapping-set/error-floor 정정을 강화한 저전력 message-passing 디코더 PAD",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "7.72mm2@28nm FD-SOI",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.16,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "dv=4 코드 특화, im=74로 수렴 느려 throughput/energy가 AD 대비 ~50% 악화, coherent optical 타깃",
+  "todo_check": "prior-LLR(κv,λv) 저장·λv 클램핑이 Prime 고rate dv=17 QC-LDPC에서도 error-floor 이득 있는지 재검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8345844---improved-low-power-ldpc-fec-for-coherent-optical-systems-2017-ecocieee">ieee:8345844 - Improved Low-Power LDPC FEC for Coherent Optical Systems (2017, ECOC/IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

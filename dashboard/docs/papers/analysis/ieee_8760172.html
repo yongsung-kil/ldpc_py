@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8760172</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8760172---importance-sampling-based-software-kit-for-llr-bp-decoding-simulation-2019-meco">ieee:8760172 - Importance Sampling Based Software Kit for LLR BP Decoding Simulation (2019, MECO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2640~22200</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>trapping-set 기반 importance sampling으로 error-floor level·Eb/N0를 Monte Carlo보다 빠르게 추정하는 GPU/OpenCL 시뮬 소프트웨어 킷</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더/부호 개선이 아니라 error-floor 추정 툴, MC 대비 정확도 2 order 저하로 floor 검출용만, heuristic 보정은 code param 의존이라 미완</td></tr><tr><td>추가확인</td><td>TS Analyser의 cyclicity indicator(w,u,e) 분석·Emin 탐색 절차가 우리 z=32 고rate QC-LDPC의 error-floor 검증 워크플로에 붙일 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: LLR BP 부호의 error-floor를 importance sampling으로 빠르게 추정하는 시뮬 도구로, 디코더 알고리즘·부호설계·HW 개선이 아니라 이식 대상이 아니므로 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LLR BP(Jacobi log 근사) 복호 시뮬, 대상 부호는 Margulis <code>(2640,1320) R=1/2</code>, QC <code>(22200,5550) R=3/4</code>, QC <code>(22200,7400) R=2/3</code>.</li><li>문제: error-floor level·Eb/N0 추정을 Monte Carlo로 하면 고SNR에서 오류 이벤트가 희소해 수 주~수개월 소요.</li><li>핵심 원리: importance sampling으로 잡음 벡터 분포를 바꿔 특정 trapping set이 자주 발생하도록 유도, likelihood ratio로 보정. <code>µ = Eq[f(X)p(X)/q(X)]</code>(식3).</li><li>잡음 모델: 잡음 벡터 X는 평균 a·분산 σ 정규분포(식4,5). trapping set 유발 위해 W개 원소 평균을 <code>Emin</code>만큼 증가시킨 수정 밀도 <code>q(xi)</code>(식6,7).</li><li>보정: likelihood ratio <code>p(x)/q(x)=W(x)</code>(식8), 단일 TS 오류확률 <code>µTS=(1/M)Σ f(xk)W(xk)</code>(식9), 전체는 발견된 모든 TS 합산.</li><li>소프트웨어 킷(5단계): OpenCL 멀티스레드 시뮬 기반. (1)미정정 error vector 저장("Bad Codewords") (2)TS Analyser가 그래프의 code node w·odd-degree check u·cyclicity e 산출 (3)e&gt;=0 구조를 PostgreSQL trapping-set DB로 구축 (4)각 TS에 대해 Emin(디코더 실패 최소 impulse 레벨) 탐색 (5)importance sampling으로 FER 추정.</li><li>Emin 탐색: 초기 E0에서 성공하는 레벨부터 ∆E씩 증가시켜 복호 실패하는 순간을 Emin으로.</li><li>검증: MC 결과와 비교. FER 값은 약 1 order 차이나 error-floor 발생 Eb/N0는 동일 → floor 검출 용도로는 유효.</li><li>결과: Margulis, Eb/N0=2.2dB에서 <code>tIS=103+7+23+378=511min</code>, MC <code>2023min</code> → 3.96배 단축, 단 정확도는 약 2 order 저하(<code>2.24e-7</code> vs MC <code>1.60e-5</code>).</li><li>한계: FER 직접 추정엔 부정확, heuristic 보정은 length/rate/type/degree 의존이라 일반화 불가, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<p>대상이 other(시뮬/추정 툴)이므로 핀포인트 대응이 제한적이다.</p>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>error-floor 추정 / trapping-set 시뮬 워크플로</td><td>대응 없음</td><td>Prime ECC는 bit-exact HW 시뮬로 error-floor 추정 전용 툴 없음</td></tr><tr><td>잡음/impulse 주입 (Emin 탐색)</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>fixed-error 패턴 주입과 개념 유사하나 IS 방법론은 미보유</td></tr><tr><td>BP 복호 실행부</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>추정 대상 복호기일 뿐, 논문이 decoder를 개선하지 않음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 디코더·부호·HW를 개선하지 않는 error-floor 추정 시뮬 도구이며 정확도도 제한적이라 Prime ECC 이식 대상이 아니다(검증 워크플로 참고 정도).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8760172",
+  "title": "Importance Sampling Based Software Kit for LLR BP Decoding Simulation",
+  "year": 2019,
+  "venue": "MECO",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "2640~22200",
+  "soft_quant": "무관",
+  "key_contribution": "trapping-set 기반 importance sampling으로 error-floor level·Eb/N0를 Monte Carlo보다 3.96배 빠르게 추정하는 GPU/OpenCL 시뮬 킷",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코더/부호 개선이 아니라 error-floor 추정 툴, MC 대비 정확도 2 order 저하로 floor 검출용만, heuristic 보정 미완",
+  "todo_check": "TS Analyser(w,u,e)·Emin 탐색이 우리 z=32 고rate QC-LDPC error-floor 검증 워크플로에 붙는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8760172---importance-sampling-based-software-kit-for-llr-bp-decoding-simulation-2019-meco">ieee:8760172 - Importance Sampling Based Software Kit for LLR BP Decoding Simulation (2019, MECO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_924874</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee924874---iterative-reliability-based-decoding-of-low-density-parity-check-codes-2001-ieee-jsac">ieee:924874 - Iterative Reliability-Based Decoding of Low-Density Parity Check Codes (2001, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.66</td></tr><tr><td>부호length</td><td>155~1057</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 각 iteration의 사후확률을 신뢰도로 삼아 order-1 OSD를 결합, 중길이 코드에서 near-MLD 접근</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OSD의 Gaussian elimination·MRB 정렬·후보 재부호화 부담이 커 고rate 장부호 NAND ECC에는 비현실적</td></tr><tr><td>추가확인</td><td>코드길이가 커질수록 이득이 급감하며(0.9dB→0.4dB), NAND급 4KB QC-LDPC에서는 사실상 이득 없음 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: BP+OSD 결합으로 중길이 짧은 코드의 WER를 개선하나, OSD 복잡도와 코드길이 의존성 때문에 NAND 고rate QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BPSK/AWGN 상의 중길이 이진 선형블록부호 (Gallager (3,6) <code>(504,252)</code>/<code>(1008,504)</code>, Tanner <code>(155,64,20)</code>, DSC/BCH 계열).</li><li>문제: BP(belief propagation) 복호는 중길이 코드에서 짧은 loop 영향으로 MLD에 못 미치고, MLD/OSD 단독은 너무 복잡.</li><li>핵심 기법: 매 BP iteration 종료 시 BP가 낸 사후확률을 신뢰도값으로 삼아 order-1 OSD(reliability-based soft decision)를 수행하는 결합 복호.</li><li>MRB(most reliable basis): 신뢰도 내림차순 정렬→Gaussian elimination으로 systematic 형태 만들어 MRIP 위치집합 결정.</li><li>order-1 재처리: MRB 내 1비트 반전 후보 재부호화, 원 수신열 기준 discrepancy(metric) 최소 후보 저장.</li><li>복잡도 억제 위해 order-1까지만, 최대 iteration 50으로 제한 (order-i는 <code>sum C(k,i)</code> 후보 필요).</li><li>정지기준 <code>T(c)</code>: 특정 iteration의 최우 후보가 c번 연속 OSD로 재출력되면 종료 (modulo-2 연산으로 구현).</li><li>하이브리드: I iteration마다 주기적 OSD, 또는 첫 F iteration만 OSD 후 순수 BP로 마무리하는 절충안도 검토.</li><li>결과: <code>(504,252)</code>에서 WER≈1e-4시 BP 200회 대비 0.55dB 이득, <code>(155,64)</code>에서 약 1.2dB; <code>T(2)</code>로 iteration 25~30% 절감.</li><li>한계: HW 미설계, 시뮬만. 코드길이 커질수록 이득 급감, length-4 loop 많은 코드(BCH 등)에서는 성능 열화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>BP 부분은 대응되나 우리는 Min-Sum 기반이라 사후확률 정밀도 상이</td></tr><tr><td>신뢰도 기반 정지기준 <code>T(c)</code></td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>우리는 이미 Partial/Full CRC 조기종료 보유, OSD식 정지는 이질적</td></tr><tr><td>OSD MRB/Gaussian elimination/재부호화</td><td>대응 없음</td><td>반복 Gaussian elimination은 QC-LDPC HW 파이프라인과 정합 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — OSD 결합은 고rate·장부호 QC-LDPC NAND ECC에서 이득이 사라지고 반복 Gaussian elimination 복잡도가 HW에 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:924874",
+  "title": "Iterative Reliability-Based Decoding of Low-Density Parity Check Codes",
+  "year": 2001,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.66",
+  "code_length": "155~1057",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 각 iteration의 사후확률을 신뢰도로 삼아 order-1 OSD를 결합, 중길이 코드에서 near-MLD 접근",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "OSD의 Gaussian elimination·MRB 정렬·후보 재부호화 부담이 커 고rate 장부호 NAND ECC에는 비현실적",
+  "todo_check": "코드길이가 커질수록 이득이 급감하며(0.9dB→0.4dB), NAND급 4KB QC-LDPC에서는 사실상 이득 없음 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee924874---iterative-reliability-based-decoding-of-low-density-parity-check-codes-2001-ieee-jsac">ieee:924874 - Iterative Reliability-Based Decoding of Low-Density Parity Check Codes (2001, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

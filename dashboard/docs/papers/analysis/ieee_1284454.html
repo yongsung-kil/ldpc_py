@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1284454</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1284454---performance-of-efficiently-encodable-low-density-parity-check-codes-in-noise-bursts-on-the-epr4-channel-2004-ieee-trans-magnetics">ieee:1284454 - Performance of Efficiently Encodable Low-Density Parity-Check Codes in Noise Bursts on the EPR4 Channel (2004, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.82~0.9</td></tr><tr><td>부호length</td><td>4095~4550</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC 단독(RS 제거)으로 storage 채널 ECC 구성, 최대 해결가능 erasure-burst 길이 L을 H로 계산하는 알고리즘 제시 + CSI를 디코더에도 전달해 error-floor 평탄화 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>EPR4 PR 채널+erasure burst 전제, HW 미설계·gatecount 없음, 부호 종류가 eIRA/EG/array/MacKay 혼합이라 특정 QC-LDPC 고정 코드베이스엔 그대로 적용 어려움</td></tr><tr><td>추가확인</td><td>erasure-burst L 계산 알고리즘을 Prime ECC의 QC-LDPC PCM에 적용해 media-defect 대응 burst 해결능력 정량화 가능한지 검토</td></tr></tbody></table>
+<blockquote><p>총평: burst-erasure 해결능력을 H-matrix로 정량화하는 알고리즘과 "CSI를 디코더까지 전달" 아이디어는 NAND의 defect/erasure 대응에 간접 유용하나, 부호는 storage용 고rate LDPC 일반론이라 이식은 부분적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: EPR4 PR 채널(<code>P(D)=(1-D)(1+D)²</code>)+AWGN, LDPC 단독 ECC(외부 RS 제거), rate 0.82/0.9, length ~4095-4550.</li><li>문제: LDPC 실패 시 다수 비트 오류가 나 외부 RS가 못 잡음 → LDPC 하나로 residual 오류와 media-defect/thermal-asperity burst를 모두 처리 가능한지 검증.</li><li>모델: media defect/thermal asperity를 "noise burst"(강한 노이즈 구간)로 모델링, 이상적 burst detector가 CSI를 제공한다고 가정.</li><li>핵심 기법 1: burst 검출 CSI를 EPR4 SISO 검출기뿐 아니라 LDPC 디코더에도 전달하여 해당 비트 LLR을 0(erasure)로 설정 → error-rate 곡선 평탄화(flooring/flaring) 제거.</li><li>핵심 기법 2: 최대 해결가능 erasure-burst 길이 <code>L</code>을 정의 — burst 위치 무관하게 디코더가 반드시 복원하는 최장 erasure 열.</li><li>L 계산 알고리즘: H의 submatrix <code>H(p,l)</code>에서 weight-1 행을 찾아 해당 열을 삭제, 반복해 전 열 삭제 성공 여부로 판정(brute-force 대비 10배 이상 빠름).</li><li>부호 비교: MacKay(4095,3358), EG cyclic(4095,3367), eIRA(4095,3367)/(4550,4096), array code, RS-I/II 대조.</li><li>부호 특성: eIRA는 upper-triangular 구조로 인코딩이 codeword 길이에 선형(효율적 인코딩), EG는 circulant이라 shift-register 인코딩 가능.</li><li>결과: rate-0.9 LDPC가 RS 대비 측정영역에서 1.2 dB 이상 우수, burst 128bit에도 강건; <code>AWGN</code>와 <code>burst</code> 하한/상한 bound 차이 0.8 dB 이내. EG는 최소거리 커 floor 낮으나 시뮬영역 성능 열위.</li><li>한계: HW 미설계, 특정 PR 타깃 가정, 고rate LDPC의 검증가능한 낮은 error-floor 설계는 미해결 과제로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>erasure burst L 계산 (H 기반)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>로드된 QC-LDPC PCM에 L 알고리즘 적용해 burst 해결능력 정량화 가능</td></tr><tr><td>CSI → 디코더 LLR=0 (erasure)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>defect 비트 LLR을 0으로 세팅하는 erasure 주입에 대응</td></tr><tr><td>MP 복호로 erasure 채우기</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>erasure-fill이 일어나는 복호 이터레이션</td></tr><tr><td>eIRA/EG/array 부호구성</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC(base+shift) 고정, 이들 부호족 미지원</td></tr><tr><td>EPR4 SISO/PR 검출</td><td>대응 없음</td><td>NAND는 PR/BCJR 등화 채널 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — H-matrix로 최대 erasure-burst 해결능력을 계산하는 알고리즘은 NAND media-defect 대응에 재사용 가치가 있으나, PR 채널·부호구성 대부분은 Prime ECC와 무관.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1284454",
+  "title": "Performance of Efficiently Encodable Low-Density Parity-Check Codes in Noise Bursts on the EPR4 Channel",
+  "year": 2004,
+  "venue": "IEEE Trans. Magnetics",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "4095~4550",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC 단독 storage ECC + H로 최대 해결가능 erasure-burst 길이 L 계산 알고리즘 + CSI를 디코더에도 전달해 error-floor 평탄화 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "EPR4 PR 채널+erasure burst 전제, HW 미설계, 부호가 eIRA/EG/array/MacKay 혼합이라 QC-LDPC 고정 코드엔 부분 적용",
+  "todo_check": "erasure-burst L 계산 알고리즘을 Prime ECC QC-LDPC PCM에 적용해 media-defect burst 해결능력 정량화 가능한지 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1284454---performance-of-efficiently-encodable-low-density-parity-check-codes-in-noise-bursts-on-the-epr4-channel-2004-ieee-trans-magnetics">ieee:1284454 - Performance of Efficiently Encodable Low-Density Parity-Check Codes in Noise Bursts on the EPR4 Channel (2004, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

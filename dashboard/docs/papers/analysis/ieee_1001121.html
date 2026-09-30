@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1001121</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1001121---ecc-less-ldpc-coding-for-magnetic-recording-channels-2002-ieee-magneticsintermag-digest">ieee:1001121 - ECC-less LDPC Coding for Magnetic Recording Channels (2002, IEEE (Magnetics/INTERMAG digest))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.818</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>defect detector+수정 APP 디코더로 erasure를 보상해 ECC 없이 LDPC만으로 자기기록 채널 성능 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>RLL제약 위반 기반 defect detection+ME2PR4 APP detector 전제, NAND 무관·부호구조/HW 미상</td></tr><tr><td>추가확인</td><td>erasure-masking APP 개념이 NAND read-retry/defect 처리에 재해석 가능한지 (본문 매우 짧음)</td></tr></tbody></table>
+<blockquote><p>총평: 자기기록 채널에서 thermal asperity/defect로 인한 erasure를 defect detector+수정 APP로 보상하는 응용 논문으로, erasure 마스킹 아이디어는 흥미로우나 RLL/ME2PR4 전제·NAND 무관·HW 미제시로 직접 이식성은 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 자기기록 ME2PR4 채널, extended user density(EUD)=2.46, LDPC 기반 차세대 코딩(PRML 대비 5dB gain).</li><li>문제: LDPC 뒤에 ECC를 붙이면 gain(1~1.5dB)이 rate loss보다 작아 비효율 → ECC 제거가 유리하나, iterative decoder가 thermal asperity(TA)/media defect發 erasure를 정정 못해 ECC를 못 뺌.</li><li>접근: iterative decoder용 erasure 보상법을 제시해 ECC-less LDPC를 가능케 함.</li><li>부호 구성: 16/17 QMTR + systematic 9/11 LDPC 결합(Fig.1 인코더).</li><li>핵심 기법: defect detector가 RLL 제약 위반을 검사해 erasure flag를 set.</li><li>수정 APP 디코더: erasure flag가 지정한 erased bit의 채널정보를 마스킹하며 branch metric을 계산(Fig.2 디코더).</li><li>효과: erased bit의 잘못된 채널정보를 배제해 iterative 복호가 TA/defect 구간을 견디게 함.</li><li>결과1: ECC-less 방식이 16/17 QMTR+8/9 LDPC(+ECC) 대비 0.9dB, 기존 16/17 QMTR(+ECC) 대비 2.3dB gain.</li><li>결과2: 48바이트 erasure 정정 가능(실용 자기기록 시스템에 충분).</li><li>한계: 자기기록 특화(RLL/ME2PR4/QMTR) 시뮬레이션, LDPC 부호구조/HW gatecount 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>erasure 마스킹 수정 APP 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>VN_Cal_HD()</code></td><td>erasure→LLR 마스킹 개념은 min-sum 입력 LLR 처리에 유사 재해석 가능하나 APP 기반</td></tr><tr><td>defect/erasure flag (RLL 위반 검출)</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>NAND는 RLL 제약 없음, defect 검출 메커니즘 상이</td></tr><tr><td>ECC-less 개념(rate loss vs gain)</td><td>대응 없음</td><td>Prime ECC는 단일 LDPC ECC 구조로 concatenation 전제 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — erased-bit LLR 마스킹이라는 발상은 NAND read 실패/defect 처리에 개념적 참고가 될 수 있으나, RLL 위반 기반 defect detector·ME2PR4 APP detector에 강결합되어 있어 binary QC-LDPC(Prime ECC 3.1)에 직접 이식할 요소는 적다.</p>
+<pre><code>{
+  "id": "ieee:1001121",
+  "title": "ECC-less LDPC Coding for Magnetic Recording Channels",
+  "year": 2002,
+  "venue": "IEEE (Magnetics/INTERMAG digest)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.818,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "defect detector+수정 APP 디코더로 erasure를 보상해 ECC 없이 LDPC만으로 자기기록 채널 성능 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "RLL제약 위반 기반 defect detection+ME2PR4 APP detector 전제, NAND 무관·부호구조/HW 미상",
+  "todo_check": "erasure-masking APP 개념이 NAND read-retry/defect 처리에 재해석 가능한지 (본문 매우 짧음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1001121---ecc-less-ldpc-coding-for-magnetic-recording-channels-2002-ieee-magneticsintermag-digest">ieee:1001121 - ECC-less LDPC Coding for Magnetic Recording Channels (2002, IEEE (Magnetics/INTERMAG digest))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

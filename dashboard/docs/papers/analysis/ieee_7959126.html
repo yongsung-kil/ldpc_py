@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7959126</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7959126---decision-directed-retention-failure-recovery-with-channel-update-for-mlc-nand-flash-memory-2018-ieee-tcas-i">ieee:7959126 - Decision-Directed Retention-Failure Recovery With Channel Update for MLC NAND Flash Memory (2018, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.90</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>retention noise로 인한 charge-loss 셀을 read-back 전압+1차 복호결과로 검출해 LLR을 re-mapping 후 2차 BP 재복호(RABP), 추가 read 없이 채널 파라미터도 갱신</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>2-bit MLC 모델 기반 시뮬만(실측 없음), 2차 복호로 latency 증가·2N 추가 저장, 가중치 ζ,η=1 미최적화</td></tr><tr><td>추가확인</td><td>Prime ECC의 hard/2SD/3SD LLR 테이블·channel 모듈에 retention-erasure/error correction LLR re-mapping 삽입 및 TLC 확장 검토</td></tr></tbody></table>
+<blockquote><p>총평: NAND retention failure를 추가 read 없이 LLR re-mapping+2차 BP로 복구하고 채널을 갱신하는 직접 타깃 기법으로, Prime ECC의 channel/LLR 테이블 계층에 이식 가치가 매우 높다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2-bit/cell MLC NAND, rate-0.90 (8000,7200) column-weight-5 regular LDPC (PEG 구성), shuffled BP, round당 최대 25 iteration.</li><li>문제: retention time 경과로 셀 전압 하강 → 초기 전압분포·read threshold가 outdated → LLR 부정확 → BP 실패. 재추정·재복호에 추가 memory sensing이 latency·전력 병목.</li><li>모델: <code>V = Vs + (nu+np+nw+nr+ni)</code> 5-noise NAND 채널(ISPP, programming, RTN, retention, CCI), Gaussian mixture 근사, retention <code>μrs=(Vs-x0)·(...)·log(1+T)</code>.</li><li>핵심기법 RABP: 1차 BP로 hard-decision <code>{ĉmsb,ĉlsb}</code> 획득 → 실패 시 read-back 전압 v와 복호비트로 charge-loss victim 셀 검출 → LLR re-mapping 후 2차 BP 재복호.</li><li>LLR 재매핑: erasure 영역(E1~E3) 셀은 <code>L̂(n)←ζn·L(n+1)</code> (retention-erasure correction), data 영역이나 상위 state로 복호된 셀은 <code>L̂(n)←ζn·L(n+2)</code> (retention-error correction).</li><li>양자화: MMI 기반 6-level(Q=6) non-uniform 양자화(4 data D1~D4 + 3 erasure E1~E3)가 full-precision soft BP 근접, LLR은 read threshold Ri와 전압분포로 산출.</li><li>채널갱신 RABP-CU: 복호 전후 error/erasure count 비교 → 측정·예측 count의 MSE 비용함수 <code>C(μ,σ)</code>를 gradient descent로 최소화 → best-fit μ,σ 재추정 (추가 read 불필요).</li><li>실패 시(RABP-CUF): 측정 count 없으면 검출 셀 count <code>ZDi,ZEj</code>로 error/erasure count 근사해 CU 수행.</li><li>결과: RABP가 CBP 대비 retention time 한계 최대 70%(FER 1e-4 기준 60%) 연장, FER 최대 3자리수 개선. RABP-CU는 retention 한계 최대 41×(6K PE) 연장, GD 복잡도 DPE 대비 낮음(34 ADD/165 MUL/33 LUT per iter), 추정오차 &lt;0.02V.</li><li>한계: 모델기반 2-bit 시뮬만(실측 없음), 2차 복호로 latency↑·2N 추가 저장, ζ,η 가중치 미최적화, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>retention-aware LLR re-mapping (erasure/error correction)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code> + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft-read LLR/threshold 계층에 재매핑 로직 삽입 대상, 핵심 이식 포인트</td></tr><tr><td>6-level MMI soft-read 양자화 (D/E 영역)</td><td><code>channel.cpp</code> (soft-read LLR 양자화·threshold)</td><td>Prime ECC 2SD/3SD 양자화 테이블과 정합(soft-4bit+는 미지원)</td></tr><tr><td>1차 실패 후 2차 BP 재복호 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>실패 시 재복호 트리거 후크 필요, 반복 루프 상위 오케스트레이션</td></tr><tr><td>retention 채널 파라미터 재추정(GD)</td><td><code>channel.cpp</code> (RBER/전압분포) / <code>ecc_top.cpp</code></td><td>채널 모델 갱신, 시뮬 채널 파라미터 반영</td></tr><tr><td>iteration별 LLR 테이블 참조</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR 재매핑 값을 기존 적응형 LLR 테이블 체계에 통합</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — 추가 read 없이 retention 오류를 복구하는 NAND 직접 타깃 기법이며, LLR re-mapping은 Prime ECC의 channel/PARAM_LLR 계층(이식 난이도 낮음~중)에 얹기 좋아 waterfall 개선 잠재력이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7959126",
+  "title": "Decision-Directed Retention-Failure Recovery With Channel Update for MLC NAND Flash Memory",
+  "year": 2018,
+  "venue": "IEEE Transactions on Circuits and Systems I: Regular Papers",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.90,
+  "code_length": "8000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "retention charge-loss 셀을 read-back 전압+1차 복호결과로 검출해 LLR re-mapping 후 2차 BP 재복호(RABP), 추가 read 없이 채널 파라미터도 GD로 갱신",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "2-bit MLC 모델기반 시뮬만(실측 없음), 2차 복호로 latency 증가·2N 추가 저장, 가중치 ζ,η 미최적화",
+  "todo_check": "Prime ECC channel/PARAM_LLR 계층에 retention LLR re-mapping 삽입 및 TLC 확장 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7959126---decision-directed-retention-failure-recovery-with-channel-update-for-mlc-nand-flash-memory-2018-ieee-tcas-i">ieee:7959126 - Decision-Directed Retention-Failure Recovery With Channel Update for MLC NAND Flash Memory (2018, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

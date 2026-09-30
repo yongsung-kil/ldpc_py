@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10530040</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10530040---hypernetwork-based-model-driven-channel-neural-decoding-2024-ieee-access">ieee:10530040 - Hypernetwork Based Model-Driven Channel Neural Decoding (2024, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Neural min-sum(NNMS/NOMS) 디코더의 학습 가능 가중치를 별도 hypernetwork가 생성하도록 하여, 노이즈/레이어 수 변화 시 메인 디코딩망 재학습 없이 적응시키는 static/dynamic hypernetwork 프레임워크 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Prime ECC는 학습형 NN 가중치 기반 min-sum이 아닌 고정 min-sum(LLR 테이블 기반)이라 hypernetwork 구조 자체를 이식하려면 전체 디코더 아키텍처 재설계가 필요하고, HW 구현/합성 없이 TensorFlow 시뮬로만 검증됨</td></tr><tr><td>추가확인</td><td>hypernetwork로 생성한 가중치를 오프라인 학습 후 고정 LLR 보정 테이블로 근사해 Prime ECC의 <code>PARAM_LLR</code>/<code>Get_VNU_Table_Idx()</code>에 부분 반영 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NNMS/NOMS의 학습가중치를 hypernetwork로 동적 생성해 재학습 비용을 줄이는 기법이나, Prime ECC는 non-NN 고정 min-sum 구조라 이식성은 낮고 waterfall 영역 0.1~0.2dB 개선은 학습 인프라 전체 도입 부담 대비 매력이 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>BPSK/AWGN 채널에서 LDPC(576,432, rate 0.75)·BCH(127,106)/(63,45)·Hamming(7,3) 코드에 대해 NBP 계열(NNMS, NOMS)을 Tanner graph unfolding으로 신경망화한 기존 구조를 사용.</li><li>문제의식: NNMS/NOMS는 학습된 가중치(<code>αv,c</code>, <code>βv,c</code>)와 레이어 수가 훈련 후 고정되어, 채널/노이즈 변화나 레이어 수 조정 시 전체 재학습이 필요함.</li><li>가정: 채널은 가우시안 잡음의 BPSK-AWGN, 디코더는 <code>T</code>회 반복의 CN층(<code>(3)</code>,<code>(10)</code>)·VN층(<code>(4)</code>,<code>(11)</code>)·출력층(<code>(6)</code>,<code>(13)</code>)으로 구성된 unfolded 신경망.</li><li>핵심 기법: 별도의 <code>l</code>층 dense hypernetwork <code>f(:,W)</code>가 입력 LLR을 받아 메인 NNMS/NOMS 디코더의 학습가중치(<code>α</code>, <code>β</code>)를 직접 생성 — 메인 네트워크는 재학습 없이 hypernetwork만 학습.</li><li>핵심 식 <code>u^t_{c,v}=sign(...)·min(f(:,W_α^{(t-1)})×u^{t-1}_{v',c})</code> (식 14): CN 업데이트의 스케일 가중치 <code>α</code>를 hypernetwork 출력으로 대체.</li><li>확장(dynamic hypernetwork): 레이어별로 독립된 hypernetwork 유닛 <code>G</code>를 두어 임의 레이어 수로 확장 가능하게 함(레이어 수 변경 시 재설계/재배포 불필요).</li><li>부수 트릭: hypernetwork는 tanh 활성함수의 4-layer(32 뉴런) dense망, SGD와 cross-entropy loss로 학습, 초기 가중치는 zero-mean 단위분산 Gaussian.</li><li>학습 절차: hypernetwork만 학습하고 메인 디코딩 네트워크 구조는 고정(unsupervised는 아니며 cross-entropy 기반 지도학습), TensorFlow 2.0으로 구현.</li><li>결과: HyperNNMS는 원본 NNMS 대비 BCH/LDPC에서 고SNR 영역 BER/FER 약 0.1~0.2dB 개선(12/32-layer 실험), 반면 HyperNOMS는 BCH에서 오히려 0.5dB 이상 성능 저하.</li><li>한계: 이론적 하드웨어 구현/합성 없음, 순수 시뮬레이션(Tensorflow)뿐이며 hypernetwork 추가로 저장·연산 복잡도가 증가(모델 압축은 별도 참고문헌 언급뿐 본 논문 미구현), 코드 길이도 576비트 단(短)-중간 길이로 NAND용 장길이 QC-LDPC와 스케일 차이가 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| NNMS/NOMS 학습가중치 생성(hypernetwork) | 대응 없음 | Prime ECC는 학습형 NN 가중치 없이 고정 min-sum + LLR 테이블(`ecc_data.h` PARAM_LLR) 구조라 hypernetwork 개념 자체가 대응 없음 |
+| CN min-sum 업데이트(offset/normalize factor) | `decoder.cpp` `CNU_Update_New_Mag()`, `C2V_Cal_New_Sgn()` | min-sum 골격은 유사하나 스케일 팩터가 학습형(hypernetwork)이 아닌 고정 테이블 기반이라 개념적 참고만 가능 |
+| iteration별 적응형 파라미터(레이어별 가변 가중치) | `ecc_data.h` `PARAM_LLR`, `decoder.cpp` `Get_VNU_Table_Idx()` | iteration별 적응이라는 아이디어는 유사하나 실시간 신경망 추론이 아닌 사전계산 테이블 참조 방식이라 구조적으로 다름 |</code></pre>
+<p>마지막에 한 문장으로 <strong>적용 가치</strong>: <code>낮음</code> — 학습형 hypernetwork로 min-sum 가중치를 생성하는 소프트웨어/시뮬레이션 기법이며 Prime ECC의 고정 min-sum·HW 구조에 이식하려면 NN 추론 엔진 전체 도입이 필요해 실효성이 낮음.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:10530040",
+  "title": "Hypernetwork Based Model-Driven Channel Neural Decoding",
+  "year": 2024,
+  "venue": "IEEE Access",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.75,
+  "code_length": 576,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Neural min-sum(NNMS/NOMS) 디코더의 학습 가능 가중치를 별도 hypernetwork가 생성하도록 하여 재학습 없이 적응시키는 static/dynamic 프레임워크 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Prime ECC는 학습형 NN 가중치 기반 min-sum이 아닌 고정 min-sum(LLR 테이블 기반)이라 hypernetwork 구조 이식에 전체 디코더 아키텍처 재설계가 필요하고 HW 구현 없이 시뮬로만 검증됨",
+  "todo_check": "hypernetwork로 생성한 가중치를 오프라인 학습 후 고정 LLR 보정 테이블로 근사해 Prime ECC의 PARAM_LLR/Get_VNU_Table_Idx()에 부분 반영 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10530040---hypernetwork-based-model-driven-channel-neural-decoding-2024-ieee-access">ieee:10530040 - Hypernetwork Based Model-Driven Channel Neural Decoding (2024, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

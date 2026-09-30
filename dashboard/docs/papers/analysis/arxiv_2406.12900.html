@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2406.12900</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv240612900v2---factor-graph-optimization-of-error-correcting-codes-for-belief-propagation-decoding-2024-arxiviclr-style-preprint">arxiv:2406.12900v2 - Factor Graph Optimization of Error-Correcting Codes for Belief Propagation Decoding (2024, arXiv/ICLR-style preprint)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.83</td></tr><tr><td>부호length</td><td>32~132</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>BP 디코딩 기준 gradient 기반 데이터드리븐 parity-check matrix(Tanner graph) 최적화 (tensor BP + binary line-search)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>short-code(n&lt;=132)·wireless 채널(AWGN/fading/bursty) 전용, HW·NAND 무관, 고정 QC 구조 미보장</td></tr><tr><td>추가확인</td><td>Appendix E Min-Sum에서의 학습부호 이득이 고rate·긴 QC-LDPC로 확장되는지</td></tr></tbody></table>
+<blockquote><p>총평: BP용 부호 자체를 backprop으로 설계하는 흥미로운 code-design 논문이나, 우리 고정 QC-LDPC 구조·NAND HW와는 접점이 거의 없어 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 짧은/중간 길이 선형 블록부호(LDPC/BCH/Polar/RS/random, <code>n</code>=32~132), BPSK, AWGN/Rayleigh fading/bursty(Gaussian-mixture) 채널.</li><li>문제: 짧은 부호에서 BP 성능은 Tanner graph 구조에 크게 의존하는데, 고전 구성법은 데이터드리븐이 아니고 새 채널·제약에 맞추기 어렵다.</li><li>핵심 아이디어: 부호 <code>H</code>를 고정하지 않고 BP 디코딩 성능 기준으로 <code>H</code> 자체를 학습(구조학습).</li><li>핵심 기법 1단: 이분 factor graph를 **완전 그래프 + 학습가능 binary edge weight <code>H</code>**로 두고, BP를 tensor 형태 <code>Q_ij</code>,<code>R_ji</code>(식5·6)로 재정식화 -&gt; <code>H</code>에 대해 미분가능.</li><li>핵심 식 의미: 대칭성으로 zero codeword만 최적화 가능해 <code>G</code>·변조 의존 제거(challenge ii,iii 해소), tensor화로 그래프 학습(challenge iv) 가능.</li><li>핵심 기법 2단: NP-hard binary 문제를 완화 <code>H=bin(Ω)</code>, shifted STE로 gradient 근사(식7), BCE 손실(식8)로 여러 iteration 수에 강건한 부호 학습.</li><li>구현 트릭: sign flip을 유발하는 step size만 후보로 두는 <strong>binary line-search</strong>(식9), 상위 50개 step만 평가해 가속.</li><li>학습 절차: 초기 <code>H</code> 주어짐 -&gt; 20 step, batch당 SNR{3..7} 샘플, iter당 4.9M 샘플, BP iter=5로 학습(8x RTX2080Ti, step당 2.96분).</li><li>결과: BP 5/15 iter 기준 -ln(BER)가 LDPC/BCH/Polar 등 전 부호족·3채널에서 기존 대비 큰 폭 개선, 학습부호가 대체로 더 sparse(girth는 불변), GA(Elkelesh) 대비 우수·수십배 빠름.</li><li>한계: 짧은 부호·wireless 채널 시뮬만, HW/양자화/throughput 미설계, QC/circulant 등 구조 제약 유지 미보장.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 기준 <code>H</code>(Tanner graph) 학습 최적화</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 교체 지점이나 학습된 부호는 우리 QC/circulant·z=32 구조 미보장</td></tr><tr><td>tensor BP(full-<code>tanh</code> Sum-Product) 정식화</td><td>대응 없음</td><td>우리는 min-sum(min1/min2) HW 근사, full-tanh SP 미사용</td></tr><tr><td>binary line-search / STE 학습</td><td>대응 없음</td><td>오프라인 부호설계 도구, 런타임 디코더와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 산출물이 short·비구조 부호라 고rate QC-LDPC·NAND HW 파이프라인(z=32/HCU/GT)에 그대로 못 얹고, 재구성·재검증 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2406.12900v2",
+  "title": "Factor Graph Optimization of Error-Correcting Codes for Belief Propagation Decoding",
+  "year": 2024,
+  "venue": "arXiv (cs.IT) preprint",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": "0.33~0.83",
+  "code_length": "32~132",
+  "soft_quant": "무관",
+  "key_contribution": "BP 디코딩 기준 gradient 기반 데이터드리븐 parity-check matrix(Tanner graph) 최적화 (tensor BP + binary line-search)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "short-code(n&lt;=132)·wireless 채널 전용, HW·NAND 무관, 고정 QC 구조 미보장",
+  "todo_check": "Appendix E Min-Sum에서의 학습부호 이득이 고rate·긴 QC-LDPC로 확장되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv240612900v2---factor-graph-optimization-of-error-correcting-codes-for-belief-propagation-decoding-2024-arxiviclr-style-preprint">arxiv:2406.12900v2 - Factor Graph Optimization of Error-Correcting Codes for Belief Propagation Decoding (2024, arXiv/ICLR-style preprint)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

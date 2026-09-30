@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1377496</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1377496---verification-based-decoding-for-packet-based-low-density-parity-check-codes-2005-ieee-transactions-on-information-theory">ieee:1377496 - Verification-Based Decoding for Packet-Based Low-Density Parity-Check Codes (2005, IEEE Transactions on Information Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>패킷(대알파벳 q-ary) 단위 qSC용 verification-based 선형시간 복호 도입·점근분석, code scrambling으로 적대적 채널 확장</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>non-binary 패킷(32bit+ 심볼) 대상 qSC 전용, binary bit-level LDPC/soft LLR과 무관; 점근·확률적 결과뿐, HW·BER 실측 없음</td></tr><tr><td>추가확인</td><td>verification 방정식으로 최적 부호족 설계는 open; RS 결합 시 false verification 확률 상승 트레이드오프</td></tr></tbody></table>
+<blockquote><p>총평: 패킷 단위 대알파벳 qSC용 verification 복호(심볼 검증+정정)로 binary NAND LDPC와 채널·심볼 모델이 근본적으로 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 bit가 아닌 패킷(32bit 이상 심볼) 단위 LDPC로, 심볼이 균일랜덤 오류값을 갖는 <code>q-ary symmetric channel(qSC)</code>을 다룬다(대알파벳 <code>q</code>, 예 <code>2^32</code>).</li><li>풀려는 문제: q-bit checksum+erasure 정정은 rate 오버헤드가 크고, RS 등 MDS의 ML 복호는 복잡도가 과다 - 선형시간으로 심볼 오류를 국소검사로 잡고 싶다.</li><li>핵심 아이디어 verification: 체크노드 이웃 심볼합이 constraint(=0 mod q, <code>2^b</code>면 bitwise XOR)를 만족하면 높은 확률로 모든 이웃이 correct라고 "검증(verified)"하여 값 고정.</li><li>규칙 2개 - (R1) 이웃 심볼합이 constraint면 미검증 이웃 전부 verified, (R2) 한 이웃만 미검증이면 합으로부터 그 값을 복원·검증.</li><li>Lemma 1: false verification 확률은 스텝당 <code>≈ 1/q</code> 이하 - 패킷당 <code>Ω(log n)</code> bit면 (예 32~64bit) 실패확률이 다항적으로 작음.</li><li>message-passing 버전으로 tree/branching 근사 하에 라운드별 오류전파 확률(<code>p_j, q_j</code>)의 밀도진화 재귀식(2)~(6)을 유도, <code>q_l→0</code>이면 복호 성공.</li><li>Theorem 2: erasure 부호(참고문헌 [2]) 차수분포를 재사용해 regular rate 부호가 약 17% 오류를 보정 - RS worst-case 경계와 비교 가능.</li><li>개선 (Additional Verification): 이웃들이 제안한 proposed value 2개가 일치하면 verified - regular 부호에서 보정률이 ~17%→~21%로 상승(단 4-cycle 금지, false verification 확률↑).</li><li>RS 결합: 체크노드에 <code>(2t,t)</code> RS 심볼 저장 시 이웃 중 t개까지 오류 정정, erasure 부호와 동일 재귀(12)로 RS worst-case에 근접.</li><li>Code scrambling(공유 난수로 심볼 곱·치환)으로 적대적 채널을 qSC와 등가로 환원(Theorem 4). 한계: 점근·확률적 결과뿐, HW·BER 실측 전무, non-binary 패킷 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>verification 복호(심볼 검증/정정)</td><td>대응 없음</td><td>Prime ECC는 binary min-sum LLR 복호, 심볼 검증 스킴 아님</td></tr><tr><td>q-ary/패킷 심볼 채널</td><td>대응 없음</td><td><code>channel.cpp</code>는 binary AWGN/RBER; 대알파벳 qSC 모델 없음</td></tr><tr><td>밀도진화 기반 차수분포 설계</td><td>대응 없음</td><td>Prime ECC는 고정 QC-LDPC, 차수분포 최적화 파이프라인 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 패킷 단위 non-binary qSC용 verification 복호로 Prime ECC의 binary QC-LDPC·soft LLR 복호와 채널·심볼·알고리즘이 모두 상이, 떼어낼 요소 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1377496",
+  "title": "Verification-Based Decoding for Packet-Based Low-Density Parity-Check Codes",
+  "year": 2005,
+  "venue": "IEEE Transactions on Information Theory",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "패킷(대알파벳 q-ary) 단위 qSC용 verification-based 선형시간 복호 도입·점근분석, code scrambling으로 적대적 채널 확장",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "non-binary 패킷(32bit+ 심볼) 대상 qSC 전용, binary bit-level LDPC/soft LLR과 무관; 점근·확률적 결과뿐, HW·BER 실측 없음",
+  "todo_check": "verification 방정식으로 최적 부호족 설계는 open; RS 결합 시 false verification 확률 상승 트레이드오프"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1377496---verification-based-decoding-for-packet-based-low-density-parity-check-codes-2005-ieee-transactions-on-information-theory">ieee:1377496 - Verification-Based Decoding for Packet-Based Low-Density Parity-Check Codes (2005, IEEE Transactions on Information Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

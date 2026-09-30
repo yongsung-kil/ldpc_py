@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5713269</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5713269---construction-and-hardware-efficient-decoding-of-raptor-codes-2011-ieee-trans-signal-processing">ieee:5713269 - Construction and Hardware-Efficient Decoding of Raptor Codes (2011, IEEE Trans. Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.66</td></tr><tr><td>부호length</td><td>1210</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>rateless Raptor(LT+LDPC precode)의 QC구조 코드구성 + 가변 check-degree 상수처리 reconfigurable CFU HW</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.022</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>rateless LT-code 전용 구조(가변 rate/랜덤인코딩) - 고정 고rate NAND QC-LDPC와 코드·스케줄 이질적, LT는 반복수↑</td></tr><tr><td>추가확인</td><td>reconfigurable Min-Sum CFU의 가변degree 처리 방식만 참고 여지</td></tr></tbody></table>
+<blockquote><p>총평: 무선/BEC용 rateless Raptor 코드의 HW-효율 디코더로, 가변 check-degree를 상수 throughput으로 처리하는 CFU 아이디어는 있으나 고정 고rate NAND binary QC-LDPC와는 코드 성격·스케줄이 이질적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 rateless Raptor 코드(고정rate LDPC precode + 랜덤 LT-code 연접), AWGN+BPSK, LT data-block 길이 1210, rate 0.4~0.66 실험.</li><li>문제: Raptor의 가변 rate·랜덤 LT 인코딩·불규칙 check-degree·LT/LDPC 결합복호가 HW 자원 저이용·복잡 메모리 접근을 유발.</li><li>코드구성: high-girth QC 구조 source matrix <code>Ω</code>(zero+shifted-identity)에 pseudo-random row-splitting으로 최적 check-degree 분포 근사, girth-oriented replication으로 girth-8 LT-graph 구성.</li><li>LT-호환 precode: <code>p×p</code> base를 z-size submatrix로 replication해 LT source와 구조 공유하는 4-cycle-free LDPC 생성, row-merging으로 4-cycle-free Raptor graph 확보(HW 재사용).</li><li>복호: Gallager TPMP(2-phase message passing)를 LT식(2)/LDPC식(3) 혼합 적용, LDPC precode의 syndrome 만족을 조기종료 기준으로 사용.</li><li>아키텍처: check-to-bit 메시지만 저장하는 serial/partially-parallel 디코더로 <code>Ω</code>의 한 행/사이클 처리, 가변 bit-degree 무관하게 상수 메시지 저장.</li><li>핵심 HW: reconfigurable CFU 3종(conventional LUT / BCJR Max-Quartet / Min-Sum)이 가변 check-degree를 상수 throughput <code>t</code>로 처리, partition table로 어느 메시지가 같은 check-node인지 표시.</li><li>Min-Sum CFU: min1/min2+index 트리, offset/normalization 보정으로 성능손실 보전; check-node 메모리를 노드당 3값으로 축약해 LDPC 메모리 대폭 절감.</li><li>결과: rate-0.4 Raptor가 rate-0.4 (3,5)LDPC를 능가하고 802.16 LDPC와 근접, 65nm 합성 serial 디코더 area 1.77mm2, 222mW@1.2V, rate0.4에서 throughput 22Mb/s, msg 양자화 6bit.</li><li>한계: 무선/rateless 타깃, 메모리가 area 92%·power 85% 차지, LT 특성상 rate↑ 시 iteration↑로 throughput 이득 없음, error-floor는 precode 최소거리(6)에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반복 복호 루프(TPMP)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적 유사(message passing)하나 LT/LDPC 혼합·rateless로 스케줄 상이</td></tr><tr><td>reconfigurable Min-Sum CFU</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime은 고정 degree min-sum - 가변degree 상수처리 로직 불필요</td></tr><tr><td>QC source matrix / replication</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime은 고정 QC H, LT-호환 구성법 불요</td></tr><tr><td>조기종료(precode syndrome)</td><td>partial_CRC.cpp / full_CRC.cpp</td><td>Prime은 CRC 기반, syndrome-check와 방식 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — rateless Raptor(LT+LDPC) 무선 디코더로 코드 성격이 이질적이며, min-sum CFU 자체는 Prime이 이미 보유해 중복. 가변 check-degree 상수-throughput CFU 발상만 참고 여지.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5713269",
+  "title": "Construction and Hardware-Efficient Decoding of Raptor Codes",
+  "year": 2011,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1210",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "rateless Raptor(LT+LDPC precode)의 QC구조 코드구성 + 가변 check-degree 상수처리 reconfigurable CFU HW",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.022,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "rateless LT-code 전용 구조(가변 rate/랜덤인코딩) - 고정 고rate NAND QC-LDPC와 코드·스케줄 이질적, LT는 반복수↑",
+  "todo_check": "reconfigurable Min-Sum CFU의 가변degree 처리 방식만 참고 여지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5713269---construction-and-hardware-efficient-decoding-of-raptor-codes-2011-ieee-trans-signal-processing">ieee:5713269 - Construction and Hardware-Efficient Decoding of Raptor Codes (2011, IEEE Trans. Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8240730</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8240730---iterative-detection-and-decoding-for-large-scale-multiple-antenna-systems-with-1-bit-adcs-2018-ieee-wireless-communications-letters">ieee:8240730 - Iterative Detection and Decoding for Large-Scale Multiple-Antenna Systems With 1-Bit ADCs (2018, IEEE Wireless Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>512</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>box-plus SPA에 quasi-uniform 양자화 + offline/online 적응 scaling factor로 LLR 보정, error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>1-bit ADC massive MIMO IDD 전용 — MMSE detector·LLR 교환이 NAND 무관, quantizer는 N=6bit soft로 NAND 2~3bit read와 격차</td></tr><tr><td>추가확인</td><td>quasi-uniform quantizer(Zhang-Siegel[6]) 원논문의 error-floor 저감이 NAND soft-read 저비트에서 유효한지 별도 검토</td></tr></tbody></table>
+<blockquote><p>총평: quasi-uniform 양자화+scaling으로 error-floor를 낮추는 아이디어는 있으나 1-bit ADC MIMO IDD 문맥·6bit soft에 묶여 NAND binary LDPC 이식성은 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: uplink large-scale multi-user MIMO(<code>K</code> 유저, <code>M</code> 안테나, <code>M≫K</code>), 수신단 1-bit ADC, 짧은 regular LDPC <code>n=512</code>, <code>rate=1/2</code>, QPSK.</li><li>문제: 1-bit 양자화 손실 + LDPC error-floor(trapping/absorbing set) — 저지연 위해 짧은 부호 쓰면 error-floor가 더 문제.</li><li>채널/모델: block-fading <code>y=Hx+n</code>, 1-bit 양자화 <code>yQ=Q(R{y})+jQ(I{y})</code>, Bussgang 기반 통계로 공분산 근사 (식 3,4).</li><li>핵심 기법 1: LRA-MMSE 검출기 — 1-bit 양자화 인지 선형 MMSE 필터 <code>w_k = C_yQk^-1 c_xk yQk</code>로 soft 병렬 간섭 제거, detector↔decoder LLR 교환(IDD).</li><li>핵심 식: 검출 LLR <code>L_ck = log(ΣP(x̂k|x)Pr(x)) − L_ek</code> (식 18) — 외부정보 제거한 extrinsic LLR을 디코더로 전달.</li><li>핵심 기법 2: box-plus SPA 디코더 + quasi-uniform quantizer(Zhang-Siegel [6] 기반) — 메시지를 신뢰도 구간별로 양자화해 saturation/trapping 방지, <code>Δ=0.25, d=1.3, N=6</code>.</li><li>부수: box-plus 연산 <code>x⊞y = sign·min(|x|,|y|) + log(1+e^-|x+y|) − log(1+e^-|x-y|)</code>로 tanh 수치포화 회피.</li><li>학습/최적화: offline scaling factor <code>α_k</code>(히스토그램 LLR 통계, 1st iter 적용) + online scaling factor <code>f_k=α_k L_ck / L(2nd iter)</code> (2nd 이후 적용).</li><li>결과: 2 iteration 후 BER 큰 이득, quantizer+scaling으로 추가 이득, near-ML 대비 복잡도 <code>O(M^3)</code> vs <code>O(2^{K Mc} M^2)</code>로 저복잡; 정량 BER 수치는 그림에만.</li><li>한계: HW 미설계, 시뮬만, MIMO-1bit ADC 문맥 특화, LDPC 부분은 6bit quasi-uniform 양자화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>box-plus SPA CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 min-sum 채택 — box-plus는 full-SPA 근사라 이미 보유 기법과 방향 상이(추천도↓)</td></tr><tr><td>quasi-uniform 양자화 / LLR 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>메시지 양자화 개념은 접점이나 N=6bit로 NAND 2~3bit read 비용과 불일치</td></tr><tr><td>적응 scaling factor (LLR 보정)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>PARAM_LLR</code></td><td>iteration별 적응 LLR은 Prime ECC가 이미 보유(적응형 LLR 테이블), 중복 기여</td></tr><tr><td>LRA-MMSE detector / IDD</td><td>대응 없음</td><td>MIMO 수신 검출기로 NAND 채널·디코더와 무관</td></tr></tbody></table>
+<p>적용 가치: 낮음 — error-floor 저감용 quasi-uniform 양자화·적응 scaling 아이디어는 Prime ECC의 적응형 LLR과 개념 중복이고, 핵심인 LRA-MMSE·IDD는 MIMO 1-bit ADC 전용이며 양자화 비트(N=6)도 NAND soft-read 저비트와 맞지 않아 떼어 쓸 부분이 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8240730",
+  "title": "Iterative Detection and Decoding for Large-Scale Multiple-Antenna Systems With 1-Bit ADCs",
+  "year": 2018,
+  "venue": "IEEE Wireless Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "512",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "box-plus SPA에 quasi-uniform 양자화와 offline/online 적응 scaling factor로 LLR 보정, error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "1-bit ADC massive MIMO IDD 전용으로 MMSE detector·LLR 교환이 NAND 무관, N=6bit soft로 NAND 2~3bit read와 격차",
+  "todo_check": "quasi-uniform quantizer(Zhang-Siegel[6]) 원논문의 error-floor 저감이 NAND soft-read 저비트에서 유효한지 별도 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8240730---iterative-detection-and-decoding-for-large-scale-multiple-antenna-systems-with-1-bit-adcs-2018-ieee-wireless-communications-letters">ieee:8240730 - Iterative Detection and Decoding for Large-Scale Multiple-Antenna Systems With 1-Bit ADCs (2018, IEEE Wireless Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

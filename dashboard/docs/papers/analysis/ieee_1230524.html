@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1230524</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1230524---array-codes-for-magnetic-recording-channels-with-erasures-2003-ieee-intermag-dt-17">ieee:1230524 - Array Codes for Magnetic Recording Channels with Erasures (2003, IEEE Intermag / DT-17)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.8895</td></tr><tr><td>부호length</td><td>4572</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>array-based LDPC(ALDPC, (p,r,k) QC구조, length-4 cycle free)를 자기기록 채널 random-error+erasure 정정에 적용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>1페이지 초록, erasure/자기기록(EPR4) 특화이며 ALDPC가 random binary 대비 우위 없음(동등)</td></tr><tr><td>추가확인</td><td>참고문헌[3] ALDPC 구성 정의 및 [4] erasure 위치(CSI) 추정 알고리즘 확인</td></tr></tbody></table>
+<blockquote><p>총평: array 대수부호를 QC-LDPC로 본 자기기록 erasure 정정 초록으로, ALDPC가 random binary LDPC와 성능 동등하고 NAND 무관하여 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>array code[1]는 좋은 정정성능의 대수부호이며, [2]에서 LDPC로 볼 수 있어 iterative decoding이 가능함.</li><li>ALDPC는 세 파라미터 <code>(p,r,k)</code>(p=홀수 소수, r,k&lt;17)로 정의되며 parity-check matrix가 single-cyclic-shift 행렬 σ로 구성됨.</li><li>이 행렬은 column weight <code>W_c=1</code>(원문 표기, 실제 예제 W_c=4), row weight <code>W_r=k</code>, length-4 cycle free이고 부호는 quasi-cyclic → 실용적.</li><li>부호 파라미터: length <code>N=p·k</code>, dimension <code>K=r(p-1)+1</code>, rate <code>R=1-r·k/(p·k)</code>.</li><li>시스템: EPR4-equalized 채널(밀도 <code>S_n=2.9943</code>), log-MAP 1회 detection + LDPC MP 복호(8 iteration).</li><li>random interleaver는 ALDPC에만 적용, 16/17 RLL은 시뮬 미구현.</li><li>Erasure는 readback 신호 손실로 정의, 코드워드당 고정길이·랜덤위치 사각창 erasure 1개 발생(<code>L=0,128,256</code>bit), full erasure의 CSI(위치)는 [4] 알고리즘으로 확보 가정.</li><li>비교 부호: ALDPC (127,4,36)=(4572,4067) R=0.8895, random binary LDPC (4608,4096), 16-ary LDPC (1152,1024); Lorentzian AWGN 및 10%AWGN+90%jitter 채널.</li><li>결과: 256bit erasure에서 q-ary가 약간 우수, 그 외에는 세 부호 차이 없음; ALDPC(랜덤 인터리버 사용)는 random binary와 동등.</li><li>한계: HW 미설계, erasure·자기기록 특화, ALDPC의 뚜렷한 성능 우위 없음(성능-복잡도 trade-off만 주장).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ALDPC (p,r,k) QC-LDPC H-matrix 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>둘 다 QC-LDPC이나 array 대수구성은 우리 base+shift와 별개, 재검증 부담 큼</td></tr><tr><td>message-passing 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>일반 MP, 우리 min-sum과 알고리즘 세부 대응 불명</td></tr><tr><td>erasure(readback 손실) + CSI 정정</td><td>대응 없음</td><td>Prime ECC는 erasure 채널·CSI 모델 없음</td></tr><tr><td>EPR4 equalized 채널 / log-MAP detection</td><td>대응 없음</td><td>자기기록 채널 등화, NAND 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 자기기록 EPR4 채널의 erasure 정정 특화이고 ALDPC가 random binary 대비 우위가 없어 고rate QC-LDPC라는 점 외에 NAND로 떼어낼 실질 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1230524",
+  "title": "Array Codes for Magnetic Recording Channels with Erasures",
+  "year": 2003,
+  "venue": "IEEE Intermag (DT-17)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.8895,
+  "code_length": 4572,
+  "soft_quant": "무관",
+  "key_contribution": "array-based LDPC(ALDPC, (p,r,k) QC구조, length-4 cycle free)를 자기기록 random-error+erasure 정정에 적용",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "1페이지 초록, erasure/자기기록(EPR4) 특화이며 ALDPC가 random binary 대비 우위 없음(동등)",
+  "todo_check": "참고문헌[3] ALDPC 구성 정의 및 [4] erasure 위치(CSI) 추정 알고리즘 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1230524---array-codes-for-magnetic-recording-channels-with-erasures-2003-ieee-intermag-dt-17">ieee:1230524 - Array Codes for Magnetic Recording Channels with Erasures (2003, IEEE Intermag / DT-17)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

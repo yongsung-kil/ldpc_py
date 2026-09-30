@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4147126</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4147126---vlsi-architectures-for-turbo-decoding-message-passing-using-min-sum-for-rate-compatible-array-ldpc-codes-2007-ieee">ieee:4147126 - VLSI Architectures for Turbo Decoding Message Passing Using Min-Sum for Rate-Compatible Array LDPC Codes (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.666~0.91</td></tr><tr><td>부호length</td><td>1525</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>offset min-sum 기반 TDMP(layered decoding)에서 value-reuse 성질을 이용해 R/Q/P 메모리를 최대 82% 절감하고 cyclic shifter를 2개에서 1개로 줄인 VLSI 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>1.6mm2@130nm (ASIC, 37210 bits memory)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>5.9Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>array LDPC(rate-compatible, prime p 기반 순환구조) 전용 설계로 base matrix 구조가 Prime ECC의 QC 구조와 다름</td></tr><tr><td>추가확인</td><td>offset min-sum의 offset β 값 산출(density evolution) 및 5/6-bit 양자화 파라미터가 Prime ECC의 PARAM_LLR 테이블과 호환 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: TDMP+offset min-sum의 value-reuse 기반 메모리/라우터 절감 기법으로 HW 구현 검증까지 마쳤으나, array LDPC 특유의 순환구조 의존도가 높아 Prime ECC의 QC-LDPC 구조로 직접 이식은 재설계 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Rate-compatible array LDPC 부호(1a/1b식)는 prime <code>p</code>, check-node degree <code>k</code>, variable-node degree <code>j</code>로 정의되며 최좌측 p열/최상단 p행을 순차 puncturing해 rate 0.666~0.91을 지원.</li><li>기존 TDMP는 BCJR 기반 CNU를 사용해 내부 FIFO가 많고 면적이 크다는 문제를 offset min-sum(OMS)으로 대체해 해결.</li><li>채널은 BPSK+AWGN, soft LLR 기반 message passing(TPMP/TDMP) 사용.</li><li>핵심 기법은 layered decoding(TDMP)에 OMS를 결합: check-node 메시지 <code>R_mn = δ_mn * max(κ_mn - β, 0)</code>, <code>κ_mn</code>은 이웃 Q메시지 중 최소값.</li><li>OMS의 value-reuse 성질(check-node가 M1, M2 두 값만 산출)로 partial state(PS)/final state(FS) 구조를 만들어 R 메모리를 50~90% 절감.</li><li>Block-serial CNU 마이크로아키텍처: PS 스테이지(k 클록)→FS 스테이지(2클록)→R select 스테이지의 3단 파이프라인.</li><li>구현 디테일: cyclic shifter를 log2(p) 스테이지의 logarithmic shifter로 구성해 Omega network 대비 면적/배선 절감, 5-bit(R,Q)/6-bit(P) 균일 양자화 사용.</li><li>최적화 절차 없음(density evolution으로 β=0.15는 선행 연구[3] 값 인용).</li><li>결과: 총 메모리 82%(TPMP-SP 대비)/72%(TDMP-BCJR 대비) 절감, router 50% 감소, throughput 2배 증가, ASIC 130nm 5.9Gbps, FPGA 1.36~2.27Gbps.</li><li>한계: array LDPC 전용 구조 의존, BER 성능 개선 자체는 없음(기존 TDMP와 동일 수렴, finite precision으로 인한 0.2dB 열화만 존재), 정정능력 향상은 목표가 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Offset min-sum CNU (PS/FS 2-value 재사용)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum 기반이라 PS/FS value-reuse 아이디어는 CNU 메모리 최적화에 참고 가능</td></tr><tr><td>Layered decoding(TDMP) 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>이미 Dual-Update 등 레이어드 스케줄 보유, 신규 기여는 아님</td></tr><tr><td>Cyclic shifter 단일화(logarithmic shifter)</td><td>대응 없음</td><td>Prime ECC는 QC circulant shift 구조가 다르므로 array LDPC 전용 shifter 설계는 직접 대응 없음</td></tr><tr><td>5/6-bit 양자화, LLR threshold</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>양자화 비트수 설계 참고 가능하나 이미 자체 LLR 테이블 보유</td></tr><tr><td>Array LDPC H-matrix 구성(1a/1b)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호 자체가 array LDPC로 Prime ECC의 QC-LDPC base matrix와 상이, 재검증 부담 큼</td></tr></tbody></table>
+<p>적용 가치: 중간 — CNU의 value-reuse 메모리 절감 아이디어는 참고할 만하나 array LDPC 고유 구조와 이미 보유한 layered decoding·min-sum 기법과 중복도가 높아 신규성은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4147126",
+  "title": "VLSI Architectures for Turbo Decoding Message Passing Using Min-Sum for Rate-Compatible Array LDPC Codes",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.666~0.91",
+  "code_length": "1525",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "offset min-sum 기반 TDMP(layered decoding)에서 value-reuse 성질을 이용해 R/Q/P 메모리를 최대 82% 절감하고 cyclic shifter를 2개에서 1개로 줄인 VLSI 아키텍처",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "1.6mm2@130nm (ASIC, 37210 bits memory)",
+  "parallelism": "부분",
+  "throughput_gbps": 5.9,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "array LDPC(rate-compatible, prime p 기반 순환구조) 전용 설계로 base matrix 구조가 Prime ECC의 QC 구조와 다름",
+  "todo_check": "offset min-sum의 offset β 값 산출(density evolution) 및 5/6-bit 양자화 파라미터가 Prime ECC의 PARAM_LLR 테이블과 호환 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4147126---vlsi-architectures-for-turbo-decoding-message-passing-using-min-sum-for-rate-compatible-array-ldpc-codes-2007-ieee">ieee:4147126 - VLSI Architectures for Turbo Decoding Message Passing Using Min-Sum for Rate-Compatible Array LDPC Codes (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

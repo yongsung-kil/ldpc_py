@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9502845</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9502845---a-low-complexity-endurance-modulation-for-flash-memory-2022-ieee-tcas-ii">ieee:9502845 - A Low-Complexity Endurance Modulation for Flash Memory (2022, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LUT 없이 ns주기로 '0'비트를 뒤집는 데이터 셰이핑 + max-log LLR 복조를 ECC soft decoder에 실어 오류정정과 endurance 복조를 결합</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 블랙박스로 사용(부호·디코더 미변경), 셰이핑으로 평균 복호 iteration이 오히려 증가하고 endurance 이득은 정정능력에 의존</td></tr><tr><td>추가확인</td><td>뒤집힌 비트에 부여하는 max-log LLR(식4~6)이 Prime ECC의 LLR 양자화 테이블·soft-read 입력과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: ECC 여유를 활용한 controller단 endurance 데이터 셰이핑 기법으로 LDPC 부호·디코더 자체는 손대지 않아(오히려 iteration↑) binary LDPC ECC 이식 관점에서는 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: SLC/MLC/TLC/QLC NAND, logical page 단위 별도 인코딩, soft decoding ECC(LDPC) 전제(그림1·2 시스템 모델).</li><li>문제: P/E cycling wear-out을 줄이려는 data shaping은 보통 LUT/가변장부호로 오버헤드·복잡도가 큼(AEC, reverse compression, direct shaping 등).</li><li>핵심 아이디어: 초기 수명엔 RBER이 낮아 ECC 여유가 있으므로, parity를 오류정정과 endurance 복조에 <strong>공동 사용</strong> → 별도 rate loss·LUT 불필요.</li><li>셰이핑(변조): 각 logical page에서 <code>i ≡ 0 (mod ns)</code>인 i번째 '0' 비트를 뒤집어 프로그램 셀('0') 비율을 낮춤 (<code>ns</code> = shaping parameter).</li><li>복조 위치추정: hard estimate <code>ŝ</code>의 zero 개수 <code>C_k(ŝ)</code>로 뒤집혔을 수 있는 인덱스 집합 <code>I_r = {l_r+1,…,l_r+m_r-1}</code> 추정.</li><li>LLR 부여: DMC 가정하 max-log 근사로 <code>j∈I</code>는 <code>L(j) ≈ -log(m_r-2)</code>, <code>j∉I</code>는 <code>L(j) ≈ Lch(j) + (-1)^{ŝ_j} log(|B_ŝ|/|B_š|)</code> (유효 셰이핑코드워드 개수비).</li><li>실무: 오류전파 제한 위해 codeword를 chunk(=128bit) 단위 독립 적용, circular-shift interleaver로 wear-leveling, RBER threshold 초과 시 controller가 셰이핑 disable.</li><li>검증: TLC balanced Gray, density evolution + EXIT chart로 이론 분석(regular LDPC <code>rate 8/9</code>, CN degree 3 / VN degree 27), 채널 왜곡(parasitic coupling·프로그램 부정확·RTN·retention) 모델링.</li><li>결과: page별 최적 <code>ns*</code>(예 lower page 1K P/E에서 <code>ns*=16</code>) 도출, endurance gain 산출; 단 평균 복호 iteration은 셰이핑 없을 때보다 증가(Table II), <code>Lmax=5</code>·max iteration 20·2KB codeword.</li><li>한계: HW 미설계, 이론/시뮬 위주, LDPC를 블랙박스로 사용해 부호·디코더 개선 아님, endurance 이득이 ECC 정정능력에 종속(강한 코드일수록 이득↑).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>데이터 셰이핑(비트 flip) 변조</td><td>대응 없음</td><td>controller단 endurance 셰이핑은 LDPC ECC 파이프라인 밖 계층</td></tr><tr><td>뒤집힌 비트 max-log LLR 부여</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>soft 입력 LLR 생성·양자화 지점에 개념적으로 닿으나 부호별 셰이핑 규칙이 추가로 필요</td></tr><tr><td>soft decoder(LDPC)로 정정+복조</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>디코더는 그대로 재사용(변경 없음), 입력 LLR만 셰이핑 인지형으로 바뀜</td></tr><tr><td>RBER threshold로 CRC 성공 판정·모드전환</td><td>full_CRC.cpp</td><td>셰이핑 on/off 판정에 조기종료 CRC 성공정보 재사용 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 부호설계/디코더/HW를 개선하지 않고 이를 블랙박스로 활용하는 상위 endurance 셰이핑 기법이라, Prime ECC에 떼어 넣을 알고리즘적 요소가 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9502845",
+  "title": "A Low-Complexity Endurance Modulation for Flash Memory",
+  "year": 2022,
+  "venue": "IEEE Transactions on Circuits and Systems II: Express Briefs",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": 0.889,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LUT 없이 ns주기로 '0'비트를 뒤집는 데이터 셰이핑 + max-log LLR 복조를 ECC soft decoder에 실어 오류정정과 endurance 복조를 결합",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 블랙박스로 사용(부호·디코더 미변경), 셰이핑으로 평균 복호 iteration이 오히려 증가하고 endurance 이득은 정정능력에 의존",
+  "todo_check": "뒤집힌 비트에 부여하는 max-log LLR(식4~6)이 Prime ECC의 LLR 양자화 테이블·soft-read 입력과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9502845---a-low-complexity-endurance-modulation-for-flash-memory-2022-ieee-tcas-ii">ieee:9502845 - A Low-Complexity Endurance Modulation for Flash Memory (2022, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

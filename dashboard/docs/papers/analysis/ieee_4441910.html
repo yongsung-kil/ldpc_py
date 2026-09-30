@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4441910</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4441910---cost-efficient-partially-parallel-irregular-ldpc-decoder-with-message-passing-schedule-2007-isic">ieee:4441910 - Cost-Efficient Partially-Parallel Irregular LDPC Decoder with Message Passing Schedule (2007, ISIC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>불필요한 column 연산·메모리 접근을 제거하는 개선된 message-passing 스케줄로 partial-parallel irregular LDPC 디코더의 면적/전력 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>9,004,366um^2@0.18um</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>IEEE 802.11n rate-1/2 648bit 부호 한정 사례이며 정정성능은 기존과 동일 수준(면적/전력만 개선)</td></tr><tr><td>추가확인</td><td>Prime ECC의 min-sum HW 스케줄(HCU/GT)과 본 기법(redundant column op 제거)의 중복 여부 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: message-passing 스케줄 최적화로 partial-parallel 디코더의 HW 비용(면적 30%, 전력 36%)을 줄인 사례로, 정정성능 개선은 없으나 스케줄링 관점 이식 아이디어는 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: IEEE 802.11n 표준 QC 구조 irregular LDPC, 648bit, rate 1/2, 12x24 sub-block(27x27 circulant).</li><li>문제: 기존 accelerated message-passing 스케줄([8], 원래 regular LDPC용)을 irregular LDPC에 그대로 적용하면 column weight가 불균일해 불필요한 column 연산·메모리 갱신이 발생.</li><li>채널 모델: AWGN.</li><li>핵심 기법 1: row 연산 후 P(β) 메시지 중 실제로 다음 row 연산에서 사용되는 "최신" 메시지만 기록하도록 메모리 접근 빈도를 축소.</li><li>핵심 기법 2: column 연산 중 후속 row 연산 전에 값이 덮어써져 사용되지 않는 "redundant" column 연산을 스케줄 분석(shift 값 비교)으로 사전에 생략.</li><li>핵심 식: <code>N_wc = sum(R_j,wc)</code> (column weight별 update 횟수 합), <code>K_wc = ceil(N_wc / Wr_MAX)</code>로 필요한 BFU(Bit node Function Unit) 개수 산출.</li><li>구현 디테일: row weight가 상이(7,8)해도 최대 row weight(Wr_MAX=8) 기준 파이프라인 주기(Wr+1 clock)로 통일. column weight별(2,3,12) 전용 BFU 배열 공유로 15개 BFU 절감.</li><li>최적화 절차 없음(휴리스틱 스케줄 분석, DE/GA 미사용).</li><li>결과: column 연산 약 14% 감소, TSMC 0.18um 합성 시 면적 30% 감소, 전력 36% 절감, 동일 iteration(5)·동일 처리량(54Mbps)에서 BER 성능은 기존과 거의 동일.</li><li>한계: 특정 648bit rate-1/2 표준 부호 한 종류로만 검증, 정정성능 개선 없음(순수 HW 비용 절감), FPGA/실측 없이 ASIC 합성 결과만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>message-passing 스케줄(불필요 column 연산 제거)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프 내 메시지 갱신 스케줄 최적화 아이디어로 참고 가능</td></tr><tr><td>메모리 접근 빈도 축소(β 메시지)</td><td><code>decoder.cpp</code> (HCU 관련 로직)</td><td>HCU가 이미 비대칭 degree column을 half-cycle 처리하는 유사 목적 대응</td></tr><tr><td>BFU 배열 공유(면적 절감)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>Graph Thinning의 edge 선택 MUX와 목적(HW 면적 절감) 유사하나 접근 방식 상이</td></tr><tr><td>부호 자체(802.11n H-matrix)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>대응 없음(다른 표준 부호, 이식 불필요)</td></tr></tbody></table>
+<p>적용 가치: 낮음 | 이미 Prime ECC는 HCU/GT로 유사한 HW 스케줄 최적화를 보유하고 있으며, 본 논문은 특정 표준 부호에 국한된 스케줄 재배치 기법으로 정정성능 개선이 없어 중복성이 높음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4441910",
+  "title": "Cost-Efficient Partially-Parallel Irregular LDPC Decoder with Message Passing Schedule",
+  "year": 2007,
+  "venue": "ISIC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 648,
+  "soft_quant": "미상",
+  "key_contribution": "불필요한 column 연산·메모리 접근을 제거하는 개선된 message-passing 스케줄로 partial-parallel irregular LDPC 디코더의 면적/전력 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "9,004,366um^2@0.18um",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "IEEE 802.11n rate-1/2 648bit 부호 한정 사례이며 정정성능은 기존과 동일 수준(면적/전력만 개선)",
+  "todo_check": "Prime ECC의 min-sum HW 스케줄(HCU/GT)과 본 기법(redundant column op 제거)의 중복 여부 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4441910---cost-efficient-partially-parallel-irregular-ldpc-decoder-with-message-passing-schedule-2007-isic">ieee:4441910 - Cost-Efficient Partially-Parallel Irregular LDPC Decoder with Message Passing Schedule (2007, ISIC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

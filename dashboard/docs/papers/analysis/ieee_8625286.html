@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8625286</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8625286---a-100-gbps-ldpc-decoder-for-the-ieee-80211ay-standard-2018-ieee-istc">ieee:8625286 - A 100 Gbps LDPC Decoder for the IEEE 802.11ay Standard (2018, IEEE ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>672~1344</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>802.11ay AA-LDPC PCM 특성을 이용한 layer 압축(compressed/super-compressed layer)+frame interleaving으로 min-sum full row-based layered 디코더를 112 Gbps까지 끌어올림</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.19 mm²@16nm / 0.42 mm²@28nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>112</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>표준(802.11ay) 특정 PCM 구조에 의존한 layer 압축(rate별 effective layer 표), 정정능력 향상 아님(throughput/area/energy), 4bit·4iter에서 0.3~1dB 성능 열화</td></tr><tr><td>추가확인</td><td>layer 압축(비겹침 2/4 layer 결합)이 우리 QC-LDPC(z=32) PCM에서 성립하는지, min-sum 32입력 search tree의 2-level routing이 우리 GT/HCU와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 특정 표준 PCM의 layer 비겹침 구조를 이용해 여러 layer를 1회 layered 디코딩으로 압축하고 frame interleaving으로 파이프라인을 채우는 throughput 극대화 아키텍처. 알고리즘은 표준 min-sum layered라 우리 보유 기법과 겹치며, 부호 종속 layer 압축 아이디어만 참고가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11ay용 full row-based layered LDPC 디코더, AA-LDPC(z=42, N=672/1344, rate 1/2~7/8, 7종 rate), QPSK/AWGN.</li><li>문제: 100+ Gbps를 낮은 전력·면적으로 달성하며 rate 유연성·early-stop 유지 — fully-parallel은 배선혼잡, unrolling은 rate 유연성·early-stop 상실.</li><li>핵심가정/모델: 802.11ay PCM은 802.11ad를 lifting해 유도, sub-matrix 42×42(identity의 cyclic shift 또는 zero), lifted PCM은 base와 동일 CN/VN degree.</li><li>핵심기법1(layer 압축): PCM 특성상 겹치는 bit-node 없는 연속 2 layer를 1회 layered 디코딩으로 결합(<code>compressed layer</code>), rate 1/2는 특정 4 layer를 3 cycle 1회 디코딩(<code>super-compressed layer</code>)해 802.11ad 대비 throughput 2배.</li><li>처리량식: <code>Throughput = N_ldpc·N_frame·f_clk / (N_iter·N_layer·C_layer)</code> — effective layer 수 N_layer(rate별 Table I)를 layer 압축으로 줄여 throughput↑.</li><li>핵심기법2(frame interleaving): 3-stage 파이프라인에 3 프레임을 인터리빙해 매 클럭 모든 stage 활성화 → 파이프라인 유휴 제거.</li><li>구현 디테일: 3-stage 파이프라인(read+barrel shift+syndrome / saturate+CFU min-sum / extrinsic 생성+writeback), 32입력 min-sum search tree(16입력 2개), 결합 layer 매핑 위한 2-level routing network(cell/cell-pair 순서 교환).</li><li>CN 연산: SPA 또는 simplified min-sum, a posteriori Q에서 extrinsic r 빼서 intrinsic q 산출 → min절대값·전체 sign 계산.</li><li>결과: 16nm 1GHz에서 rate 13/16 112 Gbps@4iter(타 rate 67 Gbps), area 0.19mm², power 408/163mW(3.5/7dB), energy 3.64/1.45 pJ/bit, area eff 589 Gb/iter/sqmm. 4bit·4iter는 최적 대비 0.3~1dB 열화.</li><li>한계: 정정능력 향상 없음(구현효율 중심), 표준 PCM 특정 구조 의존, superimpose 모드 rate 7/8 미지원, 실측 칩 아닌 logical synthesis netlist.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered 디코딩 루프 / layer 압축</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리 dual-update 스케줄과 유사, 비겹침 layer 결합 아이디어는 PCM 종속 참고</td></tr><tr><td>min-sum CFU(min절대값+sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min1/min2+sign XOR 보유, 중복</td></tr><tr><td>barrel shifter / 2-level routing</td><td>디코더 HW 모델(z=32), GT.cpp <code>Make_GT_HW()</code></td><td>우리 z=32 barrel + graph thinning과 목적 유사, routing 최적화 참고</td></tr><tr><td>양자화(4~5bit)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>양자화 폭 참고</td></tr><tr><td>frame interleaving 파이프라인</td><td>디코더 HW 모델(pipeline 6-stage)</td><td>우리 pipeline과 목적 유사(유휴 제거), 다중 프레임 개념 참고</td></tr><tr><td>조기종료(syndrome)</td><td>partial_CRC.cpp, full_CRC.cpp</td><td>우리 partial/full CRC 조기종료 보유, syndrome 방식은 다름</td></tr></tbody></table>
+<p>적용 가치: 낮음 — min-sum layered·barrel shift·파이프라인·조기종료는 모두 이미 보유하고, throughput의 핵심인 layer 압축은 802.11ay 특정 PCM 구조에 의존해 우리 고rate QC-LDPC(z=32) PCM에는 그대로 성립하지 않는다. 정정능력 개선도 없어 이식 이득이 작다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8625286",
+  "title": "A 100 Gbps LDPC Decoder for the IEEE 802.11ay Standard",
+  "year": 2018,
+  "venue": "IEEE ISTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.875",
+  "code_length": "672~1344",
+  "soft_quant": "무관",
+  "key_contribution": "802.11ay AA-LDPC PCM 특성을 이용한 layer 압축(compressed/super-compressed layer)+frame interleaving으로 min-sum full row-based layered 디코더를 112 Gbps까지 끌어올림",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.19 mm²@16nm / 0.42 mm²@28nm",
+  "parallelism": "부분",
+  "throughput_gbps": 112,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "표준(802.11ay) 특정 PCM 구조에 의존한 layer 압축, 정정능력 향상 아님(throughput/area/energy), 4bit·4iter에서 0.3~1dB 성능 열화",
+  "todo_check": "layer 압축(비겹침 2/4 layer 결합)이 우리 QC-LDPC(z=32) PCM에서 성립하는지, min-sum 32입력 search tree의 2-level routing이 우리 GT/HCU와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8625286---a-100-gbps-ldpc-decoder-for-the-ieee-80211ay-standard-2018-ieee-istc">ieee:8625286 - A 100 Gbps LDPC Decoder for the IEEE 802.11ay Standard (2018, IEEE ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

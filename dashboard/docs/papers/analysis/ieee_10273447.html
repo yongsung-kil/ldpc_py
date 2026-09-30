@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10273447</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10273447---energy-optimization-of-faulty-quantized-min-sum-ldpc-decoders-2023-ieee-istc">ieee:10273447 - Energy Optimization of Faulty Quantized Min-Sum LDPC Decoders (2023, IEEE ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1130~24400</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>faulty quantized offset Min-Sum의 에너지 모델화 + 부호길이·양자화비트·공급전압을 좌표하강으로 공동최적화(반복별 전압까지)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>알고리즘 자체 개선이 아닌 전압/양자화/길이의 에너지 최적화, faulty 메모리 모델(22nm SRAM)·row-layered 가정에 의존, HW 미구현</td></tr><tr><td>추가확인</td><td>NAND용 QC-LDPC 고정 부호에서 q(양자화 비트)만 최적화 시 에너지 이득, 우리 LLR 양자화 테이블에 offset β·scaling α 공동최적 적용 가능성</td></tr></tbody></table>
+<blockquote><p>총평: 복호 알고리즘 개선이 아니라 quantized offset min-sum의 에너지(전압 다운스케일 유발 faulty 메모리)를 부호길이·q·전압 공동최적화로 줄이는 방법론으로, min-sum 기반 우리 디코더의 양자화·에너지 튜닝 관점에서 참고가치 있으나 정정능력 개선은 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>protograph 기반 LDPC(<code>m=2,n=4</code>, rate 0.5, 4종 protograph S17/S36/Sm/Sc), AWGN·BPSK, quantized offset Min-Sum(row-layered), <code>L=25</code> iteration.</li><li>문제: 공격적 전압 다운스케일로 에너지를 줄이려 하나 저전압이 메모리 read에 fault를 유발 - 성능 제약 하에서 에너지 최소화 필요.</li><li>모델: 메시지를 <code>q</code>비트(<code>−Q~Q</code>)로 양자화, 메모리 read 시 i.i.d. Bernoulli(ε) 비트플립을 XOR로 주입(식2~4), fault는 메모리에만(processing은 신뢰 도메인).</li><li>핵심기법 - 에너지 모델: 메모리 접근수 <code>NMA(q)</code>(AP-LLR <code>q+qs</code>비트·CN sign+2 min 저장)로부터 <code>E(q,V_L,N)=NMA(q)/V_nom²·Σ_ℓ φ̄_N(ℓ)V²(ℓ)</code> (식8).</li><li>핵심식: fault율 <code>ε=min(exp(a+bV+cV²),1/2)</code> (식7, 22nm에서 (a,b,c)=(22.12,−68.14,0)) - 전압↓→fault↑ 관계를 회귀로 모델링.</li><li>유한길이 성능: DE의 <code>p_e^∞</code>에서 유한길이 BER <code>p_e^N</code> 및 iteration 수 CCDF <code>φ̄_N(ℓ)</code>를 가우시안 컨볼루션(식5,6)으로 추정, bit-true 시뮬로 정확성 확인.</li><li>최적화: 제약 최적화(식9)를 좌표하강(CD)으로 - <code>q</code>(전수탐색), <code>N</code>, <code>V</code>를 교대 최적화, 각 단계에서 <code>p_e,opt=min_{α,β} p_e^LN</code> 성능제약 검증.</li><li>확장: 반복별 전압 <code>V(ℓ)</code> 최적화를 DE-Gear-Shift 동적계획(트렐리스 최저비용 경로)으로 풀어 추가 이득.</li><li>결과: 공칭(0.8V) 대비 고정전압 최적화로 53~60% 에너지 절감, 반복별 전압으로 pe=10^-6에서 추가 20~30% 절감; 최적 <code>V≈0.49~0.54</code>, <code>q=5~7</code>, <code>N</code>은 SNR↑·pe↑에 따라 축소.</li><li>한계: HW 미구현(시뮬·이론), rate 0.5 protograph·row-layered·특정 22nm SRAM fault 모델 가정, 정정능력 향상 아닌 에너지 최적화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset min-sum CN 갱신</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>offset β min-sum CN은 우리 min-sum CN과 동일 계열 - 알고리즘 골격 일치</td></tr><tr><td>VN/AP-LLR 갱신·양자화(q비트)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>양자화 비트수 q 최적화는 우리 VN 양자화/LLR 정밀도 설계에 직결</td></tr><tr><td>LLR scaling α·offset β·양자화 파라미터</td><td>ecc_data.h <code>PARAM_LLR</code>, channel.cpp <code>Set_LLR_Th()</code></td><td>α,β,q 공동최적 개념을 우리 LLR 테이블/threshold 튜닝에 참고 가능</td></tr><tr><td>iteration 수 분포·조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>φ̄_N(ℓ) iteration 분포는 조기종료 통계와 관련, 에너지 모델 입력</td></tr><tr><td>faulty 메모리 XOR 모델, 전압 스케일 에너지</td><td>대응 없음</td><td>전압-fault 에너지 최적화/faulty 메모리 모델은 Prime ECC(bit-exact 정확 시뮬)에 대응 모듈 없음</td></tr><tr><td>protograph 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호 로드에 대응하나 우리는 특정 QC-LDPC 고정, protograph 최적화는 재검증 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — offset min-sum 계열이라 알고리즘 골격은 정합하고 양자화 비트·α·β 최적화 방법론은 우리 LLR 튜닝에 참고할 만하나, 핵심 기여인 전압-fault 에너지 최적화·faulty 메모리 모델은 bit-exact 정확 시뮬레이터 성격의 Prime ECC와 목표가 달라 직접 이식가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10273447",
+  "title": "Energy Optimization of Faulty Quantized Min-Sum LDPC Decoders",
+  "year": 2023,
+  "venue": "IEEE ISTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": 0.5,
+  "code_length": "1130~24400",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "faulty quantized offset Min-Sum의 에너지 모델화 + 부호길이·양자화비트·공급전압을 좌표하강으로 공동최적화(반복별 전압까지)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "알고리즘 개선이 아닌 전압/양자화/길이의 에너지 최적화, faulty 메모리 모델(22nm SRAM)·row-layered 가정에 의존, HW 미구현",
+  "todo_check": "NAND용 고정 QC-LDPC에서 q만 최적화 시 에너지 이득, LLR 양자화 테이블에 α·β 공동최적 적용 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10273447---energy-optimization-of-faulty-quantized-min-sum-ldpc-decoders-2023-ieee-istc">ieee:10273447 - Energy Optimization of Faulty Quantized Min-Sum LDPC Decoders (2023, IEEE ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

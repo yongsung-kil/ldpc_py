@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9037092</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9037092---fine-grained-bit-flipping-decoding-for-ldpc-codes-2020-ieee-tcas-ii-express-briefs">ieee:9037092 - Fine-Grained Bit-Flipping Decoding for LDPC Codes (2020, IEEE TCAS-II: Express Briefs)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>에너지함수의 두 항(Cn, Sn)을 세분 분류해 비트별 flipping 확률을 다르게 부여하는 fine-grained BF(G-FBF/N-FBF) 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BSC(binary symmetric channel) 기반 hard-decision BF 계열로 NAND soft-read/LLR 프레임과 직접 정합 안 됨</td></tr><tr><td>추가확인</td><td>Table II의 fmax·gatecount·정확 throughput 수치는 텍스트 손상으로 확인 불가, 원문 표 대조 필요</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision bit-flipping 계열 개선으로 Prime ECC의 soft-decision min-sum 주류 파이프라인과는 결이 다르나, 저복잡도 조기 스크리닝 단계(BF pre-decoder)로서 참고 가치는 제한적으로 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>BSC 채널에서 (3,6) rate-0.5 및 (3,12) rate-0.75 regular LDPC(N=1296)에 대한 hard-decision bit-flipping(BF) 디코더를 다룸.</li><li>기존 BF류(TPGDBF, PPBF)는 에너지 함수 <code>En(t) = xn(t)⊕yn + Σ_{m∈Mn} s(mt)</code>의 두 항(correlation Cn, unsatisfied-check-count Sn)에 동일 가중치를 둬 정보 활용이 비효율적이라는 문제를 제기.</li><li>LML(local maximum likelihood) 해석에 따르면 두 항의 중요도가 iteration마다 달라지므로, 가중치 대신 <strong>분류(classification) 기반</strong>으로 비대칭 처리.</li><li>핵심 기법: VN을 <code>Cn(t)</code> 값(0/1)으로 2개 클래스로 나누고, GB 계열(G-FBF)은 최대에너지 VN에 대해 클래스별 flipping 확률 <code>pm0, pm1</code>을 따로 적용.</li><li>NB 계열(N-FBF)은 <code>[Cn(t), Sn(t)]</code> 조합으로 세분화(dv=3이면 8개 그룹)하여 flipping 확률 함수 <code>pC_nS_n = Q(Cn(t), Sn(t))</code>를 정의 (식 3).</li><li>G-FBF는 TPGDBF의 3rd part만 수정(Alg. 4), N-FBF는 VN 연산만 수정(Alg. 3)하여 기존 구조에 최소 변경으로 적용.</li><li>파라미터(q, {pm0,pm1})는 수치 탐색(numerical search)으로 최적화하며, HW 친화적으로 근사 조정(예: q값을 barrel shifter 2개+로직으로 구현 가능하게 재작성).</li><li>결과: dv3R050N1296, α=0.02에서 G-FBF의 FER은 TPGDBF의 1/6, N-FBF의 FER은 PPBF의 1/5로 개선.</li><li>HW 합성(TSMC 90nm) 결과 G-FBF는 TPGDBF 대비 throughput +107.5%, area efficiency +81.5%(면적 +14.2%); N-FBF는 PPBF 대비 동일 주파수에서 area efficiency 개선(면적 +7.8%).</li><li>한계: hard-decision 전용(soft LLR 미사용), 특정 benchmark 코드(N=1296, dv=3)에 대한 파라미터 최적화이며 일반 rate/length로의 확장성은 본문에서 다루지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flipping 에너지함수/분류 기반 flipping 확률</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 soft-decision 디코더이며 hard-decision BF 알고리즘 자체는 보유하지 않음</td></tr><tr><td>VN 처리 로직 (에너지 계산, flip 조건)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>HD(hard-decision) 모드가 있어 개념적으로 유사한 위치이나 알고리즘 구조는 상이</td></tr><tr><td>iteration 루프/조기종료</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>BF는 syndrome=0으로 조기종료하며 이는 Prime ECC의 CRC 조기종료와 목적은 유사하나 메커니즘 상이(대응 없음에 가까움)</td></tr><tr><td>HW 파이프라인/병렬 VNU 구조</td><td><code>decoder.cpp</code> (VNU 관련), <code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>완전병렬 VNU 구조 자체는 참고 가능하나 BF 전용이라 직접 이식 어려움</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — Prime ECC는 soft-decision(2SD/3SD) min-sum 기반이며 hard-1bit BF 계열 기법은 채널/디코더 프레임이 근본적으로 다름.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9037092",
+  "title": "Fine-Grained Bit-Flipping Decoding for LDPC Codes",
+  "year": 2020,
+  "venue": "IEEE TCAS-II: Express Briefs",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.75",
+  "code_length": 1296,
+  "soft_quant": "hard-1bit",
+  "key_contribution": "에너지함수의 두 항(Cn, Sn)을 세분 분류해 비트별 flipping 확률을 다르게 부여하는 fine-grained BF(G-FBF/N-FBF) 제안",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "BSC 기반 hard-decision BF 계열로 NAND soft-read/LLR 프레임과 직접 정합 안 됨",
+  "todo_check": "Table II의 fmax·gatecount·정확 throughput 수치는 텍스트 손상으로 확인 불가, 원문 표 대조 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9037092---fine-grained-bit-flipping-decoding-for-ldpc-codes-2020-ieee-tcas-ii-express-briefs">ieee:9037092 - Fine-Grained Bit-Flipping Decoding for LDPC Codes (2020, IEEE TCAS-II: Express Briefs)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

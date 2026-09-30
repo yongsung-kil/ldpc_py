@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10333372</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10333372---neural-adjusted-min-sum-decoding-for-ldpc-codes-2023-vtc2023-fall">ieee:10333372 - Neural Adjusted Min-Sum Decoding for LDPC Codes (2023, VTC2023-Fall)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.2~0.667</td></tr><tr><td>부호length</td><td>150~528</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>deep-unfolding으로 CN 갱신 시 edge·iteration별 BP/MS 규칙을 학습선택(λ)하고 정규화가중치(α)를 학습하는 NAMS 복호기</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>edge·iteration별 학습 파라미터(λ,α)를 오프라인 훈련해야 하고 일부 edge에 tanh(BP rule)가 필요해 순수 min-sum 대비 면적↑, 5G 짧은 부호에서만 검증</td></tr><tr><td>추가확인</td><td>NAND 고rate QC-LDPC에서 학습된 λ/α의 일반화·양자화 영향, tanh(BP) 사용비율(Λ≈14%)의 HW 면적 비용</td></tr></tbody></table>
+<blockquote><p>총평: min-sum을 BP 수준으로 끌어올리는 edge/iteration별 학습선택 CN 갱신 기법으로, Prime ECC의 min-sum 디코더 성능개선에 개념적으로 이식 가치가 있으나 오프라인 NN 훈련·부분 tanh 필요·5G 짧은부호 검증이 리스크.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G 표준 LDPC(C1 [30,150], C2 [176,528], protograph)로 AWGN/BPSK 채널, LLR 입력 iterative 복호.</li><li>문제: MS는 BP의 tanh를 근사해 복잡도는 낮지만 메시지를 과대추정(overestimation)해 성능손실, NMS/OMS/AMS로 일부 보정하나 AMS는 입력 LLR만 보고 최소크기 edge 1개에만 BP 적용해 코드구조·iteration 무시.</li><li>모델: memoryless binary-input symmetric 채널, all-zero codeword 가정(대칭채널이라 실패확률이 송신어 무관)으로 훈련 단순화.</li><li>핵심 기법: CN 갱신 sublayer에 NN 기반 선택 mechanism 도입 — edge·iteration별 이진 파라미터 <code>λ(t,e(i,j))</code>로 BP rule(식(2)) 또는 MS rule(식(5)) 자동선택.</li><li>핵심 식: <code>L_c2v = sigmoid(λ)·L^BP_c2v + sigmoid(1-λ)·L^MS_c2v</code> (식(9)) — 이산 λ를 sigmoid로 감싸 미분가능·학습가능화.</li><li>확장: 학습가능 곱셈 정규화가중치 <code>α(t,e(i,j))</code>를 각 edge 메시지에 적용(식(10))해 MS 왜곡·Tanner graph cycle 영향을 추가 보정.</li><li>부수 디테일: misestimation level(식(8))로 초기 iteration·특정 CN에서 과대추정이 큼을 보이고, λ에 penalty term(식(11), 계수 L)을 넣어 sparse화(MS를 더 자주 쓰도록, Λ≈14%).</li><li>학습절차: 2-step — 1단계 α 고정 후 λ 학습(sparsity penalty), 2단계 λ 고정 후 α를 iteration별 greedy(성장형)로 학습; TensorFlow+Adam, SNR별 72000 샘플.</li><li>결과: C1에서 NAMS가 NNMS 대비 0.15~0.4 dB 개선(T=6), T=10 고SNR에선 NBP도 능가; 복잡도는 MS/NMS/NNMS보다 약간 높고 NBP보다 훨씬 낮음(BP rule 드물게 사용).</li><li>한계: HW 미설계·시뮬만, edge/iteration별 파라미터를 오프라인 훈련해야 하고 일부 edge에 tanh 필요, 검증이 5G 짧은 부호(150/528)에 한정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum 갱신 및 BP/MS 선택</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC min-sum CN 연산에 선택 mechanism/BP 분기 삽입 지점</td></tr><tr><td>iteration/edge별 정규화가중치 α</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration별 파라미터 테이블 구조와 결이 유사, α 테이블화 가능</td></tr><tr><td>deep-unfolding 학습(λ,α 최적화)</td><td>local_opt.cpp</td><td>LLR 자동최적화 유틸과 유사한 오프라인 파라미터 튜닝 경로</td></tr><tr><td>iterative message passing 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>전체 이터레이션 루프에 layer-dependent 파라미터 주입</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Prime ECC의 min-sum을 BP 수준으로 개선하는 아이디어가 CN 갱신·iteration별 LLR 테이블 구조에 맞아 이식 접점이 분명하나, 오프라인 NN 훈련·부분 tanh(BP) 도입·양자화/일반화 검증 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10333372",
+  "title": "Neural Adjusted Min-Sum Decoding for LDPC Codes",
+  "year": 2023,
+  "venue": "VTC2023-Fall",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.2~0.667",
+  "code_length": "150~528",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "deep-unfolding으로 CN 갱신 시 edge·iteration별 BP/MS 규칙을 학습선택(λ)하고 정규화가중치(α)를 학습하는 NAMS 복호기",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "edge·iteration별 학습 파라미터(λ,α)를 오프라인 훈련해야 하고 일부 edge에 tanh(BP rule)가 필요해 순수 min-sum 대비 면적↑, 5G 짧은 부호에서만 검증",
+  "todo_check": "NAND 고rate QC-LDPC에서 학습된 λ/α의 일반화·양자화 영향, tanh(BP) 사용비율(Λ≈14%)의 HW 면적 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10333372---neural-adjusted-min-sum-decoding-for-ldpc-codes-2023-vtc2023-fall">ieee:10333372 - Neural Adjusted Min-Sum Decoding for LDPC Codes (2023, VTC2023-Fall)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

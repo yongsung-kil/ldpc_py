@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9136635</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9136635---lowering-the-error-floor-of-ldpc-codes-based-on-bit-rectification-strategy-2019-ieee">ieee:9136635 - Lowering the Error Floor of LDPC Codes Based on Bit-Rectification Strategy (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.769</td></tr><tr><td>부호length</td><td>1057</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Monte-Carlo bit-searching으로 오류비트 위치 후 재인코딩+병렬연접 디코더로 error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>재인코딩으로 rate 손실(0.769-&gt;0.735)+PCGC 이중디코더 추가, trapping-set 사전분석 회피가 장점</td></tr><tr><td>추가확인</td><td>Monte-Carlo bit-searching 오프라인 비용/온라인 적용가능성, QC-LDPC(z=32)로 확장 시 병렬성 정합</td></tr></tbody></table>
+<blockquote><p>총평: trapping-set 직접분석 없이 MC 시뮬로 오류비트를 찾아 병렬연접 재부호로 error-floor를 낮추는 전략 - Prime ECC error-floor 대책 아이디어로 참고가치 있으나 rate손실·이중디코더 오버헤드가 이식 걸림돌.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN, binary LDPC, 예시 <code>(1057,813)</code> MacKay code(rate 0.769), 재인코딩용 <code>(96,48)</code> MacKay/PEG code(rate 1/2). SPA 복호.</li><li>문제: 대부분 LDPC가 iterative 복호 시 trapping set으로 error-floor 발생 - 부호구성/복호최적화/연접 기존기법은 특정부호 한정·trapping-set 사전정보 필요·복잡도 증가 단점.</li><li>모델: trapping set에 속한 비트는 수렴 실패가 반복된다는 관찰(오류비트↔trapping set 높은 상관).</li><li>기법1(bit-searching): Monte-Carlo 시뮬로 각 비트 j의 미수렴 빈도 <code>P_MC=(1/N)ΣE_j(i)</code> 산출, reliable-level 벡터 <code>E</code> 상위(가장 안 믿음직한)에서 오류비트 a개 선택.</li><li>근거: <code>E</code>를 정렬하면 waterfall 구간이 나타나 비트를 2단 신뢰도로 분리 → 임계점(예 (765,48))에서 오류비트 수 결정.</li><li>기법2(재인코딩): 선택된 a비트를 <code>(a+b,a)</code> LDPC로 재부호 → 서로 다른 Tanner graph 2개에 존재시켜 동일비트가 양쪽 trapping set에 걸릴 확률을 낮춤. 수정 rate <code>r_m=m/(n+b)</code>, <code>b&lt;&lt;n</code>이라 rate손실 미미.</li><li>기법3(최적화 PCGC 디코더): component decoder별 지역반복 <code>k</code>, 전역 super-iteration <code>W</code>. decoder1 수렴 실패 시 decoder2가 다른 구조에서 올바른 LLR을 얻어 decoder1로 전달(오류비트 LLR은 decoder1→2 전달 차단).</li><li>결과1: <code>(1057,813)</code> 48비트 선택 시 error-floor를 <code>1e-7→1e-9</code>로 저감, rate 0.769→0.735(손실 미미). 60비트는 개선 포화.</li><li>결과2: 재부호를 <code>(96,48)</code> PEG code로 교체 시 BER <code>1e-8</code>에서 0.2dB 이득. 복잡도는 곱셈연산 기준 약 8.54% 증가(avg iter 2.869→2.876).</li><li>한계: HW 미설계, 시뮬만, MC bit-searching이 특정 SNR(4.15dB)에서 오프라인 수행 필요, 이중 component decoder 오버헤드.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-searching 기반 post-processing(오류비트 위치→재복호)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>error-floor 대책 post-processing 훅으로 개념 접목 가능</td></tr><tr><td>수렴실패/미수렴 비트 추적</td><td>corner.cpp (수렴실패 추적)</td><td>MC 오류비트 통계와 유사, 오류비트 후보 수집에 재사용 여지</td></tr><tr><td>재인코딩용 보조 PCM 생성</td><td>encoder.cpp <code>Generate_PCM_encoding()</code></td><td>(a+b,a) 보조부호 추가는 dual-diagonal 고정 인코더와 정합 부담</td></tr><tr><td>병렬연접(PCGC) 이중 디코더</td><td>대응 없음</td><td>Prime ECC는 단일 QC-LDPC 디코더, 병렬연접 구조 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — error-floor 저감은 Prime ECC 관심영역이나, 재인코딩에 따른 rate손실·보조부호·이중 디코더가 고정 QC-LDPC(z=32)/dual-diagonal 인코더에 큰 재검증 부담을 주며, HW 미설계라 아이디어(오류비트 후처리) 수준 참고에 그침.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9136635",
+  "title": "Lowering the Error Floor of LDPC Codes Based on Bit-Rectification Strategy",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.769,
+  "code_length": "1057",
+  "soft_quant": "무관",
+  "key_contribution": "Monte-Carlo bit-searching으로 오류비트 위치 후 재인코딩+병렬연접 디코더로 error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "재인코딩으로 rate 손실(0.769-&gt;0.735)+PCGC 이중디코더 추가, trapping-set 사전분석 회피가 장점",
+  "todo_check": "Monte-Carlo bit-searching 오프라인 비용/온라인 적용가능성, QC-LDPC(z=32)로 확장 시 병렬성 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9136635---lowering-the-error-floor-of-ldpc-codes-based-on-bit-rectification-strategy-2019-ieee">ieee:9136635 - Lowering the Error Floor of LDPC Codes Based on Bit-Rectification Strategy (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

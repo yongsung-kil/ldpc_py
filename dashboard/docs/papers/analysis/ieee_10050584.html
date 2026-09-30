@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10050584</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10050584---a-design-method-of-high-parallelism-qc-ldpc-decoder-based-on-fpga-2022-icicsp">ieee:10050584 - A Design Method of High Parallelism QC-LDPC Decoder Based on FPGA (2022, ICICSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Overlapped-NMSA용 충돌회피 저장주소 스킴으로 고병렬 디코더 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.1</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CCSDS (8176,7154) 특정부호·NMSA 기반, gatecount 없음·FPGA만, 정정능력 개선 아님</td></tr><tr><td>추가확인</td><td>z=511 서브매트릭스를 z=32 lifting 구조에 맞출 때 저장스킴 재설계 필요</td></tr></tbody></table>
+<blockquote><p>총평: CCSDS 고정부호용 FPGA 저장주소 스킴 - 알고리즘 신규성 낮고 우리 min-sum과 중복, 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: CCSDS 권고 (8176,7154) regular QC-LDPC (rate≈0.875), row weight 32 / col weight 4, 서브매트릭스 A 크기 511×511, deep-space 통신 대상.</li><li>문제: TPMP(two-phase message passing)는 CNU·VNU가 교대 동작해 HW 이용률 50%로 낮음 - 고속화 병목.</li><li>채널/모델: AWGN, BP 계열 LLR 메시지 패싱, 초기 채널정보 <code>yj</code> LLR 입력.</li><li>핵심 기법: Overlapped-NMSA - horizontal(C2V)·vertical(V2C) 업데이트를 동시 수행. H를 행 14블록·열 112블록(각 73×73)으로 분할해 한 iteration을 <code>73+a</code> 클록에 완료.</li><li>핵심 식: C2V <code>r_ij = η·sgn(∏)·min|q|</code> (correction factor <code>η=0.75</code>), V2C <code>q_ji = y_j + Σ r_i'j</code> - min-sum 정규화로 곱셈 제거.</li><li>확장: 동시 업데이트로 새 메시지 이점은 잃어 수렴은 느리나 같은 시간에 2배 iteration 수행해 상쇄.</li><li>구현 디테일: 저장주소 스킴 - 각 track마다 C2V/V2C RAM 분리, 7데이터 bit-concatenation(49bit×73depth), barrel shifter로 offset 순환시프트해 주소충돌 회피.</li><li>양자화: (초기정보, 중간메시지) 비트수 실험 - (6,7) 채택(fractional bit +1). 최대 iteration 15 선택.</li><li>결과: VIVADO+MATLAB, 최대 210MHz, 최소 throughput 1.1Gbps(avg iter 10일 때 1.76Gbps), Eb/N0=4dB에서 BER 10^-6, 자원소모 20% 미만.</li><li>한계: 특정 CCSDS 부호 고정, gatecount 미제시, FPGA만(ASIC 없음), 정정능력 자체 개선 아님(속도/저장 최적화).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Overlapped-NMSA 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>C2V/V2C 동시 스케줄 - 우리 Dual-Update와 유사 개념, 중복성 있음</td></tr><tr><td>CN min-sum 정규화(η=0.75)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>normalized min-sum - 이미 보유 기법</td></tr><tr><td>양자화 (6,7) LLR 비트</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>LLR 양자화 테이블 - 이미 보유</td></tr><tr><td>저장주소/barrel shifter/MEM 라우팅</td><td>대응 없음</td><td>z=511·73블록 전용 저장스킴, z=32 HCU/GT 구조와 불일치</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - Overlapped-NMSA와 저장주소 스킴 모두 CCSDS 특정부호·FPGA 전용이며, 핵심 알고리즘(normalized min-sum, 교대 업데이트 스케줄)은 Prime ECC가 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10050584",
+  "title": "A Design Method of High Parallelism QC-LDPC Decoder Based on FPGA",
+  "year": 2022,
+  "venue": "ICICSP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "8176",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Overlapped-NMSA용 충돌회피 저장주소 스킴으로 고병렬 디코더 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.1,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "CCSDS (8176,7154) 특정부호·NMSA 기반, gatecount 없음·FPGA만, 정정능력 개선 아님",
+  "todo_check": "z=511 서브매트릭스를 z=32 lifting 구조에 맞출 때 저장스킴 재설계 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10050584---a-design-method-of-high-parallelism-qc-ldpc-decoder-based-on-fpga-2022-icicsp">ieee:10050584 - A Design Method of High Parallelism QC-LDPC Decoder Based on FPGA (2022, ICICSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

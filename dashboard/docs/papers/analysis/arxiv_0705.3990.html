@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_0705.3990</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv07053990v2---interior-point-decoding-for-linear-vector-channels-20072008-arxiv">arxiv:0705.3990v2 - Interior Point Decoding for Linear Vector Channels (2007/2008, arXiv)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>204</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC MLD를 fundamental polytope 위 convex 최적화로 완화한 interior point decoding 제안, ISI/partial response 등 memory 있는 채널에서 joint MPD 대비 우수한 BER·throughput 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ISI/partial response(memory 있는 채널) 전용 설계이며 순수 memoryless NAND 채널에는 해당 없음. HW 미설계, gradient/Hessian/Cholesky/Jacobi 등 부동소수점 수치최적화 기반이라 NAND HW 대비 이질적</td></tr><tr><td>추가확인</td><td>built-in min-sum(부분)이 표준 normalized min-sum과 어떻게 다른지, NAND에 memory 채널 요소(예: inter-cell interference)가 있다면 응용 가능성</td></tr></tbody></table>
+<blockquote><p>총평: ISI/partial-response 채널을 위한 convex-optimization 기반 신개념 디코더로 이론적 가치는 있으나, 순수 memoryless NAND 채널·binary QC-LDPC HW와는 채널모델·연산구조가 근본적으로 달라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널모델: linear vector channel <code>r = Ax + b + z</code> (A: interference matrix, ISI/partial response(PR) 채널 포함), 시뮬은 n=204, m=102, wc=3, wr=6 regular LDPC + PR 채널(dicode, 1-D, EPR4, long-tail δ=16 등).</li><li>문제: 기존 joint message-passing decoder(BCJR+min-sum)는 memory가 긴 채널(δ 큰 PR)에서 계산량이 폭발적으로 증가해 적용 어려움 — memory 채널용 새로운 저복잡도 디코더 필요.</li><li>핵심 가정: MLD <code>argmin_{x∈C} d(Ax+b, r)</code>를 Feldman의 fundamental polytope <code>P</code> 위로 완화(relax)한 convex 최적화 문제(relaxed MLD)로 재정의.</li><li>핵심 기법: interior point algorithm(barrier function 방식)으로 merit function <code>ψ(x)=t·f(x)+B(x)</code> (f=거리목적함수, B=log-barrier <code>-Σln(-θ_i)</code>)를 최소화, outer loop에서 t를 점진적으로 키움.</li><li><code>θ_i</code> (parity constraint 위반도)를 O(w_r) 시간에 계산하는 feasibility check(Lemma 3)로 탐색점이 항상 polytope 내부(P*)에 머물도록 보장 — 이 식이 매 iteration 실행가능성 판정의 핵심.</li><li>확장 기법: 근사 gradient(O(w_r·n))와 근사 Hessian(O(w_r·n), Newton법)을 이용해 exact gradient의 O(2^wr·n) 비용을 회피, Newton 방식이 gradient descent보다 적은 iteration으로 수렴.</li><li>구현 디테일: PR채널에서 Hessian은 대역(Toeplitz) 구조를 가져 Cholesky 분해(O(n)) 또는 Jacobi/under-relaxation 반복법(병렬화 가능)으로 Newton 방정식을 O(n)에 해결. inner loop 후 built-in normalized min-sum(dumping factor κ≈0.7~0.9)으로 secondary decoding 수행.</li><li>최적화 절차: outer loop마다 (1) inner loop(gradient/Newton) 반복, (2) built-in min-sum으로 codeword 검증, (3) parity 만족 시 종료, 아니면 t := αt로 증가.</li><li>결과: 1-D 채널에서 Newton(5,5)이 joint MPD 대비 BER 1e-4에서 1.5dB 이득, throughput은 소프트웨어 구현 기준 Newton+Cholesky 1715 blocks/sec vs joint MPD 359 blocks/sec(약 4.8배). EPR4 채널에서는 반대로 joint MPD가 1.8dB 우세.</li><li>한계: memoryless AWGN이 아닌 ISI/PR(memory) 채널 전용 정식화이며, HW 구현·게이트카운트 없음(소프트웨어 시뮬 throughput만 제시), 채널 계수에 따라 성능이 크게 갈림(EPR4에서 열세).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| Interior point / convex 최적화 디코딩 전체 | 대응 없음 | Prime ECC는 message-passing(min-sum) 구조로 gradient/Hessian/Newton 기반 최적화 프레임워크 자체가 없음 |
+| built-in normalized min-sum(secondary decoding) | decoder.cpp `CNU_Update_New_Mag()` | 이미 보유한 normalized/scaled min-sum과 유사 개념이나 논문에서는 보조 역할일 뿐 |
+| ISI/partial response 채널 모델 | channel.cpp `Set_R_Offset()` | Prime ECC는 AWGN/RBER/fixed-error 채널만 지원, memory 있는 ISI 채널 미지원 (대응 미흡) |</code></pre>
+<blockquote><p>적용 가치: 낮음 — ISI/partial-response(memory 채널) 전용 convex-optimization 디코더로, NAND의 memoryless binary QC-LDPC HW 구조(min-sum 기반 bit-exact 파이프라인)와 연산모델이 근본적으로 다르며 HW 검증도 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:0705.3990v2",
+  "title": "Interior Point Decoding for Linear Vector Channels",
+  "year": 2007,
+  "venue": "arXiv",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": 204,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC MLD를 fundamental polytope 위 convex 최적화로 완화한 interior point decoding 제안, ISI/partial response 등 memory 있는 채널에서 joint MPD 대비 우수한 BER·throughput 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "ISI/partial response(memory 있는 채널) 전용 설계이며 순수 memoryless NAND 채널에는 해당 없음. HW 미설계, gradient/Hessian/Cholesky/Jacobi 등 부동소수점 수치최적화 기반이라 NAND HW 대비 이질적",
+  "todo_check": "built-in min-sum(부분)이 표준 normalized min-sum과 어떻게 다른지, NAND에 memory 채널 요소(예: inter-cell interference)가 있다면 응용 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv07053990v2---interior-point-decoding-for-linear-vector-channels-20072008-arxiv">arxiv:0705.3990v2 - Interior Point Decoding for Linear Vector Channels (2007/2008, arXiv)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

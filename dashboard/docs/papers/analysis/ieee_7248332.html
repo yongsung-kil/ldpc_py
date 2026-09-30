@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7248332</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7248332---coding-scheme-for-3d-vertical-flash-memory-2015-ieee-icc">ieee:7248332 - Coding Scheme for 3D Vertical Flash Memory (2015, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.902 (923/1023)</td></tr><tr><td>부호length</td><td>1023</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>3D vertical NAND의 fast detrapping을 의도적 ICI로 보상 — side-information 기반 additive encoding(PBCH)으로 상단 WL cell을 stuck-at 결함처럼 마스킹</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 아님(PBCH/additive encoding), decoder 무관·encoder-side 결함마스킹 전용, SLC 시뮬만이고 HW 미설계</td></tr><tr><td>추가확인</td><td>fast detrapping side-info 획득에 read 1~2회 추가 → write 속도 저하 tradeoff, 3D charge-trap 채널모델이 우리 타깃 NAND에 해당되는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC가 아닌 additive encoding(PBCH) 기반 결함마스킹으로 fast detrapping을 보상하는 인코더-레벨 기법이라 binary QC-LDPC 코드베이스에 이식할 요소가 사실상 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 3D vertical(charge-trap) NAND, SLC(<code>B=1</code>) 시뮬, additive encoding에 <code>[n=1023, k=923, l, r]</code> PBCH(partitioned BCH) 부호 사용.</li><li>문제: 3D vertical NAND는 프로그램 직후 얕게 트랩된 전자가 빠져나가는 <code>fast detrapping</code>(급속 charge loss)으로 threshold voltage가 하강해 분포가 열화됨.</li><li>채널모델: <code>Y = V + S3D + Zfast + Zrandom</code>, ICI는 WL-plane 간만 유효(<code>γBL=γSSL=0</code>)로 단순화 <code>ΔICI = γ(ΔV(i-1)+ΔV(i+1))</code>, <code>γ=0.1</code>.</li><li>핵심 기법: fast detrapping으로 하강한 셀의 threshold voltage를 위쪽 (i+1) WL 셀의 의도적 ICI로 끌어올려 보상 — ICI를 adverse effect가 아닌 보상 수단으로 역이용.</li><li>결함마스킹 공식화: 보상이 필요한 상단 셀 <code>C(i+1,j)</code>를 stuck-at 0(=S1) 결함으로 간주하고, Tsybakov additive encoding으로 codeword가 그 위치에서 해당 값을 갖도록 마스킹(capacity-achieving).</li><li>side-info 획득: read level η와 identify level ζ 두 번(원본 데이터 보유 시 한 번) read로 fast detrapping 셀 위치 식별, ζ가 식별 셀 수를 조절.</li><li>redundancy 분할: 총 redundancy 100을 masking용 <code>l</code>과 random-error 정정용 <code>r</code>로 분배(Table II), 최적 <code>(l*, r*)</code>는 ζ와 σZfast에 종속.</li><li>인코딩 구현: two-step encoding으로 PBCH를 부호화(계산복잡도 고려), 표준 BCH 유사 설계.</li><li>결과: 의도적 ICI 보상 후 threshold voltage 분포 개선, side-info 사용 시 <code>P(decoding failure)</code>가 미사용(l=0) 대비 유의미하게 감소(σZfast 지배적일수록 개선폭 큼). ζ=0.2가 주어진 조건서 최적.</li><li>한계: LDPC 무관(BCH계열), SLC 시뮬만이며 HW 미설계, side-info 획득으로 write 속도 저하(read가 write보다 critical하다는 논리로 정당화).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>additive encoding / PBCH 결함마스킹 인코더</td><td>대응 없음</td><td>우리 인코더는 binary QC-LDPC dual-diagonal, PBCH·결함마스킹 요소 없음</td></tr><tr><td>fast detrapping side-info read (η/ζ)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>개념적 read-threshold 유사성뿐, 알고리즘 이식 대상 아님</td></tr><tr><td>디코더/정정능력/LDPC 요소</td><td>대응 없음</td><td>논문은 encoder-side side-info coding으로 LDPC 디코더를 다루지 않음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — non-LDPC additive encoding(PBCH) 기반 결함마스킹으로 binary QC-LDPC 디코더/부호설계에 떼어 쓸 이식 요소가 없다. NAND 직접 타깃이라는 점만 관심.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7248332",
+  "title": "Coding Scheme for 3D Vertical Flash Memory",
+  "year": 2015,
+  "venue": "IEEE ICC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "encoder",
+  "code_type": "기타",
+  "code_rate": 0.902,
+  "code_length": "1023",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "3D NAND fast detrapping을 의도적 ICI로 보상 - side-info 기반 additive encoding(PBCH)으로 상단 WL cell을 stuck-at 결함 마스킹",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 아님(PBCH/additive encoding), decoder 무관·encoder-side 결함마스킹 전용, SLC 시뮬만·HW 미설계",
+  "todo_check": "side-info 획득 read 1~2회 추가로 write 속도 저하, 3D charge-trap 채널모델이 우리 타깃 NAND에 해당되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7248332---coding-scheme-for-3d-vertical-flash-memory-2015-ieee-icc">ieee:7248332 - Coding Scheme for 3D Vertical Flash Memory (2015, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

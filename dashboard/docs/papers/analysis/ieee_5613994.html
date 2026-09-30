@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5613994</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5613994---fast-simulation-of-ldpc-codes-over-additive-non-gaussian-noise-channel-2010-istc">ieee:5613994 - Fast Simulation of LDPC Codes over Additive Non-Gaussian Noise Channel (2010, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Chernoff bound 기반 simulation PDF 설계로 non-Gaussian 채널 LDPC의 저 error-rate를 IS로 고속 추정(FER 1e-10에서 MT 대비 ~1/2000 시간)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN+impulse noise 채널 특화 IS 평가법이라 NAND read/양자화 모델과 무관; error boundary &lt; -1인 trapping set 처리 불가</td></tr><tr><td>추가확인</td><td>없음 (평가 방법론 논문, 이식 대상 복호/부호/HW 요소 없음)</td></tr></tbody></table>
+<blockquote><p>총평: non-Gaussian(AWGN+impulse) 채널에서 LDPC 저 error-rate를 importance sampling으로 고속 추정하는 평가 방법론 논문으로, 복호기·부호·HW 개선이 없고 NAND 채널과도 무관해 Prime ECC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: rate-1/2 regular Gallager 부호(<code>C1</code>: n=504, <code>C2</code>: n=1008)의 저 error-rate를 additive non-Gaussian(AWGN+impulse) 채널에서 평가.</li><li>문제: 유한 길이 LDPC의 매우 낮은 error 확률(error floor)은 Monte-Carlo로 평가 불가, 기존 IS는 AWGN용 mean translation(MT)이라 non-Gaussian 채널에서 시간 단축 실패.</li><li>모델: 확률 <code>γ</code>로 impulse noise가 더해지는 혼합 PDF <code>f = (1-γ)fa + γf1</code> (variance <code>σb²</code> vs <code>σb²+σi²</code>).</li><li>IS 뼈대: <code>Pr(x∈D)=∫ I(x)(g/g*)g*dx</code>, dominant trapping set별 simulation PDF <code>f_t*</code>로 FER/BER estimator(식 6,10)를 unbiased하게 추정.</li><li>핵심 기법: simulation PDF를 Chernoff bound와 연관지어 설계 — <code>f*_{s1→s2}(r|s1) = {fe(r|s2)}^θmin {fe(r|s1)}^(1-θmin) / CB</code>.</li><li>핵심 의미: 최적 조건부 simulation PDF는 error 경계(indicator) × 원 PDF를 진짜 오류확률로 정규화한 것이며(식 14), Chernoff 지수 <code>θmin</code>이 이를 근사; AWGN이면 MT법과 동일(특수경우).</li><li>절차: Cole et al. 3단계(① trapping set 탐색 ② error boundary를 결정론적 noise로 결정 ③ dominant TS별 IS 합산) 재사용, PDF만 제안식으로 교체.</li><li>구현: 임의 PDF 난수 생성이 어려워 성분별 곱 형태(식 21)로 근사, dominant TS 1000개(제안)/100개(사용) 선택, boundary &lt; -1인 TS는 제외.</li><li>결과: <code>C1</code>에서 FER 1e-10 추정에 MT 대비 ~1/2000, <code>C2</code>는 ~1/1600 시간; BER 1e-12에서 각각 ~1/120, ~1/20; CV(변동계수)가 MT는 Eb/No↑에 증가하나 제안법은 안정/감소.</li><li>한계: 평가 방법론뿐(복호/부호/HW 개선 없음), 특정 impulse-noise 채널 가정, boundary&lt;-1 TS 미처리, 제안법이 더 많은 TS 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>importance sampling 기반 저 error-rate 평가</td><td>channel.cpp</td><td>Prime ECC는 AWGN/RBER/fixed-error 주입 방식이라 IS estimator 구조가 다름(직접 대응 없음)</td></tr><tr><td>dominant trapping set 기반 error floor 추정</td><td>corner.cpp</td><td>수렴실패 추적과 개념적 접점뿐, non-Gaussian 채널 특화라 부적합</td></tr><tr><td>복호기/부호 자체</td><td>대응 없음</td><td>논문은 복호 알고리즘·부호구조를 바꾸지 않는 평가법</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — AWGN+impulse 채널 특화 IS 평가 방법론으로, NAND read/양자화 모델·복호·부호·HW 어느 것도 개선하지 않아 이식 산출물이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5613994",
+  "title": "Fast Simulation of LDPC Codes over Additive Non-Gaussian Noise Channel",
+  "year": 2010,
+  "venue": "ISTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "504",
+  "soft_quant": "무관",
+  "key_contribution": "Chernoff bound 기반 simulation PDF 설계로 non-Gaussian 채널 LDPC의 저 error-rate를 IS로 고속 추정(FER 1e-10에서 MT 대비 ~1/2000)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN+impulse noise 채널 특화 IS 평가법이라 NAND read/양자화 모델과 무관; error boundary&lt;-1 trapping set 처리 불가",
+  "todo_check": "없음 (평가 방법론 논문, 이식 대상 복호/부호/HW 요소 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5613994---fast-simulation-of-ldpc-codes-over-additive-non-gaussian-noise-channel-2010-istc">ieee:5613994 - Fast Simulation of LDPC Codes over Additive Non-Gaussian Noise Channel (2010, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

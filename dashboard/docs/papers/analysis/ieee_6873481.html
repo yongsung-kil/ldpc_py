@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6873481</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6873481---variable-min-sum-decoding-based-on-generalized-mutual-information-metric-2014-ieee-bmsb">ieee:6873481 - Variable Min-Sum Decoding Based on Generalized Mutual Information Metric (2014, IEEE BMSB)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>GMI 메트릭으로 iteration별 variable NMS scaling factor를 실제 LLR에서 Monte Carlo로 탐색</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>scaling sequence는 오프라인 탐색(테이블화 필요), DVB-T2 rate1/2 단일 부호·BPSK AWGN만 검증, error-floor 미분석</td></tr><tr><td>추가확인</td><td>GMI로 얻은 iteration별 α 시퀀스를 우리 적응형 LLR 테이블처럼 사전탑재 가능한지, 고rate QC-LDPC에서 이득 재현 여부</td></tr></tbody></table>
+<blockquote><p>총평: NMS scaling을 iteration별 GMI로 최적화하는 min-sum 개선 논문 - 우리 적응형 LLR 테이블과 결이 맞아 이식성 중, 다만 우리는 이미 iteration별 LLR threshold 테이블 보유라 중복 소지.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: LDPC min-sum 복호의 scaling factor 최적화. 검증 부호는 DVB-T2 <code>R=1/2</code>, 길이 64800 irregular (<code>λ(x)=0.2857x+0.2571x²+0.4572x⁷</code>, <code>ρ(x)=x⁵</code>).</li><li>문제: Min-Sum이 BP의 <code>tanh</code>를 min 근사로 단순화하나 성능 열화, NMS의 고정 scaling <code>α</code>는 iteration별 LLR 신뢰도 변화를 못 따라감.</li><li>배경 기법: CN 출력에 고정 <code>α∈(0,1]</code> 곱 = NMS(식6). 신뢰도가 iteration마다 커지므로 <code>α</code>도 가변이어야 함(식7).</li><li>선행(I-EXIT-P, Lechner): 최적 post-processing 함수(식8)를 MMSE로 선형근사해 iteration별 <code>α(I_e,v)</code>를 EXIT chart trajectory에서 탐색.</li><li>선행 한계: EXIT/DE는 무한길이·무cycle 가정 → 이론 threshold가 실부호 threshold와 불일치, 실디코더에서 오히려 NMS를 못 넘김.</li><li>핵심 기법(GMI): min-sum CN 출력 <code>U</code>와 송신비트 <code>B</code>의 generalized mutual information <code>I(B;U;α)</code>(식15)를 최대화하는 <code>α</code>를 iteration별로 선택(식16~17).</li><li>핵심 식: <code>α^(i)=argmin_α ∫ p_U^(i)(u) log2(1+e^{-αu}) du</code> (식18) - GMI 최대화가 곧 이 적분 최소화, 최적 post-processing <code>ũ=ln(p(u|0)/p(u|1))</code>의 선형근사.</li><li>실전 확장: DE 대신 실제 LLR에서 Monte Carlo로 <code>α^(i)=argmin (1/L)ΣΣ log2(1+e^{-αU_mn})</code>(식19) → 실부호 threshold 정합, 이론-실제 mismatch 해소.</li><li>결과: DVB-T2 64800 R=1/2, BPSK AWGN, max iter 50. GMI가 opt-NMS(α=0.85) 및 I-EXIT-P 대비 0.15dB 우수, BP와는 0.1dB 이내 접근(Fig.1 waterfall).</li><li>한계: HW 미설계, 단일 부호·BPSK AWGN만, iteration 감소 없음, node degree까지 반영한 scaling은 향후과제(복잡도 우려).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN scaling(NMS 변형)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum magnitude에 iteration별 scaling 적용 지점과 직결</td></tr><tr><td>iteration별 α 시퀀스 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블과 구조 유사, α 사전탑재 가능</td></tr><tr><td>GMI 기반 오프라인 scaling 탐색</td><td>local_opt.cpp (LLR 자동최적화)</td><td>Monte Carlo scaling 탐색을 우리 LLR 최적화 루틴에 접목 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - iteration별 min-sum scaling 최적화는 우리 적응형 LLR 테이블 파이프라인에 사상 가능하나, 이미 iteration 구간별 LLR threshold 테이블을 보유해 기여 중복 소지가 있고 고rate QC-LDPC 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6873481",
+  "title": "Variable Min-Sum Decoding Based on Generalized Mutual Information Metric",
+  "year": 2014,
+  "venue": "IEEE BMSB",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "64800",
+  "soft_quant": "미상",
+  "key_contribution": "GMI 메트릭으로 iteration별 variable NMS scaling factor를 실제 LLR에서 Monte Carlo로 탐색",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "scaling sequence는 오프라인 탐색(테이블화 필요), DVB-T2 rate1/2 단일 부호·BPSK AWGN만 검증, error-floor 미분석",
+  "todo_check": "GMI로 얻은 iteration별 α 시퀀스를 우리 적응형 LLR 테이블처럼 사전탑재 가능한지, 고rate QC-LDPC에서 이득 재현 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6873481---variable-min-sum-decoding-based-on-generalized-mutual-information-metric-2014-ieee-bmsb">ieee:6873481 - Variable Min-Sum Decoding Based on Generalized Mutual Information Metric (2014, IEEE BMSB)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1188405</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1188405---iterative-encoding-of-low-density-parity-check-codes-2002-isitieee">ieee:1188405 - Iterative Encoding of Low-Density Parity-Check Codes (2002, ISIT/IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>512~1008</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>디코더 아키텍처를 재사용하는 iterative(Jacobi) 인코더 및 그에 맞는 reversible LDPC 부호 구성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>인코더 회로 재사용이 목표이며 Prime ECC의 dual-diagonal 인코더와 부호구조가 상이, 정정성능 기여 없음</td></tr><tr><td>추가확인</td><td>reversible 구조(H_p^k=I)가 고rate NAND QC-LDPC에 적용 시 error-floor 영향 여부</td></tr></tbody></table>
+<blockquote><p>총평: 디코더 회로 재사용형 iterative 인코더 이론(2002)으로 Prime ECC의 고정 dual-diagonal 인코더/부호구조와 정합성이 낮아 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>목표: 별도 인코더 회로 없이 sum-product 디코더 아키텍처를 시분할 재사용해 인코딩, 회로 면적·전력 절감.</li><li>인코딩 문제를 <code>H_p x_k = b</code> (b = <code>H_u x_u^T</code>) 선형계 풀이로 환원.</li><li><code>H_p</code>가 상삼각(집합 <code>T</code>)이면 erasure 디코더(Algorithm 1)로 back-substitution하여 최대 m iteration 내 해를 구함(Theorem 1).</li><li>이를 고전 반복 행렬역변환과 연결: Gauss-Seidel = back-substitution, Jacobi method = <code>S=diag(A)</code>.</li><li>F2에서 Jacobi 반복은 <code>x_{k+1} = (H_p ⊕ I) x_k + b</code>가 되며, <code>(H_p ⊕ I)^k = 0</code>이면 k iteration에 수렴(Theorem 2) → 이를 "Jacobi encodable" 부호라 정의.</li><li>Jacobi 반복은 그래프상 message passing으로 표현되며 check-variable 업데이트가 sum-product과 동일해 디코더 HW 재사용 가능, node당 1연산으로 전력 이점.</li><li>Reversible LDPC 구성: <code>H_p^2=I</code>인 시드에서 Kronecker product 등 두 규칙으로 4-cycle 없이 성장(2-iteration encodable).</li><li>Regular (3,6) 구성: <code>c(x)=1+x+x^{m/2+1}</code> 순환행렬로 <code>(C⊕I)^4=0</code> 만족하는 (3,3)-regular 가역행렬 구성(Theorem 4, 4-iteration).</li><li>결과: n=1008 최적화 reversible irregular 부호가 랜덤 최적 부호와 AWGN sum-product(1000 iter)에서 Eb/No~1.8dB까지 유사, 이후 6-cycle 증가로 발산.</li><li>한계: HW 미설계(회로 재사용 개념 제시만), 시뮬만, 정정성능 개선 아닌 인코더 복잡도·구조 논문.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Jacobi iterative 인코더</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>Prime ECC는 dual-diagonal 고정 인코더로 iterative 방식과 상이</td></tr><tr><td>reversible 부호구조(순환/Kronecker 구성)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호구조 재설계는 이식 난이도 높음(특정 QC-LDPC 고정)</td></tr><tr><td>Jacobi message passing = sum-product 재사용</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>디코더 재사용 개념뿐, min-sum 성능 개선 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 인코더 회로 재사용 목적의 2002년 이론 부호구성 논문으로, Prime ECC의 고정 dual-diagonal 인코더·QC-LDPC 구조와 상이하고 디코딩 정정성능 기여가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1188405",
+  "title": "Iterative Encoding of Low-Density Parity-Check Codes",
+  "year": 2002,
+  "venue": "ISIT/IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "512~1008",
+  "soft_quant": "무관",
+  "key_contribution": "디코더 아키텍처를 재사용하는 iterative(Jacobi) 인코더 및 reversible LDPC 부호 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "인코더 회로 재사용이 목표이며 Prime ECC의 dual-diagonal 인코더와 부호구조가 상이, 정정성능 기여 없음",
+  "todo_check": "reversible 구조(H_p^k=I)가 고rate NAND QC-LDPC에 적용 시 error-floor 영향 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1188405---iterative-encoding-of-low-density-parity-check-codes-2002-isitieee">ieee:1188405 - Iterative Encoding of Low-Density Parity-Check Codes (2002, ISIT/IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

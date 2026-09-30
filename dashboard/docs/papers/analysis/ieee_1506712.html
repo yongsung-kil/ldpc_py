@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1506712</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1506712---an-improvement-on-the-modified-weighted-bit-flipping-decoding-algorithm-for-ldpc-codes-2005-ieee-communications-letters">ieee:1506712 - An Improvement on the Modified Weighted Bit Flipping Decoding Algorithm for LDPC Codes (2005, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.70~0.82</td></tr><tr><td>부호length</td><td>273~4095</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>check 신뢰도 계산 시 해당 bit 자신을 제외(2nd-min 사용)하고 가중치 α의 근사 이론식을 유도해 MWBF 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>WBF 계열은 BP/min-sum보다 성능 열위, regular FG/Gallager 코드 한정, HW 미설계, α는 SNR별 Monte Carlo 튜닝 필요</td></tr><tr><td>추가확인</td><td>2nd-min 추출 아이디어가 이미 min-sum(min1/min2)의 extrinsic 성질에 내포되어 추가이득이 있는지</td></tr></tbody></table>
+<blockquote><p>총평: WBF 계열 flipping 함수 개선(자기 bit 제외 + α 이론식)이나, min-sum을 이미 보유한 Prime ECC엔 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: regular <code>(dv,dc)</code> LDPC, BPSK/AWGN, 예제 FG-LDPC·Gallager 코드 (길이 273~4095, rate 0.70~0.82).</li><li>문제: MWBF는 syndrome·심볼 신뢰도를 결합하나 check 신뢰도 <code>wm=min|yn|</code>이 자기 bit 정보를 포함해 message-passing 관점에서 비효율.</li><li>모델: 수신 실수값 <code>yn=xn+vn</code>, hard-decision <code>zn</code>, syndrome <code>s=zH^t</code>, check 신뢰도는 참여 심볼 최소 절댓값 기반.</li><li>핵심기법: check→bit 신뢰도에서 해당 bit를 배제한 <code>wn,m = min_{i∈B(m)\n}|yi|</code> (식5) 사용 → 최소값이 자기 bit면 2번째 최소값 사용.</li><li>식 의미: extrinsic 원칙대로 자기 정보 배제해 flipping 판정의 신뢰도 정확도를 높임.</li><li>flipping 함수 <code>e_IMWBF,n = Σ(2sm-1)wn,m - α|yn|</code> (식6), 매 iter <code>n*=argmax e</code>로 1bit flip.</li><li>구현 디테일: 사전에 각 check의 두 최소 절댓값을 정렬·저장(추가 저장 M units, 비교 M(dc-2)회), iter 중 magnitude 갱신 없이 hard bit만 flip.</li><li>α 유도: min-sum LLR <code>|L2|=2wn,m/σ²</code>을 BP LLR <code>|L1|</code>에 근사시키는 계수로 보고 <code>α=(dv/dc)·E(|L1L2|)/E(|L1|²)</code> (식11) 근사식 도출.</li><li>결과: block error rate 1e-4에서 MWBF 대비 0.3~0.5dB, LP-WBF 대비 0.4dB gain, BP와는 0.55~0.6dB 격차. 식11의 α가 시뮬 최적값과 일치.</li><li>한계: 시뮬만, HW 미설계, WBF 계열로 BP/min-sum 대비 성능 열위, regular 코드 대상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>WBF/MWBF flipping 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>반복 복호 루프에 대응하나 min-sum과 다른 열위 패러다임</td></tr><tr><td>check 신뢰도 2nd-min(자기 bit 제외)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min1/min2 extrinsic이 이미 내포 — 사실상 보유</td></tr><tr><td>가중치 α (normalized 계수)</td><td>decoder.cpp <code>LDPC_Decoder()</code> (min-sum scaling)</td><td>normalized min-sum scaling과 유사, 중복</td></tr><tr><td>소프트 채널</td><td>yn</td><td></td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>채널 신뢰도 처리에 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — WBF 계열은 Prime ECC가 이미 보유한 min-sum보다 성능이 낮고, 핵심 아이디어(2nd-min extrinsic)도 min-sum min1/min2에 이미 내포되어 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1506712",
+  "title": "An Improvement on the Modified Weighted Bit Flipping Decoding Algorithm for LDPC Codes",
+  "year": 2005,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "273~4095",
+  "soft_quant": "미상",
+  "key_contribution": "check 신뢰도 계산 시 해당 bit 자신을 제외(2nd-min)하고 가중치 α의 근사 이론식을 유도해 MWBF 성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "WBF 계열은 BP/min-sum보다 성능 열위, regular FG/Gallager 코드 한정, HW 미설계, α는 SNR별 Monte Carlo 튜닝 필요",
+  "todo_check": "2nd-min 추출 아이디어가 이미 min-sum(min1/min2)의 extrinsic 성질에 내포되어 추가이득이 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1506712---an-improvement-on-the-modified-weighted-bit-flipping-decoding-algorithm-for-ldpc-codes-2005-ieee-communications-letters">ieee:1506712 - An Improvement on the Modified Weighted Bit Flipping Decoding Algorithm for LDPC Codes (2005, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

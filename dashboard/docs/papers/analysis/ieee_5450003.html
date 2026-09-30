@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5450003</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5450003---a-novel-algorithm-for-removing-cycles-in-quasi-cyclic-ldpc-codes-2009-ieee">ieee:5450003 - A Novel Algorithm for Removing Cycles in Quasi-Cyclic LDPC Codes (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.555~0.687</td></tr><tr><td>부호length</td><td>756~4113</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>QC 구조를 보존하면서 저복잡도로 tanner graph의 짧은 사이클을 제거해 girth를 늘리는 알고리즘 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호 구성(설계) 단계 최적화이며 디코더 구조 변경 없음, 검증은 SPA/FFT-QSPA 시뮬레이션(BPSK-AWGN)뿐이고 HW 검증 없음</td></tr><tr><td>추가확인</td><td>Prime ECC의 고정 H-matrix(base+shift, N_b=129)에 이 사이클 제거 알고리즘을 적용해 girth 개선 여지가 있는지, 재검증 비용 대비 이득 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC 구조를 유지하며 저복잡도로 girth를 늘리는 부호설계 기법으로, 저복잡도 인코딩 유지가 필요한 NAND ECC의 H-matrix 최적화에 이식 여지가 있으나 코드 재검증 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: base matrix <code>P</code>(J×L, 원소는 shift 값 <code>p_{j,l}</code>, 0≤p_{j,l}&lt;p)로 정의되는 QC-LDPC 부호, circulant permutation matrix <code>I(p_{j,l})</code>로 확장한 parity-check matrix <code>H</code>.</li><li>문제: 기존 사이클 제거법은 QC 구조를 보존하지 못해 인코딩 복잡도가 늘거나([9]), 파라미터(특히 code length) 선택 유연성이 부족함(특히 non-binary QC-LDPC).</li><li>가정: QC-LDPC에서 한 사이클의 "인접 사이클"(adjacent nonzero element로 정의)들이 같은 길이의 사이클 그룹(cycle-group)을 이루며, 그룹 내 임의의 한 사이클이 그룹 전체를 대표(characterize)한다는 QC 고유 성질을 이용.</li><li>핵심 기법: 체크노드 <code>r</code>의 neighborhood tree를 구성해 cycle-path를 탐색하고, 각 행 섹션(section)마다 새로 등장하는 사이클만 모은 집합 <code>C(1),...,C(J)</code>의 합집합 <code>C</code>로 전체 사이클(그룹 대표)을 중복 없이 탐색.</li><li>핵심 식: 보조 이진행렬 <code>M</code>(c×s, c=사이클 수, s=circulant 행렬 수)을 만들어 각 반복에서 열가중치(column weight)가 가장 큰 열(가장 많은 사이클이 지나가는 circulant 행렬)을 찾아 해당 circulant 행렬을 통째로 0-행렬로 치환(삭제)하고 관련 사이클을 M에서 제거, <code>M</code>이 all-zero가 될 때까지 반복 — 삭제하는 circulant 행렬 수를 최소화해 최소거리(및 error-floor) 저하를 억제.</li><li>확장: 여러 개의 서로 다른 QC parity-check matrix <code>H1,...,Hn</code>(같은 행 수, 같은 circulant 크기)을 옆으로 이어붙여 <code>H=[H1 H2 ... Hn]</code>를 만든 뒤, 이 알고리즘으로 짧은 사이클(주로 length-4)을 제거해 더 긴/유연한 non-binary QC-LDPC 부호를 구성.</li><li>부수 디테일: 탐색 복잡도를 <code>Q(2l)</code>(제안 알고리즘)와 <code>Q'(2l)</code>(기존 [9]/[10] 방식)로 수식 유도해 비교, 예시(p=63,J=4,L=8,l=2)에서 제안 알고리즘이 약 165배 저복잡도.</li><li>학습/최적화: 별도 학습 없음. 결정론적 그리디(탐욕적 column-weight 최대 삭제) 알고리즘.</li><li>결과: (4113,2288) rate-0.556 이진 QC-LDPC를 girth 8→10으로 개선해 BER 10⁻⁶에서 약 0.4dB 이득; 16-ary (360,240) 부호는 girth 6→8로 1.25dB 이득이며 동일 rate의 IEEE 802.16e 이진 (1440,960) 부호 대비 0.15dB(BER)/0.2dB(FER) 우위.</li><li>한계: 부호 구성(설계) 단계에만 적용되며 디코더/HW 변경 없음, 검증은 AWGN 채널 SPA/FFT-QSPA 시뮬레이션(최대 반복 50회)뿐, NAND 채널·soft-read 양자화 관련 언급 전혀 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC base matrix / circulant shift 구조</td><td><code>ecc_data.h</code> <code>PCM_b</code>, <code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC도 base+shift QC-LDPC 구조라 사이클 제거 알고리즘이 동일 표현 위에서 동작 가능</td></tr><tr><td>저복잡도 cycle removal (girth 확대)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix 생성/로드 단계)</td><td>H-matrix 재설계 시 참고 가능하나 코드는 특정 QC-LDPC 고정이라 재검증 부담 큼</td></tr><tr><td>non-binary QC-LDPC 결합 구성(Section IV)</td><td>(대응 없음)</td><td>Prime ECC는 binary 전용, non-binary 결합 기법은 적용 대상 아님</td></tr><tr><td>SPA/FFT-QSPA 디코딩 성능 검증</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>검증에 쓰인 디코더 자체는 Prime ECC의 min-sum과 다른 계열(Sum-Product), 디코더 이식 대상 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC-LDPC 구조를 보존하는 저복잡도 girth 확대 기법은 H-matrix 설계 단계 이식 이론상 가능하나, Prime ECC는 특정 H-matrix가 고정되어 있어 재검증 부담이 크고(§4 이식 난이도 "높음" 항목) HW/디코더 이득은 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5450003",
+  "title": "A Novel Algorithm for Removing Cycles in Quasi-Cyclic LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.555~0.687",
+  "code_length": "756~4113",
+  "soft_quant": "무관",
+  "key_contribution": "QC 구조를 보존하면서 저복잡도로 tanner graph의 짧은 사이클을 제거해 girth를 늘리는 알고리즘 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호 구성(설계) 단계 최적화이며 디코더 구조 변경 없음, 검증은 SPA/FFT-QSPA 시뮬레이션(BPSK-AWGN)뿐이고 HW 검증 없음",
+  "todo_check": "Prime ECC의 고정 H-matrix(base+shift, N_b=129)에 이 사이클 제거 알고리즘을 적용해 girth 개선 여지가 있는지, 재검증 비용 대비 이득 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5450003---a-novel-algorithm-for-removing-cycles-in-quasi-cyclic-ldpc-codes-2009-ieee">ieee:5450003 - A Novel Algorithm for Removing Cycles in Quasi-Cyclic LDPC Codes (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

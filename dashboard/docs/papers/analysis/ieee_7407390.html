@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7407390</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7407390---detector-for-mlc-nand-flash-memory-using-neighbor-a-priori-information-2016-ieee-tvlsi">ieee:7407390 - Detector for MLC NAND Flash Memory Using Neighbor-A-Priori Information (2016, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.90</td></tr><tr><td>부호length</td><td>4096(입력)/4544(출력)</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>MLC NAND CCI 후처리 detector(Even-AP/All-AP/All-AP-CCR): 이웃셀 a-priori로 간섭제거 후 LLR 생성, SNR 최대 2dB↑</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>O(N) add/mul per wordline (Post-Comp 대비 소폭↑, gatecount 미상)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 디코더 자체가 아닌 채널 detector(soft-input 생성)로 우리 min-sum 코어 밖 - CCI 모델·even-odd bitline 아키텍처·CCR 파라미터 확보 필요</td></tr><tr><td>추가확인</td><td>우리 channel/LLR 모델(RBER·AWGN 기반)에 CCI 셀간섭 모델·CCR LUT를 접목 시 read 비용·양자화 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: NAND MLC의 CCI를 이웃셀 a-priori로 제거해 LDPC용 soft LLR 품질(SNR 2dB, waterfall)을 높이는 채널 detector로, NAND 직접 타깃이나 디코더 코어 밖 소프트정보 전처리라 이식은 채널/LLR 레이어에 국한.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 2bit/cell MLC NAND(even-odd bitline)로, 셀 임계전압 <code>V=X+I+N</code> (X=쓰기전압, I=CCI 간섭, N=Gaussian 잡음), 4레벨(11/10/00/01).</li><li>문제: 노드 스케일링으로 인접셀 결합용량이 커져 CCI가 임계전압을 왜곡, soft-decision LDPC용 정확한 채널 detector가 필요.</li><li>모델: CCI 강도 <code>I=Σ ΔX_k·γ_k</code> (γ=결합용량비 CCR, 수직 γy·대각 γxy는 bounded Gaussian 랜덤변수, 수평 γx는 상수), even셀 5개·odd셀 3개 이웃 간섭.</li><li>기법(Even-AP): 먼저 odd bitline 셀을 Post-Comp <code>V'=V−Î</code>로 정화한 뒤, 그 a-priori 기대전압 <code>X̄=Σ f_sp(V)·X_sp</code>로 even셀 CCI를 더 정확히 추정·제거.</li><li>핵심: readback <code>V</code>를 초기전압 <code>X</code>로 오용하던 Post-Comp를 개선 - 정화된 이웃셀의 기대치 <code>X̄</code>로 대체해 추정오차 축소.</li><li>확장(All-AP): 다음 wordline aggressor 3셀까지 순차 정화(odd(i+1)→even(i+1)→odd(i)→even(i))해 모든 간섭원에 a-priori 적용.</li><li>확장(All-AP-CCR): 측정 vs 기대 전압시프트 MSE 비용함수 <code>F(μγy,μγxy)</code>를 gradient-descent로 최소화해 CCR 평균을 오프라인 추정, LUT 저장(런타임 계산 회피).</li><li>soft-info: MLE 기반 Gaussian kernel로 <code>f11/f10/f00/f01(V)</code> 추정 후 MSB/LSB LLR <code>L_msb=log[(f00+f01)/(f10+f11)]</code> 등 계산해 BP 디코더 초기화.</li><li>결과: s=2에서 All-AP가 Post-Comp 대비 SIR 1.1dB, Dong 대비 2dB↑(1.8bit/cell=rate0.9 기준), rate 0.90 QC-LDPC(4096/4544, col-weight 5, flooding BP 25iter)에서 BER/FER 개선.</li><li>한계: HW 미설계·floating-point 시뮬, bitline 순차처리로 detection latency 추가, 즉시 이웃만 모델링(원거리 이웃은 future work).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CCI 제거 후 soft LLR 생성(f_sp→L_msb/L_lsb)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-read LLR/threshold 생성 레이어에 대응 - CCI 보정 전처리를 추가할 접점</td></tr><tr><td>Gaussian kernel 채널 추정 / read-voltage 양자화</td><td>channel.cpp soft-read LLR 양자화·threshold</td><td>채널 모델 확장(CCI 항 추가) 가능, 단 Prime ECC는 AWGN/RBER 기반</td></tr><tr><td>BP(flooding) 복호로 성능평가</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>detector가 만든 LLR을 소비하는 쪽 - 디코더 코어 자체는 무변경</td></tr><tr><td>CCR LUT / 이웃셀 a-priori 계산</td><td>대응 없음</td><td>Prime ECC에 셀간섭(CCI) 모델·even-odd bitline 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND 직접 타깃이라 관련성은 높으나, 기여가 LDPC 디코더가 아닌 채널 detector(soft-input 전처리)라 이식은 <code>channel.cpp</code> LLR/threshold 레이어에 국한되고 CCI/CCR 모델·bitline 아키텍처를 새로 도입해야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7407390",
+  "title": "Detector for MLC NAND Flash Memory Using Neighbor-A-Priori Information",
+  "year": 2016,
+  "venue": "IEEE TVLSI",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "4096(입력)/4544(출력)",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "MLC NAND CCI 후처리 detector(Even-AP/All-AP/All-AP-CCR): 이웃셀 a-priori로 간섭제거 후 LLR 생성, SNR 최대 2dB↑",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "O(N) add/mul per wordline (gatecount 미상)",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "LDPC 디코더 자체가 아닌 채널 detector(soft-input 생성)로 우리 min-sum 코어 밖 - CCI 모델·even-odd bitline 아키텍처·CCR 파라미터 확보 필요",
+  "todo_check": "우리 channel/LLR 모델(RBER·AWGN 기반)에 CCI 셀간섭 모델·CCR LUT를 접목 시 read 비용·양자화 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7407390---detector-for-mlc-nand-flash-memory-using-neighbor-a-priori-information-2016-ieee-tvlsi">ieee:7407390 - Detector for MLC NAND Flash Memory Using Neighbor-A-Priori Information (2016, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

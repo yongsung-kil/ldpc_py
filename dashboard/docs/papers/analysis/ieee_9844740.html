@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9844740</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9844740---adaptive-gradient-descent-bit-flipping-diversity-decoding-2022-ieee-communications-letters">ieee:9844740 - Adaptive Gradient Descent Bit-Flipping Diversity Decoding (2022, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.84</td></tr><tr><td>부호length</td><td>155~2048</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GDBF-w/M 성분 디코더를 GA로 학습·다이버시티 결합한 결정론적 AD-GDBF로 BP 대비 error-floor 성능 초과</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(hard-decision) 전제, HW 미설계, 최대 iteration 수백~1000으로 latency 큼, 코드별 error pattern 학습 의존</td></tr><tr><td>추가확인</td><td>NAND soft-read(2~3bit LLR) 채널로 확장 가능 여부 및 z=32 병렬 HW에서 반복수 폭증 시 throughput 타당성</td></tr></tbody></table>
+<blockquote><p>총평: trapping-set 지식 없이 GA로 BP를 넘는 error-floor 개선을 BSC에서 달성하나, hard-decision·다반복·HW 미설계라 NAND 이식은 post-processor 관점의 부분 채택에 그친다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC(crossover <code>α</code>)상의 (N,K) LDPC, regular/irregular 모두, 정수연산 기반 hard-decision 비트플립 디코더.</li><li>문제: 유한길이 LDPC의 trapping set 탓에 BP가 ML 한계에 못 미치고 error floor 발생; FAID는 column-weight-3에 한정, 고차수/irregular엔 설계 난이도 큼.</li><li>기반 알고리즘 GDBF-w/M: 각 반복에서 역에너지 <code>E(vi)=a(xi⊕yi)+b·Σ_{j∈P(vi)} sj − m[τi]</code> 계산 후 최대치 비트 flip (식1,2), momentum 벡터 <code>m</code>(비증가 정수열)로 국소최적 탈출.</li><li>핵심 기법 diversity: 성분 디코더 <code>Dect(zt,Lt,at,bt,mt)</code>를 순차 연결, restart 스위치 <code>rt∈{0,1}</code>로 이전 출력 재사용 or 채널벡터 재시작 선택 (AD-GDBF).</li><li>파라미터 <code>rt,at,bt,mt</code>를 GA(유전 알고리즘)로 최적화; 결정론적(RNG 불필요)이며 regular 코드는 정수연산만으로 구현.</li><li>학습 절차(Algorithm 1): Dec0로 Monte-Carlo하여 오정정 패턴집합 <code>E(0)</code> 수집 → 라운드별 성분 디코더를 GA fitness(정정 패턴수 최대화)로 학습, <code>Nlow/Nup</code> 임계로 overfitting 방지·패턴집합 확장.</li><li>구현 디테일: 곱셈 불필요(×2,×4는 shift, ×3은 x+2x 가산 <code>β</code>개), N−1 magnitude comparator + N equality comparator.</li><li>최적화는 exhaustive search 대신 GA (구성 수 ~10^20로 전수탐색 불가).</li><li>결과: Tanner(N=155,R=0.4), iRISC QC(N=1296,R=0.5), 802.3an(N=2048,R=0.84), 5GNR irregular(N=1276,R=0.75)에서 (P)GDBF-w/M·ISBF 초과, BP error-floor를 1자릿수 낮춤(post-processor로 L=1000). FAID가 못 푸는 weight-6 패턴을 210 iter에 정정.</li><li>한계: BSC(hard) 전제, HW 미설계, 최대 반복 수백~1000으로 latency 큼, 성능이 학습 error-pattern 집합 품질에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>AD-GDBF 이터레이션(역에너지·flip 규칙)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>min-sum 대체/보완 디코더 루프로 이식 가능, 단 우리 min-sum 파이프라인과 상이</td></tr><tr><td>error-floor용 post-processor</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> + <code>corner.cpp</code>(수렴실패 추적)</td><td>BP/min-sum 미수렴 케이스에 후처리로 error-floor 저감 활용 여지</td></tr><tr><td>VN flip/양자화(정수 에너지)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>HD 경로와 개념 유사(hard-decision), soft LLR 경로엔 부적합</td></tr><tr><td>GA 파라미터 자동학습</td><td><code>local_opt.cpp</code>(LLR 자동최적화)</td><td>오프라인 파라미터 최적화 개념 대응(단 대상 파라미터 상이)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — BP를 넘는 error-floor 개선을 결정론적 정수연산으로 달성해 min-sum 미수렴 후처리로 채택 여지가 있으나, hard-decision(BSC) 전제·다반복 latency·HW 미설계로 NAND soft-read 주경로엔 직접 이식이 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9844740",
+  "title": "Adaptive Gradient Descent Bit-Flipping Diversity Decoding",
+  "year": 2022,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.4~0.84",
+  "code_length": "155~2048",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GDBF-w/M 성분 디코더를 GA로 학습·다이버시티 결합한 결정론적 AD-GDBF로 BP 대비 error-floor 성능 초과",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "BSC(hard-decision) 전제, HW 미설계, 최대 iteration 수백~1000으로 latency 큼, 코드별 error pattern 학습 의존",
+  "todo_check": "NAND soft-read(2~3bit LLR) 확장 가능 여부 및 z=32 병렬 HW에서 반복수 폭증 시 throughput 타당성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9844740---adaptive-gradient-descent-bit-flipping-diversity-decoding-2022-ieee-communications-letters">ieee:9844740 - Adaptive Gradient Descent Bit-Flipping Diversity Decoding (2022, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

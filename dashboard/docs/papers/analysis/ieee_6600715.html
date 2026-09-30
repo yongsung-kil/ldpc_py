@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6600715</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6600715---low-density-parity-check-codes-with-non-equiprobable-symbols-2013-ieee-communications-letters">ieee:6600715 - Low Density Parity Check Codes with Non-Equiprobable Symbols (2013, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.44~0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>비등확률(non-equiprobable) source 심볼용 LDPC 복호 - info/parity 비트 방향별 메시지 분리 + biased term, capacity 최대화 constellation 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>source redundancy(비등확률) 가정에 종속 - NAND 저장데이터는 등확률이라 전제 자체가 무관, tanh SPA 기반</td></tr><tr><td>추가확인</td><td>NAND write 데이터에 비등확률 전제가 성립하는 시나리오가 있는지(사실상 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 압축 잔여 redundancy로 인한 비등확률 심볼 채널에 특화된 LDPC 복호/신호설계로, 등확률 데이터를 다루는 NAND ECC와는 전제가 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>N=1024, K=512</code> regular-<code>(3,6)</code> LDPC, BIAWGN 채널, 심볼이 비등확률 <code>(p1,p2)=(0.3,0.7)</code>인 경우를 다룬다(압축 후 잔여 redundancy 가정).</li><li>문제: 등확률 전제 SPA는 비등확률 source에 최적이 아님 - conventional Tanner graph에서 info→parity 방향과 그 역방향 메시지가 서로 달라야 하는데 기존은 동일 취급.</li><li>모델: <code>y_i = d_i + n_i</code>, AWGN(분산 <code>N0/2</code>), 심볼 <code>d_i∈{x_{i,1},x_{i,2}}</code>에 prior <code>p_{i,1},p_{i,2}</code> 부여.</li><li>핵심기법 1(constellation 최적화): mutual information <code>I(X;Y)</code>를 Lagrange(<code>Ω</code>)로 최대화, <code>M=2</code>에서 최적 constellation <code>x1=√(Es p2/p1), x2=-√(Es p1/p2)</code>, <code>p1 g1 + p2 g2 = 0</code> 조건(Prop 1).</li><li>식 의미: 사전확률에 따라 constellation 간격/에너지를 비대칭 배분해야 심볼검출 오율 최소화이자 capacity 최대화가 동시 달성(Prop 2: 고SNR에서 capacity→<code>H(X)</code>).</li><li>핵심기법 2(방향성 메시지 전달): info bit와 parity bit에 대해 초기 LLR <code>V_i^(0)</code>를 다르게 정의 - info 비트에는 <code>ln(p_{i,2}/p_{i,1})</code> biased term 추가(식 16), parity 비트에는 미포함(식 18).</li><li>구현 디테일: 이후 CN 갱신은 기존 <code>tanh</code> SPA(식 19)와 동일, 차이는 초기 메시지와 방향 구분뿐(각 edge가 input/output 중 하나로만 고정).</li><li>학습/최적화: density evolution은 미적용(future work), constellation은 해석적 최적해 사용.</li><li>결과: 최적 constellation으로 등간격 대비 0.72 dB 이득(constellation 차원), 짧은 LDPC에서 약 0.4 dB 이득, 최적 source coding 시 추가 0.2 dB 여지(BER/PER 곡선, Fig.3~4).</li><li>한계: 시뮬만·HW 미설계, biased term/constellation이 source 비등확률 가정에 전적으로 종속되어 등확률 데이터(NAND 저장)엔 부합하지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>초기 LLR에 biased term 삽입(info/parity 구분)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>LLR 초기화 지점은 대응되나 등확률 전제라 biased term 불필요</td></tr><tr><td>tanh SPA CN 갱신(식 19)</td><td>decoder.cpp <code>C2V_Cal()</code> (단, Prime ECC는 min-sum 근사)</td><td>full-tanh SPA는 미보유·미채택(HW 부적합)</td></tr><tr><td>capacity 최대화 constellation 최적화</td><td>대응 없음</td><td>NAND read는 fixed 양자화, 송신 constellation 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 비등확률 source 전제와 constellation/에너지 최적화가 NAND 저장(등확률·고정 read)과 무관하고, 복호 변경도 초기 LLR biased term 수준에 그친다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6600715",
+  "title": "Low Density Parity Check Codes with Non-Equiprobable Symbols",
+  "year": 2013,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "비등확률 source 심볼용 LDPC 복호 - info/parity 방향별 메시지 분리 + biased term, capacity 최대화 constellation 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "source redundancy(비등확률) 가정에 종속 - NAND 저장데이터는 등확률이라 전제 자체가 무관, tanh SPA 기반",
+  "todo_check": "NAND write 데이터에 비등확률 전제가 성립하는 시나리오가 있는지(사실상 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6600715---low-density-parity-check-codes-with-non-equiprobable-symbols-2013-ieee-communications-letters">ieee:6600715 - Low Density Parity Check Codes with Non-Equiprobable Symbols (2013, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

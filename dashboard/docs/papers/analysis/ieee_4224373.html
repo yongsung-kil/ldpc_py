@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4224373</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4224373---a-perturbation-method-for-decoding-ldpc-concatenated-with-crc-2007-wcnc">ieee:4224373 - A Perturbation Method for Decoding LDPC Concatenated with CRC (2007, WCNC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>192~384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC-CRC 연접부호에서 CRC로 BP 복호 실패/오류를 검출하면, 비트별 신뢰도 파라미터(U(l), T(l))로 저신뢰 비트를 선정해 소량 가우시안 perturbation을 가하고 재복호하는 order perturbation BP(OPBP) 기법으로 error-floor를 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>재복호 루프(최대 100회) 특성상 실패 시 반복 복호를 여러 번 수행해 평균 연산량이 최대 SNR에서 약 10% 증가하며, CRC-k 부가로 code rate가 소폭 감소. 매우 짧은 codeword(192~384bit)에서만 검증됨</td></tr><tr><td>추가확인</td><td>Prime ECC 3.1의 Partial/Full CRC 조기종료 로직이 순수 성공판정용인지, 본 논문처럼 실패 시 비트별 신뢰도 기반 재복호 트리거로 확장 가능한 구조인지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: CRC 기반 오류검출과 저신뢰 비트 perturbation 재복호로 error-floor를 개선하는 기법으로, Prime ECC의 CRC 조기종료 모듈과 접점이 있어 개념적 이식 가능성은 있으나 재복호로 인한 latency 증가가 트레이드오프.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.16e 규격의 짧은 LDPC 코드(192/288/384bit, rate 1/2, 2/3, 3/4) + CRC-8 외부코드를 프레임 단위로 연접(LDPC-CRC), AWGN 채널.</li><li>풀려는 문제: 짧은 codeword LDPC는 high-SNR에서 undetected error(전체 오류의 30% 이상)가 많아 error-floor가 나타나며, 표준 BP만으로는 이를 검출·정정하지 못함.</li><li>핵심 가정: iterative decoding은 비선형 동역학계로 볼 수 있고, chaotic 특성상 초기조건에 민감하므로 초기 입력에 소량 perturbation을 가하면 다른(정상) 복호 결과로 수렴 가능.</li><li>핵심 기법: 표준 LLR-domain BP 복호(<code>u^0_i</code>, <code>ν_ij</code> 갱신) 후 <code>H·Ĉ^T=0</code>(패리티 체크) 및 CRC 다항식 검사로 오류 검출. 실패 시 비트별 신뢰도 파라미터 <code>U(l)</code>(불만족 체크노드 수), <code>T(l)=Σ R(m)·U_max(m\l)</code>(D(l,m)=3 거리의 제약노드 정보 활용)로 저신뢰 비트 L개 선정.</li><li>핵심 식: perturbation <code>y'_i = y_i + n_i (i∈I_L)</code>(식 7) — 선정된 L개 비트의 수신값에 평균0, 분산 <code>σ_p²</code>인 가우시안 잡음을 더해 초기 belief 분포를 바꿔 재복호(재부팅) 유도, 원본 <code>Y</code>는 메모리에 보관해 매 루프 재사용.</li><li>확장: 최대 N회(실험: 100회) 재복호 루프를 반복하며 매 루프 독립적인 perturbation vector 사용, CRC 통과 시 즉시 종료(조기종료).</li><li>부수 트릭: <code>L</code>(perturb 비트 수)과 <code>σ_p</code>(perturb 세기)는 시뮬레이션으로 그리드서치 최적화(<code>L=24+12i</code>, <code>σ_p=0.25+0.05j</code>). 최적값 예: LDPC(192,96)+CRC-8 → L=48, σ_p=0.40.</li><li>학습/최적화 절차: DE/GA/NN 아님, brute-force 시뮬레이션 기반 파라미터 탐색(FER 최소화 기준).</li><li>결과: FER 10⁻⁴에서 IEEE 802.16e 대비 약 0.7dB 이득, sphere-packing bound 대비 1.0~1.75dB 이내(codeword길이별). 평균 iteration은 SNR 증가에 따라 감소하나, high-SNR 영역에서 추가 연산량이 BP 대비 약 10% 증가. CRC-LDPC가 LDPC 단독 대비 undetected error를 99% 이상 검출.</li><li>한계: HW 미설계, 매우 짧은 codeword(192~384bit)에서만 검증, 재복호 루프로 인한 worst-case latency 증가(최대 100회 루프), CRC 부가로 인한 실효 code rate 손실.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CRC 기반 복호 성공/실패 판정</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC도 CRC로 조기종료를 판정하므로 CRC 검사 구조 자체는 대응됨</td></tr><tr><td>비트별 신뢰도(U(l), T(l)) 기반 저신뢰 비트 선정</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등 (HD/2SD/3SD 관련 함수)</td><td>유사 개념(비트별 magnitude/LLR 활용)은 있으나 U(l)/T(l) 같은 그래프 거리 기반 신뢰도 계산은 대응 없음</td></tr><tr><td>perturbation 재복호(잡음 추가 후 재시도)</td><td>대응 없음</td><td>Prime ECC 디코더에는 실패 시 초기값에 잡음을 더해 재복호하는 루프 구조가 없음(현재 조기종료는 성공판정 전용)</td></tr><tr><td>iteration별 LLR 재초기화(perturbed 입력으로 재시작)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>perturbed 초기값을 LLR 테이블에 다시 매핑하는 구조와 개념적으로 유사</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — CRC 실패 시 재복호를 시도하는 아이디어는 Prime ECC의 CRC 조기종료 모듈에 추가 가능한 error-floor 개선 후크이나, 신뢰도 계산 로직 및 재복호 루프가 새로 구현되어야 하고 latency 증가 트레이드오프가 있어 NAND read latency 민감도 재검토 필요.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4224373",
+  "title": "A Perturbation Method for Decoding LDPC Concatenated with CRC",
+  "year": 2007,
+  "venue": "WCNC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.75",
+  "code_length": "192~384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC-CRC 연접부호에서 CRC로 BP 복호 실패/오류를 검출하면, 비트별 신뢰도 파라미터(U(l), T(l))로 저신뢰 비트를 선정해 소량 가우시안 perturbation을 가하고 재복호하는 order perturbation BP(OPBP) 기법으로 error-floor를 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "재복호 루프(최대 100회) 특성상 실패 시 반복 복호를 여러 번 수행해 평균 연산량이 최대 SNR에서 약 10% 증가하며, CRC-k 부가로 code rate가 소폭 감소. 매우 짧은 codeword(192~384bit)에서만 검증됨",
+  "todo_check": "Prime ECC 3.1의 Partial/Full CRC 조기종료 로직이 순수 성공판정용인지, 본 논문처럼 실패 시 비트별 신뢰도 기반 재복호 트리거로 확장 가능한 구조인지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4224373---a-perturbation-method-for-decoding-ldpc-concatenated-with-crc-2007-wcnc">ieee:4224373 - A Perturbation Method for Decoding LDPC Concatenated with CRC (2007, WCNC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

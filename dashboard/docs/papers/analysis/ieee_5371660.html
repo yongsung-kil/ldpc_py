@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5371660</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5371660---a-new-method-of-detecting-cycles-in-tanner-graph-of-ldpc-codes-2009-ieee-conf">ieee:5371660 - A New Method of Detecting Cycles in Tanner Graph of LDPC Codes (2009, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>logic algebraic 계산으로 상대행렬 통합·삭제·수정을 통해 Tanner graph의 모든 cycle을 검출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(8,4,2) 초소형 예제뿐, girth·정정성능 개선 수치 없음; 노드마다 n-1회 통합이라 대형 코드엔 비현실적</td></tr><tr><td>추가확인</td><td>실제 대형 QC-LDPC에서 확장성/계산량, 기존 girth 산출법 대비 이점 유무</td></tr></tbody></table>
+<blockquote><p>총평: Tanner graph의 cycle을 논리대수로 열거하는 순수 그래프이론 도구 — 구성법 보조일 뿐 부호설계/HW/정정성능 결과가 없어 Prime ECC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary LDPC의 parity-check matrix <code>H</code>((n-k)×n) → Tanner graph의 short cycle(girth) 검출, 예제는 regular (8,4,2), rate 1/2.</li><li>문제: Tanner graph의 cycle이 belief-propagation의 메시지 통계 독립성을 깨 복호 정확도를 떨어뜨림 → 구성 단계에서 cycle(특히 length&gt;4)을 검출·제거 필요.</li><li>핵심 발상: 통신망 노드 간 전체경로 산출용 logic algebraic 알고리즘[6]을 개량해 cycle 검출에 적용.</li><li>상대행렬 구성: 각 edge에 라벨 <code>L1..Ls</code> 부여, <code>H'</code>(edge 라벨 행렬)로부터 식(1) <code>M=[[I,H'],[H'^T,I]]</code> (n×n 상대행렬) 구성.</li><li>통합·삭제: 식(2) <code>m'_ij = m_ik·m_kj + m_ij</code> (logic and/or)로 source node에서 타 노드로의 모든 route 산출, source당 n-1회 반복.</li><li>cycle 추출: n-1회 후 얻은 <code>M(n-1)</code>에서 single-edge item <code>Lg</code>을 갖는 원소를 골라 식(3)(4) <code>C_ij = m(n-1)_ij·Lg − Lg</code>로 <code>Lg</code> 제거 → node i·j를 지나는 cycle 집합.</li><li>전체 cycle: 모든 variable node를 순차 source로 반복하면 그래프의 모든 cycle 획득.</li><li>계산량: 코드길이 n, 정보비트 k에 대해 통합·삭제 n-1회 + 수정 k회로 한 source의 cycle 확보(논문 주장).</li><li>결과: (8,4,2) 예제에서 node 1의 cycle(C19, C110 등)을 손계산으로 열거, 타 방법과 동일 결과로 정확성만 검증.</li><li>한계: 초소형 toy 예제뿐, HW·복호성능·BER 없음, 대형 행렬 확장성/복잡도 미검증, non-binary·QC 특화 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Tanner graph cycle 검출(구성 보조)</td><td>대응 없음</td><td>구성/설계 단계 도구로 런타임 시뮬 코드베이스 밖</td></tr><tr><td>H-matrix/부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC를 로드만, girth는 설계 시 이미 확정</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — cycle/girth 검출은 표준 코드설계 상식 수준이고, Prime ECC의 QC-LDPC H-matrix는 이미 고정·검증되어 별도 cycle 열거 도구가 불필요하며 이 알고리즘은 대형 코드 확장성도 미검증.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:5371660",
+  "title": "A New Method of Detecting Cycles in Tanner Graph of LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE Conference",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8",
+  "soft_quant": "무관",
+  "key_contribution": "logic algebraic 계산으로 상대행렬 통합·삭제·수정을 통해 Tanner graph의 모든 cycle을 검출",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "(8,4,2) 초소형 예제뿐, girth·정정성능 개선 수치 없음; 노드마다 n-1회 통합이라 대형 코드엔 비현실적",
+  "todo_check": "실제 대형 QC-LDPC에서 확장성/계산량, 기존 girth 산출법 대비 이점 유무"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5371660---a-new-method-of-detecting-cycles-in-tanner-graph-of-ldpc-codes-2009-ieee-conf">ieee:5371660 - A New Method of Detecting Cycles in Tanner Graph of LDPC Codes (2009, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

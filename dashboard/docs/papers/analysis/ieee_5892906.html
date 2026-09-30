@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5892906</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5892906---accelerating-regular-ldpc-code-decoders-on-gpus-2011-ieee-j-selected-topics-in-applied-earth-observations-and-remote-sensing">ieee:5892906 - Accelerating Regular LDPC Code Decoders on GPUs (2011, IEEE J. Selected Topics in Applied Earth Observations and Remote Sensing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>log-SPA regular LDPC 디코더를 CUDA GPU로 병렬화 + 비동기 데이터전송(ADT)으로 CPU 대비 271배 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU 소프트웨어 가속(지상국)용, 32bit float log-SPA·full tanh 기반이라 NAND HW(min-sum, z=32) 이식 부적합</td></tr><tr><td>추가확인</td><td>없음 (알고리즘 신규성 없음, 순수 GPU 구현 최적화)</td></tr></tbody></table>
+<blockquote><p>총평: 위성/원격탐사 지상국용 regular LDPC 디코더의 CUDA GPU 구현·ADT 최적화 논문으로 271배 가속이 성과이나, 알고리즘은 표준 log-SPA이고 GPU float 구현이라 NAND용 binary QC-LDPC HW ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 위성/항공 원격탐사 데이터를 error-prone 무선링크로 지상국 전송, DVB-S2 등의 LDPC를 GPU로 복호.</li><li>풀려는 문제: ASIC/FPGA는 코드 rate/length/설계파라미터 유연성이 부족 → 지상국에 유연·저비용 고성능 복호 플랫폼으로 GPU 활용.</li><li>부호: regular LDPC(row weight <code>dc</code>, col weight <code>dv</code> 고정), 실험 3개 행렬 중 대표는 4000×8000 (rate ~0.5).</li><li>디코더 알고리즘: log-SPA(log sum-product) 5단계 - LLR 초기화, horizontal(CN, <code>sign×amplitude</code>), vertical(BN), iteration, hard decision.</li><li>핵심 식: CN 갱신은 <code>sign(L)</code>의 곱과 진폭 함수 합, BN 갱신은 인접 CN 메시지 합 + 채널 LLR (표준 message passing).</li><li>GPU 매핑: H행렬의 1(edge)을 GPU thread에 대응, block당 thread 수는 row/col edge 수의 LCM 배수 <code>n_t</code>로 결정, block 수 = edge수/n_t.</li><li>핵심 트릭: 비동기 데이터전송(ADT) - CPU↔GPU 데이터전송(DS/DR)과 kernel 실행(GKE)을 오버랩, 동기전송(SDT) 대비 최대 2배 이득(codeword 다수 시).</li><li>정밀도: 32bit single-precision float(참조 [18]의 8bit min-sum보다 정정능력↑ 주장), CN당 BN들은 같은 block에 배치(동기화).</li><li>결과(수치): Tesla C1060(240 core)에서 4000×8000·10 iteration 복호 1.808ms vs CPU(Xeon, double) 490.504ms → <strong>271배</strong> 가속, 행렬 클수록 가속 배율↑.</li><li>한계: 알고리즘 신규성 없음(표준 log-SPA), HW(ASIC/FPGA) 설계 아님, throughput(Gbps)·gate 수치 없음, GPU float 구현이라 임베디드 NAND 컨트롤러와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| log-SPA 디코딩 루프 | decoder.cpp LDPC_Decoder() | 반복 복호 루프는 대응하나 우리는 min-sum(HW), 논문은 full-SPA(GPU) |
+| CN horizontal 갱신 | decoder.cpp C2V_Cal(), CNU_Update_New_Mag() | sign×amplitude는 개념 대응하나 tanh 기반 SPA는 우리 min-sum과 이질 |
+| BN vertical 갱신 | decoder.cpp VN_Cal_HD() 등 | message passing 대응, 그러나 32bit float |
+| GPU thread/block 매핑, ADT | 대응 없음 | GPU 병렬화·데이터전송 최적화로 HW(z=32, HCU) 구조와 무관 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 표준 log-SPA를 GPU로 가속한 소프트웨어 구현 논문으로, 알고리즘 신규성이 없고 full-SPA/float/GPU 전제가 NAND 컨트롤러의 min-sum·고정소수·HW 병렬 구조와 맞지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5892906",
+  "title": "Accelerating Regular LDPC Code Decoders on GPUs",
+  "year": 2011,
+  "venue": "IEEE Journal of Selected Topics in Applied Earth Observations and Remote Sensing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "log-SPA regular LDPC 디코더를 CUDA GPU로 병렬화 + 비동기 데이터전송(ADT)으로 CPU 대비 271배 가속",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "GPU 소프트웨어 가속(지상국)용, 32bit float log-SPA·full tanh 기반이라 NAND HW(min-sum, z=32) 이식 부적합",
+  "todo_check": "없음 (알고리즘 신규성 없음, 순수 GPU 구현 최적화)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5892906---accelerating-regular-ldpc-code-decoders-on-gpus-2011-ieee-j-selected-topics-in-applied-earth-observations-and-remote-sensing">ieee:5892906 - Accelerating Regular LDPC Code Decoders on GPUs (2011, IEEE J. Selected Topics in Applied Earth Observations and Remote Sensing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

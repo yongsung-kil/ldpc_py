@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7867265</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7867265---design-and-implementation-of-scalable-throughput-fast-convergence-ldpc-decoder-2016-ieee-conference">ieee:7867265 - Design and Implementation of Scalable Throughput Fast Convergence LDPC Decoder (2016, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>512</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Scaled Min-Sum(SMS)+Weighted BF(WBF) 통합으로 short code 빠른 수렴·flooding 고throughput 확장형 디코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.4~27</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(512,256) 짧은 random (3,6) regular 부호·flooding 전용, QC-LDPC/고rate NAND와 구조 상이하고 gatecount@공정 미상</td></tr><tr><td>추가확인</td><td>76% scaling 감축(2 MSB 감산)·XOR 기반 WBF HW 트릭이 Prime ECC min-sum 정규화/면적에 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: SMS+WBF post-processing으로 short code 빠른 수렴·1.4~27Gbps 확장 throughput을 FPGA로 검증했으나 저rate·random 부호·flooding 전용이라 고rate QC-LDPC Prime ECC 이식성은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (512,256) rate-1/2 random regular (3,6) LDPC, BAWGN+BPSK, flooding(완전병렬) 스케줄, short code에서 고throughput 목표.</li><li>문제: 긴 부호는 성능 좋으나 HW 복잡·라우팅 난이, short code는 throughput 높으나 정정능력 부족 — 성능/throughput/복잡도 trade-off 해결.</li><li>핵심 기법: WBFSMS — Scaled Min-Sum(<code>SMS</code>, check node에 scaling factor <code>a</code>)로 노드를 steady state로 수렴시킨 뒤 WBF를 post-processing으로 적용해 오류정정 강화.</li><li>SMS check node 식 <code>E_new = a·(∏ sign)·min|L|</code>, VN 식 <code>L = uCh + Σ L_ij</code>, 경판정 후 syndrome null이면 조기종료.</li><li>WBF는 syndrome <code>S=y·H^T</code>와 error weight <code>Wij=Σ Sj·Hij</code>, <code>ei=Σ Wij</code>로 최대 <code>ei</code> bit flip — SMS 결과 오류를 보정.</li><li>cyclic mode: SMS·WBF 출력이 일치하는 노드의 LLR을 증가시켜(식8) 재복호, node deactivation의 error-floor 문제 회피.</li><li>HW 트릭: WBF를 XOR+permutation+decoder만으로 1클럭에 구현, scaling을 2 MSB 감산으로 근사해 로직 21→5(76% 감축), VNU 6→5 adder(16.6% 감축).</li><li>학습/최적화 절차 없음(scaling factor는 시뮬로 결정).</li><li>결과: 2.5dB에서 BER 10^-6·FER 10^-4·1.4Gbps, 6dB에서 27Gbps(250MHz), fast convergence 계열 대비 우수(단 serial [13] 제외이나 throughput 20배).</li><li>한계: short random (3,6) 부호 전용, gatecount@공정·전력 수치 본문 미기재(표 손상), QC-LDPC pipelining 아닌 flooding 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Scaled Min-Sum CN 연산(scaling factor a)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum 기반이나 scaling factor 명시 미확인 — scaling HW 트릭 참고 여지</td></tr><tr><td>WBF post-processing 이터레이션</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>BF 계열 post-processing은 Prime ECC min-sum 루프와 이질적</td></tr><tr><td>syndrome checker 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료 목적 유사하나 Prime ECC는 CRC 기반</td></tr><tr><td>flooding 완전병렬·라우팅/VNU HW</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>Prime ECC는 z=32 row 병렬 구조라 flooding random 부호와 정합 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — SMS+WBF 통합·flooding 아키텍처는 고rate QC-LDPC(z=32) Prime ECC와 부호·스케줄이 달라 직접 이식 어렵고, 참고할 만한 건 scaling 2-MSB 감산 등 국소 HW 절감 트릭뿐.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7867265",
+  "title": "Design and Implementation of Scalable Throughput Fast Convergence LDPC Decoder",
+  "year": 2016,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "512",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Scaled Min-Sum(SMS)+Weighted BF(WBF) 통합으로 short code 빠른 수렴·flooding 고throughput 확장형 디코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": "1.4~27",
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "(512,256) 짧은 random (3,6) regular 부호·flooding 전용, QC-LDPC/고rate NAND와 구조 상이하고 gatecount@공정 미상",
+  "todo_check": "76% scaling 감축(2 MSB 감산)·XOR 기반 WBF HW 트릭이 Prime ECC min-sum 정규화/면적에 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7867265---design-and-implementation-of-scalable-throughput-fast-convergence-ldpc-decoder-2016-ieee-conference">ieee:7867265 - Design and Implementation of Scalable Throughput Fast Convergence LDPC Decoder (2016, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10138824</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10138824---a-task-guided-normalized-min-sum-decoding-network-for-ldpc-codes-based-djscc-2023-ieee-communications-letters">ieee:10138824 - A Task-Guided Normalized Min-Sum Decoding Network for LDPC Codes-Based DJSCC (2023, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LLR shared unit + 적응형 multi-loss로 분산소스 상관을 복호에 활용한 멀티태스크 NNMS 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DJSCC(분산소스 상관·가상BSC)에 특화된 학습 디코더로 NAND 단일소스 시나리오에 부합 안 함</td></tr><tr><td>추가확인</td><td>LLR shared unit 없이 순수 NNMS 정규화 계수 학습만 떼어낼 때의 min-sum 이득 규모</td></tr></tbody></table>
+<blockquote><p>총평: DJSCC 분산소스 상관 활용용 멀티태스크 신경망 디코더로 NAND 단일소스 binary LDPC와 무관, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 두 상관 소스 X,Y를 각각 LDPC 부호화(<code>n=k+m</code>)한 DJSCC, 상관은 crossover <code>ρ</code>인 가상 BSC로 모델링, AWGN 채널.</li><li>문제: 기존 분리형 SNNMS 디코더는 소스 상관을 입력층에서만 활용해 추가 coding gain을 놓침.</li><li>채널/모델: 소스 X의 초기 LLR을 <code>ρ</code>와 상대소스 수신값으로 결합(식(1)), 정규화 min-sum 기반 신경망 복호.</li><li>핵심 기법 1: CN/VN 반복을 forward-propagation 망으로 unfold, 두 소스의 결합 H를 한 층에 통합해 병렬 복호.</li><li>핵심 식: CN층 <code>L(rji)=∏sgn·min(α·L(qi'j))</code>, 보정계수 <code>α</code>를 소스별(<code>αX,αY</code>) 학습 파라미터로 단순화(식(3)(4)).</li><li>핵심 기법 2: LLR shared unit — g번째 iteration 뒤 삽입, 외재정보 <code>Lex≈sgn(Lρ)·sgn(LLR)·min(|Lρ|,|LLR|)</code>로 소스 상관을 재주입(식(6)(7)(8)).</li><li>구현 디테일: VN층 가중치 <code>β</code>는 전부 1로 고정해 파라미터/학습 부담 절감.</li><li>학습: 적응형 multi-loss <code>Ltotal=λLX+(1-λ)LY</code>, <code>λ</code>가 태스크 쏠림 시 자동 균형(식(11)), SNR 1.25~4dB에서 TensorFlow 학습.</li><li>결과: P-LDPC(base matrix, PEG로 <code>n=800,m=400</code>)에서 분리형 SNNMS/joint NMS/joint BP 대비 BER 개선, JBP와 유사 성능을 tanh 없이 낮은 복잡도로 달성.</li><li>한계: HW 미설계·시뮬만, DJSCC 분산소스 전용, gate count/throughput 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>정규화 min-sum CN 연산(<code>α</code> 보정)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 자체는 대응, 그러나 학습형 정규화 계수는 코드상 미보유</td></tr><tr><td>iteration별/소스별 LLR 처리</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR 테이블은 대응하나 DJSCC 상관용 shared unit은 대응 없음</td></tr><tr><td>LLR shared unit / 외재정보 재주입</td><td>대응 없음</td><td>분산소스 상관 전용 구조, NAND 단일소스와 무관</td></tr><tr><td>멀티태스크 학습/adaptive loss</td><td>대응 없음</td><td>NN 학습 파이프라인 자체가 코드베이스에 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — DJSCC 분산소스 상관 활용이 본질이며 NAND 단일소스 binary QC-LDPC에 떼어낼 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10138824",
+  "title": "A Task-Guided Normalized Min-Sum Decoding Network for LDPC Codes-Based DJSCC",
+  "year": 2023,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": null,
+  "code_length": "800",
+  "soft_quant": "무관",
+  "key_contribution": "LLR shared unit + 적응형 multi-loss로 분산소스 상관을 복호에 활용한 멀티태스크 NNMS 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DJSCC(분산소스 상관·가상BSC)에 특화된 학습 디코더로 NAND 단일소스 시나리오에 부합 안 함",
+  "todo_check": "LLR shared unit 없이 순수 NNMS 정규화 계수 학습만 떼어낼 때의 min-sum 이득 규모"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10138824---a-task-guided-normalized-min-sum-decoding-network-for-ldpc-codes-based-djscc-2023-ieee-communications-letters">ieee:10138824 - A Task-Guided Normalized Min-Sum Decoding Network for LDPC Codes-Based DJSCC (2023, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

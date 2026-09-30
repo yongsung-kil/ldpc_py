@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9336349</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9336349---gpu-based-ldpc-decoding-for-5g-and-beyond-2021-ieee-ojcas">ieee:9336349 - GPU-Based, LDPC Decoding for 5G and Beyond (2021, IEEE OJCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33</td></tr><tr><td>부호length</td><td>25344</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>5G NR QC-LDPC 복호를 GPU CN/VN 커널로 매핑, 8-bit 양자화로 near-4Gbps throughput / 87us latency</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>3.964Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU 전용 SW 구현(SIMT), 알고리즘은 표준 scaled min-sum, NAND HW 디코더와 무관</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 5G vRAN용 GPU LDPC 복호 구현 사례로, 알고리즘은 이미 보유한 scaled min-sum 그대로이며 NAND binary QC-LDPC HW 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>5G NR QC-LDPC 복호를 NVIDIA GPU에서 가속. 부호는 base matrix <code>mb×nb</code>(BG1 46×68, BG2 42×52) + lifting factor <code>Z</code>(2~384) 구조.</li><li>문제: 5G LDPC는 rate/block/use-case 구성이 방대(51개 Z, 2 BG)해 FPGA/ASIC로 전부 지원하기 어려움 → SW(GPU)의 유연성으로 해결.</li><li>복호 알고리즘은 scaled min-sum(MSA), scale factor <code>γ</code>=0.75. CN 메시지 <code>Rmn = γ·(∏sign)·min|Qmn|</code> (식 2), VN 갱신 <code>Ln = Ln + Σ(Rmn 변화)</code> (식 3).</li><li>GPU 매핑: CN 커널·VN 커널 2개. 각 thread가 1개 CN 또는 VN 담당, block은 base graph의 row/col 처리.</li><li>병렬화: <code>α</code>개 CW를 macro-codeword(MCW)로 묶어 같은 block, <code>β</code>개 MCW를 batch 전송 → <code>α·β</code> CW 동시 복호. 제약 <code>αZ≤1024</code>.</li><li>two-min 알고리즘으로 CN에서 min1/min2 추적, sign product 계산(Kernel 1).</li><li>최적화: word length를 8-bit char로 축소(전송·global memory 접근 4x 절감), 최종 hard-decision bit-packing 커널, CUDA stream <code>η</code>개로 전송/연산 오버랩, H를 row/col-major compact로 constant memory 캐싱.</li><li>latency/throughput은 <code>α,β,η</code> 조정으로 트레이드오프(URLLC vs eMBB 타깃).</li><li>결과: TITAN RTX에서 char 기준 3964Mbps throughput, 최저 87us latency(전송 포함), iteration당 13.7us. 8-bit는 BER 미미하게 열화.</li><li>한계: 순수 GPU SW 구현, 알고리즘 신규성 없음, NAND용 HW 디코더 설계 아님, error-floor/정정능력 개선 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>scaled min-sum CN 연산(two-min, sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일 개념</td></tr><tr><td>VN LLR 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>LDPC_Decoder()</code></td><td>표준 갱신식, 신규성 없음</td></tr><tr><td>8-bit LLR 양자화</td><td>channel.cpp + <code>PARAM_LLR</code></td><td>soft-info 양자화는 이미 보유, GPU 특화라 이식 이점 없음</td></tr><tr><td>GPU 병렬화(MCW/batch/stream)</td><td>대응 없음</td><td>HW 모델(z=32, HCU, GT)과 아키텍처 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 알고리즘은 이미 보유한 scaled min-sum과 동일하고, 기여의 본질이 GPU SIMT 병렬화라 NAND용 QC-LDPC HW 디코더에 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9336349",
+  "title": "GPU-Based, LDPC Decoding for 5G and Beyond",
+  "year": 2021,
+  "venue": "IEEE OJCAS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.33,
+  "code_length": "25344",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "5G NR QC-LDPC 복호를 GPU CN/VN 커널로 매핑, 8-bit 양자화로 near-4Gbps throughput / 87us latency",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 3.964,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "GPU 전용 SW 구현, 알고리즘은 표준 scaled min-sum, NAND HW 디코더와 무관",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9336349---gpu-based-ldpc-decoding-for-5g-and-beyond-2021-ieee-ojcas">ieee:9336349 - GPU-Based, LDPC Decoding for 5G and Beyond (2021, IEEE OJCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

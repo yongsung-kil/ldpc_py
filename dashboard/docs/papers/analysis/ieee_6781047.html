@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6781047</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6781047---a-low-complexity-high-throughput-qc-ldpc-encoder-2014-ieee-transactions-on-signal-processing">ieee:6781047 - A Low Complexity-High Throughput QC-LDPC Encoder (2014, IEEE Transactions on Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2016~16000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>recursive multi-level QC-LDPC에 P·L·U LU분해+멀티레벨 메모리압축으로 선형복잡도·상수 clock 인코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>191.8Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>recursive(multi-level) QC-LDPC 구조 전용, Prime ECC의 dual-diagonal 고정 인코더와 정합 필요</td></tr><tr><td>추가확인</td><td>Prime ECC PCM이 이 재귀 확장 구조가 아니면 P·L·U 분해·압축 이득 재검증 필요, gate count 공정 미표기</td></tr></tbody></table>
+<blockquote><p>총평: recursive QC-LDPC용 LU분해+메모리압축 인코더 아키텍처로 인코더 레이어에 국한된 이식 대상, NAND 인코더 개선 참고 가치 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: recursively-constructed(multi-level) QC-LDPC 부호 HW 인코더, 부호 rate 1/2·3/4, length 수천~16K bit(예: <code>(2016,1512)</code>, <code>(2016,1008)</code>, <code>(2304,1728)</code>), Wimax base matrix 재귀 확장.</li><li>풀려는 문제: 시스테매틱 인코딩 <code>p = m·(H1⁻¹H2)ᵀ</code>에서 <code>H1⁻¹</code>가 dense → 저장·연산 비용 큼; 기존 RU/generator 방식은 code 크기에 복잡도가 종속.</li><li>부호 구성: base matrix <code>H_B</code>를 extension factor <code>S</code>로 반복 확장(0→zero, 1→circularly shifted identity), unique base shift matrix로 기술되는 multi-level QC-LDPC.</li><li>핵심 기법(LU): <code>H2</code> 대신 <code>H1</code>의 역행렬을 GF(2)에서 오프라인 계산 후 <code>P·H1⁻¹ = L·U</code>로 LU분해 → 3단계(P,L,U) row-vector×matrix 곱(VMM)으로 인코딩, 저자 관측상 <code>H1</code> LU분해가 <code>H2</code>보다 sparse.</li><li>식 의미: 곱셈을 삼각행렬 forward/backward substitution으로 치환해 dense 역행렬 저장·연산 회피(선형 복잡도).</li><li>핵심 기법(멀티레벨 압축): nonzero sub-matrix 위치를 각 확장 레벨의 base index+shifting factor로만 저장, 식(10)(15)로 상위 레벨 index 반복 계산 → 메모리 최대 77.4% 절감(단일레벨 대비 2.18배).</li><li>HW 트릭: circular shift는 Logarithmic Barrel Shifter(LBS)로 1클록 수행, L/U는 제한된 sub-matrix type만 존재 → type tag+LUT로 압축, MAC(modulo-2 VMM)+shift.</li><li>아키텍처: serial/shared-serial/degree-P partial-parallel/fully-parallel 제공, 공통 base matrix면 부호 길이 무관하게 상수 clock(fully-parallel은 3 또는 1 clock) 인코딩.</li><li>결과: Virtex-5 FPGA, TAR·area-time complexity가 prior art 대비 10~80배 우수, fully-parallel (2304,1728) 191.8Gbps, (2016,1512) serial 106.2Mbps/1035 slice, BER는 Wimax 동급 length에서 waterfall 동등·error floor 낮음.</li><li>한계: 부호설계/디코더 성능이 아닌 인코더 HW 전용, gate count 공정 미표기(FPGA slice 기준), recursive 확장 구조가 아닌 PCM엔 이득 재검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| LU분해 기반 systematic 인코딩(P,L,U 3단 VMM) | encoder.cpp LDPC_encoder_4KB(), Generate_PCM_encoding() | 우리는 dual-diagonal 고정, LU/압축 인코더로 교체 시 재구현 필요 |
+| 부호용 PCM 생성/재배치 | encoder.cpp Column_Reordering_Dual_Update() | 인코딩용 PCM 파이프라인 접점, 구조 상이 |
+| recursive multi-level QC-LDPC PCM 로드 | ecc_top.cpp Load_PCM() | 우리 QC-LDPC는 base+circulant 고정, 재귀 확장 구조 아님 |
+| circular shift(LBS)/멀티레벨 메모리 압축 | 대응 없음 | HW 인코더 특화 자료구조, 우리 디코더 z=32/HCU와 무관 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 인코더 레이어(dual-diagonal 대체 LU·메모리압축)만 건드리며 디코더·정정능력 기여는 없음. Prime ECC의 고정 dual-diagonal 인코더 대비 고throughput 대안으로 참고 가치는 있으나, PCM이 recursive multi-level 구조가 아니면 압축·LU 이득이 그대로 옮겨지지 않아 재검증 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6781047",
+  "title": "A Low Complexity-High Throughput QC-LDPC Encoder",
+  "year": 2014,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "2016~16000",
+  "soft_quant": "무관",
+  "key_contribution": "recursive multi-level QC-LDPC에 P·L·U LU분해+멀티레벨 메모리압축으로 선형복잡도·상수 clock 인코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 191.8,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "recursive(multi-level) QC-LDPC 구조 전용, Prime ECC의 dual-diagonal 고정 인코더와 정합 필요",
+  "todo_check": "Prime ECC PCM이 이 재귀 확장 구조가 아니면 P·L·U 분해·압축 이득 재검증 필요, gate count 공정 미표기"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6781047---a-low-complexity-high-throughput-qc-ldpc-encoder-2014-ieee-transactions-on-signal-processing">ieee:6781047 - A Low Complexity-High Throughput QC-LDPC Encoder (2014, IEEE Transactions on Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10509978</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10509978---a-mate-gdbf-algorithm-for-irregular-punctured-ldpc-codes-and-its-decoder-implementation-2023-ieee-apccas">ieee:10509978 - A MATE-GDBF Algorithm for Irregular Punctured LDPC Codes and Its Decoder Implementation (2023, IEEE APCCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>9344</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>펑처드 LDPC용 degree별 분리 처리(다수결+tabu)로 GDBF 성능/수렴 개선 및 저전력 flipping 접근</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>185.78K gate(total)@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>6.39Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>펑처링(erasure) 특화 구성이라 non-punctured 고전 QC-LDPC엔 majority-vote 부분이 무의미; GDBF 계열은 min-sum 대비 성능 낮음</td></tr><tr><td>추가확인</td><td>Fig.2/4 FER 곡선의 절대 이득폭·code rate, degree-5/9 orthogonal 구조가 우리 z=32 QC 구조와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: NAND 펑처드 LDPC용 저전력 hard-decision bit-flipping 디코더로 방향은 맞으나 Prime ECC의 min-sum/QC 구조와는 결이 달라 부분 이식.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 1KB punctured LDPC <code>(N=9344, P=64 erasure, K=8384)</code>, CPM(CPM size 64) 기반, punctured 열은 column degree 9, 나머지는 degree 5의 irregular 구조.</li><li>문제: punctured LDPC는 유연 rate에 유리하나 bit-flipping(GDBF) 디코더로는 성능 이득을 얻기 어렵다(Fig.2). min-sum과 달리 GDBF에선 punctured 이득이 안 나옴.</li><li>관찰: iteration별 error/energy를 degree-5 vs degree-9로 분리하니, degree-9는 energy가 높아 flip 잘 되지만 degree-5 error는 energy가 낮아 검출이 어려움 → 두 그룹을 분리 처리.</li><li>기법1: punctured(degree-9) 비트는 iterative 다수결(majority vote) <code>E_j = Σ_{k∈N(j)} s_k</code>, <code>E_j≥6→1</code>, <code>E_j&lt;4→0</code>로 복원. non-punctured(degree-5)는 UP-GDBF 유지.</li><li>관찰2: 추정 오류의 약 94%가 tie-vote(0/1 표가 근접)에서 반복 flip됨.</li><li>기법2(tabu): flipping history <code>l_i</code>를 도입, tie 구간(<code>4≤E_j&lt;6</code>)에선 <code>x_j = x_j ⊕ l̃_j</code>로 이전 flip 이력을 반영해 반복 flip 억제(Algorithm 2).</li><li>스케줄: 2-mode. 앞 50 iter는 tabu-enhancement, 뒤 50 iter는 단순 majority-vote (Tmax 기반, syndrome=0 조기종료).</li><li>HW: 4-stage pipeline, PE×3(3열을 한 그룹으로 orthogonal 처리)로 full iteration당 49 cycle. Stage0 ROM(shuffle 스케줄), Stage2 ED/EC/FD 유닛.</li><li>저전력: queue-based flipping access(전용 메모리+Global Min/write pointer 2 레지스터)와 tabu-list 메모리를 flipping-vector cache로 재사용해 재계산 제거.</li><li>결과: TSMC 90nm, 400MHz, 6.39Gbps, core 0.67mm², 185.78K gate, 79.6mW(재계산 대비 약 10% 절감), EBC=40에서 약 10배 성능 이득. 검증은 post-layout(합성/레이아웃)이며 실측 아님, hard-input 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MATE-GDBF 디코딩 루프(2-phase, majority+tabu)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>GDBF는 min-sum과 다른 알고리즘 계열이라 이터레이션 루프 프레임만 공유, 연산은 대체</td></tr><tr><td>punctured 비트 다수결/erasure 복원</td><td>대응 없음</td><td>Prime ECC는 punct_col_num=2 고정이나 majority-vote erasure recovery 로직은 없음</td></tr><tr><td>tabu-list(flipping history) 기반 flip 억제</td><td>대응 없음</td><td>유사 post-processing 없음</td></tr><tr><td>queue-based flipping access / flipping-vector cache</td><td>대응 없음(HW 메모리 최적화)</td><td>Prime ECC HW 모델과 별개 구조</td></tr><tr><td>orthogonal 3-column 그룹 병렬 스케줄</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>병렬화 개념은 유사하나 CPM 64/degree 구조가 달라 정합 필요</td></tr><tr><td>syndrome 기반 조기종료</td><td>partial_CRC.cpp / full_CRC.cpp</td><td>Prime ECC는 CRC 조기종료, 본 논문은 syndrome=0 조기종료로 방식 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND 직접 타깃이고 저전력 아이디어(cache 재사용)는 참고할 만하나, Prime ECC의 핵심인 min-sum QC-LDPC 디코더와 알고리즘 계열(GDBF)·부호구조(punctured irregular)가 달라 직접 이식 가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10509978",
+  "title": "A MATE-GDBF Algorithm for Irregular Punctured LDPC Codes and Its Decoder Implementation",
+  "year": 2023,
+  "venue": "IEEE APCCAS",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "9344",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "펑처드 LDPC용 degree별 분리 처리(다수결+tabu)로 GDBF 성능/수렴 개선 및 저전력 flipping 접근",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "185.78K gate(total)@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 6.39,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "펑처링(erasure) 특화 구성이라 non-punctured 고전 QC-LDPC엔 majority-vote 부분이 무의미; GDBF 계열은 min-sum 대비 성능 낮음",
+  "todo_check": "Fig.2/4 FER 곡선의 절대 이득폭·code rate, degree-5/9 orthogonal 구조가 우리 z=32 QC 구조와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10509978---a-mate-gdbf-algorithm-for-irregular-punctured-ldpc-codes-and-its-decoder-implementation-2023-ieee-apccas">ieee:10509978 - A MATE-GDBF Algorithm for Irregular Punctured LDPC Codes and Its Decoder Implementation (2023, IEEE APCCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

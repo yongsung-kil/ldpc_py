@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2505.19027</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv250519027v1---high-throughput-qc-ldpc-decoder-with-optimized-schedule-policy-in-layered-decoding-2025-arxiv-csit">arxiv:2505.19027v1 - High Throughput QC-LDPC Decoder With Optimized Schedule Policy in Layered Decoding (2025, arXiv [cs.IT])</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>2112~8448</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>파이프라인 layered 복호의 idle cycle 최소화를 비대칭 TSP로 정식화하되 성능 좋은 스케줄 특성(저degree·puncture 우선)을 그래프에 반영해 idle time과 복호성능 동시 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미구현(gatecount/throughput 수치 없음), 5G NR BG1 대상, SO path latency t가 작을 때만 무손실 보장</td></tr><tr><td>추가확인</td><td>Prime ECC의 dual-update/z=32 파이프라인·HCU 구조에서 layer 재배치가 그대로 성립하는지, common-degree 계산 방식 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC layered 복호의 스케줄 순서를 TSP로 최적화해 memory conflict(idle cycle)와 복호성능을 함께 잡는 순수 알고리즘 기법으로, NAND용 QC-LDPC 파이프라인 디코더 스케줄러에 이식 시도 가치 있음(중).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR QC-LDPC(BG1), rate <code>1/3</code>(K=8448)·<code>1/2</code>(K=2112), layered BP(LBP) 파이프라인 복호, SO data path latency <code>t∈{4,9}</code>.</li><li>문제: 파이프라인 layered 복호에서 인접 layer 간 memory conflict로 idle cycle이 삽입되어 throughput 저하, 기존 연구는 idle 최소화만 보고 복호성능 영향은 무시.</li><li>핵심 모델: 한 iteration의 idle cycle 수 <code>nidle</code>를 layer degree <code>dci</code>와 인접 layer 공통 degree <code>dc_{ci-1,ci}</code>로 계산: <code>max(t-(dci - dc_{ci-1,ci}),0)</code> 합.</li><li>핵심 기법 1단: 최소 idle 스케줄 탐색을 비대칭 TSP로 정식화 - 노드=layer, edge weight=전이 idle cycle, Hamiltonian cycle 최소화(differential evolution 또는 대칭 TSP 변환으로 해결).</li><li>핵심 기법 2단: 좋은 복호성능 스케줄 특성(저degree 우선, punctured VN 연결 적은 것 우선)을 반영해 layer를 <code>(di,pi)</code> 그룹으로 라벨링.</li><li>그래프 수정: 라벨 <code>i→j</code>가 <code>i+1=j</code>, <code>i=j</code>, <code>i=P,j=1</code> 조건이 아니면 edge weight를 <code>+∞</code>로, P→1 edge엔 큰 상수 <code>H</code>를 더해 라벨 오름차순 갱신 강제.</li><li>근사식: <code>c1,cm</code>을 공통 degree 작게 고르면 <code>nidle≈n'idle</code>, t가 작을 때 저degree 먼저 갱신이 최소 idle 달성(Proposition 1, 균일 랜덤 연결·<code>t≤dmin</code> 가정).</li><li>결과(성능): idle만 최소화한 스케줄은 BLER 성능이 크게 열화, idle&amp;performance 정책은 LD/nest 대비 성능 유지하며 idle 대폭 감소.</li><li>결과(idle, Table I): t=4에서 nidle - nest 19/10, LD 15/9, idle 2/2, idle&amp;performance 6/4 (R=1/3/R=1/2), t=9에서도 성능 정책이 nest·LD보다 idle 적음.</li><li>한계: RTL/gatecount/throughput 등 실제 HW 지표 미제시, 시뮬만, 성능-idle 무손실은 t 작을 때 확률적 보장.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered(LBP) 스케줄 순서 / 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC의 dual-update(even/odd 교대) layer 스케줄에 idle-aware 순서 적용 여지</td></tr><tr><td>memory conflict / pipeline idle cycle</td><td>디코더 HW 모델(z=32, pipeline 6-stage)</td><td>Prime ECC 6-stage 파이프라인의 read/write 충돌 회피 스케줄로 매핑 가능</td></tr><tr><td>QC-LDPC layer degree / H-matrix 구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>layer degree·common degree 산출은 로드된 PCM 구조 기반</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CN min-sum 연산 자체는 안 바꾸고 layer 갱신 순서만 재배치해 파이프라인 idle을 줄이는 저침습 기법이라 Prime ECC 스케줄러에 검토할 가치가 있으나, 우리 dual-update·HCU·z=32 구조 정합과 HW 검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2505.19027v1",
+  "title": "High Throughput QC-LDPC Decoder With Optimized Schedule Policy in Layered Decoding",
+  "year": 2025,
+  "venue": "arXiv [cs.IT]",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.33~0.5",
+  "code_length": "2112~8448",
+  "soft_quant": "무관",
+  "key_contribution": "파이프라인 layered 복호의 idle cycle 최소화를 비대칭 TSP로 정식화하되 성능 좋은 스케줄 특성을 그래프에 반영해 idle time과 복호성능 동시 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미구현(gatecount/throughput 수치 없음), 5G NR BG1 대상, SO path latency t가 작을 때만 무손실 보장",
+  "todo_check": "Prime ECC의 dual-update/z=32 파이프라인·HCU 구조에서 layer 재배치가 그대로 성립하는지, common-degree 계산 방식 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv250519027v1---high-throughput-qc-ldpc-decoder-with-optimized-schedule-policy-in-layered-decoding-2025-arxiv-csit">arxiv:2505.19027v1 - High Throughput QC-LDPC Decoder With Optimized Schedule Policy in Layered Decoding (2025, arXiv [cs.IT])</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

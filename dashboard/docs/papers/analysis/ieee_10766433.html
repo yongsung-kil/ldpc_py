@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10766433</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_10766433---hidden-feature-extraction-learning-and-end-to-end-joint-equalization-with-ldpc-decoding-method-for-optical-interconnect-2025-jlt">ieee_10766433 - Hidden Feature Extraction Learning and End-to-End Joint Equalization With LDPC Decoding Method for Optical Interconnect (2025, JLT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.7857</td></tr><tr><td>부호length</td><td>2240</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NN으로 min-sum의 scaling α·offset β를 iteration/edge별 학습(DL-NOMS)하여 비가우시안 광채널에서 MS/NOMS 대비 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN 전면 학습형 디코더(딥러닝) + 광 IM/DD·E2E 등화 결합, NAND 무관하며 학습 파라미터가 광채널 종속</td></tr><tr><td>추가확인</td><td>protograph 파라미터공유 학습된 α/β 테이블을 고정값으로 뽑아 min-sum에 그대로 이식 가능한지(NAND RBER 채널)</td></tr></tbody></table>
+<blockquote><p>총평: 광 인터커넥트용 E2E NN 등화+DL-NOMS 디코더 논문으로, 학습형 NN 디코더라 Prime ECC의 고정 min-sum과 정합 안 됨(대응 없음), NAND 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 850nm VCSEL-MMF 광 인터커넥트(IM/DD, 100m), PAM-4/8, 최대 288Gb/s. 부호는 5G NR BG1 <code>(2240,1760)</code>, <code>R=0.7857</code>, protograph LDPC.</li><li>문제: 비가우시안 광채널(ISI+square-law, 비선형 메모리)에서 AWGN 최적 NOMS 파라미터(<code>α=0.8, β=0.15</code>)가 열화됨.</li><li>모델: 광링크를 bi-LSTM 디지털 트윈(digital twin)으로 미분가능 대리모델화, E2E autoencoder로 Tx-NN(DPD)+Rx-NN 공동 최적화.</li><li>핵심 기법: DL-NOMS - NOMS의 CN 갱신 <code>l_{m→n}=(∏sgn)·ReLU(α·min|l|−β)</code>에서 <code>α,β</code>를 edge·iteration별 학습 파라미터(weight/bias)로 두고 Tanner 그래프를 다층 sparse NN으로 전개.</li><li>식 의미: <code>α_{n,m}^d, β_{n,m}^d</code>가 뉴런 연결 weight/bias 역할을 해 모델 부정확성을 backprop으로 보정.</li><li>확장: protograph parameter-sharing으로 동일 edge-type은 같은 α/β 공유 → 파라미터·학습 복잡도 축소.</li><li>구현: DPD/디지털트윈=bi-LSTM, FFE=1D-CNN, Peak Constraint 모듈; PAM-K LLR 초기화식 별도(Appendix A).</li><li>학습: greedy(단계별) 학습 - 디지털트윈→등화기→디코더 순서로 고정·전이학습, Iteration-by-Iteration greedy(15층, test 50 iter), Adam.</li><li>결과: DL-NOMS가 MS/NOMS보다 BER 낮음; E2E 결합이 FFE+DL-NOMS 대비 BER 2자릿수 개선, post-FEC BER&lt;1e-10, 학습 weight는 0.92~0.95/bias 0.03~0.06.</li><li>한계: HW 미설계, 학습 파라미터가 특정 광채널 종속(NN 학습형), NAND/SSD 무관, throughput/gatecount는 본문 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DL-NOMS(NN 학습형 min-sum 디코더)</td><td>대응 없음</td><td>프로파일상 NN/딥러닝 디코더는 대응 없음, 고정 min-sum 구조와 불일치</td></tr><tr><td>NOMS의 α scaling·β offset</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리 min-sum은 magnitude 양자화 테이블 기반, 학습형 계수와 정합 어려움</td></tr><tr><td>PAM-K/OOK LLR 초기화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>soft-read LLR 관점 접점 있으나 광채널 전용식이라 NAND 미적용</td></tr><tr><td>protograph 부호(5G BG1)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 QC-LDPC 고정, 5G protograph는 부호구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - NN 전면 학습형 디코더 + 광 IM/DD E2E 등화 결합으로, Prime ECC의 고정 binary QC-LDPC min-sum HW 파이프라인에 떼어 쓸 요소가 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10766433",
+  "title": "Hidden Feature Extraction Learning and End-to-End Joint Equalization With LDPC Decoding Method for Optical Interconnect",
+  "year": 2025,
+  "venue": "JLT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": 0.7857,
+  "code_length": "2240",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NN으로 min-sum의 scaling α·offset β를 iteration/edge별 학습(DL-NOMS)하여 비가우시안 광채널에서 MS/NOMS 대비 BER 개선",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "NN 전면 학습형 디코더(딥러닝) + 광 IM/DD·E2E 등화 결합, NAND 무관하며 학습 파라미터가 광채널 종속",
+  "todo_check": "protograph 파라미터공유로 학습된 α/β 테이블을 고정값으로 뽑아 min-sum에 그대로 이식 가능한지(NAND RBER 채널)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_10766433---hidden-feature-extraction-learning-and-end-to-end-joint-equalization-with-ldpc-decoding-method-for-optical-interconnect-2025-jlt">ieee_10766433 - Hidden Feature Extraction Learning and End-to-End Joint Equalization With LDPC Decoding Method for Optical Interconnect (2025, JLT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

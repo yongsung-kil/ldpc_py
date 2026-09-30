@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6533101</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6533101---implementation-of-coded-modulation-and-fec-2013-ofcnfoec">ieee:6533101 - Implementation of Coded Modulation and FEC (2013, OFC/NFOEC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>9262~10032</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LDPC-CC로 wire routing congestion 완화 + layered 복호로 iteration·면적 절반, 고차 QAM BICM(-ID)에 적용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC convolutional code(비블록)·고차 QAM 광통신 특화; NAND binary QC-LDPC와 부호구조 상이</td></tr><tr><td>추가확인</td><td>layered decoding이 QC-LDPC block에도 iteration 절반 이득 주는지(이미 layered/dual-update 보유)</td></tr></tbody></table>
+<blockquote><p>총평: 광통신 100G+ 용 LDPC-CC+BICM 코디드모듈레이션 논문으로, convolutional 부호·고차 QAM 특화라 NAND binary QC-LDPC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: beyond-100Gb/s coherent 광전송, 16/64/256QAM 고차변조 + SD-FEC; LDPC-CC(convolutional) 기반 BICM(-ID).</li><li>문제: 긴 블록 LDPC(N≈20000)는 NCG 11.3dB·error-floor 없음을 얻지만 <strong>wire routing congestion</strong>이 심함(wire수 ∝ N·q).</li><li>모델: 광채널 SD-FEC, 양자화비트 <code>q</code>=3~4bit(QPSK 기준 floating-point 대비 0.2dB 이내).</li><li>핵심기법: LDPC block 대신 <strong>LDPC-CC</strong>로 짧은 constraint length(10032)에서 동등 이득 → N 절반으로 routing 완화.</li><li>의미: bit-serial/stochastic 복호는 wire를 줄이나 throughput·성능 손실(&gt;0.2dB)이라 부적합 → LDPC-CC가 N 축소의 실용해.</li><li>확장: LDPC-CC에 <strong>layered decoding</strong> 적용, message-passing 대비 절반 iteration으로 동일성능 → 면적·latency 절반.</li><li>코디드모듈레이션: LDPC-CC 내장 인터리빙으로 별도 bit interleaver 생략, Gray/Gray-like 매핑; BICM(-ID)에 IPQ/NU-QAM/U-QAM shaped constellation 적용.</li><li>최적화: irregular degree distribution을 EXIT chart로 설계(BICM-ID용); 단 irregular는 error-floor로 outer code 필요.</li><li>결과: 37.14% overhead regular LDPC-CC(N=9262, rate-0.75 shortening), 13 iteration; FPGA에서 12iter layered로 NCG 11.5dB @ BER 10⁻¹⁵, 256U-QAM BICM은 NCG 14.7dB.</li><li>한계: HW 미상세(FPGA emulation 수준), 광통신 고차QAM 특화, demapper FLOPb가 k에 지수증가라 4-D/BICM-ID 실용성 제한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LDPC-CC(convolutional) 부호구조</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC block 고정, convolutional 부호는 이식 대상 아님</td></tr><tr><td>layered decoding(iteration 절반)</td><td>decoder.cpp <code>LDPC_Decoder()</code> (Dual-Update)</td><td>Prime ECC는 이미 dual-update 교대 스케줄 보유, 중복</td></tr><tr><td>soft 양자화 q=3~4bit</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>Prime ECC는 2~3bit 지원, 개념 접점만(광채널 LLR 상이)</td></tr><tr><td>BICM 고차QAM demapper/shaping</td><td>대응 없음</td><td>NAND는 QAM 변조 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC convolutional code·고차 QAM coded modulation 광통신 특화로, NAND binary QC-LDPC block 부호와 구조가 다르고 layered decoding은 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6533101",
+  "title": "Implementation of Coded Modulation and FEC",
+  "year": 2013,
+  "venue": "OFC/NFOEC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.75,
+  "code_length": "9262~10032",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LDPC-CC로 wire routing congestion 완화 + layered 복호로 iteration·면적 절반, 고차 QAM BICM(-ID)에 적용",
+  "hw_designed": "X",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "LDPC convolutional code(비블록)·고차 QAM 광통신 특화; NAND binary QC-LDPC와 부호구조 상이",
+  "todo_check": "layered decoding이 QC-LDPC block에도 iteration 절반 이득 주는지(이미 layered/dual-update 보유)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6533101---implementation-of-coded-modulation-and-fec-2013-ofcnfoec">ieee:6533101 - Implementation of Coded Modulation and FEC (2013, OFC/NFOEC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

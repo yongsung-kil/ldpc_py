@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5440493</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_5440493---simple-improvements-of-bit-flipping-decoding-2010-icact-2010">ieee_5440493 - Simple Improvements of Bit-Flipping Decoding (2010, ICACT 2010)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.82</td></tr><tr><td>부호length</td><td>1057~4095</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>BF/CBBF에 초기신뢰도 기반 bias term 도입(QMBF2/QCBF)으로 정정성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·gatecount/throughput 없음, bias 파라미터(a,r)를 코드별 시뮬로 수동 최적화 필요</td></tr><tr><td>추가확인</td><td>NAND RBER 채널·고rate QC-LDPC에서의 bias term 효과, min-sum 대비 성능 격차</td></tr></tbody></table>
+<blockquote><p>총평: BF 계열에 bias term을 얹는 저복잡도 개선이나 성능은 SP/min-sum에 크게 못 미쳐 이식 가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 regular LDPC(길이 1057~4095, rate 0.5~0.82, col weight 3~4), binary Gaussian 채널(±1 입력) hard-decision 기반 BF 계열 복호.</li><li>문제: BF는 회로 구현이 쉽지만 hard-info만 써서 SP 대비 성능이 크게 열등하다.</li><li>핵심 모델: 수신 <code>y_n</code>의 절대값이 작으면(잡음 큼) 신뢰도 낮다고 보고, 이 초기 신뢰도를 복호 전 구간에 유지시킨다.</li><li>핵심 기법 1(QMBF): <code>|y_n| &lt; a</code>이면 bias <code>β_n = r</code>(정수)를 부여하고 flip 판정값 <code>e_n ← Σ_m s_m + β_n</code>에 더해 저신뢰 비트를 더 잘 뒤집는다.</li><li>식 의미: bias는 반복 중 사라지는 syndrome 정보에 초기 신뢰도를 상수로 주입해, SP처럼 초기 belief를 보존하는 효과.</li><li>핵심 기법 2(QMBF2): 임계 2개(<code>a1&lt;a2</code>, <code>r1&gt;r2</code>)로 bias를 2단계화해 신뢰도 구간을 세분(1~2bit 정수).</li><li>확장(QCBF): CBBF(패리티식 신뢰도 <code>W_m=e_m-1</code> 계산)에 같은 bias term을 도입, <code>U_i = β_i + Σ s_m</code>.</li><li>구현 디테일: bias 값은 1~2bit 소정수 상수라 추가 메모리 소량, 계산은 대부분 비교 연산이라 원 알고리즘 속도 유지.</li><li>결과: BER 1e-5에서 QCBF가 CBBF 대비 0.8~1.5dB, QMBF2가 QMBF 대비 0.2~0.5dB 개선; 긴 부호일수록 이득 큼. 복잡도 순위 SP &gt;&gt; QCBF≈CBBF &gt; QMBF2 &gt; QMBF &gt; BF.</li><li>한계: HW 미설계, gatecount/throughput 없음, 파라미터를 코드·SNR별 시뮬로 수동 최적화, 여전히 SP보다 열등.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BF/CBBF 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime은 min-sum 기반이라 BF 알고리즘 자체는 대응 없음(교체 아님)</td></tr><tr><td>bias term(초기 신뢰도 주입)</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>초기 신뢰도 보존 아이디어는 적응형 LLR 테이블과 개념적 유사, 직접 이식은 아님</td></tr><tr><td>soft 신뢰도(`</td><td>y_n</td><td>`) 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>1~2bit bias 양자화가 soft-read threshold와 대응 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 이미 min-sum + 적응형 LLR을 보유하며, 성능이 SP/min-sum에 못 미치는 BF 계열 개선은 실익이 적다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5440493",
+  "title": "Simple Improvements of Bit-Flipping Decoding",
+  "year": 2010,
+  "venue": "ICACT 2010",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.82",
+  "code_length": "1057~4095",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "BF/CBBF에 초기신뢰도 기반 bias term 도입(QMBF2/QCBF)으로 정정성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HW 미설계·gatecount/throughput 없음, bias 파라미터를 코드별 시뮬로 수동 최적화 필요",
+  "todo_check": "NAND RBER 채널·고rate QC-LDPC에서 bias term 효과와 min-sum 대비 성능 격차"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_5440493---simple-improvements-of-bit-flipping-decoding-2010-icact-2010">ieee_5440493 - Simple Improvements of Bit-Flipping Decoding (2010, ICACT 2010)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

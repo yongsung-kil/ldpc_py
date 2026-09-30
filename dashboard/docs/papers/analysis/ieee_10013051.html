@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10013051</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10013051---enhanced-informed-dynamic-bp-decoding-scheduling-strategies-for-5g-nr-ldpc-codes-2022-vtc2022-fall">ieee:10013051 - Enhanced Informed Dynamic BP Decoding Scheduling Strategies for 5G NR LDPC Codes (2022, VTC2022-Fall)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1848</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>RBP 스케줄링에 CN muting(UBPRBP)과 degree-1 VN 처리를 더해 초기 iteration 수렴 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>full-tanh Sum-Product 기반 sequential RBP이라 HW 병렬(z=32 layered)·min-sum 구조와 상충, degree-1 VN 처리는 5G NR punctured code 특화</td></tr><tr><td>추가확인</td><td>NAND 고rate QC-LDPC엔 degree-1 VN이 없을 수 있어 D1VN 이득 소멸 여부, RBP residual 계산의 HW 오버헤드</td></tr></tbody></table>
+<blockquote><p>총평: sequential residual 스케줄링으로 초기 iteration FER를 개선하나, full-tanh·비병렬 RBP라 Prime ECC의 layered/min-sum HW 구조엔 그대로 이식 곤란.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BPSK+AWGN 채널의 binary <code>(N,K)</code> LDPC. 실험은 (1944,972) WiFi 부호와 (1848,616) 5G NR 부호(BG1, lift Z=28, 1176개 degree-1 VN).</li><li>문제: RBP는 초기 iteration 성능은 좋으나 greedy하게 소수 노드/에지에 집중해 수렴 성능이 나쁘고, 불신뢰 메시지가 dynamic scheduling으로 전파됨.</li><li>핵심 기법1(UBPRBP): CN이 C2V 메시지를 보내면 그 CN을 muted(집합 <code>S</code>에서 제거)하여, 연결된 VN에서 새 V2C 정보를 받기 전까지 추가 C2V 전파를 금지.</li><li>residual 정의 <code>R = |L̂_c2v − L_c2v|</code>(식4), C2V는 <code>2 tanh^-1(∏ tanh(V2C/2))</code>(식2)로 precompute 후 최대 residual 에지를 선택 전파.</li><li>muting 의미: 같은 V2C 집합에서 나온 중복 C2V 전파(불신뢰 정보 재확산)를 차단하고 residual 비교량도 감소.</li><li>핵심 기법2(D1VN): degree-1 VN은 iteration당 한 번, iteration 끝에만 갱신. 선택되면 같은 CN의 second-max residual 에지로 대체 전파(<code>F(n)</code> 플래그로 관리).</li><li>근거: degree-1 VN의 V2C는 항상 채널값 <code>2y_n/σ²</code>로 고정인데 다른 V2C가 커지며 residual이 커져 과빈번 선택→디코딩 자원 낭비.</li><li>학습/최적화: 없음(규칙 기반 스케줄링).</li><li>결과: WiFi 부호에서 iter=2일 때 RBP 대비 약 0.4 dB, SVNF-RBP 대비 0.2 dB(FER≈10^-1). RBP-D1VN은 iter=2에서 RBP 대비 0.4 dB 이득. 5G NR에서 UBPRBP-D1VN이 초기 iteration 최고 성능.</li><li>한계: HW 미설계, 순수 시뮬. sequential residual 스케줄링 + full-tanh, degree-1 VN 처리는 5G NR punctured 부호 특성에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RBP/UBPRBP 스케줄링 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프에 residual 기반 dynamic 스케줄링을 넣어야 하나 Prime ECC는 layered/flooding형 min-sum이라 스케줄러 자체를 교체해야 함</td></tr><tr><td>C2V precompute (tanh SPA)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 min-sum(min1/min2) 근사라 full-tanh residual 정의와 불일치</td></tr><tr><td>degree-1 VN 처리</td><td>대응 없음</td><td>Prime ECC 부호(VN degree 17, HCU col degree 9/7)엔 degree-1 VN이 없어 D1VN 로직 무의미</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — residual 기반 sequential RBP은 Prime ECC의 병렬 min-sum HW 구조와 근본적으로 상충하고, 핵심 이득원(degree-1 VN 처리)이 우리 부호엔 부재.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10013051",
+  "title": "Enhanced Informed Dynamic BP Decoding Scheduling Strategies for 5G NR LDPC Codes",
+  "year": 2022,
+  "venue": "VTC2022-Fall",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "1848",
+  "soft_quant": "무관",
+  "key_contribution": "RBP 스케줄링에 CN muting(UBPRBP)과 degree-1 VN 처리를 더해 초기 iteration 수렴 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "full-tanh sequential RBP이라 layered/min-sum HW 구조와 상충, degree-1 VN 처리는 5G NR punctured code 특화",
+  "todo_check": "NAND 고rate QC-LDPC엔 degree-1 VN 부재로 D1VN 이득 소멸 여부, RBP residual 계산 HW 오버헤드"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10013051---enhanced-informed-dynamic-bp-decoding-scheduling-strategies-for-5g-nr-ldpc-codes-2022-vtc2022-fall">ieee:10013051 - Enhanced Informed Dynamic BP Decoding Scheduling Strategies for 5G NR LDPC Codes (2022, VTC2022-Fall)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

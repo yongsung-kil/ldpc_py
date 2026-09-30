@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8693053</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8693053---improving-short-length-ldpc-codes-with-a-crc-and-iterative-ordered-statistic-decoding-2019-ieee-invited-paper">ieee:8693053 - Improving Short-Length LDPC Codes with a CRC and Iterative Ordered Statistic Decoding (2019, IEEE (Invited Paper))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CRC를 LDPC와 결합해 OSD 후보리스트를 함께 구성(Scheme 2)하고 IRB-OSD로 복잡도 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>미상</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>단블록(n=128) 5G LDPC 대상 near-ML OSD로 고rate 장블록 NAND QC-LDPC엔 복잡도 O(k^t)가 비현실적</td></tr><tr><td>추가확인</td><td>IRB-OSD의 SP+MRB 재인코딩 구조를 고rate NAND용 post-processing으로 축소 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 5G 단블록 CRC-aided OSD 디코딩이라 NAND 고rate LDPC HW 파이프라인 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN 채널, 단블록 5G NR LDPC (예: <code>(128,64)</code>, <code>(128,72)</code>+8bit CRC), 부호율 <code>RC≈0.5</code>.</li><li>문제: 단블록 LDPC는 SP(sum-product) 준최적, ML급 성능이 필요하나 DE 기반 설계가 부정확.</li><li>핵심가정: OSD는 임의 선형부호를 MRB(most reliable basis) 기반 후보리스트+ML 탐색으로 near-ML 복호 가능.</li><li>핵심기법 1단: OSD - LLR <code>r</code> 신뢰도 정렬 후 상위 <code>k</code>개 독립열로 <code>Gsys</code> 만들고 무게 <code>≤t</code> 테스트오류패턴 <code>ei</code>로 후보 <code>v~i=(u~+ei)Gsys</code> 재인코딩.</li><li>핵심식: 리스트크기 <code>|L|=Σ_{i=0}^{t} C(k,i)</code>, ML 탐색으로 <code>r~</code>와 유클리드 거리 최소 후보 선택.</li><li>핵심기법 2단: Scheme 2 - CRC를 검출용 프루닝이 아니라 LDPC와 합쳐 전체부호 <code>G=[GC;GL]</code>로 보고 MRB를 <code>k</code>비트 기준으로 잡아 후보리스트를 함께 구성 → 무게분포 개선.</li><li>부수트릭: IRB-OSD - SP 반복 중 매 iteration APP LLR <code>f(i)</code>로 MRB 갱신, 낮은 order <code>t</code>로도 성능 유지, <code>v_f HT=0</code>이면 조기종료.</li><li>최적화: 없음(구조 설계, DE/NN 미사용).</li><li>결과: <code>(128,64)</code> 5G LDPC 대비 Scheme 2가 BLER 1e-4에서 t=3일 때 약 2 dB(1.5 dB) 이득, ARA 대비 0.6 dB; IRB-OSD 평균 iteration 4.6 vs SP 15.8(@1dB).</li><li>한계: HW 미설계, 시뮬만, 복잡도 <code>O(k^t)</code>로 단블록에 한정, non-QC 일반 선형부호 대상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| SP(belief propagation) 반복 복호 | decoder.cpp LDPC_Decoder() | Prime ECC는 min-sum 사용, SP+OSD 재인코딩 구조와 상이 |
+| 조기종료(syndrome/거리 수렴) | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | Prime ECC는 CRC를 조기종료 검출용으로만 사용, 본 논문은 리스트 구성용 |
+| CRC를 부호강화에 결합 (Scheme 2) | 대응 없음 | Prime ECC엔 OSD/MRB 리스트 복호 계층 부재 |
+| OSD/IRB-OSD near-ML 리스트 복호 | 대응 없음 | list decoding/Gaussian elimination 재인코딩 미구현 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — near-ML OSD는 단블록·저rate 대상이고 복잡도 <code>O(k^t)</code>가 고rate 장블록 NAND QC-LDPC HW 파이프라인과 맞지 않아 이식 요소가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8693053",
+  "title": "Improving Short-Length LDPC Codes with a CRC and Iterative Ordered Statistic Decoding",
+  "year": 2019,
+  "venue": "IEEE (Invited Paper)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CRC를 LDPC와 결합해 OSD 후보리스트를 함께 구성(Scheme 2)하고 IRB-OSD로 복잡도 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "미상",
+  "recommend": "하",
+  "caveat": "단블록(n=128) 5G LDPC 대상 near-ML OSD로 고rate 장블록 NAND QC-LDPC엔 복잡도 O(k^t)가 비현실적",
+  "todo_check": "IRB-OSD의 SP+MRB 재인코딩 구조를 고rate NAND용 post-processing으로 축소 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8693053---improving-short-length-ldpc-codes-with-a-crc-and-iterative-ordered-statistic-decoding-2019-ieee-invited-paper">ieee:8693053 - Improving Short-Length LDPC Codes with a CRC and Iterative Ordered Statistic Decoding (2019, IEEE (Invited Paper))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

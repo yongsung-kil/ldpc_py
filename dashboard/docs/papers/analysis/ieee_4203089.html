@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4203089</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4203089---self-compensation-technique-for-simplified-belief-propagation-algorithm-2007-ieee-transactions-on-signal-processing">ieee:4203089 - Self-Compensation Technique for Simplified Belief-Propagation Algorithm (2007, IEEE Transactions on Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.6~0.83</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>order statistics 기반 이론유도로 min-sum check node 출력을 반복/입력크기에 따라 동적으로 정규화(dynamic normalization)하는 self-compensation 기법 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>100 gates/check-node-unit@0.13um (min-sum 대비 약 5% 오버헤드)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>DVB-S2 64800bit irregular LDPC(rate 3/5 등)로 검증되어 NAND용 고rate QC-LDPC와 부호 구조가 다름, degree distribution 의존적 확률 계산(β_m) 재도출 필요</td></tr><tr><td>추가확인</td><td>Prime ECC min-sum(min1/min2)의 fixed offset/scaling과 direct 비교 실험 필요, degree 17 col-block 구조에 맞는 정규화 인자 재계산 필요</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CN 연산에 order statistics 기반 동적 정규화를 적용해 SNR 손실을 0.5dB에서 0.2dB로 줄이고 반복횟수도 크게 줄이면서 게이트당 오버헤드는 5%(약 100게이트)에 불과한 실용적 기법으로, Prime ECC의 min-sum CNU에 직접 이식 가능성 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-S2 규격의 64800-bit irregular LDPC 코드(rate 1/4~9/10 중 특히 rate 3/5 집중 분석), AWGN 채널, QPSK/BPSK 신호.</li><li>문제: min-sum 알고리즘은 BP(sum-product)의 비선형 check node 연산 <code>tanh^-1(Π tanh(L_i/2))</code>을 <code>min</code> 연산으로 근사하는데, check node 출력 크기를 항상 과대추정(over-estimate)해 BP 대비 성능 손실(SNR degradation) 발생.</li><li>기존 보정법(offset, constant scaling normalization, 2-D normalization[Zhang])은 고정 상수 인자를 쓰거나 degree별 상수만 다르게 적용해 반복(iteration)·SNR 변화에 적응하지 못함.</li><li>핵심 기법: check node degree <code>d_c</code>의 입력 크기들을 order statistics로 정렬한 확률변수의 pdf/cdf를 유도하고, 가장 작은 두 입력크기(min1, min2에 해당하는 <code>m_1, m_2</code>)에 각각 다른 정규화 인자 <code>α(m_1), β(m_1,m_2)</code>를 곱해 check node 출력을 <code>α·m_1</code>, <code>β·m_2</code> 형태로 보정 (식 8~10).</li><li>핵심 식 의미: <code>α, β</code>는 check node 입력들의 조건부 기댓값 함수로 정의되며(식 11~14), 이 인자들이 반복 회차·채널 SNR에 따라 커지는 경향을 밀도진화 유사 4단계 재귀 절차(bit node→check node 입력→check node 출력→bit node 입력, Step1~4)로 추적.</li><li>확장: 매 반복마다 다른 정규화 인자를 쓰면 HW 비용이 크므로, 여러 반복 구간의 인자를 평균내어 사용하는 저복잡도 realization 3종 제안 — direct-mapping(2-D LUT), adaptive-K(고정 후보 집합에서 K개 인자 선택, single-β/double-β), annealing(특정 반복에서만 간헐적으로 정규화 적용해 전력·복잡도 절감).</li><li>부수 구현 디테일: annealing 방식은 정규화를 매 반복 대신 <code>T</code> 간격으로만 적용, 이때 보정계수는 <code>T</code>회 반복 효과를 한번에 반영하도록 재유도(식 23~25). 정규화 인자는 shift-and-add로 구현 가능한 <code>{0,0.125,...}</code> 후보 집합으로 제한.</li><li>학습/최적화 절차: 채널 SNR·코드 degree distribution이 주어지면 order-statistics 기반 이론식으로 정규화 인자를 사전 계산(오프라인), 반복별 인자를 시뮬레이션 기반 평균화해 최종 계수 확정 — GA/NN 등 학습 없음.</li><li>결과: rate 3/5, 64800-bit 코드에서 double-β 방식이 평균 SNR 손실을 fixed-β(상수 정규화)의 0.5dB에서 0.2dB로 감소(BP-FP 대비), 목표 BER 1e-... 도달에 필요한 최대 반복횟수를 min-sum 50회 대비 12회로 단축(76% 반복감소), HW는 check node unit당 약 100게이트(0.13um) 추가로 min-sum 대비 약 5% 면적, 17% 지연 증가.</li><li>한계: DVB-S2 irregular LDPC(long block, 64800bit) 특정 code에 최적화된 이론 유도로, degree distribution이 다른 코드(예: Prime ECC의 고정 QC-LDPC, N_b=129, VN degree 17)에는 정규화 인자를 재계산해야 함. 실측(칩 동작) 없이 합성(synthesis) 결과만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum check node 동적 정규화(self-compensation)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min1/min2 기반 CN 연산에 α(m1), β(m1,m2) 정규화 인자를 곱하는 형태로 직접 적용 가능한 핵심 대상 모듈</td></tr><tr><td>반복(iteration)별 인자 조정, annealing 방식</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>이터레이션 구간별 LLR threshold 테이블 구조와 유사해 반복별 정규화 인자 테이블로 확장 이식 가능</td></tr><tr><td>shift-and-add 기반 저복잡도 정규화 계수 구현</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>HW 친화적 계수 제한(2의 거듭제곱 근접값)이 Prime ECC의 양자화 테이블 기반 magnitude 처리와 정합</td></tr><tr><td>VN 처리 / 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>정규화는 CN magnitude 출력 단계에 적용되므로 VN 처리 자체와는 간접적 관련</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — Prime ECC가 이미 보유한 min-sum + 반복별 LLR 테이블 구조에 최소 오버헤드(check node당 약 100게이트, 5% 면적)로 정정성능(SNR 손실 0.5→0.2dB)과 평균 반복횟수(최대 76% 감소)를 동시에 개선할 수 있는 실증된 HW 합성 결과 보유 기법.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4203089",
+  "title": "Self-Compensation Technique for Simplified Belief-Propagation Algorithm",
+  "year": 2007,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.6~0.83",
+  "code_length": 64800,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "order statistics 기반 이론유도로 min-sum check node 출력을 반복/입력크기에 따라 동적으로 정규화하는 self-compensation 기법",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "100 gates/check-node-unit@0.13um",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "DVB-S2 64800bit irregular LDPC 검증으로 NAND용 고rate QC-LDPC와 부호 구조가 달라 degree distribution 의존 확률 재도출 필요",
+  "todo_check": "Prime ECC min-sum(min1/min2)의 fixed offset/scaling과 direct 비교 실험 및 degree 17 col-block 구조에 맞는 정규화 인자 재계산 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4203089---self-compensation-technique-for-simplified-belief-propagation-algorithm-2007-ieee-transactions-on-signal-processing">ieee:4203089 - Self-Compensation Technique for Simplified Belief-Propagation Algorithm (2007, IEEE Transactions on Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

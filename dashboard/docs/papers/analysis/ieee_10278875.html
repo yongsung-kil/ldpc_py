@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10278875</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10278875---ldpc-codes-with-low-error-floors-and-efficient-encoders-2023-ieee-icc">ieee:10278875 - LDPC Codes with Low Error Floors and Efficient Encoders (2023, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.4~0.9</td></tr><tr><td>부호length</td><td>30720</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>permanent 기반 최소거리 상한을 제약으로 EXIT threshold를 최적화해 low error-floor(BER 1e-12) protograph QC-LDPC 부호족 설계 + 저복잡 dual-diagonal 인코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>10</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>광위성/AWGN·BPSK 타깃, n=30720 장블록·6bit+ LLR - NAND 고rate·4KB·2~3bit soft와 부호길이/양자화 정합성 낮음</td></tr><tr><td>추가확인</td><td>permanent 기반 dmin 상한 최적화 구성법을 우리 z=32 QC 부호에 적용 가능한지, dual-diagonal 인코더가 우리 encoder.cpp와 구조적으로 호환되는지</td></tr></tbody></table>
+<blockquote><p>총평: error-floor 보증형 protograph QC-LDPC 설계법과 병렬 dual-diagonal 인코더는 참고가치 있으나 광통신 장블록·soft-4bit+ 타깃이라 NAND 이식은 재설계 부담이 커 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN/BPSK 채널, protograph 기반 QC-LDPC(lifting factor <code>Q=Q1·Q2</code>, <code>Q2=128</code>), <code>n=30720</code>, rate <code>2/5~9/10</code>. 타깃은 LEO 광위성 다운링크(≥10 Gbit/s, BER 1e-12).</li><li>문제: 5G/DVB-S2 부호는 고/중 BER용이라 error floor·인코더 복잡도가 광통신 요구(초저 BER, 온보드 저전력 인코더)에 부족.</li><li>모델: EXIT 분석으로 iterative decoding threshold(waterfall) 예측, permanent 기반 최소거리 상한 <code>dmin</code>(식 (1))으로 error-floor 예측.</li><li>핵심 기법1(고rate protograph 탐색): ARA 구조 변형. base matrix <code>B0=[A E 0 D; C 0 I 0]</code>에서 D를 double-diagonal로 강제해 linear-time·병렬 인코딩 가능.</li><li>식 의미: permanent 기반 상한 <code>dmin(B,P)</code>을 최대화하면 error floor가 낮은 짧은 부호를 얻음.</li><li>핵심 기법2(저rate 확장): <code>B=[B0 0; M I]</code> 형태로 행/열을 순차 추가, 각 단계에서 <code>dmin</code> 상한 side-constraint 하에 threshold <code>η</code> 최소화(<code>B=argmin η</code>).</li><li>구현 트릭: 채널 LLR 6bit, APP 9bit, 디코더 메시지 7bit 양자화; offset min-sum(OMS) 디코더, layered horizontal scheduling(수렴 약 2배 개선), pipelined barrel shifter permutation.</li><li>최적화: threshold 급락 방지를 위해 목표 <code>dmin,t</code> 증분 ∆을 비감소 수열로 설정(Table I).</li><li>결과: 용량 대비 0.3~0.4 dB gap, BER 1e-12까지 error floor 미관측. 인코더 자원(LUT/FF)이 DVB-S2/ARJA 대비 약 10배 절감, 인코더 코어당 ≥10 Gbit/s.</li><li>한계: HW는 FPGA(place&amp;route) 검증까지, ASIC 아님. 장블록·광통신·soft-4bit+ 타깃이라 NAND(4KB, 2~3bit) 직접 이식은 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph/QC H-matrix 구성·로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>permanent 기반 부호설계 산출물을 우리 PCM 로더로 취급 가능하나 z/구조 재검증 필요(이식 난이도 높음)</td></tr><tr><td>double-diagonal 인코더</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>우리도 dual-diagonal 인코딩 보유 - 개념 중복, 병렬 cascade 구조만 참고</td></tr><tr><td>offset min-sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리는 min-sum 보유(OMS offset은 코드상 미확인) - 부분 중복</td></tr><tr><td>LLR 양자화(6/7/9bit)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft-4bit+ 양자화라 우리 2~3bit 테이블과 스케일 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - dual-diagonal 인코더는 이미 보유해 중복이고, permanent 기반 low-error-floor 부호설계법은 개념적으로 우리 고rate QC-LDPC 부호설계에 참고 가치가 있으나 광통신 장블록 타깃이라 직접 이식은 재설계 부담.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10278875",
+  "title": "LDPC Codes with Low Error Floors and Efficient Encoders",
+  "year": 2023,
+  "venue": "IEEE ICC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": null,
+  "code_length": "30720",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "permanent 기반 dmin 상한을 제약으로 EXIT threshold 최적화한 low-error-floor protograph QC-LDPC 부호족 + 저복잡 dual-diagonal 인코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 10,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "광위성/AWGN·BPSK 타깃, n=30720 장블록·6bit+ LLR - NAND 고rate·4KB·2~3bit soft와 정합성 낮음",
+  "todo_check": "permanent 기반 dmin 상한 최적화 구성법의 z=32 QC 부호 적용 가능성, dual-diagonal 인코더 구조 호환성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10278875---ldpc-codes-with-low-error-floors-and-efficient-encoders-2023-ieee-icc">ieee:10278875 - LDPC Codes with Low Error Floors and Efficient Encoders (2023, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

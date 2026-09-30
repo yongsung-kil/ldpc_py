@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1339511</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1339511---evaluating-alternative-implementations-for-ldpc-decoder-check-node-function-2004-isvlsi">ieee:1339511 - Evaluating Alternative Implementations for LDPC Decoder Check Node Function (2004, ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC check node의 초월함수 B(x)=ln((1+e^x)/(1-e^x)) 근사를 ROM LUT vs PWL로 비교, ROM LUT가 면적 대비 정확도·속도 우위</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>428840µm²(4096x15 ROM)~8931µm²(128x10)</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>latency_note</td><td>단일 사이클 근사 유닛으로 pipeline throughput 향상(check node 국한)</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Sum-Product의 tanh 계열 CN 함수 근사로 Prime ECC의 min-sum과 다른 도메인, 부호 스펙·BER 곡선 없이 SW 대비 근사오차만 보고</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: SPA CN의 tanh-도메인 초월함수 근사를 ROM LUT로 구현하는 컴포넌트 연구로, min-sum 기반 Prime ECC와 연산 도메인이 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 LDPC 디코더의 check node(CN) 함수 근사이며, 부호 스펙(rate/length/부호종류)은 논문에 명시 안 됨.</li><li>문제: CN 연산이 division/multiplication 다수를 포함해 디코딩의 병목이고, tanh/bilinear transform 기반 초월함수 계산이 비쌈.</li><li>핵심 변환: likelihood ratio를 log 도메인으로 옮겨 <code>llr_i_new = B[Σ B(llr_j_old) - B(llr_i_old)]</code> 형태로, 곱셈→덧셈, 나눗셈→뺄셈으로 단순화 (<code>B(x)=ln((1+e^x)/(1-e^x))</code>).</li><li>근사 대상은 단일 입력 <code>x=llr</code>을 받아 <code>B(x)</code>를 반환하는 approximation unit(AU)이고, sign은 XOR로 분리해 magnitude-only 계산으로 축소.</li><li>두 구현 비교: (1) PWL(구간선형, 기울기를 2의 거듭제곱으로 잡아 shift로 곱셈 제거, 작은 LUT에 a,b 저장), (2) ROM LUT(SW로 B(x) 미리 계산해 x 상위비트를 주소로 사용).</li><li>수 표현: 16-bit sign-magnitude, 5 정수 + 10 소수 + 1 부호비트가 최소 BER.</li><li>ROM 압축: x&gt;6.422는 B(x)=0, x=0은 최대값으로 corner-case 우회, 유효값 약 4500개 → 4096x15 ROM으로 축소 가능.</li><li>결과(합성): ROM 5.10 포맷 평균 BER 9.24%/2.20ns/428840µm², PWL 동일포맷 11.23%/2.37ns/31936µm²; 동일 면적으로 압축해도 ROM이 더 정확·빠름.</li><li>검증: Synopsys Design Compiler 합성 + Cadence 배치배선 타이밍, BER은 32-bit float SW 대비 오차율.</li><li>한계: 부호 스펙·실제 FER 곡선·throughput 미제시, iteration 감소 없음, 비트폭이 커지면 ROM 면적이 불리해질 수 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 초월함수 B(x) 근사(ROM/PWL)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>낮음 - Prime ECC는 min-sum(min1/min2)로 tanh/B(x) 근사 자체가 불필요</td></tr><tr><td>iteration별 LLR 테이블/양자화</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>낮음 - LUT 기반 magnitude 양자화 아이디어는 유사하나 함수가 다름</td></tr><tr><td>sign XOR 처리</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>낮음 - sign-magnitude XOR은 이미 보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - Sum-Product의 tanh-도메인 CN 함수를 ROM LUT로 근사하는 연구인데 Prime ECC는 이미 min-sum을 채택해 이 초월함수 근사가 필요 없고, 부호 스펙·BER 곡선도 없어 NAND binary QC-LDPC 이식 이득이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1339511",
+  "title": "Evaluating Alternative Implementations for LDPC Decoder Check Node Function",
+  "year": 2004,
+  "venue": "ISVLSI",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC check node의 초월함수 B(x)=ln((1+e^x)/(1-e^x)) 근사를 ROM LUT vs PWL로 비교, ROM LUT가 면적 대비 정확도·속도 우위",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "428840µm²(4096x15 ROM)~8931µm²(128x10)",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "Sum-Product의 tanh 계열 CN 함수 근사로 Prime ECC의 min-sum과 다른 도메인, 부호 스펙·BER 곡선 없이 SW 대비 근사오차만 보고",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1339511---evaluating-alternative-implementations-for-ldpc-decoder-check-node-function-2004-isvlsi">ieee:1339511 - Evaluating Alternative Implementations for LDPC Decoder Check Node Function (2004, ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

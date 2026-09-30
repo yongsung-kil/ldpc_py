@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6954486</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6954486---variable-llr-scaling-in-min-sum-decoding-for-irregular-ldpc-codes-2014-ieee-trans-broadcasting">ieee:6954486 - Variable LLR Scaling in Min-Sum Decoding for Irregular LDPC Codes (2014, IEEE Trans. Broadcasting)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64800, 10032</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>GMI 기준으로 iteration·check-node degree별 스케일 팩터를 1D로 탐색하는 변수 스케일링 min-sum</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>스케일 시퀀스는 오프라인 훈련(DE/Monte Carlo)으로 사전 계산·저장, HW 미설계·error-floor 실측 없음</td></tr><tr><td>추가확인</td><td>degree별 스케일 테이블이 NAND용 고rate QC-LDPC(단일 degree 지배)에서 이득이 있는지</td></tr></tbody></table>
+<blockquote><p>총평: NMS를 iteration+degree 양방향 변수 스케일링으로 확장한 성능개선 기법으로 decoder.cpp min-sum에 이식 용이하나 이득폭(0.1~0.3dB)이 작고 waterfall 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BPSK/256QAM AWGN 채널의 irregular LDPC (DVB-T2 rate 1/2, length 64800 check-regular / length 10032 check-irregular).</li><li>문제: min-sum이 check node에서 LLR 크기를 과대평가 → NMS(고정 α)/OMS(고정 β)로 보정하나, iteration과 check-node degree 양방향 변수 스케일링은 파라미터 폭발로 미해결.</li><li>핵심 관찰: MS 근사 오차는 iteration이 진행될수록(LLR 신뢰↑) 줄고, check-node degree <code>dc</code>가 클수록 커진다 → 스케일 <code>αj(i)</code>는 <code>i</code>와 <code>dj</code> 모두에 의존해야 함.</li><li>핵심 기법: 각 degree·iteration에 대해 generalized mutual information(GMI) <code>I(U~c; B)</code>를 최대화하는 스케일 <code>αj(i)</code>를 1D 탐색(greedy, 이전 iteration 값 고정).</li><li>핵심 식: <code>αj(i)=argmin_α ∫ P_U~j(i)(l) log2(1+e^{-αl}) dl</code> (식31) — GMI 최대화가 mismatch LLR 정확도 최대화와 등가.</li><li>확장: 검사노드 degree 무시 시 <code>αj(i)≡α(i)</code>가 되어 iteration만 의존하는 간이판 I-GMI, degree까지 반영하면 ID-GMI.</li><li>실무 트릭: DE로 얻은 <code>αj(i)</code>는 실코드와 mismatch → Monte Carlo(식32)로 훈련 LLR에서 직접 <code>αj(i)</code> 산출, <code>αj(i)</code>는 (αj(i-1),1] 내 non-decreasing.</li><li>학습 절차: Eb/N0를 BP threshold 근처로 두고 Nblk(10^3~5×10^3) 훈련 블록의 iteration별 MS 출력 LLR로 스케일 시퀀스를 평균.</li><li>결과: 64800 code BPSK에서 I-EXIT-P/NMS 대비 0.15dB, 256QAM에서 0.2~0.3dB 개선(BP와 0.1~0.2dB차); 10032 code는 BP와 0.05dB 이내, error-floor 10^-8까지 없음.</li><li>한계: HW 미설계, 시뮬만, 스케일 테이블 오프라인 사전계산 필요, degree 다수인 통신용 부호 전제(NAND 고rate 단일 degree와 상이).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN 스케일 보정(αj(i))</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN magnitude에 iteration/degree별 스케일 곱하는 지점</td></tr><tr><td>iteration별 스케일 테이블 참조</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>기존 iteration별 LLR threshold 테이블 구조에 스케일 테이블 추가</td></tr><tr><td>디코딩 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>스케일 시퀀스를 iteration index로 인가</td></tr><tr><td>오프라인 스케일 최적화</td><td>local_opt.cpp</td><td>LLR 자동최적화와 유사한 파이프라인 재사용 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 스케일링은 decoder.cpp에 바로 얹을 수 있으나, Prime ECC는 이미 적응형 LLR 테이블을 보유하고 이득폭이 작으며 degree 다양성이 적은 고rate QC-LDPC에서 degree별 이점이 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6954486",
+  "title": "Variable LLR Scaling in Min-Sum Decoding for Irregular LDPC Codes",
+  "year": 2014,
+  "venue": "IEEE Trans. Broadcasting",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "64800, 10032",
+  "soft_quant": "무관",
+  "key_contribution": "GMI 기준으로 iteration과 check-node degree별 스케일 팩터를 1D로 탐색하는 변수 스케일링 min-sum",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "스케일 시퀀스는 오프라인 훈련(DE/Monte Carlo)으로 사전 계산·저장, HW 미설계·error-floor 실측 없음",
+  "todo_check": "degree별 스케일 테이블이 NAND용 고rate QC-LDPC(단일 degree 지배)에서 이득이 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6954486---variable-llr-scaling-in-min-sum-decoding-for-irregular-ldpc-codes-2014-ieee-trans-broadcasting">ieee:6954486 - Variable LLR Scaling in Min-Sum Decoding for Irregular LDPC Codes (2014, IEEE Trans. Broadcasting)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

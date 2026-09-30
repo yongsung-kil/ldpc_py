@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5624760</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5624760---applying-transparent-lossless-data-compression-to-improve-the-feasibility-of-using-advanced-error-correction-codes-in-solid-state-drives-2010-sips-2010">ieee:5624760 - Applying Transparent Lossless Data Compression to Improve the Feasibility of Using Advanced Error Correction Codes in Solid-State Drives (2010, SiPS 2010)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.857~0.95</td></tr><tr><td>부호length</td><td>34520</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>페이지 단위 무손실 압축으로 여유공간 확보→더 강한 LDPC(저rate) 기회적 사용→coarser soft-sensing 허용해 read latency 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>복호/부호 알고리즘 개선이 아닌 압축+가변rate 시스템 전략, LZ77 압축·2단 rate 스위칭 별도 로직 필요</td></tr><tr><td>추가확인</td><td>페이지내 압축률 분포(α) 및 read-modify-write 관리 오버헤드, 가변 코드rate 지원 방식</td></tr></tbody></table>
+<blockquote><p>총평: NAND read latency를 줄이려 무손실 압축으로 강한 LDPC를 기회적으로 쓰고 soft-sensing 정밀도를 낮추는 시스템 레벨 트레이드오프 전략 — Prime ECC 디코더/부호설계 자체는 손대지 않아 직접 이식 요소는 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2bits/cell MLC NAND, 4KB 페이지, 컨트롤러+다수 NAND 칩. rate-19/20 QC-LDPC <code>(34520, 32794)</code>, 검사행렬 2×40 circulant array, col weight 4, min-sum 복호.</li><li>문제: 미래 SSD에서 advanced ECC(LDPC)는 soft-decision 입력이 필요→ n-bit soft sensing이 on-chip sensing latency <code>(2^n-1)/(2^2-1)</code>배, bus transfer latency <code>n/2</code>배로 증가 (6-bit시 read 77μs→346μs).</li><li>모델: MLC threshold voltage 분포 = 중앙 균일분포(폭 ΔVpp)+양측 가우시안 꼬리(σ), erase state는 가우시안. 이 모델로 PER 시뮬.</li><li>핵심 기법: 페이지별 run-time 무손실 압축으로 확보한 여유공간에 더 많은 ECC redundancy를 넣어 기회적으로 더 강한(저rate) LDPC 사용. firmware/OS에 투명(intra-page 독립).</li><li>식 의미: <code>Rn→Rn/rc</code> (압축비 rc만큼 rate 하향). 강한 ECC의 여분 정정능력을 coarser sensing 허용에 트레이드→ <code>Lsens=α·(2^qf-2^qr)/(2^qf-1)</code>, <code>Ltrans=α·(qf-qr)/qf</code> latency 절감.</li><li>확장: 구현 단순화 위해 코드rate 2단(Rn 정상, Rs 강함)만 허용, 압축비 threshold rt로 스위칭.</li><li>구현 디테일: 무손실 압축은 LZ77 기반, 해제는 table lookup으로 on-the-fly(추가 latency 무시가능). 압축비 1.11:1이면 rate 19/20→6/7로 낮춰도 됨.</li><li>최적화 절차: 각 감축 sensing 정밀도(Q=2~6)에 대해 성능손실 없는 LDPC rate를 시뮬로 탐색 (Q=5→16/17, 4→12/13, 3→7/8, 2→6/7).</li><li>결과: 실제 파일 압축시 α=0.858~0.999. 최대 on-chip sensing latency 95.24%, flash-to-controller transfer latency 66.67% 절감. 평균 read latency 346μs→106μs(qr=2).</li><li>한계: HW 미설계, 시뮬만. 복호기/부호구조 개선이 아니라 압축+가변rate 시스템 전략. 압축 실패 페이지·write 관리 오버헤드 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC min-sum 복호(예시 부호)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>논문은 min-sum을 그대로 쓸 뿐 개선 없음 — 이미 보유(§3)</td></tr><tr><td>soft-sensing 정밀도별 LLR 양자화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft 2~3bit read 비용 개념은 겹치나 압축 연계 로직은 대응 없음</td></tr><tr><td>페이지 단위 가변 코드rate 스위칭</td><td>대응 없음</td><td>Prime ECC는 고정 QC-LDPC(H-matrix), 가변rate/압축 프론트엔드 없음</td></tr><tr><td>무손실 압축(LZ77)</td><td>대응 없음</td><td>ECC 파이프라인 밖의 시스템 레이어</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND read latency 관점은 관련 있으나, 기여가 압축+가변rate 시스템 전략이라 Prime ECC의 디코더/부호설계/HW 어디에도 떼어 붙일 알고리즘이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5624760",
+  "title": "Applying Transparent Lossless Data Compression to Improve the Feasibility of Using Advanced Error Correction Codes in Solid-State Drives",
+  "year": 2010,
+  "venue": "SiPS 2010",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.857~0.95",
+  "code_length": 34520,
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "페이지 단위 무손실 압축으로 여유공간 확보→더 강한 LDPC(저rate) 기회적 사용→coarser soft-sensing 허용해 read latency 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "복호/부호 알고리즘 개선이 아닌 압축+가변rate 시스템 전략, LZ77 압축·2단 rate 스위칭 별도 로직 필요",
+  "todo_check": "페이지내 압축률 분포(α) 및 read-modify-write 관리 오버헤드, 가변 코드rate 지원 방식"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5624760---applying-transparent-lossless-data-compression-to-improve-the-feasibility-of-using-advanced-error-correction-codes-in-solid-state-drives-2010-sips-2010">ieee:5624760 - Applying Transparent Lossless Data Compression to Improve the Feasibility of Using Advanced Error Correction Codes in Solid-State Drives (2010, SiPS 2010)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

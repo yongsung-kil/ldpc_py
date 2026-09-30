@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6159384</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6159384---design-eg-ldpc-codes-for-soft-error-mitigation-in-memory-2011-ieee-국제학술대회">ieee:6159384 - Design EG-LDPC Codes for Soft Error Mitigation in Memory (2011, IEEE 국제학술대회)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.38~0.52</td></tr><tr><td>부호length</td><td>31~42</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>EG-LDPC를 2n bit 데이터폭에 맞춰 설계 + majority-logic 복호를 2-step으로 축소한 fault-secure 메모리 방식</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>majority-logic one-shot 복호 + Galois field EG-LDPC 구조로 NAND용 iterative min-sum QC-LDPC와 완전 이질적, 코드길이 31~42 극소</td></tr><tr><td>추가확인</td><td>(42,16) EG-LDPC의 dmin=8 정정능력이 고rate NAND 목표대비 부족한지</td></tr></tbody></table>
+<blockquote><p>총평: SRAM/메모리 SEU-SET fault-secure용 EG-LDPC majority-logic 부호로, NAND iterative soft-decision QC-LDPC 파이프라인과 이질적이라 이식가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: SoC 메모리 soft error(SEU/MBU/SET) 완화용 EG-LDPC(Euclidean Geometry LDPC), 예제 (31,16)·(42,16), rate 약 0.38~0.52, GF(2^5)/GF(2^6) 기반.</li><li>문제: Hamming은 MBU 부족, RM/Matrix code는 HW overhead 크거나 encoder/decoder SET 미대응; [4]의 EG-LDPC는 원시 코드길이만 지원해 메모리의 2n bit 데이터폭에 직접 못 씀.</li><li>접근: G-matrix 열 삭제로 (63,37)-&gt;(42,16)처럼 2n bit 데이터폭 EG-LDPC 구성; parallel majority decoding + detector feedback loop로 storage cell·encoder·decoder 모든 transient fault 감내(fault-secure).</li><li>부호구성: 최소다항식으로 생성다항식 <code>G(X)</code> 도출, vF를 순환시프트해 systematic G-matrix 생성; encoder는 <code>v=u*G</code> XOR 로직.</li><li>복호: majority-logic decoding — parity check-sum <code>A</code>의 다수결값이 1이면 해당 bit 반전; correction matrix <code>W</code>가 J/2 정정·J-1 검출.</li><li>핵심 개선: 원래 (31,16)은 dmin <code>J</code>=6으로 이론상 3-step majority decoding 필요하나, 제안 알고리즘이 orthogonal vector 재구성으로 <strong>2-step</strong>으로 축소.</li><li>HW: (31,16) 디코더는 7개 parallel majority logic 회로 + syndrome 회로, N번째 회로 입력은 (N-1)번째를 5bit 순환우시프트해 얻어 1 클록에 정정.</li><li>detector: syndrome matrix <code>S</code>로 d·S^T=0 여부 검사, 0 아니면 error 신호로 데이터 중단·재전송(fault-secure 보증).</li><li>결과: Verilog+SMIC 0.18um 합성; 100만 fault injection 실험서 (42,16) EG-LDPC가 최고 보호; MTTF (42,16)이 Matrix code 대비 18.9%, RM 대비 4.5% 높음.</li><li>한계: iterative message passing 아님(hard majority-logic one-shot), 코드길이 31~42로 극소, gatecount/throughput 수치 본문 부재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>majority-logic 복호</td><td>대응 없음</td><td>Prime ECC는 iterative min-sum message passing, majority-logic one-shot과 무관</td></tr><tr><td>EG-LDPC 부호구성(GF 생성다항식)</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC(base+circulant), Euclidean geometry 구성과 이질적</td></tr><tr><td>G-matrix XOR 인코더</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>개념상 인코더지만 dual-diagonal QC 인코딩과 방식 상이, 이식 불가</td></tr><tr><td>syndrome detector</td><td>대응 없음</td><td>fault-secure feedback/재전송 구조는 Prime ECC 범위 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard majority-logic 복호 + Euclidean Geometry 부호구성이 NAND용 iterative soft-decision binary QC-LDPC 엔진과 알고리즘/부호구조 모두 이질적이라 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6159384",
+  "title": "Design EG-LDPC Codes for Soft Error Mitigation in Memory",
+  "year": 2011,
+  "venue": "IEEE 국제학술대회",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.38~0.52",
+  "code_length": "31~42",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "EG-LDPC를 2n bit 데이터폭에 맞춰 설계 + majority-logic 복호를 2-step으로 축소한 fault-secure 메모리 방식",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "majority-logic one-shot 복호 + Galois field EG-LDPC 구조로 NAND용 iterative min-sum QC-LDPC와 완전 이질적, 코드길이 31~42 극소",
+  "todo_check": "(42,16) EG-LDPC의 dmin=8 정정능력이 고rate NAND 목표대비 부족한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6159384---design-eg-ldpc-codes-for-soft-error-mitigation-in-memory-2011-ieee-국제학술대회">ieee:6159384 - Design EG-LDPC Codes for Soft Error Mitigation in Memory (2011, IEEE 국제학술대회)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_886472</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee886472---gallager-codes-for-cdma-applicationspart-ii-implementations-complexity-and-system-capacity-2000-ieee-trans-communications">ieee:886472 - Gallager Codes for CDMA Applications—Part II: Implementations, Complexity, and System Capacity (2000, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.125</td></tr><tr><td>부호length</td><td>1536</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>(N,K,3) 저rate Gallager 부호의 sum-product 디코더 SW/HW(파이프라인+Banyan 라우팅) 저복잡도 구현 및 CDMA 용량 분석</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>저rate(1/8) CDMA 특화 부호, soft-product(tanh형) 디코더로 Prime ECC의 고rate binary QC-LDPC/min-sum과 정합 낮음</td></tr><tr><td>추가확인</td><td>Banyan 라우팅 네트워크 아이디어가 QC-LDPC 메모리 라우팅에 응용 가치 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 2000년 IS-95 CDMA용 저rate Gallager 부호의 sum-product 디코더 SW/HW 구현 논문 — 고rate NAND QC-LDPC와 부호/알고리즘 정합이 낮아 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IS-95 CDMA forward link용 <code>(N=1536, K=192, weight-3)</code> rate 1/8 Gallager(LDPC) 부호로, 짧은 프레임(음성) 지연 제약 하에서 용량 개선을 노린다.</li><li>문제: 기존 rate 1/2 convolutional 대비 대역 확장 여유를 강한 오류정정에 배분하되 디코딩 복잡도가 용량 이득을 상쇄하지 않아야 함.</li><li>채널은 AWGN 및 완전 인터리브 flat Rayleigh-fading(±1 antipodal), CSI 유무 두 경우를 가정.</li><li>핵심 기법: sum-product(belief propagation) 반복 복호 — vertical step(site-to-check <code>q</code>)과 horizontal step(check-to-site <code>r</code>)을 교대, 희소 PCM을 두 리스트(<code>I,J</code>)로 표현.</li><li>horizontal step은 MacKay식 차분(difference) 표현으로 곱 형태를 단순화, forward-backward pass로 <code>set N(k)\l</code> 곱을 효율 계산.</li><li>로그 도메인 변환으로 곱셈을 덧셈+<code>f(x)=ln(1+e^-x)</code> 룩업테이블로 대체(작은 테이블로 고정밀).</li><li>HW: 4개 PU(processor unit) + 3개 ICN(interconnection network) 파이프라인, MM 데이터버퍼로 여러 코드워드 동시 복호해 회로 이용률↑.</li><li>ICN 라우팅은 cross-bar 대신 Banyan network(<code>log2 M</code> 스테이지, 8x8→48292 cross point) 제안, 사전계산 라우팅으로 message blocking 회피.</li><li>결과: 정보비트·반복당 162 OPs(turbo 192 OPs 대비 낮음), SNR 2.5~3.5dB에서 평균 ~10 iteration, CDMA 셀 용량 uncoded 대비 5배·orthogonal conv 대비 2배(37 users@BER 1e-3).</li><li>한계: 버퍼링으로 latency 증가(예: 100ms), 저rate CDMA 특화 부호이며 gate count/공정/throughput 수치 없음, NAND 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>sum-product 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>알고리즘 계층은 대응하나 우리는 min-sum(tanh 아님)이라 직접 이식 불가</td></tr><tr><td>horizontal step 차분·로그 룩업</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN 연산 대응, 그러나 full sum-product 룩업은 우리 min-sum과 방식 상이</td></tr><tr><td>로그도메인 LLR 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft-info 양자화 개념은 닿으나 부호/rate 상이</td></tr><tr><td>ICN Banyan 라우팅 네트워크</td><td>대응 없음</td><td>우리 z=32 고정 라우팅(GT/HCU)과 구조 상이</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 저rate CDMA 특화 regular Gallager 부호 + full sum-product 디코더로, Prime ECC의 고rate binary QC-LDPC min-sum 파이프라인과 부호·알고리즘 모두 정합이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:886472",
+  "title": "Gallager Codes for CDMA Applications—Part II: Implementations, Complexity, and System Capacity",
+  "year": 2000,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.125,
+  "code_length": "1536",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "저rate (N,K,3) Gallager 부호의 sum-product 디코더 SW/HW(파이프라인+Banyan 라우팅) 저복잡도 구현 및 CDMA 용량 5배 개선",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "저rate(1/8) CDMA 특화 부호, full sum-product(tanh형) 디코더로 Prime ECC 고rate binary QC-LDPC/min-sum과 정합 낮음",
+  "todo_check": "Banyan 라우팅 네트워크 아이디어가 QC-LDPC 메모리 라우팅에 응용 가치 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee886472---gallager-codes-for-cdma-applicationspart-ii-implementations-complexity-and-system-capacity-2000-ieee-trans-communications">ieee:886472 - Gallager Codes for CDMA Applications—Part II: Implementations, Complexity, and System Capacity (2000, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

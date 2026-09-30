@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9369450</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9369450---dynamic-dual-quantization-domain-self-corrected-ldpc-decoder-2021-ieee-ccnc">ieee:9369450 - Dynamic Dual Quantization-Domain Self-Corrected LDPC Decoder (2021, IEEE CCNC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CN은 3-bit, VN은 고정밀 도메인으로 운용하는 동적 이중양자화(DQD) + self-correction, 비선형 매핑을 DE·ML로 iteration별 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>시뮬만(HW 없음), FER 개선치 수치 미제시, iteration별 매핑 테이블·NN 학습 오프라인 필요</td></tr><tr><td>추가확인</td><td>DQD 3-bit CN 양자화가 우리 min-sum magnitude 양자화 테이블과 정합되는지, self-correction 오버헤드</td></tr></tbody></table>
+<blockquote><p>총평: CN 저비트(3-bit) 양자화 + 동적 비선형 매핑 + self-correction으로 waterfall 개선하는 아이디어로, soft-read 비용·복잡도 절감 관점에서 참고가치 있으나 HW 미검증.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>binary <code>(N,K)</code> LDPC, NR BG2 부호(<code>K=520</code>, <code>R=1/2</code>) 대상. CN은 3-bit 도메인, VN은 고정밀 도메인에서 운용하는 이중 양자화(DQD).</li><li>문제: min-sum 저정밀 구현 시 성능 손실 → 비선형 매핑으로 도메인 간 변환하며 손실 최소화하되, 고정 매핑은 iteration 중 변하는 LLR 분포를 못 따라감.</li><li>고→저정밀 매핑 <code>Q(l)(x)</code>: 임계 <code>t1(l)&lt;t2(l)&lt;t3(l)</code>로 x를 {-3..3} 3-bit로 양자화(식 1).</li><li>저→고정밀 역매핑 <code>Q̄(l)(x)</code>: 3-bit 값을 대표값 <code>d1(l)&lt;d2(l)&lt;d3(l)</code>로 복원(식 2).</li><li>동적화: iteration별 매핑 파라미터 = 초기 파라미터 × 스케일 <code>α(l)</code>. 초기값은 differential evolution(DE)으로 획득.</li><li><code>α(l)</code>은 ML로 최적화. NN은 입력·출력층만이며 VN의 APP-LLR 연산과 동일 구조.</li><li>학습: 출력에 sigmoid(식 3), cross-entropy loss(식 4) 최소화 = DQD-SC 오류 수 최소화와 등가. Adam(lr=1e-3), FER 1e-1 SNR 영역 LLR을 학습셋으로.</li><li>self-correction(SC): VN에서 <code>LV2C(l)</code>와 <code>LV2C(l-1)</code> 부호가 다르면 신뢰불가로 판단해 메시지를 0으로 소거(직전이 0이면 항상 갱신).</li><li>결과: AWGN/BPSK, 최대 30 iteration. hybrid DQD 대비 dynamic DQD-SC가 FER 최고 성능(정성적, 수치 미제시).</li><li>한계: 시뮬레이션만, HW·gatecount·throughput 없음, iteration별 매핑 테이블과 NN 학습이 오프라인 선행 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 3-bit 양자화 / min-sum 도메인 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum magnitude 양자화 테이블과 대응, 3-bit CN은 저비트 절감 아이디어</td></tr><tr><td>iteration별 비선형 매핑 파라미터 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration 구간별 LLR threshold 테이블과 유사, DE/ML 최적화만 추가</td></tr><tr><td>VN self-correction(부호 반전 소거)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>LDPC_Decoder()</code> 루프</td><td>VN 처리 루프에 조건부 소거 추가로 이식 가능</td></tr><tr><td>고↔저정밀 도메인 역매핑</td><td>channel.cpp LLR 테이블(<code>PARAM_LLR</code>)</td><td>양자화 매핑 관점 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CN 저비트(3-bit) 양자화 + iteration별 동적 매핑 + VN self-correction은 우리 LLR 테이블/VN 루프에 이식 가능한 binary LDPC 기법이나, HW 미검증이고 iteration별 매핑·NN 학습 인프라 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9369450",
+  "title": "Dynamic Dual Quantization-Domain Self-Corrected LDPC Decoder",
+  "year": 2021,
+  "venue": "IEEE CCNC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CN은 3-bit, VN은 고정밀 도메인으로 운용하는 동적 이중양자화(DQD) + self-correction, 비선형 매핑을 DE·ML로 iteration별 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "시뮬만(HW 없음), FER 개선치 수치 미제시, iteration별 매핑 테이블·NN 학습 오프라인 필요",
+  "todo_check": "DQD 3-bit CN 양자화가 우리 min-sum magnitude 양자화 테이블과 정합되는지, self-correction 오버헤드"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9369450---dynamic-dual-quantization-domain-self-corrected-ldpc-decoder-2021-ieee-ccnc">ieee:9369450 - Dynamic Dual Quantization-Domain Self-Corrected LDPC Decoder (2021, IEEE CCNC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

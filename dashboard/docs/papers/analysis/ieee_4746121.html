@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4746121</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4746121---dynamically-reconfigurable-architecture-for-multi-rate-compatible-regular-ldpc-decoding-2008-ieee">ieee:4746121 - Dynamically Reconfigurable Architecture for Multi-Rate Compatible Regular LDPC Decoding (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1536~3072</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>다중 rate 호환 1st/2nd 최소값 탐색 유닛(tournament)으로 단일 HW에서 rate 동적 재구성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상 (row unit 면적 0.23mm²@90nm)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.539Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선 다중rate 특화, min-sum·min1/min2는 이미 보유, NAND 고정 고rate엔 다중rate 이점 없음</td></tr><tr><td>추가확인</td><td>tournament min-search가 Prime ECC의 가변 degree col(HCU) 처리에 재사용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 무선 채널 SNR 변동 대응용 다중rate 재구성 min-search HW - NAND 고정 고rate ECC엔 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 모바일 무선망용 regular LDPC 복호기, AWGN+BPSK, 데이터 폭 6-bit.</li><li>문제: 기존 rate-fixed 복호기는 복호 시작 후 rate 고정, 채널 SNR 변동에 비효율(저SNR은 저rate, 고SNR은 고rate가 유리).</li><li>코드 스펙: <code>768×6144</code> 대형 matrix를 <code>3×24</code> sub-block(각 <code>256×256</code> 순환이동 identity)으로 분할, R=0.5/0.625/0.75에 각각 code length 1536/2048/3072.</li><li>핵심 기법: block-partitioned parity check matrix - 대형 matrix를 2/3/4 부분으로 나눠 rate별로 동일 구조(같은 <code>wr</code>,<code>wc</code>)의 부분행렬을 얻어, 하나의 HW로 여러 codeword 동시 복호.</li><li>복호 알고리즘: Min-Sum, row op <code>αmn = (∏sign βmn)·min|βmn|</code>, col op <code>βmn = Σαm'n + λn</code>, max iteration 8.</li><li>핵심 기법 2단: multi-rate 호환 1st-2nd 최소값 탐색 유닛 - tournament 방식으로 R에 따라 6입력 2출력(R=0.5) 또는 12입력 1출력(R=0.75)을 신호 <code>R</code>로 전환.</li><li>구현 디테일: partially parallel(parallel factor 4), CFU 12개·BFU 96개, 120 memory bank.</li><li>학습/최적화: C 시뮬레이션으로 rate-switching point 결정(R=0.5는 2.75dB까지, 0.625는 3.65dB까지, 이후 0.75).</li><li>결과: CMOS 90nm 합성, critical path 3.07ns→326MHz, simple throughput 539Mbps; 다중rate row unit 면적 0.23mm²로 결합형 0.37mm² 대비 37% 절감.</li><li>한계: 실측 없이 논리합성뿐, 무선 다중rate 시나리오 특화, 정정능력 자체 개선은 아님(rate 선택으로 throughput만 개선).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum row op / 1st-2nd min 탐색</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 CN 연산은 이미 보유, tournament 구조만 상이</td></tr><tr><td>전체 복호 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Min-Sum 반복 구조 동일</td></tr><tr><td>다중 rate 재구성 minimum unit</td><td>대응 없음</td><td>Prime ECC는 단일 고rate QC-LDPC 고정, 다중rate 불필요</td></tr><tr><td>block-partitioned PCM (rate 가변)</td><td>대응 없음</td><td>H-matrix 고정(<code>Load_PCM()</code>)이라 rate 분할 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - min-sum·min1/min2 CN은 이미 보유하고, 다중rate 재구성은 NAND의 고정 고rate ECC 시나리오에 불필요함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4746121",
+  "title": "Dynamically Reconfigurable Architecture for Multi-Rate Compatible Regular LDPC Decoding",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1536~3072",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "다중 rate 호환 1st/2nd 최소값 탐색 유닛(tournament)으로 단일 HW에서 rate 동적 재구성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상 (row unit 0.23mm2@90nm)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.539,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "무선 다중rate 특화, min-sum·min1/min2는 이미 보유, NAND 고정 고rate엔 다중rate 이점 없음",
+  "todo_check": "tournament min-search가 Prime ECC의 가변 degree col(HCU) 처리에 재사용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4746121---dynamically-reconfigurable-architecture-for-multi-rate-compatible-regular-ldpc-decoding-2008-ieee">ieee:4746121 - Dynamically Reconfigurable Architecture for Multi-Rate Compatible Regular LDPC Decoding (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

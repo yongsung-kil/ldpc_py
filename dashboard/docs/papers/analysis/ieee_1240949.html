@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1240949</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1240949---low-density-parity-check-decoder-architecture-for-high-throughput-optical-fiber-channels-2003-iccd03">ieee:1240949 - Low-Density Parity-Check Decoder Architecture for High Throughput Optical Fiber Channels (2003, ICCD'03)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1000~2040</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>병렬화 계수 M로 스케일링하는 확장형 디코더 아키텍처(M-way 메모리 분할+스위치 로직)로 latency N/M 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>1.29M gates@0.35um(M=170)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2.51</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>광통신(2Gbps fiber channel) 타깃, log-MAP full-tanh(Psi) 연산 기반이라 min-sum HW와 상이, BER 개선 없음</td></tr><tr><td>추가확인</td><td>M-way 메모리 분할 시 부과되는 code construction 제약(parallelizing constraint)이 QC-LDPC circulant 구조와 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 2003년 광통신용 log-MAP LDPC 디코더의 serial/parallel/scalable HW 트레이드오프 연구로, NAND binary QC-LDPC와 부호·알고리즘 모두 상이하여 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: RAID 서버용 2Gbps 광섬유 채널의 FEC로 LDPC를 적용, BER &lt; 1e-12 요구. AWGN 채널, rate 1/2 <code>(3,k) regular</code> LDPC, N~1000~2040.</li><li>문제: serial 디코더는 latency가 블록길이 <code>N</code>에 비례해 고throughput 불가, 완전 parallel은 gate count 과다. 둘 사이 절충 필요.</li><li>모델: soft-input iterative message passing, LLR <code>L=log(Pr(c=1)/Pr(c=0))</code>, log-MAP 알고리즘.</li><li>핵심기법1(serial): bit-node당 1클록 처리, 3 edge 병렬. <code>Psi(x)=log(tanh(|x/2|))</code> 회로로 check-node parity 합산, FIFO로 Psi값 저장 후 subtract로 bit update. LLR 4bit, 20 iteration.</li><li>핵심식: parity check는 연결된 bit-node들의 <code>Psi</code> 합, 자기 정보 제외(subtraction)로 extrinsic 산출 — 이것이 tanh-domain SPA 구현.</li><li>핵심기법2(parallel): 모든 bit-node 동시 처리, 3*N개 Psi/Psi^-1 회로+레지스터, 1클록/iteration으로 최고 throughput(10Gbps@100MHz) 그러나 gate 2.69M.</li><li>확장기법(scalable): 조합논리(adder/subtractor/Psi)를 병렬화계수 <code>M</code>배 스케일, 메모리를 3*M 블록으로 분할, switch logic으로 라우팅. latency = <code>N/M</code>.</li><li>트릭: M-way 메모리 분할을 BER 저하 없이 하기 위해 code construction에 parallelizing constraint 추가.</li><li>결과: TSMC 0.35um 합성, M=170 확장형이 2Gbps 사양을 최소 gate(1.29M)로 충족, 2.51Gbps@295MHz. M=340은 4.62Gbps/1.77M gate.</li><li>한계: BER 곡선/error-floor 분석 없음(HW 트레이드오프 중심), log-MAP full-tanh 기반, 광통신 특화, NAND soft-read 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반복 message passing 디코더 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>알고리즘 골격은 대응하나 Prime은 min-sum, 본 논문은 full-tanh log-MAP이라 CN 연산 상이</td></tr><tr><td>Psi(=tanh-domain) CN 연산</td><td>대응 없음</td><td>Prime은 <code>CNU_Update_New_Mag()</code> min-sum 근사 사용, tanh full-SPA 미사용</td></tr><tr><td>M-way 병렬화/메모리 분할/switch logic</td><td>디코더 HW 모델(z=32, GT)</td><td>Prime은 row-단위 z=32 병렬+Graph Thinning 구조로 접근이 다름, 라우팅 개념만 유사</td></tr><tr><td>LLR 4bit 초기화 테이블</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>개념적 대응, 그러나 AWGN 광채널 기준이라 NAND soft-read와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — full-tanh log-MAP 기반의 2003년 광통신용 HW 트레이드오프 연구로 Prime의 min-sum QC-LDPC 구조와 알고리즘·부호·채널 모두 상이하고 부호설계/BER 기여도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1240949",
+  "title": "Low-Density Parity-Check Decoder Architecture for High Throughput Optical Fiber Channels",
+  "year": 2003,
+  "venue": "ICCD'03",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1000~2040",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "병렬화 계수 M로 스케일링하는 확장형 디코더 아키텍처(M-way 메모리 분할+스위치 로직)로 latency N/M 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "1.29M gates@0.35um(M=170)",
+  "parallelism": "부분",
+  "throughput_gbps": 2.51,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "광통신 타깃, log-MAP full-tanh 연산 기반이라 min-sum HW와 상이, BER 개선 없음",
+  "todo_check": "M-way 메모리 분할 제약이 QC-LDPC circulant 구조와 정합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1240949---low-density-parity-check-decoder-architecture-for-high-throughput-optical-fiber-channels-2003-iccd03">ieee:1240949 - Low-Density Parity-Check Decoder Architecture for High Throughput Optical Fiber Channels (2003, ICCD&#x27;03)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

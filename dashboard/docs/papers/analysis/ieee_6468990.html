@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6468990</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6468990---relaxed-half-stochastic-belief-propagation-2013-ieee-trans-communications">ieee:6468990 - Relaxed Half-Stochastic Belief Propagation (2013, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.8413~0.5</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>이진 메시지(1비트/wire) BP로 SPA급 성능 달성, wiring 복잡도 대폭 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>RHS는 HW 미설계(모듈 카운트 분석뿐), NMS 대비 iteration 수 38~160% 많음(1비트 메시지의 정보량 한계)</td></tr><tr><td>추가확인</td><td>β-sequence/VN Harmonization을 우리 QC-LDPC·z=32 구조와 정합, soft-read 비용 대비 fully-parallel wiring 이득 실효성</td></tr></tbody></table>
+<blockquote><p>총평: fully-parallel wiring 병목을 이진 메시지+LLR 추적으로 푸는 정교한 BP 변형이나 NAND용 부분병렬(z=32) 구조엔 wiring 이득이 제한적, β-sequence/error-floor 대책은 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.3an RS-LDPC(len 2048, rate 0.8413, regular <code>dv=6</code>/<code>dc=32</code>) 및 CCSDS AR4JA(len 2048+512 punctured, rate 1/2, irregular) — AWGN 채널, fully-parallel 디코더 지향.</li><li>문제: fully-parallel LDPC 디코더는 실수값 메시지 교환용 wire 수가 면적·전력·임계경로를 지배 — 이를 이진 메시지로 줄이되 SPA급 정정성능을 유지하려는 것.</li><li>핵심 기법 CN: 체크노드 함수를 modulo-2 합(<code>CHKbin = X1⊕...⊕Xn</code>)으로 대체 — Gallager hard-decision과 동일 함수, 임의 분할 가능해 배선 자유도 확보(식 6).</li><li>핵심 기법 VN: 이진 확률 스트림을 받아 <code>k</code>개 샘플평균으로 메시지 <code>m̂</code> 추정(식 10), 선형 추적함수 <code>pi(t)=(1-β)pi(t-1)+β·m̂i(t)</code>로 평균화(식 11)해 고정밀 복호.</li><li>식 의미: VN 계산은 LLR 도메인에서 수행(식 1은 단순 덧셈) — tanh/arctanh 양자화오차 없이 정밀도를 소프트웨어적으로 확보.</li><li>확장 β-sequence: iteration 구간별 β를 바꿔(Gear-Shift 유사) 평균 iteration 감소 — RS-LDPC에서 <code>{0.55,0.25^(L-5)}</code>로 avg iter 3.46(4.6dB).</li><li>구현 트릭: LLR threshold를 priority encoder(base-2 log 근사)로 생성, RNG 64 VN 공유, 선형+포화 근사로 tracker를 6~7비트 가산기 수준으로 단순화.</li><li>Error-floor 대책: 2-phase VN Harmonization(Phase-II) — 다수결 부호 LLR에 ±d 보정, 노드 간 통신 불필요, Margulis code에도 유효.</li><li>결과: RHS가 FP SPA 성능 매칭/초과(RS-LDPC), 30 iter RHS가 fully-stochastic 400 iter보다 우수, rounded linear tracking이 4비트 NMS 대비 0.1dB 이득.</li><li>한계: RHS 자체 실리콘/합성 없음(NMS 대비 모듈 카운트 표만), 채널은 AWGN 가정, 이득의 핵심인 wiring 절감은 fully-parallel 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>이진 메시지 CN(modulo-2) / VN LLR 추적</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>우리는 min-sum CN 사용 — RHS는 CN을 XOR로 전면 교체, 이터레이션 루프 재작성 필요</td></tr><tr><td>VN 양자화/tracker(선형+포화)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>6~7비트 tracker 아이디어 참고 가능하나 우리 HD/2SD/3SD 파이프라인과 상이</td></tr><tr><td>β-sequence(iteration별 파라미터)</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블과 개념 유사 — 구간별 파라미터 스위칭 발상 참고</td></tr><tr><td>조기종료(유효 codeword 검출 시 종료)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC</td><td>우리 CRC 조기종료로 이미 대응</td></tr><tr><td>CN 임의 분할 / 배선 라우팅</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>그래프 씨닝과 목적(edge/배선 축소) 유사, 접근은 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — waterfall/error-floor 개선과 avg iteration 감소는 관심사에 부합하나, 이득의 근거인 fully-parallel wiring 절감이 NAND용 부분병렬(z=32) 구조에는 직접 적용되기 어렵고 CN 전면 교체 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6468990",
+  "title": "Relaxed Half-Stochastic Belief Propagation",
+  "year": 2013,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.8413~0.5",
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "이진 메시지(1비트/wire) BP로 SPA급 성능 달성, wiring 복잡도 대폭 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "RHS는 HW 미설계(모듈 카운트 분석뿐), NMS 대비 iteration 수 38~160% 많음",
+  "todo_check": "β-sequence/VN Harmonization을 z=32 QC-LDPC 구조와 정합, soft-read 비용 대비 wiring 이득 실효성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6468990---relaxed-half-stochastic-belief-propagation-2013-ieee-trans-communications">ieee:6468990 - Relaxed Half-Stochastic Belief Propagation (2013, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

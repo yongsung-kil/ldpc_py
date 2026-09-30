@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11361078</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11361078---hierarchical-approximate-min-sum-and-multi-frame-parallel-qc-ldpc-decoder-for-fpga-optical-links-2026-ieee-photonics-technology-letters">ieee:11361078 - Hierarchical Approximate Min-Sum and Multi-Frame Parallel QC-LDPC Decoder for FPGA Optical Links (2026, IEEE Photonics Technology Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>511</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CNU의 min1/min2 탐색을 그룹화+계층비교로 근사해 comparator 39%, MUX 52% 절감(0.02dB 손실)하고 다중프레임 병렬 BRAM으로 99.8% 활용률 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>35,719 LUT+38,118 FF+80 BRAM@Xilinx Virtex-7</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>2.87Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>CCSDS C2 코드(511×511 submatrix, degree-32 CN) 기준으로 설계되어 Prime ECC의 z_sb=32/degree-17 구조와 파라미터 재검증 필요; 그룹 수(N)-성능-자원 트레이드오프 재튜닝 필요</td></tr><tr><td>추가확인</td><td>정정능력향상 자체는 없음(근사로 인한 0.02dB 열화), latency는 9,447 cycle로 [14] 대비 명시적으로 악화됨을 논문이 인정</td></tr></tbody></table>
+<blockquote><p>총평: normalized min-sum의 CNU 최소값탐색 근사(그룹화+계층비교)와 프레임병렬 BRAM 관리 기법으로, comparator/MUX/메모리 자원 절감 폭이 커 Prime ECC HW 디코더의 CNU/메모리 모듈에 직접 이식 검토 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: QC-LDPC(CCSDS C2, 511×511 submatrix) 부호를 FPGA(Xilinx Virtex-7)에서 복호, BPSK 2Gbps 위성 광통신(FSO) 링크 대상.</li><li>문제: 고차수(degree-32) check node의 min1/min2 탐색에 정렬망(sorting network) 기반 CNU가 과다한 comparator/MUX를 소모해 critical path와 자원 사용량을 늘림; 기존 병렬 아키텍처는 고정 블록 크기로 인한 파이프라인 정체와 낮은 BRAM 활용률 문제도 있음.</li><li>핵심 가정: normalized min-sum(NMSA) 알고리즘, AWGN 채널 LLR 초기화 <code>L_v(0)=2y_i/σ²</code>.</li><li>핵심 기법 1단: check node 입력 M개를 N개 그룹으로 분할해 그룹 내 로컬 최솟값을 독립 계산 후, 트리 비교로 전역 min1을, N개 로컬 최솟값 중 두 번째로 작은 값으로 min2를 근사(min2_approx) — 정확한 global min2 탐색을 생략.</li><li>핵심 식/의미: 제안 방식은 <code>M+N-3</code> comparator·<code>M+N-4</code> MUX만 필요(기존 트리 소터는 <code>2M-3</code>·<code>3M-4</code>) — 그룹 수 N을 늘릴수록 comparator/MUX는 줄지만 근사 오차(ROP 열화)는 커지는 트레이드오프.</li><li>핵심 기법 2단: CCSDS C2 서브매트릭스(511×511)에 맞춰 BRAM depth를 512로 설정해 511/512=99.8% 활용률 달성, 두 개 서브그룹으로 프레임을 병렬 저장해 CNU/VNU가 비동기 스케줄링(핸드셰이크 기반, CNU가 VNU보다 2cycle 느려 VNU에 2 wait cycle 삽입)으로 충돌 없이 접근.</li><li>부수 디테일: 12-bit ADC 기준 총 워드길이 16비트 여유 내에서 fixed-point 폭 튜닝(fractional 1bit, 총 6bit <code>fix6_1</code>로 최종 채택), normalization factor <code>α=0.75</code>.</li><li>최적화 절차: 그룹 수(2/4/8/16) 스윕으로 ROP 열화 대 자원절감 트레이드오프 실험 → 8그룹이 balance point로 채택(comparator 39%, MUX 52% 절감, 0.02dB 손실).</li><li>결과: 350MHz 클럭, 10-iteration으로 peak throughput 2.87Gbps, 80.4 Mbps/kLUT(기존 [14] 대비 25% 향상), ROP=-53dBm@2Gbps BPSK. 단, latency는 9,447 cycle로 [14] 대비 명시적으로 더 높음(처리량 우선 설계).</li><li>한계: 근사 min2로 인한 성능 열화(≤0.02dB)가 상존, CCSDS C2 특정 부호(degree-32, 511×511)에 최적화되어 다른 코드 구조로 일반화 시 그룹 파라미터 재튜닝 필요, latency 트레이드오프가 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| CN min-sum 연산(정규화 min-sum) | decoder.cpp `CNU_Update_New_Mag()`, `C2V_Cal_New_Sgn()` | Prime ECC도 min1/min2 기반 min-sum CNU 사용, 그룹화+계층비교 근사 기법을 CNU 탐색 로직에 직접 적용 검토 가능 |
+| 그룹화 최소값탐색(2S1/2S2/4S2 커스텀 소터) | decoder.cpp `CNU_Update_New_Mag()` 내부 comparator tree | degree 17(HCU 비대칭 col 포함) 구조에서도 comparator/MUX 절감 아이디어 이식 가능 - Prime ECC degree가 CCSDS C2(32)보다 작아 절감 폭은 재검증 필요 |
+| 다중프레임 병렬 BRAM 관리(compact-packing, CNU/VNU 비동기 스케줄링) | 디코더 HW 모델(z=32, HCU, GT), decoder.cpp pipeline 6-stage | Prime ECC의 z_sb=32 row-병렬 구조와 메모리 정합 재설계 필요하나 BRAM 활용률 개선 아이디어는 직접 참고 가치 있음 |
+| fixed-point LLR 폭 최적화(fix6_1) | channel.cpp LLR 테이블(`PARAM_LLR`) | Prime ECC의 HD/2SD/3SD LLR 양자화 설계와 유사한 워드폭 튜닝 방법론, 참고 가치 있음 |
+| CCSDS C2 H-matrix(511×511, degree-32) 구조 | ecc_top.cpp `Load_PCM()` | 특정 위성통신 표준 부호 고정, Prime ECC 부호구조와 직접 대응 안 됨 |</code></pre>
+<p>적용 가치: <strong>높음</strong> — CNU 최소값탐색의 comparator/MUX 절감(그룹화+계층비교) 기법과 프레임병렬 BRAM 최적화 전략은 Prime ECC의 <code>decoder.cpp</code> CNU 로직과 메모리 구조에 직접 이식을 검토할 만한 HW 면적/자원 절감 기법임 (단, degree/코드 구조 차이로 파라미터 재튜닝 필요).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11361078",
+  "title": "Hierarchical Approximate Min-Sum and Multi-Frame Parallel QC-LDPC Decoder for FPGA Optical Links",
+  "year": 2026,
+  "venue": "IEEE Photonics Technology Letters",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "511",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CNU의 min1/min2 탐색을 그룹화+계층비교로 근사해 comparator 39%, MUX 52% 절감(0.02dB 손실)하고 다중프레임 병렬 BRAM으로 99.8% 활용률 달성",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "35,719 LUT+38,118 FF+80 BRAM@Xilinx Virtex-7",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 2.87,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "CCSDS C2 코드(511×511 submatrix, degree-32 CN) 기준으로 설계되어 Prime ECC의 z_sb=32/degree-17 구조와 파라미터 재검증 필요; 그룹 수(N)-성능-자원 트레이드오프 재튜닝 필요",
+  "todo_check": "정정능력향상 자체는 없음(근사로 인한 0.02dB 열화), latency는 9,447 cycle로 [14] 대비 명시적으로 악화됨을 논문이 인정"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11361078---hierarchical-approximate-min-sum-and-multi-frame-parallel-qc-ldpc-decoder-for-fpga-optical-links-2026-ieee-photonics-technology-letters">ieee:11361078 - Hierarchical Approximate Min-Sum and Multi-Frame Parallel QC-LDPC Decoder for FPGA Optical Links (2026, IEEE Photonics Technology Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

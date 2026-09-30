@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10392480</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10392480---early-harq-using-llr-trend-analysis-2023-ieee-ictc">ieee:10392480 - Early HARQ using LLR Trend Analysis (2023, IEEE ICTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>posterior LLR 방향변화(Zero_Count) trend로 subcode 기반 조기 HARQ 복호가능성 예측</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>정정능력·error-floor 개선 아님(HARQ RTT 단축용), 5G URLLC·BG2 타깃, HW 미설계·문턱값 SNR 종속</td></tr><tr><td>추가확인</td><td>없음(NAND에 재전송/HARQ 프로토콜 없어 조기예측 메트릭 이식 무의미)</td></tr></tbody></table>
+<blockquote><p>총평: NMS LDPC 위에 얹은 5G HARQ 조기예측 메트릭 - 복호 정정능력 무개선, NAND(재전송 없음)와 무관해 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>5G URLLC(1ms RTT, 99.999% 신뢰)에서 HARQ RTT 병목을 줄이기 위해, BG2 substructure QC-LDPC의 subcode(rate 1/2~5/6)를 이용한 조기 HARQ 예측 문제.</li><li>기존 문제: reactive HARQ는 지연, proactive HARQ는 스펙트럼 낭비 - 복호 완료 전 decodability를 조기 예측해 feedback 시간 <code>T_FB</code>를 단축해야 함.</li><li>채널/디코더: AWGN·BPSK, <code>L(b_i)=2y/σ²</code> LLR 입력, <code>α=0.66</code> normalization factor의 NMS(Normalized Min-Sum) LDPC 디코더(BP 대체 손실 보상).</li><li>핵심 기법(LLR trend analysis): 매 iteration의 posterior LLR <code>L^(l)(q_ij)</code>(식 4) 부호를 추적, 연속 iteration 간 부호 방향 일치 여부를 판정.</li><li>핵심 지표: <code>Trend_i</code>(식 5~7)로 bit i의 LLR 방향이 iteration 구간에서 유지되면 non-zero, rise-fall 발생 시 0. <code>Zero_Count</code>(식 8)가 방향 흔들린 노드 수를 집계.</li><li>예측 규칙(식 9): <code>Zero_Count ≤ threshold</code>면 decodable(ACK), 초과면 undecodable(NACK). 예측 시점 <code>l_p=5</code> iteration(3-4, 4-5차 구간에서 변화 계산).</li><li>문턱값 설계: false-negative <code>fn=0.05</code> 고정, SNR 증가 시 threshold 감소(Fig.2); SC-HARQ가 full-code보다 threshold 빠르게 감소.</li><li>지연 분석: RTT를 <code>T1</code>,<code>T2</code>로 분해(식 10,11, subcode 비율 <code>rsc</code>), min-sum 복호지연 <code>∝ N·dv·Z·I/fc</code>(식 12, <code>fc=1GHz</code>), 60kHz SCS→TTI 250µs 가정.</li><li>결과(시뮬): Transport block 360, BG2 Z=36, iter 20(예측 5). effective BLER <code>1e-5</code>를 subcode 5/6은 Eb/N0 3.5 dB, 기타 subcode는 ~3.8 dB에서 달성; subcode 5/6 지연은 regular HARQ 대비 89.4%(SC 1/2는 69.6%).</li><li>한계: 정정능력·error-floor 개선 아님(HARQ 재전송 결정용), 5G URLLC·BG2 특화, HW 미설계, gatecount/throughput 미보고.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS(α=0.66) LDPC 복호</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 이미 보유(§3), normalized factor는 중복 기여</td></tr><tr><td>posterior LLR trend/Zero_Count 조기예측</td><td>대응 없음</td><td>NAND에 HARQ 재전송 없음 - 조기 feedback 메트릭 적용처 없음</td></tr><tr><td>iteration별 LLR 관측</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR 테이블 구조는 있으나 trend 예측 용도는 무관</td></tr><tr><td>BG2 subcode/부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>5G BG2 rate-compatible 구조, Prime ECC 고정 QC-LDPC와 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 기여가 5G HARQ 재전송 조기예측이라 재전송 개념이 없는 NAND ECC와 무관하고, 밑단 NMS는 이미 보유 기법.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10392480",
+  "title": "Early HARQ using LLR Trend Analysis",
+  "year": 2023,
+  "venue": "IEEE ICTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "posterior LLR 방향변화(Zero_Count) trend로 subcode 기반 조기 HARQ 복호가능성 예측",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "정정능력·error-floor 개선 아님(HARQ RTT 단축용), 5G URLLC·BG2 타깃, HW 미설계·문턱값 SNR 종속",
+  "todo_check": "없음(NAND에 재전송/HARQ 프로토콜 없어 조기예측 메트릭 이식 무의미)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10392480---early-harq-using-llr-trend-analysis-2023-ieee-ictc">ieee:10392480 - Early HARQ using LLR Trend Analysis (2023, IEEE ICTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1377970</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1377970---high-throughput-vlsi-implementations-of-iterative-decoders-and-related-code-construction-problems-2004-ieee-globecom">ieee:1377970 - High-Throughput VLSI Implementations of Iterative Decoders and Related Code Construction Problems (2004, IEEE Globecom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.95</td></tr><tr><td>부호length</td><td>1024~8900</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>array코드 변형+NPLA 완전병렬 배치 공동설계로 라우팅혼잡·칩면적 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>231~357Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>코드를 칩 배선에 하드와이어(1코드=1칩), tanh/arctanh PLA LUT·5bit, 원 array코드 대비 성능열화</td></tr><tr><td>추가확인</td><td>full-parallel 하드와이어 방식이 재구성 불가 - NAND 컨트롤러 유연성과 상충하는지</td></tr></tbody></table>
+<blockquote><p>총평: array코드+NPLA 완전병렬 공동설계로 100s Gbps·소면적을 달성하나, 코드가 배선에 고정되고 5bit soft·tanh LUT 기반이라 NAND용 재구성 가능 QC-LDPC 엔진에 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: recording/wireless용 구조적 LDPC, regular(dv/dc), rate 1/3~0.95, block 1024~8900, 5-bit 양자화 메시지.</li><li>문제: random-like LDPC의 그래프 배선 복잡도(routing congestion)·대형 칩이 완전병렬 VLSI의 병목 → code-design과 VLSI를 decouple한 기존 방식 비효율.</li><li>핵심: VLSI 배치·라우팅 제약과 코드 girth/min-distance를 <strong>공동 최적화</strong>, 코드를 칩 배선에 embed(PCM 저장 불필요).</li><li>HW 핵심: check/variable 노드를 medium-size PLA 네트워크(NPLA)로 분해 - pre-charged NOR-NOR PLA로 crosstalk 면역·2-level 저지연.</li><li>VN: channel+타 edge 정보 합산, <code>log(dv+1)+1</code> 단 2입력 Manchester 가산기 스테이지, 부호가 현재 추정치.</li><li>CN: log-likelihood 도메인 reliability update, logtanh/logarctanh를 5입력5출력 32행 PLA LUT로 구현(dc=3 예).</li><li>배치: check 1개+variable 다수 = cluster, 동심원(concentric) S1~S4 bank 배치, Hilbert-Peano 공간충전곡선으로 근접 배치.</li><li>코드제약: V를 4분할하고 대각 bank끼리 교차연결 억제(<code>|Si∩Sj|&lt;d</code>)해 중앙 관통 배선 제거 - array code 변형 H*로 생성.</li><li>결과(0.1µm 추정): n=8900 rate3/4에서 최대 357Gbps@칩 6.198mm, rate1/2 n=1024는 2.956mm/0.723W(기존 [1] 7.5x7mm 대비 대폭 축소).</li><li>성능대가: H* 변형이 diameter 증가로 원 array code 대비 BER 열화(단 rate3/4 16iter, 10^-8까지 error-floor 없음).</li><li>한계: 코드=칩 하드와이어(재구성 불가), 라우팅·parity update·배선오버헤드 추정 제외, tanh 기반 full sum-product LUT.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN reliability update (logtanh/arctanh)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 tanh 아닌 min-sum 근사라 직접 대응 안됨</td></tr><tr><td>VN 5-bit 양자화 가산</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>양자화 개념만 유사, LUT/PLA 구조 무관</td></tr><tr><td>array코드 기반 H-matrix 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC, 배선embed 코드와 무관</td></tr><tr><td>NPLA 완전병렬 배치·라우팅</td><td>대응 없음</td><td>Prime ECC는 z=32 row-병렬·GT/HCU 구조, full-parallel 하드와이어 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — full-parallel PLA 하드와이어·tanh LUT·5bit soft는 z=32 부분병렬 재구성형 QC-LDPC 엔진과 아키텍처가 근본적으로 다르고 정정능력 개선도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1377970",
+  "title": "High-Throughput VLSI Implementations of Iterative Decoders and Related Code Construction Problems",
+  "year": 2004,
+  "venue": "IEEE Globecom",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1024~8900",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "array코드 변형+NPLA 완전병렬 배치 공동설계로 라우팅혼잡·칩면적 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 357,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "코드를 칩 배선에 하드와이어(1코드=1칩), tanh/arctanh PLA LUT·5bit, 원 array코드 대비 성능열화",
+  "todo_check": "full-parallel 하드와이어 방식이 재구성 불가 - NAND 컨트롤러 유연성과 상충하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1377970---high-throughput-vlsi-implementations-of-iterative-decoders-and-related-code-construction-problems-2004-ieee-globecom">ieee:1377970 - High-Throughput VLSI Implementations of Iterative Decoders and Related Code Construction Problems (2004, IEEE Globecom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9613326</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9613326---lowering-the-error-floor-of-quantized-nr-ldpc-decoders-by-a-post-processing-on-trapping-sets-2021-wcsp">ieee:9613326 - Lowering the Error Floor of Quantized NR LDPC Decoders by a Post-Processing on Trapping Sets (2021, WCSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.67</td></tr><tr><td>부호length</td><td>960~3840(정보비트 K)</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>2단계 양자화 NMS 복호에서 TS 기반 CSCD/SA-CSCD 후처리로 error floor를 1자릿수 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>에러패턴/오프셋을 Monte-Carlo로 사전수집해야 하고 5G NR BG2 구조에 특화(우리 QC-LDPC로 재수집 필요)</td></tr><tr><td>추가확인</td><td>후처리 진입조건(unsatisfied check</td><td></td><td>s</td><td></td><td>&gt;10 폐기)과 CRC 삼중루프 복잡도가 NAND 지연 예산에 맞는지</td></tr></tbody></table>
+<blockquote><p>총평: TS 기반 CRC 후처리로 error floor를 겨냥한 아이디어는 이식 가치가 있으나 코드별 에러패턴 사전수집 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G NR LDPC(BG2, QC-LDPC) 단블록·저rate 부호로, rate-1/4·1/2·2/3, K=960/1440/3840, lifting <code>Z</code>=96/144/384, AWGN/BPSK 채널.</li><li>문제: 양자화 NMS 복호가 high-SNR에서 error floor를 보이며, 소수 TS(trapping set)가 이를 지배함.</li><li>관찰: 오류 대부분이 BG의 3rd/6th/8th 정보 변수노드(highest-rate part에서 degree 2)에 집중되는 dominant TS 그룹임.</li><li>1단계: 5-bit 균일양자화 layered NMS(정규화계수 0.875~0.9375, 최대 iter 100)로 waterfall 성능 보장, CRC 만족 시 조기종료.</li><li>진입기준: 1단계 실패 시 syndrome <code>s=Hc^T</code>의 불만족 체크수 <code>||s||</code>가 임계(&gt;10 폐기) 내일 때만 2단계 실행해 복잡도 제어.</li><li>CSCD: 사전수집한 에러패턴 <code>Ψ</code>·오프셋 <code>P</code>로 후보 위치 <code>R_j=(Ψ_j-1)×Z+P_j</code>를 계산, <code>z</code>=0..Z-1 순환시프트하며 비트반전 후 CRC 테스트.</li><li>핵심식: <code>R'_{i,j,z}=(Ψ_{i,j}-1)×Z+(P_{i,j}+z) mod Z</code> — TS 그룹의 Z개 동형 TS를 순환시프트로 커버.</li><li>SA-CSCD: syndrome의 불만족 체크 인덱스에서 <code>Φ̂</code>,<code>Q̂</code>를 유도해 CSCD의 Z회 순환탐색 대신 오류 비트 위치를 직접 계산(저장자원 소량 추가로 복잡도 대폭 절감).</li><li>에러/오프셋 패턴은 Monte-Carlo로 수집·TS 구조로 분석하여 테이블화(Table II/III).</li><li>결과: waterfall는 유지하며 error floor를 약 1자릿수(FER 10^-3→10^-4) 낮추고 저FER에서 NMS 대비 약 0.3 dB 이득.</li><li>한계: HW 미설계, 시뮬만, 부호별 에러패턴 사전수집 필요, 후처리로 실패프레임 지연 증가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>양자화 NMS 반복복호(1단계)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>1단계 NMS는 우리 min-sum 루프와 정합(이미 보유)</td></tr><tr><td>CRC 기반 조기종료/후처리 검증</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>후처리 종료판정에 기존 CRC 재사용 가능</td></tr><tr><td>syndrome <code>Hc^T</code> 기반 진입/오류위치 추정</td><td>decoder.cpp <code>LDPC_Decoder()</code> (이터레이션 루프 내 syndrome)</td><td>error floor 후처리 훅 추가 지점</td></tr><tr><td>TS 에러패턴/오프셋 테이블(부호구조 종속)</td><td>ecc_top.cpp <code>Load_PCM()</code> (H-matrix/BG)</td><td>우리 QC-LDPC로 패턴 재수집 필요(이식 비용의 핵심)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — error floor 후처리 훅과 CRC 재사용은 쉬우나 TS 에러패턴을 우리 부호로 재수집해야 하고 5G NR BG2 특화 구조 의존이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9613326",
+  "title": "Lowering the Error Floor of Quantized NR LDPC Decoders by a Post-Processing on Trapping Sets",
+  "year": 2021,
+  "venue": "WCSP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.67",
+  "code_length": "960~3840(K)",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "2단계 양자화 NMS 복호에서 TS 기반 CSCD/SA-CSCD 후처리로 error floor를 1자릿수 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "에러패턴/오프셋을 Monte-Carlo로 사전수집해야 하고 5G NR BG2 구조에 특화(우리 QC-LDPC로 재수집 필요)",
+  "todo_check": "후처리 진입조건(||s||&gt;10 폐기)과 CRC 삼중루프 복잡도가 NAND 지연 예산에 맞는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9613326---lowering-the-error-floor-of-quantized-nr-ldpc-decoders-by-a-post-processing-on-trapping-sets-2021-wcsp">ieee:9613326 - Lowering the Error Floor of Quantized NR LDPC Decoders by a Post-Processing on Trapping Sets (2021, WCSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

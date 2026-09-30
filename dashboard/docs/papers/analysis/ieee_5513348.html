@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5513348</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5513348---channel-decoding-with-a-bayesian-equalizer-2010-isit">ieee:5513348 - Channel Decoding with a Bayesian Equalizer (2010, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CSI 추정 불확실성을 marginalize한 Bayesian equalizer로 더 정확한 APP(soft-input) 생성 → LDPC 복호 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추가확인</td><td>미상</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ISI 채널·CSI training 특화 equalizer(등화기)로 LDPC 복호기·부호구조 자체는 미개조, BCJR을 M회 반복(L에 지수복잡)해 계산부담 큼, NAND에 ISI/CSI 개념 부재</td></tr><tr><td>추가확인</td><td>NAND read 채널(ISI 없음, RBER 기반)에서 CSI marginalize 아이디어가 무의미한지 확인</td></tr></tbody></table>
+<blockquote><p>총평: 무선 ISI 채널의 CSI 추정 불확실성을 Bayesian marginalize해 soft-input(APP)을 개선하는 등화기 논문으로, LDPC는 소비자일 뿐 복호기·부호구조는 손대지 않음 — ISI/CSI가 없는 NAND에는 부적합, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: SISO 분산(ISI) 채널 <code>H(z)</code>(길이 L, Rayleigh fading tap), BPSK, regular LDPC (3,6) rate 1/2, 블록 500bit·프레임 1000bit.</li><li>문제: LDPC 복호는 정확한 APP(soft-input)를 가정하나, 실제 CSI는 짧은 training sequence로 ML 추정되어 부정확 → overconfident APP가 복호를 오도.</li><li>모델: 채널 tap을 zero-mean Gaussian(분산 1/L, Rayleigh)으로 두고, 프리앰블 n bit로 <code>h_ML = argmax p(x°|b°,h)</code> 추정 후 BCJR로 APP 산출(ML-BCJR).</li><li>핵심 기법: CSI 불확실성까지 반영하는 Bayesian equalizer — <code>p(b_i|x,D) = ∫ p(b_i|x,h) p(h|D) dh</code>로 h를 marginalize.</li><li>식 의미: ML-BCJR은 노이즈 불확실성만, Bayesian은 CSI posterior <code>p(h|D)</code>까지 통합 → training이 짧을수록 더 정확한 APP(과신 완화).</li><li>posterior 계산: Gaussian likelihood(6)+prior(7)로 평균 <code>h_h|D</code>(8)·공분산 <code>C_h|D</code>(9)를 닫힌형으로 얻음.</li><li>근사: Monte Carlo — <code>p(h|D)</code>에서 M 샘플 추출 → 각각 BCJR 수행 → APP를 M개 평균(10)으로 (4) 근사.</li><li>관찰: equalizer 직후 BER은 hard-decision(50% 분위)만 반영해 차이 미미하나, LDPC(BP)는 전 구간 APP 정확도가 필요해 복호 후 이득이 큼.</li><li>결과: L=3, 짧은 training에서 복호 후 1dB 이상 이득; L=6, n=25·SNR=7dB에서 1dB 이상; training이 길면(계수당 20+ 샘플) ML-BCJR과 수렴.</li><li>한계: BCJR을 M회 반복해 계산부담 크고(L에 지수), HW 미설계·시뮬만, 무선 ISI/CSI 채널 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Bayesian equalizer APP(soft-input) 생성</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code> / LLR 테이블(<code>PARAM_LLR</code>)</td><td>복호 앞단 soft-info 생성이라는 점만 유사, NAND는 ISI/CSI 없어 등화 개념 부재</td></tr><tr><td>BCJR / ML-BCJR 등화기</td><td>대응 없음</td><td>Prime ECC는 등화기 미보유, ISI trellis 처리 구조 없음</td></tr><tr><td>LDPC BP 복호(APP 소비자)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문은 복호기를 개조하지 않고 입력 APP만 개선 — 복호 로직 이식 요소 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무선 ISI 채널의 CSI 추정 불확실성 완화용 등화기로, NAND read 채널(ISI 없음·RBER 기반)에는 전제가 성립하지 않고 LDPC 복호기·부호구조 개선도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5513348",
+  "title": "Channel Decoding with a Bayesian Equalizer",
+  "year": 2010,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CSI 추정 불확실성을 marginalize한 Bayesian equalizer로 더 정확한 APP(soft-input) 생성 → LDPC 복호 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ISI 채널·CSI training 특화 등화기로 LDPC 복호기·부호구조 미개조, BCJR을 M회 반복(L에 지수)해 계산부담 큼, NAND에 ISI/CSI 개념 부재",
+  "todo_check": "NAND read 채널(ISI 없음, RBER 기반)에서 CSI marginalize 아이디어가 무의미한지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5513348---channel-decoding-with-a-bayesian-equalizer-2010-isit">ieee:5513348 - Channel Decoding with a Bayesian Equalizer (2010, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

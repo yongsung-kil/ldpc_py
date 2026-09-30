@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8589421</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8589421---lut-based-decoding-and-architecture-optimization-for-scale-min-sum-polar-decoders-2018-itme">ieee:8589421 - LUT-based Decoding and Architecture Optimization for Scale-Min-Sum Polar Decoders (2018, ITME)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Polar BP 디코더용 Scale-Min-Sum(SMS)에 LUT/LUT-SMS 근사로 gx,y 오차 보정(장부호 dB이득) + PE 계산경로 4Tadder→3Tadder 단축으로 throughput↑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Polar 코드 BP 디코더 전용(LDPC 아님) - Prime ECC의 binary QC-LDPC와 부호·팩터그래프 구조가 근본적으로 상이</td></tr><tr><td>추가확인</td><td>SMS의 f(z)=ln(1+e^-</td><td>z</td><td>) 보정 LUT 아이디어가 개념적으로 LDPC Min-Sum 보정(offset/normalized)과 유사한지 정도만</td></tr></tbody></table>
+<blockquote><p>총평: Polar BP 디코더의 SMS 근사오차 LUT 보정과 PE 계산경로 단축 논문으로, 부호 종류가 LDPC가 아니라 Prime ECC(binary QC-LDPC)에 직접 이식 불가.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: Polar 코드의 Belief-Propagation(BP) 디코더 HW. 팩터그래프는 <code>log2 N</code> stage, 각 stage에 <code>N/2</code> PE. 부호길이는 짧은~긴 Polar 코드 비교(구체 N 본문 텍스트 손상으로 미상).</li><li>문제: 하드웨어용 Scaled-Min-Sum(SMS)은 부호길이가 길어질수록 <code>g(x,y)</code> 근사오차 누적으로 성능 저하, 또 PE의 계산경로(critical path)가 길어 지연 큼.</li><li>BP 갱신: 좌우 전파 메시지 <code>L_ij</code>, <code>R_ij</code>를 <code>g(x,y)=ln[(1+e^{x+y})/(e^x+e^y)]</code> 기반으로 갱신, frozen 위치는 <code>R</code>을 큰 상수/0으로 설정.</li><li>SMS 근사: <code>|g(x,y)| ≈ s·min(|x|,|y|)</code> (scaling factor <code>s</code>로 min-sum 근사오차 보정). 그러나 min 대체로 여전히 상당한 오차.</li><li>계산경로 단축: <code>a=b⊞c</code>에서 <code>|a|</code>의 가능값이 <code>|b|,|c|</code> 중 하나 뿐임을 이용, 세 후보를 첫 Tadder에서 병렬 계산 후 부호 판정으로 선택 → SC/CS 변환 유닛 제거, PE 경로를 <code>4Tadder→3Tadder</code>로 단축(Type-I/II 블록).</li><li>LUT 알고리즘: <code>LUT(x,y)=min(|x|,|y|)+f(|x|+|y|)-f(||x|-|y||)</code>, <code>f(z)=ln(1+e^{-|z|})</code> (식 <code>(15)(16)</code>), SMS 근사오차를 상쇄. <code>f(z)</code> 값테이블을 축약(Table I→II)해 자원 절감.</li><li>LUT-SMS: 부호길이별로 LUT와 SMS를 조합(Table III) - 짧은 부호는 SMS, 긴 부호는 LUT 위주로 waterfall 영역 성능 유지.</li><li>근사 우월성: <code>ERROR_LUT(x,y) &lt; ERROR_SMS(x,y)</code>인 영역(흰색)이 반대(검정)보다 훨씬 넓음을 오차맵으로 제시.</li><li>결과: 긴 Polar 부호에서 LUT-SMS가 SMS 대비 추가 복호이득(수치 텍스트 손상으로 정확값 미상, "extra dB gain" 서술). 수정 PE 아키텍처는 계산경로 단축으로 clock↑, 어떤 Polar 디코더에서 평균 throughput 향상(정확 % 손상). ASIC 파라미터(nm/V, Ling adder Tadder=ns) 언급.</li><li>한계: Polar 코드 BP 전용(LDPC 아님), 계산유닛이 전체 디코더 면적의 작은 비중이라 긴 부호에선 메모리 read/write가 지연 지배. 텍스트 인코딩 손상으로 다수 수치 확인 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Polar BP 디코더 전체</td><td>대응 없음</td><td>Prime은 binary QC-LDPC min-sum 디코더, Polar BP는 부호·팩터그래프 구조 자체가 상이</td></tr><tr><td>SMS min-sum 근사 + scaling</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>개념적으로만 min-sum 유사 - Polar의 g(x,y) 갱신식은 LDPC CN 연산과 다름</td></tr><tr><td>f(z) 보정 LUT</td><td>대응 없음</td><td>LDPC Min-Sum의 offset/normalized 보정과 발상은 유사하나 Polar 전용 테이블이라 직접 대응부 없음</td></tr><tr><td>PE 계산경로 단축(HW)</td><td>대응 없음</td><td>Polar PE 아키텍처 특화, Prime의 z=32 QC-LDPC pipeline과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - Polar 코드 BP 디코더 전용이라 binary QC-LDPC인 Prime ECC와 부호 구조가 근본적으로 다르며, LUT 보정·PE 경로 단축 모두 Polar 특화로 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8589421",
+  "title": "LUT-based Decoding and Architecture Optimization for Scale-Min-Sum Polar Decoders",
+  "year": 2018,
+  "venue": "ITME",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Polar BP 디코더용 Scale-Min-Sum(SMS)에 LUT/LUT-SMS 근사로 gx,y 오차 보정(장부호 dB이득) + PE 계산경로 4Tadder→3Tadder 단축으로 throughput↑",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "Polar 코드 BP 디코더 전용(LDPC 아님) - Prime ECC의 binary QC-LDPC와 부호·팩터그래프 구조가 근본적으로 상이",
+  "todo_check": "SMS의 f(z)=ln(1+e^-|z|) 보정 LUT 아이디어가 개념적으로 LDPC Min-Sum 보정(offset/normalized)과 유사한지 정도만"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8589421---lut-based-decoding-and-architecture-optimization-for-scale-min-sum-polar-decoders-2018-itme">ieee:8589421 - LUT-based Decoding and Architecture Optimization for Scale-Min-Sum Polar Decoders (2018, ITME)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

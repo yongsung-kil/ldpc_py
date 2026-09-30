@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7032490</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7032490---a-hardware-generator-for-factor-graph-applications-2014-ieee">ieee:7032490 - A Hardware Generator for Factor Graph Applications (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>120~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Python 스크립트+Verilog 템플릿으로 factor-graph 솔버(LDPC 디코더 포함) HDL을 자동 생성하는 프레임워크</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (Virtex6 LX240T 기준 LUT 53,748 / Register 25,702)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>6.6 Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>범용 factor-graph HDL 생성 툴로 LDPC 알고리즘 자체엔 신규성 없음(표준 SP/MS), 완전병렬 fully-parallel 구조라 NAND 고rate 대형 QC-LDPC엔 부적합(R=5/6는 place&amp;route 실패)</td></tr><tr><td>추가확인</td><td>생성기가 QC 구조·circulant를 지원하는지, partially-parallel/pipelined 확장(논문이 future work로만 언급) 가능성</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코더를 예제로 쓴 범용 factor-graph HDL 생성 프레임워크로 NAND QC-LDPC ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Factor Graph(변수노드+팩터노드, bipartite) 솔버를 위한 HDL 자동 생성 프레임워크 — Python 생성 스크립트 + Verilog 템플릿(태그 삽입 방식)으로 벤더 무관 HDL 산출(현재 Xilinx Virtex-6 ML605 타깃).</li><li>솔버는 graph structure / factor computation / iterative algorithm / termination 4개 기준으로 정의, 이 파라미터로 프로그래머블하게 HW 생성.</li><li>지원 알고리즘 2종: Sum-Product(N-domain, 16-bit float 확률), Min-Sum(1-domain, N-bit signed integer LLR — binary decoder용).</li><li>변수노드 M-S: <code>L = log(P(0)/P(1))</code> LLR 저장, 메시지 <code>q_{n→m}=γ_n + Σ_{m'∈M_{n,m}} r_{m'→n}</code>, belief는 전체 합의 sign으로 hard decision(식 3~5).</li><li>팩터노드 M-S(LDPC): <code>r_{m→n} = (Π sign) · min|q_{n'→m}|</code> — 표준 min-sum check node(식 6). 팩터노드는 application-specific.</li><li>그래프는 graph definition file로 노드 연결/모듈명 지정 → 완전병렬(fully-parallel) 인스턴스화. termination 모듈은 개발자가 수동 작성.</li><li>응용1(LDPC basket): <code>N∈{120,200,400,800,1008,1156}</code>, rate 1/2, (3,6)-regular 코드 37개 생성, PEG/LDPC-codes 소프트웨어로 코드 구성, Virtex6에서 BER/Iavg/throughput 측정.</li><li>응용2(802.11n): irregular block-circulant LDPC, length 648, rate {1/2,2/3,3/4,5/6} — 3개만 구현 성공(R=5/6은 routing congestion으로 P&amp;R 실패).</li><li>결과(Table1, N=1008, quant 4-3 hyb): 100 MHz, Eb/N0 3.4 dB @ BER 1e-6, avg iter 5.6, throughput 6.6 Gbps, LUT 53,748(참조 [8]보다 면적 효율↑, throughput은 낮음). 응용3으로 4x4 Sudoku 솔버도 생성.</li><li>한계: LDPC 알고리즘 신규성 없음(교과서 SP/MS), 완전병렬만 지원(pipelined/partially-parallel은 future work), 대형·고rate 코드는 라우팅 혼잡으로 구현 실패.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum 변수/팩터 노드 메시지 패싱</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>표준 min-sum, 이미 보유 — 신규성 없음</td></tr><tr><td>CN min-sum(sign product·min)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>동일 연산, 중복</td></tr><tr><td>VN LLR 처리/양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>LLR 표현만 유사, 이식 이점 없음</td></tr><tr><td>HDL 자동 생성 프레임워크 자체</td><td>대응 없음</td><td>Prime ECC는 bit-exact C++ 시뮬레이터로 생성기 파이프라인과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 범용 factor-graph HDL 생성기로 NAND 고rate QC-LDPC ECC 코드베이스와 아키텍처/목적이 모두 어긋나며 LDPC 기법 자체에 신규 기여 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7032490",
+  "title": "A Hardware Generator for Factor Graph Applications",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.83",
+  "code_length": "120~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Python 스크립트+Verilog 템플릿으로 factor-graph 솔버(LDPC 디코더 포함) HDL을 자동 생성하는 프레임워크",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상(Virtex6 LX240T LUT 53,748/Reg 25,702)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 6.6,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "범용 factor-graph HDL 생성 툴로 LDPC 알고리즘 신규성 없고 fully-parallel 구조라 NAND 고rate 대형 QC-LDPC엔 부적합",
+  "todo_check": "생성기의 QC/circulant 지원 여부, partially-parallel/pipelined 확장 가능성(논문은 future work로만 언급)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7032490---a-hardware-generator-for-factor-graph-applications-2014-ieee">ieee:7032490 - A Hardware Generator for Factor Graph Applications (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

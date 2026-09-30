@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9499562</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9499562---a-low-complexity-parallel-qc-ldpc-encoder-2021-ieee-mtt-s-iws">ieee:9499562 - A Low Complexity Parallel QC-LDPC Encoder (2021, IEEE MTT-S IWS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Bit Selection(BS): 서브행렬 첫 열 비영 위치집합만 골라 유효 정보비트만 곱해 AND 게이트 완전 제거·XOR 약 50% 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>Slices 10663 / 4-input LUT 10663 @Xilinx Virtex-4 VC4VLX80</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>5.84Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>인코더 전용·G=[I\</td><td>P] 생성행렬 방식, 우리 dual-diagonal 인코더와 구조 상이, CCSDS 위성통신 부호(비NAND)</td></tr><tr><td>추가확인</td><td>BS의 AND제거·XOR절감이 dual-diagonal 대비 실제 게이트 이득 있는지, cyclic shift network의 z=32 lifting 정합성</td></tr></tbody></table>
+<blockquote><p>총평: 유효비트 선택으로 AND 제거·XOR 50% 절감하는 QC-LDPC 인코더 HW 기법이나 생성행렬 방식·CCSDS 부호 기반이라 dual-diagonal 인코더 쓰는 Prime ECC엔 직접 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: QC-LDPC 인코더, 생성행렬 <code>G=[I|P]</code>(P는 순환치환 부분행렬), lifting size <code>m</code>, <code>K=k·m</code>, <code>N=n·m</code>, rate <code>R=k/n</code>; 검증부호 CCSDS (7154, 8176), rate≈0.875.</li><li>문제: 전통 LDPC 인코딩은 블록길이 제곱 복잡도; SRAA(shift register adder accumulator) 방식도 직렬은 throughput 제약, 병렬은 레지스터 과다.</li><li>모델: 부호화 <code>C=uG</code>, 정보열 <code>u</code>를 <code>k</code> 세그먼트로 분할 후 각 <code>u_i</code>에 서브행렬 <code>B_ij</code> 곱해 parity <code>V_j</code> 산출.</li><li>핵심기법: Bit Selection(BS) — <code>B_ij</code> 첫 열의 비영 위치집합 <code>λ_ij=find(b_ij==1)</code>만 골라 <code>u_i(λ_ij)</code> 유효비트만 XOR, <code>0</code> 무효비트 연산 회피 (<code>hij(s)=mod(sum(u_i'),2)</code> 후 <code>circshift</code>).</li><li>핵심식: <code>V_j = Σ_i u_i·B_ij</code> 를 <code>Σ_i h_ij</code> 로 치환 — 정보비트-생성행렬 곱을 비영 위치 선택 누산으로 대체(무효 비트 곱 제거가 핵심).</li><li>HW 구조: data-preprocessing + <code>k</code>개 cyclic shift network + <code>k(n−k)</code>개 bit selection unit + <code>(n−k)</code>개 bit merge unit.</li><li>구현 디테일: shift는 <code>m</code> 클록; 생성행렬 밀도 높아 유효비트 길이 약 <code>k·m/2</code>, 누산은 <code>log(k·m/2)</code> 스테이지 트리; AND 게이트 0, XOR <code>k·m</code>.</li><li>최적화: [8](Wei Yan) 대비 AND 완전 제거, XOR 약 50% 감소, 인코딩 지연 고정(유효비트 수 무관하게 결정적).</li><li>결과: Xilinx Virtex-4 VC4VLX80 구현 시 Slice 10% / 4-input LUT 11% 절감, 최대 clock 425MHz, 최대 throughput 5.84 Gbps.</li><li>한계: 인코더 전용(복호 성능 무관), CCSDS 위성통신 부호 특화, BER/정정능력 미평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BS 기반 병렬 QC-LDPC 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>인코더 대상이나 우리는 dual-diagonal 방식이라 `G=[I</td><td>P]` 생성행렬 곱 기법과 구조 상이</td></tr><tr><td>순환치환 서브행렬/부호 PCM 생성</td><td>encoder.cpp <code>Generate_PCM_encoding()</code></td><td>QC 순환구조는 공통이나 생성행렬 대 dual-diag PCM으로 대응 부분적</td></tr><tr><td>cyclic shift network (z=m 병렬)</td><td>대응 없음</td><td>dual-diagonal 인코더엔 직접 대응 모듈 없음</td></tr><tr><td>CCSDS 위성 부호 / FPGA 리소스</td><td>대응 없음</td><td>NAND 무관(위성통신 표준부호)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — encoder 전용 HW 최적화로 우리 dual-diagonal 인코더와 접근이 달라 직접 이식 어렵고, 인코딩은 NAND ECC에서 상대적 병목이 작아 우선순위 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9499562",
+  "title": "A Low Complexity Parallel QC-LDPC Encoder",
+  "year": 2021,
+  "venue": "IEEE MTT-S IWS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "8176",
+  "soft_quant": "무관",
+  "key_contribution": "Bit Selection(BS): 서브행렬 첫 열 비영 위치집합만 골라 유효 정보비트만 곱해 AND 게이트 완전 제거·XOR 약 50% 감소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "Slices 10663 / 4-input LUT 10663 @Xilinx Virtex-4 VC4VLX80",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 5.84,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "인코더 전용·G=[I|P] 생성행렬 방식, 우리 dual-diagonal 인코더와 구조 상이, CCSDS 위성통신 부호(비NAND)",
+  "todo_check": "BS의 AND제거·XOR절감이 dual-diagonal 대비 실제 게이트 이득 있는지, cyclic shift network의 z=32 lifting 정합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9499562---a-low-complexity-parallel-qc-ldpc-encoder-2021-ieee-mtt-s-iws">ieee:9499562 - A Low Complexity Parallel QC-LDPC Encoder (2021, IEEE MTT-S IWS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7593125</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7593125---noise-aided-gradient-descent-bit-flipping-decoders-approaching-maximum-likelihood-decoding-2016-istc-2016">ieee:7593125 - Noise-Aided Gradient Descent Bit-Flipping Decoders approaching Maximum Likelihood Decoding (2016, ISTC 2016)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GDBF에 무작위 노이즈를 주입해(PGDBF/NGDBF) trapping set attraction을 탈출시키고, DDS-PGDBF 스케줄링으로 MLD 성능에 근접</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>hard-decision BF 계열 기법으로 min-sum 대비 성능이 낮고, MLD 근접을 위해 매우 많은 iteration(최대 10^8)이 필요</td></tr><tr><td>추가확인</td><td>DDS-PGDBF 평균 iteration 수(a=0.03일 때 16.8)는 조기종료 조건 하의 값으로, 최악 케이스 latency는 별도 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BF 계열에 확률적 노이즈를 주입하는 저복잡도 기법이나, Prime ECC의 min-sum 기반 디코더와는 알고리즘 계열이 달라 직접 이식성은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 채널은 BSC/AWGN, 코드는 (N=155, K=64, Dmin=20) Tanner LDPC 코드로 시뮬레이션.</li><li>문제의식: 결정론적 GDBF(gradient descent bit-flipping)는 trapping set에 갇히면 고정점에서 진동하며 복호 실패.</li><li>핵심 가정: 하드웨어/알고리즘에 인위적 랜덤 노이즈를 섞으면 오히려 trapping set attraction을 탈출할 수 있다는 stochastic-resonance류 관찰.</li><li>핵심 기법 1: PGDBF - flipping set <code>F(l)</code>의 각 비트를 확률 <code>p0</code>로만 실제 flip (<code>ε_n</code> uniform random과 비교).</li><li>핵심 기법 2: NGDBF - 에너지 함수 <code>E_vn</code>에 가우시안 노이즈 <code>ε(l)~N(0,σp²)</code>를 더해 threshold <code>θ</code> 기준으로 flip 여부 결정.</li><li>두 알고리즘 모두 5-bit trapping set 상태공간에서 Markov 전이확률(<code>Λ(S,S')</code>)로 탈출확률을 해석적으로 계산.</li><li>확장 기법: DDS-PGDBF - 현재 iteration 에너지 대신 이전 iteration의 최대 에너지 <code>b(l-1)</code>를 flipping 기준으로 사용해 스케줄을 변형, 더 큰 state-space jump 유도.</li><li>최적화 절차 없음(파라미터 <code>p0</code>, <code>σp</code>는 TS 상태공간 분석 및 시뮬레이션으로 수동 탐색).</li><li>결과: DDS-PGDBF는 300 iteration 제한에서도 원래 PGDBF/GDBF 대비 큰 FER 개선을 보이며, 매우 큰 L(최대 10^8) 허용 시 MLD 한계에 근접. 평균 iteration 수는 조기종료로 a=0.03에서 16.8, a=0.02에서 4.9.</li><li>한계: HW 미설계, 시뮬레이션(FER 곡선)에 국한, worst-case iteration이 매우 커질 수 있어 latency 예측 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GDBF/NA-GDBF (bit-flipping 알고리즘 전체)</td><td>대응 없음</td><td>Prime ECC는 min-sum 계열이며 BF 계열 알고리즘 자체는 미보유</td></tr><tr><td>노이즈 주입을 통한 trapping set 탈출 아이디어</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>error-floor 대책으로 min-sum 루프에 유사 개념(랜덤 섭동) 이식 검토 가능하나 알고리즘 구조가 달라 재설계 필요</td></tr><tr><td>DDS-PGDBF 스케줄링(이전 iteration 임계값 재사용)</td><td>대응 없음</td><td>BF 전용 스케줄로 min-sum 구조와 직접 대응 안 됨</td></tr><tr><td>조기종료(평균 iteration 감소 관찰)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료 개념은 유사하나 본 논문은 CRC가 아닌 코드워드 수렴 판정</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음. hard-decision BF 계열 특유의 노이즈 주입 기법으로, Prime ECC의 min-sum 기반 구조와 알고리즘 계열이 근본적으로 달라 직접 이식보다는 개념적 참고 수준.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7593125",
+  "title": "Noise-Aided Gradient Descent Bit-Flipping Decoders approaching Maximum Likelihood Decoding",
+  "year": 2016,
+  "venue": "ISTC 2016",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "155",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GDBF에 무작위 노이즈를 주입해(PGDBF/NGDBF) trapping set attraction을 탈출시키고, DDS-PGDBF 스케줄링으로 MLD 성능에 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "hard-decision BF 계열 기법으로 min-sum 대비 성능이 낮고, MLD 근접을 위해 매우 많은 iteration(최대 10^8)이 필요",
+  "todo_check": "DDS-PGDBF 평균 iteration 수(a=0.03일 때 16.8)는 조기종료 조건 하의 값으로, 최악 케이스 latency는 별도 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7593125---noise-aided-gradient-descent-bit-flipping-decoders-approaching-maximum-likelihood-decoding-2016-istc-2016">ieee:7593125 - Noise-Aided Gradient Descent Bit-Flipping Decoders approaching Maximum Likelihood Decoding (2016, ISTC 2016)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8555891</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8555891---a-unified-deep-learning-based-polar-ldpc-decoder-for-5g-communication-systems-2018-ieee">ieee:8555891 - A Unified Deep Learning Based Polar-LDPC Decoder for 5G Communication Systems (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>16</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>indicator section 1비트를 입력에 붙여 하나의 DNN이 polar와 LDPC를 동시 복호하는 통합 신경망 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(16,8) 초소형 부호 전용 fully-connected DNN 전면대체라 blocklength 확장 시 지수적으로 비현실적, 5G/무선 타깃</td></tr><tr><td>추가확인</td><td>LDPC 대비 0.8dB 이득이 부호가 너무 짧아 BP가 불리한 탓인지, 큰 부호에서도 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: 단일 DNN으로 polar/LDPC를 통째로 대체하는 5G 무선용 통합 디코더로, 초소형 (16,8) 부호 전용이며 NAND 고rate QC-LDPC의 min-sum 파이프라인과 접점이 없어 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>배경: 5G eMBB는 제어평면 polar + 데이터평면 LDPC를 함께 쓰므로 단말에서 두 부호를 지원하는 디코더가 필요.</li><li>문제: polar·LDPC 디코더를 따로 두면 HW 비효율, merged-BP는 factor graph 설계·rate 일반화가 까다로움.</li><li>아이디어: BP를 신경망으로 근사하되, 부호 종류를 알리는 <code>indicator section I</code>를 관측심볼 <code>y</code>에 concat해 하나의 함수 <code>f(y,I)</code>로 통합.</li><li>통합식: <code>b̂ = f(y, I=polar/LDPC)</code> — 입력=[<code>I</code>,<code>y</code>], hidden=ReLU, 출력=sigmoid, 손실=MSE <code>L=(b̂-b)(b̂-b)^T/k</code>.</li><li>대상 부호: (16,8) polar와 (16,8) LDPC(<code>Gl=[Q Ik]</code>), BPSK+AWGN.</li><li>네트워크 클래스 비교: DNN(512,256,128) vs LSTM vs CNN을 유사 파라미터(~17만)로 비교, 1D 독립데이터에 강한 DNN이 최우수.</li><li>indicator 크기: 1비트만으로 두 부호 식별에 충분(BER 성능 유지).</li><li>네트워크 크기: 3-layer (512,256,128)이 (1024,512,256) 대비 0.1dB 이내로 성능/복잡도 균형.</li><li>결과: polar는 BP와 0.2dB 이내, LDPC는 BP 대비 0.8dB 우수(짧은 부호에서 BP가 불리한 탓), 통합-격리 대비 파라미터 &lt;0.3%·throughput &lt;0.4% 손실. throughput은 BP 대비 6자릿수 향상 주장(단, GPU 없는 데스크톱 CPU 시뮬 계측).</li><li>한계: fully-connected 전면대체라 blocklength가 커지면 출력공간·학습이 지수적으로 비현실적, HW 미설계·무선 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DNN 전면대체 LDPC 복호</td><td>대응 없음</td><td>Prime ECC는 min-sum 반복복호로 NN 디코더에 대응 모듈 없음</td></tr><tr><td>indicator로 polar/LDPC 통합</td><td>대응 없음</td><td>Prime ECC는 LDPC 전용, polar 미지원</td></tr><tr><td>관측심볼 y 입력/양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>채널모델만 개념적 유사, 알고리즘 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — fully-connected NN이 반복복호기를 통째로 대체하는 구조라 Prime ECC의 min-sum·HCU·pipeline HW 모델과 이식 접점이 없고, 초소형 무선 부호 전용이라 NAND 고rate에 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8555891",
+  "title": "A Unified Deep Learning Based Polar-LDPC Decoder for 5G Communication Systems",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "16",
+  "soft_quant": "무관",
+  "key_contribution": "indicator section 1비트를 입력에 붙여 하나의 DNN이 polar와 LDPC를 동시 복호하는 통합 신경망 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "(16,8) 초소형 부호 전용 fully-connected DNN 전면대체라 blocklength 확장 시 지수적으로 비현실적, 5G/무선 타깃",
+  "todo_check": "LDPC 대비 0.8dB 이득이 부호가 너무 짧아 BP가 불리한 탓인지, 큰 부호에서도 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8555891---a-unified-deep-learning-based-polar-ldpc-decoder-for-5g-communication-systems-2018-ieee">ieee:8555891 - A Unified Deep Learning Based Polar-LDPC Decoder for 5G Communication Systems (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6804932</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6804932---structured-bit-interleaved-ldpc-codes-for-mlc-flash-memory-2014-ieee-jsac">ieee:6804932 - Structured Bit-Interleaved LDPC Codes for MLC Flash Memory (2014, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>MSB/LSB 비대칭 BER를 반영해 check node를 MSB/LSB에 불균형(T(1,k-1)/T(k-1,1))으로 연결하면 decoding threshold가 개선됨을 DE로 규명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GF(4) non-binary LDPC 구성이 핵심이라 binary 전용 Prime ECC와 정합 안 됨. 실HW/시뮬 없이 DE threshold만</td></tr><tr><td>추가확인</td><td>MSB/LSB 비대칭 연결 원리를 binary QC-LDPC H-matrix 열배치에 차용 가능한지(부호구조 재설계 부담)</td></tr></tbody></table>
+<blockquote><p>총평: MLC MSB/LSB 비대칭 BER를 겨냥한 check-node 연결 최적화 이론이나, 결과물이 GF(4) non-binary 부호라 binary QC-LDPC Prime ECC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: MLC/TLC NAND flash의 BICM(bit-interleaved coded modulation) 구조, <code>(j,k)</code>-regular binary LDPC, hard-decision decoding.</li><li>문제: MLC에서 MSB/LSB 페이지의 채널 오류율이 다르고(<code>b1&lt;b2</code>) 오류의 96%가 single-bit인데, 무작위 bit 배치는 이 비대칭을 활용하지 못함.</li><li>모델: MSB/LSB 초기 오류확률 <code>b1</code>,<code>b2</code>를 각각 부여, 4-PAM Gray map + AWGN(<code>b1≈0.5Q(1/σ)</code>, <code>b2≈Q(1/σ)</code>).</li><li>핵심기법 1단: check node를 <code>T(α,β)</code>(α=MSB이웃, β=LSB이웃) 타입으로 정의하고, 타입 비율 <code>g</code>를 두어 Gallager A/B DE로 <code>b2</code> threshold 계산.</li><li>핵심식: <code>q(t)=(1-(1-2p_M)^x1 (1-2p_L)^x2)/2</code> — check→variable 오류확률이 MSB/LSB 이웃 수에 지수적으로 의존.</li><li>핵심기법 2단: 2타입(또는 3~4타입) 조합에서 <code>g=1/2</code>, <code>T(1,k-1)</code>/<code>T(k-1,1)</code> 극불균형이 최적 threshold; MSB 이웃 다수인 구성이 BICM 평균 대비 우수.</li><li>구현 디테일: non-binary(GF(4)) LDPC의 binary image graph를 이용해 GF(4) edge label로 원하는 binary check 타입/차수분포를 유도, binary decoder로 복호.</li><li>최적화: Table III처럼 edge label set별 MSB/LSB 차수분포·check 타입을 나열해 Gallager A/B threshold 비교로 우수 label 선정.</li><li>결과: (3,6)-regular에서 <code>T(1,5)/T(5,1)</code> σ threshold 0.6189(BICM 0.6172), edge label <code>{1,1,1,A2,A2,A2}</code>가 binary image에서 최고 성능.</li><li>한계: DE threshold(이론)뿐, HW/BER 시뮬 없음. binary image가 결국 non-binary GF(4) 부호이며, cycle-free 가정 근사.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MSB/LSB 비대칭 check 연결 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 열배치에 MSB/LSB 편향 반영 시도 시 닿으나 재설계 부담 큼</td></tr><tr><td>GF(4) binary image / non-binary 구성</td><td>대응 없음</td><td>Prime ECC는 binary 전용</td></tr><tr><td>Gallager A/B hard-decision DE 분석</td><td>대응 없음</td><td>Prime ECC는 min-sum soft/HD, Gallager A/B 미사용</td></tr><tr><td>soft-read 없이 hard-1bit 판정</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>HD 채널만 부분 대응, 핵심 기여와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 핵심 산출물이 GF(4) non-binary 부호이고 binary QC-LDPC와 부호구조가 달라 이식 시 H-matrix 전면 재설계·재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6804932",
+  "title": "Structured Bit-Interleaved LDPC Codes for MLC Flash Memory",
+  "year": 2014,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "MSB/LSB 비대칭 BER를 반영한 check node의 불균형 연결(T(1,k-1)/T(k-1,1))로 decoding threshold 개선을 DE로 규명, GF(4) binary image로 구현",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "GF(4) non-binary 부호 구성이 핵심이라 binary 전용 Prime ECC와 정합 안 됨. HW/시뮬 없이 DE threshold만",
+  "todo_check": "MSB/LSB 비대칭 연결 원리를 binary QC-LDPC H-matrix 열배치에 차용 가능한지 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6804932---structured-bit-interleaved-ldpc-codes-for-mlc-flash-memory-2014-ieee-jsac">ieee:6804932 - Structured Bit-Interleaved LDPC Codes for MLC Flash Memory (2014, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

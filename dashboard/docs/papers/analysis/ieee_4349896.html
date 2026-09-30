@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4349896</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4349896---architecture-and-design-methodology-for-structured-ldpc-decoder-2007-ieee">ieee_4349896 - Architecture and Design Methodology for Structured LDPC Decoder (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.51~0.97</td></tr><tr><td>부호length</td><td>16320</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>구조화 LDPC(IRA 유사)에 turbo-like min-sum 디코딩과 shuffle 기반 serial scheduling 설계규칙을 결합해 수렴 속도와 throughput을 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>12722 logic cells (16%), 1443200 memory bits (19%)@Altera EP1S80</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>IRA류 코드(triangular Hp, accumulator 구조) 전용 설계로 일반 QC-LDPC PCM_b 구조와 상이해 부호설계 이식은 높은 난이도</td></tr><tr><td>추가확인</td><td>5.4Mbit/s(50MHz, 7 iteration) 수치는 본문 서술에 명시되어 있으나 gatecount 대비 실제 throughput 곡선(그림)은 손상되어 상세 대조 불가</td></tr></tbody></table>
+<blockquote><p>총평: IRA류 구조 LDPC에 shuffle scheduling 설계규칙과 메모리 절감형 SPC 프로세서를 적용한 FPGA 디코더 아키텍처 논문으로, 스케줄링/메모리 절감 아이디어는 이식 가능하나 부호설계 자체는 QC-LDPC와 다른 IRA 계열이라 이식 난이도가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>구조화 LDPC(IRA 유사) 코드: <code>H=[Hs Hp]</code>, Hs는 순환 shift identity block, Hp는 (비순환) shift triangular accumulator 구조.</li><li>기존 방식은 코드 설계와 디코더 아키텍처를 분리 최적화해 하드웨어 비친화적 구조가 되는 문제를 해결하려 함.</li><li>채널은 AWGN, 코드워드는 <code>x=[c p]</code>, <code>HxT=0</code> 제약.</li><li>핵심 기법은 turbo-like 디코딩: 코드를 outer(SPC)와 inner(accumulator, 2-state trellis) 서브디코더로 분리해 각각 SPC decoding과 BCJR형 FBA(<code>Fj</code>, <code>Bj</code>, <code>mIO(j)</code>)로 처리.</li><li>핵심 식 <code>g(a,b)=sign(a)sign(b)min(|a|,|b|)</code>는 min-sum 근사이며, SPC inward/outward 메시지 <code>miOI</code>, <code>mciv</code> 계산에 사용.</li><li>설계 규칙: "시스템 비트는 한 decoding window 내에서 한 번만 사용"(<code>δ(i,j)=δ(k,j), ∀i≠k</code>)이 shuffle scheduling과 동일한 효과를 내어 수렴을 가속.</li><li>구현 디테일: SPC outward 단계에서 2개 최소값(<code>|m1|</code>,<code>|m2|</code>)만 저장/비교하는 방식으로 메모리 약 70%(J가 클 때) 절감, 채널 양자화 4bit, mcj 양자화 5bit.</li><li>serial(window) scheduling을 semi-pipeline으로 확장해 forward/backward 재귀와 outward 체크를 겹쳐 처리(그림5, throughput 식 <code>Db=(2mk+α)/(Imax·fclk)</code>).</li><li>결과: N=16320, R=1/2 예제에서 제안 스케줄링 5 iteration이 기존 스케줄링 7 iteration과 동등한 성능(throughput 40% 향상), FPGA 구현은 7 iteration에서 5.4Mbit/s(50MHz), fully pipelined 시 14.28Mbit/s.</li><li>한계: ASIC 대비 FPGA는 클록이 낮아 throughput 직접비교 어렵고, fully pipelined 구조는 코드 설계 제약을 더 강화시켜 코드 선택이 어려워짐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>turbo-like min-sum(SPC+accumulator FBA) 디코딩 알고리즘</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 표준 min-sum C2V/V2C 구조로 IRA류 turbo-like 분리 디코딩과는 다른 스케줄이나 min-sum 근사 자체는 대응</td></tr><tr><td>shuffle 기반 serial(window) scheduling 설계규칙</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (Dual-Update 교대 스케줄)</td><td>Dual-Update가 유사한 조기 정보 갱신 개념을 이미 채택, 이식 시 중복 가능성</td></tr><tr><td>SPC outward 2-comparison 메모리 절감(min1/min2 저장)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>Prime ECC의 min1/min2 기반 min-sum 연산과 개념적으로 거의 동일(이미 보유)</td></tr><tr><td>채널/mcj 양자화(4bit/5bit)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>양자화 비트수 설계 참고 가능하나 IRA 특유 파이프라인 종속</td></tr><tr><td>IRA류 H-matrix(Hs+Hp triangular) 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC base+circulant 구조(<code>PCM_b</code>)로 IRA의 triangular accumulator 파트와 구조가 달라 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 근사와 메모리 절감형 비교 로직은 이미 Prime ECC가 유사 기법을 보유하고 있어 신규성은 낮으나, shuffle scheduling에 따른 수렴 가속 아이디어는 참고 가치가 있음. 다만 코드 자체가 IRA 계열이라 부호설계 이식은 높은 난이도.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4349896",
+  "title": "Architecture and Design Methodology for Structured LDPC Decoder",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.51~0.97",
+  "code_length": 16320,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "구조화 LDPC(IRA 유사)에 turbo-like min-sum 디코딩과 shuffle 기반 serial scheduling 설계규칙을 결합해 수렴 속도와 throughput을 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "12722 logic cells (16%), 1443200 memory bits (19%)@Altera EP1S80",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "IRA류 코드(triangular Hp, accumulator 구조) 전용 설계로 일반 QC-LDPC PCM_b 구조와 상이해 부호설계 이식은 높은 난이도",
+  "todo_check": "5.4Mbit/s(50MHz, 7 iteration) 수치는 본문 서술에 명시되어 있으나 gatecount 대비 실제 throughput 곡선(그림)은 손상되어 상세 대조 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4349896---architecture-and-design-methodology-for-structured-ldpc-decoder-2007-ieee">ieee_4349896 - Architecture and Design Methodology for Structured LDPC Decoder (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10874397</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10874397---ldpc-decoding-based-on-hybrid-stochastic-computing-2024-ispcem">ieee:10874397 - LDPC Decoding Based on Hybrid Stochastic Computing (2024, ISPCEM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>8448</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CN은 확률영역(stochastic computing, AND게이트)으로, VN은 LLR영역(OMS)으로 계산하는 하이브리드 구조를 제안하고, gold sequence+synchronizer+NDS로 양의 상관 비트스트림을 생성해 재난수화(re-randomization) 모듈 없이 CN의 min 연산을 AND 게이트로 대체</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BER 성능이 OMS 대비 다소 저하되며(논문 자체 인정), gatecount/throughput 등 실제 HW 합성 수치가 본문에 없고 시뮬레이션(BER 곡선)만 제시됨</td></tr><tr><td>추가확인</td><td>CN을 AND게이트 기반 확률영역으로 대체 시 정정능력 손실polnomial 정도와 Prime ECC의 min-sum CNU 대비 실제 게이트수·전력 절감폭</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR BG1 QC-LDPC를 대상으로 CN 연산을 stochastic computing(AND게이트)으로 단순화하고 VN은 OMS(LLR)를 유지하는 HW 친화적 하이브리드 디코더로, QC-LDPC·row-parallel 구조가 Prime ECC와 유사해 CN 하드웨어 절감 아이디어는 참고 가치가 있으나 정정능력 저하와 검증 부족이 이식 리스크임.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 5G NR QC-LDPC BG1 기반, 정보비트 <code>K=8448</code>, 코드율 <code>R=1/3</code>, lifting size <code>Z=384</code>, VN degree 범위 (1,30), CN degree 범위 (3,19).</li><li>문제의식: 전통 LDPC 디코더(BP/OMS/NMS)는 VN-CN 간 배선이 매우 복잡(H행렬의 '1' 위치가 랜덤)해 완전병렬 구조에서 배선혼잡·면적·전력 문제가 심각하고, 기존 stochastic decoding(확률영역 전체)은 deadlock·re-randomization 회로 부담이 큼.</li><li>핵심 가정: CN은 확률영역(Bernoulli 0/1 비트스트림)으로, VN은 LLR영역(실수 덧셈, OMS)으로 계산을 분리하는 하이브리드 구조를 채택(RHS 알고리즘[9]의 확장).</li><li>핵심 기법: OMS의 CN 최소값 연산 <code>β·min|...|·sign(...)</code> (식 1)에서 min 연산을 두 양의 상관(positively correlated) 비트스트림의 AND 연산으로 대체(<code>X&amp;Y = min(p_X,p_Y)</code>, 완전상관 시), CN 입력단에서 LLR을 완전상관 비트스트림으로 변환해 별도 비교기 없이 AND게이트만으로 min/2nd-min 계산.</li><li>핵심 식: 상관도 정의 <code>SCC(X,Y)</code>(식 4, Alaghi&amp;Hayes)로 비트스트림 상관을 정량화하며, gold sequence(4단 D flip-flop, feedback [1 1 0 0]/[1 1 0 1])를 synchronizer와 결합해 SCC를 -0.1429→1로 끌어올림 (완전 양의 상관 확보가 AND=min 근사의 전제조건).</li><li>확장: NDS(Noise-Dependent Scaling, 식 5~7)로 SNR에 따른 posterior probability <code>p_chi</code> 분포 편차를 스케일링 보정, LLR→비트스트림 변환은 lookup table 1개+곱셈기 1개+비교기 다수 공유로 구현(자원 절감).</li><li>부수 트릭: CN degree&gt;3은 반브로드캐스트(semi-broadcast) XOR 구조로 서브그래프 분해해 XOR게이트 약 3/4 절감(기존 기법), 제안 구조는 XOR 대신 AND게이트(2-input 4트랜지스터, XOR은 6트랜지스터)로 CN 진폭 계산을 대체해 면적 추가 절감. row-parallel(층별 stratified) 스케줄링 사용.</li><li>학습/최적화: 없음(고정 회로 설계, 시뮬레이션 기반 파라미터 튜닝만).</li><li>결과: <code>K=8448, R=1/3, BG1, iteration=10, Z=384</code> 조건에서 제안 방식의 BER 곡선이 OMS 알고리즘과 근접(BP·OMS 대비 성능 열화는 있으나 근접)하며, 회로 자원(게이트수)은 대폭 절감된다고 서술(구체 수치 없음).</li><li>한계: gatecount/공정/throughput 등 구체 HW 합성 수치 없음(정성적 서술뿐), BER 성능이 OMS 대비 열화됨을 논문이 인정, ASIC/FPGA 실측 없이 시뮬레이션(BER 곡선)만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min 연산을 AND게이트(stochastic computing)로 대체</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min-sum CN 크기 연산을 확률영역 AND 연산으로 치환하는 아이디어로 직접 대응, 다만 Prime ECC는 완전 binary LLR 도메인이라 비트스트림 변환 오버헤드·정확도 trade-off 재검증 필요</td></tr><tr><td>VN은 LLR(OMS)영역 유지</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>Prime ECC도 VN을 LLR 덧셈으로 처리하므로 구조적으로 이미 유사(하이브리드 방식이 기존 VN 처리와 정합)</td></tr><tr><td>gold sequence + synchronizer + NDS(LLR→비트스트림 변환)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>Prime ECC의 LLR 양자화·threshold 테이블과는 다른 별도 회로(RNG+동기화기)가 필요해 부분 대응, 신규 HW 블록 추가 필요</td></tr><tr><td>row-parallel(층별) CN/VN 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC도 layered/partial-parallel 구조(z_sb=32 row 단위 병렬)를 사용해 스케줄링 개념은 유사</td></tr><tr><td>CN degree&gt;3 semi-broadcast XOR 분해</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>Graph Thinning의 edge 선택·MUX 구조와 목적(배선/게이트 절감)은 유사하나 구현 방식은 상이</td></tr></tbody></table>
+<p>적용 가치: 중간 — QC-LDPC·row-parallel 구조가 Prime ECC와 정합되고 CN 연산을 AND게이트로 단순화하는 아이디어는 min-sum CNU HW 면적 절감에 참고 가치가 있으나, BER 성능 저하가 확인되고 정량적 gatecount/throughput 검증이 없어 실제 이식 전 추가 검증이 필요함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10874397",
+  "title": "LDPC Decoding Based on Hybrid Stochastic Computing",
+  "year": 2024,
+  "venue": "ISPCEM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.333,
+  "code_length": 8448,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CN은 확률영역(stochastic computing, AND게이트)으로, VN은 LLR영역(OMS)으로 계산하는 하이브리드 구조를 제안하고, gold sequence+synchronizer+NDS로 양의 상관 비트스트림을 생성해 재난수화(re-randomization) 모듈 없이 CN의 min 연산을 AND 게이트로 대체",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "BER 성능이 OMS 대비 다소 저하되며(논문 자체 인정), gatecount/throughput 등 실제 HW 합성 수치가 본문에 없고 시뮬레이션(BER 곡선)만 제시됨",
+  "todo_check": "CN을 AND게이트 기반 확률영역으로 대체 시 정정능력 손실 정도와 Prime ECC의 min-sum CNU 대비 실제 게이트수·전력 절감폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10874397---ldpc-decoding-based-on-hybrid-stochastic-computing-2024-ispcem">ieee:10874397 - LDPC Decoding Based on Hybrid Stochastic Computing (2024, ISPCEM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

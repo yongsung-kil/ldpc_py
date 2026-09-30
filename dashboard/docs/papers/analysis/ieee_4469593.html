@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4469593</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4469593---memory-efficient-block-serial-architecture-for-programmable-multi-rate-multi-length-ldpc-decoder-2007-imsccs">ieee:4469593 - Memory Efficient Block-Serial Architecture for Programmable, Multi-Rate Multi-Length LDPC Decoder (2007, IMSCCS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LSBPA(layered shuffled BP) + 수정 A-min 알고리즘으로 check node당 extrinsic message를 2개만 저장해 메모리 68.4~85.9% 절감하는 programmable block-serial 디코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>257 ALUT+69518 RAM+182 REG (Stratix-II EP2S60F672C5)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>A-min은 Min-sum 대비 성능 우수하다 하나 이미 min-sum 계열을 보유한 코드베이스와 개념적으로 겹치며, block-serial 구조는 완전병렬 대비 처리량이 낮음</td></tr><tr><td>추가확인</td><td>A-min의 check node 연산량(add-tree 대신 accumulator/subtractor 사용)이 실제 CNU 대비 게이트 절감으로 이어지는지 정량 비교 자료 없음</td></tr></tbody></table>
+<blockquote><p>총평: IEEE802.16e 12종 rate/length를 EPROM 파라미터로 지원하는 programmable serial 디코더로, extrinsic memory를 2-message A-min 근사로 크게 줄이고 FPGA 160MHz 합성 결과까지 제시했으나 완전병렬 고속 NAND ECC보다는 저면적/유연성 지향 설계라 이식 시 구조 재설계가 필요함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE802.16e 기반 block-structured irregular QC-LDPC, rate 1/2·2/3·3/4, length 576/1152/1728/2304, AWGN 채널.</li><li>문제: block-serial 구현은 하드웨어 자원을 줄이지만 지연이 커져 throughput이 낮아지고, min-sum은 0.1dB BER 손실이 있음. 다양한 rate/length를 하나의 디코더로 지원(재합성 없이)하는 것도 과제.</li><li>가정/모델: 각 row(check node)를 하나의 layer로 취급해 layered shuffled BP(LSBPA)를 serial 모드로 변형.</li><li>핵심 기법 1단(LSBPA): <code>L(qji)[k] = L(Qj)[k,r-1] - L(rij)[k-1]</code> (식1), check node 갱신 <code>L(rij)[k]</code> (식2, <code>φ(x)=log(tanh(x/2))</code> 사용), <code>L(Qj)[k,r] = L(qji)[k] + L(rij)[k]</code> (식3)로 표준 BP 대비 수렴이 약 2배(논문 인용: 70% 더) 빠름.</li><li>핵심 기법 2단(수정 A-min): <code>M1(i)=Σφ(L(qji)[k])</code>, <code>M2(i)=M1(i)-φ(min|L(qji)|)</code> 정의 후, 최소 edge는 <code>L(rij)=-φ⁻¹[M2(i)]</code>, 나머지 edge는 <code>L(rij)=-φ⁻¹[M1(i)]</code>로 근사 — check node degree와 무관하게 단 2개의 extrinsic message만 저장.</li><li>이 근사로 LSBPA+A-min은 LSBPA(근사 없음)와 거의 동일한 BER을 유지하면서 min-sum(0.1dB 손실) 대비 우수한 트레이드오프를 달성.</li><li>구현 디테일: 3-stage pipeline(read/process/write)로 read-after-write 충돌 회피, CNPU는 accumulator+subtractor로 add-tree 대체해 φ(x) 연산 유닛 수 축소, greedy comparator(GCMP)로 최소값·인덱스 탐색, 8-bit fixed-point message width 채택(7/8/9bit 비교 후 8bit 선정).</li><li>별도 학습/최적화 절차 없음(고정 알고리즘, 파라미터는 EPROM에 rate/length별로 사전 저장해 재합성 없이 전환).</li><li>결과: extrinsic memory 68.4%(rate 1/2)~85.9%(rate 3/4) 절감(rate가 높을수록 절감폭 증가). FPGA(Stratix-II EP2S60F672C5) 합성 160MHz, 총 257 ALUT / 69518 RAM bit / 182 REG. Max iteration 10/15/25 지원.</li><li>한계: 완전병렬이 아닌 block-serial 구조로 처리량이 병렬 대비 제한적. Throughput 수치(Gbps)는 본문에 없음. 정정능력 개선(waterfall/error-floor) 관련 언급 없이 메모리/자원 효율화에 집중.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>A-min 근사(2-message만 저장) CN 갱신</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 계열 대체 근사로 CN 연산부에 대응, 개념 중복(이미 min-sum 보유)</td></tr><tr><td>LSBPA(layered shuffled BP) 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Dual-Update(odd/even 교대) 스케줄과 유사한 layered 스케줄 아이디어</td></tr><tr><td>Programmable EPROM 기반 multi-rate/length 컨트롤러</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix/파라미터 동적 전환 아이디어로 대응 가능하나 Prime ECC는 특정 QC-LDPC 고정</td></tr><tr><td>3-stage pipeline(read/process/write)</td><td><code>decoder.cpp</code> pipeline 6-stage(col_M1/Z/P1~P4)</td><td>Prime ECC가 이미 더 세분화된 pipeline 보유, 개념 중복</td></tr><tr><td>Lr/LQ RAM 주소생성기</td><td><code>channel.cpp</code>, <code>ecc_data.h</code> PCM 구조체</td><td>메모리 라우팅 설계 참고 가치 있으나 코드 직접 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <code>중간</code> — 메모리 절감형 A-min CNU와 multi-rate programmable 구조는 참고 가치가 있으나, min-sum/layered-schedule 개념이 이미 보유 기법과 겹치고 완전병렬이 아닌 serial 구조라 고throughput NAND ECC에는 구조적 재설계 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4469593",
+  "title": "Memory Efficient Block-Serial Architecture for Programmable, Multi-Rate Multi-Length LDPC Decoder",
+  "year": 2007,
+  "venue": "IMSCCS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.75",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LSBPA(layered shuffled BP) + 수정 A-min 알고리즘으로 check node당 extrinsic message를 2개만 저장해 메모리 68.4~85.9% 절감하는 programmable block-serial 디코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "257 ALUT+69518 RAM+182 REG (Stratix-II EP2S60F672C5)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "A-min은 Min-sum 대비 성능 우수하다 하나 이미 min-sum 계열을 보유한 코드베이스와 개념적으로 겹치며, block-serial 구조는 완전병렬 대비 처리량이 낮음",
+  "todo_check": "A-min의 check node 연산량(add-tree 대신 accumulator/subtractor 사용)이 실제 CNU 대비 게이트 절감으로 이어지는지 정량 비교 자료 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4469593---memory-efficient-block-serial-architecture-for-programmable-multi-rate-multi-length-ldpc-decoder-2007-imsccs">ieee:4469593 - Memory Efficient Block-Serial Architecture for Programmable, Multi-Rate Multi-Length LDPC Decoder (2007, IMSCCS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

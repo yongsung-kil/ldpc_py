@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7723560</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_7723560---qc-ldpc-gear-like-decoder-architecture-with-multi-domain-quantization-2016-euromicro-dsd">ieee_7723560 - QC-LDPC Gear-Like Decoder Architecture with Multi-Domain Quantization (2016, Euromicro DSD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1296~2304</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>디코딩 3단계(시작/중간/끝)별 multi-domain 양자화(qF↔qF/2)+SIMD 유닛으로 메모리 대역폭·에너지 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>CNU/VNU SIMD LUT-FF 오버헤드 17%/36.6%@Virtex7</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>flooded partial-parallel 전제, throughput Gbps 미보고, 양자화 4→2bit 거친 단계</td></tr><tr><td>추가확인</td><td>Prime ECC의 iteration별 적응형 LLR 테이블과 phase 기반 dual-domain 양자화 중복/시너지 여부</td></tr></tbody></table>
+<blockquote><p>총평: MS 디코더의 시작·끝 iteration에서 메시지 양자화를 절반으로 낮춰(dual-domain SIMD) 메모리 대역폭·에너지·latency를 줄이는 아키텍처. 정정능력 열화 거의 없음. 우리 적응형 LLR과 컨셉이 겹치나 메모리 관점 최적화는 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: partially-parallel flooded QC-LDPC Min-Sum 디코더(SIMD 처리유닛), z-병렬. 검증부호: 정규 dv=3/dv=4 (N=1296, z=54, BSC)와 irregular WiMAX rate 1/2/3 (N=2304, z=96, AWGN).</li><li>문제: partial-parallel LDPC 디코더는 메모리 접근이 전력·면적의 지배 요인(선행연구 74% 전력). 메모리 대역폭 활용을 극대화하며 에너지·throughput을 개선하려 함.</li><li>관찰/모델: MS 메시지는 초기 iteration엔 진폭이 작고 말기엔 최대 진폭으로 포화 → 메시지 대부분 sign bit에 의존. 따라서 시작/끝 iteration은 적은 양자화 비트로 충분.</li><li>핵심기법(3-phase multi-domain 양자화): <code>Ph1</code>(시작)·<code>Ph3</code>(끝)은 저해상도 <code>qR=qF/2</code>, <code>Ph2</code>(중간)은 고해상도 <code>qF</code>. 저해상도 phase에서는 한 사이클에 2 메시지 처리.</li><li>핵심식(MUE): <code>μ_i = q_i·|V| / (w_M·n_cc^i)</code> — iteration별 메모리 접근 사이클 대비 처리 사이클 비. <code>qR=qF/2</code>일 때만 100% μ 달성 가능(2 메시지 동시 접근).</li><li>dual-quantization domain: 저해상도 phase에서 VNU는 <code>qF/2+1</code> bit, CNU는 <code>qF/2</code> bit로 처리. 메시지 매핑(Table II)은 [10]의 최단순 매핑(하위비트 절삭·hidden 0) 채택.</li><li>HW 디테일: SIMD one-hot 제어(SIMD=01 full, 10 dual). CNU는 2bit 모드에서 SM↔C2 변환 불필요, min1=AND게이트·min2=0값 2개 검출로 단순화. barrel shifter 1bit/msg는 SIMD 자연스럽게 지원, α/β 메모리 2뱅크 분할.</li><li>throughput/latency 식: <code>T</code>에 ItSIMD(저양자화 iteration 수) 반영. Ph1/Ph3 iteration당 사이클 <code>Nv=Σdv_i</code>, <code>Nc=Σdc_i</code> (모두 짝수여야 이상적). dv=4 정규부호만 100% μ.</li><li>결과: BER/FER 열화 없음(waterfall 무변화), 평균 iteration ≤1 증가. Virtex7 FPGA CNU/VNU SIMD 오버헤드 17%/36.6%(주파수 동등), 메시지 메모리 증가 없음. ItSIMD=5시 20iter 대비 throughput 15%↑, latency 최대 50%↓(reduced phase). 에너지: 40% iteration이 절반 전력.</li><li>한계: throughput Gbps 미보고(FPGA LUT-FF만), 양자화 4→2bit 거친 단계, flooded partial-parallel 특정 구조 전제, ASIC 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동일 flooded/layered MS 복호 골격</td></tr><tr><td>CN min1/min2 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>저양자화 시 min 연산 단순화 아이디어</td></tr><tr><td>VN 양자화 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등 (HD/2SD/3SD)</td><td>dual-domain(qF/2+1) VNU 양자화 이식 대상</td></tr><tr><td>phase별 양자화 도메인 전환</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration별 적응형 LLR 테이블과 컨셉 중복 - 시너지 검토 필요</td></tr><tr><td>조기종료(syndrome/early term)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>논문은 syndrome check, 우리는 CRC 조기종료 보유</td></tr><tr><td>메모리 뱅크/양자화 저장</td><td>대응 없음</td><td>2뱅크 메모리·SIMD 패킹은 우리 pipeline HW 모델과 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - phase 기반 양자화 축소·에너지 절감 컨셉은 우리 적응형 LLR 테이블과 이미 부분 중복되나, 메모리 대역폭 관점의 dual-domain SIMD 패킹은 HW 메모리 절감 아이디어로 참고 가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7723560",
+  "title": "QC-LDPC Gear-Like Decoder Architecture with Multi-Domain Quantization",
+  "year": 2016,
+  "venue": "Euromicro Conference on Digital System Design (DSD)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "1296~2304",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "디코딩 3단계별 multi-domain 양자화(qF↔qF/2)+SIMD 유닛으로 메모리 대역폭·에너지·latency 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "CNU/VNU SIMD LUT-FF 오버헤드 17%/36.6%@Virtex7",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "flooded partial-parallel 전제, throughput Gbps 미보고, 양자화 4→2bit 거친 단계",
+  "todo_check": "Prime ECC의 iteration별 적응형 LLR 테이블과 phase 기반 dual-domain 양자화 중복/시너지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_7723560---qc-ldpc-gear-like-decoder-architecture-with-multi-domain-quantization-2016-euromicro-dsd">ieee_7723560 - QC-LDPC Gear-Like Decoder Architecture with Multi-Domain Quantization (2016, Euromicro DSD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

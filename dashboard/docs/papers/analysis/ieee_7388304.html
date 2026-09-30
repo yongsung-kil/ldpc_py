@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7388304</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7388304---a-parallel-routing-network-for-reliability-inferences-of-single-parity-check-decoder-2015-ieee-atc">ieee:7388304 - A Parallel-Routing Network for Reliability Inferences of Single-Parity-Check Decoder (2015, IEEE ATC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.857</td></tr><tr><td>부호length</td><td>28672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SPC 디코더 신뢰도 추론용 symmetric-tree parallel-routing network로 cascaded 구조 대비 latency를 O(N)에서 O(logN)으로 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>316 ALUTs (N=32, Altera Stratix IV EP4SE530H35C2)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>LDPC 정정능력 자체는 개선하지 않음(수학적으로 동일 연산 순서 재배치이며 양자화 오차만 미세 감소); CN degree(N)가 클수록 이득이 커지는 구조라 저-degree(예: degree 2~4) CN에는 효과 제한적</td></tr><tr><td>추가확인</td><td>Prime ECC의 CN degree(9/7, HCU 대상 col 포함) 분포에서 이 구조의 실질 latency 이득폭 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: SPC(=check node) 신뢰도 계산의 라우팅 구조를 이진트리형으로 재설계해 LUT 기반 CN 연산의 critical path를 로그 스케일로 줄이는 HW 아키텍처 기법으로, min-sum/LUT CN 연산을 쓰는 Prime ECC 디코더에 직접 이식 검토 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>SPC(single-parity-check) 코드의 신뢰도 추론(각 변수에 대해 나머지 N-1개 변수의 결합 LLR)을 계산하는 문제; LDPC는 다수의 SPC(=check node)로 구성되므로 이는 LDPC 디코더의 CN 연산에 직결.</li><li><code>O_i = 2·tanh^-1(Π tanh(I_j/2))</code> (식 1) 형태의 비선형 연산을 N개 변수 각각에 대해 동시에 계산해야 하는데, 기존 cascaded(forward-backward, F/B partial-sum) 구조는 커널 수는 최소(<code>3(N-2)</code>)지만 latency가 <code>(N-2)τ</code>로 N에 선형 비례해 문제.</li><li>커널(⊙)은 논문 추상화상 임의의 결합연산(2-input, 곱셈/tanh 로그도메인/min-sum/LUT 등)이며 실제 구현은 4-bit quantization LUT (<code>S(O)=S(I_i)⊕S(I_j)</code>, magnitude는 min 기반 식 16, min-sum과 유사한 형태).</li><li>핵심 기법: symmetric-tree 구조로 converging network <code>U</code>(입력들을 이진트리형으로 결합해 partial-sum 후보 전부 생성)와 diverging network <code>V</code>(U의 출력을 재조합해 최종 O 생성)를 재귀적으로 구성(식 3~13).</li><li><code>U</code>, <code>V</code> 각각 N-2개 커널을 써서 총 커널 수는 기존과 동일하게 <code>3(N-2)</code>이나, 트리 깊이가 <code>log2(N)</code>이므로 latency는 <code>2(log2(N)-1)τ</code>로 로그 스케일로 감소 — 이 latency 감소가 핵심 결과.</li><li>N이 2의 거듭제곱이 아닌 경우, 가상 입력을 가정해 U_n/V_n을 구성한 뒤 존재하지 않는 노드/연결을 제거하는 pruning 절차(Algorithm 1~3, <code>Rec_Cons_U</code>/<code>Rec_Cons_V</code>)로 일반 N에 대응.</li><li>구현 디테일: 커널은 4-bit sign-magnitude LUT(<code>M(O)</code>는 min-sum과 유사한 magnitude 계산 규칙), 정확도·복잡도 불변을 이론적으로 보장(연산 순서만 재배치, 대수적으로 동일).</li><li>학습/최적화 절차 없음(구조적/조합적 설계, HDL 자동 생성 가능한 pseudo code만 제시).</li><li>결과: FPGA(Altera Stratix IV) 구현 시 N=32에서 fmax 186% 향상(60~70MHz → 190~200MHz), ALUT 사용량은 기존과 거의 동일(322→316); (28672,24576) QC-LDPC 10-iteration layered decoding에서 BER 곡선이 기존 구조와 거의 겹침(양자화 오차 경로 감소로 미세 개선).</li><li>한계: 정정능력 자체를 개선하는 기법이 아니라 순수 HW 라우팅/latency 최적화이며, N(CN degree)이 작을 때(N≤4)는 기존 구조와 동일해 이득 없음; throughput(Gbps) 수치는 본문에 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPC(CN) 신뢰도 추론 라우팅 구조</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN degree가 높은(9/7) 컬럼의 min-sum 계산 라우팅을 트리 구조로 재설계해 critical path 단축 가능</td></tr><tr><td>pipeline 단계별 critical path 단축</td><td><code>decoder.cpp</code> pipeline 6-stage (col_M1/Z/P1~P4)</td><td>파이프라인 스테이지 내 CN 연산 latency를 줄여 클록 상승 여지</td></tr><tr><td>LUT 기반 magnitude 계산 (식 16)</td><td><code>decoder.cpp</code> <code>Get_VNU_*</code> (magnitude 양자화 테이블)</td><td>LUT 기반 CN 연산이라는 점에서 Prime ECC의 min-sum LUT 테이블과 구조적으로 유사, 라우팅 재배치 적용 가능</td></tr><tr><td>HCU(비대칭 degree 컬럼 2-cycle 처리)</td><td><code>decoder.cpp</code> HCU 로직</td><td>degree가 큰 컬럼에서 이 논문의 트리 구조 적용 시 이득이 더 크므로 HCU 대상 컬럼과 시너지 검토 가치</td></tr></tbody></table>
+<p>적용 가치: 높음 — CN(SPC) 신뢰도 계산의 라우팅 구조를 바꿔 정정능력 저하 없이 critical path/latency를 개선하는 순수 HW 아키텍처 기법으로, Prime ECC의 min-sum LUT 기반 CN 연산 파이프라인에 비교적 낮은 난이도로 이식 검토 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7388304",
+  "title": "A Parallel-Routing Network for Reliability Inferences of Single-Parity-Check Decoder",
+  "year": 2015,
+  "venue": "IEEE ATC",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.857,
+  "code_length": 28672,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SPC 디코더 신뢰도 추론용 symmetric-tree parallel-routing network로 cascaded 구조 대비 latency를 O(N)에서 O(logN)으로 감소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "316 ALUTs (N=32, Altera Stratix IV EP4SE530H35C2)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "LDPC 정정능력 자체는 개선하지 않음(수학적으로 동일 연산 순서 재배치이며 양자화 오차만 미세 감소); CN degree(N)가 클수록 이득이 커지는 구조라 저-degree(예: degree 2~4) CN에는 효과 제한적",
+  "todo_check": "Prime ECC의 CN degree(9/7, HCU 대상 col 포함) 분포에서 이 구조의 실질 latency 이득폭 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7388304---a-parallel-routing-network-for-reliability-inferences-of-single-parity-check-decoder-2015-ieee-atc">ieee:7388304 - A Parallel-Routing Network for Reliability Inferences of Single-Parity-Check Decoder (2015, IEEE ATC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

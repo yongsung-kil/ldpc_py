@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8023480</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8023480---multi-bit-flipping-algorithms-with-probabilistic-gradient-descent-2017-ieee">ieee:8023480 - Multi-Bit Flipping Algorithms with Probabilistic Gradient Descent (2017, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.41</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>multi-bit(VN Pv비트/CN Pc비트) flipping을 probabilistic gradient descent + rewinding으로 강화해 BSC에서 error-floor 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(hard-1bit) 전용·소형 (155,64) Tanner code 시뮬만, HW 미설계, 반복수 최대 4000까지 늘려 성능확보(latency↑)</td></tr><tr><td>추가확인</td><td>NAND read 채널(RBER, 2SD/3SD LLR)과 min-sum 대비 실효 이득, 실제 z=32 병렬구조에서 global energy 계산 라우팅 비용</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BSC용 저복잡 BF 계열 error-floor 개선 기법으로 아이디어(확률적 gradient flip + rewinding)는 이식 가치가 있으나, Prime ECC의 주력인 soft min-sum과 결이 달라 보조 경로로만 검토 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC(hard-decision) 상의 <code>(dv,dc)</code>-regular binary LDPC, 실험은 QC (155,64) Tanner code(rate 0.41), 최대 50~4000 iteration.</li><li>문제: 순수 hard-decision(메모리/스토리지/광통신)에서 BF는 빠르지만 finite-length 정정능력 부족, GDBF는 여전히 error-floor 존재.</li><li>모델: VN을 <code>Pv</code>비트로 신뢰도(level) 표현, CN을 <code>Pc</code>비트로 과거 syndrome 시퀀스(check node memory) 표현.</li><li>MBF 핵심: CN 갱신은 산술연산 없이 syndrome 시퀀스 bit-shift, VN 갱신은 이웃 CN state의 비선형 Boolean 함수 <code>Φ</code>(symmetry·irreducibility 조건 만족).</li><li>에너지: VN energy <code>A_v = x̂_v ⊕ y_v + a·X_v</code> (채널값 불일치항 + 이웃 CN state 가중합), 최대 energy를 flip threshold <code>b</code>로 사용.</li><li>PGD: max energy VN만 flip 후보이되 default flip 대신 확률 <code>ε&lt;1</code>로만 flip("conservative"), K iteration마다 threshold를 두번째 큰 energy로 감소.</li><li>Rewinding: 결정론 디코더 D를 먼저 돌리고 실패 시 확률 디코더 P를 채널값 재초기화하며 여러 round 반복 → 확률적 update의 이득 극대화.</li><li>디코더 설계: trapping-set profile 기반으로 41,472,000개 후보 중 컴포넌트 MBF 선택(D1/D3/D4), D3가 PGD와 궁합 좋음(특정 코드 harmful structure 제거).</li><li>결과: (155,64) code에서 GD-D1이 error-floor에서 D1 대비 한 자릿수 개선, PGD-D3(N=400)가 floating-point SPA(N=100) 성능에 도달(산술연산 불필요).</li><li>한계: 초기결과·Pv=Pc=2만 실험, HW 미설계(HW는 [16] 참조), 성능확보에 iteration 최대 4000 필요(latency 악화), 가중치 a 미최적화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MBF VN/CN 갱신(비선형 Boolean, bit-shift)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>VN_Cal_HD()</code></td><td>이터레이션 루프 자리에 대응하나 min-sum과 완전 다른 flip 규칙, HD 경로 대체 형태로만 이식 가능</td></tr><tr><td>CN syndrome / check node state</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 min-sum sign/mag, syndrome-memory 개념 미보유</td></tr><tr><td>VN energy(global) 계산</td><td>대응 없음</td><td>Prime ECC 디코더는 지역 message-passing만, global energy·max 선택 구조 없음</td></tr><tr><td>trapping-set 기반 컴포넌트 선택</td><td>corner.cpp</td><td>수렴실패 추적부와 개념적 접점뿐, 디코더 선택 로직은 미보유</td></tr><tr><td>조기종료(codeword 도달 시 종료)</td><td>full_CRC.cpp, partial_CRC.cpp</td><td>syndrome=0 종료와 CRC 조기종료는 목적 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — hard-decision error-floor 개선이라는 목표는 NAND HD 모드와 부합하나, Prime ECC의 주력 soft min-sum 파이프라인과 알고리즘이 전혀 달라 별도 HD 보조 디코더로만 검토 가치가 있고 global energy 계산의 HW 라우팅 비용 검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8023480",
+  "title": "Multi-Bit Flipping Algorithms with Probabilistic Gradient Descent",
+  "year": 2017,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.41,
+  "code_length": "155",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "multi-bit(VN Pv비트/CN Pc비트) flipping을 probabilistic gradient descent + rewinding으로 강화해 BSC에서 error-floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "BSC(hard-1bit) 전용·소형 (155,64) Tanner code 시뮬만, HW 미설계, 반복수 최대 4000까지 늘려 성능확보(latency 악화)",
+  "todo_check": "NAND read 채널(RBER, 2SD/3SD LLR)과 min-sum 대비 실효 이득, 실제 z=32 병렬구조에서 global energy 계산 라우팅 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8023480---multi-bit-flipping-algorithms-with-probabilistic-gradient-descent-2017-ieee">ieee:8023480 - Multi-Bit Flipping Algorithms with Probabilistic Gradient Descent (2017, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

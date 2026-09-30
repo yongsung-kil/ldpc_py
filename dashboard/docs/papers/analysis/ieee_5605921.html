@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5605921</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5605921---an-iterative-decoding-algorithm-with-backtracking-to-lower-the-error-floors-of-ldpc-codes-2011-ieee-trans-commun">ieee:5605921 - An Iterative Decoding Algorithm with Backtracking to Lower the Error-Floors of LDPC Codes (2011, IEEE Trans. Commun.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.8</td></tr><tr><td>부호length</td><td>1056~4000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>디코딩 실패 시 불만족 CN 인접 VN을 하나씩 flip 후 재복호(backtracking)하여 trapping set 탈출, error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>재복호 반복으로 latency/iteration 증가(고SNR에서만 무시가능), trapping set 구조 사전지식은 불필요하나 flip trial 수가 가변적</td></tr><tr><td>추가확인</td><td>u0 저장·correlation 계산·다중 재복호를 pipeline 디코더에 얹을 때 제어흐름/메모리 오버헤드, 조기종료 CRC와의 연동</td></tr></tbody></table>
+<blockquote><p>총평: 코드 무관·범용 error-floor 저감 후처리로 이식성 높으나 latency 증가가 NAND 실시간성에 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC(3,15)-regular (1890,1512) rate-0.8, WiMAX (1056,528) irregular rate-0.5, PEG (4000,3200) rate-0.8 등 다양한 구성의 binary LDPC.</li><li>문제: SPA/MSA가 trapping set(소수 VN·홀수차 CN 구조)에 갇혀 고SNR에서 error-floor 발생, 기존 대책(bit-pinning, 후처리)은 특정 코드의 dominant trapping set 사전지식 필요.</li><li>모델: BPSK+AWGN, LLR 입력. 복호 실패 시 전 iteration 중 불만족 CN 최소집합 <code>C0</code>와 그 상태 <code>u0</code>를 추적.</li><li>1차 backtracking: <code>|C0|&lt;=tau</code>이면 소형 trapping set으로 간주, <code>N(C0)</code>(불만족 CN 인접 VN) 각각을 <code>u0</code> 대비 최대 LLR로 flip 후 재복호, 성공하면 종료.</li><li>flip은 boundary node(실제 오류 VN)를 맞히려는 trial-and-error — 맞으면(hit-trial) trapping set이 더 작은 부분집합으로 축소되어 탈출 가능.</li><li>2차 backtracking: 1차 전 trial 중 <code>u_i != u0</code>인 것에 대해 상관 <code>lambda_i=&lt;y,chi(u_i)&gt;</code> 최대인 gamma개를 ML로 hit-trial 후보 선정, 각 후보의 새 <code>C*</code>로 다시 backtracking.</li><li>구현 디테일: 6-bit fixed-point scaled MSA(scaling 0.75~0.815), correlation은 u0와 다른 소수 비트만 가중합해 저비용 계산.</li><li>error-floor 예측: 중요 trapping set 목록(error-impulse 탐색)+각 실패확률을 반해석적 적분(Q함수 근사·외삽)으로 합산, backtracking 후 floor까지 예측.</li><li>결과: 1차 backtracking으로 (1890,1512) floor 2자리수↓, PEG (4000,3200) 4자리수↑ 개선, 2차 backtracking 추가 1자리수↓; <code>P_B(M1+M2)~10^-3</code>로 고SNR 오버헤드 무시가능.</li><li>한계: HW 미설계(원 디코더만 FPGA 참조), 저SNR에서는 재복호 비용 큼, undetected error rate가 backtracking으로 약간 증가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 재복호(backtracking) 루프·flip 후 재시작 | decoder.cpp LDPC_Decoder() | 이터레이션 루프 외곽에 재시작 제어 추가, 실패시 재호출 |
+| 불만족 CN 집합 C0 추적·최소화 | decoder.cpp C2V_Cal(), CNU_Update_New_Mag() | CN 만족여부 집계 결과 재사용 가능 |
+| flip 대상 VN의 LLR 최대치 주입 | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | 특정 VN 입력 LLR을 반대극성 max로 override |
+| 조기종료(성공 판정) | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 재복호 성공/실패 판정에 재사용 |
+| correlation &lt;y,u_i&gt; 계산 | 대응 없음 | ML hit-trial 선정용 신규 상관 연산 필요 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — decoder.cpp 이터레이션 루프에 재시작·flip override만 얹으면 되어 이식은 쉬우나(코드 무관 error-floor 저감), 재복호 반복이 NAND 실시간 latency 예산과 상충하고 Prime ECC의 partial-CRC 조기종료·적응형 LLR과 통합 검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5605921",
+  "title": "An Iterative Decoding Algorithm with Backtracking to Lower the Error-Floors of LDPC Codes",
+  "year": 2011,
+  "venue": "IEEE Trans. Commun.",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.8",
+  "code_length": "1056~4000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "디코딩 실패 시 불만족 CN 인접 VN을 하나씩 flip 후 재복호(backtracking)로 trapping set 탈출, error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "재복호 반복으로 latency/iteration 증가(고SNR에서만 무시가능), flip trial 수 가변",
+  "todo_check": "u0 저장·correlation 계산·다중 재복호를 pipeline 디코더에 얹을 때 제어흐름/메모리 오버헤드, 조기종료 CRC 연동"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5605921---an-iterative-decoding-algorithm-with-backtracking-to-lower-the-error-floors-of-ldpc-codes-2011-ieee-trans-commun">ieee:5605921 - An Iterative Decoding Algorithm with Backtracking to Lower the Error-Floors of LDPC Codes (2011, IEEE Trans. Commun.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5937811</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5937811---sliding-window-method-for-stochastic-ldpc-decoder-2011-ieee-wicomicspcc">ieee:5937811 - Sliding Window Method for Stochastic LDPC Decoder (2011, IEEE WiCOM/ICSPCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1056</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Stochastic LDPC 디코더의 VN latch-up 해소용 re-randomization 유닛을 sliding-window로 구현해 TFM 대비 로직 35% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.5</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Stochastic 디코딩(Bernoulli bitstream, XOR/AND 게이트) 전용 기법 → min-sum 기반 Prime ECC와 계산 패러다임 자체가 상이</td></tr><tr><td>추가확인</td><td>Prime ECC는 stochastic 미채택; 이식하려면 디코더 전면 교체 필요(비현실적)</td></tr></tbody></table>
+<blockquote><p>총평: stochastic LDPC 디코더의 latch-up용 re-randomization HW 최적화로, Prime ECC의 min-sum 반복복호와 패러다임이 달라 이식 대상이 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 확률 메시지를 Bernoulli bit stream으로 변환해 처리하는 fully-parallel stochastic LDPC 디코더(IEEE 802.11n irregular <code>(1056,528)</code>, rate 0.5).</li><li>문제: stochastic VN 갱신에서 발생하는 <code>latch-up</code>(hold-state) 현상이 복호성능을 크게 저하시킴 → re-randomization 유닛 필요.</li><li>모델: PN은 XOR 게이트, VN은 AND/inverse-AND 게이트로 곱셈·나눗셈을 구현; 두 입력 stream이 다를 때(hold-state) 보수적 비트 <code>r'(t)</code>를 재랜덤화 유닛으로 생성.</li><li>핵심 기법: 기존 EM(edge memory)·TFM(tracking forecast memory) 대신 <code>Sliding Window Method(SWM)</code> 제안 — 최근 <code>L</code>개 regular-state 비트의 통계 <code>C1L1(i)=Σ C11(t)</code>로 hold-state 확률을 추정.</li><li>핵심 식: <code>Pi→j ≈ C1L1(i)/L</code> (식 13), hold-state 출력은 <code>r'(t)= [j ≥ C1L1(i)]</code>, <code>j=t mod L</code>을 균등분포 난수로 사용(식 17) → TFM보다 정밀한 확률 갱신.</li><li>슬라이딩 윈도우 업데이트를 증분식 <code>C1L1(i)=C1L1(i-1)+bk</code>(식 19)로 근사해 상한 <code>L</code>의 saturate counter로 구현.</li><li>HW 구현: saturate counter(윈도우 통계) + cyclic counter(<code>j</code> 생성) + comparator 한 개; 별도 난수원 불필요, TFM보다 adder/comparator 폭이 작음.</li><li>최적화: degree-6 VN에 4-bit SWM, degree-2/3 VN에 3-bit SWM, majority-based 공유 구조로 자원 추가 절감; early termination 적용.</li><li>결과: Xilinx Virtex-4-LX200 FPGA에서 4-bit SWM이 8-bit TFM 대비 4-input LUT 약 35% 절감, BER은 TFM·EM과 유사, 평균 70 디코딩 사이클(Eb/N0=4dB), 200MHz에서 throughput 1.5Gb/s.</li><li>한계: stochastic 디코딩 패러다임 전용, BER 곡선 수치는 본문 서술 없음(그림만), NAND read/LLR 설계와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>stochastic VN 갱신 (AND/inverse-AND, re-randomization)</td><td>대응 없음</td><td>Prime ECC는 결정론적 min-sum VN 사용, stochastic bitstream 처리 없음</td></tr><tr><td>stochastic PN 갱신 (XOR 게이트)</td><td>대응 없음</td><td>min-sum CN(min1/min2+sign)과 계산 방식 상이</td></tr><tr><td>early termination</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료 개념만 공유, stochastic 사이클 카운트 방식과 무관</td></tr><tr><td>완전병렬 HW 구조 / 자원 절감</td><td>대응 없음</td><td>Prime ECC는 z=32 row 병렬(GT/HCU) 구조로 stochastic 완전병렬과 정합 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Bernoulli bitstream 기반 stochastic 디코딩 전용 HW 기법으로, min-sum 기반 Prime ECC에 떼어 쓰려면 디코더 코어 전면 교체가 필요해 이식성이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5937811",
+  "title": "Sliding Window Method for Stochastic LDPC Decoder",
+  "year": 2011,
+  "venue": "IEEE Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1056",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Stochastic LDPC 디코더의 VN latch-up 해소용 re-randomization 유닛을 sliding-window로 구현해 TFM 대비 로직 35% 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.5,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "Stochastic 디코딩(Bernoulli bitstream, XOR/AND 게이트) 전용 기법 → min-sum 기반 Prime ECC와 계산 패러다임 자체가 상이",
+  "todo_check": "Prime ECC는 stochastic 미채택; 이식하려면 디코더 전면 교체 필요(비현실적)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5937811---sliding-window-method-for-stochastic-ldpc-decoder-2011-ieee-wicomicspcc">ieee:5937811 - Sliding Window Method for Stochastic LDPC Decoder (2011, IEEE WiCOM/ICSPCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

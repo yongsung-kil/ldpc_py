@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9774738</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9774738---dwr-differential-wearing-for-read-performance-optimization-on-high-density-nand-flash-memory-2022-date">ieee:9774738 - DWR: Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory (2022, DATE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>plane을 저마모(LWA)/고마모(HWA) 영역으로 차등 마모, hot-read 데이터를 신뢰도 높은 LWA에 배치해 LDPC read-retry 감소로 read latency 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>FTL 레벨 wear-leveling/데이터 배치 기법으로 LDPC 코덱(부호·디코더·HW) 자체는 미변경 — ECC 이식 대상 아님</td></tr><tr><td>추가확인</td><td>LDPC retry 수(sensing voltage 단계)와 read latency 매핑이 우리 soft-read(2SD/3SD) 비용모델과 연동 가능한지(시스템 레벨)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC read-retry로 인한 read latency를 FTL 차등 마모+데이터 배치로 줄이는 시스템 기법 — NAND 직접 타깃이나 LDPC ECC 코덱에 이식할 알고리즘은 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 3D TLC NAND SSD(256GB, 8ch, P/E 1000), LDPC를 기본 ECC로 사용, SSDsim 시뮬레이터·MSR 8 workload.</li><li>문제: wear leveling이 모든 블록을 균등 마모 → 전체 신뢰도 동시 저하 → LDPC read-retry 급증으로 read latency가 마모 20~80%에서 3.8x~6.1x 증가.</li><li>모델: LDPC read latency는 셀 신뢰도와 강상관 (신뢰도 낮으면 sensing voltage/retry 증가). retry 수는 마모 stage(new/middle/old)별 [11] 데이터로 주입.</li><li>핵심기법: plane 내부를 저마모영역 <code>LWA</code>(hot-read 데이터, read 서비스)와 고마모영역 <code>HWA</code>(write 서비스)로 물리 분할(block offset 1변수).</li><li>의미: read 대상 데이터를 신뢰도 높은 블록에 모아 LDPC retry를 줄여 read latency를 낮춤.</li><li>확장: hot-read 식별 후 HWA→LWA 마이그레이션, 임계 <code>NR</code>(read 횟수)을 마모 stage별 5/4/3로 적응 조절.</li><li>구현: 페이지별 read counter(mapping table +3bit), LWA full 시 FIFO victim으로 LWA→HWA 반환, 마이그레이션은 GC/WL/host-update에 편승해 저비용.</li><li>수명 최적화: LWA 크기 제한(hot-read는 소량, 10% 데이터가 4회+ read), HWA 마모율 80% 상한, 초과 시 write를 LWA로 유도.</li><li>결과: old stage에서 SWL 대비 read latency 45%(PWL 대비 33%) 감소, 마이그레이션 오버헤드 0.22~0.42%, TBW(수명) 영향 무시할 수준.</li><li>한계: locality 없는 workload(STG_0)엔 효과 미미, HW 미설계, LDPC 코덱 자체는 손대지 않음(시스템 FTL 기법).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FTL 차등 마모 / 데이터 배치·마이그레이션</td><td>대응 없음 (FTL/시스템 레벨, ECC 코덱 밖)</td><td>Prime ECC는 codec 시뮬레이터라 대응 모듈 없음</td></tr><tr><td>LDPC read-retry / sensing voltage 단계</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code> (soft-read threshold)</td><td>개념적 연결만: retry↔soft-read 비용, 알고리즘 이식 아님</td></tr><tr><td>LDPC 복호 자체</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문이 디코더를 변경하지 않음 → 이식 요소 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND read latency를 FTL 차등 마모/데이터 배치로 개선하는 시스템 레벨 기법으로, Prime ECC(부호·디코더·HW codec)에 떼어낼 알고리즘이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9774738",
+  "title": "DWR: Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory",
+  "year": 2022,
+  "venue": "DATE",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "plane을 저마모(LWA)/고마모(HWA) 영역으로 차등 마모, hot-read 데이터를 신뢰도 높은 LWA에 배치해 LDPC read-retry 감소로 read latency 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "FTL 레벨 wear-leveling/데이터 배치 기법으로 LDPC 코덱(부호·디코더·HW) 자체는 미변경 — ECC 이식 대상 아님",
+  "todo_check": "LDPC retry 수(sensing voltage 단계)와 read latency 매핑이 우리 soft-read(2SD/3SD) 비용모델과 연동 가능한지(시스템 레벨)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9774738---dwr-differential-wearing-for-read-performance-optimization-on-high-density-nand-flash-memory-2022-date">ieee:9774738 - DWR: Differential Wearing for Read Performance Optimization on High-Density NAND Flash Memory (2022, DATE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

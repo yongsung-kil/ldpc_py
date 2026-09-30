@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4541470</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4541470---enhanced-delta-based-layered-decoding-of-wimax-qc-ldpc-codes-2008-ieee-conf">ieee:4541470 - Enhanced Delta-Based Layered Decoding of WiMAX QC-LDPC Codes (2008, IEEE conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>delta-based layered decoding(DLDA)+offset Min-Sum에 base matrix row/column 재배열 절차를 더해 파이프라인 late-update 손실을 0.13dB→0.03dB로 저감(추가 HW 비용 없음)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>floating-point 시뮬만(합성/실측 없음), 이득은 overlapping block-row 파이프라인 해저드가 있을 때만 유효</td></tr><tr><td>추가확인</td><td>Prime ECC 6-stage 파이프라인이 layer간 bit-sum overwrite(late-update) 해저드를 겪는지, delta-update가 우리 Dual-Update 스케줄과 정합하는지</td></tr></tbody></table>
+<blockquote><p>총평: 파이프라인 layered 디코더의 late-update 해저드를 H-matrix 처리순서 재배열로 완화하는 스케줄링 기법. 임의 QC-LDPC 적용 가능하나 성능 자체 향상은 아니고 파이프라인 손실 회복이 목적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: WiMAX(802.16e) irregular QC-LDPC 6개 code group, base matrix <code>Hbm</code>(mb×nb)를 z×z permutation으로 확장, rate 1/2~5/6, length 576·2304.</li><li>문제: layered decoding(LDA)은 인접 block row가 겹치면(overlap) serial function unit 지연 때문에 파이프라인에서 late-update 발생 → 성능 손실.</li><li>배경: Rovini의 delta-based LDA(DLDA)는 (3) 대신 차분 <code>ΔRmj=Rmj(i)-Rmj(i-1)</code>, <code>qj=qj+ΔRmj</code>(식10-11)로 latency 제약을 제거, 임의 QC-LDPC 적용 가능.</li><li>핵심기법: DLDA + 저복잡 offset Min-Sum(OMS, offset β=0.5)을 WiMAX 부호에 적용하고, base model matrix의 row/column 처리순서를 재배열해 late-update를 최소화.</li><li>late-update 정의: pipeline depth <code>PD</code>, row weight <code>dc</code>에 대해 update latency <code>LAT=dc+PD-1</code>; 다음 layer가 <code>D&lt;LAT</code>에 bit-sum을 요청하면 update가 늦어 손실.</li><li>Row reordering: check weight 오름차순 그룹화 후 인접 row 간 overlap count(OC)의 누적(COC)이 최소가 되는 순서 선택.</li><li>Column reordering: 연속 3개 row(R1,R2,R3) 관찰, R1에서 즉시 갱신 가능한 열집합 <code>SA</code>를 R1 앞·R2 뒤에 배치(C-1 규칙, 식13-17)해 late-update 저감.</li><li>결과지표: rate-5/6, PD=8에서 원본 50/80 late-update → 재배열 후 16/80. 대부분 부호에서 late/total 비율 45%→~20%.</li><li>성능: rate-1/2 length-2304, PD=8에서 이상적 LDA 대비 손실 0.13dB(H1)→0.03dB(H2), avg iteration도 이상 LDA에 근접. BP 대비 1.5× 적은 평균 iteration.</li><li>한계: floating-point 시뮬만, 실제 HW 합성/gate/throughput 없음, NAND soft-read 무관, 성능 자체 향상이 아닌 파이프라인 손실 회복.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered decoding 이터레이션 + delta update 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC Dual-Update 스케줄과 층위 동일, delta-update는 변형</td></tr><tr><td>offset Min-Sum check 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 기보유와 동일</td></tr><tr><td>base matrix row/column 처리순서 재배열</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix 로드/순서)</td><td>우리 H-matrix 고정이나 파이프라인 처리순서 최적화에 관여</td></tr><tr><td>pipeline late-update 해저드 회피</td><td>대응 없음</td><td>Prime ECC 6-stage 파이프라인 구조·해저드 존재 여부 확인 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 파이프라인 layered 디코더의 late-update 해저드를 H-matrix 처리순서 재배열로 무비용 완화하는 기법. Prime ECC가 overlapping block-row 파이프라인 해저드를 겪는다면 유용하나 sim-only이고 우리 구조 정합 확인 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4541470",
+  "title": "Enhanced Delta-Based Layered Decoding of WiMAX QC-LDPC Codes",
+  "year": 2008,
+  "venue": "IEEE conf",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "576~2304",
+  "soft_quant": "무관",
+  "key_contribution": "DLDA+offset Min-Sum에 base matrix row/column 재배열 절차를 더해 파이프라인 late-update 손실을 0.13dB→0.03dB로 저감(추가 HW 비용 없음)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "floating-point 시뮬만, 이득은 overlapping block-row 파이프라인 해저드가 있을 때만 유효",
+  "todo_check": "Prime ECC 6-stage 파이프라인이 layer간 bit-sum overwrite 해저드를 겪는지, delta-update가 우리 Dual-Update와 정합하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4541470---enhanced-delta-based-layered-decoding-of-wimax-qc-ldpc-codes-2008-ieee-conf">ieee:4541470 - Enhanced Delta-Based Layered Decoding of WiMAX QC-LDPC Codes (2008, IEEE conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

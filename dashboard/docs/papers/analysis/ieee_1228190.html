@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1228190</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1228190---representing-codes-for-belief-propagation-decoding-2003-isit">ieee:1228190 - Representing Codes for Belief Propagation Decoding (2003, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.498</td></tr><tr><td>부호length</td><td>255</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>고전 부호(EG code)의 redundant GPC 행렬을 auxiliary bit로 재작성해 행 weight를 줄여 BP 복호에 적합한 sparse 표현 생성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC 전용 검증(auxiliary bit가 채널 증거 없어 BEC 외 채널에서 성능 열화 가능); 고도로 redundant한 GPC(M'=32130)라 NAND HW 비현실적</td></tr><tr><td>추가확인</td><td>AWGN/soft 채널에서 auxiliary bit 성능 열화 정도, GPC redundancy가 디코더 복잡도에 미치는 영향 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 고전 EG 부호를 BP에 적합한 sparse GPC 표현으로 변환하는 부호표현 기법 — BEC 전용·고redundancy로 NAND binary QC-LDPC와 무관, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 고전 block code(예: <code>(n=255,k=127)</code> Euclidean Geometry 부호)를 belief propagation(BP)으로 복호하기 위한 <strong>generalized parity check(GPC)</strong> 행렬 표현.</li><li>풀려는 문제: 짧은/중간 blocklength의 우수한 고전 부호들이 sparse parity check 표현이 없어 BP 후보에서 배제됨 — 이들을 BP 친화적 sparse 표현으로 변환.</li><li>BP가 잘 동작하는 GPC 행렬 특성: (a) 각 행의 1 개수 작음, (b) 각 열의 1 개수 큼, (c) 임의 두 행이 공유하는 1 열 수가 작음(이상적으로 0~1).</li><li>핵심 기법: 많은 bit가 관여하는 제약을 <strong>auxiliary bit</strong>(bit 집합의 parity를 인코딩)로 재작성하는 divide-and-conquer로 각 제약의 bit 수를 최소화, redundant 제약은 최대한 활용.</li><li>의미: 입력 GPC <code>H(M×N)</code>를 출력 GPC <code>H'(M'×N')</code>로 변환해 행 weight를 낮춤 — 단 auxiliary bit는 채널 증거가 없어 BEC 외 채널에서 성능 열화 위험.</li><li>적용 사례: EG <code>(255,127)</code> 부호(<code>m=4,s=2,p=1</code>), 각 bit=점, 5355개 line(4점)·5355개 plane 구조를 redundant PCM <code>M=5355, N=255</code>(행 weight 16)로 표현.</li><li>알고리즘 적용 결과 출력 <code>H'</code>는 <code>M'=32130, N'=5610</code>, 행 weight 4 또는 5로 감소.</li><li>결과(BEC): redundant <code>H</code>(5355행)만으로도 128행 표현·Gallager <code>(3,6)</code> 부호 BP보다 훨씬 우수; <code>H'</code>는 더 우수하나 ML 복호와는 여전히 구분됨.</li><li>비교 기준: 규칙적 <code>(3,6)</code> Gallager 부호 BP 및 random linear <code>(256,128)</code> 부호 ML 복호와 대조.</li><li>한계: BEC 전용 검증, auxiliary bit로 인한 non-BEC 채널 열화 가능, HW 미설계, 고도 redundancy(수만 행).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GPC/redundant 행렬 표현 생성</td><td>대응 없음</td><td>Prime ECC는 고정 QC base+shift PCM 사용, GPC/auxiliary-bit 표현법과 무관</td></tr><tr><td>EG 고전 부호 → BP 표현 변환</td><td>대응 없음</td><td>non-QC·고전 대수부호 대상으로 Prime ECC binary QC-LDPC와 계열 상이</td></tr><tr><td>BP(belief propagation) 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 기반이며 full-BP·auxiliary bit 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 고전 EG 부호를 BEC용 redundant GPC로 변환하는 부호표현 기법으로, Prime ECC의 고정 QC-LDPC 구조·NAND 채널과 무관하며 이식 대상 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1228190",
+  "title": "Representing Codes for Belief Propagation Decoding",
+  "year": 2003,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": 0.498,
+  "code_length": "255",
+  "soft_quant": "무관",
+  "key_contribution": "고전 부호(EG code)의 redundant GPC 행렬을 auxiliary bit로 재작성해 행 weight를 줄여 BP 복호에 적합한 sparse 표현 생성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BEC 전용 검증(auxiliary bit가 채널 증거 없어 BEC 외 채널에서 성능 열화 가능); 고도로 redundant한 GPC(M'=32130)라 NAND HW 비현실적",
+  "todo_check": "AWGN/soft 채널에서 auxiliary bit 성능 열화 정도, GPC redundancy가 디코더 복잡도에 미치는 영향 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1228190---representing-codes-for-belief-propagation-decoding-2003-isit">ieee:1228190 - Representing Codes for Belief Propagation Decoding (2003, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

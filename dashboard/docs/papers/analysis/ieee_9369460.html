@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9369460</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9369460---boosting-belief-propagation-for-ldpc-codes-with-deep-convolutional-neural-network-predictors-2021-ieee-ccnc">ieee:9369460 - Boosting Belief Propagation for LDPC Codes with Deep Convolutional Neural Network Predictors (2021, IEEE CCNC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CNN 예측기가 이전 프레임에서 현재 bit를 예측해 SPA 디코더 초기 LLR을 mixing 초기화(LP-SPA), 상관성 있는 소스에 대해 최대 2dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>full-tanh SPA 사용, bit 간 장기상관 있는 소스(오디오/비디오) 전제 - i.i.d NAND 데이터엔 이득 소멸, CNN 예측기 부담</td></tr><tr><td>추가확인</td><td>NAND 저장 데이터는 소스 상관 낮아 예측기 이득 미미할 가능성 확인</td></tr></tbody></table>
+<blockquote><p>총평: 소스 bit 간 장기상관을 CNN으로 예측해 SPA 초기 LLR에 섞는 수신단 기법으로, 채널코드가 아닌 소스상관 활용이 본질이라 i.i.d 전제의 NAND binary QC-LDPC엔 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>AWGN/BPSK, rate <code>1/2</code> LDPC로 인코딩된 오디오(8-bit 양자화→Gray code) 프레임 복호. systematic 생성행렬로 변환해 예측기·디코더 융합 단순화.</li><li>문제: 기존 채널코드는 입력 bit i.i.d 가정이지만 오디오·비디오·센서 데이터는 장기·비선형 상관을 가짐 → 이를 활용하면 고잡음 영역 복호 성능 개선 가능.</li><li>핵심: bit-level CNN 예측기가 이전 <code>L</code>(=10) 프레임 복호결과로 현재 프레임 <code>X̃k</code> 예측 → SPA 초기화에 사용해 더 좋은 local optima로 수렴 유도(LP-SPA).</li><li>SPA 자체는 표준 full-<code>tanh</code> sum-product: VN <code>λknm = In + Σηmn</code> (식 5), CN <code>ηkmn = 2tanh⁻¹(∏tanh(λ/2))</code> (식 6).</li><li>예측정보 혼합: 첫 iteration에서 <code>λn1m = α(βPn) + In</code> (식 7). <code>Pn</code>=예측기 출력, <code>In</code>=채널 LLR.</li><li>혼합가중 <code>α</code>: <code>η1=SNR</code>, <code>η2=var(|I|)</code>, <code>α=η1/(λη2)</code> (식 2). SNR↑이면 α↓로 예측 비중 억제.</li><li>예측강도 <code>s(Fn)</code>=예측 bit LLR 절대값 평균(식 3), 이로부터 보조가중 <code>β</code>(식 4, s≤3→0, 3~15→4, ≥15→60/s).</li><li>학습: 6층 1D-CNN + FC 2층 + softmax, batch-norm, dropout 0.35. segment(20000프레임)별 75% train/25% test, transfer learning으로 이전 segment 파라미터 재사용.</li><li>결과: <code>η2</code>는 ~1000프레임 후 수렴. 표준 SPA 대비 10⁻⁴ BER에서 최대 1.7dB(Test1, λ=1), 전반 0.5~2dB transmit power 이득. 예측정확도 &lt;90%.</li><li>한계: 시뮬만, HW·복잡도·throughput 없음, 이득이 소스 bit 장기상관에 전적으로 의존(랜덤·i.i.d 데이터엔 이득 소멸).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA(full-tanh) VN/CN 갱신</td><td>대응 없음</td><td>우리는 min-sum 근사 사용, full-tanh Sum-Product는 미채택 대상</td></tr><tr><td>CNN 예측기(프레임 간 bit 예측)</td><td>대응 없음</td><td>NN/딥러닝 디코더는 명시적 미대응 요소</td></tr><tr><td>예측 LLR을 초기 LLR에 mixing</td><td>decoder.cpp <code>LDPC_Decoder()</code> 초기화, channel.cpp LLR</td><td>개념상 초기 LLR 주입 지점은 있으나 소스상관 예측 자체가 NAND에 부적합</td></tr><tr><td>반복 종료(HT=0)</td><td>full_CRC.cpp, <code>partial_CRC.cpp</code></td><td>표준 조기종료, 신규성 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 이득의 본질이 소스 bit 간 장기상관을 CNN으로 예측하는 데 있어 i.i.d에 가까운 NAND 저장 데이터엔 이득이 소멸하고, 디코더도 우리가 미채택한 full-tanh SPA + NN이라 이식 대상이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9369460",
+  "title": "Boosting Belief Propagation for LDPC Codes with Deep Convolutional Neural Network Predictors",
+  "year": 2021,
+  "venue": "IEEE CCNC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CNN 예측기가 이전 프레임에서 현재 bit를 예측해 SPA 디코더 초기 LLR을 mixing 초기화(LP-SPA), 상관성 있는 소스에 대해 최대 2dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "full-tanh SPA 사용, bit 간 장기상관 있는 소스(오디오/비디오) 전제 - i.i.d NAND 데이터엔 이득 소멸, CNN 예측기 부담",
+  "todo_check": "NAND 저장 데이터는 소스 상관 낮아 예측기 이득 미미할 가능성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9369460---boosting-belief-propagation-for-ldpc-codes-with-deep-convolutional-neural-network-predictors-2021-ieee-ccnc">ieee:9369460 - Boosting Belief Propagation for LDPC Codes with Deep Convolutional Neural Network Predictors (2021, IEEE CCNC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

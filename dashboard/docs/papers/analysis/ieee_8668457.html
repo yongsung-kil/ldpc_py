@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8668457</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8668457---joint-decoder-design-for-ssds-2019-ieee-trans-signal-processing">ieee:8668457 - Joint Decoder Design for SSDs (2019, IEEE Trans. Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호length</td><td>800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>ECC/RAID·write-amp의 여분 페이지를 bilayer LDPC로 묶어 여러 페이지를 joint 복호(BP 교대 스케줄), relay-channel 관점 분석</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>단일 LDPC 디코더가 아니라 RAID/WA 시스템 계층(FTL·stripe) 정보 의존, 복잡도·latency·HW자원 증가 인정, HW 미설계</td></tr><tr><td>추가확인</td><td>bilayer 스케줄이 우리 pipeline/HCU 구조와 정합 가능한지, 다중 페이지 동시 복호 시 메모리/엔진 자원</td></tr></tbody></table>
+<blockquote><p>총평: SSD 시스템 레벨(RAID/write-amp)의 여분 정보를 활용한 joint bilayer LDPC 복호로 1.8dB gain을 얻으나, 단일 부호 디코더 개선이 아니라 상위 stripe 구조 의존이라 Prime ECC 단일 QC-LDPC 엔진에 떼어 쓰기 어려움 → 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: NAND SSD, page당 [n,k] LDPC + stripe 단위 RAID(4/5/6, RDP) 또는 write-amp(WA) 복제 페이지. 시뮬은 (3,6) regular LDPC, length 800, AWGN, max iter 80.</li><li>문제: ECC·RAID가 둘 다 실패하면 stripe 내 여분 페이지가 있어도 기존 방식은 복구 불가; 새 부호 설계 대신 기존 디코더로 여분 정보 활용.</li><li>모델: 여러 noisy 페이지 <code>y_i^n</code>가 zero-parity(개별 LDPC) + RAID/WA joint parity 두 층 제약을 만족 → bilayer LDPC로 표현.</li><li>핵심기법 1단(RAID 4): d개 hard-error 페이지를 lower(개별 LDPC)·upper(RAID XOR 제약) 두 layer로 묶어 message-passing을 교대 수행. 상·하 check node의 edge 연결 확률이 달라 LLR을 별도 추적.</li><li>핵심식: V2C <code>v = u0 + (dv-1)u_lower + u_upper</code> (식2), C2V는 표준 <code>2 tanh⁻¹(∏ tanh(v/2))</code> — upper layer(RAID) LLR을 추가 주입해 상관 정보 이용.</li><li>핵심기법 2단: RAID 6(RDP, 대각+행 parity)로 확장해 3 hard error를 middle/left/right bilayer part로 분해 복호; WA(같은 정보비트 공유)·coupling WA로도 일반화.</li><li>구현 디테일: bilayer이라 upper/lower check node별로 density evolution threshold를 별도 계산(Table I, II).</li><li>학습/최적화: 없음(부호 학습 아님). relay-channel(decode-and-forward) 관점의 용량 분석(Appendix A/B, RAID-relay·WA-relay 용량).</li><li>결과: AWGN, BER 10⁻³에서 conventional 대비 gain — diff WA 0.6dB, coupling WA 0.8dB, RAID4(2 err) 1.4dB, RAID4(3 err) 1.6dB, RDP(3 err) 1.8dB.</li><li>한계: HW 미설계(향후 과제로 명시), 복잡도·latency·RAM/엔진 자원 증가, 단일 LDPC가 아닌 RAID/WA 상위 구조 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bilayer LDPC joint message-passing 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>단일 부호 루프에 upper(RAID) layer 제약 추가해야 — 구조 확장 필요, 단순 이식 아님</td></tr><tr><td>C2V/V2C LLR 업데이트</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>표준 SPA/min-sum과 동일, 신규 연산 없음</td></tr><tr><td>RAID/WA stripe 여분 페이지 결합</td><td>대응 없음</td><td>Prime ECC는 stripe/FTL/RAID 미포함, 단일 페이지 QC-LDPC 엔진</td></tr><tr><td>relay-channel 용량 분석</td><td>대응 없음</td><td>이론 분석, 코드 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 아이디어는 SSD 시스템(RAID/WA) 계층 정보에 의존해 단일 QC-LDPC 디코더 엔진에 떼어 쓰기 어렵고, HW 미설계·복잡도 증가로 Prime ECC 3.1 이식 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8668457",
+  "title": "Joint Decoder Design for SSDs",
+  "year": 2019,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "800",
+  "soft_quant": "무관",
+  "key_contribution": "ECC/RAID·write-amp의 여분 페이지를 bilayer LDPC로 묶어 여러 페이지를 joint 복호(BP 교대 스케줄), relay-channel 관점 분석",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "단일 LDPC 디코더가 아니라 RAID/WA 시스템 계층(FTL·stripe) 정보 의존, 복잡도·latency·HW자원 증가 인정, HW 미설계",
+  "todo_check": "bilayer 스케줄이 우리 pipeline/HCU 구조와 정합 가능한지, 다중 페이지 동시 복호 시 메모리/엔진 자원"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8668457---joint-decoder-design-for-ssds-2019-ieee-trans-signal-processing">ieee:8668457 - Joint Decoder Design for SSDs (2019, IEEE Trans. Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

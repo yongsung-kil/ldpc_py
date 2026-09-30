@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5757668</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_5757668---iterative-weighted-ℓ1-optimization-for-compressed-sensing-and-coding-2010-asilomar">ieee_5757668 - Iterative Weighted ℓ1 Optimization for Compressed Sensing and Coding (2010, Asilomar)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>1000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>LP 복호 실패 시 pseudocodeword 편차로 신뢰도 재가중한 2차 LP를 돌려 provable threshold와 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LP(cvx toolbox) 기반 소프트웨어 복호로 NAND용 min-sum HW와 완전히 다른 계보, 실시간성 없음</td></tr><tr><td>추가확인</td><td>n이 커지면 iterative 방식들이 LP 곡선으로 수렴(reweighted만 이득 유지)하는지 재현 여부</td></tr></tbody></table>
+<blockquote><p>총평: LP 복호 + 압축센싱 재가중 아이디어의 이론/시뮬 논문으로, NAND binary QC-LDPC min-sum 파이프라인에는 이식 계보가 맞지 않아 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC 상의 binary linear code에 대한 LP 복호(Feldman et al.의 ML 완화); 실험 부호는 rate <code>R=3/4</code>, <code>n=1000</code>, <code>dv=3/dc=4</code> random LDPC.</li><li>문제: LP 복호가 실패하면 fractional pseudocodeword를 출력하는데, 이 부분적 정보를 활용해 성능을 더 끌어올리려는 것.</li><li>채널 모델: BSC(bit-flip 확률 <code>p</code>), 목적함수는 likelihood <code>γ^T x</code> 또는 BSC에서 <code>||x - x(r)||_1</code> 최소화(polytope <code>P</code> 위).</li><li>핵심 기법: 1차 LP 출력 pseudocodeword <code>x(p)</code>로 편차벡터 <code>x(d)=x(r)-x(p)</code>를 만들어 각 비트의 불신뢰도를 측정.</li><li><code>x(d)</code> 절댓값 정렬로 신뢰(작은 <code>pn</code>개=집합 <code>L</code>)/불신뢰 비트를 구분 — 재가중의 근거.</li><li>확장(2차 LP): <code>min λ1||(x-y)_L||_1 + λ2||(x-y)_{L^c}||_1</code> (<code>λ1&lt;0, λ2&gt;0</code>)로 신뢰 비트 변경비용↑, 불신뢰 비트 변경비용↓.</li><li>이론 도구: fundamental cone property <code>FCP(S,C)</code>와 robustness factor <code>C</code>를 정의, expander/girth 부호에 대해 provable strong/weak threshold 하한 유도.</li><li>최적화 절차: <code>λ1,λ2</code>는 각 <code>p</code>마다 실험적으로 평균 성능이 최적인 값 선택(<code>-3≤λ1≤-0.5</code>, <code>1≤λ2≤3</code>).</li><li>결과: Algorithm 1은 LP 대비 2배 복잡도(1회 추가 LP)로 mixed-integer(Draper), random facet guessing 대비 BER 개선, provable strong threshold를 엄격히 개선.</li><li>한계: LP는 min-sum보다 성능이 비슷~약간 우수하나 sum-product보다 열위, MATLAB/cvx 소프트웨어 구현뿐, HW 미설계, BSC(hard) 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LP 복호 알고리즘 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing 계보로 LP polytope 복호와 무관</td></tr><tr><td>pseudocodeword 편차 기반 신뢰도 재가중</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (개념적 유사)</td><td>불신뢰 비트 가중 개념은 적응형 LLR과 발상은 겹치나 알고리즘 구조가 달라 직접 이식 불가</td></tr><tr><td>BSC hard-decision 채널</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>hard-1bit 채널 모델만 대응, soft-read 이득 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — LP 복호는 Prime ECC의 min-sum HW 계보와 다른 알고리즘 축이며, 이론/MATLAB 시뮬뿐이라 NAND ECC 이식 경로가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5757668",
+  "title": "Iterative Weighted l1 Optimization for Compressed Sensing and Coding",
+  "year": 2010,
+  "venue": "Asilomar",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.75,
+  "code_length": "1000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "LP 복호 실패 시 pseudocodeword 편차로 신뢰도 재가중한 2차 LP로 provable threshold와 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "LP(cvx) 기반 소프트웨어 복호로 NAND용 min-sum HW와 다른 계보, 실시간성 없음",
+  "todo_check": "n이 커질 때 reweighted LP만 이득 유지하는지 재현 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_5757668---iterative-weighted-ℓ1-optimization-for-compressed-sensing-and-coding-2010-asilomar">ieee_5757668 - Iterative Weighted ℓ1 Optimization for Compressed Sensing and Coding (2010, Asilomar)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

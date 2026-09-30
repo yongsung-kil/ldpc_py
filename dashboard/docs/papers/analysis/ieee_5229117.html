@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5229117</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5229117---an-energy-efficient-layered-decoding-architecture-for-ldpc-decoder-2010-ieee-tvlsi">ieee:5229117 - An Energy Efficient Layered Decoding Architecture for LDPC Decoder (2010, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.83</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>layered 복호에서 read/write 순서 decouple + 최적 layer 순서(TSP/SA)로 Channel RAM 메모리 접근 최대 bypass, Channel RAM+FIFO 단일 메모리 병합</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>error correction 성능은 불변(전력/면적 최적화만), layer 순서 SA는 오프라인 전처리, 무선 표준(802.11n/16e/DVB-S2) 타깃</td></tr><tr><td>추가확인</td><td>Prime ECC의 z=32 row-병렬 layered pipeline에 read/write decouple + memory 병합이 실제 면적/전력 이득으로 이어지는지</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC layered 디코더의 메모리 접근/idle cycle을 최적 layer 순서와 read/write decoupling으로 줄이는 HW 저전력 기법으로, Prime ECC 메모리 배치·라우팅 최적화에 참고 가치가 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: partial-parallel layered LDPC 디코더, AA-LDPC(QC-LDPC, base matrix + cyclic-shift identity), IEEE 802.11n rate 5/6 sub-block 81 예시, 802.16e/DVB-S2(180 layer)도 적용.</li><li>문제: LDPC 디코더 전력의 주요분은 메모리 접근(특히 posterior reliability 저장 Channel RAM) → 접근량을 최적으로 줄이는 것이 목표.</li><li>핵심 가정: layered(horizontal) 스케줄에서 연속 layer가 같은 column에 non-null이면 Add-array 결과를 Channel RAM 저장 없이 다음 layer로 직접 전달(memory bypassing) 가능.</li><li>핵심 기법 1단: Channel RAM의 read/write 순서를 decouple → 연속 2 layer뿐 아니라 3 layer까지 확장해 bypass 가능한 모든 overlapped column 실현, idle cycle 최소화.</li><li>핵심 식: layered 갱신 <code>L(qmn)=L(qn)-R(mn)</code>, min-sum 근사로 CN 출력은 최소 2개 magnitude+index+sign만 저장(dc 대신 2).</li><li>핵심 기법 2단: bypass 총량은 layer 복호 순서에 의존 → 최적 순서 탐색을 TSP(완전그래프, 간선비용=layer간 overlap 수)로 정식화(NP-hard).</li><li>최적화 절차: 소형부호는 brute-force, 대형부호(DVB-S2 180 layer)는 simulated annealing(layer 쌍 swap, cost=overlapped column 수)으로 근사 최적 순서 획득.</li><li>아키텍처: read/write decouple로 Channel RAM+intermediate FIFO를 4-port 단일 SRAM으로 병합(면적↓), 수신 5bit 양자화·soft output 6bit, two-output SISO, 81 SISO 병렬, 최대 15 iteration.</li><li>결과: 802.11n에서 Channel RAM 메모리접근 12.9~19.3%↓(802.16e 65.8~98.8%, DVB-S2 30.9~65.9% bypass 가능), idle cycle 1.0~13.2%↓, 전체 에너지 13.2~25.9%↓(TSMC 0.18µm, 250MHz, 1.8V).</li><li>한계: 정정능력은 불변(순수 전력/면적/latency 최적화), layer 순서 SA는 오프라인 전처리 필요, 무선 표준 타깃(NAND 미언급), gate count/throughput 본문 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered 복호 이터레이션/스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (Dual-Update 교대 스케줄)</td><td>Prime ECC도 layered/dual-update — memory-bypass는 스케줄 layer 순서 최적화로 접목 여지</td></tr><tr><td>min-sum(two-output) CN 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min1/min2) — 기법 중복</td></tr><tr><td>Channel RAM read/write decouple + 메모리 병합</td><td>대응 없음 (HW 메모리 모델)</td><td>Prime ECC HW 모델(z=32, pipeline)의 메모리 배치 최적화 참고 대상, 직접 함수 대응 없음</td></tr><tr><td>soft output 6bit 양자화</td><td><code>channel.cpp</code> + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>Prime ECC LLR 테이블(HD/2SD/3SD)과 정합 확인 필요</td></tr><tr><td>edge/MUX 기반 라우팅 축소</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>관점 유사(클록당 접근 축소)나 기법(memory-bypass vs graph-thinning) 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 알고리즘(min-sum/layered)은 이미 보유하나, Channel RAM 접근을 최적 layer 순서 + read/write decoupling으로 줄이는 HW 저전력 기법은 Prime ECC의 메모리/라우팅 layer 면적·전력 최적화에 참고할 만하다(정정능력 개선은 없음).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5229117",
+  "title": "An Energy Efficient Layered Decoding Architecture for LDPC Decoder",
+  "year": 2010,
+  "venue": "IEEE TVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.83,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "layered 복호에서 read/write 순서 decouple + 최적 layer 순서(TSP/SA)로 Channel RAM 메모리 접근 최대 bypass, Channel RAM+FIFO 단일 메모리 병합",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "error correction 성능은 불변(전력/면적 최적화만), layer 순서 SA는 오프라인 전처리, 무선 표준(802.11n/16e/DVB-S2) 타깃",
+  "todo_check": "Prime ECC의 z=32 row-병렬 layered pipeline에 read/write decouple + memory 병합이 실제 면적/전력 이득으로 이어지는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5229117---an-energy-efficient-layered-decoding-architecture-for-ldpc-decoder-2010-ieee-tvlsi">ieee:5229117 - An Energy Efficient Layered Decoding Architecture for LDPC Decoder (2010, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

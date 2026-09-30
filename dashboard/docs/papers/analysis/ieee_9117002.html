@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9117002</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9117002---a-pdd-decoder-for-binary-linear-codes-with-neural-check-polytope-projection-2020-ieee-wireless-communications-letters">ieee:9117002 - A PDD Decoder for Binary Linear Codes With Neural Check Polytope Projection (2020, IEEE Wireless Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.5</td></tr><tr><td>부호length</td><td>96~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>penalty dual decomposition(PDD) 프레임워크를 fundamental polytope 기반 ML 디코딩에 적용하고, 가장 시간이 오래 걸리는 check polytope projection(CPP) 연산을 3층 MLP(CPP-net)로 근사해 반복횟수를 줄이는 NCPP 알고리즘 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>min-sum/BP 계열이 아닌 LP(선형계획법) relaxation 기반 ML 디코딩(PDD/ADMM) 패러다임이라 Prime ECC의 min-sum 이터레이션 구조와 근본적으로 다름; 부동소수점 MLP 가중치·sin 기반 activation 등 HW 미설계</td></tr><tr><td>추가확인</td><td>CPP-net 가중치 양자화(2^k shift)로 곱셈을 시프트 연산으로 대체하는 아이디어는 HW 친화적이나 전체 PDD/ADMM 반복 구조가 min-sum 디코더에 이식 가능한지는 별도 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: LP/ADMM/PDD 기반 디코더로 min-sum 계열과 근본적으로 다른 패러다임이며 짧은 코드(96~2640) 대상 시뮬 검증뿐이라 NAND LDPC ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 binary linear code(LDPC 포함)의 fundamental polytope 기반 ML(최대우도) 디코딩 문제; AWGN+BPSK 채널, <code>(96,48)</code> MacKay, <code>(575,288)</code> IEEE 802.16e, <code>(2640,1320)</code> MacKay 코드로 검증.</li><li>기존 LP 디코더는 error floor가 낮고 이론적 보장이 강하지만 계산복잡도가 높고 저 SNR에서 성능이 떨어지는 문제, 특히 ADMM 기반 디코더의 check polytope projection(CPP) 연산이 가장 시간 소모적임.</li><li>채널모델: memoryless binary-input symmetric-output channel, LLR <code>v_i = log(Pr(y_i|x_i=0)/Pr(y_i|x_i=1))</code>.</li><li>핵심 기법1: PDD(penalty dual decomposition) 프레임워크로 <code>min v^T x s.t. P_j x ∈ PP_dj</code> 문제를 보조변수 <code>{x̂, z}</code>와 dual variable <code>{y,w,η}</code>로 재구성해 outer loop(dual/penalty 갱신)-inner loop(BCD로 x/z/x̂ closed-form 갱신) 2중 루프로 해결.</li><li>핵심 식(12): <code>z_j^{k+1} = Π_PPdj(P_j x^k + y_j/μ_m)</code>가 CPP(check polytope projection) 연산이며 각 반복마다 필요해 전체 지연을 좌우함.</li><li>핵심 기법2(NCPP): 기존 ICPP(반복적 CPP, 정렬 불필요)의 반복횟수를 줄이기 위해 3층 MLP(CPP-net, <code>SinAct</code> 활성함수 사용)로 초기 추정치 <code>s̃</code>를 예측 후 잔여 반복만 수행.</li><li>구현 디테일: CPP-net 가중치를 <code>{0,±1,±2^k}</code>로 양자화해 곱셈을 비트 시프트로 대체(예: C1 코드 가중치 <code>[0,0,0,-2,0,0;...]</code>), <code>SinAct</code>는 LUT로 구현 가능.</li><li>학습: PDD 디코딩 중 수집한 <code>(v_p, ŝ_p)</code> 샘플로 CPP-net을 TensorFlow/Adam으로 학습, loss는 <code>(ŝ_p-s̃_p) + κ‖ŝ_p-s̃_p‖²</code> (초기 추정치가 더 크도록 유도).</li><li>결과: BLER에서 ADMM-2 대비 C1/C2/C3 각 0.3dB/0.1dB/0.08dB 개선(BLER=10⁻⁴), NCPP는 ICPP 대비 평균 반복횟수 거의 절반으로 감소.</li><li>한계: 순수 시뮬레이션(HW 미설계), 짧은/중간 길이 코드만 검증, LP/ADMM/PDD는 min-sum과 반복 구조·수학적 기반이 전혀 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PDD/ADMM 기반 ML 디코딩 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 메시지 패싱만 지원, LP relaxation 디코더 구조 자체가 없음</td></tr><tr><td>CPP(check polytope projection) 연산</td><td>대응 없음</td><td>min-sum의 CN 연산(min1/min2)과 수학적으로 무관한 정렬/투영 연산</td></tr><tr><td>NCPP의 MLP 근사(가중치 양자화, SinAct LUT)</td><td>대응 없음</td><td>NN 디코더 보조 기법으로, Prime ECC 프로파일상 "NN/딥러닝 디코더"는 대응 없음으로 명시됨</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — LP/ADMM/PDD 기반 ML 디코딩과 신경망 보조 CPP 근사로, Prime ECC의 min-sum QC-LDPC 디코더 구조와 패러다임이 근본적으로 달라 이식 불가.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9117002",
+  "title": "A PDD Decoder for Binary Linear Codes With Neural Check Polytope Projection",
+  "year": 2020,
+  "venue": "IEEE Wireless Communications Letters",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.5",
+  "code_length": "96~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "penalty dual decomposition(PDD) 프레임워크를 fundamental polytope 기반 ML 디코딩에 적용하고, 가장 시간이 오래 걸리는 check polytope projection(CPP) 연산을 3층 MLP(CPP-net)로 근사해 반복횟수를 줄이는 NCPP 알고리즘 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "min-sum/BP 계열이 아닌 LP(선형계획법) relaxation 기반 ML 디코딩(PDD/ADMM) 패러다임이라 Prime ECC의 min-sum 이터레이션 구조와 근본적으로 다름; 부동소수점 MLP 가중치·sin 기반 activation 등 HW 미설계",
+  "todo_check": "CPP-net 가중치 양자화(2^k shift)로 곱셈을 시프트 연산으로 대체하는 아이디어는 HW 친화적이나 전체 PDD/ADMM 반복 구조가 min-sum 디코더에 이식 가능한지는 별도 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9117002---a-pdd-decoder-for-binary-linear-codes-with-neural-check-polytope-projection-2020-ieee-wireless-communications-letters">ieee:9117002 - A PDD Decoder for Binary Linear Codes With Neural Check Polytope Projection (2020, IEEE Wireless Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

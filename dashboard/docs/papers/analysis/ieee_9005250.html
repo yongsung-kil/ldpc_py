@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9005250</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9005250---error-floor-estimation-of-ldpc-decoders-a-code-independent-approach-to-measuring-the-harmfulness-of-trapping-sets-2020-ieee-transactions-on-communications">ieee:9005250 - Error Floor Estimation of LDPC Decoders — A Code Independent Approach to Measuring the Harmfulness of Trapping Sets (2020, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.587~0.84</td></tr><tr><td>부호length</td><td>63~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>코드 독립적인 local importance sampling(LIS)+density evolution 기반 상관모델로 quantized iterative LDPC 디코더의 trapping-set별 error-floor 기여도를 정확 추정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>코드/디코더를 실제로 개선하는 논문이 아니라 error-floor 기여도를 빠르게 "추정"하는 분석 도구(예측 방법론)일 뿐, 정정능력 자체를 바꾸지 않음</td></tr><tr><td>추가확인</td><td>Prime ECC의 실제 H-matrix(QC-LDPC, z=32)에 대해 dominant ETS를 열거하고 이 LIS-DEc를 적용했을 때 실측 error-floor와의 일치도 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: 부호/디코더 개선이 아닌 quantized min-sum류 디코더의 error-floor를 코드 독립적으로 빠르게 예측하는 분석 방법론으로, Prime ECC의 trapping-set 진단·검증 단계에 도구로 참고할 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 이진 LDPC 부호(AWGN, BSC), SPA/MSA/normalized-MSA 등 대칭 반복 메시지패싱 디코더 전반, quantized 및 unquantized 모두 포함. 검증에 사용된 코드는 rate 0.587~0.84, length 63~2640의 QC/random/irregular/finite-geometry 등 7종.</li><li>풀려는 문제: 기존 linear state-space model([10])은 quantized(비선형) 디코더에 적용 불가하고, 선형화(0 근처 Taylor)로 인해 error floor를 과대추정하는 한계가 있음.</li><li>핵심 가정: trapping set(TS) 주변 Tanner graph는 tree로 근사, TS로 들어오는 외부 메시지(unsatisfied/missatisfied check node 경유)는 density evolution(DE)으로 얻은 분포를 따름.</li><li>핵심 기법: Local Importance Sampling(LIS) - 전체 Tanner graph 대신 TS가 유도하는 부분그래프에서만 실제(비선형) message-passing을 반복 수행해 실패확률 <code>Pe(a,b) = (1/N)Σ I_z ω_z</code> 추정, biasing으로 실패율 10~50%가 되도록 조정해 rare event 시뮬 가속.</li><li>missatisfied check node로 들어오는 메시지는 반복 <code>ℓ &lt; g/2</code>(g=girth)까지는 DE 분포에서 i.i.d. 샘플링, <code>ℓ ≥ g/2</code>부터는 상관관계 근사를 위해 매 반복 1개 샘플을 모든 missatisfied check node에 공유("correlation model") - 이 상관을 무시하면(LIS-DEnc) error floor를 과소추정함을 실험으로 확인.</li><li>이론 분석(선형화 모델 확장): missatisfied check node의 random gain에 분산·상관계수를 도입, 상관 <code>κij≥0</code>이면 항상 실패율이 증가함을 Theorem 1로 증명 - 기존 linear state-space model의 과대추정 원인이 선형근사(0 근처 Taylor) 자체에 있음을 규명.</li><li>복잡도: 부분그래프 반복당 메시지 수는 <code>a·dv - b</code>로 전체 그래프(<code>n·dv</code>) 대비 <code>n/a</code> 배 절감, 코드 독립적(디그리 분포만 필요, 전체 Tanner graph 불필요)이라는 것이 IS 대비 강점.</li><li>결과: 7개 코드(QC/Margulis/random/Wimax/RS-LDPC/EG-LDPC/PG-LDPC), 다양한 quantization(3~8bit MSA/SPA)에서 LIS-DEc 추정치가 Monte-Carlo 시뮬과 정확히 일치, 기존 linear state-space model은 최대 한 자릿수(order of magnitude) 과대추정.</li><li>비균일 quantization(MI 최대화 기반)에도 적용 가능함을 보임, dominant TS class가 SNR/quantization bit 수에 따라 바뀌는 것도 정확히 추정(예: C3에서 quantization 6bit→5bit시 dominant class가 (5,1)→(4,2)로 전환).</li><li>한계: 이론/시뮬 검증뿐(HW 없음), saturating decoder에만 적용 가능(non-saturating 디코더는 모델 밖), TS enumeration(dominant ETS 탐색)은 별도 알고리즘 필요 - 이 논문은 이미 알려진 TS 구조의 기여도만 추정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>trapping-set별 error-floor 기여도 추정(LIS-DEc)</td><td>대응 없음</td><td>Prime ECC 코드에는 error-floor 분석/진단 전용 모듈 없음, 오프라인 검증 도구로만 이식 가능</td></tr><tr><td>quantized min-sum/normalized-MSA의 error-floor 분석 대상</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min-sum quantization 파라미터가 이 방법론의 입력(quantization scheme)이 됨</td></tr><tr><td>DE 기반 메시지 분포 계산</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>논문의 DE는 LLR 테이블과 무관하게 디그리 분포 기반 별도 계산, 직접 대응 없음</td></tr><tr><td>dominant TS 구조 및 multiplicity</td><td>대응 없음</td><td>Prime ECC의 실제 H-matrix(QC-LDPC, base+shift)에서 dominant ETS를 찾는 별도 탐색 알고리즘([11],[33]-[36] 참조 필요) 부재</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 디코더/부호를 직접 바꾸는 기여는 없으나, Prime ECC의 quantized min-sum 디코더에 대해 (오프라인으로) error-floor를 코드 독립적/저비용으로 예측·검증하는 진단 도구로 활용 가치 있음(HW 이식 대상 아님).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9005250",
+  "title": "Error Floor Estimation of LDPC Decoders — A Code Independent Approach to Measuring the Harmfulness of Trapping Sets",
+  "year": 2020,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": "0.587~0.84",
+  "code_length": "63~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "코드 독립적 local importance sampling(LIS)+DE 상관모델로 quantized iterative LDPC 디코더의 trapping-set별 error-floor 기여도를 정확 추정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "코드/디코더를 실제로 개선하는 논문이 아니라 error-floor 기여도를 추정하는 분석 도구일 뿐, 정정능력 자체를 바꾸지 않음",
+  "todo_check": "Prime ECC의 실제 H-matrix(QC-LDPC, z=32)에 대해 dominant ETS를 열거하고 LIS-DEc를 적용했을 때 실측 error-floor와의 일치도 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9005250---error-floor-estimation-of-ldpc-decoders-a-code-independent-approach-to-measuring-the-harmfulness-of-trapping-sets-2020-ieee-transactions-on-communications">ieee:9005250 - Error Floor Estimation of LDPC Decoders — A Code Independent Approach to Measuring the Harmfulness of Trapping Sets (2020, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

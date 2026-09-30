@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7440607</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7440607---optimization-of-codes-for-the-joint-viterbi-detector-decoder-jvdd-2016-icnccnc-workshop">ieee:7440607 - Optimization of Codes for the Joint Viterbi Detector Decoder (JVDD) (2016, ICNC/CNC Workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.90 (0.6~1.0 스윕)</td></tr><tr><td>부호length</td><td>512, 1024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>JVDD 트렐리스 survivor 수를 억제하는 VG(varying-gradient) 부호 4종 + RSM/DOE 파라미터 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>JVDD(트렐리스 결합검파·복호) 전용 부호로 iterative BP/min-sum 디코더 무관, AWGN/ISI 통신 채널 대상</td></tr><tr><td>추가확인</td><td>없음 (JVDD 알고리즘 자체가 Prime ECC 구조와 이질적)</td></tr></tbody></table>
+<blockquote><p>총평: JVDD 트렐리스 알고리즘에 맞춘 H-matrix last-1 분포 설계로, NAND binary QC-LDPC min-sum 디코더와 무관 - 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 결합 Viterbi 검파·복호기(JVDD)를 위한 부호 최적화, 코드 <code>N=512/1024</code>, rate <code>R=0.90</code>, coded AWGN/ISI(turbo equalizer 대체) 채널.</li><li>문제: JVDD는 조건부 최적이나 random LDPC와 쓰면 트렐리스 survivor 수가 지수적으로 폭증 - H의 각 행 마지막 <code>1</code>이 끝단에 몰려 parity check 시작이 늦기 때문.</li><li>핵심 기법: parity check가 "각 행의 마지막 1 위치"에서 발동하므로, 마지막 1들을 대각선을 따라 고르게 분산시키는 부호(GDLD)를 일반화.</li><li>VG(varying gradient) 부호: offset을 <code>dx</code>(좌상단 수평)와 <code>dy</code>(우하단 수직)로 분리해 대각선 기울기를 가변화 - 끝단 열 보호 + parity check 조기 발동 양립.</li><li>4종 설계: 고정 행가중(<code>wrow</code>), 비례 행가중(<code>wrow=%*drow</code>), 고정 열가중(<code>wcol</code>), 비례 열가중(<code>wcol=%*dcol</code>); <code>1</code> 배치는 Gaussian(분산 <code>σ²</code>) 또는 uniform 분포.</li><li>비용함수: <code>FC = FER × Complexity(avg survivor 수)</code>를 목적변수로 성능·복잡도 동시 최소화.</li><li>최적화: RSM 기반 DOE로 <code>y=A^T x</code> 2차 다항 응답면을 MMSE로 적합, <code>∂y/∂xi=0</code> 4식 4미지수 풀어 최적 <code>(wrow/wcol, σ, dx, dy)</code> 도출.</li><li>결과: 비례 행/열가중 부호가 최고 - 최적 VG 부호로 GDLD 대비 최대 2 dB 이득, iterative 대비 survivor 수 대폭 감소(N=512/1024).</li><li>최적 파라미터 예: prop.row <code>dx=4,dy=18,wrow=30%,σ=239</code> / prop.col <code>dx=4,dy=20,wcol=30%,σ=15</code> (Table I).</li><li>한계: HW 미설계, 시뮬만, JVDD 트렐리스 전용 부호라 iterative BP/min-sum 디코더엔 적용 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| JVDD 트렐리스 결합 검파·복호 | 대응 없음 | Prime ECC는 iterative min-sum BP, JVDD는 Viterbi 트렐리스 - 알고리즘 이질 |
+| VG/GDLD H-matrix 구성(last-1 대각 분포) | 대응 없음 (JVDD 전용, 일반 QC-LDPC 아님) | ecc_top.cpp Load_PCM() 형식과 무관한 비-QC 랜덤 구조 |
+| RSM/DOE 파라미터 최적화 | 대응 없음 | local_opt.cpp는 LLR 자동최적화 - 부호구조 최적화와 무관 |</code></pre>
+<p>마지막 적용 가치: <strong>낮음</strong> - JVDD는 Prime ECC의 iterative min-sum 디코더 파이프라인과 근본적으로 다른 트렐리스 결합 방식이며, 제안 부호는 그 트렐리스 전용이라 NAND binary QC-LDPC로 떼어 쓸 근거가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7440607",
+  "title": "Optimization of Codes for the Joint Viterbi Detector Decoder (JVDD)",
+  "year": 2016,
+  "venue": "ICNC/CNC Workshop",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": 0.90,
+  "code_length": "512, 1024",
+  "soft_quant": "무관",
+  "key_contribution": "JVDD 트렐리스 survivor 억제용 VG 부호 4종 + RSM/DOE 파라미터 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "JVDD 트렐리스 결합 복호 전용 부호로 iterative BP/min-sum 디코더 무관, AWGN/ISI 통신 채널 대상",
+  "todo_check": "없음 (JVDD 알고리즘이 Prime ECC 구조와 이질적)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7440607---optimization-of-codes-for-the-joint-viterbi-detector-decoder-jvdd-2016-icnccnc-workshop">ieee:7440607 - Optimization of Codes for the Joint Viterbi Detector Decoder (JVDD) (2016, ICNC/CNC Workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

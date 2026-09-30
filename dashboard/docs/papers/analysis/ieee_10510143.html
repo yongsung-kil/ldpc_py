@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10510143</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10510143---small-elementary-trapping-sets-elimination-of-girth-8-qc-ldpc-codes-2024-dspa">ieee:10510143 - Small Elementary Trapping Sets Elimination of Girth-8 QC-LDPC Codes (2024, DSPA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.2~0.75</td></tr><tr><td>부호length</td><td>305~46256</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>girth-8, dv=4 QC-LDPC에서 Type-A 8-cycle 부재가 LETS(8,0)/(8,2) 부재의 필요충분조건임을 증명(Theorem 1)하고, 이를 SES 알고리즘에 반영해 동일 조건 대비 최소 circulant 크기(zmin)를 최대 5배 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>dv=4 fully-connected regular QC-LDPC로 한정, BP 디코더·이론상 실험(FPGA/ASIC 미검증), 고rate(0.75)에서는 Type B cycle까지 제거 시 zmin이 실용 불가 수준으로 커짐</td></tr><tr><td>추가확인</td><td>Prime ECC의 실제 H-matrix(<code>PCM_b</code>, VN degree 17, N_b=129)가 dv=4 fully-connected 가정과 구조가 달라 Theorem 1을 그대로 적용 가능한지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 순수 부호설계(H-matrix trapping-set 제거) 이론 논문으로 min-sum/HW 이식 요소는 없으나, error-floor 개선 목적의 girth-8 QC-LDPC 구성 규칙은 Prime ECC의 H-matrix 재설계 시 참고할 만한 이론적 근거 제공.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 girth-8, column weight <code>dv=4</code>인 fully-connected regular QC-LDPC(protograph를 circulant permutation matrix로 리프팅), rate <code>R=1-dv/dc</code> 범위 0.2~0.75, length <code>n=dc*z</code> 범위 305~46256.</li><li>문제: girth 8 QC-LDPC는 harmful trapping set을 줄이지만, 기존 최적화(girth 8 + 모든 8-cycle 제거)는 필요 이상으로 큰 lifting factor <code>z</code>(circulant 크기)를 요구해 실용성이 떨어짐.</li><li>핵심 가정: leafless elementary trapping set(LETS) 중 error-floor에 가장 유해한 것은 <code>(a,0)</code>(codeword)과 <code>(a,1)</code>(pseudo-codeword) 클래스이며, 8-cycle은 route type A/B/C로 분류 가능.</li><li>핵심 기법: <strong>Theorem 1</strong> — dv=4 girth-8 프로토그래프에서 Type-A 8-cycle이 없으면 LETS(8,0)과 LETS(8,2)가 존재하지 않음을 증명(Type-B cycle까지 제거할 필요 없음).</li><li>증명 방식은 LETS(7,4)의 조상 그래프를 Tanner graph node indexing 전수조사로 분석해, Type-A cycle 부재 조건 하에서 모든 가능한 인덱싱이 LETS(7,4) 생성 조건과 모순됨을 보임.</li><li>확장: 기존 SES(Smart Exhaustive Search) 알고리즘[12]을 수정해 "no Type-A" 조건만 적용한 base matrix 탐색을 수행, "no Type-A,B"(기존[11] 기준) 대비 zmin을 비교.</li><li>구현 디테일: 특별한 양자화·HW 변형 없음, 순수 조합론적 base-matrix(교환행렬 P) 탐색 알고리즘.</li><li>최적화 절차: SES 알고리즘 기반 exhaustive/heuristic search로 dc=1~8에 대해 zmin과 base matrix를 표(Table I)로 제시.</li><li>결과: dv=4,dc=16(R=0.75) 예제에서 Type-A만 제거 시 z=599(n=9584), Type-A,B 모두 제거 시 z=2891(n=46256)로 zmin이 약 5배 차이. BER은 pb=1e-7에서 기존 girth-8 무최적화 코드 대비 Eb/N0 약 0.25dB 개선(waterfall+error-floor 동시 관찰, BP decoder max 20 iteration).</li><li>한계: dv=4 fully-connected 구조로 한정(parallel edge 없음), 실측/FPGA/ASIC 검증 없이 AWGN 채널 시뮬레이션(BP, 20회 반복)에 그침, 고rate에서 Type-B까지 제거하는 것은 zmin이 지나치게 커져 실용성 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Theorem 1 기반 Type-A 8-cycle 제거 규칙(H-matrix 설계)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 로드/구성 로직에 대응하나 Prime ECC는 dv=4 fully-connected가 아닌 N_b=129, VN degree 17 구조라 직접 이식 어려움</td></tr><tr><td>SES 기반 base matrix(circulant shift 값) 탐색·최적화</td><td>대응 없음</td><td>오프라인 부호 설계 도구로 실행 코드에 대응 모듈 없음, <code>PCM_b</code>(base+shift) 생성 시 참고 가능</td></tr><tr><td>LETS(trapping set) 기반 error-floor 개선</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (간접)</td><td>디코더 알고리즘 변경 없이 부호 자체의 trapping set 제거로 error-floor 개선하는 접근이라 디코더 코드는 불변, H-matrix 재설계 시에만 효과</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — HW/디코더 이식 요소는 없으나, error-floor 개선을 위한 girth-8 QC-LDPC H-matrix 설계 이론(Theorem 1)은 Prime ECC의 향후 부호 재설계 시 zmin 축소·trapping set 회피에 참고할 수 있는 이론적 근거 제공.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10510143",
+  "title": "Small Elementary Trapping Sets Elimination of Girth-8 QC-LDPC Codes",
+  "year": 2024,
+  "venue": "DSPA",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.2~0.75",
+  "code_length": "305~46256",
+  "soft_quant": "무관",
+  "key_contribution": "girth-8, dv=4 QC-LDPC에서 Type-A 8-cycle 부재가 LETS(8,0)/(8,2) 부재의 필요충분조건임을 증명(Theorem 1)하고, 이를 SES 알고리즘에 반영해 동일 조건 대비 최소 circulant 크기(zmin)를 최대 5배 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "dv=4 fully-connected regular QC-LDPC로 한정, BP 디코더 이론상 실험(FPGA/ASIC 미검증), 고rate(0.75)에서는 Type B cycle까지 제거 시 zmin이 실용 불가 수준으로 커짐",
+  "todo_check": "Prime ECC의 실제 H-matrix(PCM_b, VN degree 17, N_b=129)가 dv=4 fully-connected 가정과 구조가 달라 Theorem 1을 그대로 적용 가능한지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10510143---small-elementary-trapping-sets-elimination-of-girth-8-qc-ldpc-codes-2024-dspa">ieee:10510143 - Small Elementary Trapping Sets Elimination of Girth-8 QC-LDPC Codes (2024, DSPA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

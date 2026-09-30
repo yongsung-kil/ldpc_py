@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9580405</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9580405---design-of-protograph-based-ldpc-codes-for-dvb-s2-systems-2021-ieeecic-iccc">ieee:9580405 - Design of Protograph-based LDPC Codes for DVB-S2 Systems (2021, IEEE/CIC ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.6~0.889</td></tr><tr><td>부호length</td><td>16200</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>PEXIT+경험규칙(degree-2 VN 비율 제어)으로 DVB-S2 다중rate protograph 기저행렬 설계, 기존 대비 임계 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB-S2 위성/APSK·BICM-ID 전용 부호설계로 QC 구조·length(16200) 고정, NAND high-rate QC-LDPC와 부호구조 상이</td></tr><tr><td>추가확인</td><td>degree-2 VN 개수를 check수-1로 제한하는 최소거리·error-floor 설계규칙을 NAND용 QC 기저행렬 설계에 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: PEXIT로 degree-2 VN 비율을 조절해 waterfall/error-floor를 동시 겨냥한 DVB-S2 protograph 부호설계로 설계원칙은 참고 가치가 있으나, 위성/BICM-ID·비-QC·length 고정이라 NAND binary QC-LDPC HW ECC 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-S2 위성표준 LDPC(short mode <code>N=16200</code>, rate 3/5~8/9), QPSK·16APSK 변조에 BICM-ID 적용.</li><li>문제: DVB-S2는 rate마다 개별 PCM이라 단일 enc/dec 구조가 어렵고 기존 부호의 SNR 임계가 Shannon과 격차 큼.</li><li>채널 모델은 AWGN + APSK 매핑, 복조기 LLR을 디코더와 반복 교환(BICM-ID).</li><li>핵심 기법: 작은 기저행렬 <code>B</code>(D×F)를 PEXIT로 분석·설계 후 <code>T</code>회 copy-permute lifting으로 protograph LDPC 생성.</li><li>PEXIT 4단계(<code>J(σ)</code> 초기화 → VN→CN <code>I_Ev</code> → CN→VN <code>I_Ec</code> → <code>I_App</code>)로 <code>I_App=1</code> 수렴 SNR 임계를 예측, 이 임계 최소화가 설계 목표.</li><li>확장: rate 3/5~8/9별 기저행렬(예 3/5는 4×10 <code>H3/5</code>)을 PEXIT 유도 exhaustive search로 확정.</li><li>설계규칙: degree-2 VN이 waterfall에 유리하나 error-floor 유발 → degree-2 노드 수를 check수-1로 제한(cycle 방지), punctured 노드 회피.</li><li>학습절차 없음(PEXIT 기반 exhaustive search + 경험규칙); PPV bound로 유한블록 한계도 비교.</li><li>결과: 설계 부호의 복호 임계가 DVB-S2 대비 전 rate에서 개선(예 8/9: 3.73→3.37dB), BER 10^-6에서 최대 0.2dB 이득, 16APSK BICM-ID도 유효.</li><li>한계: 순수 시뮬(HW·복잡도·throughput 미제시), 위성 APSK 채널 전용, BP max iter 50 고정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| protograph 기저행렬 설계·lifting | ecc_top.cpp Load_PCM() | Prime은 특정 QC-LDPC 고정, 부호구조 재설계 부담 큼 |
+| PEXIT 임계·degree-2 VN 규칙 | 대응 없음 | 부호설계 툴(오프라인), Prime 런타임 모듈에 대응 없음 |
+| BP 복호(반복 message passing) | decoder.cpp LDPC_Decoder() | Prime은 min-sum 기반으로 이미 보유, BP full-tanh는 대응 없음 |
+| BICM-ID(복조기-디코더 반복) | 대응 없음 | Prime은 NAND read 소프트정보 사용, APSK BICM-ID 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — degree-2 VN 제어로 error-floor를 관리하는 PEXIT 기반 부호설계 원칙 자체는 NAND QC-LDPC 부호설계에 개념 참고 가치가 있으나, 부호구조(비-QC protograph, length 16200 고정)·위성 BICM-ID 채널이 Prime과 상이하고 부호설계 이식은 재검증 부담이 커 실효성 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9580405",
+  "title": "Design of Protograph-based LDPC Codes for DVB-S2 Systems",
+  "year": 2021,
+  "venue": "IEEE/CIC ICCC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": "0.6~0.889",
+  "code_length": "16200",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "PEXIT+경험규칙(degree-2 VN 비율 제어)으로 DVB-S2 다중rate protograph 기저행렬 설계, 기존 대비 임계 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DVB-S2 위성/APSK·BICM-ID 전용 부호설계로 QC 구조·length(16200) 고정, NAND high-rate QC-LDPC와 부호구조 상이",
+  "todo_check": "degree-2 VN 개수를 check수-1로 제한하는 최소거리·error-floor 설계규칙을 NAND용 QC 기저행렬 설계에 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9580405---design-of-protograph-based-ldpc-codes-for-dvb-s2-systems-2021-ieeecic-iccc">ieee:9580405 - Design of Protograph-based LDPC Codes for DVB-S2 Systems (2021, IEEE/CIC ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

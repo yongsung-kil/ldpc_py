@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6168872</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6168872---on-the-design-of-ldpc-convolutional-ensembles-using-the-tep-decoder-2012-ieee-communications-letters">ieee:6168872 - On the Design of LDPC-Convolutional Ensembles Using the TEP Decoder (2012, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>5120~51200</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>TEP(Tree-Expectation Propagation) 디코더로 LDPCC 부호의 BP 대비 WER·부호길이·latency 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC(이진소거채널) 전용 peeling 알고리즘, AWGN/soft-read 미대응이라 NAND 이식 불가</td></tr><tr><td>추가확인</td><td>TEP의 degree-2 check 제거 아이디어가 AWGN LLR 도메인에서 성립하는지(참고 [8])</td></tr></tbody></table>
+<blockquote><p>총평: BEC 전용 LDPCC + TEP 디코더 이론/시뮬 논문으로, NAND용 AWGN·soft-read binary QC-LDPC과 채널이 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BEC(이진소거채널)에서 (l,r,L,M) LDPC-convolutional(LDPCC) 앙상블, 예 <code>(3,6,20,M)</code>, rate≈0.5, 부호길이 <code>n=M·L</code> (M=256~1024, L=20~100).</li><li>문제: LDPCC는 BP로 용량달성이나 종단 check로 인한 rate loss(∝1/L) 때문에 매우 큰 L·M이 필요→과도한 부호길이·latency.</li><li>모델: BEC erasure 파라미터 <code>ε</code>, all-zero codeword 전송 가정, Tanner graph 상 peeling 디코딩.</li><li>핵심기법: TEP(Tree-Expectation Propagation) 디코더 - BP의 degree-1 check 제거(variable identification)에 더해 <code>degree-2 check 제거</code>(graph reduction) 단계를 추가.</li><li>의미: degree-2 check 제거는 한 변수가 다른 변수의 연결을 상속(inherit)해 BP가 막히는 stopping-set을 깨뜨림.</li><li>확장: window-sliding wTEP - 윈도우 크기 <code>W</code>로 subgraph만 디코딩해 latency 저감.</li><li>구현 디테일: 디코딩 중 행렬 sparsity 유지, degree-2 제거는 BP 1회 + parity 2열 덧셈 → 복잡도 <code>O(n)</code>.</li><li>최적화: rate loss Δr(5% 또는 0.05%) 목표로 L 산출, L/M→0이어야 성능 개선.</li><li>결과: <code>(3,6,20,M)</code>에서 TEP가 BP WER 대폭 감소; 동일 WER에 약 50% 짧은 부호 가능; 평균 variable degree 증가 ≤12 binary sum으로 O(n) 유지.</li><li>한계: BEC 전용, HW 미설계, 시뮬레이션만, AWGN/soft-decision 채널 미대응.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TEP peeling 디코더(degree-1/2 check 제거)</td><td>대응 없음</td><td>BEC peeling 알고리즘으로 min-sum message-passing과 구조 상이</td></tr><tr><td>LDPCC 부호구조(spatial coupling)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>SC-LDPC는 우리의 고정 QC-LDPC와 부호구조가 다름(간접)</td></tr><tr><td>windowed 디코딩(latency)</td><td>대응 없음</td><td>BEC 스트림 sliding window, 우리 pipeline과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - BEC 전용 peeling 디코더로 NAND AWGN/soft-read binary QC-LDPC 파이프라인에 직접 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6168872",
+  "title": "On the Design of LDPC-Convolutional Ensembles Using the TEP Decoder",
+  "year": 2012,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "5120~51200",
+  "soft_quant": "무관",
+  "key_contribution": "TEP 디코더로 LDPCC 부호의 BP 대비 WER·부호길이·latency 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "BEC 전용 peeling 알고리즘, AWGN/soft-read 미대응이라 NAND 이식 불가",
+  "todo_check": "TEP의 degree-2 check 제거가 AWGN LLR 도메인에서 성립하는지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6168872---on-the-design-of-ldpc-convolutional-ensembles-using-the-tep-decoder-2012-ieee-communications-letters">ieee:6168872 - On the Design of LDPC-Convolutional Ensembles Using the TEP Decoder (2012, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

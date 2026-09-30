@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2310.07129</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv231007129v2---the-impact-when-neural-min-sum-variant-meets-ordered-statistics-decoding-of-ldpc-codes-2024-arxiv-csit">arxiv:2310.07129v2 - The impact when neural min-sum variant meets ordered statistics decoding of LDPC codes (2024, arXiv [cs.IT])</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>128~1056</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>neural min-sum(NMS-1) + 적응형 OSD post-processing 하이브리드에 DIA(CNN)·TEP 그룹화·iteration diversity를 결합해 저복잡도·채널불변으로 ML FER에 근접</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN 학습(NMS 가중치+CNN DIA)+직렬 OSD(TEP 수천~수십만 탐색) 기반 short/moderate 부호 전용 - NAND 고rate·HW min-sum 파이프라인과 부적합</td></tr><tr><td>추가확인</td><td>채널불변(σ² 불요) 정규화 min-sum 가중치 학습 결과가 NAND 고rate QC-LDPC min-sum 성능에 기여하는지(OSD 제외)</td></tr></tbody></table>
+<blockquote><p>총평: NMS+OSD 하이브리드로 short 부호에서 ML급 FER을 저비용으로 달성하나, NN 학습+직렬 OSD라 NAND HW min-sum에 이식 불가로 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: binary LDPC, BPSK+AWGN, <code>li = 2yi/σ²</code>; 대상 부호 CCSDS(128,64), WiMAX-like(384,192), 802.16(1056,880), rate 0.5~0.83, block 128~1056(short~moderate).</li><li>문제: min-sum은 BP 대비 성능손실, OSD는 ML급이나 채널분산 <code>σ²</code> 필요·직렬처리 병목; 두 방법을 하이브리드해 저복잡도·고throughput·채널불변·ML근접 FER을 동시 추구.</li><li>모델: 복호 실패시 MRB(most reliable basis) 상 hard-decision과 정답의 불일치를 authentic error pattern으로 정의, OSD가 이를 TEP 탐색으로 복원.</li><li>핵심 기법1(NMS 설계): GNN permutation-invariance 관점에서 <code>x_v→c = ζ1·li + Σ...</code>, <code>x_c→v = ζ3·s·ϕ</code>(min-term)로 파라미터화; NMS-1(ζ3만 학습, ζ1=ζ2=1)이 최적 - 모든 NMS 변형이 성능 무차별.</li><li>핵심 식: OSD 최적추정 <code>c = argmin Σ 1(č_i≠ĉ_i)|y_i|</code> (Eq.9) - 후보 부호어 중 비트반전 신뢰도합 최소 선택.</li><li>핵심 기법2(적응형 OSD): TEP를 order pattern으로 그룹화(균등분할 / GE swap 수 <code>ρs</code> 기반 동적분할 <code>0,d1,d2,d3)</code>), 우선순위는 authentic error pattern 통계로 경험적 결정.</li><li>구현 디테일: DIA(Decoding Information Aggregation)를 2~4층 CNN(파라미터&lt;200)으로 구현해 새 비트신뢰도 합성, MRB 오류를 앞쪽에 집중; auxiliary criterion으로 TEP 리스트 축소.</li><li>학습: NMS는 누적 cross-entropy loss+Adam(lr 0.01, 0.95 decay), 채널불변이라 min-sum은 <code>y_i</code>만 필요; iteration diversity - 실패 궤적을 여러 그룹으로 분할해 작은 DIA 모델 다수로 diversity gain.</li><li>결과: (128,64) NMS-OSD(Gr=200)이 ML 대비 0.2dB 이내; (384,192) Gr=80이 BP보다 0.4dB 우위(FER=1e-3); TEP 탐색수 conventional order-3 대비 (384,192)에서 100만→7738~13451로 대폭 감소.</li><li>한계: TensorFlow/Colab 시뮬만(HW 미설계), NN 학습 의존, OSD 직렬탐색이 부호길이·rate 증가시 급증(1056,880에서 dynamic-TEP도 ML 대비 0.25dB+ gap), short~moderate 부호 한정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>neural min-sum(NMS-1=정규화 MS)</td><td>[decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 자체는 이미 보유(중복), NN 학습 가중치 도입은 구조상 부적합</td></tr><tr><td>ζ3 min-term scaling(정규화 계수)</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>scaling 개념은 대응 가능하나 학습기반이라 magnitude 양자화 테이블과 접목 부담</td></tr><tr><td>OSD post-processing(GE+TEP 탐색)</td><td>대응 없음</td><td>직렬 ML근사 후처리로 NAND HW 파이프라인에 없음</td></tr><tr><td>DIA(CNN 신뢰도 합성)/NN 디코더</td><td>대응 없음</td><td>딥러닝 디코더는 프로파일상 명시적 대응 없음</td></tr><tr><td>조기종료(c·H'=0)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>조기종료 개념은 유사하나 Prime ECC는 CRC 기반으로 이미 보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - min-sum은 이미 보유 기법이고 핵심 신규성인 NN 학습·직렬 OSD·CNN DIA는 NAND HW min-sum 코드베이스에 대응 요소가 없어 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2310.07129v2",
+  "title": "The impact when neural min-sum variant meets ordered statistics decoding of LDPC codes",
+  "year": 2024,
+  "venue": "arXiv [cs.IT]",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.83",
+  "code_length": "128~1056",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "neural min-sum(NMS-1) + 적응형 OSD post-processing 하이브리드에 DIA(CNN)·TEP 그룹화·iteration diversity를 결합해 저복잡도·채널불변으로 ML FER에 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "NN 학습(NMS 가중치+CNN DIA)+직렬 OSD(TEP 수천~수십만 탐색) 기반 short/moderate 부호 전용 - NAND 고rate·HW min-sum 파이프라인과 부적합",
+  "todo_check": "채널불변(σ² 불요) 정규화 min-sum 가중치 학습 결과가 NAND 고rate QC-LDPC min-sum 성능에 기여하는지(OSD 제외)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv231007129v2---the-impact-when-neural-min-sum-variant-meets-ordered-statistics-decoding-of-ldpc-codes-2024-arxiv-csit">arxiv:2310.07129v2 - The impact when neural min-sum variant meets ordered statistics decoding of LDPC codes (2024, arXiv [cs.IT])</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

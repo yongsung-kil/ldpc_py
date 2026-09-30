@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5336850</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5336850---linear-llr-approximation-for-iterative-decoding-on-wireless-channels-2009-ieee-trans-communications">ieee:5336850 - Linear LLR Approximation for Iterative Decoding on Wireless Channels (2009, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>10000~12000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>fading 채널 SI 없이 채널출력 선형함수로 LLR 근사 시, LLR pdf 기반 용량형 측도(Ĉ, MCLA)를 볼록최적화로 최대화해 true LLR에 근접(수백분의 1 dB)한 최적 선형계수 도출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선 fading(Rayleigh/Rician) 채널·채널추정 회피에 특화, SPA·DE 기반 irregular 부호설계 — NAND fading 무관 채널과 부호구조가 맞지 않음</td></tr><tr><td>추가확인</td><td>용량형 LLR 정확도 측도(MCLA)를 NAND soft-read LLR 테이블 최적화(local_opt.cpp)에 적용 가능한지(채널 LLR pdf 모델 필요)</td></tr></tbody></table>
+<blockquote><p>총평: 무선 fading LLR 근사·부호설계 이론 논문. 부호구조·채널이 NAND와 무관해 직접 이식성은 낮으나, "LLR pdf 용량측도로 LLR 매핑 최적화"라는 발상만 soft-read LLR 테이블 튜닝 관점에서 참고 여지.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널모델 <code>y = r·x + z</code> (r: 임의 pdf의 fading gain, z~N(0,σz²)), 수신단에 순시 fading gain 정보(SI) 없음.</li><li>문제: SI 없을 때 true LLR은 채널출력의 복잡한 비선형 함수 → 기존은 <code>α = 2E[r]/σz²</code> 선형근사(E[r] 사용)를 쓰나 BER 최적이 아님.</li><li>핵심: 대칭 선형근사 <code>l̂ = α·y</code>에서 근사 LLR의 pdf <code>f_L̂</code>로 용량형 측도 <code>Ĉ = 1 - E[log2(1+e^-L̂)]</code> 정의, 이를 정확도 척도로 사용(MCLA).</li><li>정리1: <code>Ĉ</code>는 <code>r̂</code>에 대해 concave → 유일 최댓값을 볼록최적화(steepest descent 등)로 효율적 계산, true LLR pdf 불필요.</li><li>증명: 이산/연속 MBISO 채널을 M개 병렬 BSC로 보고 각 <code>Ĉ_i</code>가 true LLR에서 최대임을 보여, <code>Ĉ</code>가 true LLR에서만 최대가 됨을 증명(정확도 측도 정당화).</li><li>잡음전력 σz도 미지인 경우: 각 σz의 <code>α_Ĉ(σz)</code>를 구하고, density evolution + binary search로 수렴범위를 최대화하는 <code>α</code>(=최대 threshold) 선택.</li><li>부호설계: MCLA 하에서 threshold 최대화 / rate 최대화(고정 ρ(x)면 linear programming)로 irregular LDPC degree distribution 최적화(Table III).</li><li>결과1: threshold가 E[r] 대비 개선 — (x²,x⁵)에서 4.06→3.81dB, (x³,x¹⁵)에서 7.69→6.93dB, opt와 거의 동일.</li><li>결과2: BER 개선 약 0.3dB(x²,x⁵)~0.75dB(x³,x¹⁵) @1e-5, true LLR 대비 손실 &lt;0.02dB, <strong>추가 복호비용 없음</strong>; σz 미지여도 성능 거의 동일.</li><li>한계: HW 미설계, 무선 fading 채널·채널추정 시나리오 특화, SPA·DE 기반 이론/시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>채널 LLR 근사/계산</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read LLR 값 결정과 접점이나 논문은 fading gain 추정 회피용</td></tr><tr><td>LLR 테이블/자동최적화 목적함수</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>local_opt.cpp</code>(LLR 자동최적화)</td><td>용량형 측도(Ĉ)를 LLR 최적화 목표로 쓰는 발상이 유일한 접점</td></tr><tr><td>반복복호 알고리즘</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>논문은 SPA/DE 기반, Prime ECC는 min-sum → 알고리즘 불일치</td></tr><tr><td>irregular 부호 degree 설계</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC, DE 기반 irregular 설계는 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무선 fading + SPA + DE 기반 irregular 부호설계라 NAND용 고정 binary QC-LDPC min-sum 엔진과 채널·부호·알고리즘이 모두 다르다. 다만 "LLR pdf 용량측도로 LLR 매핑을 최적화"하는 아이디어는 soft-read LLR 테이블 튜닝의 목적함수로 참고할 여지가 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5336850",
+  "title": "Linear LLR Approximation for Iterative Decoding on Wireless Channels",
+  "year": 2009,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "10000~12000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "fading 채널 SI 없이 채널출력 선형함수로 LLR 근사 시, LLR pdf 기반 용량형 측도(Ĉ, MCLA)를 볼록최적화로 최대화해 true LLR에 근접한 최적 선형계수 도출",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "무선 fading(Rayleigh/Rician) 채널·채널추정 회피에 특화, SPA·DE 기반 irregular 부호설계 — NAND fading 무관 채널과 부호구조가 맞지 않음",
+  "todo_check": "용량형 LLR 정확도 측도(MCLA)를 NAND soft-read LLR 테이블 최적화(local_opt.cpp)에 적용 가능한지(채널 LLR pdf 모델 필요)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5336850---linear-llr-approximation-for-iterative-decoding-on-wireless-channels-2009-ieee-trans-communications">ieee:5336850 - Linear LLR Approximation for Iterative Decoding on Wireless Channels (2009, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

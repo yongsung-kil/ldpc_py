@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10507492</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10507492---an-improved-syndrome-bit-flipping-decoder-with-narrowed-flipping-set-for-ldpc-codes-2023-iccc">ieee:10507492 - An Improved Syndrome Bit Flipping Decoder with Narrowed Flipping Set for LDPC Codes (2023, ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.8413</td></tr><tr><td>부호length</td><td>1008~2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SBF flipping set을 채널신뢰도+랜덤 기반 narrowed set으로 제약해 error propagation 억제</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>저SNR에서 채널정보로 unreliable bit 선별이 무력화, 반복적 랜덤 trial로 평균복잡도 최대 8배 증가</td></tr><tr><td>추가확인</td><td>soft magnitude(</td><td>y</td><td>) 정렬 의존성이 NAND soft-read(2~3bit 양자화)에서 유효한지, HW 정렬/교집합 비용</td></tr></tbody></table>
+<blockquote><p>총평: SBF post-processing에 error propagation을 줄이는 flipping-set 제약 아이디어는 유용하나, 소프트 정렬·다중 trial 의존과 HW 미설계로 NAND min-sum 파이프라인 이식은 부분적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: IEEE 802.3an regular LDPC (<code>N=2048</code>, <code>R=0.8413</code>)와 PEGReg504×1008 (<code>N=1008</code>, <code>R=0.5</code>), AWGN + BPSK.</li><li>문제: 원본 SBF는 threshold sequence <code>θ(ℓ)</code>가 작을 때 non-error bit까지 flip해 error propagation 발생, error-floor 성능 저하.</li><li>모델: 수신 <code>y = ĉ + z</code>, syndrome <code>s = Hx mod 2</code>, SBF 에너지 <code>Ek = Σ_{i∈M(k)} s_i</code> (채널정보 무시).</li><li>핵심 기법 1단: flipping을 <code>SSBF ∩ S</code>로 제약. <code>S</code>는 narrowed flipping set으로 반드시 <code>Serr ⊆ S</code> 필요, <code>|S|</code>가 짧을수록 성능↑.</li><li><code>S</code> 구성: <code>S1</code> = <code>|y|</code> 최소 top-<code>T1</code> (unreliable) bit + <code>S2</code> = 나머지에서 랜덤 <code>T2</code>개 → <code>S = S1 ∪ S2</code>.</li><li>근거식: 한 trial에서 <code>Serr ⊆ S</code> 확률 <code>p</code>를 일반화 이항계수(gamma 함수)로 계산 (식 5,7), <code>γ</code> trial 누적 <code>Pγ = 1-(1-p)^γ</code>.</li><li>파라미터: <code>(T1,T2)</code>는 <code>p</code>와 <code>T1+T2</code> 최소화 절충으로 선택 (예 code2 <code>(400,200)</code>, code1 <code>(300,400)</code>), <code>γ</code>=trial 상한.</li><li>2단 구조: 1단은 원본 SBF, 미수렴 시 2단에서 <code>S</code>로 제약하고 threshold sequence는 첫 번째만 사용해 복잡도 절감.</li><li>결과: code2에서 BER=10⁻⁶ 기준 <code>γ=50</code>으로 원본 SBF 대비 1.2 dB 이득, code1은 약 0.7 dB; 단 S-NGDBF보다는 0.25~0.3 dB 열위.</li><li>한계: HW 미설계, 시뮬만, 평균복잡도 저SNR에서 최대 8배, 저SNR에서 unreliable bit 선별 무력화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SBF/narrowed flipping 반복 로직</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>BF 계열은 min-sum 루프와 다른 계열이라 직접 대체는 아니고 post-processing 삽입 위치로만 관련</td></tr><tr><td>syndrome 에너지 계산 <code>E=Hᵀs</code></td><td>decoder.cpp <code>C2V_Cal()</code></td><td>syndrome/CN 정보 재사용 개념 유사, 연산 형태는 다름</td></tr><tr><td>`</td><td>y</td><td>` 기반 unreliable bit 선별</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>soft magnitude 활용 개념 대응, 다만 정렬 기반 top-T 선택은 신규</td></tr><tr><td>조기종료(syndrome=0)</td><td>full_CRC.cpp / <code>partial_crc_HW_T4()</code></td><td>종료조건 개념만 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 min-sum 기반 QC-LDPC이고 본 기법은 BF 계열 post-processing(정렬·다중 랜덤 trial 의존, HW 미설계)이라 우리 파이프라인에 직접 이식가치 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10507492",
+  "title": "An Improved Syndrome Bit Flipping Decoder with Narrowed Flipping Set for LDPC Codes",
+  "year": 2023,
+  "venue": "ICCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "1008~2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SBF flipping set을 채널신뢰도+랜덤 기반 narrowed set으로 제약해 error propagation 억제",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "저SNR에서 채널정보 기반 선별 무력화, 다중 랜덤 trial로 평균복잡도 최대 8배 증가",
+  "todo_check": "soft |y| 정렬 의존성이 NAND soft-read 양자화에서 유효한지, HW 정렬/교집합 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10507492---an-improved-syndrome-bit-flipping-decoder-with-narrowed-flipping-set-for-ldpc-codes-2023-iccc">ieee:10507492 - An Improved Syndrome Bit Flipping Decoder with Narrowed Flipping Set for LDPC Codes (2023, ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

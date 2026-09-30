@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4299991</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4299991---alternative-approximation-of-check-node-algorithm-for-dvb-s2-ldpc-decoder-2007-ieee-icsnc-2007">ieee:4299991 - Alternative Approximation of Check Node Algorithm for DVB-S2 LDPC Decoder (2007, IEEE (ICSNC 2007))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>1/4~9/10</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check node update 함수 <code>F(x)=log(tanh(x/2))</code>를 Taylor series로 전개해 <code>2e^-x</code> 형태의 덧셈 근사식으로 대체, shifter+priority encoder만으로 구현해 BER 저하 없이 하드웨어 면적 ~20% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>면적 ~20%감소@0.13um(상대값, 절대 gatecount 미상)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>이 근사는 Sum-Product(tanh 기반) check node 연산의 하드웨어 경량화이며, 우리 코드는 이미 Min-Sum(min1/min2) 기반이라 F(x)=log(tanh) 자체를 사용하지 않아 직접 적용 대상이 아님</td></tr><tr><td>추가확인</td><td>제안 기법이 기존 Min-Sum 대비 우위인지, 아니면 정확한 Sum-Product의 경량 근사인지 본문상 비교기준이 불명확 - Min-Sum과의 면적/성능 비교 데이터 부재</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2용 exact Sum-Product check node 함수(log-tanh)를 Taylor 급수로 근사해 하드웨어 면적을 줄인 기법으로, Prime ECC가 이미 Min-Sum을 채택하고 있어 직접 이식 대상은 아니지만 근사식 유도 방식은 참고할 만함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>DVB-S2 표준의 LDPC(irregular repeat-accumulate 구조, N=64800, rate 1/4~9/10)와 outer BCH 결합 시스템, staircase lower-triangular H2로 선형시간 인코딩(<code>p_i = p_i ⊕ p_{i-1}</code>).</li><li>기존 방식은 Belief Propagation의 check node update에서 정확한 <code>F(x)=log(tanh(x/2))</code>를 LUT로 구현하는데, 이는 면적/복잡도 부담이 큼(Min-Sum은 이를 min 연산으로 근사하는 별도 계열).</li><li>채널모델: binary-input AWGN, <code>λ_vn^(0) = 2r/σ²</code>로 초기 LLR 계산.</li><li>핵심 기법: <code>F(x) = log(1+e^-x) - log(1-e^-x)</code>를 Taylor 급수 전개(<code>log(1+y)=Σ(-1)^(k-1) y^k/k</code>)하여 1차항만 취해 <code>F(x) ≈ 2e^-x</code>로 근사.</li><li>이 근사식으로 check node magnitude update를 <code>δ_cm,vn = -log2(Σ 2^(-δ_vi,cm))</code> 형태의 덧셈식(식 12)으로 재구성 - exact log-tanh LUT 대신 지수합 형태.</li><li>HW 구현: barrel shifter(2^n shift 누적)로 <code>Σ2^-δ</code> 계산, priority encoder로 <code>-log2(x)</code> 계산 - 곱셈/LUT 없이 shifter+encoder만으로 처리.</li><li>면적 검증: 0.13um 공정 standard cell 기준 기존 아키텍처(Fig.3, exact log-tanh) 대비 제안 아키텍처(Fig.4)가 면적 ~20% 감소.</li><li>성능검증: rate 1/2 QPSK, N=64800, 최대 100 iteration, BER 시뮬레이션에서 기존 발표치[9](tanh 근사 사용)와 comparable하거나 marginally 우수(~2×10^-7 @ Es/No≈0.8dB).</li><li>BCH 결합 시 rate 3/4 QPSK, 2/3 8PSK, 3/4 16APSK에서 PER 요구치 10^-7 달성, 기존 참조치[10]와 부합.</li><li>한계: Min-Sum 자체와의 직접 비교(면적/성능) 없이 exact-tanh 대비 비교만 제시, HW 합성/FPGA 검증 없이 표준셀 면적 추정치 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check node F(x)=log(tanh) Taylor 근사 (<code>2e^-x</code>)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 이미 Min-Sum(min1/min2) 기반이라 exact-tanh 근사가 필요 없어 직접 대체 대상 아님</td></tr><tr><td>barrel shifter + priority encoder 기반 magnitude 연산</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>HW 연산소자 아이디어는 참고 가능하나 우리 min-sum 구조와 알고리즘 자체가 다름</td></tr><tr><td>DVB-S2 H-matrix (IRA 구조, staircase triangular)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>특정 표준(DVB-S2) 종속 구조로 이식 대상 아님</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 제안 근사는 exact Sum-Product(log-tanh) 계열의 HW 경량화이며, Prime ECC는 이미 더 단순한 Min-Sum을 사용 중이라 이 기법을 적용할 필요성이 낮음. Min-Sum과의 직접 비교 데이터가 없어 우위 판단도 어려움.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4299991",
+  "title": "Alternative Approximation of Check Node Algorithm for DVB-S2 LDPC Decoder",
+  "year": 2007,
+  "venue": "IEEE (ICSNC 2007)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": 64800,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check node update 함수 F(x)=log(tanh(x/2))를 Taylor series로 전개해 2e^-x 형태의 덧셈 근사식으로 대체, shifter+priority encoder만으로 구현해 BER 저하 없이 하드웨어 면적 약 20% 절감",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "면적 ~20%감소@0.13um(상대값)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "exact Sum-Product(tanh 기반) check node 연산의 HW 경량화이며, Prime ECC는 이미 Min-Sum 기반이라 직접 적용 대상 아님",
+  "todo_check": "제안 기법과 기존 Min-Sum 간의 면적/성능 직접 비교 데이터가 본문에 없어 우위 판단 불명확"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4299991---alternative-approximation-of-check-node-algorithm-for-dvb-s2-ldpc-decoder-2007-ieee-icsnc-2007">ieee:4299991 - Alternative Approximation of Check Node Algorithm for DVB-S2 LDPC Decoder (2007, IEEE (ICSNC 2007))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

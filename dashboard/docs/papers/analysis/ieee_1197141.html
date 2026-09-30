@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1197141</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1197141---shuffled-belief-propagation-decoding-2002-asilomar">ieee:1197141 - Shuffled Belief Propagation Decoding (2002, Asilomar)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>shuffled/group-shuffled BP 스케줄 — CN/VN 갱신을 그룹 순차 처리해 평균 iteration을 표준 BP의 약 절반으로 감소(동일 복잡도)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만; 순수 sum-product(tanh) 기반이라 Prime ECC min-sum과 정합 필요, 완전순차판은 delay↑(그룹수 G로 병렬/수렴 trade-off)</td></tr><tr><td>추가확인</td><td>Prime ECC dual-update가 group-shuffled 수렴이득을 이미 확보하는지, min-sum에서도 iteration 절반 이득이 유지되는지 비교</td></tr></tbody></table>
+<blockquote><p>총평: group-shuffled BP는 사실상 layered/horizontal 스케줄로 iteration을 절반으로 줄이는 대표 기법 — Prime ECC dual-update와 직결되어 이식성·추천도 상.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: regular binary (N,K)(dv,dc) LDPC, BPSK/AWGN(분산 N0/2). 시뮬은 (8000,4000)(3,6) 코드, 최대 20/2000 iteration.</li><li>문제: 표준 BP는 매 iteration에서 이전 iteration의 낡은 <code>z_mn</code>(bit-to-check)만 사용해 수렴이 느림.</li><li>핵심 기법 shuffled BP: horizontal(CN)·vertical(VN) step을 섞어, 이미 갱신된 <code>z</code> 값을 같은 iteration 내에서 즉시 사용 → bit-by-bit 순차 갱신. 초기화·정지·출력은 표준 BP와 동일, 갱신 절차만 변경.</li><li>식 의미: bit n 처리 시 n'&lt;n의 갱신값 <code>z_mn'</code>을 바로 반영하므로 정보 전파가 빨라짐 — 더 많은 독립 정보로 메시지 신뢰도 상승.</li><li>forward-backward 구현: CN 계산의 <code>tanh(z)</code> recursion을 forward/backward로 수행해 복잡도 O(dc²)→O(dc), 표준 BP와 동일 연산량 유지(메모리 dc-1 사용).</li><li>group-shuffled 확장: N비트를 G그룹으로 나눠 그룹 내부는 병렬, 그룹 간은 순차. <code>G=1</code>이면 표준 BP, <code>G=N</code>이면 완전 shuffled BP.</li><li>이론: Tanner graph가 acyclic·connected면 shuffled BP는 표준 BP와 동일 최소 iteration으로 수렴, MAP 최적성 유지(Theorem 1,2). 수렴속도는 G에 대해 단조 증가.</li><li>최적성: 순차 스케줄 변경일 뿐 그래프 구조·메시지패싱 성질을 바꾸지 않아 BP 최적일 때 최적.</li><li>결과: (8000,4000)(3,6)에서 WER 1e-? / 20 iteration 시 표준 BP 대비 약 0.2dB 개선, 평균 iteration은 약 절반. G=100이 G=8000과 거의 동일 성능(HW 친화).</li><li>한계: HW 미설계, sum-product(tanh) 기반이며 완전 순차판은 hardware delay↑(그룹화로 완화), DSC 등 고밀도 부호에선 이득 축소.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>shuffled/group-shuffled 순차 스케줄(iteration 절반)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC dual-update(parity even/odd 교대)와 동일 계열의 layered 스케줄</td></tr><tr><td>그룹 병렬 분할(G그룹, z=행단위)</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>VN_Cal_HD()</code></td><td>z_sb=32 row 병렬과 group-shuffled의 그룹 병렬 대응</td></tr><tr><td>forward-backward CN(tanh) recursion</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2)로 full-tanh sum-product 미사용</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — group-shuffled BP의 iteration 절반 이득은 Prime ECC dual-update가 이미 같은 계열로 확보 중이라 신규성은 제한적이나, min-sum에서의 그룹 분할·수렴 trade-off(G↔병렬도) 튜닝 근거로 재사용 가치가 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1197141",
+  "title": "Shuffled Belief Propagation Decoding",
+  "year": 2002,
+  "venue": "Asilomar",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "shuffled/group-shuffled BP 스케줄 — CN/VN 갱신을 그룹 순차 처리해 평균 iteration을 표준 BP의 약 절반으로 감소(동일 복잡도)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "HW 미설계·시뮬만; 순수 sum-product(tanh) 기반이라 Prime ECC min-sum과 정합 필요, 완전순차판은 delay↑(그룹수 G로 병렬/수렴 trade-off)",
+  "todo_check": "Prime ECC dual-update가 group-shuffled 수렴이득을 이미 확보하는지, min-sum에서도 iteration 절반 이득이 유지되는지 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1197141---shuffled-belief-propagation-decoding-2002-asilomar">ieee:1197141 - Shuffled Belief Propagation Decoding (2002, Asilomar)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

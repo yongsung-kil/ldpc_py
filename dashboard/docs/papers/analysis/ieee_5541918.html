@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5541918</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5541918---decoding-low-density-parity-check-codes-with-error-floor-free-over-the-awgn-channel-2010-ieee-conf">ieee:5541918 - Decoding Low-Density Parity-Check Codes with Error-Floor Free over the AWGN Channel (2010, IEEE (Conf.))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.69</td></tr><tr><td>부호length</td><td>155~341</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 출력을 conditioning(부호만 뒤집어 Ymax 유지)해 OSD-i 입력으로 써 error-floor 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OSD(ML급 후처리)는 Gaussian elimination·재인코딩으로 HW 부담 극심, full-precision soft 필요</td></tr><tr><td>추가확인</td><td>고rate 장부호(4KB)에서 OSD 탐색비용, NAND soft-read 2~3bit 양자화 하 적용 가능성</td></tr></tbody></table>
+<blockquote><p>총평: BP-then-OSD 하이브리드에서 iterative 출력을 conditioning해 error-floor를 없애는 후처리 논문, error-floor 관점은 흥미로우나 OSD가 우리 HW 예산·soft 정밀도와 근본적으로 상충해 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: 단부호·중간길이 LDPC 예제들 — Tanner (155,64,20), EG (255,175,17), Gallager (204,102,8), PEG (256,128,17), PG cyclic (341,205,16), BPSK/AWGN.</li><li>풀려는 문제: BP 단독은 stopping/trapping set으로 고SNR에서 error-floor 발생, OSD 단독은 order <code>i</code>가 커야 해 복잡도 급증.</li><li>모델: ML 복호는 수신벡터와 최대 cross-correlation <code>Ymax</code> 코드워드 탐색; BP 출력을 OSD-i 입력으로 재활용하는 하이브리드 구조.</li><li>핵심 기법: BP <code>N</code> iteration 후 출력 <code>r'</code>을 그대로 넘기지 않고 conditioning한 <code>f'</code>을 OSD-i에 투입.</li><li>핵심 식: conditioned 출력 <code>f'_m = ±r_m</code>(부호만 BP hard-decision으로 뒤집음)으로 <code>Ymax=Σ|r_j|</code>를 원 수신벡터와 동일하게 유지(식 5·6).</li><li>확장: <code>f'</code> 기반 재인코딩 코드워드 <code>c'</code>의 cross-correlation을 OSD-i 탐색의 lower bound로 써 탐색크기 축소.</li><li>구현 디테일: 신뢰도순 permutation + LRB부터 Gaussian elimination으로 full-rank generator matrix 구성(비독립 bit은 skip), MRB/LRB 재정렬.</li><li>분석: 표준 soft 출력은 반복될수록 LRB↔MRB bit swap으로 MRB error 증가(Tanner code 4dB, 106 벡터 실험); conditioning은 부호만 바꿔 이 열화를 방지하고 MRB error 수를 최소화.</li><li>결과: 제안 decoder+OSD-1이 OSD-2 단독보다 우수하며 모든 예제에서 error-floor 제거, OSD-1 단독 대비 3dB 이상서 1.5dB 이득(Gallager).</li><li>한계: 시뮬만, HW 미설계, OSD 자체가 full-precision soft·Gaussian elimination 요구라 HW 비용 큼, iteration 감소 아님(BP 후 추가 후처리로 latency 악화).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP iterative 복호(초기 디코더)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>BP 부분은 우리 min-sum 디코더로 대체 가능, 출력 conditioning 훅 필요</td></tr><tr><td>soft 출력 conditioning (부호만 반전)</td><td>decoder.cpp <code>VN_Cal_HD()</code> (APP/LLR 출력)</td><td>LLR 부호·크기 접근은 가능하나 이후 OSD 단계가 없음</td></tr><tr><td>OSD-i 후처리 (재인코딩·Gaussian elimination)</td><td>대응 없음</td><td>ML급 후처리는 Prime ECC에 부재, 이식 시 신규 대형 블록 필요</td></tr><tr><td>error-floor 대책</td><td>corner.cpp (수렴실패 추적)</td><td>error-floor 관심 접점은 있으나 후처리 방식이 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — error-floor 제거 아이디어(conditioning)는 개념적으로 유효하나, 핵심인 OSD-i(재인코딩·Gaussian elimination·full-precision soft)가 우리 코드에 대응 모듈이 없고 NAND HW 예산·2~3bit soft-read 제약과 근본적으로 상충한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5541918",
+  "title": "Decoding Low-Density Parity-Check Codes with Error-Floor Free over the AWGN Channel",
+  "year": 2010,
+  "venue": "IEEE (Conf.)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.69",
+  "code_length": "155~341",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 출력을 conditioning(부호만 뒤집어 Ymax 유지)해 OSD-i 입력으로 써 error-floor 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "OSD(ML급 후처리)는 Gaussian elimination·재인코딩으로 HW 부담 극심, full-precision soft 필요",
+  "todo_check": "고rate 장부호(4KB)에서 OSD 탐색비용, NAND soft-read 2~3bit 양자화 하 적용 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5541918---decoding-low-density-parity-check-codes-with-error-floor-free-over-the-awgn-channel-2010-ieee-conf">ieee:5541918 - Decoding Low-Density Parity-Check Codes with Error-Floor Free over the AWGN Channel (2010, IEEE (Conf.))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

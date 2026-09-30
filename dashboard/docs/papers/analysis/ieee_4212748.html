@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4212748</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4212748---reduced-complexity-and-improved-performance-for-short-regular-ldpc-codes-based-on-select-updating-schedule-2007-ieee-wicomicccas-계열-추정">ieee_4212748 - Reduced Complexity and Improved Performance for Short Regular LDPC Codes Based on Select Updating Schedule (2007, IEEE (WiCOM/ICCCAS 계열 추정))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>576~1225</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>TG 사이클(girth) 분포 기반으로 일부 bit node의 업데이트를 그룹별로 스킵하는 select updating schedule(BP-SU) 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN 채널·짧은 regular LDPC(576/1225)에서만 시뮬 검증, soft LLR(부동소수점 추정) 기반이라 NAND HW 양자화 미고려</td></tr><tr><td>추가확인</td><td>BP(sum-product) 기반이라 Prime ECC의 min-sum HW 구조에 직접 적용 가능한지, 그리고 h값(SGmax-SGmin) 산출의 실시간 계산 비용</td></tr></tbody></table>
+<blockquote><p>총평: girth 분포 기반 선택적 업데이트로 짧은 regular LDPC의 waterfall 성능은 개선하지만, BP(sum-product) 전제·소프트웨어 시뮬 수준이라 HW 이식성은 낮고 average iteration은 오히려 소폭 증가함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>짧은 regular LDPC 코드(TS code (576,1152), MF code (1225,1715))의 Tanner graph에서 girth(최소 사이클 길이) 및 girth+2 사이클 분포를 분석.</li><li>문제의식: 짧은 코드는 사이클이 많아 conventional flooding-schedule BP가 최적이 아니며, 일부 bit node의 extrinsic LLR이 사이클로 인해 진동(oscillate)해 수렴을 방해.</li><li>채널 모델은 표준 BPSK+AWGN, 기존 log-domain BP(합-곱, 식(1)-(7)) 그대로 사용.</li><li>핵심 기법: bit node를 girth 사이클 개수 기준으로 "bit node location 1(cycle-girth 없는 노드), location 2(일정 개수 이하 사이클)"로 분류해 select updating schedule(BP-SU) 구성.</li><li><code>h = SGmax/2 - SGmin/2</code> (single bit node girth 최대/최소 차)로 반복수 조건식 <code>(girth/2 + h + 1)×k ≤ iteration ≤ ... + (girth/2 -1)</code> 정의, 이 그룹 단위로 반복을 나눠 일부 노드만 순차 업데이트.</li><li>3단계: <code>Maxiter/(girth/2+2)</code> 그룹으로 나누고, 각 그룹 내 iteration마다 location1 → location2 → 나머지 순으로 업데이트 노드를 선택적으로 정지/재개.</li><li>부수 트릭: check node process는 변경 없음, bit node process만 스케줄링 변경 — 구현상 알고리즘 로직 최소 변경.</li><li>최적화 절차 없음(학습 기반 아님) — cycle distribution 사전 분석(오프라인 카운팅)으로 location 1/2 결정.</li><li>결과: TS code 기준 BP-SU는 BP 대비 그룹 반복당 bit node 업데이트 997회 감소(BP-PU는 208회 감소, BP는 6912회), BER 6×10⁻⁵에서 BP/BP-PU 대비 0.2dB 이상 개선. 단, 평균 반복 횟수는 BP보다 최대 2회 더 필요.</li><li>한계: 검증은 AWGN 시뮬레이션뿐(HW/FPGA 없음), regular 코드 두 종류(TS/MF)에만 적용, girth 분포 사전계산이 필요해 코드 구조 변경 시 재계산 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(sum-product) bit node 업데이트 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 기반이라 BP 전제 스케줄 변경은 알고리즘 성격이 달라 직접 이식 어려움</td></tr><tr><td>조기 노드 업데이트 정지(select updating)</td><td><code>decoder.cpp</code> (이터레이션 루프 내 VN 업데이트 로직)</td><td>개념적으로 조기종료(Partial CRC)와 유사하나 node-level이라 대응 구조 다름</td></tr><tr><td>girth/cycle distribution 사전분석</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 로드 단계에서 cycle 분석 추가 가능하나 코드 자체 구현 없음, "대응 없음"에 가까움</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — BP(sum-product) 전제·regular 코드·소프트웨어 시뮬 수준이며, Prime ECC의 min-sum/QC-LDPC HW 구조와 알고리즘 기반이 달라 이식 난이도가 높고 실익이 제한적.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4212748",
+  "title": "Reduced Complexity and Improved Performance for Short Regular LDPC Codes Based on Select Updating Schedule",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "576~1225",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "TG 사이클(girth) 분포 기반으로 일부 bit node의 업데이트를 그룹별로 스킵하는 select updating schedule(BP-SU) 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN 채널·짧은 regular LDPC(576/1225)에서만 시뮬 검증, soft LLR(부동소수점 추정) 기반이라 NAND HW 양자화 미고려",
+  "todo_check": "BP(sum-product) 기반이라 Prime ECC의 min-sum HW 구조에 직접 적용 가능한지, 그리고 h값(SGmax-SGmin) 산출의 실시간 계산 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4212748---reduced-complexity-and-improved-performance-for-short-regular-ldpc-codes-based-on-select-updating-schedule-2007-ieee-wicomicccas-계열-추정">ieee_4212748 - Reduced Complexity and Improved Performance for Short Regular LDPC Codes Based on Select Updating Schedule (2007, IEEE (WiCOM/ICCCAS 계열 추정))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

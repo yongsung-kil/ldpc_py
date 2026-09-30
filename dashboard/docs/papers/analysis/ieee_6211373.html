@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6211373</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6211373---a-peg-construction-of-finite-length-ldpc-codes-with-low-error-floor-2012-ieee-communications-letters">ieee:6211373 - A PEG Construction of Finite-Length LDPC Codes with Low Error Floor (2012, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504~2016</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>PEG 부호구성 단계마다 dominant ETS를 직접 탐색해 그 생성을 피하는 edge를 선택(ETS-constrained PEG)해 error floor 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>N/A</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>QC-LDPC circulant 구조가 아닌 일반 Tanner graph PEG 구성이라 Prime ECC의 고정 H-matrix에 직접 적용 불가, ETS 탐색이 매 노드 반복되어 구성 복잡도 큼</td></tr><tr><td>추가확인</td><td>ETS-constrained PEG를 QC-LDPC/protograph lifting에 결합 가능한지, 고rate(~0.9) 단축부호에서도 효과 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: dominant ETS(trapping set)를 직접 회피하는 PEG 변형으로 error-floor를 실측 개선한 부호설계 논문, 발상은 유용하나 Prime ECC의 QC 구조·고정 H-matrix 재설계 부담으로 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 short/medium block length의 regular/irregular LDPC 부호, BPSK/AWGN, BP(LLR) 복호 max 50 iter.</li><li>문제: 기존 PEG 변형(ACE[10], generalized-ACE[8], ACSE[11])은 error floor를 <code>ACE</code>/<code>ACSE</code> 같은 간접 지표로만 다뤄 dominant trapping set을 직접 제어하지 못함.</li><li>핵심 지표: <code>(a,b)</code> elementary trapping set(ETS, 모든 check가 degree 1 또는 2) 중 a·b가 작은 것을 dominant로 정의, depth-d <code>ETS spectrum</code> <code>(ξ_{g/2},...,ξ_d)</code>를 최대화 목표.</li><li>핵심 기법: 원래 PEG로 변수노드 <code>v_i</code>의 edge 후보를 만들되, <code>Algorithm A</code>로 <code>v_i</code>를 포함하는 dominant ETS를 재귀 탐색해 target spectrum을 만족하는 edge만 채택.</li><li><code>Algorithm A</code>는 3/4의 dominant-ETS 탐색을 <code>v_i</code> 포함 ETS만 찾도록 단순화(정확도 유지).</li><li>복잡도 저감 수정: (i) 초기 집합을 <code>v_i</code>를 포함하는 short cycle로 한정, <code>l_max</code>로 긴 cycle 보완, (ii) low-degree VN 추가(Step4) 제거 후 Step7,8로 2-chain 처리 보완.</li><li>파라미터 <code>l_max, β, T_ACE, d</code>로 정확도-복잡도 균형 조절.</li><li>absorbing set 등 다른 그래프 구조도 동일 프레임으로 target 가능(탐색 알고리즘 tailoring).</li><li>결과: rate-1/2 (1008,504)·(504,252)·(2016) 예제에서 dominant (a,b) ETS 다중도가 원본/generalized-ACE-PEG 대비 크게 감소, error floor 개선(예: n=2016, 2.4dB에서 BER 6e-9 vs 1.46e-8).</li><li>한계: HW 미설계, 부호구성(오프라인) 알고리즘 시뮬만, QC-LDPC/circulant 제약 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| ETS-constrained PEG로 H-matrix 구성 | ecc_top.cpp Load_PCM() | Prime ECC는 고정 QC-LDPC H-matrix 로드, 부호 재설계 시 진입점이나 QC 제약과 충돌 |
+| dominant ETS/error-floor 개선 목표 | 대응 없음 | 우리 코드는 부호를 재설계하지 않음(디코더 side), error-floor 보증 구조 미보유 |
+| trapping set 회피 부호구성 | encoder.cpp Generate_PCM_encoding() (개념적) | 부호 PCM 생성부와 닿으나 PEG는 QC lifting 방식과 상이 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — error-floor를 직접 낮추는 부호설계 발상은 NAND 고rate ECC에 가치가 있으나, Prime ECC의 QC-LDPC circulant·고정 H-matrix 구조에 PEG 구성을 이식하려면 lifting 결합과 전면 재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6211373",
+  "title": "A PEG Construction of Finite-Length LDPC Codes with Low Error Floor",
+  "year": 2012,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "504~2016",
+  "soft_quant": "무관",
+  "key_contribution": "PEG 부호구성 단계마다 dominant ETS를 직접 탐색해 생성을 피하는 edge를 선택(ETS-constrained PEG)해 error floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "N/A",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "QC-LDPC circulant 아닌 일반 Tanner graph PEG 구성이라 Prime ECC 고정 H-matrix에 직접 적용 불가",
+  "todo_check": "ETS-constrained PEG를 QC-LDPC/protograph lifting에 결합 가능한지, 고rate 단축부호에서도 효과 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6211373---a-peg-construction-of-finite-length-ldpc-codes-with-low-error-floor-2012-ieee-communications-letters">ieee:6211373 - A PEG Construction of Finite-Length LDPC Codes with Low Error Floor (2012, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

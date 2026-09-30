@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5341237</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5341237---rtl-design-of-ldpc-decoder-for-ieee80211n-wlan-2009-ieee-iscit">ieee:5341237 - RTL Design of LDPC Decoder for IEEE802.11n WLAN (2009, IEEE ISCIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>row/column 연산을 2 cycle 겹쳐 실행하는 overlapped H9-V9 아키텍처로 HPU/VPU 개수를 줄여 면적 18% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>1397812.674㎛²@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>IEEE 802.11n (648,324) rate-1/2 단일 코드에만 구현·검증, 다른 code rate/length 확장은 future work로 미검증</td></tr><tr><td>추가확인</td><td>overlap 스케줄링이 정정성능(수렴/BER)에 영향 없는지 논문에 시뮬레이션 근거 없음, 실제 성능 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 디코더의 row/column 연산을 부분 오버랩시켜 processing unit 수를 줄이는 RTL 면적 최적화 사례, 정정성능 기여 없이 표준 min-sum을 그대로 사용.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.11n WLAN용 QC-LDPC, 코드워드 length 648bit, rate 1/2 예제로 구현(submatrix z=27). 목표 처리량 200Mbps @200MHz.</li><li>min-sum 디코더에서 row(check node) 연산과 column(bit node) 연산은 한 iteration 내에서 순차 실행되어야 해 HW 유닛(HPU/VPU) 활용률이 낮고 면적이 커지는 문제.</li><li>표준 min-sum 근사(BP 대체) 알고리즘 그대로 사용, 채널/노이즈 모델 특별한 가정 없음.</li><li>핵심 기법: Hp-Vq 표기(HPU가 p개 row 연산, VPU가 q개 column 연산을 한 iteration에 처리)로 아키텍처 설계공간을 정의, <code>R_p,q = p+q</code> cycle로 iteration 시간 결정.</li><li>H9-V9 조합이 유닛 수는 최소(HPU 36, VPU 72)이나 18 cycle이 필요해 16 cycle 제약을 못 맞춤 → row/column 연산을 2 cycle 겹쳐 실행하는 overlapped 스케줄 고안, 서브매트릭스의 logical sum 분석(Fig.10)으로 필요한 HPU 배치를 결정.</li><li>확장: overlap 스케줄을 만족하려면 6번째 column sub-matrix 처리에 HPU 4개 필요 → 전체 40개 HPU로 재구성(H3-V3 대비 HPU 68개, VPU 144개 절감).</li><li>부수 디테일: HPU는 sign-magnitude 산술(3-to-2/4-to-2 comparator + XOR tree로 min/2nd-min 및 부호 계산), VPU는 2's complement CSA tree + 2-stage CPA로 누적합 계산, 6-bit fixed point 표현.</li><li>별도 학습/최적화 절차 없음(고정 코드에 대한 수작업 아키텍처 설계).</li><li>결과(TSMC 90nm 합성): 제안 overlapped H9-V9(HPU 40, VPU 72)가 H9-V3(HPU 36, VPU 216) 대비 combinational area 25%, 총면적 18% 감소(1685643.847→1397812.674㎛²), 전력 137.07→133.10mW.</li><li>한계: (648,324) rate-1/2 단일 코드에만 구현, 다른 rate/length로의 일반화는 future work. 정정성능(BER, error-floor) 실험 없음, PCU는 loop 조건에도 미사용(단순 성공/실패 출력).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum row(CN)/column(VN) 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code>, <code>VN_Cal_HD()</code></td><td>이미 min-sum 계열 보유, sign-magnitude/2's complement 변환 방식은 신규성 낮음</td></tr><tr><td>row/column 연산 overlap 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Dual-Update(even/odd 교대)와 유사한 파이프라인 오버랩 아이디어로 참고 가능하나 목적(단순 면적 절감)이 제한적</td></tr><tr><td>HPU/VPU 개수 축소를 통한 면적 절감</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>HCU(비대칭 degree column 처리)와 목적은 유사하나 접근 방식(연산 오버랩)은 상이</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 정정성능 기여 없이 특정 소형 코드(648,1/2)에 대한 processing unit 개수 절감형 RTL 면적 최적화로, 이미 HCU/z=32 병렬구조가 확립된 우리 코드베이스 대비 이식 실익이 작음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5341237",
+  "title": "RTL Design of LDPC Decoder for IEEE802.11n WLAN",
+  "year": 2009,
+  "venue": "IEEE ISCIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 648,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "row/column 연산을 2 cycle 겹쳐 실행하는 overlapped H9-V9 아키텍처로 HPU/VPU 개수를 줄여 면적 18% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "1397812.674um2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "IEEE 802.11n (648,324) rate-1/2 단일 코드에만 구현·검증, 다른 code rate/length 확장은 future work로 미검증",
+  "todo_check": "overlap 스케줄링이 정정성능(수렴/BER)에 영향 없는지 논문에 시뮬레이션 근거 없음, 실제 성능 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5341237---rtl-design-of-ldpc-decoder-for-ieee80211n-wlan-2009-ieee-iscit">ieee:5341237 - RTL Design of LDPC Decoder for IEEE802.11n WLAN (2009, IEEE ISCIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

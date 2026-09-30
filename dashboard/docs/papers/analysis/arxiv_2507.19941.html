@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2507.19941</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv250719941v1---adaptive-learned-belief-propagation-for-decoding-error-correcting-codes-2025-arxiv-csit">arxiv:2507.19941v1 - Adaptive Learned Belief Propagation for Decoding Error-Correcting Codes (2025, arXiv cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.43~0.96</td></tr><tr><td>부호length</td><td>128~4260</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>WBP/WMS 가중치를 수신어마다 적응 결정 - 병렬 WMS(이산 가중치 탐색, 최소 신드롬 선택) + 2단(CNN이 가중치 예측)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>오프라인 학습된 가중치 분포/CNN 필요, 정적 WBP 재훈련·분포이동 취약, HW 미설계·시뮬만</td></tr><tr><td>추가확인</td><td>병렬 WMS(2SD/3SD 저비트 LLR) 적용 시 이득 유지 여부, per-word 가중치 스케줄을 우리 적응형 LLR 테이블/normalized MS로 근사 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum(WMS) 가중치를 수신어마다 적응시켜 정적 WBP 대비 BER 최대 1자릿수·최대 0.8dB 개선하는 복호기로, 병렬 WMS 변형은 동일 복잡도·latency로 Prime ECC min-sum에 이식 여지가 있어 정독 가치 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(n,k)</code> binary linear code(BCH <code>(63,36)</code>, polar, 다수 QC-LDPC regular/irregular rate 0.43~0.96), AWGN(BPSK, <code>L(y)=4rρy</code>) + 비선형 광섬유(16-QAM WDM, 내부 QC-LDPC + 외부 SC-QC-LDPC 연접) 채널.</li><li>문제: 정적 WBP(오프라인 학습 가중치)는 짧은 블록·저rate·고SNR에서만 유효하고 저BER·장블록에서 sample complexity 폭증으로 일반화 실패.</li><li>WBP 기반: Tanner graph를 <code>T</code> iteration으로 unroll한 RNN에서 CN/VN 메시지에 가중치 <code>γ_{v,c}^t, β_{c,v}^t</code> 부여(식9~10), WMS는 <code>tanh</code> 근사 min-sum + 가중치.</li><li>핵심 기여: 가중치를 수신어 <code>y</code>마다 온라인 결정하는 적응형 WBP <code>γ=g(y)</code>로 오류확률 최소화(식13), 정적 복호기는 <code>g</code>가 상수인 특수경우.</li><li>변형1 병렬 복호기: <code>γ^t</code>를 이산집합에서 취해 <code>ν</code>개 WMS를 동시 실행, 신드롬 Hamming weight 최소인 <code>i*=argmin‖s_i‖</code>를 선택(식14). 탐색 깊이 <code>T1=5</code> 후 <code>T2</code> iteration 이어감.</li><li>가중치 분포: <code>Γ^t</code>가 근사 가우시안 → <code>x_k^t=θ^t+√2σ^t·erfc^{-1}(...)</code>(식16)로 이산점 배치, 정적 WBP를 오프라인 학습해 경험적 CDF 추정.</li><li>변형2 2단 복호기: CNN(<code>Conv1-Conv2-Dense</code>, ReLU)이 <code>L(y)</code>를 입력받아 가중치 벡터 <code>γ̄</code>를 예측(quantile loss <code>ξ=0.75</code> 학습), 병렬 복호기의 지수 복잡도 없이 임의 가중치 산출.</li><li>학습: active learning으로 결정경계 근처 예제 표집(acquisition = Hamming distance), Adam, 가중치 pruning(<code>τ_prun</code>)으로 CNN 복잡도 1/4 감축.</li><li>결과: AWGN에서 적응형 WMS가 정적 대비 BER 최대 1자릿수↓·<code>C1</code>에서 0.32dB gain(BER 1e-4), 동일 복잡도. 광섬유 연접에서 적응형 WBP가 NNMS 대비 0.8dB coding gain(동일 복잡도·동일 latency).</li><li>한계: HW 미설계·시뮬만, 오프라인 학습된 분포/CNN 의존, 분포이동 시 재훈련 필요(본문서 미해결), 블록↑일수록 이득 감소.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>WMS 가중 min-sum CN 업데이트</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum magnitude에 iteration별 스케일 가중치 적용 지점과 직접 대응</td></tr><tr><td>iteration별 적응 가중치 <code>γ^t</code></td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration 구간별 LLR threshold 테이블과 유사 구조, 가중치 스케줄로 치환 검토</td></tr><tr><td>병렬 WMS + 최소 신드롬 선택</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>서로 다른 스케일로 병렬 복호 후 신드롬 최소 선택 로직 추가 형태로 이식 가능</td></tr><tr><td>신드롬 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>병렬 후보 판정 기준(신드롬 weight)과 우리 CRC 종료가 연동될 수 있음</td></tr><tr><td>2단 CNN 가중치 예측</td><td>대응 없음</td><td>Prime ECC는 NN 미보유, CNN 추론 블록은 신규 이식 부담</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 병렬 WMS(iteration별 가중치 스위핑 후 최소 신드롬 선택)는 우리 min-sum 파이프라인과 적응형 LLR 테이블 구조에 비교적 낮은 부담으로 이식해 waterfall/error-floor를 개선할 여지가 있으나, 2단 CNN 변형과 오프라인 가중치 분포 학습은 NN 미보유·soft-4bit+ 전제라 추가 검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2507.19941v1",
+  "title": "Adaptive Learned Belief Propagation for Decoding Error-Correcting Codes",
+  "year": 2025,
+  "venue": "arXiv cs.IT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.43~0.96",
+  "code_length": "128~4260",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "WBP/WMS 가중치를 수신어마다 적응 결정 - 병렬 WMS(이산 가중치 탐색, 최소 신드롬 선택) + 2단(CNN이 가중치 예측)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "오프라인 학습된 가중치 분포/CNN 필요, 정적 WBP 재훈련·분포이동 취약, HW 미설계·시뮬만",
+  "todo_check": "병렬 WMS(2SD/3SD 저비트 LLR) 적용 시 이득 유지 여부, per-word 가중치 스케줄을 우리 적응형 LLR 테이블/normalized MS로 근사 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv250719941v1---adaptive-learned-belief-propagation-for-decoding-error-correcting-codes-2025-arxiv-csit">arxiv:2507.19941v1 - Adaptive Learned Belief Propagation for Decoding Error-Correcting Codes (2025, arXiv cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10392669</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10392669---energy-efficient-operation-method-of-iterative-channel-decoder-in-wireless-communication-systems-2023-ieee-ictc">ieee:10392669 - Energy efficient operation method of iterative channel decoder in wireless communication systems (2023, IEEE ICTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.245~0.754</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>AMC 구간을 SNR로 세분해 MCS별 ITER를 CQI 기반 선택(THD 룩업)해 복호 에너지 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더 알고리즘·부호설계 변경 없음(외부 ITER 선택 정책), 5G NR AMC 종속, HW 미설계·THD 표값 시뮬뿐</td></tr><tr><td>추가확인</td><td>없음(NAND엔 AMC/CQI 없음, SNR 대신 RBER 기반 iteration 정책은 별도 설계 필요)</td></tr></tbody></table>
+<blockquote><p>총평: 채널 SNR로 iteration 수를 룩업 선택해 에너지 절감하는 시스템 정책 - 디코더 코어·부호 무변경, AMC 의존이라 NAND 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>5G NR급 무선(대역 400MHz, FFT 4096, SCS 120kHz, QPSK/16/64QAM)에서 5G LDPC 부호를 쓰는 수신기의 반복복호 에너지 절감 문제.</li><li>기존 문제: max ITER를 모든 AMC 조합에 고정하면 채널이 좋아도 과다 iteration으로 에너지 낭비; early-termination은 종료시점 불확실로 HW 복잡도 증가.</li><li>시스템 모델: AWGN 채널, MCS0~5(code rate <code>251/1024</code>~<code>772/1024</code>, 변조 QPSK/16/64QAM), LDPC iteration 범위 <code>ITER=4~8</code>.</li><li>핵심 기법: 기존 AMC 구간을 수신 SNR로 더 세분하고, MCS와 함께 ITER도 CQI로 선택 - DCB가 CQI 측정→MIDB가 MCS·ITER 결정→DCB가 복조·복호에 적용(Fig.2).</li><li>핵심 판정: 각 MCS·ITER 조합의 BLER 곡선이 Target-BLER(0.01)와 만나는 SNR을 임계값 <code>THD{mcs}-{iter}</code>로 정의(예 THD4-4~THD4-8).</li><li>결정 로직: 측정 SNR이 속한 THD 구간에 따라 (MCS, ITER)를 룩업(TABLE III/IV) - 예: SNR 15dB에서 기존은 MCS4·ITER=8, 제안은 MCS4·ITER=5로 iteration 절감.</li><li>부수: 표준(AMC 규격) 무관하게 수신기 단독 구현 가능하다고 주장.</li><li>학습/최적화: 없음(BLER 시뮬로 THD 표를 사전 산출하는 룩업 방식).</li><li>결과: Target-BLER 0.01 유지하며 동일 SNR에서 필요 iteration을 8→5 등으로 낮춰 수신기 에너지 절감(정량 절감치·gatecount·throughput 미보고).</li><li>한계: 디코더 알고리즘·부호설계 변경 없음(iteration 수 외부 선택 정책), 5G NR AMC/CQI 종속, HW 미설계, 결과는 BLER 시뮬뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ITER(최대 iteration) 선택 정책</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>max iteration 파라미터는 있으나, SNR/CQI 룩업 선택은 NAND(AMC 없음)에 부재</td></tr><tr><td>CQI 기반 조기종료 대체</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>Prime ECC는 CRC 조기종료 이미 보유(§3), 본 논문은 그 대안(고정 iter 세분)</td></tr><tr><td>5G LDPC 부호/MCS</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>5G NR rate-compatible 부호, Prime ECC 고정 QC-LDPC와 상이</td></tr><tr><td>AMC·CQI·MIDB(시스템 정책)</td><td>대응 없음</td><td>무선 링크적응 계층 - NAND 컨트롤러에 대응 계층 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — iteration을 채널 SNR로 룩업 선택하는 무선 링크적응 정책이라, AMC/CQI가 없고 이미 CRC 조기종료를 보유한 NAND Prime ECC에 이식 이점이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10392669",
+  "title": "Energy efficient operation method of iterative channel decoder in wireless communication systems",
+  "year": 2023,
+  "venue": "IEEE ICTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "AMC 구간을 SNR로 세분해 MCS별 ITER를 CQI 기반 선택(THD 룩업)해 복호 에너지 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "디코더 알고리즘·부호설계 변경 없음(외부 ITER 선택 정책), 5G NR AMC 종속, HW 미설계·THD 표값 시뮬뿐",
+  "todo_check": "없음(NAND엔 AMC/CQI 없음, SNR 대신 RBER 기반 iteration 정책은 별도 설계 필요)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10392669---energy-efficient-operation-method-of-iterative-channel-decoder-in-wireless-communication-systems-2023-ieee-ictc">ieee:10392669 - Energy efficient operation method of iterative channel decoder in wireless communication systems (2023, IEEE ICTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

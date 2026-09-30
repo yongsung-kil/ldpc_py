@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6871329</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6871329---efficient-decoder-architecture-for-single-block-row-quasi-cyclic-ldpc-codes-2014-ieee-tcas-ii">ieee:6871329 - Efficient Decoder Architecture for Single Block-Row Quasi-Cyclic LDPC Codes (2014, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9167~0.9333</td></tr><tr><td>부호length</td><td>1020~2115</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>single block-row QC-LDPC용 1-element 분해 스케줄로 메모리 20.8% 절감 + subblock-sharing VNU/저지연 CNU</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>single block-row(CDF/PDF) 특정 부호구조 전제; dv=3 중심, gatecount/throughput 수치 미상, MSA와 성능 동일(정정능력 무변)</td></tr><tr><td>추가확인</td><td>Prime ECC의 base+shift QC-LDPC(z=32, N_b=129)에 1-element 분해·barrel shifter VNU가 적용 가능한지, 메모리 절감이 우리 구조에서도 재현되는지</td></tr></tbody></table>
+<blockquote><p>총평: 고rate QC-LDPC 복호기의 메모리·라우팅을 줄이는 HW 아키텍처 논문. min-sum 성능은 불변이고 부호구조(single block-row)를 전제하므로, 메모리 최적화 아이디어(1-element 스케줄, subblock-sharing, 저지연 min/submin 탐색)만 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: CDF/PDF 기반 single block-row 정규 QC-LDPC(rate (L-1)/L), 예시 (1020,935) rate 0.9167(dv=3,L=12,z=85), (2115,1974) rate 0.9333(dv=3,L=15,z=141), 6-bit 양자화.</li><li>문제: 이런 고rate single block-row 부호는 복호기 설계가 체계적으로 다뤄진 적 없고, circulant 배열 길이 L이 최대 1000까지라 메모리가 병목.</li><li>핵심가정: MSA(min-sum)를 재배열해도 성능 동일. weight-3 circulant을 3개 weight-1 부행렬로 분해해 H를 3×L compound 행렬 H̃로 변환.</li><li>핵심기법(1-element schedule): C2V 갱신을 dv=3 layer로 쪼갬 — <code>R_cv,k = α·∏sgn·min|L-R|</code>을 layer별 계산 후 3개 layer 결과를 merge unit(6입력 CNU)로 병합. 재배열 MSA라 TPMP와 동일 성능.</li><li>스케줄 의미: L/R/T/R 메모리에 p인접 열/행을 한 엔트리로 묶고, R 메모리엔 soft가 아닌 4값(min1, min2, min1 index, 부호들)만 저장 → 메모리 대폭 절감.</li><li>VNU 최적화(subblock-sharing): C2V·V2C 단계가 겹치지 않으므로 permutation π와 depermutation π⁻¹을 barrel shifter 하나로 통합(p×(log2 p+2) 2-to-1 MUX), adder/subtractor도 단일 adder로.</li><li>CNU 최적화: min1/min2·min1 index 탐색을 binary-tree로 하되, 2단계 suboptimal low-latency 탐색(각 pair의 큰 값들 중 최소 = min2)으로 backtrack 없이 latency (log2 n + log2 log2 n) 비교 시간 달성.</li><li>학습/최적화: 없음(순수 아키텍처 최적화).</li><li>결과: (1020,935) 35,530 bit 메모리 — [3] 대비 42.3%, [4] 대비 20.8% 절감. (2115,1974)는 각 43.8%/23.5% 절감. 1 iteration latency 7×z/p 클록.</li><li>한계: HW 소비 추정/합성 비교만(FPGA·실측 없음), throughput·gatecount 절대수치 미제시, dv=3 한정 설명, 특정 single block-row 부호구조 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 1-element 분해 복호 스케줄(layer별 min-sum) | decoder.cpp LDPC_Decoder(), C2V_Cal() | 이터레이션 스케줄 재배열 아이디어(우리 Dual-Update와 유사 계열) |
+| CNU min1/min2/index 저지연 탐색 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min1/min2 탐색 HW 대안, critical path 참고 |
+| barrel shifter 기반 π/π⁻¹ VNU | decoder.cpp VN_Cal_HD() 등, GT.cpp Make_GT_HW() | 열↔행 permutation/라우팅 최적화 대응 |
+| 4값만 저장하는 R 메모리 아키텍처 | decoder.cpp LDPC_Decoder() (메모리 모델) | 메모리 라우팅 절감 아이디어, 우리 z=32/HCU 구조와 정합 필요 |
+| single block-row 부호구조(CDF/PDF) | ecc_top.cpp Load_PCM() | 부호구조 전제가 우리 고정 QC-LDPC와 달라 이식 부담 |</code></pre>
+<p>적용 가치: 중간 — 메모리·라우팅 절감과 저지연 min/submin 탐색은 HW 아키텍처 레이어(중 난이도) 참고 가치가 있으나, single block-row라는 특정 부호구조를 전제하고 정정능력 이득이 없어 Prime ECC 고정 QC-LDPC에 그대로 옮기긴 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6871329",
+  "title": "Efficient Decoder Architecture for Single Block-Row Quasi-Cyclic LDPC Codes",
+  "year": 2014,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.9167~0.9333",
+  "code_length": "1020~2115",
+  "soft_quant": "무관",
+  "key_contribution": "single block-row QC-LDPC용 1-element 분해 스케줄로 메모리 20.8% 절감 + subblock-sharing VNU/저지연 CNU",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "single block-row(CDF/PDF) 특정 부호구조 전제; dv=3 중심, gatecount/throughput 수치 미상, MSA와 성능 동일(정정능력 무변)",
+  "todo_check": "Prime ECC의 base+shift QC-LDPC(z=32, N_b=129)에 1-element 분해·barrel shifter VNU가 적용 가능한지, 메모리 절감이 우리 구조에서도 재현되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6871329---efficient-decoder-architecture-for-single-block-row-quasi-cyclic-ldpc-codes-2014-ieee-tcas-ii">ieee:6871329 - Efficient Decoder Architecture for Single Block-Row Quasi-Cyclic LDPC Codes (2014, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

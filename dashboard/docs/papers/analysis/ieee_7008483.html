@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7008483</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7008483---concatenated-bch-and-ldpc-coding-scheme-with-iterative-decoding-algorithm-for-flash-memory-2015-ieee-communications-letters">ieee:7008483 - Concatenated BCH and LDPC Coding Scheme With Iterative Decoding Algorithm for Flash Memory (2015, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>18480</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>BCH+LDPC concatenation에서 unequal-length BCH 선택(UER·BLER·residual BER 기반)과 outer-iteration 지속 조건 수정으로 waterfall 개선하며 low error floor 유지</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 자체 개선이 아니라 outer BCH concatenation 계층 추가 — 우리 시스템에 BCH outer 계층이 없으면 아키텍처 변경 필요. 시뮬만, HW 미설계</td></tr><tr><td>추가확인</td><td>outer iteration 시 성공 BCH 비트를 ∞ 포화시켜 LDPC LLR 초기화하는 방식이 우리 적응형 LLR 테이블/CRC 조기종료와 상호작용하는지 확인</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃의 BCH+LDPC concat 시스템으로 waterfall·error-floor 동시 개선하나, LDPC 디코더 자체가 아닌 outer BCH 계층 설계라 우리 단일 LDPC 엔진 이식엔 아키텍처 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: flash memory용 BCH(inner group) + LDPC(outer) concatenation; 정보비트를 β그룹으로 나눠 각 BCH 인코딩 후 결합해 LDPC 입력 <code>KLDPC=ΣNj</code>, LDPC codeword <code>NLDPC=18480</code>, overall rate ~0.9 (rate-0.95 BCH × rate-0.95 LDPC).</li><li>문제: LDPC 단독은 waterfall은 좋지만 flash가 요구하는 극저 error rate(10^-12)에서 error floor 발생; concat이 해법이나 rate-loss로 waterfall 성능 저하.</li><li>채널 모델: AWGN을 BSC crossover ε로 근사, ε=10^-2~10^-3 영역에서 BCH UER/BLER 분석.</li><li>디코딩: outer iteration(BCH↔LDPC) + LDPC 내부 min-sum(MSA); 성공한 BCH 블록 비트 신뢰도를 ∞로 saturate해 LDPC가 해당 hard decision을 못 바꾸게 함(식(1)).</li><li>MSA 핵심: <code>Ei,j = α·si,j·min|Li',j|</code> (α normalization scale, si,j는 sign 곱), 성공 BCH 비트는 <code>Ri=2(1-2d̂i)/σ²</code>로 초기화.</li><li>기여1 - outer iteration 수정: [6]의 max outer iteration 상한 대신, 직전 대비 성공 BCH 블록이 늘 수 있는 한 계속 진행(<code>Bi&gt;Bi-1</code>).</li><li>기여2 - unequal-length BCH 선택: UER를 binomial weight 분포로 근사(식(2)), 목표 BLER Pt로 nmax 결정, residual BER(90%-tile) 곡선을 따라 [N1..N4]=[2000,2400,5800,7272]로 점증 선택.</li><li>구현 디테일: unequal 길이지만 mother BCH code + shortening으로 단일 BCH HW 재사용 가능 → HW 복잡도는 equal-length와 유사.</li><li>결과: column-weight-3 LDPC concat이 error floor 제거하며, equal-length는 등가 BCH t=187, 제안 unequal-length는 t=208 수준으로 waterfall 개선; raw BER&lt;10^-3이면 BCH만으로 정정(Table I).</li><li>한계: 시뮬레이션만(HW 미설계), gate count·throughput 미보고, LDPC 부호/디코더 자체가 아니라 outer BCH 계층 설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LDPC min-sum(MSA) CN 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문 MSA는 우리 min-sum과 동일 계열 — 이미 보유, 신규성 없음</td></tr><tr><td>성공 BCH 비트 ∞ 포화로 LLR 초기화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>외부(BCH) 확정 비트를 강신뢰 LLR로 주입하는 인터페이스 — 부분 대응, outer 계층 신규 필요</td></tr><tr><td>조기종료(BCH 전부 성공 시 종료)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>우리 CRC 조기종료와 개념 유사하나 논문은 BCH validity 기반 outer 종료</td></tr><tr><td>outer BCH↔LDPC concatenation 계층</td><td>대응 없음</td><td>우리 코드는 단일 LDPC 엔진 — BCH inner/outer 계층 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND 직접 타깃이고 waterfall+error-floor 동시개선이 우리 관심사와 맞지만, 핵심 신규성이 LDPC 디코더가 아닌 outer BCH concatenation 계층 설계라 우리 단일 QC-LDPC 엔진에 떼어 붙이려면 BCH 계층 추가라는 아키텍처 변경이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7008483",
+  "title": "Concatenated BCH and LDPC Coding Scheme With Iterative Decoding Algorithm for Flash Memory",
+  "year": 2015,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.9,
+  "code_length": "18480",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "BCH+LDPC concatenation에서 unequal-length BCH 선택(UER·BLER·residual BER 기반)과 outer-iteration 지속 조건 수정으로 waterfall 개선하며 low error floor 유지",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LDPC 자체 개선이 아니라 outer BCH concatenation 계층 추가 — BCH outer 계층 없으면 아키텍처 변경 필요. 시뮬만, HW 미설계",
+  "todo_check": "성공 BCH 비트를 ∞ 포화시켜 LDPC LLR 초기화하는 방식이 우리 적응형 LLR 테이블/CRC 조기종료와 상호작용하는지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7008483---concatenated-bch-and-ldpc-coding-scheme-with-iterative-decoding-algorithm-for-flash-memory-2015-ieee-communications-letters">ieee:7008483 - Concatenated BCH and LDPC Coding Scheme With Iterative Decoding Algorithm for Flash Memory (2015, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

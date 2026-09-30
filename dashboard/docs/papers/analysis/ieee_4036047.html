@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4036047</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4036047---doubly-generalized-ldpc-codes-2006-isit">ieee:4036047 - Doubly Generalized LDPC Codes (2006, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.4667~0.75</td></tr><tr><td>부호length</td><td>7650~100000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>variable/check 노드 양쪽을 모두 서브코드(Hamming/SPC/repetition 등)로 일반화한 doubly GLDPC 구조와 EXIT chart 기반 파라미터 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN/BPSK 채널 가정, non-binary가 아니지만 서브코드가 Hamming/BCH 등 대수적 블록코드로 QC-LDPC와 구조가 크게 다름</td></tr><tr><td>추가확인</td><td>서브코드로 SPC/repetition만 쓰면 일반 irregular LDPC로 환원되므로 그 특수 케이스만 이식 가치 있는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: variable/check 노드를 모두 대수적 서브코드로 일반화하는 부호구성 이론 논문으로 QC-LDPC 기반 NAND ECC에 직접 이식할 요소가 적음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널은 AWGN, BPSK 신호, 반복 BP(belief propagation) 복호를 사용하는 doubly GLDPC 부호 설계 논문이다.</li><li>기존 GLDPC는 check node만 subcode(예: Hamming/BCH)로 대체했는데, 본 논문은 variable node도 subcode(SPC, repetition 등)로 대체하는 구조를 제안한다.</li><li>Tanner graph의 super variable node/super check node는 각각 subcode이며, base matrix <code>H=[Hmn]</code>를 row expansion(서브코드 parity check 열벡터로 치환) → column expansion(서브코드 generator 행벡터로 치환) 2단계로 전개해 전체 parity check 행렬을 얻는다.</li><li>반복 복호는 MAP(APP) 기반 horizontal step(super check node, 식 (3))과 vertical step(super variable node, 식 (4))의 LLR 메시지 교환으로 진행되며, <code>Wn(i,p)</code> 부호 판정 후 <code>bˆ(i)H^T=0</code> 이면 종료한다.</li><li>서브코드 EXIT 곡선은 SPC/repetition은 닫힌 해, 나머지는 Monte Carlo 시뮬로 얻어 super variable/check EXIT 곡선을 <code>λi</code>(edge 비율) 가중합(식 (7),(8))으로 결합한다.</li><li>EXIT curve-fitting(계면 정합) 기법으로 variable/check 곡선이 서로 맞물리도록 <code>λi</code> 분포를 설계하여 문턱값(threshold)을 최소화한다.</li><li>Convex한 서브코드 EXIT 곡선((6,5) SPC 등)을 variable node에 도입하면 concave한 repetition 곡선보다 check node 곡선(예: Hamming)과 더 잘 맞아 threshold가 개선된다.</li><li>최적화는 EXIT chart curve matching(수동/반복적 파라미터 탐색)이며 별도 GA/NN은 사용하지 않는다.</li><li>rate-3/4 length-100000 부호 C1은 threshold 1.9dB로 동일 rate irregular LDPC(PEG 구성, threshold 2.0dB) 대비 개선, error floor 영역에서도 우수. rate-7/15 length-7650 부호 C2는 threshold 0.3dB로 동일 rate (2,15) GLDPC(threshold 0.88dB) 대비 0.58dB 개선, BER 시뮬에서 0.35dB 이득.</li><li>HW 구현/합성 없음, 이론 및 시뮬레이션(AWGN, BPSK)에 국한되며 서브코드는 소형 대수코드(≤ (6,5))로 제한되어 있어 실용 하드웨어 복잡도는 미평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>부호구성(doubly GLDPC base matrix, subcode 배치)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC-LDPC 고정 구조와 무관한 대수적 서브코드 기반 구성으로 이식 난이도 높음</td></tr><tr><td>BP 반복복호(horizontal/vertical step, MAP)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>min-sum이 아닌 full MAP/APP 서브코드 복호로 CN/VN 연산 자체가 다름, 대응 없음</td></tr><tr><td>EXIT chart 기반 degree/서브코드 최적화</td><td>대응 없음</td><td>Prime ECC는 고정 H-matrix 사용, EXIT 최적화 파이프라인 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — non-QC-LDPC 대수적 서브코드 구조 기반 이론적 부호 설계이며, NAND/SSD 타깃이 아니고 Prime ECC의 QC-LDPC + min-sum HW 구조와 접점이 거의 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4036047",
+  "title": "Doubly Generalized LDPC Codes",
+  "year": 2006,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "7650~100000",
+  "soft_quant": "무관",
+  "key_contribution": "variable/check 노드 양쪽을 모두 서브코드로 일반화한 doubly GLDPC 구조와 EXIT chart 기반 파라미터 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN/BPSK 채널 가정, 서브코드가 Hamming/BCH 등 대수적 블록코드로 QC-LDPC와 구조가 크게 다름",
+  "todo_check": "서브코드로 SPC/repetition만 쓰면 일반 irregular LDPC로 환원되므로 그 특수 케이스만 이식 가치 있는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4036047---doubly-generalized-ldpc-codes-2006-isit">ieee:4036047 - Doubly Generalized LDPC Codes (2006, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

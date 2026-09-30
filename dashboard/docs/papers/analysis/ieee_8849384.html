@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8849384</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8849384---spatially-coupled-ldpc-codes-via-partial-superposition-2019-isit">ieee:8849384 - Spatially Coupled LDPC Codes via Partial Superposition (2019, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024~2400</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LDPC-BC 부호어를 partial superposition(BMST memory-1)으로 결합해 기존 LDPC-BC 대비 최대 0.7dB coding gain을 얻고, 인코더/디코더를 기존 LDPC-BC HW 위에 재사용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN/BPSK·16-QAM 무선 채널 대상 SC-LDPC 구성으로, superposition·sliding-window가 decoding latency(dn)를 키워 NAND 블록부호 디코더 파이프라인과 정합 안 됨</td></tr><tr><td>추가확인</td><td>superposition fraction α 최적화, sliding-window 크기 d·global iteration Jmax가 실제 gate/latency에 주는 비용은 본문에 HW 수치 없음</td></tr></tbody></table>
+<blockquote><p>총평: 기존 LDPC-BC HW를 재사용하며 coding gain을 얻는 BMST 기반 SC-LDPC 구성/디코딩 논문이지만, 지연을 늘리는 spatial coupling 구조라 저지연 NAND binary QC-LDPC 블록부호에는 이식 가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>기본 부호는 rate 1/2 (3,6)-regular binary LDPC-BC <code>C[n,k]</code>(PEG로 구성, length 1024~2400), AWGN·BPSK/16-QAM 전송.</li><li>문제: 기존 SC-LDPC 구성은 성능은 좋으나 인코더/디코더 HW가 기저 LDPC-BC HW와 느슨하게 연결돼 실제 구현이 불편.</li><li>핵심 아이디어: LDPC-BC 부호어 <code>v(t)=u(t)G</code>를 block Markov superposition transmission(BMST) 방식으로 encoding memory=1로 결합.</li><li>Partial superposition: selection matrix <code>S</code>(랜덤 순열 permutation의 <code>n(1-α)</code> 열을 0으로) 사용, <code>c(t)=v(t)+v(t-1)S</code>. <code>α</code>는 superposition fraction(최적화 대상).</li><li><code>α&lt;1</code>(부분 결합)이 catastrophic error propagation을 완화 — 기존 BMST(full superposition, α=1) 대비 핵심 차별점.</li><li>대수적 표현: 생성행렬 <code>G_SC</code>는 upper-banded block, 패리티행렬 <code>H_SC</code>는 lower block-triangular → BMST-LDPC가 SC-LDPC의 특수 클래스임을 보임.</li><li>디코딩: sliding-window(SW) 반복 message passing, 각 layer에 <code>+/=/S/LDPC</code> 노드, 내부 <code>LDPC</code> 노드는 기존 SISO SPA(Imax=20) 재사용, forward/backward recursion + successive cancellation.</li><li>BER 분석: genie-aided(GA) bound — 시뮬 GA(L=1)와 추정 GA <code>f_BMST(γ) ≥ f_basic(γ+10log10(1+α))</code>(기본 부호 곡선을 좌로 shift)로 예측.</li><li>결과: length 1024, α=0.3에서 LDPC-BC 대비 BER 1e-5에서 0.7dB coding gain; 16-QAM에서 window d=2/3/4로 BICM-LDPC 대비 0.5/0.6/0.7dB gain.</li><li>한계: HW 미설계(시뮬만), decoding latency <code>dn</code>으로 증가, AWGN/무선 채널 가정, NAND read/soft 양자화 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| BMST superposition 인코딩 (G_SC, selection matrix S) | encoder.cpp LDPC_encoder_4KB() | 대응은 인코더지만 dual-diagonal 고정 구조라 superposition 결합 이식 부담 큼 |
+| sliding-window SISO 반복 복호 (LDPC 노드=기존 SPA) | decoder.cpp LDPC_Decoder() | 내부 컴포넌트 디코더는 유사하나 우리는 min-sum, 논문은 SPA + SW 스케줄이라 정합 낮음 |
+| 부호구성 (H_SC, SC-LDPC 결합) | ecc_top.cpp Load_PCM() | Prime ECC는 QC-LDPC 블록 PCM 고정, spatial-coupling 구조 미지원 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — spatial coupling으로 지연을 늘려 coding gain을 얻는 방식은 저지연 NAND binary QC-LDPC 블록부호 디코더(<code>LDPC_Decoder()</code>)와 구조가 맞지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8849384",
+  "title": "Spatially Coupled LDPC Codes via Partial Superposition",
+  "year": 2019,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1024~2400",
+  "soft_quant": "무관",
+  "key_contribution": "LDPC-BC 부호어를 partial superposition(BMST memory-1)으로 결합해 기존 LDPC-BC 대비 최대 0.7dB coding gain을 얻고, 인코더/디코더를 기존 LDPC-BC HW 위에 재사용",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "AWGN/BPSK·16-QAM 무선 채널 대상 SC-LDPC 구성으로, superposition·sliding-window가 decoding latency(dn)를 키워 NAND 블록부호 디코더 파이프라인과 정합 안 됨",
+  "todo_check": "superposition fraction α 최적화, sliding-window 크기 d·global iteration Jmax가 실제 gate/latency에 주는 비용은 본문에 HW 수치 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8849384---spatially-coupled-ldpc-codes-via-partial-superposition-2019-isit">ieee:8849384 - Spatially Coupled LDPC Codes via Partial Superposition (2019, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

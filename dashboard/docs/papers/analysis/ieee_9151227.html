@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9151227</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9151227---disjoint-set-data-structure-aided-structured-gaussian-elimination-for-solving-sparse-linear-systems-2020-ieee-communications-letters">ieee:9151227 - Disjoint-Set Data Structure-Aided Structured Gaussian Elimination for Solving Sparse Linear Systems (2020, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>10000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>disjoint-set data structure(DSDS)로 structured Gaussian elimination의 triangulation 중 maximum component 탐색을 DFS 대비 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 BEC(binary erasure channel) 상의 ML erasure decoding(LDPC/LT 코드)이며 NAND의 min-sum BP 반복복호와는 알고리즘 계열이 다름</td></tr><tr><td>추가확인</td><td>Prime ECC가 erasure decoding/ML pivoting 기반 디코더를 사용하지 않으므로 이식 필요성 자체가 낮음</td></tr></tbody></table>
+<blockquote><p>총평: BEC 소거 복호를 위한 희소 선형계 삼각화(triangulation)를 disjoint-set 자료구조로 가속하는 알고리즘/자료구조 논문으로, NAND binary QC-LDPC의 min-sum 반복복호와는 대상 채널·복호 방식이 달라 Prime ECC 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 문제: 희소 선형계 <code>Ax=y</code> (F=R 또는 GF(2))를 structured Gaussian elimination(SGE)으로 빠르게 푸는 것 (LDPC/LT/raptor 코드의 ML erasure decoding, 정수 인수분해 등에 응용).</li><li>기존 방식 한계: SGE의 삼각화(triangulation) 단계에서 maximum component(MC, 가장 큰 연결 성분)를 찾기 위해 Tanner graph 전체를 DFS로 매번 탐색해야 해 계산 병목이 됨.</li><li>핵심 모델: <code>A</code>는 <code>m x n</code> 희소행렬, <code>θ</code>는 비영 원소 수. degree-2 row(2개 column과만 연결)를 통해 column들이 "component"로 연결됨을 정의(Definition 1).</li><li>핵심 기법: DFS 대신 disjoint-set data structure(DSDS, union-find)를 사용해 degree-2 row가 나올 때마다 해당 두 column에 <code>UNION(v,v')</code>을 적용, 각 rooted tree가 하나의 component에 대응하도록 유지.</li><li>핵심 연산: <code>FIND(v)</code>(path-compression 포함)와 <code>UNION(u,v)</code>(union-by-rank 포함)로 <code>O(α(n)·nf)</code> 시간에 component 관리 (<code>α</code>는 역 Ackermann 함수, 사실상 상수).</li><li>전체 삼각화 복잡도: DSDS 사용 시 <code>O(α(n)m + nγ + θ)</code>로 기존 DFS 기반 <code>O(θγ)</code> 대비 수 배 낮음 (<code>γ</code>는 삼각화 후 남는 dense 부분 크기).</li><li>삼각화 이후 처리: <code>(2)</code>를 <code>I/0, R1/R2</code> 형태로 변환 후 <code>R2 x2 = y2</code>를 conventional GE로 풀고 back substitution — 전체 <code>O(θγ + θl + γ^3 + γ^2 l)</code>.</li><li>구현 디테일: bit-string 32비트를 정수 하나로 압축해 XOR 연산 가속(C++ 구현), F=GF(2) 특화.</li><li>결과: rate-0.5 irregular LDPC(m=5000,n=10000,l=3200, BEC)와 LT code(n=1024)에서 pe≥0.45 구간 등에서 DSDS가 DFS 대비 수 배(several times) 빠른 실행시간 확인(시뮬 그래프 기반, 정확한 배수는 본문 수치 미제시).</li><li>한계: 대상이 BEC 상의 erasure decoding(선형대수 기반 ML decoding)이며, HW 설계·min-sum 반복복호와 무관. 순수 알고리즘/자료구조 논문(시뮬만, ASIC/FPGA 없음).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| MC 기반 triangulation / SGE (erasure ML decoding) | 대응 없음 | Prime ECC는 min-sum BP 반복복호 기반이며 Gaussian elimination 기반 ML decoding을 사용하지 않음 |
+| disjoint-set 자료구조(DSDS) | 대응 없음 | H-matrix 구조 관리·인코딩 어디에도 union-find 기반 component 탐색이 쓰이지 않음 |
+| 부호 PCM 생성/구조 (LDPC/LT 코드 예시) | ecc_top.cpp Load_PCM() | 원문은 QC-LDPC PEG 알고리즘으로 생성된 PCM을 예시로만 사용, 부호설계 기법 자체는 아님 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 알고리즘 대상(BEC 소거 채널, ML erasure decoding)과 최적화 대상(component 탐색 자료구조)이 Prime ECC의 min-sum 기반 binary QC-LDPC 반복복호 파이프라인과 근본적으로 다른 계열이라 이식 지점이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9151227",
+  "title": "Disjoint-Set Data Structure-Aided Structured Gaussian Elimination for Solving Sparse Linear Systems",
+  "year": 2020,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": 10000,
+  "soft_quant": "무관",
+  "key_contribution": "disjoint-set data structure(DSDS)로 structured Gaussian elimination의 triangulation 중 maximum component 탐색을 DFS 대비 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상이 BEC 상의 ML erasure decoding(LDPC/LT 코드)이며 NAND의 min-sum BP 반복복호와는 알고리즘 계열이 다름",
+  "todo_check": "Prime ECC가 erasure decoding/ML pivoting 기반 디코더를 사용하지 않으므로 이식 필요성 자체가 낮음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9151227---disjoint-set-data-structure-aided-structured-gaussian-elimination-for-solving-sparse-linear-systems-2020-ieee-communications-letters">ieee:9151227 - Disjoint-Set Data Structure-Aided Structured Gaussian Elimination for Solving Sparse Linear Systems (2020, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

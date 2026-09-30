@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9714392</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9714392---low-complexity-majority-logic-decoding-for-ldpc-coded-pnc-systems-2022-ieee-communications-letters">ieee:9714392 - Low Complexity Majority-Logic Decoding for LDPC-Coded PNC Systems (2022, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>PNC TWRC용 저복잡도 MLGD/reliability 기반 복호(M-OSMLGD/M-ISRB/IM-ISRB), 반복마다 외부 신뢰도 갱신</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>non-binary GF(2^2) + PNC 두-사용자 중첩신호 전용, binary NAND LDPC와 채널·문제정의가 다름</td></tr><tr><td>추가확인</td><td>IM-ISRB의 반복별 외부신뢰도 갱신 아이디어가 binary min-sum 스케줄에 이식되는지 여부</td></tr></tbody></table>
+<blockquote><p>총평: PNC/TWRC 중첩신호용 non-binary MLGD 복호로 NAND binary QC-LDPC와 무관, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2-way relay channel(TWRC)에서 두 사용자 A,B가 동일 regular non-binary LDPC(GF(2^2), rate 1/2, <code>n=1024</code>)로 부호화 후 BPSK로 relay에 동시 전송, relay는 XOR NC 메시지 추정.</li><li>문제: BP 기반 JCNC는 두-사용자 조합을 반복 갱신하여 복잡도가 큼 → 저복잡도 message-passing 복호가 필요.</li><li>모델: 전력 불균형 Gaussian 채널 <code>y=hA*xA+hB*xB+nR</code>, 4가지 중첩심볼 <code>S={±hA±hB}</code>을 GF(2^2)의 4원소에 대응.</li><li>기법1 M-OSMLGD: 채널확률로 hard-decision <code>zj</code>, PNC 매핑 <code>uR(j)=1 if zj∈{1,2}</code>, 체크섬 <code>si</code>와 외부정보 <code>σi,j</code>로 다수결 투표 <code>Rj,l += 1</code>.</li><li>식 의미: <code>si=Σ zj</code> (식4)가 XOR parity, 외부정보 <code>σi,j</code>(식7)가 각 CN의 VN 예측 → 다수결 vote로 정정.</li><li>기법2 M-ISRB: 초기 채널확률 <code>pj,l</code>을 양자화(<code>φj,l</code>, 식10)해 신뢰도 벡터 초기화, 외부신뢰도 <code>ϕi,j</code>(식11, min-max) 사용.</li><li>기법3 IM-ISRB: 초기화 시 1회만 계산되던 <code>ϕi,j</code>를 매 반복 <code>Rj,l</code>로부터 갱신(식14-15, <code>τj=ε·max Rj,l</code>)해 신뢰도 반영도 유지.</li><li>파라미터: <code>Imax=50</code>, 양자화 <code>r=0.7, w=5</code>, scaling <code>λ=5, ε=0.5</code>(경험적).</li><li>결과: IM-ISRB가 M-ISRB 대비 BER 10^-4에서 1.5dB↑, JCNC와 1.8dB 이내 gap이면서 복잡도 대폭 절감, 평균 반복수도 최소.</li><li>한계: 시뮬만(HW 없음), non-binary GF(2^2) + 두-사용자 PNC 중첩신호 전용으로 채널·문제정의가 NAND와 근본적으로 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MLGD/reliability 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>낮음 - non-binary GF(2^2) MLGD, binary min-sum과 연산 구조 상이</td></tr><tr><td>외부정보 σi,j / 신뢰도 vote</td><td>대응 없음</td><td>non-binary reliability vote, Prime ECC min-sum과 무관</td></tr><tr><td>채널확률 양자화 φj,l</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>낮음 - PNC 중첩신호 확률 양자화로 NAND soft-read LLR과 목적 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — non-binary GF(2^2) 부호 + PNC/TWRC 중첩신호 복호 전용으로, NAND binary QC-LDPC 부호설계/디코더/HW에 떼어 쓸 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9714392",
+  "title": "Low Complexity Majority-Logic Decoding for LDPC-Coded PNC Systems",
+  "year": 2022,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1024",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "PNC TWRC용 저복잡도 MLGD/reliability 기반 복호(M-OSMLGD/M-ISRB/IM-ISRB), 반복마다 외부 신뢰도 갱신",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "non-binary GF(2^2) + PNC 두-사용자 중첩신호 전용, binary NAND LDPC와 채널·문제정의가 다름",
+  "todo_check": "IM-ISRB의 반복별 외부신뢰도 갱신 아이디어가 binary min-sum 스케줄에 이식되는지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9714392---low-complexity-majority-logic-decoding-for-ldpc-coded-pnc-systems-2022-ieee-communications-letters">ieee:9714392 - Low Complexity Majority-Logic Decoding for LDPC-Coded PNC Systems (2022, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

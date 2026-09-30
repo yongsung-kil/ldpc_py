@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1412054</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1412054---improved-bit-flipping-decoding-of-low-density-parity-check-codes-2005-ieee-trans-inf-theory">ieee:1412054 - Improved Bit-Flipping Decoding of Low-Density Parity-Check Codes (2005, IEEE Trans. Inf. Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.7</td></tr><tr><td>부호length</td><td>273~40000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>결정론적 BF에서 임계 초과 비트를 확률 p(&lt;1)로 flip하고 p를 반복마다 증가시켜 waterfall 성능·평균 반복수 동시 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>error-floor는 개선 못함(별도 parallel+reinit 절차 필요), J=3에서만 큰 이득, HW 미설계</td></tr><tr><td>추가확인</td><td>초기 p·증분 스텝 최적화 규칙, NAND용 QC-LDPC(고rate, VN degree 17)에서 확률적 BF가 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BF의 waterfall/반복수 개선용 확률적 flip 아이디어로 NAND용 min-sum 대비 이득은 제한적이나 초저복잡도 HD 경로에 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC 상의 regular <code>(J,L)</code> LDPC, hard-decision BF 복호. 예제: <code>(1008,504)(3,6)</code>, <code>(40000,20000)(3,6)</code>, <code>(1680,1176)(3,10)</code>, <code>(4000,2000)(4,8)</code>, <code>(273,191)(17,17)</code> PG.</li><li>문제: Gallager 결정론적 BF는 짧은 cycle이 만드는 주기적 오류패턴에 갇혀(trap) waterfall 성능·수렴이 나쁘다.</li><li>모델: unsatisfied check sum 수가 <code>⌈J/2⌉</code>에 가까운 비트는 신뢰도가 낮다는 관찰을 이용.</li><li>핵심 기법: 임계 <code>b(≥J-1)</code> 초과 비트를 자동 flip 대신 확률 <code>p&lt;1</code>로 flip. cycle 내부의 잘못된 메시지 전파를 늦춰 오류 확산을 줄임.</li><li>핵심 식: cycle-free 수렴식 <code>p_{i+1}=p0−p0F+(pi)(1−(1−p)pi)+(1−p0)F−(pi)(p+(1−p)pi)</code> — <code>p</code>를 반복마다 키우면 static point(비영 수렴점)를 회피.</li><li>확장: 복호 후 codeword가 아니면 unsatisfied 비트를 모두 flip하고 <code>p</code>를 리셋하는 reinitialization + 동일 수신열의 parallel 복호(다수결/최근접 Hamming) 로 error-floor 완화.</li><li>구현 디테일: <code>p</code>는 초기값(예 0.1)에서 시작해 비트값 변화가 없을 때 0.1씩 증가, <code>p=1</code> 도달 시 갱신규칙이 정지조건이 됨.</li><li>최적화: tree-like 코드 수렴식으로 최소 초기 p·최대 증분을 도출하되 유한길이에서는 하향 조정 필요.</li><li>결과: <code>(1008,504)(3,6)</code>에서 Algorithm A 대비 waterfall &gt;1dB, <code>(3,10)</code>은 1.9dB 이득; 평균 반복수도 감소(특히 (4,8)에서 Algorithm B 대비 log-scale 대폭 감소).</li><li>한계: error-floor는 확률적 BF만으로 개선 불가, J≥4·irregular에서는 이득 급감, HW 미설계·throughput/gate 정보 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 확률적 BF flip 결정 (반복별 p 증가) | decoder.cpp LDPC_Decoder() 이터레이션 루프 | HD 경로에 확률적 flip 스케줄 삽입 가능하나 우리 기본은 min-sum |
+| unsatisfied check sum 카운트 기반 VN 갱신 | decoder.cpp VN_Cal_HD() | HD 복호 시 flip 판정부에 대응 |
+| parallel+reinitialization error-floor 완화 | decoder.cpp LDPC_Decoder() (재초기화 루프) | 반복 후 실패 시 재시도 로직으로 이식 가능, 다만 latency 증가 |
+| BF 자체 (min-sum 아님) | 대응 없음 | Prime ECC는 min-sum 기반이라 BF 알고리즘 직접 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — hard-decision BF는 우리 min-sum(2SD/3SD) 대비 성능이 낮고 논문 이득도 J=3·waterfall에 국한되어, NAND 고rate QC-LDPC 실이식 가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1412054",
+  "title": "Improved Bit-Flipping Decoding of Low-Density Parity-Check Codes",
+  "year": 2005,
+  "venue": "IEEE Trans. Inf. Theory",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.7",
+  "code_length": "273~40000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "결정론적 BF에서 임계 초과 비트를 확률 p(&lt;1)로 flip하고 p를 반복마다 증가시켜 waterfall 성능·평균 반복수 동시 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "error-floor는 개선 못함(별도 parallel+reinit 절차 필요), J=3에서만 큰 이득, HW 미설계",
+  "todo_check": "초기 p·증분 스텝 최적화 규칙, NAND용 고rate QC-LDPC에서 확률적 BF 유효성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1412054---improved-bit-flipping-decoding-of-low-density-parity-check-codes-2005-ieee-trans-inf-theory">ieee:1412054 - Improved Bit-Flipping Decoding of Low-Density Parity-Check Codes (2005, IEEE Trans. Inf. Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

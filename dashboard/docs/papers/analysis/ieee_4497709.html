@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4497709</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4497709---high-throughput-encoder-architecture-for-dvb-s2-ldpc-ira-codes-2007-ieee-icm">ieee:4497709 - High Throughput Encoder Architecture for DVB-S2 LDPC-IRA Codes (2007, IEEE ICM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.25~0.9</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>DVB-S2 IRA 부호의 M=360 주기구조를 이용해 부분병렬(360비트/클록)로 패리티비트를 실시간 계산하는 통합 인코더 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>5.93Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB-S2 IRA(staircase B matrix) 전용 구조로 Prime ECC의 QC-LDPC dual-diagonal 인코더와 구조가 달라 직접 이식 어려움</td></tr><tr><td>추가확인</td><td>부분병렬 rotation 기반 S-메모리 갱신 기법이 encoder.cpp의 dual-diagonal 인코딩과 접목 가능한지 여부</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 IRA 인코더의 FPGA 고속화 논문으로 NAND binary QC-LDPC 이식 관점에서는 참고 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>DVB-S2 LDPC-IRA 부호(H = [A | B], B는 staircase 하삼각행렬)를 대상으로 하며 프레임길이 16200/64800, rate 1/4~9/10 21종 모드를 모두 지원.</li><li>IRA 부호는 O(n) 선형 인코딩이 가능하지만, 표준의 21개 모드 전체를 지원하는 통합 고속 인코더 설계가 과제.</li><li>A 행렬은 정보비트를 M=360개 단위 그룹으로 나누고 그룹 내 모든 비트가 동일 weight <code>w_l</code>를 갖는 유사난수(pseudo-random) 준주기 구조를 가정.</li><li>패리티 재귀식 <code>p_r = S_r ⊕ p_{r-1}</code>, <code>S_r = ⊕_{z∈IN(r)} i_z</code> 를 정보비트 c 기준 수직 처리로 재구성하고, 주기성 M=360을 이용해 한 클록에 360개 체크노드에 대해 <code>S_r</code> 값을 동시 갱신.</li><li>핵심 관계식 <code>S(r mod q,:) = S(r mod q,:) ⊕ rot_{r div q}(i)</code>: 정보벡터의 circular shift만으로 S 메모리의 한 행을 벡터화 갱신 가능함을 보여 하드웨어 병렬화를 가능케 함.</li><li>이후 S 메모리 전체 열의 GF(2) 누적합을 하삼각 행렬 L 곱으로 구해 최종 359비트 벡터 <code>s'</code>를 얻고, 이를 우측 논리시프트하여 초기 패리티 시퀀스를 생성.</li><li>구현은 Task1(S_r 계산)-Task2(열 체크섬 누적, Task1과 동시수행)-Task3(패리티 360비트/클록 계산) 3단 파이프라인으로 구성, ROM에 code별 shift/address 테이블 저장.</li><li>별도 학습/최적화 절차 없음(고정 하드웨어 아키텍처 설계).</li><li>XC2VP30 Virtex-II Pro FPGA @131.7MHz 합성 결과, 최저 throughput 4.5Gb/s(16200,9720), 최고 10.78Gb/s(rate 1/5), FPGA 슬라이스 32% 사용.</li><li>인코더 전용 설계로 디코더 성능/복잡도 언급 없음, ASIC 합성 아닌 FPGA 결과만 제시, DVB-S2 표준 특정 IRA 구조에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>IRA 부분병렬 인코딩 알고리즘</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>인코딩 처리량 개선 아이디어이나 부호구조(staircase IRA vs dual-diagonal QC)가 달라 직접 대응 어려움</td></tr><tr><td>A/B 행렬 기반 H-matrix 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>IRA 특유 구조라 QC-LDPC PCM 로드와 무관</td></tr><tr><td>S 메모리 벡터화 회전 갱신</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>정보비트 순서 재배치 아이디어 측면 미약한 유사성</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — IRA 특유의 staircase 구조에 최적화된 인코더로, Prime ECC의 QC-LDPC dual-diagonal 인코더 구조와 근본적으로 다른 부호 클래스를 다룸.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4497709",
+  "title": "High Throughput Encoder Architecture for DVB-S2 LDPC-IRA Codes",
+  "year": 2007,
+  "venue": "IEEE ICM",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "기타",
+  "code_rate": "0.25~0.9",
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "DVB-S2 IRA 부호의 M=360 주기구조를 이용해 부분병렬(360비트/클록)로 패리티비트를 실시간 계산하는 통합 인코더 아키텍처",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 5.93,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DVB-S2 IRA(staircase B matrix) 전용 구조로 Prime ECC의 QC-LDPC dual-diagonal 인코더와 구조가 달라 직접 이식 어려움",
+  "todo_check": "부분병렬 rotation 기반 S-메모리 갱신 기법이 encoder.cpp의 dual-diagonal 인코딩과 접목 가능한지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4497709---high-throughput-encoder-architecture-for-dvb-s2-ldpc-ira-codes-2007-ieee-icm">ieee:4497709 - High Throughput Encoder Architecture for DVB-S2 LDPC-IRA Codes (2007, IEEE ICM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

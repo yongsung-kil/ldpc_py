@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9942436</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9942436---a-fast-decoding-convergence-of-siso-repetition-qc-ldpc-codes-concatenated-at-the-receiver-2022-niles-2022">ieee:9942436 - A Fast Decoding Convergence of SISO Repetition – QC-LDPC Codes Concatenated at the Receiver (2022, NILES 2022)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.333~0.667</td></tr><tr><td>부호length</td><td>792</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>오버샘플링 반복심볼을 SISO repetition(외부)+OMS(내부) 직렬연접으로 처리해 수렴 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>수신단 오버샘플링(OSR=2)이 이득의 원천 — NAND 플래시 read엔 오버샘플링 개념 부재로 이식 불가</td></tr><tr><td>추가확인</td><td>HW 미설계·MATLAB 시뮬만, 오버샘플링 없는 순수 알고리즘 이득 분리 여부</td></tr></tbody></table>
+<blockquote><p>총평: 무선/URLLC용 수신단 오버샘플링 연접 기법으로 NAND ECC 이식성 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK over AWGN/Rayleigh, 5G NR QC-LDPC(BG1, <code>kb=22</code>), rate <code>1/3, 1/2, 2/3</code>, <code>z=12</code>, PCM <code>264×792/528/396</code>, K=256bit.</li><li>문제: MS 계열 저복잡도 디코더의 성능 손실을 복잡도 큰 증가 없이 만회하고자 함.</li><li>모델: 심볼주기 내 Nyquist보다 빠르게 오버샘플링(<code>OSR=M</code>)하여 M-folded 반복심볼 <code>y_{N,i}=he^{jφ}x_N+n_{N,i}</code> 생성, noise i.i.d.</li><li>핵심기법 1단: 외부 SISO repetition 디코더가 M-folded 심볼을 결합 우도로 처리, <code>LLR(y)=Σ_{i=1}^{M} LLR(y_i)</code>로 신뢰도 향상.</li><li>식 의미: M개 샘플 LLR 합산이 유효 SNR을 높여 내부 디코더 초기 신뢰도를 강화.</li><li>핵심기법 2단: 강화된 LLR을 내부 OMS(offset <code>β=0.6</code>) layered 디코더의 VN 초기값으로 투입, layered QC-LDPC 복호.</li><li>구현: 오버샘플링에 다중 ADC 채널, SRRC 필터(roll-off <code>α=0.3</code>) 사용, 코딩레이트는 반복이 수신단이라 불변.</li><li>복잡도: 전체 <code>≈O(K/R)</code>, 추가항 <code>(M+1)</code>만 붙어 conventional 대비 유의미 증가 없음.</li><li>결과: OSR=2에서 BER 10^-3에 OMS 대비 ~3dB(이상), SRRC 시 ~2.4dB 이득; iteration 10→5 감소, BER 10^-5서 0.9~1.9dB.</li><li>한계: HW 미설계, MATLAB 시뮬만, 이득이 수신단 오버샘플링에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 내부 OMS layered 복호 | decoder.cpp LDPC_Decoder(), C2V_Cal() | Min-Sum 계열은 이미 보유, 중복 |
+| offset min-sum 연산 | decoder.cpp CNU_Update_New_Mag() | offset은 기존 min-sum과 유사, 신규성 낮음 |
+| 외부 SISO repetition / 오버샘플링 | 대응 없음 | NAND read에 오버샘플링 개념 부재, 이식 불가 |
+| LLR 초기화(soft prior) | channel.cpp Set_LLR_Th() | soft 입력 경로는 있으나 오버샘플 합산 LLR은 무관 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 이득의 핵심이 수신단 오버샘플링 반복이며 NAND 플래시 read에는 존재하지 않는 물리계층 가정이라 떼어낼 부분이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9942436",
+  "title": "A Fast Decoding Convergence of SISO Repetition – QC-LDPC Codes Concatenated at the Receiver",
+  "year": 2022,
+  "venue": "NILES 2022",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "792",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "오버샘플링 반복심볼을 SISO repetition(외부)+OMS(내부) 직렬연접으로 처리해 수렴 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "수신단 오버샘플링(OSR=2)이 이득 원천 — NAND read엔 오버샘플링 부재로 이식 불가",
+  "todo_check": "HW 미설계·MATLAB 시뮬만, 오버샘플링 없는 순수 알고리즘 이득 분리 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9942436---a-fast-decoding-convergence-of-siso-repetition-qc-ldpc-codes-concatenated-at-the-receiver-2022-niles-2022">ieee:9942436 - A Fast Decoding Convergence of SISO Repetition – QC-LDPC Codes Concatenated at the Receiver (2022, NILES 2022)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

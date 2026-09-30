@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2605.01035</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv260501035v1---a-scalable-fpga-architecture-for-real-time-decoding-of-quantum-ldpc-codes-using-gari-2026-arxiv">arxiv:2605.01035v1 - A Scalable FPGA Architecture for Real-Time Decoding of Quantum LDPC Codes Using GARI (2026, arXiv)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>144</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>GARI 변환 후 quantum LDPC(bivariate bicycle code)의 correlated error(X/Y/Z)를 처리하는 자원 재사용형 FPGA 디코더 아키텍처 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>122393 LUT / 111697 REG / 704 BRAM (단일 코어, VU29P)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>quantum LDPC(비-CSS 상호작용 X/Y/Z error, GARI 변환 특유 구조) 전용이라 binary NAND LDPC 부호 구조와 근본적으로 다름</td></tr><tr><td>추가확인</td><td>크로스바 라우팅/타일 매핑 아이디어가 자원 재사용 관점에서 일반 병렬 LDPC HW에 참고될 여지가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: quantum LDPC(GARI 변환) 전용 FPGA 디코더 아키텍처로, 부호 구조와 CNU 스케줄링이 NAND binary QC-LDPC와 근본적으로 달라 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 <code>[[144,12,12]]</code> bivariate bicycle quantum LDPC 코드이며, X/Z/Y 세 종류 상관 오류(correlated error)를 다루는 detector error model을 decoding 대상으로 함.</li><li>기존 X/Z 독립 디코딩은 Y-error로 인한 상관관계 때문에 성능이 저하되는 문제를 해결하려 함.</li><li>GARI(Graph Augmentation and Rewiring for Inference) 변환으로 detector error model <code>D_XYZ</code>를 4-cycle 없는 구조로 재작성, <code>D_X, D_Z, U, V</code> 서브행렬로 분리(식 (1)-(2)).</li><li>아키텍처는 두 유닛으로 구성: <code>D_X, D_Z</code> 유닛(직렬 스케줄 BP)과 <code>U, V</code> 유닛(완전 병렬, 체크 간 독립).</li><li><code>D_X, D_Z</code>는 메모리 기반 직렬 BP 디코더(변수당 메모리 할당, 체크당 순차 처리)로 정규화 min-sum(normalized min-sum) 규칙 사용.</li><li><code>U, V</code> 유닛은 체크 간 완전 독립이므로 병렬 처리 가능하며, <code>D_X,D_Z</code> 처리 시간과 맞도록 병렬도(타일 수 18개)를 조정해 idle/과잉자원 방지.</li><li>eY 메시지를 U→V로 라우팅하기 위해 태그 기반 크로스바(binary radix sort 유사, K=⌈log2(J)⌉ 스테이지) 구조를 도입해 controller-less 라우팅 구현.</li><li>학습/최적화 절차는 없고, 변수-타일 매핑은 greedy/heuristic search(NP-hard 문제의 근사해)로 수행.</li><li>VU29P FPGA에서 단일 코어 274 MHz, iteration당 1728 cycle, 평균 2.28회 반복 시 14.4 μs 지연(단일 디코더), 24-디코더 앙상블(3-코어×8 FPGA) 구성 시 라운드당 596 ns 달성 - 기존 GARI 구현 대비 자원 6분의 1.</li><li>한계: FPGA 구현만 존재(ASIC 없음), 코드 특정적 자원 추정(범용화 어려움), 낮은 논리 오류율에서의 정확도 평가는 향후 과제로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>normalized min-sum CNU 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 보유한 기법과 개념적으로 유사하나 quantum 특유 X/Y/Z 체크 구조 전제로 재검증 필요</td></tr><tr><td>메모리 기반 직렬 BP 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>스케줄링 개념은 참고 가능하나 D_X/D_Z/U/V 분리 구조는 binary QC-LDPC와 무관</td></tr><tr><td>GARI 부호 변환(H-matrix 재구성)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>대응 없음 (quantum non-CSS 상관오류 모델 전용, binary QC-LDPC 구조와 무관)</td></tr><tr><td>크로스바 기반 메시지 라우팅</td><td>대응 없음</td><td>GT.cpp의 edge 선택과 목적이 다름(HW 자원축소 vs U/V 타일 간 통신)</td></tr></tbody></table>
+<p>적용 가치: 낮음 - quantum LDPC(비-CSS 상관오류, GARI 변환) 전용 구조로 NAND binary QC-LDPC 부호/디코더 설계와 직접적 접점이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2605.01035v1",
+  "title": "A Scalable FPGA Architecture for Real-Time Decoding of Quantum LDPC Codes Using GARI",
+  "year": 2026,
+  "venue": "arXiv",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "144",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "GARI 변환 후 quantum LDPC(bivariate bicycle code)의 correlated error(X/Y/Z)를 처리하는 자원 재사용형 FPGA 디코더 아키텍처 제안",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "122393 LUT / 111697 REG / 704 BRAM (단일 코어, VU29P)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "quantum LDPC(비-CSS 상호작용 X/Y/Z error, GARI 변환 특유 구조) 전용이라 binary NAND LDPC 부호 구조와 근본적으로 다름",
+  "todo_check": "크로스바 라우팅/타일 매핑 아이디어가 자원 재사용 관점에서 일반 병렬 LDPC HW에 참고될 여지가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv260501035v1---a-scalable-fpga-architecture-for-real-time-decoding-of-quantum-ldpc-codes-using-gari-2026-arxiv">arxiv:2605.01035v1 - A Scalable FPGA Architecture for Real-Time Decoding of Quantum LDPC Codes Using GARI (2026, arXiv)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

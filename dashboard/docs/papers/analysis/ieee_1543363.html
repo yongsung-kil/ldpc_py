@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1543363</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1543363---low-complexity-stopping-criterion-for-ldpc-code-decoders-2005-ieee-iscas-2005">ieee:1543363 - Low Complexity Stopping Criterion for LDPC Code Decoders (2005, IEEE (ISCAS 2005))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.8</td></tr><tr><td>부호length</td><td>2000~3200</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>VNR(중간 VN 신뢰도 절대값 합)이 정체/감소하면 조기종료해 미복호 블록의 평균 iteration을 대폭 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>VNRoff 임계값을 rate별로 사전 튜닝해야 하고, 미복호 블록만 이득(복호가능 블록은 기존 parity-check 종료가 이미 완벽)</td></tr><tr><td>추가확인</td><td>Prime ECC의 Partial/Full CRC 조기종료 대비 미복호 블록 검출 이득이 실제로 더 큰지</td></tr></tbody></table>
+<blockquote><p>총평: 미복호 블록을 초기에 검출하는 저복잡도 종료기준으로 avg iteration/latency 감소에 유효하나, Prime ECC는 이미 CRC 기반 조기종료를 보유해 중복 성격.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: irregular LDPC (<code>R=0.8</code>, len 2000, VN degree {2:0.2,4:0.8}, CN degree 18 / <code>R=0.5</code>, len 3200, CN degree 8), AWGN, 6bit LLR 양자화, 최대 40 iteration.</li><li>문제: 미복호(undecodable) 블록은 parity-check가 끝까지 안 맞아 40 iteration을 전부 소진 → 에너지·latency 낭비.</li><li>모델: 무한 블록 가정 시 VN 출력 <code>Λn = λch + λi</code>를 Gaussian LLR로 보고 consistency(<code>2μ=σ²</code>)로 분포를 <code>μ</code>만으로 특성화.</li><li>핵심 기법: VN reliability <code>VNR = Σ|Λi|</code> (모든 VN 중간결과 절대값 합)을 매 iteration 추적, 이 값이 <code>SNR_VN = μ[|Λ|]/2</code>에 비례함을 이용.</li><li>종료 규칙: 두 연속 iteration에서 VNR이 증가하지 않으면(정체/감소) 미복호로 판단해 조기종료.</li><li>스위치오프: VNR이 임계 <code>VNRoff = MB·N</code>를 넘으면 종료기준을 끈다(복호가능 블록의 일시적 VNR 하강 오검출 방지).</li><li>임계 유도: <code>MB ≈ 4·(Es/N0)_WR</code> (waterfall region SNR 기반), SNR 독립이며 rate당 1회만 결정.</li><li>HW 친화성: VNR 계산과 VNRoff 비교만 필요해 구현 복잡도 매우 낮음(sign-magnitude LLR에서 즉시 획득).</li><li>결과: <code>R=0.8</code>, MB=16에서 성능손실 0 이면서 저SNR(2.5dB) 평균 iteration 40→3; MB=20이면 전 SNR&lt;12 iteration, 손실 0.1dB.</li><li>한계: HW 미설계(시뮬만), MB 임계 사전튜닝 필요, decodable 블록엔 기존 parity-check 종료가 이미 최적이라 이득은 미복호 블록에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VNR 기반 조기종료 판정</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>조기종료 레이어가 대응 — 미복호 블록 검출 보조 기준으로 추가 가능</td></tr><tr><td>VN 중간결과 <code>Λn</code> 합산</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>LDPC_Decoder()</code> 루프</td><td>VN 처리 결과 절대값 누적을 이터레이션 루프에 삽입</td></tr><tr><td>VNRoff 임계 테이블(rate별)</td><td>ecc_data.h <code>PARAM_LLR</code> / <code>PARAM_DEC</code></td><td>rate당 단일 상수 추가 수준</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 저복잡도 미복호 검출 아이디어는 이식이 매우 쉽지만, Prime ECC는 이미 Partial/Full CRC 조기종료를 보유해 신규성이 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1543363",
+  "title": "Low Complexity Stopping Criterion for LDPC Code Decoders",
+  "year": 2005,
+  "venue": "IEEE (ISCAS 2005)",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.8",
+  "code_length": "2000~3200",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "VNR(중간 VN 신뢰도 절대값 합) 정체/감소 시 조기종료로 미복호 블록 평균 iteration 대폭 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "VNRoff 임계를 rate별 사전 튜닝 필요, 이득은 미복호 블록에 국한",
+  "todo_check": "Prime ECC의 CRC 조기종료 대비 미복호 블록 검출 이득이 실제로 더 큰지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1543363---low-complexity-stopping-criterion-for-ldpc-code-decoders-2005-ieee-iscas-2005">ieee:1543363 - Low Complexity Stopping Criterion for LDPC Code Decoders (2005, IEEE (ISCAS 2005))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

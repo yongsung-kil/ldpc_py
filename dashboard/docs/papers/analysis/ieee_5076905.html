@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5076905</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5076905---a-modified-belief-propagation-decoding-algorithm-of-ldpc-codes-for-fast-convergence-2009-ieee-iccsn">ieee:5076905 - A Modified Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence (2009, IEEE ICCSN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LLR 값을 non-confidence/half-confidence/full-confidence 3구간으로 나누고 각각 계수 α(&lt;1), β(&gt;1)를 곱해 강제 수렴시켜 표준 BP 대비 iteration을 절반으로 줄임</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>이론적 근거 미확립(저자 스스로 "theoretical deduction still remains in research"라 명시), 0.2dB 성능 손실 존재, sum-product(tanh 기반) BP 알고리즘 기준이라 Prime ECC의 min-sum과 직접 비교 불가, HW/gatecount 검증 없음</td></tr><tr><td>추가확인</td><td>α,β,a,b 임계값이 특정 시뮬레이션 조건(rate 1/2, n=2000)에 맞춘 경험적 상수라 다른 부호/rate에서 재조정 필요 여부 확인</td></tr></tbody></table>
+<blockquote><p>총평: sum-product BP decoder에 LLR 구간별 강제 스케일링을 적용해 iteration을 절반으로 줄이는 경험적 기법으로, 개념(적응형 LLR 스케일링)은 Prime ECC의 적응형 LLR 테이블과 유사한 방향이나 min-sum 미적용/이론적 근거 부족/성능 손실로 이식 가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>표준 sum-product BP 디코딩(check node 갱신 식 <code>Lqc(i)=Ψ^-1(Σ Ψ(Lqb(k))·Π(-1)^k)</code>, <code>Ψ(x)=log(tanh(|x|/2))</code>)을 AWGN 채널(rate R=1/2, n=2000, dv=3 regular / 식(6) irregular degree distribution)에서 시뮬레이션.</li><li>문제의식: BP 알고리즘은 많은 iteration이 필요해 하드웨어 자원과 디코딩 지연(latency)을 증가시킴.</li><li>핵심 관찰(통계 분석): 초기 iteration 후 LLR이 극성화(polarization)되며, 특정 값 이상인 비트는 부호가 바뀌지 않고(신뢰 확정), 0 근처 비트는 사이클로 인한 진동(oscillation)을 반복함.</li><li>핵심 기법: LLR을 3구간으로 분할 — non-confidence(<code>|LLR|&lt;a</code>), half-confidence(<code>a&lt;|LLR|&lt;b</code>), full-confidence(<code>|LLR|&gt;b</code>) — 하고 check node 메시지 갱신식(3)을 구간별로 다르게 스케일링한 식(5)으로 대체.</li><li>핵심 식 의미: non-confidence 구간엔 α(&lt;1)를 곱해 진동 폭을 줄이고, full-confidence 구간엔 β(&gt;1)를 곱해 수렴을 가속(인위적 노이즈를 주입해 강제로 0/1로 밀어붙임).</li><li>부수 트릭: 채널 정보를 충분히 활용하기 위해 처음 2회 iteration은 표준 BP 그대로 수행한 뒤 3회차부터 수정식 적용.</li><li>구현 디테일: 수정 알고리즘은 표준식에 상수 곱셈만 추가되므로 복잡도는 표준 BP와 거의 동일(HW 설계/게이트카운트 언급 없음).</li><li>실험 파라미터: α=0.8, β=1.2, a=4, b=8 (regular LDPC(n=2000,R=1/2,dv=3) AWGN, irregular LDPC(동일 n,R, 식6 degree dist.) Rayleigh fading 채널 각각 Monte-Carlo 시뮬, 비트에러 1000개 이상 수집).</li><li>결과: 표준 BP 대비 필요 iteration이 약 절반(M-BP(10)≈S-BP(20~30) 수준 성능)이면서 성능 손실은 미미(본문 초록 기준 약 0.2dB).</li><li>한계: 저자 스스로 이론적 유도(theoretical deduction)가 미완성임을 명시, 순수 시뮬레이션(AWGN/Rayleigh)뿐 HW 구현 없음, 성능이 개선이 아닌 소폭 저하이며 min-sum이 아닌 sum-product 기반이라 Prime ECC 아키텍처와 직접 비교 어려움.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check node 메시지 갱신 시 LLR 구간별 스케일링(α,β)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN 연산부에 스케일링 계수를 추가하는 방식으로 개념적 이식 가능성 있으나, Prime ECC는 이미 min-sum 기반이라 sum-product 전제의 Ψ 함수 자체는 대응 없음</td></tr><tr><td>iteration별 LLR 구간 분류/적응 스케일링</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>Prime ECC의 적응형 LLR threshold 테이블(§3)과 유사한 방향이나, 본 논문 기법은 이미 보유 기술과 중복되는 "적응형 LLR" 범주로 추천도 낮음</td></tr><tr><td>강제 수렴을 통한 iteration 감소</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>조기 수렴 관점에서 관련 있으나 Prime ECC는 이미 Partial CRC 조기종료를 보유(§3), 중복 기여</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 개념(LLR 구간별 적응 스케일링)은 Prime ECC가 이미 보유한 적응형 LLR/조기종료 기법과 방향이 겹치고, sum-product 전제·이론적 근거 미확립·성능 손실이라는 한계로 실질적 이식 가치는 제한적.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5076905",
+  "title": "A Modified Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence",
+  "year": 2009,
+  "venue": "IEEE ICCSN",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": 2000,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LLR을 3구간으로 나눠 각 구간에 계수 α,β를 곱해 강제 수렴시켜 표준 BP 대비 iteration을 절반으로 줄임",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "이론적 근거 미확립(저자 자인), 0.2dB 성능 손실, sum-product 기반이라 min-sum과 직접 비교 어려움, HW 검증 없음",
+  "todo_check": "α,β,a,b 임계값이 특정 시뮬레이션 조건에 맞춘 경험적 상수라 다른 부호/rate에서 재조정 필요 여부 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5076905---a-modified-belief-propagation-decoding-algorithm-of-ldpc-codes-for-fast-convergence-2009-ieee-iccsn">ieee:5076905 - A Modified Belief Propagation Decoding Algorithm of LDPC Codes for Fast Convergence (2009, IEEE ICCSN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

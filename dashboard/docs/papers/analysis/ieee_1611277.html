@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1611277</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1611277---an-efficient-low-complexity-ldpc-encoder-based-on-factorization-with-pivoting-2005-ieee-conf-미상">ieee:1611277 - An Efficient Low Complexity LDPC Encoder Based On Factorization With Pivoting (2005, IEEE conf. 미상)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1536</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>확장 LU 인수분해+피벗팅으로 sparse A행렬을 분해, 임의 H-matrix를 부호길이에 선형인 복잡도로 인코딩하는 파이프라인 HW</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.031Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>throughput 31Mbps로 매우 낮음, LU 분해는 소프트웨어 전처리 의존, 임의행렬 범용이라 고정 QC 구조에 특화 이점 없음</td></tr><tr><td>추가확인</td><td>고rate NAND급 부호에서의 throughput 확장성, QC-LDPC의 dual-diagonal 인코딩 대비 이득 여부</td></tr></tbody></table>
+<blockquote><p>총평: 임의 H-matrix용 범용 LU-피벗팅 인코더로, Prime ECC가 이미 dual-diagonal 전용 인코더를 보유하고 throughput도 낮아 이식 실익이 작다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 (n,k) systematic LDPC 인코더로, PCM을 <code>H=[B A]</code>(A: [(n-k)×(n-k)])로 분할, 코드워드 <code>[s c]</code>에서 parity <code>c^T = A^{-1} B s^T</code>.</li><li>문제: dense <code>A^{-1}</code> 곱은 부호길이 제곱 복잡도이며 HW 비용이 크다. 기존 선형복잡도 기법(Neal, Richardson, MacKay, quasi-cyclic 등)은 특정 구성에 한정.</li><li>핵심 기법: A의 sparse성을 유지하는 <strong>확장 LU 인수분해+피벗팅</strong> <code>P·A = L·U</code> 적용. <code>A c^T = y (=B s^T)</code>를 <code>L z = P y</code>(전방대입) → <code>U c^T = z</code>(후방대입)로 푼다.</li><li>피벗팅 이유: A의 모든 principal minor가 nonsingular가 아니어서 순수 LU가 없을 수 있으므로, 행 교환을 P에 기록하는 확장 LU로 임의 행렬 지원.</li><li>복잡도: 4단계(<code>B s^T</code>, <code>P B s^T</code>, 전방대입, 후방대입) 모두 부호길이 <code>n</code>에 <strong>선형</strong>(Table 1). L,U,P가 A의 sparse성 보존.</li><li>전처리: LU 인수분해는 소프트웨어(Matlab)로 수행, 곱셈·전/후방대입만 HW가 수행.</li><li>HW 구조: 4-stage 파이프라인 + double buffering, 워크로드 균형(rate 1/2에서 자연 균형), 임의 rate·블록길이 지원.</li><li>구현 디테일: sparse MVM은 각 행의 1의 위치+행종료 플래그만 저장(Table 2), XOR+D-플립플롭 누산 회로; 전/후방대입은 삼각행렬 특성으로 역행렬 회피.</li><li>결과: rate 1/2 regular (3,6) length-1536 부호를 Altera Stratix EP1S80에 구현, 64MHz에서 throughput 31Mbps, 로직 5%·메모리 20% 사용, Matlab 대비 코드워드 검증.</li><li>한계: throughput 낮음, 디코더 미포함(향후 과제), gate count·ASIC 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LU-피벗팅 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>둘 다 인코더지만 Prime ECC는 dual-diagonal 전용, 이 논문은 임의행렬 범용이라 구조 상충</td></tr><tr><td>sparse MVM/삼각대입 회로</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>부호 PCM 재배치와 개념 연관하나 QC circulant 구조엔 dual-diagonal이 더 간단</td></tr><tr><td>sparse 행렬 저장(1위치+플래그)</td><td>대응 없음</td><td>Prime ECC는 QC base+shift 저장 방식이라 임의 sparse 저장 불필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 임의 H-matrix 범용 인코더로, 고정 QC-LDPC용 dual-diagonal 인코더를 이미 가진 Prime ECC엔 이점이 없고 throughput도 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1611277",
+  "title": "An Efficient Low Complexity LDPC Encoder Based On Factorization With Pivoting",
+  "year": 2005,
+  "venue": "미상",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1536",
+  "soft_quant": "무관",
+  "key_contribution": "확장 LU 인수분해+피벗팅으로 sparse A행렬을 분해, 임의 H-matrix를 부호길이에 선형인 복잡도로 인코딩하는 파이프라인 HW",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.031,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "throughput 31Mbps로 매우 낮음, LU 분해는 소프트웨어 전처리 의존, 임의행렬 범용이라 고정 QC 구조에 특화 이점 없음",
+  "todo_check": "고rate NAND급 부호에서의 throughput 확장성, QC-LDPC의 dual-diagonal 인코딩 대비 이득 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1611277---an-efficient-low-complexity-ldpc-encoder-based-on-factorization-with-pivoting-2005-ieee-conf-미상">ieee:1611277 - An Efficient Low Complexity LDPC Encoder Based On Factorization With Pivoting (2005, IEEE conf. 미상)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

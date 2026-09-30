@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7110620</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7110620---high-throughput-multi-core-ldpc-decoders-based-on-x86-processor-2016-ieee-tpds">ieee:7110620 - High-Throughput Multi-Core LDPC Decoders Based on x86 Processor (2016, IEEE TPDS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Horizontal TDMP(layered) OMS/NMS 디코더를 x86 SIMD(SSE/AVX2)+멀티코어에 inter-frame 병렬로 매핑, H행렬 재정렬·캐시 최적화로 고throughput</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.56Gbps(4코어 SSE)~2.0Gbps(4코어 AVX)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 CPU 소프트웨어 디코더(SDR/무선표준 대상), RTL/ASIC HW 없음·NAND 무관, 최적화 기법이 x86 캐시/SIMD 종속</td></tr><tr><td>추가확인</td><td>없음 (NAND HW 이식 가치 없음)</td></tr></tbody></table>
+<blockquote><p>총평: x86 CPU용 소프트웨어 LDPC 디코더 최적화 논문 - Prime ECC(NAND HW) 이식 대상 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: WiFi/WiMAX/DVB-S2 등 표준 LDPC (<code>(n,k)</code>=576×288~64800×32400, QC 및 unstructured, 다양한 CN degree).</li><li>문제: 기존 SW 디코더는 flooding 스케줄+GPU 위주라 반복 수·메모리 병목으로 real-time throughput 미달.</li><li>채널: BPSK+AWGN 에뮬레이션, 8bit 고정소수(채널값 6bit, decoder 내부 8bit).</li><li>핵심기법1: Horizontal TDMP(layered) 스케줄로 CN-centric 단일 커널화, <code>L_nm</code>을 on-the-fly 계산해 flooding 대비 반복 수·메모리 절반.</li><li>근사: CN 연산은 Min-Sum 계열 OMS(offset λ)/NMS(normalized β)로 <code>tanh</code> 제거 (식 4,5).</li><li>핵심기법2: inter-frame 병렬 - <code>q</code>=16(SSE)/32(AVX) 프레임을 인터리빙해 SIMD 레인 100% 활용, 멀티코어는 OpenMP로 코어별 독립 프레임 세트.</li><li>구현 트릭: H행렬 row degree 정렬로 degree 배열 제거, 2차 CN 재정렬로 VN 캐시 재사용, VN 물리주소 사전계산, 8bit saturated add intrinsic.</li><li>최적화: 오프라인 C코드 생성(코드별 상수 헤더), 루프 언롤, prefetch, <code>-xCORE-AVX2</code> 등.</li><li>결과: 단일코어 최대 170Mbps(20 layered iter), 4코어 최대 560Mbps(SSE)/~2Gbps(AVX); GPU 대비 ×1.4~×8, x86 선행연구 대비 ×5~×12 speedup.</li><li>한계: 순수 SW/CPU 구현, HW(RTL/ASIC) 없음, 성능이 x86 캐시·SIMD 구조에 종속, NAND ECC와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMS/NMS CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 계열은 이미 보유, 신규성 없음</td></tr><tr><td>layered(TDMP) 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄 개념만 대응, x86 매핑은 무관</td></tr><tr><td>SIMD inter-frame 병렬 / H행렬 재정렬</td><td>대응 없음</td><td>CPU 캐시/SIMD 전용 최적화, HW 디코더 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 순수 x86 소프트웨어 디코더로, 최적화 기법 전부 CPU SIMD/캐시 종속이라 NAND HW ECC 엔진에 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7110620",
+  "title": "High-Throughput Multi-Core LDPC Decoders Based on x86 Processor",
+  "year": 2016,
+  "venue": "IEEE TPDS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "576~64800",
+  "soft_quant": "무관",
+  "key_contribution": "Horizontal TDMP OMS/NMS 디코더를 x86 SIMD(SSE/AVX2)+멀티코어에 inter-frame 병렬 매핑, H행렬 재정렬·캐시 최적화로 고throughput",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 2.0,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "순수 CPU 소프트웨어 디코더(SDR/무선표준), RTL/ASIC HW 없음·NAND 무관, 최적화가 x86 캐시/SIMD 종속",
+  "todo_check": "없음 (NAND HW 이식 가치 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7110620---high-throughput-multi-core-ldpc-decoders-based-on-x86-processor-2016-ieee-tpds">ieee:7110620 - High-Throughput Multi-Core LDPC Decoders Based on x86 Processor (2016, IEEE TPDS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

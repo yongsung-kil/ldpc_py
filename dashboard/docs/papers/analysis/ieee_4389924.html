@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4389924</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4389924---block-interlaced-ldpc-decoders-with-reduced-interconnect-complexity-2008-ieee-tcas-ii">ieee:4389924 - Block-Interlaced LDPC Decoders With Reduced Interconnect Complexity (2008, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.73~0.84</td></tr><tr><td>부호length</td><td>660~2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>half/full-broadcasting으로 node간 배선·메모리접근 축소 + block interlacing으로 2프레임 교차처리해 throughput 60~71% 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정성능은 무변(오직 배선/throughput 최적화), broadcasting은 fully-parallel 중심이라 QC-LDPC z=32 partial-parallel엔 이득 제한</td></tr><tr><td>추가확인</td><td>block interlacing의 LLR 메모리 2배 비용이 Prime ECC z=32 구조에서 정당화되는지</td></tr></tbody></table>
+<blockquote><p>총평: 정정성능 변화 없이 배선/throughput만 개선하는 2쪽 express brief HW 아키텍처 기법 — Prime ECC의 pipeline/GT와 개념 중복이 있고 fully-parallel 편향이라 이식가치 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 multi-Gbit/s fully/partially parallel binary LDPC 디코더의 배선 혼잡·throughput 문제 (10GBase-T, DVB-S2, WiMAX 표준용).</li><li>문제: fully parallel 디코더는 랜덤 PCM 때문에 global interconnect가 혼잡, timing/전력 악화. 어떤 LDPC 부호에도 적용 가능하고 정정성능 저하 없는 기법을 목표.</li><li>sum-product를 <code>S = f(...)</code>, <code>P = g(...)</code> 형태로 재작성해 check/variable 노드 연산을 (3)~(6)으로 분해.</li><li>Half-broadcasting: check 노드가 이웃 VN들에게 개별 메시지 대신 **단일 메시지 <code>P</code>** 하나만 broadcast, 나머지 재구성 연산은 VN으로 이동 (message-passing 결과 불변).</li><li>효과: fully parallel에선 배선 공유로 node간 wirelength 26% 감소(2048-bit, 1.88→1.40 mm, HW 오버헤드 0), partial parallel에선 CPU write가 <code>d</code>→<code>1</code>로 감소해 메모리 접근 24% 감소.</li><li>Full-broadcasting: check·variable 양방향 모두 broadcast, inverse 연산 중복으로 최대 2x 로직 오버헤드지만 배선 추가 축소(메모리 접근 45% 감소).</li><li>워드길이 주의: broadcast 값(<code>P</code> 등)은 clip된 extrinsic보다 1~2bit 넓어야 할 수 있음(hard-decision 1-bit 메시지면 XOR라 증가 불필요).</li><li>Block interlacing: 두 연속 프레임을 교차 스케줄 — 한 프레임 VN update 시 다른 프레임 CN update. 유휴시간 제거로 HW utilization↑, throughput 최대 2배 목표.</li><li>결과: (2048,1723) RS기반 (6,32)-regular hard-decision(32iter) 디코더 throughput +60% @ +5.5% gate, (660,480) (4,15)-regular PEG min-sum(4bit,16iter) 디코더 throughput +71% @ +9.5% gate (0.18um CMOS, post-layout).</li><li>한계: 정정능력·부호·복호알고리즘 무변(순수 아키텍처), pipeline register가 critical path를 정확히 반분 못해 2배엔 못미침, 절대 gatecount/throughput은 표에만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>broadcasting (node간 배선/edge 축소)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>MUX 기반 edge 축소와 개념적 유사, 다만 GT는 이미 보유 — 중복성 있음</td></tr><tr><td>디코더 이터레이션 루프 / pipeline</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>block interlacing은 이 루프에 2-frame 교차 스케줄 추가 — throughput 참고</td></tr><tr><td>CN min-sum 연산 재분할</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>broadcasting은 알고리즘 불변, 연산 배치만 이동</td></tr><tr><td>partial-parallel 메모리 접근</td><td>디코더 HW 모델 (z=32)</td><td>대응 위치 유사하나 논문은 fully-parallel 중심이라 직접 이득 제한</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — HW throughput/interconnect 기법으로 참고할 만하나, broadcasting은 fully-parallel 배선 절감에 특화되고 Prime ECC의 GT/pipeline과 개념 중복이며 정정성능 개선은 없음. block interlacing의 2-frame 교차 아이디어만 throughput 관점에서 재검토 가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4389924",
+  "title": "Block-Interlaced LDPC Decoders With Reduced Interconnect Complexity",
+  "year": 2008,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "660~2048",
+  "soft_quant": "무관",
+  "key_contribution": "half/full-broadcasting으로 배선·메모리접근 축소 + block interlacing으로 2프레임 교차처리해 throughput 60~71% 향상",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "정정성능 무변, broadcasting은 fully-parallel 중심이라 QC-LDPC z=32 partial-parallel엔 이득 제한",
+  "todo_check": "block interlacing LLR 메모리 2배 비용이 Prime ECC z=32 구조에서 정당화되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4389924---block-interlaced-ldpc-decoders-with-reduced-interconnect-complexity-2008-ieee-tcas-ii">ieee:4389924 - Block-Interlaced LDPC Decoders With Reduced Interconnect Complexity (2008, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

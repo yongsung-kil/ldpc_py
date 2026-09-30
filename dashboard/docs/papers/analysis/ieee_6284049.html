@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6284049</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6284049---quantized-min-sum-decoders-with-low-error-floor-for-ldpc-codes-2012-ieee-isit">ieee:6284049 - Quantized Min-Sum Decoders with Low Error Floor for LDPC Codes (2012, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.3~0.5</td></tr><tr><td>부호length</td><td>640~2640</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>(q+1)-bit quasi-uniform 양자화: 큰 magnitude에 지수 step 확장, update rule/그래프 변경 없이 error floor 대폭 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>파라미터 d 휴리스틱 선택(1,dv-1] 범위; variable-regular 코드 분석 기반, irregular는 d 조정 필요; HW 미설계(추가 1비트 대역 확대만)</td></tr><tr><td>추가확인</td><td>Prime ECC LLR 양자화 테이블(HD/2SD/3SD)에 quasi-uniform saturation 확대 적용 시 error-floor 저감 여부, 3SD 비트폭 예산</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 양자화만 quasi-uniform으로 바꿔 error floor를 unsaturated 수준으로 낮추는 기법 - update rule/HW 구조 변경 불필요라 Prime ECC 양자화 레이어에 이식성 상, 최우선 검토.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: MBIOS(BSC/AWGN) 채널, min-sum 및 변형(AMS/OMS) 복호. 부호는 rate-0.3 (640,192) QC-LDPC, rate-0.5 (2640,1320) Margulis.</li><li>문제: error floor의 한 원인이 코드/알고리즘이 아니라 fixed-point 구현의 <strong>메시지 양자화 규칙</strong>(uniform saturation)임을 규명.</li><li>모델: absolute trapping set (a,b) - 유도 부분그래프에 degree-1 CN 최소 1개 필요(외부 정답 메시지 유입 경로). k-separation 가정.</li><li>핵심 관찰: variable-regular 코드에서 trapping set 밖 정답 메시지 magnitude가 iteration마다 <code>|Ll|=|L0|+(dv-1)|Ll-1| &gt; (dv-1)^l|L0|</code>로 지수 증가(Thm 1).</li><li>의미: uniform quantizer는 saturation이 작아 정답 메시지가 조기 포화 -&gt; 오답 상쇄 불가 -&gt; min-sum이 Gallager-B로 퇴화. saturation 확장이 핵심.</li><li>핵심 기법: <strong>(q+1)-bit quasi-uniform 양자화</strong>. <code>[-NΔ,NΔ]</code> 내는 q-bit uniform과 동일 정밀도, 밖은 추가 1비트로 step을 <code>d^r·NΔ</code>(지수 증가)로 표현. <code>d∈(1,dv-1]</code>.</li><li>구현 디테일: 예) Δ=1,d=3,q=3이면 {0,±1,±2,±3,±9,±27,±81,±243}. update rule·그래프 무변경, 복잡도 증가 없음.</li><li>확장: irregular는 d 조정으로 대응, SPA 근사 등 대부분 MP 디코더에 적용 가능(별도 보고 예정).</li><li>결과: (640,192)/Margulis에서 3+1/4+1/5+1-bit quasi-uniform이 동일 비트 uniform 대비 error floor 대폭 저감, unsaturated 디코더에 근접. 수십억 realization에서 small trapping set 실패 미관측.</li><li>한계: 시뮬만(BSC/AWGN), HW 미설계, d는 휴리스틱 선택, variable-regular 분석 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>(q+1)-bit quasi-uniform magnitude 양자화</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, VN magnitude 양자화</td><td>min-sum magnitude 표현을 quasi-uniform으로 교체 -&gt; saturation 확대, update rule 무변경으로 직접 이식 대상</td></tr><tr><td>iteration별 LLR/양자화 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>기존 magnitude 양자화 테이블을 quasi-uniform 레벨로 재설계</td></tr><tr><td>min-sum CN 연산(min1/min2)</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code>, <code>CNU_Update_New_Mag()</code></td><td>CN 연산 자체는 불변, 입출력 표현 대역만 확장</td></tr><tr><td>soft-read LLR 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>채널 입력 LLR 표현도 확장 대역 정합 필요(2SD/3SD)</td></tr></tbody></table>
+<p>적용 가치: 높음 - Prime ECC의 min-sum과 magnitude 양자화 테이블 구조에 update rule 변경 없이 saturation을 확대하는 방식이라 이식이 쉽고 error-floor 개선이라는 관심 영역에 정확히 부합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6284049",
+  "title": "Quantized Min-Sum Decoders with Low Error Floor for LDPC Codes",
+  "year": 2012,
+  "venue": "IEEE ISIT",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.3~0.5",
+  "code_length": "640~2640",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "(q+1)-bit quasi-uniform 양자화: 큰 magnitude에 지수 step 확장, update rule/그래프 변경 없이 error floor 대폭 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "파라미터 d 휴리스틱 선택(1,dv-1] 범위; variable-regular 코드 분석 기반, irregular는 d 조정 필요; HW 미설계(추가 1비트 대역 확대만)",
+  "todo_check": "Prime ECC LLR 양자화 테이블(HD/2SD/3SD)에 quasi-uniform saturation 확대 적용 시 error-floor 저감 여부, 3SD 비트폭 예산"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6284049---quantized-min-sum-decoders-with-low-error-floor-for-ldpc-codes-2012-ieee-isit">ieee:6284049 - Quantized Min-Sum Decoders with Low Error Floor for LDPC Codes (2012, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

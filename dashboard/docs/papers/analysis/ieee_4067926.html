@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4067926</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4067926---a-new-fast-density-evolution-method-for-ldpc-codes-using-higher-order-statistics-2006-ieee">ieee:4067926 - A New Fast Density Evolution Method for LDPC Codes Using Higher Order Statistics (2006, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.33</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Gram-Charlier 급수 기반 moment-matching으로 variable node LLR 분포를 근사해 Density Evolution 계산 복잡도를 낮춘 해석적 방법 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>실제 디코더나 부호 설계가 아닌 점근적 분석(EXIT chart/threshold 추정) 도구에 불과</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 코드 설계 최적화용 Density Evolution 근사 알고리즘으로, NAND 디코더/부호/HW 이식 관점에서 직접 적용점이 없는 순수 이론 논문.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>AWGN 채널, <code>x∈{-1,1}</code> 이진 입력, LDPC 코드의 Tanner graph 상 message-passing 기반 Density Evolution(DE) 분석 대상.</li><li>기존 Discretized DE(DDE)는 정확하지만 복잡도 <code>O(2^2k)</code>로 코드 최적화 cost function으로 쓰기엔 너무 무거움; Gaussian approximation은 낮은 SNR·고차수 variable node에서 부정확.</li><li>variable node LLR 메시지 분포가 근사적으로 Gaussian이며 consistency 조건(<code>p(-x)=e^-x p(x)</code>)을 만족한다고 가정.</li><li>Gram-Charlier 급수의 홀수항을 제거한 <code>p_Lv(lv) = (1/√4πβ) e^{-(lv-β)²/4β} Σ a_k lv^{2k}</code> 형태로 variable node 메시지 분포를 모델링, 미지수 <code>[β, a]</code>를 Newton-Raphson으로 첫 N개 모멘트에 매칭.</li><li>모멘트 매칭이 필요한 이유: 정확한 pdf 계산은 닫힌 해가 없으므로, 모멘트만 맞춰 EXIT chart(Message Error Probability, MEP)를 근사 산출.</li><li>check node LLR 모멘트 <code>ω_n</code>은 tanh-rule 기반 변수 <code>u=tanh(l_c/2)</code>의 Taylor 전개로 계산, variable node 모멘트는 Gauss-Hermite quadrature로 적분.</li><li>부수 트릭: 4개 모멘트만으로도 충분한 정확도를 얻음(수치실험 확인), 복잡도는 <code>O(n³)</code> (n=모멘트 수)로 DDE의 <code>O(2^2k)</code>보다 낮음.</li><li>알고리즘은 8단계 반복 루프: 모멘트 계산→Newton-Raphson 파라미터 갱신→MEP 계산→tanh 기댓값 갱신→check node 모멘트 갱신, 최대 반복수까지 순환.</li><li>결과: (3,6) regular R=1/2 코드에서 threshold 오차 Gaussian approx 0.06dB → 제안법 0.02dB; irregular R=1/3 코드에서 0.25dB → 0.082dB로 개선.</li><li>한계: 순수 이론적 분석/설계 도구(threshold 추정)이며 실제 디코더 구현, HW, 검증(FPGA/ASIC) 전혀 없음. 특정 코드 앙상블(2개 예제)에서만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Density Evolution 근사(EXIT chart 계산)</td><td>대응 없음</td><td>Prime ECC는 실시간 HW 디코더 시뮬레이터로 코드 설계용 DE 도구는 포함하지 않음</td></tr><tr><td>tanh-rule check node 모멘트</td><td>대응 없음</td><td>Sum-Product의 tanh 자체를 다루나 Prime ECC는 이미 min-sum으로 근사해 사용 중이라 무관</td></tr></tbody></table>
+<p>마지막 적용 가치: <strong>낮음</strong> — NAND 디코더/HW/부호설계 어디에도 직접 이식할 요소가 없는 순수 코드 최적화(설계 단계) 해석 도구.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4067926",
+  "title": "A New Fast Density Evolution Method for LDPC Codes Using Higher Order Statistics",
+  "year": 2006,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Gram-Charlier 급수 기반 moment-matching으로 variable node LLR 분포를 근사해 Density Evolution 계산 복잡도를 낮춘 해석적 방법 제안",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "실제 디코더나 부호 설계가 아닌 점근적 분석(EXIT chart/threshold 추정) 도구에 불과",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4067926---a-new-fast-density-evolution-method-for-ldpc-codes-using-higher-order-statistics-2006-ieee">ieee:4067926 - A New Fast Density Evolution Method for LDPC Codes Using Higher Order Statistics (2006, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

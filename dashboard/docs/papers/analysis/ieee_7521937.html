@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7521937</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7521937---variable-llr-scaling-in-ldpc-min-sum-decoding-under-horizontal-shuffled-structure-2016-ieee-bmsbicce-class-conference">ieee:7521937 - Variable LLR Scaling in LDPC Min-Sum Decoding under Horizontal Shuffled Structure (2016, IEEE (BMSB/ICCE-class conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.44~0.5</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>GMI 기반 variable LLR scaling(VMS) 계수 탐색을 layered(HSS) min-sum에 확장: iteration·parallel operation·row degree 3차원 계수 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>계수는 Monte Carlo 오프라인 학습(부호·SNR별 재훈련 필요), special QC(DVB-S2 겹침 submatrix)만 i.i.d 특수처리 필요, HW 미구현(BER 시뮬만)</td></tr><tr><td>추가확인</td><td>Prime ECC의 iteration별 LLR threshold 테이블(PARAM_LLR)과 3차원 scaling 계수(po×degree)의 저장·룩업 정합 및 z=32/HCU 비대칭 degree col과의 호환</td></tr></tbody></table>
+<blockquote><p>총평: 널리 쓰이는 layered min-sum에 GMI 기반 variable scaling을 이식하는 방법으로, Prime ECC의 min-sum+적응형 LLR 구조와 직결되어 정독가치 상.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: QC-LDPC(base matrix + <code>Qc×Qc</code> circulant, DVB-S2 <code>N=64800</code> rate 1/2 <code>Qc=360</code>, DVB-T2 <code>[9000,16200]</code>) layered(HSS) min-sum 복호.</li><li>문제: variable min-sum(VMS)의 scaling factor 탐색은 flooding(FS) 구조에서만 연구됨 — HW 친화적인 HSS(layered)에는 계수 선택법 부재.</li><li>핵심가정: GMI 기반 계수탐색은 CN/VN 출력 LLR의 i.i.d 가정을 전제 — HSS는 layer 내 갱신 LLR을 즉시 재사용하여 i.i.d가 깨짐.</li><li>핵심기법1 (GMI metric): FS VMS 계수는 <code>α_d^(iter) = argmin_α ∫ p_Ud(l) log2(1+e^{-αl}) dl</code> (식11), 실제로는 Monte Carlo로 <code>α = argmin Σ log2(1+e^{-α·U_ij})</code> (식12).</li><li>핵심식 의미: 계수를 iteration·degree별로 다르게 두어 min-sum overestimation을 GMI 최대화 방향으로 보정(NMS의 단일 상수 한계 극복).</li><li>핵심기법2 (HSS 확장): i.i.d를 "parallel operation 내부에서 LLR 교환 없음"으로 재정의 → <code>P=Qc</code>면 계수를 <code>α_po^(iter)</code> 2차원, <code>P&gt;Qc</code>면 <code>α_po,d^(iter)</code> 3차원(iteration×parallel op×row degree)으로 확장(식18/19).</li><li>특수처리: DVB-S2식 special QC(한 submatrix에 겹친 순환행렬로 같은 열에 다중 '1')에서는 un-updated <code>V_j</code> 사본을 두 processor가 병렬 사용 후 결합(식13~17)해 i.i.d 복원.</li><li>학습절차: SNR threshold에서 실제 LLR로 Monte Carlo 훈련하여 각 (iter, po, degree) 계수 오프라인 결정.</li><li>결과: DVB-S2 N=64800에서 HSS VMS가 HSS NMS 대비 +0.13dB, HSS BP와 0.1dB 차(BER 1e-7); DVB-T2 N=16200에서 +0.04dB, BP와 0.06dB 차. 평균 iteration도 NMS보다 감소(고SNR&gt;1dB에선 &lt;30 iter).</li><li>한계: BER 시뮬만(HW·gatecount·throughput 미제시), 계수는 부호·SNR별 오프라인 재훈련 필요, error-floor는 미분석(waterfall 중심).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN scaling 계수 적용</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 magnitude 후 scaling 곱셈만 추가하면 되는 저비용 이식</td></tr><tr><td>iteration/parallel-op/degree별 LLR scaling 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>기존 iteration별 LLR threshold 테이블에 po·degree 차원 추가로 매핑 가능</td></tr><tr><td>VN LLR 갱신(layered 즉시 재사용)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>LDPC_Decoder()</code> 루프</td><td>Prime ECC의 Dual-Update(even/odd 교대 스케줄)와 HSS layered 처리 개념 대응</td></tr><tr><td>비대칭 row degree 처리(HCU col)</td><td>decoder.cpp HCU 처리</td><td>논문의 row-degree별 계수가 degree 9/7 비대칭 col(127,128) 계수 세분화에 활용 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — min-sum scaling 곱셈 지점에 계수 테이블만 추가하는 저비용 이식이며, Prime ECC가 이미 보유한 iteration별 적응형 LLR·layered 스케줄과 직결되어 waterfall·avg iteration 개선 여지가 큼(단, 계수 오프라인 재훈련 필요).</p>
+<pre><code>{
+  "id": "ieee:7521937",
+  "title": "Variable LLR Scaling in LDPC Min-Sum Decoding under Horizontal Shuffled Structure",
+  "year": 2016,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "16200~64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "GMI 기반 variable LLR scaling(VMS) 계수 탐색을 layered(HSS) min-sum에 확장: iteration·parallel operation·row degree 3차원 계수 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "계수는 Monte Carlo 오프라인 학습(부호·SNR별 재훈련 필요), special QC(겹침 submatrix)만 i.i.d 특수처리 필요, HW 미구현(BER 시뮬만)",
+  "todo_check": "Prime ECC의 iteration별 LLR threshold 테이블과 3차원 scaling 계수(po×degree)의 저장·룩업 정합 및 z=32/HCU 비대칭 degree col 호환"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7521937---variable-llr-scaling-in-ldpc-min-sum-decoding-under-horizontal-shuffled-structure-2016-ieee-bmsbicce-class-conference">ieee:7521937 - Variable LLR Scaling in LDPC Min-Sum Decoding under Horizontal Shuffled Structure (2016, IEEE (BMSB/ICCE-class conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11127112</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11127112---a-study-on-the-fitness-of-ga-for-improving-sp-decoding-performance-2026-ieee-transactions-on-magnetics">ieee:11127112 - A Study on the Fitness of GA for Improving SP Decoding Performance (2026, IEEE Transactions on Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>36990</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>GA 적합도 함수를 개선(선택 정확도+강조 확률 반영)해 SP 복호용 신경망 LLR 강조 파라미터를 더 효과적으로 탐색</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>HDD SMR 채널(ITI/PR1/turbo equalization) 특화, non-binary·아날로그 채널 모델 전제로 NAND에 그대로 적용 불가</td></tr><tr><td>추가확인</td><td>신경망+GA 학습 비용 및 실시간 하드웨어 구현 가능성 미검증</td></tr></tbody></table>
+<blockquote><p>총평: HDD SMR 채널용 신경망 기반 SP 디코더의 GA 파라미터 최적화 연구로, NAND binary LDPC와 채널/코드 구조가 달라 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: SMR HDD, 4 Tbits/inch² 밀도, (30,3)-regular LDPC 코드(길이 <code>36990</code>, column weight 3, row weight 30), 128/130 RLL 인코딩과 결합.</li><li>채널: PR1 타깃 등화, TD-FIR로 ITI 억제, APP 디코더와 SP 디코더 간 turbo equalization 반복.</li><li>문제: 종전 신경망 기반 LLR 강조 기법에서 GA로 threshold/weight를 탐색했으나, 적합도 함수가 신뢰도 낮은 LLR까지 강조해 성능 개선이 제한적.</li><li>핵심 기법: 새 적합도 함수 <code>f_δl^(1) = -log10(Nte/Nt) - Cδl·log10(1-Nt/Nall)</code> 로 강조 정확도와 강조 확률을 동시에 반영.</li><li>식의 의미: 첫 항은 오강조 비율(선택 정확도), 둘째 항은 강조되지 않은 LLR 비율에 계수 <code>Cδl</code>을 곱해 강조 개수 증가를 유도 - 두 목표를 하나의 스칼라로 결합.</li><li><code>Cδl</code>은 세대마다 GA로 함께 진화하며 약 0.965로 수렴(11세대 이후), 선택 정확도와 강조 확률의 균형점을 자동 탐색.</li><li>신경망은 decoding target bit과 인접 bit의 <code>ln γkn</code>을 입력으로 강조 여부(THγd 기준)와 강조 가중치(Wγd)를 결정, 4가지 decoding pattern(d=0~3)별 파라미터 별도 관리.</li><li>최적화 절차: GA로 THγd, Wγd, Cδl을 1차원 chromosome으로 묶어 selection/crossover/mutation, elitist preserving selection 적용, 20세대 진화.</li><li>결과: 제안 적합도 함수 적용 시 isp=20, SNRS=21.0dB에서 iglobal=22로 error-free 도달(기존 대비 반복 횟수 감소).</li><li>한계: 시뮬레이션 단계뿐이고 HW 설계 없음, HDD SMR 특화 채널/코드 구조로 다른 도메인 일반화는 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>신경망 기반 LLR 강조 SP 디코딩</td><td>대응 없음</td><td>Sum-Product 전체(Maxlog-MAP, trellis 기반) 알고리즘으로 Prime ECC의 min-sum 구조와 근본적으로 다름</td></tr><tr><td>GA 기반 파라미터 탐색</td><td>대응 없음</td><td>Prime ECC의 LLR threshold 최적화는 <code>local_opt.cpp</code>가 있으나 GA 방식 자체는 대응 없음</td></tr><tr><td>(30,3)-regular LDPC 부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>regular LDPC이며 Prime ECC는 QC-LDPC 고정 구조라 참조성 낮음</td></tr></tbody></table>
+<p>적용 가치: <code>낮음</code> - HDD SMR 채널 특화 신경망+SP+GA 복합 기법으로 binary QC-LDPC/min-sum 기반 NAND ECC와 알고리즘·채널 모델이 근본적으로 달라 이식 요소가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11127112",
+  "title": "A Study on the Fitness of GA for Improving SP Decoding Performance",
+  "year": 2026,
+  "venue": "IEEE Transactions on Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "36990",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "GA 적합도 함수를 개선(선택 정확도+강조 확률 반영)해 SP 복호용 신경망 LLR 강조 파라미터를 더 효과적으로 탐색",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "HDD SMR 채널(ITI/PR1/turbo equalization) 특화, non-binary·아날로그 채널 모델 전제로 NAND에 그대로 적용 불가",
+  "todo_check": "신경망+GA 학습 비용 및 실시간 하드웨어 구현 가능성 미검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11127112---a-study-on-the-fitness-of-ga-for-improving-sp-decoding-performance-2026-ieee-transactions-on-magnetics">ieee:11127112 - A Study on the Fitness of GA for Improving SP Decoding Performance (2026, IEEE Transactions on Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

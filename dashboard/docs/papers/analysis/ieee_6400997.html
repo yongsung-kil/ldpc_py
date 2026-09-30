@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6400997</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6400997---an-efficient-method-for-computing-the-weight-spectrum-of-ldpc-convolutional-codes-constructed-from-quasi-cyclic-codes-2012-isita">ieee:6400997 - An Efficient Method for Computing the Weight Spectrum of LDPC Convolutional Codes Constructed from Quasi-Cyclic Codes (2012, ISITA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>QC 유래 LDPC convolutional 부호의 PCM 메모리를 축소해 forward-backward 트리탐색으로 weight spectrum/free distance를 효율 계산</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>복호가 아닌 거리분포 계산 도구, 대상이 LDPC convolutional 부호로 Prime ECC(block QC-LDPC)와 구조 상이</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: LDPC convolutional 부호의 weight spectrum 계산 알고리즘. 복호/부호설계 이식 대상 아님, NAND block QC-LDPC와 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate <code>R=k/n</code>, memory <code>ms</code>인 LDPC convolutional 부호(QC block 부호의 circulant를 다항식 <code>H(D)</code> monomial로 치환해 구성), 예시 rate 2/5, <code>ms=4</code>.</li><li>문제: error-floor 예측에 필요한 minimum free distance와 low-part weight spectrum 계산에서 기존 BEAST/syndrome BEAST는 memory가 큰 부호에 RAM 소모 과다로 부적합.</li><li>핵심 기법: 부호트리에서 syndrome 상태 <code>s(t)</code>와 누적 weight <code>w(t)</code>로 노드를 정의, forward 트리와 reversed 부호 <code>C̃</code>의 backward 트리를 각각 탐색해 상태 매칭으로 codeword를 발견(식 8,9,15,16).</li><li>forward-backward 결합: backward에서 <code>w̃≥w̃min</code> leaf 상태를 저장, forward 상태 <code>s(t)</code>와 대응시켜 weight <code>w(t)+w̃(r-t)</code> codeword 계수 → free distance 갱신.</li><li>가지치기: <code>s0(t)≠0</code> 또는 <code>w(t)&gt;dfree+N</code>이면 branch cut으로 탐색 축소.</li><li>복잡도 저감(핵심): PCM <code>H(D)</code> 각 행/열의 공통인수 <code>D^q</code>로 나누고 특정 열에 <code>D</code> 곱하는 memory reducing operation으로 distance profile을 보존한 채 memory <code>ms</code>를 대폭 축소(예 <code>ms=4→2</code>).</li><li>열 shift가 sequence weight를 불변으로 유지하므로 축소 PCM으로 원부호 weight spectrum을 그대로 계산 가능.</li><li>학습/최적화: 없음(결정론적 트리탐색+대수적 memory 축소).</li><li>결과: memory 21/57/126/134 부호에 적용, <code>dfree=24</code> 등 산출. <code>H2(D)</code> weight-24 계산 시 확장노드 16,888(forward)로 BEAST(3.5M)·syndrome BEAST(6.5M) 대비 크게 감소, 1.8초 vs 8.1/7.4초.</li><li>한계: 복호기/HW 아님, 거리분포 분석 도구, 대상이 LDPC convolutional 부호(block QC-LDPC 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>weight spectrum / free distance 계산</td><td>대응 없음</td><td>Prime ECC는 거리분포 분석기 없음, 오프라인 부호평가 도구</td></tr><tr><td>LDPC convolutional PCM(H(D)) memory 축소</td><td>대응 없음</td><td>Prime ECC는 block QC-LDPC(PCM_b), convolutional 구조 미지원</td></tr><tr><td>QC circulant 기반 부호 구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>circulant/QC 개념만 공유, 부호 클래스(convolutional vs block) 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 복호·부호설계·HW 어느 계층도 아닌 LDPC convolutional 거리분포 계산 도구로 NAND block QC-LDPC에 이식할 요소 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6400997",
+  "title": "An Efficient Method for Computing the Weight Spectrum of LDPC Convolutional Codes Constructed from Quasi-Cyclic Codes",
+  "year": 2012,
+  "venue": "ISITA",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.4,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "QC 유래 LDPC convolutional 부호의 PCM 메모리를 축소해 forward-backward 트리탐색으로 weight spectrum/free distance를 효율 계산",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "복호가 아닌 거리분포 계산 도구, 대상이 LDPC convolutional 부호로 Prime ECC(block QC-LDPC)와 구조 상이",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6400997---an-efficient-method-for-computing-the-weight-spectrum-of-ldpc-convolutional-codes-constructed-from-quasi-cyclic-codes-2012-isita">ieee:6400997 - An Efficient Method for Computing the Weight Spectrum of LDPC Convolutional Codes Constructed from Quasi-Cyclic Codes (2012, ISITA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1322530</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1322530---synthesizing-interconnect-efficient-low-density-parity-check-codes-2004-dac">ieee:1322530 - Synthesizing Interconnect-Efficient Low Density Parity Check Codes (2004, DAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Tanner그래프 cut-size 상한을 제약으로 부호를 구성해 디코더 VLSI 배선/라우팅혼잡을 성능손실 거의 없이 대폭 축소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>fully-parallel 노드-per-unit 배치의 라우팅혼잡 대책이라 Prime의 z=32 QC-LDPC 부분병렬 구조엔 직접 적용 어려움</td></tr><tr><td>추가확인</td><td>cut-size 최소화 구성이 QC-LDPC circulant 구조와 양립 가능한지, girth 유지하며 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 디코더 VLSI 라우팅혼잡을 부호구성 단계에서 줄이는 layout-aware LDPC 합성 알고리즘으로 HW관점 통찰은 있으나 QC-LDPC 고정 구조엔 직접 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>문제: LDPC 디코더 HW(노드마다 별도 유닛+연결)에서 배선/라우팅혼잡이 칩 면적·전력을 지배(Blanksby [1]: 50% 이용률, 배선 스위칭이 전력 대부분).</li><li>관찰: 기존 부호구성은 SW 복잡도 기준이라 VLSI wiring 비용을 무시 → 임의 LDPC의 max cut은 e/2 수준으로 커짐.</li><li>핵심개념: Tanner그래프를 채널 라우팅으로 배치할 때 vertical <code>cut-size</code>(수직선을 가로지르는 edge 수)가 배치 높이(=면적)의 하한.</li><li>핵심기법: 부호 생성 시 한 pass당 cut 제약 <code>cut &lt; cut_max</code>을 지키며 code-node↔check-node edge를 BFS식(pass당 노드당 최대 1 edge)으로 추가하는 layout-aware 합성 알고리즘(Algorithm 1).</li><li>girth 제약: <code>dist(u,v) &gt;= g-1</code>이면 edge 추가가 girth <code>g</code> 유지 → <code>N_u^i</code> 집합으로 거리 관리하며 girth와 cut 동시 만족하는 후보 <code>C = S - N</code>에서 최소차수 노드 선택.</li><li>대비: bit-filling [3]의 depth-first(코드노드 전체 edge 한번에) 대신 breadth-first로 모든 노드를 균등 처리해 cut 균일화.</li><li>복잡도: 시간 <code>O(maxiter·p·c) = O(p^2)</code>.</li><li>설정: c=1024, p=512, g=6, d_avg=6.5/8, BPSK/AWGN, message-passing 64 iteration.</li><li>결과: cut_max 축소로 max cut 2063→605(75%↓)에도 성능 동일; 0.18um 합성서 cut_max 256→64시 면적 4.66→1.27mm²(75%↓); Blanksby [1] 대비 동일 BLER에서 SNR 손실 &lt;0.7dB(송신전력 +17%)로 디코더 면적 1/4.</li><li>한계: fully-parallel(노드=유닛) 배치 전제, QC-LDPC circulant 구조·soft-read 미고려, 부호율/길이 예제 고정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>cut-size 제약 layout-aware 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 로드 지점이나 Prime은 고정 QC-LDPC라 재설계 부담 큼</td></tr><tr><td>디코더 배선/라우팅혼잡 최소화</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Prime은 이미 Graph Thinning으로 edge/MUX 라우팅 완화 → 문제의식 겹침</td></tr><tr><td>Tanner그래프 girth 관리 부호생성</td><td>대응 없음</td><td>Prime 부호는 사전고정, 그래프 합성 경로 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — LDPC HW의 실병목(라우팅혼잡)을 부호설계로 푸는 문제의식은 Prime의 GT와 통하지만, fully-parallel 전제와 QC-LDPC 미대응으로 알고리즘 자체의 직접 이식성은 낮다.</p>
+<pre><code>{
+  "id": "ieee:1322530",
+  "title": "Synthesizing Interconnect-Efficient Low Density Parity Check Codes",
+  "year": 2004,
+  "venue": "DAC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1024",
+  "soft_quant": "무관",
+  "key_contribution": "cut-size 제약 부호구성으로 디코더 VLSI 배선/라우팅혼잡을 성능손실 거의 없이 대폭 축소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "fully-parallel 노드-per-unit 배치 전제라 Prime의 z=32 QC-LDPC 부분병렬 구조엔 직접 적용 어려움",
+  "todo_check": "cut-size 최소화가 QC-LDPC circulant 구조와 girth 유지하며 양립 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1322530---synthesizing-interconnect-efficient-low-density-parity-check-codes-2004-dac">ieee:1322530 - Synthesizing Interconnect-Efficient Low Density Parity Check Codes (2004, DAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

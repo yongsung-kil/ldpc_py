@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6336765</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6336765---message-passing-algorithms-for-counting-short-cycles-in-a-graph-2013-ieee-trans-communications">ieee:6336765 - Message-Passing Algorithms for Counting Short Cycles in a Graph (2013, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008~20000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Tanner 그래프에서 정수 가감산 메시지패싱으로 길이 g~2g-2 짧은 사이클을 O(g</td><td>E</td><td>^2)에 세는 알고리즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호설계 오프라인 분석 툴로 디코더·HW 성능에 직접 기여 안 함, error-floor 개선은 후속 트래핑셋 작업 몫</td></tr><tr><td>추가확인</td><td>Prime QC-LDPC H-matrix의 short cycle/trapping-set 진단에 오프라인으로 붙여 부호 선정·검증에 쓸 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC Tanner 그래프의 short cycle 수를 저복잡도로 세는 오프라인 분석 알고리즘으로, Prime의 부호설계·H-matrix 품질 진단 툴로 간접 활용 가능하나 디코더/HW 성능에는 직접 기여하지 않는다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 코딩용 이분(Tanner) 그래프에서 짧은 사이클 개수 계수. LDPC 부호 예시로 PEG <code>(1008,504)</code> rate-1/2 (regular/irregular), MacKay <code>8000.4000.3.6</code>, <code>20000.10000.3.6</code> 등.</li><li>문제: 유한길이 LDPC 성능(트래핑셋/error-floor)이 short cycle 수와 직결되나, 기존 사이클 계수 알고리즘(Tarjan/Johnson/Schott-Staples/[12])은 계산·메모리 복잡도가 커 큰 sparse 그래프에 부적합.</li><li>핵심 아이디어: extrinsic 메시지패싱에서 노드 <code>v</code>가 처음 보낸 monomial을 다시 받는 iteration 번호가 사이클 길이의 절반이라는 성질을 이용(Lemma 1).</li><li>핵심 기법: 각 인접 에지에 서로 다른 변수 <code>X_j</code>를 초기 전파, iteration <code>k</code>(<code>g/2&lt;=k&lt;=g-1</code>)에 돌아온 monomial의 지수 합으로 <code>v</code>를 지나는 <code>2k</code>-사이클 수 <code>N_2k^v = Σ_j ex(m_E) / 2</code> 계산(Lemma 4, 식 2).</li><li>정당성: girth <code>g</code> 그래프에서 길이 <code>&lt;2g</code>인 tbc(tailless backtrackless closed) walk는 모두 단순 사이클이므로(Lemma 2) 이 범위에서 계수가 정확.</li><li>확장: 병렬 구현으로 한 파티션 노드를 동시 초기화해 girth <code>g</code>와 <code>N_g</code>도 계산 가능.</li><li>구현 디테일: monomial을 벡터로 표현해 곱셈을 정수 벡터 가감산으로 환원, 사이클 계수 완료 노드는 비활성화(그래프에서 제거)해 k-중복 계수 회피.</li><li>대안: directed edge matrix <code>A_e</code>의 <code>k</code>제곱 trace로도 계수 가능(<code>N_k=tr(A_e^k)/2k</code>), 효율적 구현 시 message-passing과 동일 복잡도이며 이를 trellis 위 forward MP로 해석.</li><li>결과: <code>(8000,4000)</code> regular 부호에서 [12] 대비 30배 이상 빠르고 메모리 ~600배 절감. 계산 O(g|E|^2), 저장 O(dmax|E|). rate-1/2 랜덤 regular 부호의 short cycle 분포는 블록길이에 거의 무관함을 실측(Table IV).</li><li>한계: HW 미설계, 순수 그래프 분석 알고리즘(디코딩/정정 자체는 아님), 정확 계수는 길이 <code>&lt;2g</code> 범위로 제한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Tanner 그래프 short cycle 계수 (부호 품질 진단)</td><td>ecc_top.cpp <code>Load_PCM()</code> (H-matrix 로드)</td><td>중 - 로드된 H-matrix에 오프라인 사이클 진단 툴로 붙일 수 있음</td></tr><tr><td>girth/사이클 분포 기반 부호 선정</td><td>대응 없음 (부호설계 오프라인)</td><td>Prime은 특정 QC-LDPC 고정, H-matrix 검증 단계에서만 참고</td></tr><tr><td>트래핑셋/error-floor 진단 연계</td><td>corner.cpp (수렴실패 추적)</td><td>낮음 - 논문은 사이클 계수까지, 트래핑셋 판정은 후속 작업</td></tr><tr><td>메시지패싱 계수 알고리즘 자체</td><td>대응 없음</td><td>복호(min-sum MP)와 무관한 그래프 분석용 MP</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - Prime QC-LDPC의 H-matrix short cycle/girth를 저복잡도로 진단하는 오프라인 부호품질 툴로 간접 활용 가능하나, 디코더/HW 런타임 성능에는 직접 기여하지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6336765",
+  "title": "Message-Passing Algorithms for Counting Short Cycles in a Graph",
+  "year": 2013,
+  "venue": "IEEE Trans. Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "1008~20000",
+  "soft_quant": "무관",
+  "key_contribution": "Tanner 그래프에서 정수 가감산 메시지패싱으로 길이 g~2g-2 짧은 사이클을 O(g|E|^2)에 세는 알고리즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호설계 오프라인 분석 툴로 디코더·HW 성능에 직접 기여 안 함, error-floor 개선은 후속 트래핑셋 작업 몫",
+  "todo_check": "Prime QC-LDPC H-matrix의 short cycle/trapping-set 진단에 오프라인으로 붙여 부호 선정·검증에 쓸 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6336765---message-passing-algorithms-for-counting-short-cycles-in-a-graph-2013-ieee-trans-communications">ieee:6336765 - Message-Passing Algorithms for Counting Short Cycles in a Graph (2013, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8692862</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8692862---binary-message-passing-decoding-of-product-codes-based-on-generalized-minimum-distance-decoding-2019-ieee-isitinvited">ieee:8692862 - Binary Message Passing Decoding of Product Codes Based on Generalized Minimum Distance Decoding (2019, IEEE ISIT/Invited)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.8716</td></tr><tr><td>부호length</td><td>65536</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>GMDD(error-erasure) 최종단을 Hamming distance로 판정해 soft교환 없이 hard+최소신뢰비트 리스트만 교환하는 BMP 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC가 아닌 BCH product code 대상, fiber-optic 타깃, error-floor 회피 위해 iBDD 후처리 필요</td></tr><tr><td>추가확인</td><td>LDPC 그래프에는 component BDD/GMDD 개념이 없어 이식 경로 사실상 부재</td></tr></tbody></table>
+<blockquote><p>총평: BCH product code용 hard-message 복호로 LDPC와 그래프/component 구조가 근본적으로 달라 Prime ECC binary QC-LDPC에 이식 경로 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2-D product code(PC), 동일 binary eBCH component code(행/열), AWGN 채널, 대표 예제는 <code>(256,239,6)</code> eBCH로 PC rate <code>R=239^2/256^2≈0.8716</code>, PC 길이 <code>256^2=65536</code>.</li><li>풀려는 문제: iBDD(hard)는 SDD(soft) 대비 1dB+ 손실, TPD/iGMDD-SR(soft 교환)은 성능은 좋지만 data flow(soft 교환)가 iBDD보다 훨씬 커 Tbps급 광통신에 부적합.</li><li>핵심 모델: component 복호를 GMDD(generalized minimum distance, error-erasure)로 수행 — <code>|L_i|</code> 신뢰도 순위로 최소신뢰 <code>m</code>비트 erase, <code>t+1</code> trial 벡터에 algebraic error-erasure 복호.</li><li>핵심 기법 1단: GMDD 최종 판정을 generalized distance <code>d_GD</code>(식1, <code>α_i=|L_i|/max|L_j|</code>) 대신 <strong>Hamming distance</strong> <code>argmin d_H(r,c)</code>(식2)로 대체 → soft 신뢰도 교환 불필요.</li><li>식 의미: <code>d_GD</code>는 정규화 신뢰도 <code>α_i</code>를 쓰므로 soft를 넘겨야 하지만, <code>d_H</code>로 바꾸면 hard 결정+짧은 리스트만 교환해도 되어 data flow 급감.</li><li>핵심 기법 2단: 반복 교환 메시지 = hard decision <code>ψ</code>(식4, <code>B(·)</code>)와 <code>d_min-1</code>개 최소신뢰 비트의 정렬 리스트 <code>L</code>; 신뢰도 갱신 <code>μ = w·μ̄ + L</code>(식3, <code>w</code>는 최적화 스케일, <code>μ̄∈{±1,0}</code>).</li><li>구현 디테일: 리스트는 비트당 <code>(⌈log2(n)⌉+⌈log2(d_min-1)⌉)(d_min-1)</code> 비트로 표현; error-floor 회피 위해 BMP 8 iteration 후 conventional iBDD 2 iteration 부가.</li><li>최적화: 스케일 벡터 <code>w=(w^(1),...,w^(ℓmax))</code>를 고정 Eb/N0에서 Monte-Carlo BER로 공동 최적화(단조증가 제약).</li><li>결과(시뮬): BER 10^-7에서 iBDD-TPD 갭의 약 50% 폐쇄, iGMDD-SR 대비 0.074dB만 열화하면서 data flow는 iBDD 대비 +21.48%(n=256, d_min=5), n 클수록 증가율 감소(8.5~34.3%).</li><li>한계: HW 미설계·시뮬만, LDPC 아닌 BCH product code, 광통신/무선 고throughput 타깃, LLR 강신뢰·오부호 시 error-floor 위험(iBDD 후처리 의존).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GMDD/BDD component 복호 (product code)</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC 그래프 복호로 component algebraic 복호 개념 없음</td></tr><tr><td>BMP hard-message + 최소신뢰 리스트 교환</td><td>대응 없음</td><td>LDPC의 C2V/V2C min-sum 메시지 구조와 상이</td></tr><tr><td>신뢰도 스케일 <code>μ=w·μ̄+L</code></td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>개념적 유사(scaled reliability)뿐, 알고리즘 직접 이식 불가</td></tr><tr><td>iterative message passing 스케줄</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>반복복호라는 공통점뿐, product code 전용</td></tr><tr><td>error-floor 회피용 iBDD 후처리</td><td>대응 없음</td><td>LDPC엔 BDD 후처리 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC가 아닌 binary BCH product code 전용 복호이고 fiber-optic 고throughput 타깃이라 Prime ECC binary QC-LDPC 디코더에 떼어 쓸 알고리즘적 접점이 사실상 없음.</p>
+<pre><code>{
+  "id": "ieee:8692862",
+  "title": "Binary Message Passing Decoding of Product Codes Based on Generalized Minimum Distance Decoding",
+  "year": 2019,
+  "venue": "IEEE ISIT (Invited)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.8716,
+  "code_length": "65536",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "GMDD(error-erasure) 최종단을 Hamming distance로 판정해 soft교환 없이 hard+최소신뢰비트 리스트만 교환하는 BMP 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC가 아닌 BCH product code 대상, fiber-optic 타깃, error-floor 회피 위해 iBDD 후처리 필요",
+  "todo_check": "LDPC 그래프에는 component BDD/GMDD 개념이 없어 이식 경로 사실상 부재"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8692862---binary-message-passing-decoding-of-product-codes-based-on-generalized-minimum-distance-decoding-2019-ieee-isitinvited">ieee:8692862 - Binary Message Passing Decoding of Product Codes Based on Generalized Minimum Distance Decoding (2019, IEEE ISIT/Invited)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

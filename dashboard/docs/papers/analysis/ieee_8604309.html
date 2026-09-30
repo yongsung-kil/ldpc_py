@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8604309</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8604309---hybrid-decoding-of-ldpc-codes-in-discrete-communication-channels-2018-ieee">ieee:8604309 - Hybrid Decoding of LDPC Codes in Discrete Communication Channels (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>bit-flip과 majority-logic을 임계값만 바꿔 결합, 마지막 iteration을 MAJ로 하여 error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>시뮬만(FPGA/ASIC 없음), 특정 (1000,500)/(1000,750) PEG regular 코드 예제뿐, gatecount/throughput 없음</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC + soft-read 환경에서 MAJ 마지막-iter 트릭이 여전히 유효한지, min-sum 대비 이득</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BF/MAJ 하이브리드로 임계값 스위칭만으로 error-floor를 낮추는 저비용 아이디어 — Prime ECC의 min-sum(soft) 파이프라인과 직접 겹치진 않으나 조기종료 후 마지막 iter 보정 전략으로 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 binary regular LDPC, girth≥6, 하드결정 복조(AWGN+HD)를 가정한 하드결정 복호기(<code>bit-flip</code>, <code>majority-logic</code>).</li><li>문제: 전통 BF/MP 복호기는 소수 에러 이벤트를 못 고쳐 SNR 상승 시 error-floor 발생, 이를 낮추려면 Tanner graph 최적화(고비용)나 2차 복호(복잡도 2배)가 필요.</li><li>BF 알고리즘: 신드롬 <code>S = rH^T</code> (GF(2)), <code>f = S·H</code> (정수환) 계산 후 <code>f ≥ b</code>인 비트를 반전, 기본 임계 <code>b = max{f}</code>.</li><li>Majority-logic은 BF와 동일 절차이되 임계를 <code>b = γ/2</code>로 고정 — 즉 "임계값만 다른 BF".</li><li>직교 검사(girth≥6) 조건에서 MAJ는 <code>t = γ/2</code> 이하 에러를 보장 정정(sphere 복호), BF는 어떤 반경 t도 보장 없음.</li><li>핵심 관찰: BF는 입력 에러가 많아도 1 iter로 에러 수를 줄이는 수렴성이 좋고, MAJ는 에러가 적을 때(≤5) 확실히 없앰 → 상보적.</li><li>하이브리드: BF로 여러 iter 수행해 에러를 줄인 뒤 마지막 1 iter만 MAJ 임계(<code>γ/2</code>)로 수행 → 잔여 에러를 코드워드로 확정, error-floor 저감.</li><li>구현 비용은 작음 — 두 알고리즘이 반전 임계 <code>b</code> 값 변경만으로 동일 SW/HW에서 전환 가능.</li><li>결과: (1000,500) <code>γ=11</code> (t=5), (1000,750) <code>γ=5</code> (t=2) PEG regular 코드에서 시뮬. Fig.3에서 BF-MAJ(9-1)이 BF(10) 대비 error-floor 영역 BER 감소.</li><li>한계: HW 미설계, 시뮬만, 하드결정 채널 한정, 정량적 gatecount/throughput/BER 수치는 그림에만 존재해 본문 확정 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit-flip / majority-logic 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum(soft) 기반이라 BF/MAJ 직접 대응은 아니나 이터레이션 루프 위치가 동일 삽입점</td></tr><tr><td>마지막 iteration 임계 스위칭(error-floor 대책)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>반복 구간별 동작 변경 개념은 적응형 LLR 테이블과 유사, 마지막-iter post-processing으로 접목 가능</td></tr><tr><td>신드롬/조기종료 판정</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>신드롬=0 종료 개념은 CRC 조기종료와 유사</td></tr><tr><td>MAJ 보장 정정반경(t=γ/2)</td><td>대응 없음</td><td>soft min-sum 디코더엔 orthogonal-check sphere 보장 개념 부재</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 순수 하드결정 BF/MAJ는 Prime ECC의 soft min-sum 파이프라인과 계층이 달라 직접 이식은 어렵고, "마지막 iteration 임계 변경으로 error-floor 저감"이라는 아이디어만 개념 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8604309",
+  "title": "Hybrid Decoding of LDPC Codes in Discrete Communication Channels",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.75",
+  "code_length": "1000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "bit-flip과 majority-logic을 임계값만 바꿔 결합, 마지막 iteration을 MAJ로 하여 error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "시뮬만(FPGA/ASIC 없음), 특정 (1000,500)/(1000,750) PEG regular 코드 예제뿐, gatecount/throughput 없음",
+  "todo_check": "고rate QC-LDPC + soft-read 환경에서 MAJ 마지막-iter 트릭이 여전히 유효한지, min-sum 대비 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8604309---hybrid-decoding-of-ldpc-codes-in-discrete-communication-channels-2018-ieee">ieee:8604309 - Hybrid Decoding of LDPC Codes in Discrete Communication Channels (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

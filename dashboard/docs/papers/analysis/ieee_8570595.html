@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8570595</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8570595---on-the-use-of-hard-decision-ldpc-decoders-on-mlc-nand-flash-memory-2018-ieee-ssd-conference">ieee:8570595 - On the Use of Hard-Decision LDPC Decoders on MLC NAND Flash Memory (2018, IEEE SSD Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>MLC retention 오류의 단방향 특성으로 신뢰비트(I) 판정 → BF(GDBF/PGDBF)에서 신뢰 VN을 flip 금지하도록 적응(A-GDBF/A-PGDBF)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>regular LDPC·N=1296 소규모 시뮬만, HW 아키텍처는 타 논문 참조, soft 대비 정정능력은 여전히 열세</td></tr><tr><td>추가확인</td><td>우리 고rate(~0.9) QC-LDPC·2SD/3SD 환경에서 hard-only BF가 실용 정정능력을 내는지, MSB/LSB 매핑 가정 정합</td></tr></tbody></table>
+<blockquote><p>총평: NAND retention 특성으로 hard read만으로 신뢰비트 활용하는 아이디어는 직접 관련·매력적이나, 우리는 min-sum(soft) 기반이라 BF 채택은 아키텍처 전환이 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 2bit/cell MLC NAND, regular LDPC <code>R=0.75</code>, <code>N=1296</code>; retention 오류만 가정(단일 단계 인접 상태 천이).</li><li>문제: soft-decision LDPC는 정정력 좋지만 soft-sensing이 read latency를 크게 늘림 → hard read만으로 유사 성능을 원함.</li><li>채널 모델: raw BER <code>α</code>의 crossover(<code>Pr(y_n≠x_n)=α</code>), retention은 항상 낮은 전하 방향의 단방향 전이.</li><li>핵심 관찰: retention은 단방향이라 특정 read 값의 일부 비트는 error-free — 예: <code>01</code>은 MSB·LSB 모두 신뢰, <code>00</code>은 MSB 신뢰, <code>10</code>은 LSB, <code>11</code>은 MSB 신뢰.</li><li>전처리(pre-processing): 셀의 (MSB,LSB)로부터 신뢰벡터 <code>I=(I_1..I_N)</code> 생성(단순 조합회로, XOR 기반, 오버헤드 무시가능).</li><li>BF 기본: CN은 parity XOR(<code>c_m</code>), VN은 energy <code>E_n = (v_n⊕y_n) + Σ c_m</code> 계산, 최대 energy VN을 flip(GDBF), PGDBF는 확률신호 <code>R_n</code>로 flip 게이팅.</li><li>적응(A-GDBF/A-PGDBF): flip은 해당 VN이 unreliable(<code>I_n=0</code>)일 때만 수행 → 신뢰(정답) VN이 잘못 flip되어 발생하는 진동/트래핑셋 실패를 회피.</li><li>예시: trapping set (5,3)에서 GDBF는 항상 실패하나 A-GDBF는 신뢰정보로 75% 정정.</li><li>결과: raw BER <code>2e-3</code>에서 A-PGDBF BER <code>8e-10</code>, A-GDBF <code>4e-8</code>; 전처리 미사용 대비 A-GDBF 0.5dB·A-PGDBF 0.2dB 이득; BF는 1 iter=1 clock, MS는 layer당 2 clock(4 layer)이라 BF가 MS 대비 약 4배 빠름.</li><li>한계: N=1296 소규모·regular 코드 시뮬만, soft-sensing 회피의 latency 이득은 정량화 안 함, MS(4bit LLR/6bit AP-LLR)보다 정정능력은 여전히 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| BF VN energy/flip 처리 | decoder.cpp VN_Cal_HD() (HD 경로) | 우리 HD는 min-sum 기반, BF flip 로직은 신규 — VNU 대체 필요 |
+| CN parity XOR | decoder.cpp CNU_Update_New_Mag()/C2V_Cal_New_Sgn() | BF의 binary CN은 sign만 → 부분 대응 |
+| 신뢰비트 판정(retention 기반 I) | channel.cpp Set_R_Offset()/Set_LLR_Th() | soft-read threshold 대신 hard 신뢰마스크 주입점으로 활용 가능 |
+| 조기종료(syndrome=0) | partial_CRC.cpp/full_CRC.cpp | BF는 CN 만족 검사로 종료, 우리 CRC 종료와 개념 유사 |
+| PGDBF 확률신호 생성 | random.cpp (XOR25 난수) | 난수원 재사용 가능 |
+| MLC MSB/LSB 신뢰 전처리 회로 | 대응 없음 | 우리 채널에 MLC 비트매핑/retention 모델 없음 |</code></pre>
+<p>적용 가치: 중간 — retention 단방향성으로 hard read 신뢰비트를 디코더에 주입하는 개념은 NAND 직접 관련이나, Prime ECC는 min-sum(soft) 기반이라 BF 전면 채택보다는 "신뢰비트를 LLR 초기값/고정"으로 반영하는 부분 이식이 현실적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8570595",
+  "title": "On the Use of Hard-Decision LDPC Decoders on MLC NAND Flash Memory",
+  "year": 2018,
+  "venue": "IEEE SSD Conference",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.75,
+  "code_length": "1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "MLC retention 오류의 단방향 특성으로 신뢰비트(I) 판정 후 BF(GDBF/PGDBF)에서 신뢰 VN을 flip 금지하도록 적응(A-GDBF/A-PGDBF)",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "regular LDPC·N=1296 소규모 시뮬만, HW 아키텍처는 타 논문 참조, soft 대비 정정능력은 여전히 열세",
+  "todo_check": "우리 고rate(~0.9) QC-LDPC·2SD/3SD 환경에서 hard-only BF가 실용 정정능력을 내는지, MSB/LSB 매핑 가정 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8570595---on-the-use-of-hard-decision-ldpc-decoders-on-mlc-nand-flash-memory-2018-ieee-ssd-conference">ieee:8570595 - On the Use of Hard-Decision LDPC Decoders on MLC NAND Flash Memory (2018, IEEE SSD Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

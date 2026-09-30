@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4556289</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4556289---impact-of-roundoff-errors-in-ldpc-decoding-2008-iswpc-2008">ieee:4556289 - Impact of Roundoff errors in LDPC decoding (2008, ISWPC 2008)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.47</td></tr><tr><td>부호length</td><td>120</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>log-SP의 Φ(x)=-log(tanh) 유한워드길이 양자화 오차를 Roundoff/Saturation 두 메커니즘으로 분해·분석</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Sum-Product Φ-LUT 특화 분석이라 min-sum 쓰는 Prime ECC엔 Saturation 메커니즘 부적용, 1 iteration·단일 소형 코드·모델 미완성</td></tr><tr><td>추가확인</td><td>min-sum(min1/min2) 양자화에서도 유사 saturation 오차가 발생하는지, 완성된 word-length 예측 모델이 후속 논문에 있는지</td></tr></tbody></table>
+<blockquote><p>총평: log-SP Φ 양자화 오차의 두 메커니즘을 분리 분석했으나 min-sum 기반 Prime ECC엔 직접 적용 어렵고 이론 모델도 미완성.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN/BPSK 채널의 log-domain Sum-Product(SP) LDPC 디코더 유한정밀도 분석, 테스트 코드 (120,64) irregular(<code>dv=3</code> 고정, <code>dc=5</code> 24개/<code>dc=6</code> 40개 check node).</li><li>문제: 워드길이 결정은 방대한 시뮬레이션이 필요 → 워드길이와 성능을 잇는 해석적 오차 모델 필요, 그 첫 단계.</li><li>모델: <code>Qvc = Σ Rmv + λv</code>, <code>Rcv = Πsign(Qnc)·Φ(ΣΦ(Qnc))</code>, <code>Φ(x) = -log(tanh(|x|/2))</code>, 판정량 <code>Qv = Σ Rmv + λv</code>.</li><li>기법 핵심: <code>Φ</code>를 <code>i</code> 정수비트 <code>f</code> 소수비트로 균일양자화(LUT)할 때 성능을 저하시키는 두 오차 메커니즘을 식별.</li><li>Roundoff 메커니즘: 양자화 오차 <code>e = q̂ - q</code>가 <code>[-2^-f, 2^-f]</code>, 정규분포(zero-mean)로 작은 값.</li><li>Saturation 메커니즘: <code>Qnc</code>가 커서 모든 <code>Φ̂(Qnc)=0</code>이면 합=0, <code>Φ(0)=∞</code>라 <code>Rcv</code>가 최대값 <code>S = 2^i - 2^-f</code>로 포화 → 큰 오차. 확률 <code>p = Πpn</code>.</li><li>해석식: 첫 iteration에서 <code>Qv</code> 오차가 <code>L·S</code> 근처일 확률을 regular 코드 대상 (10)으로 유도, <code>p</code>는 (12)의 erf로 노이즈·<code>f</code> 종속.</li><li>히스토그램 특징: 오차 히스토그램은 <code>Nlobes = 2·dv + 1</code>개 lobe, <code>±L·S</code> 위치, 2·S/3·S lobe는 Lobe1 분포의 컨볼루션으로 확인.</li><li>결과: <code>i=5,f=1</code>이면 7개 lobe(큰 오차 존재), <code>f</code>를 2→4로 늘리면 큰 오차 lobe 소멸, <code>i</code> 줄이면 lobe 중앙 병합.</li><li>한계: HW 미설계, 1 iteration·단일 소형 코드 실험, 완성된 예측 모델은 미제시(첫 단계라고 명시).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td><code>Φ(x)=-log(tanh)</code> LUT 양자화(SP)</td><td>대응 없음</td><td>Prime ECC는 full-tanh SP가 아니라 min-sum(magnitude 양자화 테이블) 사용</td></tr><tr><td>메시지/LLR 워드길이 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>양자화 지점은 대응하나 오차 메커니즘 자체는 min-sum에 다르게 적용됨</td></tr><tr><td>Roundoff/Saturation 오차 모델</td><td>대응 없음</td><td>코드 모듈이 아닌 해석적 분석 프레임워크</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Sum-Product Φ-LUT에 특화된 양자화 오차 분석으로 min-sum 기반 Prime ECC의 Saturation 거동과 직접 대응되지 않고, 새 알고리즘·HW 없이 미완성 모델의 첫 단계에 그친다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4556289",
+  "title": "Impact of Roundoff errors in LDPC decoding",
+  "year": 2008,
+  "venue": "ISWPC 2008",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.47,
+  "code_length": "120",
+  "soft_quant": "미상",
+  "key_contribution": "log-SP의 Φ(x)=-log(tanh) 유한워드길이 양자화 오차를 Roundoff/Saturation 두 메커니즘으로 분해·분석",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Sum-Product Φ-LUT 특화 분석이라 min-sum 쓰는 Prime ECC엔 Saturation 메커니즘 부적용, 1 iteration·단일 소형 코드·모델 미완성",
+  "todo_check": "min-sum(min1/min2) 양자화에서도 유사 saturation 오차가 발생하는지, 완성된 word-length 예측 모델이 후속 논문에 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4556289---impact-of-roundoff-errors-in-ldpc-decoding-2008-iswpc-2008">ieee:4556289 - Impact of Roundoff errors in LDPC decoding (2008, ISWPC 2008)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

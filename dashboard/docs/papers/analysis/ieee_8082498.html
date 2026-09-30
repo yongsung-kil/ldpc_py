@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8082498</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8082498---an-iterative-check-polytope-projection-algorithm-for-admm-based-lp-decoding-of-ldpc-codes-2018-ieee-communications-letters">ieee:8082498 - An Iterative Check Polytope Projection Algorithm for ADMM-Based LP Decoding of LDPC Codes (2018, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576~1000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>ADMM LP 복호의 check polytope Euclidean projection을 정렬 없이 반복적으로 수행해 최악 복잡도를 d에 선형으로 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM/LP projection 전용 - min-sum 기반 Prime ECC에 대응 연산 없음, 반복 구조로 latency 증가</td></tr><tr><td>추가확인</td><td>polytope projection이 min-sum CN 연산과 무관함 재확인</td></tr></tbody></table>
+<blockquote><p>총평: ADMM LP 복호의 sorting-free projection 알고리즘으로, min-sum 기반 Prime ECC와 계보가 달라 이식 지점이 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 binary LDPC: irregular (576,288) rate-1/2 (IEEE 802.16e) <code>C1</code>, 그리고 length~1000 regular 코드 <code>C2~C6</code>(check degree d=6/9/12/15/30).</li><li>풀려는 문제: ADMM LP 복호의 지배 연산인 check polytope로의 Euclidean projection이 정렬(sorting) O(d log d) 이상 복잡도를 요구 - 이게 HW/멀티코어 병목.</li><li>모델: AWGN+BPSK, LLR <code>γ</code>, check polytope <code>PPd</code>(짝수 weight 이진벡터 convex hull), assistant hyperplane <code>θ^T x = p</code>로 cut 여부 판정.</li><li>핵심 기법: projection을 (a)assistant hyperplane <code>θ</code>,<code>p</code> 산출, (b)difference coefficient <code>s</code> 추정, (c)<code>z = Π[0,1]d(v - sθ)</code> 3단계로 분해. <code>s</code>를 정렬 없이 반복으로 근사.</li><li>핵심 식: projection coefficient <code>η_i = (θ^T u_{i-1} - p)/d</code> (θ가 ±1이라 분모가 d로 단순화) - 각 반복에서 v를 hyperplane 방향으로 shift하는 양.</li><li>확장/보증: Proposition 3에서 <code>η_i ≤ s - Σηj</code>로 단조 수렴 증명 - v가 목표 v를 넘지 않고 <code>z = ΠPPd(v)</code>로 수렴.</li><li>구현 디테일: 정렬 완전 제거, 단순 산술만 사용. 정지조건은 <code>η &lt; ε</code> 또는 최대반복 <code>Imax</code> 또는 둘의 조합.</li><li>최적화 절차: ADMM은 l2 penalized(μ=2.8, α=1.7, over-relax 1.8, max 60 iter) 사용.</li><li>결과: ε=0.001, Imax=30에서 [5]의 exact projection과 사실상 동일 FER. 평균 반복 I=11.2(3dB)~8.6(4.2dB), 고SNR에선 대다수 projection이 s=0으로 반복 불필요. 최악 복잡도 d에 선형.</li><li>한계: 순수 시뮬(HW 미설계, 저자도 HW 구현은 future work), 반복 구조로 병렬화 제한·latency 증가 인정, gate/throughput 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check polytope Euclidean projection</td><td>대응 없음</td><td>Prime ECC는 polytope projection 없이 min-sum CN 연산(<code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>) 수행</td></tr><tr><td>반복적 projection 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code> (개념 유사만)</td><td>둘 다 반복 구조지만 내부 연산이 완전히 다름 - 코드 재사용 불가</td></tr><tr><td>assistant hyperplane / sorting 제거</td><td>대응 없음</td><td>min-sum은 min1/min2 선택으로 정렬 이슈가 없어 문제 자체가 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - ADMM/LP projection 전용 최적화라 min-sum 기반 Prime ECC 파이프라인에 대응 연산이 없고, 반복 구조로 latency도 불리하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8082498",
+  "title": "An Iterative Check Polytope Projection Algorithm for ADMM-Based LP Decoding of LDPC Codes",
+  "year": 2018,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "576~1000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "ADMM LP 복호의 check polytope Euclidean projection을 정렬 없이 반복적으로 수행해 최악 복잡도를 d에 선형으로 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "ADMM/LP projection 전용 - min-sum 기반 Prime ECC에 대응 연산 없음, 반복 구조로 latency 증가",
+  "todo_check": "polytope projection이 min-sum CN 연산과 무관함 재확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8082498---an-iterative-check-polytope-projection-algorithm-for-admm-based-lp-decoding-of-ldpc-codes-2018-ieee-communications-letters">ieee:8082498 - An Iterative Check Polytope Projection Algorithm for ADMM-Based LP Decoding of LDPC Codes (2018, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

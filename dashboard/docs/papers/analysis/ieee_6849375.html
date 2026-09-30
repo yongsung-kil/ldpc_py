@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6849375</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6849375---advanced-error-prediction-ldpc-for-high-speed-reliable-tlc-nand-based-ssds-2014-ieee">ieee:6849375 - Advanced Error Prediction LDPC for High-Speed Reliable TLC NAND-based SSDs (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>2/3, 9/10</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>program disturb·retention·coupling을 EP table로 모델링해 7회 read만으로 정확한 LLR/CER 생성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>10</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 코어 자체가 아닌 채널 LLR/CER 추정 프런트엔드 개선 — EP table은 측정 기반 TLC 특성 종속</td></tr><tr><td>추가확인</td><td>부호종류/length·디코더 알고리즘 미기재, EP table 생성·저장 비용 및 우리 3SD LLR 테이블과 정합</td></tr></tbody></table>
+<blockquote><p>총평: TLC NAND 실측 기반 AEP-LDPC. LDPC 디코더 코어가 아니라 program disturb/retention/coupling을 EP table로 반영해 소프트정보(CER/LLR)를 정확화하는 채널 프런트엔드 기법. 아이디어는 우리 LLR 테이블에 이식 가능(중).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: TLC NAND SSD, 셀당 8 VTH 상태·3 page, code rate <code>2/3</code>·<code>9/10</code> 측정.</li><li>문제: 기존 EP-LDPC(MLC용)는 program disturb를 모델링 안 해 단기 retention(&lt;2일) 정확도 부족, TLC는 VTH 마진이 좁아 더 심각.</li><li>모델: 총 오류율을 셀별 CER로 분해, VTH는 1 state만 shift 가정; retention을 long(retention 지배)·short(program disturb+retention 공존) 2영역으로 분리.</li><li>핵심 기법: read 시 3개 유닛 추가 — Unit1 retention time 추정, Unit2 short retention 처리, Unit3 EP table 접근해 CER 파라미터를 LDPC 디코더에 공급.</li><li>핵심 식: <code>BER2nd_page = (|NcellA_init−NcellA_meas| + |NcellB_init−NcellB_meas|)/NP</code> — 2nd page 셀 재카운트로 retention time 추정.</li><li>확장: <code>BER_total_est = (α+β+1)·BER2nd_page/3</code> — 1st/3rd page BER를 fitting 계수 α,β로 2nd page 기준 추정; short retention에선 Day0 최소값 사용.</li><li>구현 디테일: soft-info를 49회 read 대신 7회 read + EP table lookup으로 대체(측정된 cycling/retention별 오류율); CER에 inter-cell coupling 승수 반영(예 1.086×1.187×…).</li><li>학습/최적화: 실제 NAND 측정으로 EP table(neighbor VTH별 cell error ratio) 사전 구축.</li><li>결과: BCH 대비 acceptable retention 12×, BER 2.8×; EP-LDPC 대비 max decode iteration 57% 감소; 디코딩 시간 8~32μs(10Gbps 가정).</li><li>한계: LDPC 디코더 코어 알고리즘/부호구조 미기재, HW 미설계(측정+계산), EP table은 특정 TLC 공정 측정치 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CER/LLR 추정(EP table, coupling 반영)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code> + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>소프트정보 정확화 프런트엔드 — 우리 LLR/threshold 테이블에 대응</td></tr><tr><td>7-read soft 정보 생성</td><td><code>channel.cpp</code> soft-read 양자화</td><td>2SD/3SD read 비용 절감 아이디어와 정렬</td></tr><tr><td>retention/disturb 모델 → 디코더 입력</td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code> (iteration별 LLR)</td><td>채널 상태별 LLR 선택 로직에 개념 반영 가능</td></tr><tr><td>LDPC 디코더 코어</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>논문은 코어 변경 없음(입력 LLR만 개선)</td></tr></tbody></table>
+<p><strong>적용 가치</strong>: 중간 — NAND 직접 타깃이고 EP table 기반 CER/LLR 추정은 우리 <code>channel.cpp</code>/<code>PARAM_LLR</code> LLR 테이블 설계에 이식할 여지가 있으나, LDPC 코어·부호구조는 손대지 않고 채널 프런트엔드에 국한되며 측정 데이터 의존도가 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6849375",
+  "title": "Advanced Error Prediction LDPC for High-Speed Reliable TLC NAND-based SSDs",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "2/3, 9/10",
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "program disturb·retention·coupling을 EP table로 모델링해 7회 read만으로 정확한 LLR/CER 생성",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": 10,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LDPC 코어 자체가 아닌 채널 LLR/CER 추정 프런트엔드 개선 — EP table은 측정 기반 TLC 특성 종속",
+  "todo_check": "부호종류/length·디코더 알고리즘 미기재, EP table 생성·저장 비용 및 우리 3SD LLR 테이블과 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6849375---advanced-error-prediction-ldpc-for-high-speed-reliable-tlc-nand-based-ssds-2014-ieee">ieee:6849375 - Advanced Error Prediction LDPC for High-Speed Reliable TLC NAND-based SSDs (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4211820</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4211820---minimum-energy-ldpc-decoder-for-real-time-mobile-application-2007-date">ieee_4211820 - Minimum-Energy LDPC Decoder for Real-Time Mobile Application (2007, DATE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>채널 체크에러 수·과거 프레임 iteration 이력으로 필요 최대 iteration을 예측해 DVFS로 전압·주파수를 낮춰 에너지 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>0.2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 채널이 block-fading 무선통신이며 real-time QoS/DVFS 목적이라 NAND ECC(고정 클록, 고신뢰 read) 맥락과 맞지 않음</td></tr><tr><td>추가확인</td><td>코드 자체 개선이 아니라 전력관리 정책이므로 NAND SSD 컨트롤러의 전력예산 관리 참고 가치만 있는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코딩 알고리즘 자체 개선이 아닌 모바일 무선 채널용 DVFS 기반 저전력 스케줄링 기법으로, NAND binary LDPC ECC 이식 관점에서는 관련성이 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (3,6) regular LDPC, rate 1/2, block length 2048, block-fading + AWGN 채널, Offset-Min-Sum 기반 디코더[3] 사용.</li><li>문제: 고정 max iteration 방식은 실시간 모바일 기기에서 에너지 비효율적 — 대부분 프레임이 max 전에 수렴 후 유휴 대기.</li><li>가정: 채널 잡음 심각도(체크에러 수)는 수신 데이터에서 사전에 통계적으로 추정 가능, SNR과 iteration 수는 상관관계 존재.</li><li>핵심 기법: 수신 프레임의 hard-decision <code>cH^T</code>로 <code>Num_Check_Err</code>를 구하고, 임계값(<code>Check_Err_Threshold1~3</code>)에 따라 예측 최대 iteration(<code>Num_Dec_Iteration</code>)을 4단계(num1~4)로 결정.</li><li>보정식: <code>Num_Dec_Iteration</code>이 과거 평균 대비 <code>1.5*Aver_Iteration</code> 미만이면 그 값으로 상향 — 과거 프레임 이력으로 예측 신뢰도 보정.</li><li>DVFS 적용: 예측 iteration 수에 비례해 클록 주파수 결정(예: 20회→기준, 10회→2배 주파수), 주파수에 따라 최소 필요 전압을 buck converter로 공급.</li><li>HW 구현: 주파수분할 클록divider + critical path replica 기반 전압제어기, frame buffer(K=2) 필요, TSMC 0.13um 공정으로 시뮬레이션.</li><li>최적화 절차: threshold 값(420/380/350)과 iteration 수(24/18/14/12)를 시뮬레이션 기반 경험적으로 선정.</li><li>결과: 최대 35% 디코딩 에너지 절감, BER 성능 저하 없이 최대 30% 전력 절감, controller 오버헤드 약 10mW(디코더 전체 약 200mW 대비 미미).</li><li>한계: 무선 fading 채널 및 real-time QoS 특화 설계로 NAND ECC의 고정 지연·고신뢰성 요구와 맥락이 다르며, 부호설계·디코딩 알고리즘 자체 개선은 없음(순수 전력관리 정책).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DVFS 기반 iteration 예측/전력관리</td><td>대응 없음</td><td>Prime ECC는 bit-exact HW 시뮬레이터로 DVFS/전압제어 개념 자체가 없음</td></tr><tr><td>체크에러 수 기반 조기 iteration 예측</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>조기종료(Partial CRC)와 유사 목적이나 본 논문은 CRC가 아닌 통계적 사전예측 방식이라 직접 대응 어려움</td></tr><tr><td>Offset-Min-Sum 디코더</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 보유한 기법(Min-Sum 계열)과 동일 계열, 신규 기여 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 무선 모바일 채널 대상 전력관리 정책으로, NAND ECC의 부호설계/디코딩 알고리즘 개선과 무관하며 이미 보유한 Min-Sum 계열 디코더 이상의 신규 기여가 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4211820",
+  "title": "Minimum-Energy LDPC Decoder for Real-Time Mobile Application",
+  "year": 2007,
+  "venue": "DATE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "채널 체크에러 수·과거 프레임 iteration 이력으로 필요 최대 iteration을 예측해 DVFS로 전압·주파수를 낮춰 에너지 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": 0.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "대상 채널이 block-fading 무선통신이며 real-time QoS/DVFS 목적이라 NAND ECC(고정 클록, 고신뢰 read) 맥락과 맞지 않음",
+  "todo_check": "코드 자체 개선이 아니라 전력관리 정책이므로 NAND SSD 컨트롤러의 전력예산 관리 참고 가치만 있는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4211820---minimum-energy-ldpc-decoder-for-real-time-mobile-application-2007-date">ieee_4211820 - Minimum-Energy LDPC Decoder for Real-Time Mobile Application (2007, DATE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1494402</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1494402---gear-shift-decoding-for-algorithms-with-varying-complexity-2005-ieee-conf">ieee:1494402 - Gear-shift Decoding for Algorithms with Varying Complexity (2005, IEEE (Conf))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>200000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>iteration마다 복호 알고리즘(sum-product/min-sum/Alg.E/B)을 전환해 수렴 보장 하에 복호 latency를 최소화하는 gear-shift 스케줄을 EXIT chart+DP로 도출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>순수 SW 소요시간(µs/b) 기준 latency로 HW 병렬 디코더의 clock/면적과 무관; 알고리즘 간 message alphabet 호환 매핑 필요, gear-shift는 threshold를 넘지 않는 latency만 개선</td></tr><tr><td>추가확인</td><td>Prime ECC의 min-sum + partial/full CRC 조기종료 대비 실제 추가 이득이 있는지, HW에서 알고리즘 전환의 자원(면적/제어) 비용</td></tr></tbody></table>
+<blockquote><p>총평: iteration별로 강/약 복호 규칙을 최적 전환해 latency를 줄이는 스케줄링 아이디어로, 디코더 iteration 루프에 붙일 여지는 있으나 SW-latency 관점·threshold 무개선이라 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 반복 message-passing 디코더가 매 iteration마다 여러 복호 규칙 중 하나를 선택(gear-shift)해 target error rate를 최소 복호시간으로 달성하는 문제.</li><li>문제: 고복잡도(sum-product)는 강하나 느리고, 저복잡도(min-sum/Alg.E/Alg.B)는 threshold가 나빠 수렴에 더 많은 iteration 필요 → 단일 알고리즘으로는 총 연산시간 최적 아님.</li><li>예시(도입): (4,8) regular LDPC, AWGN 2.50dB에서 sum-product 9iter=46.8µs/b, min-sum 20iter=56.0µs/b이지만 SP 4 + Alg.E 5 + Alg.B 4 조합은 26.86µs/b(SP의 58% 미만).</li><li>핵심기법1: 각 알고리즘의 EXIT chart <code>p_out=f_i(p_in,p_0)</code>(extrinsic message error rate 추적)와 1-iter 소요시간 <code>t_i</code>를 입력으로, 시퀀스 <code>S=(a_1,...,a_l)</code>의 총시간 <code>T_S=Σ t_{a_i}</code>를 최소화.</li><li>핵심식: 출력 오류율 <code>P_S(p_0)=f_{a_l}(...f_{a_1}(p_0,p_0)...)</code>; <code>P_S≤p_t</code>면 admissible, 최소 <code>T_S</code>가 optimum.</li><li>핵심기법2(동복잡도): <code>t_i</code> 동일 시 매 iteration에서 <code>p_out</code> 최소 알고리즘을 고르는 greedy가 최적임을 증명(Theorem 1).</li><li>핵심기법3(이복잡도): <code>f_i</code>를 격자점 <code>P={p_0&gt;...&gt;p_n=p_t}</code>로 양자화한 <code>f̂_i</code>(비관적 근사)로 "decoding performance trellis" 구성 — 각 branch=알고리즘 i, weight=<code>t_i</code> → 최소 weight 경로를 DP로 탐색(수천 state도 처리 가능).</li><li>이론보장: gear-shift 디코더의 수렴 threshold는 가용 알고리즘 최고 threshold 이상(Theorem 2) — latency는 줄이되 threshold는 손해 없음.</li><li>결과: (3,6) LDPC, 1.75dB에서 optimum=min-sum2+SP5+min-sum10=40.9µs/b(단독 SP 61.5µs/b 대비 &gt;50%↓, min-sum 52.7µs/b 대비 &gt;28%↓); 채널 SNR 0.05dB 과추정 시 min-sum은 발산하나 gear-shift는 SP로 전환해 robust.</li><li>한계: HW 미설계·SW 소요시간(µs/b, Pentium IV) 기준, cycle-free soft 복호에선 threshold 개선 불가(latency만), 알고리즘 간 message alphabet 호환 매핑 필요, 고최적화 irregular 부호는 EXIT가 tight/closed라 적용 제한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>iteration별 복호 규칙 전환 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>iteration 루프에 알고리즘/스케줄 전환을 삽입하는 관점 — 다만 Prime ECC는 min-sum 단일이라 gear 후보 부재</td></tr><tr><td>iteration별 파라미터 테이블 기반 적응</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>Prime ECC의 iteration 구간별 LLR threshold 테이블과 개념 유사(이미 적응형 보유 → 중복성)</td></tr><tr><td>조기종료로 iteration 수 최소화</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>latency 최소화 목표가 겹침 — Prime ECC는 CRC 조기종료로 이미 iteration 절감</td></tr><tr><td>EXIT chart + DP 스케줄 최적화(오프라인)</td><td>대응 없음</td><td>설계 시 스케줄 결정 도구로, 런타임 HW 모듈과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — iteration별 강/약 규칙 전환으로 latency를 줄이는 발상은 디코더 루프에 붙일 여지가 있으나, Prime ECC는 min-sum 단일+적응형 LLR+CRC 조기종료를 이미 보유해 gear 후보와 이득이 제한적이고, 논문 자체가 SW-latency·HW 미설계·threshold 무개선.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1494402",
+  "title": "Gear-shift Decoding for Algorithms with Varying Complexity",
+  "year": 2005,
+  "venue": "IEEE (Conf)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "200000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "iteration마다 복호 알고리즘(sum-product/min-sum/Alg.E/B)을 전환해 수렴 보장 하에 복호 latency를 최소화하는 gear-shift 스케줄을 EXIT chart+DP로 도출",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "SW 소요시간(µs/b) 기준 latency로 HW 병렬 디코더 clock/면적과 무관, 알고리즘 간 alphabet 호환 매핑 필요, threshold는 무개선",
+  "todo_check": "Prime ECC의 min-sum+CRC 조기종료 대비 실제 추가 이득 및 HW에서 알고리즘 전환 자원 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1494402---gear-shift-decoding-for-algorithms-with-varying-complexity-2005-ieee-conf">ieee:1494402 - Gear-shift Decoding for Algorithms with Varying Complexity (2005, IEEE (Conf))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

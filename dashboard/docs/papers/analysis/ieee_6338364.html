@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6338364</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6338364---vlsi-architecture-for-layered-decoding-of-qc-ldpc-codes-with-high-circulant-weight-2013-ieee-tvlsi">ieee:6338364 - VLSI Architecture for Layered Decoding of QC-LDPC Codes With High Circulant Weight (2013, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>circulant weight K≥1 임의 지원하는 block-serial layered 디코더 아키텍처(K와 무관한 latency)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.1Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>K&gt;1 circulant 처리는 LLR combining으로 K=2,3,4 시 0.1dB 미만 성능 저하 발생</td></tr><tr><td>추가확인</td><td>Prime ECC의 z=32/degree17 구조가 K=1(단일 shift) 전제인지 확인, K&gt;1 부호 미사용 시 이식 가치 제한</td></tr></tbody></table>
+<blockquote><p>총평: circulant weight K&gt;1 QC-LDPC를 위한 범용 layered 디코더 HW로, min-sum 압축저장·permuter 시분할 등 HW 트릭은 유용하나 Prime ECC가 K=1 QC-LDPC 전제면 직접 이식 이득 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 array-of-circulant QC-LDPC로, 각 nonzero submatrix가 K개 cyclic-shifted identity의 superposition(circulant weight <code>K≥1</code>)인 코드; CMMB rate 1/2·3/4, block length 9216bit, Z=256.</li><li>문제: 전통 layered 디코더는 K=1만 지원, K&gt;1이면 한 layer 내 같은 variable node에 여러 check node가 연결되어 APP LLR 갱신 충돌 발생.</li><li>기존 해법([12]~[15])은 특정 코드 구조 전용이거나 병렬도 저하·layer 재정렬 필요로 범용성 부족.</li><li>핵심: block-serial scheduling — parity check matrix를 layer별, 각 Z×Z submatrix를 병렬단위로 처리, 각 block을 1 clock에 처리해 latency가 K와 무관.</li><li>LLR combining 식 <code>Ln = Ln + Σ_{j}(R'_{mj,n} − R_{mj,n})</code>로 K개 check node 기여를 합산해 충돌 해소.</li><li>디코딩은 scaled min-sum(scaling factor S=0.75), submatrix당 첫/둘째 최소값 <code>Am,Bm</code>을 두 번 scan(Q 계산 → LLR 갱신)으로 갱신.</li><li>HW 트릭: R-Mem은 min-sum 압축(first/second min + 위치 + sign)으로 저장, memory 구조가 K에 무관, permuter를 first/second scan 시분할로 면적 절감.</li><li>min-finder 유닛은 K에 따라 회로 변경(K=2는 CMP 5개+MUX 4개), K=3 일반화 가능.</li><li>결과: CMMB용 65nm TSMC 합성 시 core area 3.9mm², 600MHz에서 15 iter로 1.1Gb/s throughput 달성(기존 대비 higher throughput).</li><li>한계: LLR combining 부작용으로 K=2,3,4 시 0.1dB 미만 성능 저하, error-floor/정정능력 개선 목적 아님, 무선 방송(CMMB/DVB-S2) 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| block-serial layered 디코딩 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | K&gt;1 circulant 지원 스케줄링; Prime ECC가 K=1이면 부분 참고만 |
+| scaled min-sum CN 연산(0.75) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum 압축저장(min1/min2/pos/sign)은 Prime ECC와 동일 계열 |
+| permuter 시분할(row shift) | GT.cpp Make_GT_HW() | HW edge/라우팅 최적화 관점 부분 관련 |
+| Z×Z 병렬 CNP / LLR-Mem 구조 | 디코더 HW 모델(z=32) | Z=256 vs z=32 정합 필요 |</code></pre>
+<p>적용 가치: 낮음 — min-sum 압축저장은 Prime ECC가 이미 보유, 논문 고유 기여인 K&gt;1 circulant 지원은 Prime ECC가 K=1 QC-LDPC 전제로 보이면 불필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6338364",
+  "title": "VLSI Architecture for Layered Decoding of QC-LDPC Codes With High Circulant Weight",
+  "year": 2013,
+  "venue": "IEEE TVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "9216",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "circulant weight K≥1 임의 지원하는 block-serial layered 디코더 아키텍처(K와 무관한 latency)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.1,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "K&gt;1 circulant 처리는 LLR combining으로 K=2,3,4 시 0.1dB 미만 성능 저하 발생",
+  "todo_check": "Prime ECC의 z=32/degree17 구조가 K=1 전제인지 확인, K&gt;1 부호 미사용 시 이식 가치 제한"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6338364---vlsi-architecture-for-layered-decoding-of-qc-ldpc-codes-with-high-circulant-weight-2013-ieee-tvlsi">ieee:6338364 - VLSI Architecture for Layered Decoding of QC-LDPC Codes With High Circulant Weight (2013, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

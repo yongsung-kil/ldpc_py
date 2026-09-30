@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6404695</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6404695---suppressing-pseudocodewords-by-penalizing-the-objective-of-lp-decoding-2012-ieee-itw">ieee:6404695 - Suppressing pseudocodewords by penalizing the objective of LP decoding (2012, IEEE ITW)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ADMM 기반 LP 복호 목적함수에 비볼록 penalty(l1/l2/log)를 더해 pseudocodeword를 억제, 저SNR은 BP 수준·고SNR은 error-floor 없는 복호 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LP/ADMM은 min-sum과 다른 복호 클래스(parity polytope projection, 실수 연산)라 HW 미설계·연산비용 큼, penalty로 비볼록화되어 전역해 보장 없음</td></tr><tr><td>추가확인</td><td>NAND용 QC-LDPC·hard/2-3bit soft-read에서 penalty ADMM의 정정이득과 HW 비용(면적/latency) 실측 여부</td></tr></tbody></table>
+<blockquote><p>총평: BP의 저SNR 성능과 LP의 무error-floor를 결합한 매력적 복호지만, min-sum과 이질적인 LP/ADMM 실수연산 구조라 NAND HW 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 binary LDPC(길이 <code>N=2640</code>, <code>[2640,1320]</code> Margulis code, rate 0.5), MBIOS/AWGN 채널에서 LP 복호.</li><li>문제: LP 복호는 <code>ML certificate</code>·무error-floor 장점이 있으나 저SNR에서 BP보다 WER가 나쁘다 — 이상적 복호는 저SNR에서 BP처럼, 고SNR에서 error-floor 없이 동작해야.</li><li>모델: Feldman LP 완화 <code>min γ^T x s.t. P^j x ∈ PP_dj</code>(fundamental polytope), <code>γi</code> = negative LLR; ADMM으로 replica <code>zj</code>와 parity polytope projection으로 분산 풀이.</li><li>핵심 기법: 선형 목적에 좌표별 penalty <code>Σ g(xi)</code>를 추가(식 (7))해 fractional(=pseudocodeword) 해를 벌점, 정수해로 유도.</li><li>penalty 성질: <code>g</code>는 (0,1/2)에서 증가, <code>g(x)=g(1-x)</code>(전송부호 독립성, Thm 2), 미분가능(ADMM x-update 정확화).</li><li>penalty 3종: <code>g1=-α1|x-0.5|</code>(l1), <code>g2=-α2(x-0.5)^2</code>(l2), <code>g3=-α3 log|x-0.5|</code>(log); l1/log는 stationary point 2개→0.5에서 먼 쪽 선택.</li><li>구현: Algorithm 1에서 x-update만 penalty별로 교체(식 9/11/13), z-update는 parity polytope projection, λ-update는 LP와 동일; 비볼록이라 국소해만 보장.</li><li>파라미터: <code>μ=5.5</code>, 최적 <code>α1*=0.6, α2*=0.8, α3*=0.2</code>(SNR 무관 거의 동일), <code>Tmax</code> 클수록 WER 개선하나 시간 증가(trade-off).</li><li>결과: <code>Eb/N0=1.4dB</code>에서 l1/l2 penalty가 BP 수준 WER, 고SNR에서 세 penalty 모두 LP처럼 error-floor 없이 WER 기울기 증가; l2가 성능·속도 최적, baseline sum-product BP와 비슷한 속도.</li><li>한계: HW 미설계·시뮬뿐(Margulis 1개 부호), 실수 LP/ADMM 연산이라 고SNR 영역 추가검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM LP penalty 복호 전체</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum message passing 고정, LP/ADMM(parity polytope projection)과 복호 패러다임이 달라 직접 대응 없음</td></tr><tr><td>CN 연산(parity polytope projection)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>min-sum CN 연산과 수학적 성격이 달라 대응 없음</td></tr><tr><td>soft LLR 입력 <code>γ</code></td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>LLR 입력은 공유하나 penalty ADMM은 실수 float 연산 요구</td></tr></tbody></table>
+<p>적용 가치: 낮음 — error-floor 억제 아이디어는 흥미롭지만 LP/ADMM 실수연산 복호는 min-sum 기반 Prime ECC HW와 이질적이라 이식 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6404695",
+  "title": "Suppressing pseudocodewords by penalizing the objective of LP decoding",
+  "year": 2012,
+  "venue": "IEEE ITW",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ADMM 기반 LP 복호 목적함수에 비볼록 penalty(l1/l2/log)를 더해 pseudocodeword를 억제, 저SNR은 BP 수준·고SNR은 error-floor 없는 복호 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "LP/ADMM은 min-sum과 다른 복호 클래스(parity polytope projection, 실수 연산)라 HW 미설계·연산비용 큼, penalty로 비볼록화되어 전역해 보장 없음",
+  "todo_check": "NAND용 QC-LDPC·hard/2-3bit soft-read에서 penalty ADMM의 정정이득과 HW 비용(면적/latency) 실측 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6404695---suppressing-pseudocodewords-by-penalizing-the-objective-of-lp-decoding-2012-ieee-itw">ieee:6404695 - Suppressing pseudocodewords by penalizing the objective of LP decoding (2012, IEEE ITW)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

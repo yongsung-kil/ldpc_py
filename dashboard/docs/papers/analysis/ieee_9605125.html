@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9605125</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9605125---ldpc-joint-decoding-scheme-for-stt-mram-storage-2021-tmrc">ieee:9605125 - LDPC Joint Decoding Scheme for STT MRAM Storage (2021, TMRC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.83</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>D-SVNFS(빠른 수렴)와 RBI-MSD를 순차 결합해 D-SVNFS greedy 오정정을 보정하는 joint decoding</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>STT-MRAM 비대칭 write-error 채널 특화, 2페이지 확장초록으로 수식·수치 근거 부족</td></tr><tr><td>추가확인</td><td>RBI-MSD/D-SVNFS 결합이 NAND read 채널·binary QC-LDPC에서 이득이 있는지, 부호length·복잡도 원출처 확인</td></tr></tbody></table>
+<blockquote><p>총평: STT-MRAM 비대칭 채널 전용 scheduling+RBI-MSD 결합 아이디어로 NAND binary LDPC 이식성은 낮고, 2페이지 초록이라 근거가 얕음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: STT-MRAM 저장 채널(MTJ+nMOS 셀), write-error 전이확률이 자릿수 단위로 비대칭이며 최대 error 전이확률 ~1e-4. 부호는 참고문헌[4]의 rate-0.83 rate-compatible protograph LDPC.</li><li>문제: STT-MRAM의 비대칭 write-error로 소수 비트가 반전되며, 이를 빠르고 정확히 정정할 디코딩이 필요.</li><li>채널 모델: 참고문헌[3]의 cascaded channel model에서 유도, read voltage를 4-bit uniform quantization으로 양자화.</li><li>기법1(D-SVNFS): dynamic silent-variable-node-free scheduling — 선택된 VN <code>v_p</code>의 unsatisfied 이웃 CN만 largest C2V residual 기준으로 다음 C2V 전파에 포함, 불신 VN이 더 자주 갱신되어 수렴 가속.</li><li>문제점: D-SVNFS는 greedy 특성상 이미 정정된 비트를 다시 뒤집어 오류율을 증가시킬 수 있음.</li><li>기법2(RBI-MSD): reliability-based iterative min-sum decoding — 정수 reliability 정보와 binary 논리+정수 연산만 사용해 계산복잡도 낮음.</li><li>joint 기법: D-SVNFS로 2회 iteration 후 RBI-MSD로 전환해 추가 정정·검증하여 greedy 부작용 억제.</li><li>학습/최적화 절차: 없음(결정론적 스케줄+MS).</li><li>결과: 저항분포 overlap이 작을 때(σ0/μ0 작음) joint decoding이 RBI-MSD·D-SVNFS 단독보다 우수(Fig.1, 정성적). 정량 수치는 그림에만 존재해 미상.</li><li>한계: HW 미설계, 시뮬만, STT-MRAM 특정 채널 가정, 계산복잡도 증가로 latency 악화, 부호length·gate 등 수치 본문 부재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RBI-MSD (reliability 기반 min-sum)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 계열이나 reliability-based/majority-logic 변형이라 부분 대응</td></tr><tr><td>D-SVNFS 스케줄링 (residual 기반 VN/CN 선택)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>informed dynamic scheduling — 루프 스케줄에 닿으나 dual-update 스케줄과 상이</td></tr><tr><td>4-bit read voltage 양자화</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read 양자화 대응, 단 Prime ECC는 soft-4bit+ 미지원</td></tr><tr><td>STT-MRAM cascaded 채널 모델</td><td>대응 없음</td><td>NAND 채널이 아님</td></tr></tbody></table>
+<p>적용 가치: 낮음 — STT-MRAM 비대칭 write-error 전용 채널과 4bit+ soft, protograph 부호에 특화되어 NAND binary QC-LDPC로의 직접 이식성이 낮고, RBI-MSD도 이미 보유한 min-sum 계열과 중복.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9605125",
+  "title": "LDPC Joint Decoding Scheme for STT MRAM Storage",
+  "year": 2021,
+  "venue": "TMRC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": 0.83,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "D-SVNFS(빠른 수렴)와 RBI-MSD를 순차 결합해 D-SVNFS greedy 오정정을 보정하는 joint decoding",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "STT-MRAM 비대칭 write-error 채널 특화, 2페이지 확장초록으로 수식·수치 근거 부족",
+  "todo_check": "RBI-MSD/D-SVNFS 결합이 NAND read 채널·binary QC-LDPC에서 이득이 있는지, 부호length·복잡도 원출처 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9605125---ldpc-joint-decoding-scheme-for-stt-mram-storage-2021-tmrc">ieee:9605125 - LDPC Joint Decoding Scheme for STT MRAM Storage (2021, TMRC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

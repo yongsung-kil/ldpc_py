@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7037159</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7037159---modelling-of-the-threshold-voltage-distributions-of-sub-20nm-nand-flash-memory-2014-globecom">ieee:7037159 - Modelling of the Threshold Voltage Distributions of Sub-20nm NAND Flash Memory (2014, Globecom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>MLC NAND VTH 분포를 Normal-Laplace 혼합+programming-error 모델로 정식화, 10L P/E까지 실측 BER과 정확히 일치하는 파라메트릭 채널 모델</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>N/A</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>ECC/디코더가 아닌 채널(VTH 분포) 모델링 논문 — 코드 설계·복호 알고리즘 자체는 없음, cell-to-cell interference 미반영</td></tr><tr><td>추가확인</td><td>이 VTH 모델을 우리 channel LLR 양자화/threshold 설정에 연결 가능한지, TLC·retention/read-disturb 스트레스로 확장 시 파라미터 재적합 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: NAND soft-read LLR·채널모델 정확도를 높이는 실측 기반 VTH 분포 모델로 디코더가 아닌 채널 레이어에 직접 관련되나 부호/복호 알고리즘 기여는 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 sub-20nm(1x-nm) MLC NAND flash의 threshold voltage(VTH) 분포 — E/A/B/C 4상태, LSB(lower)/MSB(upper) 2단계 프로그래밍 구조.</li><li>문제: 고P/E-cycle에서 VTH 분포가 비대칭·지수꼬리·multi-modal로 변해 기존 Gaussian(혼합) 모델이 실측 BER을 과소추정 — 고급 soft-decision ECC 설계에 부정확.</li><li>히스토그램 추출: read voltage를 <code>∆</code>만큼 shift하며 read sweep → 각 셀을 <code>N_bin=6n+4</code>개 bin으로 라벨링, 상태별 조건부 확률 <code>P_k(X)</code> 추정(식 3,4).</li><li>핵심 모델: Normal-Laplace 혼합 — <code>V_ideal(A)=µ_A+σ_A W+α_A^{-1}Z1−β^{-1}Z2</code> 형태로 Gaussian(<code>W</code>)+좌우 지수꼬리(<code>Z1,Z2</code>) 결합, E/C는 shifted-exponential(식 9~12).</li><li>지수꼬리 파라미터 <code>α</code>(우측), <code>β</code>(좌측)가 P/E cycle 마모로 인한 비대칭 exponential 꼬리를 표현 — Gaussian이 못 잡던 tail을 포착.</li><li>programming error 확장: <code>Φ_X(z)=Σ_Y λ_{X,Y} φ_Y(z+δ_{X,Y})</code> — 셀이 의도 상태 X 대신 Y로 프로그램될 확률 <code>λ_{X,Y}</code>로 multi-modal bump 표현(식 13~15), 고전하 방향만 허용해 반복적 fitting.</li><li>Fitting: 실측 bin 확률과 모델 bin 확률 간 Kullback-Leibler divergence 최소화(식 8,16), Nelder-Mead simplex로 최적 파라미터 추정.</li><li>파라미터화: <code>λ</code>는 정규화 P/E cycle <code>x</code>에 지수 증가, <code>µ</code>는 power-law, <code>σ</code>는 상수, <code>1/α·1/β</code>는 선형 — Table I로 compact 모델 제공(외삽 가능).</li><li>결과: 10L P/E cycle까지 실측 분포·BER과 거의 정확히 일치(Gaussian은 저BER 영역에서도 과소추정), programming error 제거 가정 시 BER=0.01 endurance가 9L→15L(1.7배) 향상 예측.</li><li>한계: 채널 VTH 분포 모델링일 뿐 ECC/디코더 설계 없음, cell-to-cell interference·retention·read-disturb는 미반영(future work), HW 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VTH 분포 → soft-read bin/threshold</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>read shift <code>∆</code>·bin 경계가 우리 soft-read threshold 설정과 직접 대응</td></tr><tr><td>VTH 분포 기반 LLR 생성</td><td>channel.cpp + LLR 테이블(<code>PARAM_LLR</code>)</td><td>Normal-Laplace 모델로 더 정확한 LLR 양자화 테이블 도출 가능</td></tr><tr><td>채널/에러 주입 모델</td><td>channel.cpp (AWGN/RBER/fixed)</td><td>현 AWGN/RBER 대신 실측 기반 VTH 모델로 채널 리얼리즘 향상</td></tr><tr><td>부호설계·복호 알고리즘</td><td>대응 없음</td><td>채널 모델링 논문으로 code/decoder 기여 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 디코더/부호 자체엔 기여 없으나 NAND soft-read LLR·채널모델 정확도를 높여 <code>channel.cpp</code> LLR 테이블 튜닝에 직접 활용 가능(soft-4bit+ 비용 평가 포함).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7037159",
+  "title": "Modelling of the Threshold Voltage Distributions of Sub-20nm NAND Flash Memory",
+  "year": 2014,
+  "venue": "Globecom",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "MLC NAND VTH 분포를 Normal-Laplace 혼합+programming-error 모델로 정식화해 10L P/E까지 실측 BER과 정확히 일치하는 파라메트릭 채널 모델",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "N/A",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "ECC/디코더가 아닌 채널(VTH 분포) 모델링 논문으로 부호/복호 알고리즘 기여 없음, cell-to-cell interference 미반영",
+  "todo_check": "VTH 모델을 channel.cpp LLR 양자화/threshold 설정에 연결 가능성, TLC·retention/read-disturb 확장 시 파라미터 재적합 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7037159---modelling-of-the-threshold-voltage-distributions-of-sub-20nm-nand-flash-memory-2014-globecom">ieee:7037159 - Modelling of the Threshold Voltage Distributions of Sub-20nm NAND Flash Memory (2014, Globecom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

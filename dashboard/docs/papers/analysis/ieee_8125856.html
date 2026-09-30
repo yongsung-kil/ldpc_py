@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8125856</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8125856---adaptive-threshold-multi-bit-flipping-for-low-density-parity-check-codes-2017-ieee-iccpct">ieee:8125856 - Adaptive Threshold Multi Bit Flipping for Low Density Parity Check Codes (2017, IEEE ICCPCT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>32</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>flipping intensity 기반 multi-bit BF에 매 iteration 갱신되는 적응형 threshold(ATMBF)를 도입</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(16x32) 초소형 부호 시뮬만, threshold를 trial-and-error(50~70% 성공)로 결정, FI/ATMBF 복잡도 증가</td></tr><tr><td>추가확인</td><td>실용 크기(수 kB) 부호에서 threshold 규칙 유효성, min-sum 대비 실이득</td></tr></tbody></table>
+<blockquote><p>총평: 초소형 부호에서 multi-bit BF의 적응형 threshold를 실험한 초기 단계 연구로, HW 미설계·복잡도 증가·min-sum 미보유 패러다임이라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 regular LDPC (16x32 H, wc=4, wr=8, N=32), AWGN+BPSK, 수신 soft <code>y</code>와 hard decision <code>z</code>.</li><li>문제: BF의 multi-bit flipping은 threshold <code>∆</code> 설정이 어렵고, 고정 threshold는 message-passing의 동적 변화를 반영 못함.</li><li>모델: flipping function <code>En = -yn(1-zn) - Σ rmn(1-sm)</code>, weight <code>rmn = min|yn|</code> (외재정보).</li><li>핵심 기법: flipping intensity <code>Fn</code> (식19)을 도입 - 미충족 constraint 연결수와 최대 FF 위치를 결합, <code>θ0&gt;θ1&gt;θ2</code> 및 Kronecker delta로 노드 상태 반영.</li><li>식 의미: <code>Fn&gt;0</code>인 노드 = FF 최대이면서 미충족 constraint에 최다 연결 → flipping 우선 대상.</li><li>확장: 적응형 threshold - <code>∆</code>=최대와 2위 FF의 차이, <code>∆1</code>=그 차이의 2배; Method2 실패 시 Method3 사용해 50~70% 정확 복호.</li><li>구현 디테일: 매 iteration마다 FF 정렬(descending), weight <code>rmn</code>을 <code>Ω(-En)</code> (η=0 clip)으로 갱신하여 동적 반영.</li><li>학습/최적화: 없음 (threshold를 trial-and-error 3방법으로 경험적 결정).</li><li>결과: ATMBF가 FI 대비 0.75dB, M-DWBF 대비 1dB coding gain (16x32 부호); 단 FI/ATMBF는 타 multi-bit 대비 복잡도 증가.</li><li>한계: HW 미설계, 초소형 부호 시뮬만, 적응 threshold로 iteration/복잡도 증가, error-floor 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>flipping intensity / multi-bit BF</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing, BF 계열 미보유 - 패러다임 상이</td></tr><tr><td>적응형 threshold</td><td>대응 없음</td><td>iteration별 조정 개념은 <code>PARAM_LLR</code> 테이블과 유사하나 BF threshold 로직은 무관</td></tr><tr><td>syndrome / weight `min</td><td>yn</td><td>`</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>syndrome/min 연산 개념만 공유, flipping 결정은 무관</td></tr><tr><td>dual-diagonal 유사 back-substitution 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>논문의 approximate lower-triangular 인코딩과 Prime ECC dual-diagonal은 별개 기법</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - BF 계열은 min-sum 기반 Prime ECC와 디코딩 패러다임이 다르고, 검증이 16x32 초소형 부호 시뮬에 그치며 복잡도 증가·HW 미설계라 이식 가치 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8125856",
+  "title": "Adaptive Threshold Multi Bit Flipping for Low Density Parity Check Codes",
+  "year": 2017,
+  "venue": "IEEE ICCPCT",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "32",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "flipping intensity 기반 multi-bit BF에 매 iteration 갱신되는 적응형 threshold(ATMBF) 도입",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "(16x32) 초소형 부호 시뮬만, threshold를 trial-and-error(50~70% 성공)로 결정, FI/ATMBF 복잡도 증가",
+  "todo_check": "실용 크기(수 kB) 부호에서 threshold 규칙 유효성, min-sum 대비 실이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8125856---adaptive-threshold-multi-bit-flipping-for-low-density-parity-check-codes-2017-ieee-iccpct">ieee:8125856 - Adaptive Threshold Multi Bit Flipping for Low Density Parity Check Codes (2017, IEEE ICCPCT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

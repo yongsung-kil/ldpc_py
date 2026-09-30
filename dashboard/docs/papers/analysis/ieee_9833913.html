@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9833913</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9833913---improved-layered-normalized-min-sum-algorithm-for-5g-nr-ldpc-2022-ieee-wireless-communications-letters">ieee:9833913 - Improved Layered Normalized Min-Sum Algorithm for 5G NR LDPC (2022, IEEE Wireless Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.30~0.80 (308/679/822/1024)</td></tr><tr><td>부호length</td><td>1152 (N), 미상(Zc·TBS 가변)</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>filler-bit 위치를 활용한 CN→VN 메시지 수정 + DNN으로 iteration별 normalization factor <code>αi</code> 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>filler-bit 트릭은 5G NR TB 구조 전용(NAND 무대응), DNN이 SNR·MCS별 재학습 필요, gain의 상당부분이 filler-bit 의존</td></tr><tr><td>추가확인</td><td>iteration별 <code>αi</code> DNN 최적화만 떼어 NAND 고rate min-sum(고정 α 대비)에 적용 시 waterfall 이득 유무, 정수-2승 아닌 α의 HW 비용</td></tr></tbody></table>
+<blockquote><p>총평: iteration별 normalization factor DNN 최적화는 일반 binary min-sum에 이식 여지가 있으나(중), filler-bit 트릭·5G TB 의존성은 NAND 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR PUSCH, protograph LDPC(BG1/BG2), lifting size <code>Zc</code>, 첫 2Zc bit puncturing, AWGN/TDL-A, <code>Im=10</code> iteration.</li><li>문제: NR BG의 degree-1 VN 다수로 min-sum이 BP 대비 성능 열위 → HW 저복잡 유지하며 min-sum 정정성능 개선 필요.</li><li>모델: layered NMS(LNMS) 기반, CN→VN 메시지 <code>Rmj = αi·∏sign·min</code>, VN 갱신 <code>Li(cj)=Li(qmj)+Rmj</code>.</li><li>핵심기법1: TB 내 filler bit(항상 0, 위치 기지) 이웃 <code>Ñ(m)</code>을 min·sign 연산에서 제외 → 잘못된 belief 전파 억제(식 8), hard decision도 filler는 0 강제(식 9).</li><li>핵심 식: filler LLR이 이상적으로 <code>→∞</code>여야 하나 채널로 유한값 → 이를 제외해 오류 전파 감소.</li><li>핵심기법2: iteration별 normalization factor <code>αi</code>를 단일 스칼라가 아닌 전 iteration 동시 최적화.</li><li>구현 디테일: runtime 곱셈 수는 LNMS와 동일, 메모리만 <code>O(1)→O(Im)</code> 증가(α가 αi로), α는 2의 거듭제곱 아님 → shift 대체 불가.</li><li>학습: forward-propagation DNN(hidden layer = 1 iteration), 목표는 (8)(9) 적용한 LBP 출력 LLR, MSE loss(정보비트만), Adam(lr=0.001), 10000 TB 80:20, 특정 SNR(10% BLER)에서 학습.</li><li>결과: LNMS 대비 0.3~1.9dB, 타 DNN 디코더[10] 대비 0.3~1.7dB BLER 개선(AWGN), fading에서 0.25~1.8dB, 곱셈기 자원 추가 없음.</li><li>한계: filler-bit 트릭이 5G TB 구조 전용, DNN은 MCS·SNR별 학습 필요, HW 전체 설계 아님(복잡도 논의만).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN→VN 연산(sign·min·α)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>normalization factor 개념이 우리 min-sum(magnitude 양자화 테이블)과 접점, α scaling 도입 여지</td></tr><tr><td>iteration별 normalization factor <code>αi</code></td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration구간별 LLR threshold 테이블과 유사 구조 — αi 최적화 아이디어 이식 여지</td></tr><tr><td>filler-bit 제외 메시지/hard decision</td><td>대응 없음</td><td>5G NR TB filler bit 구조 전용, NAND 코드워드에 대응 개념 없음</td></tr><tr><td>DNN 기반 계수 학습</td><td>대응 없음</td><td>코드베이스에 NN 학습 파이프라인 없음(LLR 자동최적화는 <code>local_opt.cpp</code>이나 방식 상이)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — iteration별 min-sum normalization factor를 (DNN 등으로) 동시 최적화하는 아이디어는 우리 iteration구간별 LLR 테이블 튜닝에 참고 가치가 있으나, 핵심 gain의 filler-bit 부분은 5G 전용이라 NAND에 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9833913",
+  "title": "Improved Layered Normalized Min-Sum Algorithm for 5G NR LDPC",
+  "year": 2022,
+  "venue": "IEEE Wireless Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.30~0.80",
+  "code_length": "1152",
+  "soft_quant": "무관",
+  "key_contribution": "filler-bit 위치를 활용한 CN→VN 메시지 수정 + DNN으로 iteration별 normalization factor αi 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "filler-bit 트릭은 5G NR TB 구조 전용(NAND 무대응), DNN이 SNR·MCS별 재학습 필요",
+  "todo_check": "iteration별 αi DNN 최적화만 떼어 NAND 고rate min-sum에 적용 시 waterfall 이득 유무, 비-2승 α의 HW 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9833913---improved-layered-normalized-min-sum-algorithm-for-5g-nr-ldpc-2022-ieee-wireless-communications-letters">ieee:9833913 - Improved Layered Normalized Min-Sum Algorithm for 5G NR LDPC (2022, IEEE Wireless Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

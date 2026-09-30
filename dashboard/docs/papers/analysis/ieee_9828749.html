@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9828749</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9828749---an-optimal-block-scheduling-algorithm-for-pipelined-block-parallel-ldpc-decoder-2022-bmsb">ieee:9828749 - An Optimal Block-Scheduling Algorithm for Pipelined Block-Parallel LDPC Decoder (2022, BMSB)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33~0.9</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>pipelined block-parallel QC-LDPC 디코더에서 block 재스케줄 + 최소 NOP 삽입을 결합해 read-write conflict를 최적(NOP 최소)으로 제거하는 명령어 생성 알고리즘</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>layered/two-thread block-parallel pipeline 및 5G-NR BG1/BG2 특화, 복호 성능(BER)은 불변이며 스케줄 최적성만 증명(FPGA/ASIC 실측 없음)</td></tr><tr><td>추가확인</td><td>Prime ECC의 6-stage pipeline·GT·HCU 구조에 two-thread(X/Y) conflict 모델이 대응되는지, z=32 block-parallel과 명령어 오버헤드 정합</td></tr></tbody></table>
+<blockquote><p>총평: block-parallel pipeline 디코더의 conflict를 NOP 최소로 제거하는 스케줄링 최적화로, throughput/latency 개선에 직결되고 이론적 최적성이 증명됐으나 우리 pipeline 구조와의 정합·실측 검증이 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC(base graph, <code>z×z</code> circulant block), block-parallel + layered scheduling 디코더, 5G-NR BG1(rate 1/3)/BG2 예시.</li><li>문제: pipeline 도입 시 같은 column index <code>j</code>의 a-posteriori message <code>A_j</code>에 대한 read(Thread1 첫 stage)/write(Thread2 마지막 stage)가 서로 다른 row에서 충돌(read-write conflict) 발생.</li><li>모델: two-thread waveform graph — Thread2가 각 row에서 Thread1보다 지연, row <code>i</code>의 block 스케줄 벡터 <code>TiX/TiY</code>, row weight <code>di=|Ni|</code>, 충돌 인덱스 <code>Ci,i+δ = Ni∩Ni+δ</code>.</li><li>핵심기법: block 재스케줄(충돌 감소)과 NOP 삽입(충돌 완전 제거, throughput↓)을 결합해 "충돌 0 + NOP 최소"인 명령어 집합 생성.</li><li>제약식: 명령어 non-overlap <code>Xi+di-1&lt;Xi+1</code>(식1,2), thread간 순서 <code>Xi+PX+di-2&lt;Yi</code>(식3), 레지스터 버퍼 보존 <code>Xi+1+PX&gt;Yi</code>(식4) → Algorithm 1로 conflict 무시한 <code>Xi,Yi</code> 결정.</li><li>확장: 2-row 충돌은 Theorem 1(Lemma 1·2)로 <code>TiY, TiX+δ</code>를 최소 NOP <code>e</code>로 배치, <code>e=max(0,p1-q1+1)</code>.</li><li>다중 row: 충돌 최대 row 거리 상한 <code>Δ0 ≤ ⌈(PX+PY-2)/dmin⌉+1</code>(Theorem 2)로 고려 범위 한정, Algorithm 2·3로 <code>TiX/TiY</code> 설계(이미 해소된 인덱스는 line5에서 제외).</li><li>통합: Algorithm 4가 위를 결합, <code>SY/VY</code> 버퍼 1개 + <code>SkX/VkX</code> 버퍼 Δ개를 포인터 <code>k</code>로 순환 사용해 최적 스케줄 생성.</li><li>결과: BG1 rate1/3(PX=4,PY=2)에서 총 명령어 354, NOP 비율 0.1073; 단순 natural-order NOP삽입 대비 NOP 68.6%·명령어 19.0% 감소(PX=5,PY=3시 71.2%/25.6%), 정규화 throughput <code>(PX+PY)/L</code> 분석.</li><li>한계: FPGA/ASIC 실측 없이 스케줄 최적성만 증명, 복호 성능(BER) 개선 아님, row schedule은 고정 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>pipelined block-parallel 스케줄/명령어</td><td>decoder.cpp <code>LDPC_Decoder()</code> (6-stage pipeline, z=32)</td><td>pipeline stage·block 처리 순서 결정 로직에 대응</td></tr><tr><td>read-write conflict / 버퍼 보존 제약</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 pipeline의 message 읽기/쓰기 타이밍과 직결</td></tr><tr><td>block edge 선택·스케줄 최소화</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Graph Thinning(MUX edge 선택)과 목적(클록당 edge 축소)이 유사</td></tr><tr><td>비대칭 degree row 처리</td><td>decoder.cpp HCU(Half Column Update)</td><td>row weight/degree 편차 스케줄 관점에서 연관</td></tr></tbody></table>
+<p>적용 가치: 중간 — block-parallel pipeline conflict를 NOP 최소로 없애는 스케줄링 최적화는 Prime ECC의 pipeline·GT·HCU HW 레이어와 개념적으로 정합하나, two-thread/5G-BG 모델을 우리 고정 z=32·6-stage 구조로 재매핑하고 실측 검증하는 부담이 남는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9828749",
+  "title": "An Optimal Block-Scheduling Algorithm for Pipelined Block-Parallel LDPC Decoder",
+  "year": 2022,
+  "venue": "BMSB",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.33~0.9",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "pipelined block-parallel QC-LDPC 디코더에서 block 재스케줄 + 최소 NOP 삽입으로 read-write conflict를 최적 제거하는 명령어 생성 알고리즘",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "layered/two-thread block-parallel pipeline·5G-NR BG1/BG2 특화, 복호 성능(BER) 불변, 스케줄 최적성만 증명(실측 없음)",
+  "todo_check": "Prime ECC의 6-stage pipeline·GT·HCU 구조에 two-thread conflict 모델이 대응되는지, z=32 block-parallel과 명령어 오버헤드 정합 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9828749---an-optimal-block-scheduling-algorithm-for-pipelined-block-parallel-ldpc-decoder-2022-bmsb">ieee:9828749 - An Optimal Block-Scheduling Algorithm for Pipelined Block-Parallel LDPC Decoder (2022, BMSB)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

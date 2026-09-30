@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_953537</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee953537---decoding-low-density-parity-check-codes-with-probabilistic-schedule-2001-ieee-proceedings">ieee:953537 - Decoding Low-Density Parity-Check Codes with Probabilistic Schedule (2001, IEEE (proceedings))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.36 (456/1268)</td></tr><tr><td>부호length</td><td>1268</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>girth 기반 확률적 message-passing 스케줄로 flooding 대비 단블록 BER/MER 한 자릿수 개선(복잡도 무증)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>저rate(0.36) 단블록 sum-product 대상, avg iteration은 오히려 증가(≤3), HW 미설계</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC + min-sum + 병렬 HW에서 확률적 노드 idle이 유효/구현가능한지</td></tr></tbody></table>
+<blockquote><p>총평: girth 기반 확률적 스케줄이라는 스케줄링 아이디어는 이식 가능하나, 대상이 저rate 단블록 full sum-product이고 노드별 확률 idle이 우리의 완전병렬 z=32 HW와 정합 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (1268,456) LDPC(construction 2A, ATM cell용), BPSK/AWGN, sum-product(belief propagation) 복호, 최대 500 iter.</li><li>문제: flooding schedule은 짧은 블록(≤10000bit)의 작은 cycle 때문에 APP 최적에서 멀어져 성능 저하.</li><li>모델: cycle-free TG면 sum-product가 최적 APP지만, 실제 TG는 cycle 다수 → girth <code>g_u</code>(노드 u 통과 최단 cycle)가 최적성 붕괴 시점을 결정.</li><li>핵심 기법: 각 symbol node <code>u</code>에 확률 <code>p_u = g_u/g_max</code> 부여, 매 iteration마다 확률 <code>p_u</code>로만 outgoing 갱신·<code>1-p_u</code>로 idle 후 check node 갱신.</li><li>의미: girth 작은 노드(비최적 메시지 조기 유발)의 갱신 빈도를 낮춰 <code>g_max/2</code> iteration마다 한 번씩만 최단 cycle을 돌게 함 = "equal double counting" 근사.</li><li>확장: 첫 iteration만 flooding으로 초기 메시지 전부 주입, 이후 확률 스케줄 적용.</li><li>구현: 평균 갱신 메시지 <code>E + Σ g_u d_u/g_max</code> (&lt; flooding의 <code>2E</code>)로 iteration당 연산은 동등/소폭 감소.</li><li>학습: 별도 학습 없음, girth distribution만 사전 계산.</li><li>결과: SNR 2.5dB에서 BER·MER를 flooding 대비 한 자릿수 이상 개선, undetected error 대폭 감소; 단 avg iteration은 최대 3회 증가.</li><li>한계: HW 미설계, 시뮬만, 저rate 단블록 full sum-product 대상, latency(iteration 수) 증가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>message-passing 스케줄(확률적 노드 갱신)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 Dual-Update(even/odd 교대) 스케줄과 경쟁 영역이나 확률적 idle은 완전병렬 HW와 상충</td></tr><tr><td>girth 기반 노드 선택</td><td>대응 없음</td><td>노드별 girth 테이블·확률 게이팅 구조 부재</td></tr><tr><td>sum-product CN 갱신 (<code>tanh</code>)</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum 근사 사용, 알고리즘 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 스케줄링 개선 아이디어는 흥미로우나 저rate 단블록 full sum-product 전제이고, 노드별 확률 idle은 z=32 완전병렬 HW·min-sum 파이프라인에 정합 어렵고 iteration 증가로 latency 악화.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:953537",
+  "title": "Decoding Low-Density Parity-Check Codes with Probabilistic Schedule",
+  "year": 2001,
+  "venue": "IEEE (proceedings)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.36,
+  "code_length": "1268",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "girth 기반 확률적 message-passing 스케줄로 flooding 대비 단블록 BER/MER 한 자릿수 개선(복잡도 무증)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "저rate(0.36) 단블록 sum-product 대상, avg iteration은 오히려 증가(≤3), HW 미설계",
+  "todo_check": "고rate QC-LDPC + min-sum + 병렬 HW에서 확률적 노드 idle이 유효/구현가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee953537---decoding-low-density-parity-check-codes-with-probabilistic-schedule-2001-ieee-proceedings">ieee:953537 - Decoding Low-Density Parity-Check Codes with Probabilistic Schedule (2001, IEEE (proceedings))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

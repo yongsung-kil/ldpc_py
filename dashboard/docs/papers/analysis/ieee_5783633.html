@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5783633</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5783633---a-low-complexity-ldpc-decoder-architecture-for-wimax-applications-2011-ieee">ieee:5783633 - A Low-complexity LDPC Decoder Architecture for WiMAX Applications (2011, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.83</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LMPD-ICM 기반 unified task processor로 114개 WiMAX QC-LDPC를 고정 라우팅망·주소생성기로 복호</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.679mm2@90nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.24</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMAX 표준 QC 구조(z가변 다부호) 특화라 Prime ECC 고정 z=32 구조와 정합 필요, offset-MS로 성능개선 아닌 면적/처리량 목표</td></tr><tr><td>추가확인</td><td>LMPD-ICM의 identical core matrix 라우팅 공유가 Prime ECC 단일 z=32 부호에서 이득이 있는지 확인</td></tr></tbody></table>
+<blockquote><p>총평: QC 구조를 활용한 저면적·고에너지효율 layered min-sum 디코더 HW. Prime ECC의 라우팅/메모리·layered 스케줄 참고 가치는 있으나 성능 개선은 아니고 다부호 표준 특화라 이식은 부분적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: WiMAX QC-LDPC 114개(6 class × 19 코드, z별 확장) 전모드 codec을 90nm CMOS로 구현. PCM은 <code>z×z</code> circulant 배열, <code>Mb×Nb</code> prototype. 예: rate-5/6, z=24, (2304,1152) 비교 부호.</li><li>문제: 서로 다른 rate·length WiMAX 부호들을 HW 재사용 극대화하며 저복잡도로 복호하기.</li><li>복호: layered MPD(LMPD)에 offset min-sum 사용. C2V <code>R_ij = S_ij · max(min_{j'≠j}|Q_j'i| - β, 0)</code>, <code>β</code>는 offset 상수, sign은 XOR; V2C <code>Q_ji = Λ^{k,ℓ-1} - R_ij^{k-1}</code>, layer 끝에 APP <code>Λ</code> 갱신(식1).</li><li>핵심: <strong>LMPD-ICM</strong> — H의 행을 z개 layer로 나누면 각 layer의 core matrix(non-zero 열)가 서로 column-permuted 버전이라 <strong>모든 layer가 동일 라우팅망 공유</strong>, 같은 class 19개 부호도 공유.</li><li>의미: QC의 순환 성질로 layer별 주소가 <code>(s(j)+ℓ) mod z</code>로 결정 → 주소생성기·라우팅이 매우 단순, multi-length 내장 지원.</li><li>Unified task processor: 6 class 중 최소 layer 크기 4를 병렬도로 채택(4 CNU + 4 VNU, 4-input). 한 layer를 최대 16값/cycle 제약에 맞춰 5개 task로 분할(computer search로 배치), 24 APP 메모리 블록에서 16값씩 읽기.</li><li>구현 디테일: CNU 4-stage(CMP4→S-CMP4로 최소2값 탐색→Sign→C2V Calculator), VNU 10-stage pipeline. CN/VN 동시 수행, layer ℓ의 APP 갱신 중 CN은 layer ℓ+1 처리.</li><li>데이터 해저드: layer 간 의존성을 idle cycle 없이 <strong>delta-based update</strong>(Parallel-update Unit)로 흡수, computer search로 스케줄.</li><li>결과(post-layout, (2304,1152)): 90nm, 400MHz, 7-bit 양자화, 8-12 iter, 처리량 133-240Mb/s, 면적 0.679mm², TAR 196-353 Mb/s/mm², 에너지 516-845 pJ/bit — 선행 [1][2] 대비 최소 면적·최고 에너지효율. BER=10^-5 @2.15dB.</li><li>한계: 성능(BER) 개선이 아니라 면적/처리량/에너지 목표, WiMAX 다부호·z가변 표준 특화, gatecount·throughput은 Mb/s급(Gbps 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset min-sum CN 연산 (<code>max(min-β,0)</code>, sign XOR)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC min-sum과 동종, offset β 적용은 참고 가능하나 이미 보유 계열</td></tr><tr><td>layered decoding + delta-based APP 갱신</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Dual-Update(even/odd 교대) 스케줄과 유사 개념, 수렴 가속 참고</td></tr><tr><td>QC 순환 주소 <code>(s(j)+ℓ)mod z</code> 기반 라우팅/메모리</td><td>decoder.cpp HW 모델(z=32, HCU, GT)</td><td>Prime ECC 메모리/라우팅 병목과 직접 접점, 단 z 가변 다부호 전제라 z=32 고정 구조와 정합 필요</td></tr><tr><td>unified task processor / CNU-VNU pipeline</td><td>decoder.cpp pipeline 6-stage 모델</td><td>pipeline 구조 참고 가능하나 병렬도·task 분할이 우리와 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC 순환성을 이용한 고정 라우팅망·주소생성·layered delta 갱신·offset-MS는 Prime ECC HW/스케줄 레이어와 접점이 있으나, WiMAX 다부호·z가변에 특화되어 단일 z=32 고정 부호인 Prime ECC로의 직접 이식은 부분적이고 성능 개선 기여는 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5783633",
+  "title": "A Low-complexity LDPC Decoder Architecture for WiMAX Applications",
+  "year": 2011,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.83,
+  "code_length": "2304",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LMPD-ICM 기반 unified task processor로 114개 WiMAX QC-LDPC를 고정 라우팅망·주소생성기로 복호",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.679mm2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.24,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "WiMAX 표준 QC(z가변 다부호) 특화라 Prime ECC 고정 z=32 구조와 정합 필요, offset-MS로 성능개선 아닌 면적/처리량 목표",
+  "todo_check": "LMPD-ICM identical core matrix 라우팅 공유가 단일 z=32 부호에서도 이득인지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5783633---a-low-complexity-ldpc-decoder-architecture-for-wimax-applications-2011-ieee">ieee:5783633 - A Low-complexity LDPC Decoder Architecture for WiMAX Applications (2011, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

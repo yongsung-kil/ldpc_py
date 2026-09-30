@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11350474</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11350474---fpga-implementation-of-5g-nr-qc-ldpc-codes-2025-inspect">ieee:11350474 - FPGA Implementation of 5G NR QC-LDPC Codes (2025, INSPECT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1664</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>5G NR BG1/BG2 표준 기반 QC-LDPC 인코더(P1/P2/CRC16 파이프라인)를 FPGA(Nexys4 DDR)에 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>6589 LUTs (10% 자원) @Nexys4 DDR</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.410Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G NR 3GPP TS 38.212 표준 인코딩(Richardson-Urbanke 변형) 그대로 구현한 재현 성격이 강하고 NAND 문맥 없음</td></tr><tr><td>추가확인</td><td>CRC16→CRC24 미지원, TB length 3824bit 제한 등 저자 스스로 명시한 한계 다수</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR 표준 QC-LDPC 인코더의 표준적 FPGA 구현/재현 논문으로 NAND 이식 관점의 새 기법 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR 3GPP TS 38.212 표준 QC-LDPC 인코더, Base Graph BG1(Kb=8488)/BG2(Kb=3840) 지원, lifting size Z 기반 구조.</li><li>문제: QC-LDPC 인코딩 HW 구현이 다양한 code rate/lifting size 적응성과 낮은 지연·높은 처리량을 동시에 요구해 어려움.</li><li>모델: H 행렬을 <code>[[A B][C D][O I]]</code> 커널 구조로 분해, 코드워드 <code>C=[S|P1|P2]</code>.</li><li>핵심 기법: <code>H·C^T=0</code> 제약에서 <code>P1^T = B^-1·A·S^T</code>, <code>P2^T = C·S^T + D·P1^T</code> 로 두 단계 parity 계산.</li><li>의미: B 블록의 이중대각(double-diagonal) 구조 덕분에 P1 계산이 단순 행렬 연산으로 환원되며, 이후 P2도 C/D 블록으로 순차 계산 가능.</li><li>확장: 람다(<code>λ_i = Σ a_i,j·S_j</code>) 사전계산으로 barrel-shift + XOR 누적 방식으로 P1 계산 단순화.</li><li>구현 디테일: C/D 행렬은 FPGA BRAM에 저장, cyclic shift는 barrel shifter, CRC16-CCITT(<code>g(x)=x^16+x^12+x^5+1</code>)를 모듈로 별도 파이프라인화, FSM 기반 top module로 P1/P2/CRC 통합.</li><li>학습/최적화 절차: 없음(표준 알고리즘 직접 구현, DE/GA/NN 없음).</li><li>결과: Nexys4 DDR에서 TB length 1664bit 기준 26 clock cycle, 33.33MHz, throughput 0.410Gbps, LUT 6589개(10%), on-chip power 0.142W.</li><li>한계: 인코더만 구현(디코더 없음), CRC24 미지원, 클록 300~400MHz급 최신 설계 대비 처리량 낮음, 시뮬/FPGA 검증만이고 ASIC 합성 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC-LDPC 인코딩(P1/P2, dual-diagonal 유사 구조) | `encoder.cpp` `LDPC_encoder_4KB()`, `Generate_PCM_encoding()` | 5G NR BG 기반 표준 인코딩 구조이나 Prime ECC의 dual-diagonal 인코딩과 개념적으로 유사, 코드 자체는 5G 전용 |
+| Cyclic shift network / barrel shift | `encoder.cpp` `Column_Reordering_Dual_Update()` | 순환 시프트 연산이라는 점만 유사, 표준 종속적 구조라 그대로 이식 불가 |
+| CRC16 조기/사후 검증 | `partial_CRC.cpp`, `full_CRC.cpp` | Prime ECC도 CRC 기반 조기종료를 이미 보유(Partial CRC 4 termination), 방식이 다름(사후검증 vs 조기종료) |
+| H-matrix 로드 (BG1/BG2 표) | `ecc_top.cpp` `Load_PCM()` | 5G NR 고정 표준 행렬로 NAND용 QC-LDPC와 무관, 대응은 형식적 수준 |</code></pre>
+<p>적용 가치: <code>낮음</code> — 5G NR 표준 인코더의 FPGA 재구현이며 NAND/binary LDPC 디코더·부호설계 개선과 무관, Prime ECC가 이미 보유한 인코딩·CRC 조기종료 기법과 중복.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11350474",
+  "title": "FPGA Implementation of 5G NR QC-LDPC Codes",
+  "year": 2025,
+  "venue": "INSPECT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1664",
+  "soft_quant": "무관",
+  "key_contribution": "5G NR BG1/BG2 표준 기반 QC-LDPC 인코더(P1/P2/CRC16 파이프라인)를 FPGA(Nexys4 DDR)에 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "6589 LUTs (10%)@Nexys4 DDR",
+  "parallelism": "부분",
+  "throughput_gbps": 0.41,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "5G NR 표준 인코딩(Richardson-Urbanke 변형) 그대로 구현한 재현 성격이 강하고 NAND 문맥 없음",
+  "todo_check": "CRC16→CRC24 미지원, TB length 3824bit 제한 등 저자 스스로 명시한 한계 다수"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11350474---fpga-implementation-of-5g-nr-qc-ldpc-codes-2025-inspect">ieee:11350474 - FPGA Implementation of 5G NR QC-LDPC Codes (2025, INSPECT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10233519</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10233519---soft-osd-sliding-window-decoding-for-staircase-ldpc-codes-in-deep-space-communications-2023-ieeecic-iccc">ieee:10233519 - Soft OSD-Sliding Window Decoding for Staircase LDPC Codes in Deep Space Communications (2023, IEEE/CIC ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>rate-adaptive staircase LDPC용 SOSD(soft-output OSD)를 내부 디코더로 쓴 sliding-window 복호로 BP-SWD 대비 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>staircase(product-like) 부호 + OSD(Gaussian elimination/재부호화) 기반이라 NAND용 binary QC-LDPC + min-sum 파이프라인과 계열/HW구조가 상이</td></tr><tr><td>추가확인</td><td>OSD order Δ 증가에 따른 복잡도 폭증 정량치, staircase가 아닌 단일 QC-LDPC block에 SOSD를 붙였을 때의 이득</td></tr></tbody></table>
+<blockquote><p>총평: deep-space optical(Gamma-Gamma) 채널의 staircase LDPC를 OSD 기반 SWD로 복호하는 응용 특화 기법으로, NAND binary QC-LDPC/min-sum과 계열이 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템/부호: deep-space optical(Earth-to-Mars), rate-adaptive staircase LDPC(component code는 systematic LDPC, block length <code>N=128</code>, check <code>r=64</code>), 4-PPM 변조.</li><li>문제: staircase의 HDD-SWD는 stall pattern으로 error floor, 기존 rate-adaptive staircase LDPC에 적합한 SDD가 부재.</li><li>채널/모델: 태양 scintillation index <code>σI²</code>로 채널을 3상태로 구분 — <code>σI²&lt;0.01</code> AWGN, <code>0.01&lt;σI²&lt;0.99</code> Gamma-Gamma 난류(식(2)), <code>σI²&gt;0.99</code> outage(식(1)(3)).</li><li>핵심 기법 1: SWD 구조를 rate-adaptive staircase에 맞게 변형 — 재부호화 행렬이 block보다 작아 target block을 첫 block이 아닌 둘째 block으로 이동(window size <code>w=4</code>).</li><li>핵심 식: 세 종류 외재정보 교환(식(8)(9)(10)) — window 이동 시 직전 window 복제 block, 같은 outer iteration 내 인접 group, outer iteration 간 초기화로 a priori 값 갱신.</li><li>핵심 기법 2: 내부 디코더로 SOSD(OSD의 soft-output 변형) 사용 — reliability 정렬 + Gaussian elimination + 재부호화로 codeword 추정하고 비트별 soft 정보 출력, order <code>Δ</code>.</li><li>구현 디테일: 내부 iteration <code>Imax</code>, 외부 iteration <code>Jmax</code>, 스케일링 <code>μ1,μ2</code>(Algorithm 1), Memory A/B로 재부호화·a priori 값 저장, staircase 폭만큼 인코더/SOSD 병렬 배치.</li><li>학습/최적화: 없음(학습 기반 아님), 파라미터(<code>m,Δ,Jmax</code>) 튜닝으로 BER-복잡도 trade-off 조정.</li><li>결과: SOSD-SWD가 BP-SWD보다 낮은 BER(특히 높은 <code>σI²</code>), 세 채널 상태에서 파라미터 조정으로 BER 1e-4 달성, <code>Δ</code> 증가 시 성능↑·복잡도 급증.</li><li>한계: HW 미설계·시뮬만, deep-space optical GG 채널 전용, gate count/throughput/rate 명시 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SOSD(OSD 기반) 내부 복호</td><td>대응 없음</td><td>Prime ECC는 min-sum 반복복호, OSD(정렬+Gaussian elimination+재부호화)는 코드베이스에 없음</td></tr><tr><td>sliding-window / staircase 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>개념적으로 반복복호에 닿으나 staircase product-like 구조 전제라 QC-LDPC block에 직접 대응 안 됨</td></tr><tr><td>soft 외재정보 교환/양자화</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR/soft 정보 개념만 일부 겹침, staircase 간 정보전달 구조는 대응 없음</td></tr><tr><td>Memory A/B 재부호화 저장</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>staircase 재부호화 방식이 dual-diagonal QC-LDPC 인코딩과 상이</td></tr></tbody></table>
+<p>적용 가치: 낮음 — OSD/staircase/optical-GG 채널이 본질이며 NAND binary QC-LDPC + min-sum 파이프라인에 떼어낼 모듈이 사실상 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10233519",
+  "title": "Soft OSD-Sliding Window Decoding for Staircase LDPC Codes in Deep Space Communications",
+  "year": 2023,
+  "venue": "IEEE/CIC ICCC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "128",
+  "soft_quant": "무관",
+  "key_contribution": "rate-adaptive staircase LDPC용 SOSD(soft-output OSD)를 내부 디코더로 쓴 sliding-window 복호로 BP-SWD 대비 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "staircase(product-like) 부호 + OSD(Gaussian elimination/재부호화) 기반이라 NAND용 binary QC-LDPC + min-sum 파이프라인과 계열/HW구조가 상이",
+  "todo_check": "OSD order Δ 증가에 따른 복잡도 폭증 정량치, staircase가 아닌 단일 QC-LDPC block에 SOSD를 붙였을 때의 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10233519---soft-osd-sliding-window-decoding-for-staircase-ldpc-codes-in-deep-space-communications-2023-ieeecic-iccc">ieee:10233519 - Soft OSD-Sliding Window Decoding for Staircase LDPC Codes in Deep Space Communications (2023, IEEE/CIC ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9611452</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9611452---combined-polar-ldpc-design-for-channels-with-high-noise-2021-ieee-itw">ieee:9611452 - Combined polar-LDPC design for channels with high noise (2021, IEEE ITW)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.05</td></tr><tr><td>부호length</td><td>8192~8208</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>저rate LDGM(weight w=2~4 parity) BP와 짧은 polar SCL을 교대로 결합해 극저rate 채널에서 CA-SCL 수준 성능을 낮은 latency로 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>극저rate(~0.05, IoT/-1.59dB급) 특화 + polar 결합 구조라 고rate NAND QC-LDPC와 정합 안 됨</td></tr><tr><td>추가확인</td><td>µ=O(ln d) BP iteration의 실제 반복 수, LDGM(정보비트만 재계산) 방식의 error-floor 거동</td></tr></tbody></table>
+<blockquote><p>총평: 극저rate IoT 채널용 LDGM+polar 결합 설계로, 고rate binary QC-LDPC(NAND) 이식 관점에서는 채널/rate/구조 모두 어긋나 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BI-AWGN 극저noise(σ²→∞, SNR&gt;ln2=-1.59dB) 채널, IoT 저전력용 극저rate 코드; 대표 부호는 <code>[8208,400]</code>(w=3), <code>[8192,450]</code>(w=4), rate ~0.05.</li><li>문제: 극저rate에서 biorthogonal/RM/polar-repetition/기존 LDGM은 길이·복잡도·latency가 과도하게 커짐.</li><li>기본 부호: 생성행렬 <code>G=[I_k|J_{k,d,w}]</code>의 systematic LDGM, <code>J</code>는 순환행렬 <code>P_k^s</code>로 구성, 각 열 weight <code>w</code>(≤4), 각 행 weight <code>d</code>(큼), 길이 <code>n=k+kd/w</code>.</li><li>BP 1단: 정보심볼만 재계산하는 belief propagation. offset <code>u_i=tanh(z_i)</code>, parity check (5)로 <code>u</code>, l.l.h. <code>h</code> 갱신, <code>µ~2log2(k)</code> iteration.</li><li>핵심식: 각 정보비트가 <code>d</code>개 parity check <code>a_i=a_j·∏a_{i'}</code> (4)를 만족 → 정보비트 재계산만으로 복잡도 <code>Φ~2nw(w+4)log2 k</code>.</li><li>반복 강화: 정보비트를 <code>s</code>(≤5)회 복제 <code>G=[I_{k,1}|..|I_{k,s}|J]</code> → 수신 신뢰도↑, BP BER 2~3배 감소.</li><li>2단 결합: BP 출력 l.l.h.를 짧은 polar code <code>P[k,kr]</code>(k=512)의 SCL(L=32) 디코더에 입력, 후보를 다시 길이 n으로 인코딩해 ML 선택.</li><li>알고리즘 A~D: A=단일 BP+SCL, B=BP 2회, C=CRC-11 추가, D=W(-)/W(+) 분할 + CRC-q1/q2 + half-way 결합.</li><li>결과: <code>[8208,400]</code> 코드가 SNR=1dB에서 WER~10⁻⁴, CA-polar A5[8192,400]와 동등하되 latency 대폭 감소; [16] 대비 0.75dB 이득(단 rate는 더 높음).</li><li>한계: 순수 시뮬레이션만, HW 미설계, 극저rate·polar 결합 특화. CRC/half-way(C,D)가 A,B 대비 개선 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>정보비트만 재계산하는 BP</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>tanh 기반 full BP + LDGM 정보비트 한정 방식이라 min-sum 루프와 이질적</td></tr><tr><td>BP 출력 l.l.h. + polar SCL 결합</td><td>대응 없음</td><td>polar/SCL은 Prime ECC 범위 밖</td></tr><tr><td>offset <code>u=tanh(z)</code> 채널 변환</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>full-tanh soft 처리로 hard/2~3bit 양자화와 불일치</td></tr><tr><td>LDGM 순환행렬 부호 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>LDGM(weight w) 구조가 고rate QC-LDPC PCM과 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — non-QC LDGM + polar 결합, full-tanh BP, 극저rate/soft-4bit+ 채널 특화로 고rate binary QC-LDPC NAND ECC와 부호·디코더·채널 모든 층위가 어긋남.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9611452",
+  "title": "Combined polar-LDPC design for channels with high noise",
+  "year": 2021,
+  "venue": "IEEE ITW",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.05,
+  "code_length": "8192~8208",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "저rate LDGM BP와 짧은 polar SCL 교대 결합으로 극저rate 채널에서 CA-SCL 수준 성능을 낮은 latency로 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "극저rate(~0.05) + polar 결합 구조라 고rate NAND QC-LDPC와 정합 안 됨",
+  "todo_check": "µ=O(ln d) BP 실제 반복 수, LDGM 방식의 error-floor 거동"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9611452---combined-polar-ldpc-design-for-channels-with-high-noise-2021-ieee-itw">ieee:9611452 - Combined polar-LDPC design for channels with high noise (2021, IEEE ITW)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

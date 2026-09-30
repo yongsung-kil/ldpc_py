@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6363269</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6363269---optimal-output-quantization-of-binary-input-awgn-channel-for-belief-propagation-decoding-of-ldpc-codes-2012-ieee-workshop-on-signal-processing-systems-sips">ieee:6363269 - Optimal Output Quantization of Binary Input AWGN Channel for Belief-Propagation Decoding of LDPC Codes (2012, IEEE Workshop on Signal Processing Systems (SiPS))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.25~0.95</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>discretized DE 기반 uni/multi-parametric 탐색으로 BI-AWGN 채널 출력의 BP 최적 quantizer(erasure/2bit/3bit) 도출, Lloyd(MSE) 대비 우월</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>regular (dv,dc) code·무한 블록/무한 iteration DE 가정, 내부 메시지는 무한정밀도 전제(양자화 대상은 채널출력만)</td></tr><tr><td>추가확인</td><td>NAND read threshold(RBER 분포)에 실제 code rate/degree로 최적 경계 재산출 시 gain, soft-read cost 대비 효과</td></tr></tbody></table>
+<blockquote><p>총평: NAND 셀 센싱 정밀도(2~3bit)에 직결되는 채널출력 최적 quantizer를 DE로 설계, Prime ECC의 soft-read threshold/LLR 테이블 설계에 직접 이식 가치 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BI-AWGN 채널 <code>y=x+z</code>, regular (dv,dc) LDPC(rate 0.25~0.95), BP 복호. 실측은 (3,6)-regular (8000,4000) code, iteration limit 100.</li><li>문제: 초고속·NAND flash 센싱은 ADC 정밀도가 낮아(≤3bit) 채널출력 양자화가 필수, read latency는 센싱 정밀도에 지수적 증가.</li><li>모델: 채널출력을 대칭 quantizer로 이산화, LLR <code>L(y)=2y/σ^2</code>, 각 영역 partial cdf <code>ϕ_i</code>, 레벨 <code>r_i=log(ϕ_i/ϕ_-i)</code>.</li><li>핵심기법: quantizer 성능을 MSE가 아니라 discretized DE의 noise threshold <code>σ*</code>(오류무한소 도달 최대 잡음)로 평가·최적화.</li><li>핵심식: 2bit boundary <code>q1*</code>를 DE로 탐색 → Lloyd <code>q1*Lloyd=1.207</code> 대신 <code>q1*=0.74</code>, threshold 1.05배(Eb/N0 0.42dB) 우월.</li><li>확장: n-bit uniform은 단일 step <code>q_Δ</code> uni-parametric exhaustive search, non-uniform 3bit은 q1/q2/q3 hill-climbing multi-parametric 최적화.</li><li>부수 트릭: erasure(3-level) quantizer 도입만으로 1bit 대비 ~1dB Eb/N0 gain, 저정밀 저장/통신에 유효.</li><li>최적화: DE noise threshold를 목적함수로 hill climbing, 하위 정밀도 최적 경계를 상위 정밀도 초기값으로 사용.</li><li>결과: 3bit로 infinite-precision 대비 0.1dB 이내(rate 무관), 최적 2bit이 Lloyd 대비 BER 1e-5에서 0.32dB 우세, uniform≈non-uniform 3bit(&lt;0.01dB).</li><li>한계: HW 미설계(시뮬/이론), regular code·무한 블록/iteration DE 가정, 내부 메시지는 무한정밀도 전제(채널출력만 양자화).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>채널출력 최적 quantizer 경계/soft-read threshold</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>DE 최적 경계를 NAND read threshold 설계에 직접 이식</td></tr><tr><td>양자화 레벨→LLR 매핑 <code>r_i=log(ϕ_i/ϕ_-i)</code></td><td>ecc_data.h <code>PARAM_LLR</code></td><td>2SD/3SD LLR 테이블 값 산출에 적용</td></tr><tr><td>BP/min-sum CN 메시지 집중 분석</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>고 dc에서 경계 조밀화 근거, min-sum 보유와 정합</td></tr><tr><td>code rate/degree별 경계 의존성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 고rate QC-LDPC의 dc에 맞춘 경계 재산출 필요</td></tr></tbody></table>
+<p>적용 가치: 높음 - 2~3bit soft-read quantizer 경계 설계는 Prime ECC의 <code>hard-1bit</code>/<code>soft-2~3bit</code> read 비용과 직결되며 채널/LLR 모듈에 저비용 이식 가능, 다만 우리 고rate QC-LDPC의 실제 degree로 DE 재실행이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6363269",
+  "title": "Optimal Output Quantization of Binary Input AWGN Channel for Belief-Propagation Decoding of LDPC Codes",
+  "year": 2012,
+  "venue": "IEEE Workshop on Signal Processing Systems (SiPS)",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.25~0.95",
+  "code_length": "8000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "discretized DE 기반 uni/multi-parametric 탐색으로 BI-AWGN 채널 출력의 BP 최적 quantizer(erasure/2bit/3bit) 도출, Lloyd(MSE) 대비 우월",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "regular (dv,dc) code·무한 블록/무한 iteration DE 가정, 내부 메시지는 무한정밀도 전제(양자화 대상은 채널출력만)",
+  "todo_check": "NAND read threshold(RBER 분포)에 실제 code rate/degree로 최적 경계 재산출 시 gain, soft-read cost 대비 효과"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6363269---optimal-output-quantization-of-binary-input-awgn-channel-for-belief-propagation-decoding-of-ldpc-codes-2012-ieee-workshop-on-signal-processing-systems-sips">ieee:6363269 - Optimal Output Quantization of Binary Input AWGN Channel for Belief-Propagation Decoding of LDPC Codes (2012, IEEE Workshop on Signal Processing Systems (SiPS))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

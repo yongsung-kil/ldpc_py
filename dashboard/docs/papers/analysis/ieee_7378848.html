@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7378848</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7378848---a-relaxed-min-sum-ldpc-decoder-with-simplified-check-nodes-2016-ieee-communications-letters">ieee:7378848 - A Relaxed Min-Sum LDPC Decoder With Simplified Check Nodes (2016, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.84</td></tr><tr><td>부호length</td><td>1008~2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>2nd-min을 제거하고 broadcast 가능한 단일출력 check node + β=0.5 relaxation, VN에서 offset으로 2nd-min emulation</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미구현(시뮬만), 고SNR에서 error-floor 발생(별도 post-processing 필요), gate count·throughput 미제시</td></tr><tr><td>추가확인</td><td>off/β를 우리 고rate QC-LDPC에 재최적화 시 waterfall 손실 여부, error-floor가 NAND 목표 BER 이하에서 문제되는지</td></tr></tbody></table>
+<blockquote><p>총평: 2nd-min 제거+broadcast로 라우팅 완화하는 min-sum 변형, 4bit로 NMS 근접하나 HW 미설계·error-floor·오프셋 재튜닝 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 유한길이 binary LDPC (2048,1723) RS-LDPC와 (1008,504) PEG-LDPC, AWGN 채널, 4-bit 양자화.</li><li>문제: MS 기반 broadcast 디코더는 라우팅/에너지 이득이 크지만 2nd-min emulation 시 수 tenths dB coding loss가 발생.</li><li>핵심 기법 1 - check node는 오직 global 1st min과 sign만 출력(식 5), 이를 모든 이웃 VN에 broadcast하여 <code>dc</code>개 개별 링크 대신 단일 배선으로 라우팅 congestion·wire length(예 35%↓) 감소.</li><li>핵심 기법 2 - VN에서 2nd-min emulation: 자신이 보낸 메시지 크기가 broadcast된 1st min과 같으면 <code>off</code> 오프셋을 더해 2nd min을 근사(식 6), sign은 1st min sign과 자기 sign 곱(식 7).</li><li>relaxation: <code>l(v→c) = 0.5·l^(ℓ-1)(v→c) + l^(ℓ)(v→c)</code> (식 4), β=0.5 고정이라 곱셈기 불필요(LSB 버리고 shift)—배선·게이트 없이 relaxation 구현.</li><li>파라미터 <code>off</code>, <code>β</code>는 해석도구 부재로 Monte Carlo로 최적화(RS-LDPC off=1, PEG off=2).</li><li>결과: 4-bit RMS-2ME가 waterfall에서 FP-NMS/SPA에 거의 근접하며, BER&lt;10^-8에서 FP-SPA(|l|≤19)를 능가.</li><li>복잡도: Table I 기준 [10][11] 대비 약 16.6%, [12] 대비 33.3%(k=2) 감소, OMS 대비 16.6% 낮음(edge당 조건부 보정 1회).</li><li>error floor: RS-LDPC에서 BER~10^-11 부근부터 error floor 시작, [12]/[6][14]류 post-processing으로 대응 가능(복잡도 증가).</li><li>한계: HW(RTL/합성) 미구현, gate count·throughput 정량치 없음, error-floor 별도 대책 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>단일 1st-min broadcast check node</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN이 min1/min2 계산하는 부분을 min1 단독 출력으로 단순화 이식</td></tr><tr><td>VN에서 offset 기반 2nd-min emulation</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>VN 처리에 조건부 offset 보정 추가</td></tr><tr><td>β=0.5 relaxation (shift/LSB drop)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>v→c 메시지 갱신 시 이전값 0.5 가중, 곱셈기 없이 삽입</td></tr><tr><td>4-bit LLR 양자화 / offset 파라미터</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>off/β를 우리 LLR 테이블 체계에 매핑 재튜닝 필요</td></tr><tr><td>라우팅/배선 완화(broadcast)</td><td>디코더 HW 모델 (z=32, GT)</td><td>GT(edge 축소)와 목적 유사하나 논문은 RTL 미제공</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum broadcast+relaxation은 우리 decoder.cpp에 이식 쉬우나, 이미 min-sum/GT/양자화를 보유하고 error-floor·HW 미검증이라 신규 이득은 라우팅·게이트 절감 정도로 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7378848",
+  "title": "A Relaxed Min-Sum LDPC Decoder With Simplified Check Nodes",
+  "year": 2016,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1008~2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "2nd-min 제거+broadcast 단일출력 check node와 β=0.5 relaxation, VN offset으로 2nd-min emulation",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HW 미구현(시뮬만), 고SNR error-floor 별도 post-processing 필요, gate/throughput 미제시",
+  "todo_check": "off/β 우리 고rate QC-LDPC 재최적화 시 waterfall 손실, error-floor가 NAND 목표 BER 이하 문제 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7378848---a-relaxed-min-sum-ldpc-decoder-with-simplified-check-nodes-2016-ieee-communications-letters">ieee:7378848 - A Relaxed Min-Sum LDPC Decoder With Simplified Check Nodes (2016, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

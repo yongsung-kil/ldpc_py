@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9618067</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9618067---an-energy-efficient-hybrid-fec-arq-communication-scheme-for-small-satellite-applications-2021-cits">ieee:9618067 - An Energy Efficient Hybrid FEC-ARQ Communication Scheme for Small Satellite Applications (2021, CITS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.889</td></tr><tr><td>부호length</td><td>999~1280</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>신드롬 가중치 진동의 주기성을 검출하는 SNR-독립적 조기종료(PSD) 기준</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Bit-Flipping(hard) 디코더 전용 조기종료 - min-sum/soft-read 기반 우리 디코더와 정합성 낮음</td></tr><tr><td>추가확인</td><td>우리 파이프라인의 신드롬 가중치 진동 패턴에서 유사 주기성이 나타나는지</td></tr></tbody></table>
+<blockquote><p>총평: BF 디코더의 SNR-무관 조기종료 아이디어는 참신하나 MacKay 랜덤 LDPC + hard-decision BF 대상이라 NAND용 min-sum QC-LDPC에 직접 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 PocketQube 소형위성의 Hybrid FEC-ARQ 링크로, 세 개 MacKay LDPC 코드(rate 0.889/0.769/0.5, 길이 999/1057/1280)를 사용한다.</li><li>문제: LDPC 복호(BF)가 처리 단계 에너지의 84%를 차지 - 위성의 극히 제한된 에너지를 아끼려면 불필요한 iteration을 줄여야 한다.</li><li>채널은 AWGN + BPSK 최적수신 가정. 복호기는 Gallager의 hard-decision Bit-Flipping.</li><li>핵심 기법: 미복호(undecodable) 워드에서 신드롬 가중치 <code>s_w</code>가 진동하는 특성을 이용, 최근 iteration 내 반복 시퀀스를 탐지하는 Periodicity-Sum Detector(PSD)를 제안.</li><li>주기 길이 <code>p</code>가 검출되면 주기합 <code>S</code>에 누적, <code>S ≥ S_MAX</code>이면 undecodable로 판정하고 조기종료. 주기가 바뀌면 <code>S</code>를 0으로 리셋.</li><li><code>S_MAX</code>는 역누적확률 분포(Fig.1)에서 <code>1 - CDF ≤ ε</code>(ε=1e-3)이 되는 주기값으로 설정(코드별 7/8/9).</li><li>과거 <code>2·S_MAX</code> 신드롬 가중치만 보면 되며, 주기 검출에는 최소 2주기 관찰이 필요.</li><li>학습/최적화: 각 Eb/N0(0~8dB)에서 1,000개 undecodable 워드 시뮬로 임계 결정(별도 NN/DE 없음).</li><li>결과: STM32F429ZI(Cortex-M4) 실측 - avg iteration 최대 95% 감소, 처리단계 에너지 604.93J→26.38J, 프레임당 총에너지 1.78J→0.34J(약 80% 절감), WER 열화는 최대 2%.</li><li>한계: HW(RTL) 미설계, hard-decision BF 전용, 세 특정 MacKay 코드에 한정, soft-decision·QC-LDPC 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PSD 조기종료(신드롬 가중치 진동)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>우리는 CRC 기반 조기종료 사용 - 신드롬 진동 방식은 대체 후보이나 우선순위 낮음</td></tr><tr><td>신드롬 가중치 계산</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>신드롬 자체는 존재하나 종료 판정 로직이 CRC 기반이라 구조 상이</td></tr><tr><td>Bit-Flipping 복호</td><td>대응 없음</td><td>우리 디코더는 min-sum message passing - BF 미사용</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - hard-decision BF 전용 조기종료로 CRC 기반 조기종료를 이미 보유한 min-sum QC-LDPC 파이프라인과 정합성이 낮고, NAND/soft-read와 무관.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9618067",
+  "title": "An Energy Efficient Hybrid FEC-ARQ Communication Scheme for Small Satellite Applications",
+  "year": 2021,
+  "venue": "CITS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.889",
+  "code_length": "999~1280",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "신드롬 가중치 진동의 주기성을 검출하는 SNR-독립적 조기종료(PSD) 기준",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "Bit-Flipping(hard) 디코더 전용 조기종료 - min-sum/soft-read 기반 우리 디코더와 정합성 낮음",
+  "todo_check": "우리 파이프라인의 신드롬 가중치 진동 패턴에서 유사 주기성이 나타나는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9618067---an-energy-efficient-hybrid-fec-arq-communication-scheme-for-small-satellite-applications-2021-cits">ieee:9618067 - An Energy Efficient Hybrid FEC-ARQ Communication Scheme for Small Satellite Applications (2021, CITS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

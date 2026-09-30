@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8625324</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8625324---when-channel-coding-hits-the-implementation-wall-2018-ieee-istc">ieee:8625324 - When Channel Coding Hits the Implementation Wall (2018, IEEE ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.8125</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>Turbo/LDPC/Polar 디코더의 100Gbps+ 구현 벽(전력밀도·라우팅·메모리) 분석 및 언롤·파이프라인 아키텍처 비교</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>268Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>통신성능 미고려·소블록/저iteration 전용, 5G 무선 초고속 처리 특화로 NAND ECC와 목표 상이</td></tr><tr><td>추가확인</td><td>unrolled fully parallel LDPC의 gatecount, 라우팅 혼잡 완화 기법 상세, 양자화 비트폭</td></tr></tbody></table>
+<blockquote><p>총평: 초고속(100Gbps+) 무선 FEC 구현 벽을 짚는 서베이/포지션 논문 - 아키텍처 인사이트(언롤·파이프라인·메모리/라우팅 병목)는 참고가치 있으나 NAND용 신기법 이식 대상은 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: beyond-5G 무선 baseband FEC, 목표 throughput <code>&gt;100Gbit/s</code>(장기 <code>1Tbit/s</code>), 28nm FD-SOI 기준. Turbo/LDPC/Polar 3종 디코더 비교.</li><li>문제: Moore's law 둔화(전력밀도·라우팅 지연·비용 급증)로 실리콘 진보만으론 처리량·에너지 요구 못 따라감 - "구현 벽".</li><li>LDPC 관점: BP는 CN/VN 병렬 가능하나 Tanner graph locality 낮아 데이터 전송(transfer) 지배적, 라우팅 혼잡이 핵심 병목.</li><li>처리량 모델: <code>T(H,A) = #proc_edges(A)/(#edges(H)) · N · I · f</code>, 병렬도 <code>P = #proc_edges(A)/#edges(H)</code>.</li><li>아키텍처 분류: partially parallel(<code>P&lt;1</code>, 메모리 지배)/fully parallel(<code>P=1</code>, 라우팅 지배)/unrolled fully parallel(<code>P=I</code>, 파이프라인).</li><li>LDPC 사례: IEEE 802.11ad <code>N=672</code>, <code>#edges(H)=1890</code>, 400MHz, 9 iter → partially 10Gbps, fully 29Gbps, unrolled 268Gbps.</li><li>메모리·전력: heavily pipelined 설계는 레지스터·클록트리가 전력 지배(Polar 예 클록47%+레지스터24%), 레지스터→래치 치환으로 전력·면적 절감.</li><li>트릭: 효율적 양자화(비트폭↓→메모리↓), retiming, re-computation이 storage/access보다 에너지 효율적일 수 있음.</li><li>결과(Table II): LDPC 9iter 268Gbps@2.8mm²(2.5pJ/bit), 4iter는 1.3mm²·700mW(215 Gbps/mm² 면적효율), Polar 764Gbps.</li><li>한계: 통신성능 미고려, 소블록/저iteration에만 적용 가능하며 파이프라인이 오히려 latency 증가·유연성 저하.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP LDPC 디코더 아키텍처 분류(병렬도 P)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념 참고(z=32 partial-parallel과 대비)이나 구체 이식 대상 아님</td></tr><tr><td>메모리 스킴·라우팅 네트워크 병목</td><td>decoder.cpp HW 모델(GT/HCU)</td><td>Prime ECC 라우팅/메모리 설계 방향 참고 정보</td></tr><tr><td>Min-Sum 컴퓨트 커널(Table I)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>이미 보유(Min-Sum), 신규 기여 없음</td></tr><tr><td>양자화 비트폭 최적화</td><td>channel.cpp LLR 테이블</td><td>정성적 언급뿐, 구체 알고리즘 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 구체적 이식 알고리즘이 아닌 초고속 무선 FEC 구현 트렌드 서베이. 아키텍처 병목(메모리/라우팅/전력) 인사이트는 배경지식으로만 유용.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8625324",
+  "title": "When Channel Coding Hits the Implementation Wall",
+  "year": 2018,
+  "venue": "IEEE ISTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.8125,
+  "code_length": "672",
+  "soft_quant": "미상",
+  "key_contribution": "Turbo/LDPC/Polar 디코더의 100Gbps+ 구현 벽(전력밀도·라우팅·메모리) 분석 및 언롤·파이프라인 아키텍처 비교",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 268,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "통신성능 미고려·소블록/저iteration 전용, 5G 무선 초고속 처리 특화로 NAND ECC와 목표 상이",
+  "todo_check": "unrolled fully parallel LDPC의 gatecount, 라우팅 혼잡 완화 기법 상세, 양자화 비트폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8625324---when-channel-coding-hits-the-implementation-wall-2018-ieee-istc">ieee:8625324 - When Channel Coding Hits the Implementation Wall (2018, IEEE ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

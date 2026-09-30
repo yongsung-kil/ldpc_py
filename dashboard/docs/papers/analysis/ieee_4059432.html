@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4059432</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4059432---modified-min-sum-algorithm-for-ldpc-decoders-in-uwb-communications-2006-ieee">ieee:4059432 - Modified Min-Sum Algorithm for LDPC Decoders in UWB Communications (2006, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1200~1536</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>min-sum 근사(min(x,y))의 지배적 오차항 `f(x,y)=ln(1+e^-\</td><td>x-y\</td><td>)`을 3번째 최소값 기반으로 근사 보정하는 modified min-sum(MMS) 알고리즘 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상(gatecount 표는 손상되어 본문 서술로 확정 불가)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>AWGN/UWB 다중경로 페이딩 채널(802.15.3a) 기준 검증, NAND 채널(RBER/retention) 특성과 다름</td></tr><tr><td>추가확인</td><td>3번째 최소값(3rd minimum) 계산 및 F(x,y)=max(x-y-0.5,0) 근사가 하드웨어 오버헤드 대비 이득이 NAND 저iteration 환경에서도 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 오차 보정을 통해 scaled min-sum과 동등 이상 성능을 스케일링 팩터 튜닝 없이 달성하는 CN 연산 개선 기법으로, Prime ECC의 min-sum CN 유닛에 직접 이식 검토 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 UWB(MB-OFDM, IEEE 802.15.3a) 통신용 irregular QC-LDPC 코드(rate 1/2, block size 1536 또는 1200, permutation 32x32/25x25), AWGN 및 페이딩(CM1/CM3) 채널.</li><li>문제: 기존 conventional min-sum(CMS)은 <code>Φ(Φ(x)+Φ(y)) ≈ min(x,y)</code> 근사로 하드웨어는 간단하지만 log-BPA(log-MAP) 대비 성능손실 커서 반복횟수 증가→latency 증가.</li><li>핵심 가정: 근사 오차는 <code>Φ(Φ(x)+Φ(y)) = min(x,y) + f(x,y)</code>이며 <code>f(x,y)=ln(1+e^-|x-y|)</code>가 지배적 오차항, <code>x,y</code>가 값이 가까울수록 오차 커짐.</li><li>핵심 기법: 체크노드 차수 <code>k_i&gt;2</code>일 때 오차는 3번째 최소값(<code>vc_min3,i</code>)이 지배하므로, C2V 메시지 계산식 <code>M(cv_i,j) = vc_min1,i - f(vc_min2,i, vc_min3,i)</code> 형태로 최소값 2개 대신 3개(min1/min2/min3)를 이용해 오차항을 보정.</li><li><code>f(x,y)</code> 자체도 회로 복잡하므로 <code>F(x,y)=max(x-y-0.5, 0)</code> (Mansour &amp; Shanbhag 근사)로 대체, <code>x&gt;y</code>가 이미 알려져 있어 절대값 연산 생략 가능.</li><li>Layered-mode belief propagation(L-BP)을 모든 알고리즘(log-MAP/CMS/SMS/MMS)에 공통 적용해 반복횟수를 절반 이하로 단축.</li><li>부수 트릭: 3-최소값을 순차(serial) 비교로 구하는 대신 word-length N=8 bit-level pipelined comparator(3-to-1 selector) 설계로 critical path를 비트 단위로 쪼개 clock rate 2배 향상.</li><li>학습/최적화 절차 없음 (closed-form 오차보정, DE/GA 미사용).</li><li>결과: MMS는 CMS 대비 log-MAP에 근접(CM1 채널에서 log-MAP 대비 0.2dB 이내, CMS는 0.75dB 열위), scaled min-sum(최적 scaling 0.8) 대비 동등~우수, 8-iteration MMS가 CMS보다 우수.</li><li>한계: UWB 다중경로 페이딩/AWGN 채널 기준, gatecount 수치는 표 손상으로 본문에서 확정 불가(미상 처리), NAND 채널 특성(RBER)에서의 검증 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum 오차 보정(3rd minimum 기반 C2V 계산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min1/min2 기반 min-sum CN 연산에 3rd-min 보정항을 추가하는 형태로 직접 이식 검토 가능</td></tr><tr><td>f(x,y) 근사 함수(간이 보정 회로)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케일링 팩터 없이 고정 채널·rate 무관 보정이라 Prime ECC의 magnitude 양자화 테이블과 결합 검토 가능</td></tr><tr><td>bit-level pipelined comparator (3-to-1 selector)</td><td><code>decoder.cpp</code> pipeline 6-stage HW 모델</td><td>compare-select critical path 단축 기법으로 pipeline 단수/클록 설계에 참고 가능</td></tr></tbody></table>
+<p>적용 가치: <code>높음</code> — Prime ECC가 이미 min-sum(min1/min2) 기반이므로, scaling factor 튜닝 없이 3rd-minimum 기반 오차보정을 추가하는 MMS는 코드/채널 rate 변경에 강인하면서 waterfall 영역 성능 개선(log-MAP 근접)이 기대되는 저위험 이식 후보.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4059432",
+  "title": "Modified Min-Sum Algorithm for LDPC Decoders in UWB Communications",
+  "year": 2006,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1200~1536",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "min-sum 근사(min(x,y))의 지배적 오차항 f(x,y)=ln(1+e^-|x-y|)을 3번째 최소값 기반으로 근사 보정하는 modified min-sum(MMS) 알고리즘 제안",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "AWGN/UWB 다중경로 페이딩 채널(802.15.3a) 기준 검증, NAND 채널(RBER/retention) 특성과 다름",
+  "todo_check": "3번째 최소값(3rd minimum) 계산 및 F(x,y)=max(x-y-0.5,0) 근사가 하드웨어 오버헤드 대비 이득이 NAND 저iteration 환경에서도 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4059432---modified-min-sum-algorithm-for-ldpc-decoders-in-uwb-communications-2006-ieee">ieee:4059432 - Modified Min-Sum Algorithm for LDPC Decoders in UWB Communications (2006, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10173581</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10173581---analysis-of-binary-and-ternary-message-passing-decoding-for-generalized-ldpc-codes-2023-ieee-trans-communications">ieee:10173581 - Analysis of Binary and Ternary Message Passing Decoding for Generalized LDPC Codes (2023, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.375~0.7715</td></tr><tr><td>부호length</td><td>7680~8000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GLDPC의 BMP/TMP 복호(CN=BDD/APP)에 대한 밀도진화(DE) 분석·안정성 조건 유도, VN 스케일링 계수 도출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GLDPC(CN=extended Hamming 성분부호)+1~2bit 메시지 특화, binary QC-LDPC(SPC-CN) 아키텍처와 CN 처리·부호구조가 이질적</td></tr><tr><td>추가확인</td><td>성분부호 CN BDD를 SPC 기반 우리 부호에 적용할 여지 여부, T·D(ℓ) 스케일 계수를 min-sum LLR 테이블 튜닝에 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: GLDPC용 저정밀(1~2bit) 메시지 복호의 DE·안정성 이론으로 학술적 깊이는 높으나, SPC-CN 기반 NAND binary QC-LDPC에는 부호구조·CN 처리가 달라 직접 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 GLDPC 부호(CN이 (32,26)/(16,11) extended Hamming, (32,31) SPC 등 성분부호), <code>dv=2</code> regular 및 irregular 앙상블, biAWGN·BPSK, rate 0.375~0.7715, PEG로 설계한 <code>n≈7680~8000</code>.</li><li>문제: GLDPC CN의 최적 SISO(APP) 복호는 복잡도가 크고, 저정밀 메시지(BMP=이진, TMP=삼진) 복호가 unquantized BP 대비 얼마나 손실인지 정량화 필요.</li><li>모델: CN↔VN 교환 메시지를 extrinsic 채널로 모델링 - BMP는 crossover θ의 BSC, TMP는 error θ·erasure ε의 BEEC, 채널 신뢰도 <code>D(θ)</code>, <code>D(θ,ε)</code> 정의.</li><li>핵심기법1 - VN 갱신: <code>m_{v→c}=Ψ(L_ch + D(ℓ)·Σ_{c'} m_{c'→v})</code> (식9), 채널 LLR과 CN 메시지 가중합을 양자화(BMP는 부호, TMP는 임계 T로 삼진화).</li><li>핵심식: 신뢰도 <code>D(ℓ)=ln((1−q_{-1})/q_{-1})</code> (BMP, 식11), TMP는 erasure 포함(식12) - CN 출력 오류/소실확률로부터 VN 가중치를 DE로 추정.</li><li>핵심기법2 - CN 처리 2종: 최적 APP SISO(trellis, 식7) vs extrinsic BDD([15] j번째를 erasure로 치환 / [8] 채널메시지로 치환) - <code>2d_H+v ≤ d_min−2</code> 조건으로 정정.</li><li>DE: BMP/TMP 각각 VN측은 해석식(14),(17),(18), CN측은 APP는 몬테카를로, BDD는 성분부호 weight enumerator로 정확 계산.</li><li>안정성: BDD-CN에서 야코비안 스펙트럴 반경 Ω&lt;1 조건 유도 - [15]식은 모든 CN <code>d_min≥4</code>, [8]식은 <code>d_min≥5</code>면 안정성 충족.</li><li>결과: BMP에서는 CN이 BDD든 APP든 성능 사실상 동일; TMP는 BDD가 APP 대비 0.6~0.7dB 손실; DE 임계값이 유한길이 waterfall과 일치.</li><li>한계: HW 미설계, 시뮬레이션·이론뿐, GLDPC(성분부호 CN) 특화이며 표준 SPC-CN LDPC나 NAND 대상 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VN 갱신 <code>L_ch + D(ℓ)·Σm</code> 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>채널+CN 메시지 가중합·양자화 개념은 VN 처리에 대응하나 메시지 알파벳(1~2bit)과 우리 min-sum이 상이</td></tr><tr><td>iteration별 신뢰도 <code>D(ℓ)</code>·임계 T</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 스케일 계수는 적응형 LLR 테이블과 개념적 유사, 다만 GLDPC용</td></tr><tr><td>CN APP/BDD(성분부호 복호)</td><td>대응 없음</td><td>Prime ECC의 CN은 SPC min-sum(<code>CNU_Update_New_Mag()</code>), GLDPC 성분부호 BDD/APP는 대응 모듈 없음</td></tr><tr><td>부호구조(GLDPC, Hamming-CN)</td><td>대응 없음</td><td>Load_PCM은 binary QC-LDPC(SPC-CN)용, GLDPC 성분부호 부호구조는 대응 없음</td></tr><tr><td>DE/안정성 이론</td><td>대응 없음</td><td>시뮬레이터 코드에 DE·안정성 해석 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — GLDPC+저정밀 메시지 복호의 DE·안정성 이론으로, CN이 SPC가 아닌 성분부호(BDD/APP)여서 NAND binary QC-LDPC(SPC-CN) min-sum 파이프라인에 부호구조·CN 처리를 떼어 붙일 수 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10173581",
+  "title": "Analysis of Binary and Ternary Message Passing Decoding for Generalized LDPC Codes",
+  "year": 2023,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "7680~8000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GLDPC의 BMP/TMP 복호(CN=BDD/APP)에 대한 밀도진화(DE) 분석·안정성 조건 유도, VN 스케일링 계수 도출",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "GLDPC(CN=extended Hamming 성분부호)+1~2bit 메시지 특화, binary QC-LDPC(SPC-CN) 아키텍처와 CN 처리·부호구조가 이질적",
+  "todo_check": "성분부호 CN BDD를 SPC 기반 우리 부호에 적용 여지 여부, T·D(ℓ) 스케일 계수를 min-sum LLR 테이블 튜닝에 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10173581---analysis-of-binary-and-ternary-message-passing-decoding-for-generalized-ldpc-codes-2023-ieee-trans-communications">ieee:10173581 - Analysis of Binary and Ternary Message Passing Decoding for Generalized LDPC Codes (2023, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

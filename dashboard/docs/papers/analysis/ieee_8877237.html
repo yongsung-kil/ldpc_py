@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8877237</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8877237---neighbor-cell-information-based-detection-for-ldpc-coded-mlc-nand-flash-memory-2019-ieee">ieee:8877237 - Neighbor-Cell-Information Based Detection for LDPC Coded MLC NAND Flash Memory (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.784~0.838</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>성공복호 이웃셀 정보(NCI)+이웃 a-priori 정보를 혼합해 CCI 제거·정확한 read 전압 복원</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>디코더가 아닌 채널검출기(pre-LLR) 개선, CCI 모델·프로그래밍 순서(all-bit-line 3bit/cell) 가정 의존</td></tr><tr><td>추가확인</td><td>Prime ECC의 channel/LLR 생성 단계에 CCI 제거·이웃셀 정보 반영 여지(단, RTN·retention 단순화 채널 재검증 필요)</td></tr></tbody></table>
+<blockquote><p>총평: NAND MLC CCI 완화용 채널검출기(LLR 입력 개선)로 NAND 직접 관련성은 높으나 디코더 알고리즘이 아닌 pre-processing 층위라 이식은 channel/soft-read 경로에 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 all-bit-line 구조 3bit/cell MLC NAND, LDPC 부호(rate-0.784 (504,2331) 및 rate-0.838 (378,2331) QC-LDPC), min-sum 복호(max iter 30).</li><li>문제: 셀 미세화로 인접셀 결합용량이 커져 cell-to-cell interference(CCI)가 threshold voltage를 왜곡, LDPC 초기 LLR 정확도를 떨어뜨림.</li><li>모델: erased state Gaussian <code>p_e(x)</code>, programmed state 균일 <code>p_p=1/ΔVpp</code>, CCI 강도 <code>I=Σ ΔV(n)·γ(n)</code> (수직 <code>γ_y</code>, 대각 <code>γ_xy</code>), RTN+retention은 zero-mean Gaussian <code>σ_N²</code>.</li><li>핵심기법: Mixed-NCI 검출기 — 이웃셀이 성공복호되면 실제 이웃셀 정보 <code>Y</code>(식10)로, 실패하면 이웃 a-priori 정보 <code>X</code>(식8)로 CCI 성분을 추정·제거.</li><li>식(11) <code>I(i,j)=γ_xy[Y−Xe]+γ_y[Y−Xe]+γ_xy[X−Xe]</code>: 성공복호 셀은 정확한 <code>Y</code>, 실패 셀은 a-priori <code>X</code>를 섞어 overcompensation 문제 완화.</li><li>NCI가 a-priori보다 실제 프로그래밍 전압에 가까우므로 CCI 제거 후 잔차(overcompensation)를 줄여 read voltage를 프로그래밍 전압에 근접시킴.</li><li>절차(Algorithm 2): (i+1) word-line에서 CCI cancel→분포 <code>f_sp(V)</code> 추정→BP 복호로 <code>Y</code> 산출→i번째 word-line CCI 제거·분포 갱신.</li><li>최적화: state별 Gaussian 파라미터 <code>(μ*sp,σ*sp)</code>를 MLE(식6,7)로 재추정하며 CCI 제거 반복.</li><li>결과: s=2.0에서 SNR 6.5dB 시 BER 2×10⁻⁶ (All-AP는 8.8×10⁻⁶), s=2.3에서 All-AP 대비 1자릿수 이상 BER 이득.</li><li>한계: HW 미설계·시뮬 전용, 이웃셀 성공복호 의존(복호 순서 결합), 단순화된 RTN/retention 채널·특정 coupling ratio 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CCI 제거 후 read voltage/분포 추정 → LLR 초기값</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>채널·soft-read threshold 단계에서 CCI 보정된 전압으로 LLR 생성 가능 (직접 대응)</td></tr><tr><td>soft-info 양자화(2SD/3SD read)</td><td>channel.cpp + LLR 테이블 <code>PARAM_LLR</code></td><td>이웃셀 기반 전압 복원이 2~3bit soft read LLR 정확도를 개선</td></tr><tr><td>BP/min-sum 복호로 이웃셀 성공여부 판정</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이웃셀 성공복호 여부를 NCI에 피드백(복호 자체 알고리즘 변경은 아님)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND CCI 완화로 초기 LLR 정확도를 높여 정정성능에 간접 기여하나, 디코더가 아닌 채널검출(pre-LLR) 층위이고 이웃셀 성공복호를 활용하는 시스템 오케스트레이션·프로그래밍 순서 가정이 커서 channel/LLR 경로 한정 이식.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8877237",
+  "title": "Neighbor-Cell-Information Based Detection for LDPC Coded MLC NAND Flash Memory",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.784~0.838",
+  "code_length": null,
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "성공복호 이웃셀 정보(NCI)+이웃 a-priori 정보를 혼합해 CCI 제거·정확한 read 전압 복원",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "디코더가 아닌 채널검출기(pre-LLR) 개선, CCI 모델·프로그래밍 순서(all-bit-line 3bit/cell) 가정 의존",
+  "todo_check": "Prime ECC의 channel/LLR 생성 단계에 CCI 제거·이웃셀 정보 반영 여지(단, RTN·retention 단순화 채널 재검증 필요)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8877237---neighbor-cell-information-based-detection-for-ldpc-coded-mlc-nand-flash-memory-2019-ieee">ieee:8877237 - Neighbor-Cell-Information Based Detection for LDPC Coded MLC NAND Flash Memory (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6120564</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6120564---erasing-bit-nodes-on-the-bipartite-graph-for-enhanced-performance-of-ldpc-codes-2011-icetet">ieee:6120564 - Erasing Bit Nodes on the Bipartite Graph for Enhanced Performance of LDPC Codes (2011, ICETET)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>200~504</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>비트노드 일부를 LLR=1/2로 "erase"한 여러 세트로 반복을 분할, 사이클·trapping set 인지 없이 비단조 복호로 탈출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>erasure 세트/δ 최적화는 open problem, 실패 시 여러 세트 순차 실행이라 최악 latency 증가 우려</td></tr><tr><td>추가확인</td><td>high-rate QC-LDPC(~0.9)에서도 δ=0.9 erasure가 유효한지, NAND soft-read와 결합 시 효과</td></tr></tbody></table>
+<blockquote><p>총평: 부호구조 인지 없이 error-floor 낮추는 저비용 decoder-side post-processing이나 SPA(tanh) 기반·저rate·HW 미설계로 Prime ECC(min-sum, 고rate) 직접 이식엔 재검증 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular (200,100)·(504,252) LDPC (rate 0.5), AWGN 채널, sum-product(SPA) 복호.</li><li>문제: 짧은 부호의 사이클·trapping set이 복호기를 나쁜 상태로 끌어당기고, SPA의 단조(monotonic) 거동으로 탈출 불가.</li><li>아이디어: 선택 비트노드의 정규화 likelihood ratio를 <code>1/2</code>로 설정해 "erase"(엔트로피↑) → 나쁜 sub-structure를 부분/전체 해체.</li><li>핵심 변수: <code>ns</code>(세트 수), <code>Ic</code>(초기 SPA 반복), <code>Ir</code>(세트별 반복), <code>δ</code>(참여 비트노드 비율, 본문 0.9~0.95), <code>n×ns</code> erasure 행렬.</li><li>필요 비트노드 최소비율 <code>δ &gt; R + ε</code>(식1): rate R보다 크면 성공 복호 가능(SNR↑ 시 ε↓).</li><li>절차: 전 비트노드로 <code>Ic</code> 반복 SPA → 실패 시 각 세트가 서로 다른 erasure 패턴으로 <code>Ir</code> 반복 → 유효 codeword들 중 수신벡터에 Hamming 최근접 선택.</li><li>비단조성: 세트마다 다른 복호 경로 → trapping set 인지·특성화 불필요(2번째 카테고리 기법과 차별점).</li><li>erasure 행렬은 LDPC 행렬 생성법과 유사하게 각 행·열의 0 개수 균등하게 랜덤 배치.</li><li>결과: (200,100)에서 error floor 대신 waterfall 유지, Eb/No 4.8dB에서 약 1 decade 개선; (504,252) MacKay 코드는 recovery 적용 시 PEG+conventional을 능가; 평균 iteration은 오히려 소폭 감소(5.90 vs 6.01 @3dB).</li><li>한계: HW 미설계·시뮬만, rate 0.5 규칙부호, δ·erasure 세트 최적화 미해결, 실패 시 다중 세트 순차 실행.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>erase 후 반복 재시도(비단조 복호 루프)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프에 세트별 재실행/조기종료 판정 추가 필요</td></tr><tr><td>선택 비트노드 LLR=1/2 강제(erasure)</td><td>channel.cpp LLR 테이블 <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>특정 VN LLR을 중립값으로 마스킹하는 훅 필요</td></tr><tr><td>유효 codeword 판정/조기종료</td><td>full_CRC.cpp, partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>세트별 성공 판정에 재사용 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — error-floor 완화 아이디어는 흥미로우나 SPA(tanh) 기반·저rate·HW 미설계이고 다중 세트 순차 재실행이 min-sum 파이프라인 latency와 상충.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6120564",
+  "title": "Erasing Bit Nodes on the Bipartite Graph for Enhanced Performance of LDPC Codes",
+  "year": 2011,
+  "venue": "ICETET",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "200~504",
+  "soft_quant": "무관",
+  "key_contribution": "비트노드 일부를 LLR=1/2로 erase한 여러 세트로 반복을 분할해 사이클·trapping set 인지 없이 비단조 복호로 탈출",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "erasure 세트/δ 최적화는 open problem, 실패 시 여러 세트 순차 실행으로 최악 latency 증가 우려",
+  "todo_check": "고rate QC-LDPC(~0.9)에서 δ erasure 유효성 및 NAND soft-read 결합 효과"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6120564---erasing-bit-nodes-on-the-bipartite-graph-for-enhanced-performance-of-ldpc-codes-2011-icetet">ieee:6120564 - Erasing Bit Nodes on the Bipartite Graph for Enhanced Performance of LDPC Codes (2011, ICETET)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

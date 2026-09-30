@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9824734</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9824734---a-high-speed-satellite-internet-physical-layer-ldpc-decoder-design-and-fpga-based-implementation-2022-icccas">ieee:9824734 - A High-speed Satellite Internet Physical Layer LDPC Decoder Design and FPGA-based Implementation (2022, ICCCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.889</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>DVB-S2/S2X용 NMSA 부분병렬 QC-LDPC 디코더 FPGA 구현 (α=0.875 shift로 곱셈 대체, partial-sum VNU)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.768</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NMSA는 Prime ECC가 이미 보유한 min-sum과 중복, DVB 비정규 IRA LDPC·위성 특화라 NAND QC-LDPC와 부호구조 상이</td></tr><tr><td>추가확인</td><td>α=0.875를 우측 shift로 대체하는 normalized scaling이 우리 magnitude 양자화 테이블에 유효한지, partial-sum VNU가 z=32 pipeline에 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2/S2X 위성 인터넷용 NMSA QC-LDPC 디코더의 FPGA 구현. min-sum 계열은 이미 보유, 채널·부호가 위성 특화라 NAND 이식성 낮음. HW 구현 디테일(partial-sum, shift scaling)만 부분 참고.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템/코드: 저궤도 위성 인터넷 물리계층, DVB-S2/S2X·IPoS 표준의 비정규 IRA(cyclic accumulation) <code>QC-LDPC</code>, frame 16200/32400/64800, rate <code>1/2~8/9</code>, sub-matrix 기저 q×360.</li><li>문제: 위성 신호 모니터링에 고대역·저지연 요구 → 처리속도와 자원소모를 동시 만족하는 디코더 HW 필요.</li><li>부호구조: H=[H1|H2], H1은 q×360 기저의 QC 희소행렬, H2는 double-diagonal → 전체 H 사전저장 회피(메모리·주소지연 절감).</li><li>핵심 기법: <code>NMSA</code>(normalized min-sum) 채택 - CN update <code>L(Rji)=Π sgn·min|L(Qij)|</code> + normalization factor α.</li><li>핵심 식/의미: α=0.875를 우측 shift 연산으로 대체해 곱셈기 제거(NMSA가 OMSA의 subtractor+multi-level 비교 지연보다 유리).</li><li>확장(VNU): partial-sum 방식 <code>L(Qij)=L(Pi)+Σ_{j'∈Ri\j}L(Rj'i)</code>로 subtractor·보수변환 모듈 제거, Pdc 누산 크기 축소.</li><li>구현 디테일: 부분병렬 parallelism=90, LLR 초기값 8bit·중간값 11bit 양자화, dual-port RAM 2조 교대 저장, parallel multi-level 비교 파이프라인으로 비교 지연 압축.</li><li>제어: top-level FSM(INITIAL/CNU/VNU/OUTPUT), MAX_ITER=20 조기종료.</li><li>결과: Virtex-7, 204.8 MHz에서 최대 throughput 768 Mbps(rate 5/6, len 64800), LUT 54843/FF 27476, QPSK normal frame Es/N0&gt;2.8dB에서 BER&lt;10^-8.</li><li>한계: 정정능력 자체 개선 없음(표준 부호 그대로), 위성 IRA-LDPC 특화, gate count(ASIC 공정) 없음, NAND read soft 비용 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMSA CN update (min + sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum과 동일 계열 - 이미 보유, 중복</td></tr><tr><td>α=0.875 shift scaling</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>normalized factor를 shift로 대체하는 HW 트릭, 우리 scaling factor는 미확인이라 소폭 참고</td></tr><tr><td>partial-sum VNU</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>VNU에서 subtractor 제거하는 구현 디테일</td></tr><tr><td>H1/H2 double-diagonal·주소생성</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>double-diagonal은 우리 dual-diagonal과 유사, 위성 IRA 부호구조는 상이</td></tr><tr><td>부분병렬 아키텍처 (parallelism 90)</td><td>대응 없음</td><td>우리는 z=32 고정 병렬, 위성 frame 병렬화와 구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 위성 DVB-S2/S2X용 min-sum 디코더로 핵심(NMSA)은 이미 보유, 부호·채널이 위성 특화라 NAND binary QC-LDPC에 떼어 쓸 신규 요소는 shift-scaling·partial-sum 정도의 HW 디테일에 그친다.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:9824734",
+  "title": "A High-speed Satellite Internet Physical Layer LDPC Decoder Design and FPGA-based Implementation",
+  "year": 2022,
+  "venue": "ICCCAS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.889",
+  "code_length": "16200~64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "DVB-S2/S2X용 NMSA 부분병렬 QC-LDPC 디코더 FPGA 구현 (α=0.875 shift로 곱셈 대체, partial-sum VNU)",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.768,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "NMSA는 Prime ECC가 이미 보유한 min-sum과 중복, DVB 비정규 IRA LDPC·위성 특화라 NAND QC-LDPC와 부호구조 상이",
+  "todo_check": "α=0.875를 우측 shift로 대체하는 normalized scaling이 우리 magnitude 양자화 테이블에 유효한지, partial-sum VNU가 z=32 pipeline에 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9824734---a-high-speed-satellite-internet-physical-layer-ldpc-decoder-design-and-fpga-based-implementation-2022-icccas">ieee:9824734 - A High-speed Satellite Internet Physical Layer LDPC Decoder Design and FPGA-based Implementation (2022, ICCCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

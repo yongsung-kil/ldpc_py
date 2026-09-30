@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2102.05256</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv210205256v1---proximal-decoding-for-ldpc-coded-massive-mimo-channels-2021-arxiv-csit">arxiv:2102.05256v1 - Proximal Decoding for LDPC-coded Massive MIMO Channels (2021, arXiv cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>204</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>code-constraint 다항식을 정규화항으로 쓰는 proximal gradient 기반 근사 MAP 복호(gradient step + code-proximal step) — massive MIMO에서 MMSE+BP 대비 약 3dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>massive MIMO(채널행렬 A) 검출·복호 결합 전용 — memoryless NAND엔 이점 소멸(gradient step이 A^T(As-y) 기반). γ,ω 튜닝 민감, HW 미설계</td></tr><tr><td>추가확인</td><td>code-proximal step(GDBF류 penalty gradient)만 memoryless AWGN LDPC에 떼어내 min-sum 대비 이득이 있는지</td></tr></tbody></table>
+<blockquote><p>총평: MIMO 검출과 LDPC 복호를 proximal gradient로 통합한 최적화형 복호 — massive MIMO 채널행렬 의존이 핵심이라 memoryless NAND QC-LDPC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC-coded massive MIMO(<code>y=Ax+w</code>, Kronecker 상관 채널), QPSK→실수 BPSK 등가, (3,6)-regular LDPC <code>n=204, m=102</code>(rate 0.5).</li><li>풀려는 문제: memoryless 가정의 BP는 채널메모리/MIMO 검출에 비자명 — 검출+복호를 하나의 최적화로 풀고자 함.</li><li>핵심 가정: prior를 <code>p(x)∝exp(-γh(x))</code>로 두면 <code>γ→∞</code>에서 코드워드 집합 delta로 수렴 → 근사 MAP <code>argmin[L(x;y)+γh(x)]</code>.</li><li>핵심 기법: code-constraint 다항식 <code>h(x)=Σ(xj²-1)² + Σ(∏_{j∈A(i)}xj -1)²</code>(bipolar+parity, SOS형, <code>h≥0</code> 등호⟺코드워드)를 정규화항으로 사용.</li><li>핵심 식: proximal 반복 <code>r=s-ω∇L</code>, <code>s=Pγ(r)=r-γ∇h(r)</code> — ISTA의 code 버전. code-proximal operator가 pull-in property로 코드워드로 끌어당김.</li><li>확장: MIMO 특화 gradient <code>∇L∝Aᵀ(As-y)</code>, box projection <code>Πη</code>(η=1.5)로 수치 불안정(∇h 발산) 억제.</li><li>구현 디테일: <code>∇h</code> 계산이 <code>Q(i)=∏xj</code> 기반 O(n+k), LDPC면 O(n)로 BP와 동급 복잡도.</li><li>학습 가능성: 모든 subprocess가 미분가능 → deep unfolding으로 γ,ω 튜닝 가능(future work).</li><li>결과: ρ=0.4에서 BER=1e-4 기준 MMSE+BP 대비 약 3dB 이득, MMSE 대비 수렴 빠름·saturated error 낮음.</li><li>한계: massive MIMO 검출 전용(A 행렬 의존), HW/throughput/양자화 없음, γ 선택에 성능 민감(γ=0.05 heuristic).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| proximal/code-proximal 반복 복호 | decoder.cpp LDPC_Decoder() | 복호 루프 위치는 대응하나 gradient기반 최적화라 min-sum 메시지패싱과 알고리즘 이질적 |
+| code-constraint 다항식 ∇h (parity penalty gradient) | decoder.cpp CNU_Update_New_Mag() | CN 연산에 대응 개념이나 GDBF류 실수 gradient — HW min-sum과 부정합 |
+| gradient step Aᵀ(As-y) (MIMO 검출) | 대응 없음 | Prime ECC는 memoryless NAND 채널 — MIMO 채널행렬 검출 단계 없음 |
+| soft LLR / 초기값 y | channel.cpp Set_LLR_Th() | 입력 soft값 개념 대응뿐, NAND soft-read 양자화 논의 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — proximal decoding의 이득이 MIMO 채널행렬 <code>A</code>와의 결합 검출에서 나오며 memoryless NAND에선 그 핵심이 소멸. code-proximal(GDBF penalty) 부분만이 이론적 후보이나 실수 gradient라 min-sum HW와 이질적이고 HW 미설계.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2102.05256v1",
+  "title": "Proximal Decoding for LDPC-coded Massive MIMO Channels",
+  "year": 2021,
+  "venue": "arXiv cs.IT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "204",
+  "soft_quant": "무관",
+  "key_contribution": "code-constraint 다항식 정규화 기반 proximal gradient 근사 MAP 복호, massive MIMO에서 MMSE+BP 대비 약 3dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "massive MIMO 검출·복호 결합 전용 — memoryless NAND엔 이점 소멸(gradient step이 Aᵀ(As-y) 기반), γ·ω 튜닝 민감, HW 미설계",
+  "todo_check": "code-proximal step(GDBF류 penalty gradient)만 memoryless AWGN LDPC에 떼어내 min-sum 대비 이득이 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv210205256v1---proximal-decoding-for-ldpc-coded-massive-mimo-channels-2021-arxiv-csit">arxiv:2102.05256v1 - Proximal Decoding for LDPC-coded Massive MIMO Channels (2021, arXiv cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

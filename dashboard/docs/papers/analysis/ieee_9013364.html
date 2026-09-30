@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9013364</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9013364---finite-alphabet-iterative-decoding-of-ldpc-codes-with-coarsely-quantized-neural-networks-2019-isitieee">ieee:9013364 - Finite alphabet iterative decoding of LDPC codes with coarsely quantized neural networks (2019, ISIT/IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>STE 기반 QNN으로 3bit 메시지 FAID LUT를 오프라인 학습, float MS 대비 0.2dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>학습으로 iteration별 LUT 생성 - 오프라인 학습·regular 가정·짧은/중길이 부호 시뮬만, HW/gate/throughput 없음</td></tr><tr><td>추가확인</td><td>학습된 iteration-dependent LUT의 HW 오버헤드·고rate NAND QC-LDPC로의 재학습 필요성 확인</td></tr></tbody></table>
+<blockquote><p>총평: QNN+STE로 3bit/4bit FAID LUT를 자동 학습해 float MS를 0.2dB 능가하는 오프라인 설계법. 최종 산출물이 iteration별 정수 LUT라 이식 가능성은 있으나 부호별 재학습·HW 미검증이 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: LDPC FAID를 QNN으로 설계, 예제는 Tanner code <code>(155,64)</code>와 QC-LDPC <code>(1296,972)</code> rate 0.75, BPSK/AWGN, 최대 5 iteration.</li><li>문제: BP/MS를 학습하는 기존 DNN 디코더는 floating-point weight라 HW에 부적합, 저정밀 activation은 gradient가 거의 0이라 backprop 불가.</li><li>모델: Tanner graph를 "펼친" QNN - 3 hidden layer가 1 iteration(VN update/CN update/likelihood 추정), 각 뉴런=edge 또는 VN.</li><li>핵심기법: activation 갱신규칙 <code>Φ</code>(VN), <code>Ψ</code>(CN=min-sum), <code>Υ</code>를 MS에서 취하고 양자화기 <code>Qmsg</code>(bmsg-bit), <code>Qc</code>(bc-bit)로 저정밀화(식1). weight/bias는 full precision.</li><li>핵심 트릭: 저정밀 activation의 zero-gradient 문제를 straight-through estimator(STE)로 해결 - <code>∂Qmsg/∂Φ</code>를 clipped-ReLU STE(식12,14), sign은 sigmoid계 STE(식13,15)로 대체.</li><li>양자화기: <code>Qc</code>는 MI 최대화로 설계(식4), <code>Qmsg</code>는 <code>Ac</code>의 대칭 부분집합 + 스칼라 <code>Smsg</code>로 threshold 유도(식5).</li><li>목적함수: BCE 대신 실제 BER(Hamming, 식8)을 최소화 - BCE 최소가 BER 최소를 보장 못함을 반례로 증명.</li><li>학습: all-zero codeword 가정(대칭성), ADAM+mini-batch, gradient는 full precision 누적, 학습은 오프라인.</li><li>산출물: 학습된 <code>{W(3ℓ),b(3ℓ)}</code>로 iteration별 갱신규칙 <code>f(ℓ),g(ℓ)</code>를 정수 LUT로 구현(식6,7) → FAID. regular이면 weight 공유로 파라미터 축소.</li><li>결과: 3bit 메시지/4bit 채널 FAID가 5 iteration 내 float MS 및 4bit MS 대비 평균 0.2dB coding gain(Fig.2,3). HW 미설계, gate/throughput 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 갱신(<code>Ψ</code>=min-sum)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>학습 산출물이 min-sum 기반 CN이라 대응</td></tr><tr><td>VN 갱신/양자화(<code>Φ</code>,<code>Qmsg</code>)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>3bit 메시지 VN 처리·양자화로 대응</td></tr><tr><td>iteration별 LUT <code>f(ℓ)</code>/<code>g(ℓ)</code></td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 테이블 참조 구조와 정합, 학습 결과 주입 지점</td></tr><tr><td>채널 양자화기 <code>Qc</code>(MI 최대화)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>AWGN soft-read LLR threshold 설계에 대응</td></tr><tr><td>QNN/STE 학습 프레임워크</td><td>대응 없음</td><td>오프라인 학습 파이프라인은 코드베이스에 없음</td></tr><tr><td>전체 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 통합점</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 최종 산출물이 min-sum 기반 iteration별 정수 LUT라 Prime ECC의 LLR 테이블 구조에 원리상 주입 가능하나, QNN 학습 인프라가 별도로 필요하고 부호별 재학습·고rate QC-LDPC 미검증·HW 미설계라 즉시 이식은 아님.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9013364",
+  "title": "Finite alphabet iterative decoding of LDPC codes with coarsely quantized neural networks",
+  "year": 2019,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.75,
+  "code_length": "1296",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "STE 기반 QNN으로 3bit 메시지 FAID LUT를 오프라인 학습, float MS 대비 0.2dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "학습으로 iteration별 LUT 생성 - 오프라인 학습·regular 가정·짧은/중길이 부호 시뮬만, HW/gate/throughput 없음",
+  "todo_check": "학습된 iteration-dependent LUT의 HW 오버헤드·고rate NAND QC-LDPC로의 재학습 필요성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9013364---finite-alphabet-iterative-decoding-of-ldpc-codes-with-coarsely-quantized-neural-networks-2019-isitieee">ieee:9013364 - Finite alphabet iterative decoding of LDPC codes with coarsely quantized neural networks (2019, ISIT/IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4632040</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4632040---efficient-code-construction-of-3-k-regular-ldpc-codes-2008-ieee">ieee:4632040 - Efficient Code Construction of (3, k) Regular LDPC Codes (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.75</td></tr><tr><td>부호length</td><td>160~480</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>결정적 근사 하삼각 parity part(Hp)+랜덤 info part(Hi)로 전처리 없는 선형시간 인코딩과 가변 rate 지원</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>HW 미설계, 저rate(≤3/4)·단부호(&lt;500b), 인코딩 복잡도 중심 — Prime의 dual-diagonal 인코더와 중복</td></tr><tr><td>추가확인</td><td>고rate(~0.9)/L1 대형 확장 시 girth-6 유지 여부와 실제 BER(제시 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 결정적 Hp + 랜덤 Hi 조합으로 전처리 없는 QC 계열 (3,k) regular 부호를 구성하는 인코딩 편의형 논문으로, 저rate·단부호·HW 부재라 Prime ECC 관점 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(3, k)</code> regular LDPC, <code>H = [Hi | Hp]</code>, <code>j=3</code>(열 무게), rate <code>R = 1 - j/k</code>, BPSK/AWGN.</li><li>문제: G 행렬 방식은 조밀해져 <code>O(N^2)</code> 인코딩, Richardson-Urbanke는 전처리(<code>O(N^3)</code>)로 하삼각화 필요 — 전처리 제거가 목표.</li><li>parity part <code>Hp</code>: <code>(15x15)</code> triple-diagonal base matrix를 제약조건(행/열당 1의 개수=3)으로 결정적 구성 → 근사 하삼각.</li><li>base matrix를 1차 확장인자 <code>L</code>로 <code>(LxL)</code> 순환 이동(RCS <code>((x-1)*y) mod L</code>) shift-identity로 확장 → circulant(QC) 구조.</li><li>info part <code>Hi</code>: <code>(ZxZ)</code> identity를 랜덤 RCS(<code>Z=(Base*L)/j</code>)로 배치, 열당 sub-matrix 3개 유지, girth-4 회피로 girth&gt;=6 보장.</li><li>rate 가변: 행 수(=<code>Z*j</code>) 고정, <code>Hi</code>의 열 개수(<code>ki</code>)만 변경 → <code>(3,4)(3,6)(3,8)(3,12)</code> = rate 1/4,1/2,5/8,3/4.</li><li>2차 확장인자 <code>L1</code>로 <code>H</code>를 <code>(L1xL1)</code> identity 스케일 → 수백만 bit까지 길이 확장 가능(시뮬은 미실시).</li><li>인코딩: RU actual-encoding step만 사용, <code>Phi=-ET^-1B+D</code>로 <code>p1,p2</code> 계산, <code>g=2L</code>, 복잡도 <code>O(N)+O(g^2)</code>.</li><li>결과: sum-product(50 iter), 10,000 trial. rate 3/4에서 RA LDPC 대비 BLER 1e-5 지점 0.272 dB, rate 1/4에서 0.512 dB 개선.</li><li>한계: HW 설계 없음, 저rate·단부호(&lt;500b) 시뮬만, error-floor·양자화·throughput 미분석.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>H-matrix/QC 부호구조 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>base+circulant 구성은 유사하나 Prime은 특정 고rate QC-LDPC 고정, 재검증 부담 큼</td></tr><tr><td>근사 하삼각 인코딩/부호 PCM</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>전처리 없는 선형 인코딩 목표는 Prime의 dual-diagonal 인코더와 기능 중복</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 저rate(&lt;=3/4)·단부호 QC regular 구성법이고 인코딩 편의는 Prime이 이미 dual-diagonal로 보유, 고rate NAND ECC와 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4632040",
+  "title": "Efficient Code Construction of (3, k) Regular LDPC Codes",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.75",
+  "code_length": "160~480",
+  "soft_quant": "무관",
+  "key_contribution": "결정적 근사 하삼각 parity part(Hp)+랜덤 info part(Hi)로 전처리 없는 선형시간 인코딩과 가변 rate 지원",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "HW 미설계, 저rate(&lt;=3/4)·단부호(&lt;500b), 인코딩 복잡도 중심 — Prime의 dual-diagonal 인코더와 중복",
+  "todo_check": "고rate(~0.9)/L1 대형 확장 시 girth-6 유지 여부와 실제 BER(제시 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4632040---efficient-code-construction-of-3-k-regular-ldpc-codes-2008-ieee">ieee:4632040 - Efficient Code Construction of (3, k) Regular LDPC Codes (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

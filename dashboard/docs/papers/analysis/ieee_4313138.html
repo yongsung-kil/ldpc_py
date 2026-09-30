@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4313138</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4313138---functions-and-architectures-for-ldpc-decoding-2007-itw">ieee:4313138 - Functions and Architectures for LDPC Decoding (2007, ITW)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>1/3~1/2</td></tr><tr><td>부호length</td><td>12</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check node의 dc개 고유 extrinsic 메시지를 최소 연산(3(dc-2))으로 계산하는 Min*/Approximate-Min*-BP 알고리즘과, structured/universal 메시지 패싱 HW 아키텍처(Type-I/Type-II) 제시</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>Approximate-Min*-BP는 SNR 추정 필요(Min* 의존), 예제는 소규모 protograph/(dv=3,dc=6) regular 중심</td></tr><tr><td>추가확인</td><td>Type-I/Type-II 유니버설 아키텍처의 memory partitioning·crossbar 복잡도가 Prime ECC의 z=32 lifting 구조와 어떻게 매핑되는지</td></tr></tbody></table>
+<blockquote><p>총평: check node extrinsic 계산 최적화(Min*/Approximate-Min*-BP)와 유니버설 디코더 메모리 아키텍처를 다뤄 min-sum 대체 알고리즘과 HW 매핑 모두에서 Prime ECC 디코더/HW 레이어와 접점이 크다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC Tanner graph에서 각 반복마다 variable node(VN)/check node(CN)가 LLR 메시지 <code>u</code>(VN→), <code>v</code>(→CN), <code>U</code>(CN→), <code>V</code>(→VN)를 주고받는 belief propagation 구조.</li><li>문제: check node에서 degree <code>dc</code>개의 고유 extrinsic 메시지 <code>U_i</code>를 계산할 때 <code>Λ_lnBP(v)</code> 함수의 동적범위가 [0,∞]로 넓어 근사가 어려움.</li><li>Jacobian 로그 항등식을 두 번 적용해 <code>Λ_BP*(v1,v2) = sgn(v1)sgn(v2)Min*(v1,v2)</code> 형태의 <strong>Min* 재귀</strong>를 유도(근사 아님, 정확식).</li><li>핵심 기법 1단: <code>Min*(v1,v2) = min(|v1|,|v2|) + ln(1+e^-(|v1|+|v2|)) - ln(1+e^-||v1|-|v2||)</code> — 함수값 범위가 [0,ln2]로 좁아 근사가 쉬움(single/double-line 근사 가능, Fig.1).</li><li>역연산자가 없는 비선형 연산에서 <code>dc</code>개 출력을 <code>dc(dc-2)</code>가 아닌 <strong>3(dc-2) 연산</strong>으로 계산하는 최적 알고리즘 A*(dc)(오름차순/내림차순 누적 후 결합) 제시, 이 하한이 최적임을 증명.</li><li>핵심 기법 2단(축소형): BP-Based(최소/차소값만 이용, 최대 1dB 손실, <code>Offset-BP-Based</code>로 0.1~0.2dB로 개선)와 Approximate-Min*-BP(가장 약한 edge만 정확 계산, 0.05dB 미만 손실, SNR 추정 필요) 두 저복잡도 근사.</li><li>부수 구현: CNP는 sign-magnitude, VNP는 2's-complement 표현 사용, 두 표현 간 변환블록 필요, LUT 기반 <code>Λ_lnBP</code> 구현.</li><li>HW 아키텍처: (a) protograph 기반 structured 디코더(edge당 memory+cyclic shift, switch matrix 불필요), (b) Type-I universal 아키텍처(H를 N×M 서브행렬로 분할, row/column permutation으로 memory load balancing, 불규칙 코드는 degree별 정렬로 idle time 최소화), (c) Type-II universal 아키텍처(block column당 edge 수를 균등화해 idle time 원천 차단, <code>4L</code>개 RAM과 <code>L^2</code> 크로스바로 column↔row interleaving).</li><li>결과: Approximate-Min*-BP는 Full-BP 대비 0.05dB 미만 손실(JPL FPGA 실측 확인), Type-II는 L=16까지 병렬화 달성, throughput ∝ <code>N(FL/2EI)</code>.</li><li>한계: 실제 gate count/throughput 수치는 본문에 명시 안 됨(예제 코드도 소규모), Approximate-Min*-BP는 SNR 추정 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min*/Approximate-Min*-BP (check node extrinsic 계산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 min-sum(0th-order 근사) 사용 중 — Min*/Approximate-Min*-BP는 그보다 정확한 대안으로 이식 시 min-sum 대체 검토 가능</td></tr><tr><td>3(dc-2) 최적 extrinsic 계산 알고리즘</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>CN 연산 스케줄링 최적화와 직결, 낮은 이식 난이도</td></tr><tr><td>Type-I/II universal decoder memory partitioning</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>Prime ECC는 QC-LDPC 고정 lifting(z_sb=32) 구조라 universal 아키텍처 자체보다는 memory balancing 아이디어만 참고 가능</td></tr><tr><td>protograph 기반 structured 디코더(cyclic shift, no switch matrix)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC도 QC-LDPC(circulant shift) 구조라 개념적으로 이미 유사 구현 보유</td></tr><tr><td>sign-magnitude/2's-complement 변환</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>이미 유사 표현 방식 사용 중, 대응 확인 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — check node 연산 최적화(Min*/Approximate-Min*-BP)가 Prime ECC의 min-sum 디코더 핵심 루프에 직접 대체 가능한 대안이며, 3(dc-2) 최적 스케줄링도 CN 연산 저복잡도화에 참고 가치가 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4313138",
+  "title": "Functions and Architectures for LDPC Decoding",
+  "year": 2007,
+  "venue": "ITW",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "1/3~1/2",
+  "code_length": "12",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check node의 dc개 고유 extrinsic 메시지를 최소 연산(3(dc-2))으로 계산하는 Min*/Approximate-Min*-BP 알고리즘과, structured/universal 메시지 패싱 HW 아키텍처(Type-I/Type-II) 제시",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "Approximate-Min*-BP는 SNR 추정 필요(Min* 의존), 예제는 소규모 protograph/(dv=3,dc=6) regular 중심",
+  "todo_check": "Type-I/Type-II 유니버설 아키텍처의 memory partitioning·crossbar 복잡도가 Prime ECC의 z=32 lifting 구조와 어떻게 매핑되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4313138---functions-and-architectures-for-ldpc-decoding-2007-itw">ieee:4313138 - Functions and Architectures for LDPC Decoding (2007, ITW)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

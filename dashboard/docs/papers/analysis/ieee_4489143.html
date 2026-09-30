@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4489143</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4489143---recfec-a-reconfigurable-fec-processor-for-viterbi-turbo-reed-solomon-and-ldpc-coding-2008-wcnc">ieee:4489143 - RECFEC: A Reconfigurable FEC Processor for Viterbi, Turbo, Reed-Solomon and LDPC Coding (2008, WCNC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>576~1056</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Viterbi/Turbo/RS/LDPC 4종 FEC를 단일 8×8 SIMD PE array에 SW 매핑하는 재구성형 프로세서</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.058~0.355Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>다중표준 재구성형 범용 FEC 프로세서라 전용 고정 파이프라인 NAND ECC와 설계철학 상반, LDPC부는 교과서 sum-product</td></tr><tr><td>추가확인</td><td>4-bit message resolution·DB selection network 인터리빙 정도만 참고 가능, gate count·QC 구조 미제시</td></tr></tbody></table>
+<blockquote><p>총평: 4종 FEC를 SIMD PE array로 통합하는 무선용 재구성형 프로세서로, LDPC 알고리즘 자체 신규성 없어 전용 NAND QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 8×8=64개 동종 PE(SIMD/MIMD) pool + PE 컨트롤러(32-bit RISC) + Data/Config Buffer로 구성된 재구성형 FEC 프로세서, 8~16bit 데이터패스.</li><li>문제: 표준마다 다른 FEC(polynomial/블록크기/rate/termination)를 별도 ASIC coprocessor로 두는 관행 → 프로그래머블 다중표준 엔진으로 대체.</li><li>PE 구성: 각 PE에 ALU, ACS(Viterbi/Turbo용 Max/Max*), GF accelerator(RS용 8차 다항식), 16B LUT 탑재.</li><li>LDPC 매핑: 64 PE를 변수노드/검사노드로 교대 구성해 message passing 수행, 노드 수가 64 배수일 때 최대 병렬.</li><li>검사노드 연산: <code>φ(x)=-ln(tanh(x/2))</code> 비선형 함수를 LUT로 구현(sum-product), variable node는 ALU로 계산.</li><li>종료: 최대 iteration(20) 도달 or 모든 parity check 만족 시 hard decision.</li><li>데이터 라우팅: Data Buffer 64 memory bank + 2단 MUX selection network로 임의 permutation/interleaving/data shuffling 지원(인터리버를 Config Table로 로드).</li><li>부호: WiMAX/DVB-S2 H-matrix 사용(288×576, 528×1056, 704×1056; max row/col degree 4/7; 20 iter; 4-bit message resolution).</li><li>결과: LDPC throughput 355/85/58 Mbps(행렬별), TSMC 90nm RTL 합성 시 PE당 전력 3.1mW, 고정 WiMAX(70Mbps) 요구 충족.</li><li>한계: LDPC 알고리즘 신규성 없음(표준 sum-product), gate count 미제시, 64 PE 제약으로 부분 병렬, 무선표준 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PE를 VN/CN으로 교대 구성한 message passing</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적 대응뿐, Prime ECC는 SIMD array 아닌 고정 6-stage 파이프라인</td></tr><tr><td>검사노드 <code>φ(x)=-ln(tanh(x/2))</code> sum-product LUT</td><td>대응 없음</td><td>Prime ECC는 min-sum(<code>CNU_Update_New_Mag()</code>)으로 대체 이미 보유, full-tanh SP는 역행</td></tr><tr><td>4-bit message resolution / soft 입력</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>양자화 개념만 겹침, NAND read 레벨과 무관한 무선 soft</td></tr><tr><td>DB selection network(permutation/interleaving 라우팅)</td><td>대응 없음</td><td>Prime ECC 고정 z=32 병렬·GT 구조와 다른 범용 SIMD 라우팅</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 다중표준 재구성형 프로세서로 LDPC부는 표준 sum-product를 범용 PE array에 얹은 것뿐이고, 전용 고정 NAND QC-LDPC 엔진과 설계철학이 반대라 떼어 쓸 알고리즘 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4489143",
+  "title": "RECFEC: A Reconfigurable FEC Processor for Viterbi, Turbo, Reed-Solomon and LDPC Coding",
+  "year": 2008,
+  "venue": "WCNC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "576~1056",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Viterbi/Turbo/RS/LDPC 4종 FEC를 단일 8×8 SIMD PE array에 SW 매핑하는 재구성형 프로세서",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "다중표준 재구성형 범용 FEC 프로세서라 전용 고정 파이프라인 NAND ECC와 설계철학 상반, LDPC부는 교과서 sum-product",
+  "todo_check": "4-bit message resolution·DB selection network 인터리빙 정도만 참고 가능, gate count·QC 구조 미제시"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4489143---recfec-a-reconfigurable-fec-processor-for-viterbi-turbo-reed-solomon-and-ldpc-coding-2008-wcnc">ieee:4489143 - RECFEC: A Reconfigurable FEC Processor for Viterbi, Turbo, Reed-Solomon and LDPC Coding (2008, WCNC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

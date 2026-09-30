@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4557569</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4557569---tail-biting-ldpc-convolutional-codes-2007-isit">ieee_4557569 - Tail-Biting LDPC Convolutional Codes (2007, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048~10240</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>syndrome former를 wrapping하여 rate-loss 없는 tail-biting LDPC convolutional code를 정의하고 circular pipeline decoder를 제시</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>non-binary가 아니라 binary(3,6) regular임에도 convolutional 부호 구조 자체가 Prime ECC(QC-LDPC block code)와 근본적으로 다름</td></tr><tr><td>추가확인</td><td>논문 내 정확한 rate 표기가 텍스트 손상으로 명확치 않아 R=1/2로만 서술됨을 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: LDPC convolutional code(SC-LDPC)의 tail-biting 변형을 제안한 이론 논문으로, QC-LDPC 블록 부호인 Prime ECC와 부호 구조 자체가 달라 이식 실익이 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Rate <code>R=1/2</code>, regular <code>(3,6)</code> LDPC convolutional code(LDPCCC)의 syndrome former <code>H^T</code> 마지막 <code>m_s</code> 열을 wrapping하여 tail-biting 버전(TB-LDPCCC)을 정의.</li><li>문제의식: zero-tail termination은 짧은 프레임에서 rate loss가 크므로, tail-biting으로 이 손실을 회피.</li><li>채널 모델은 AWGN + BPSK, 별도 NAND/플래시 특화 모델 없음.</li><li>인코딩은 <code>[H^(1)]^T</code>가 full-rank일 때 <code>N x N</code> 역행렬 <code>G_[0,N-1]</code>을 사전 계산해 <code>v = u H^(0) G</code> 형태의 선형 행렬곱으로 수행 (복잡도 <code>O(N^2)</code>).</li><li>디코딩은 circular pipeline decoder로, <code>I_p</code>개의 동일한 병렬 프로세서 <code>D_i</code>가 memory section을 hop하며 belief propagation(sum-product, <code>tanh</code> 기반 LLR 업데이트 식 (11))을 수행.</li><li>tail-biting 구조 특성상 최소거리 <code>d_min</code>은 mother LDPCCC의 free distance <code>d_free</code>와 Gallager bound(<code>α_G(J,K)</code>) 중 작은 값으로 하한(Theorem 2, 식 (15)).</li><li>부수 디테일: 모든 병렬 프로세서가 동일 구조라 HW 설계가 단순화된다고 서술(구체 게이트/합성 결과 없음).</li><li>최적화 절차 없음 (구성법은 unwrapping 절차 재사용, [3] 인용).</li><li>결과: 블록길이 μ=2048~10240에서 TB-LDPCCC가 동일 조건 random LDPC block code(LDPCBC)와 유사하거나 일부 구간(μ=2048, μ=10240)에서 error-floor 회피로 소폭 우수. HW 복잡도 관점에서 동등 복잡도의 LDPCBC는 TB-LDPCCC보다 5~20배 더 큰 블록길이가 필요하다고 주장.</li><li>한계: 시뮬레이션(AWGN, max 50 iteration)뿐이며 실제 HW 설계·게이트카운트·throughput 없음. irregular TB-LDPCCC 및 VLSI 설계는 future work로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>circular pipeline decoder (belief propagation, sum-product)</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 QC-LDPC 블록 디코더이며 convolutional 구조의 circular pipeline과 근본 구조가 다름</td></tr><tr><td>tail-biting 부호 구성 (syndrome former wrapping)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 구성 자체가 SC-LDPC 방식이라 이식 난이도 높음, 매우 낮은 관련성</td></tr><tr><td>최소거리 하한(Theorem 1,2)</td><td>대응 없음</td><td>순수 이론적 결과로 코드 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — convolutional 부호 구조와 sum-product(tanh) 기반 디코더로 Prime ECC의 QC-LDPC/min-sum 아키텍처와 직접 대응되지 않으며, HW 검증도 없는 순수 이론/시뮬 논문.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4557569",
+  "title": "Tail-Biting LDPC Convolutional Codes",
+  "year": 2007,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "2048~10240",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "syndrome former를 wrapping하여 rate-loss 없는 tail-biting LDPC convolutional code를 정의하고 circular pipeline decoder를 제시",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "convolutional 부호 구조 자체가 Prime ECC(QC-LDPC block code)와 근본적으로 다름",
+  "todo_check": "논문 내 정확한 rate 표기가 텍스트 손상으로 명확치 않아 R=1/2로만 서술됨을 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4557569---tail-biting-ldpc-convolutional-codes-2007-isit">ieee_4557569 - Tail-Biting LDPC Convolutional Codes (2007, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

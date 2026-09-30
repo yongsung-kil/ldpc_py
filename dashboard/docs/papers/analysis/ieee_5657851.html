@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5657851</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5657851---performance-optimization-of-ldpc-codes-using-selective-coding-approach-and-beacon-parity-check-matrix-2010-ic-nidc">ieee:5657851 - Performance Optimization of LDPC Codes Using Selective Coding Approach and Beacon Parity Check Matrix (2010, IC-NIDC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>100</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>채널상태 추정용 beacon matrix로 프레임별 선택적 encoding/decoding(무부호 전송) 수행</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선(WSN·voice/video) 대역폭/지연 최적화 프로토콜; 채널이 변하면 무부호 프레임 손실 위험, NAND 무관</td></tr><tr><td>추가확인</td><td>beacon message 오류 복구·정확도 open issue 미해결, 정정능력 자체 개선 아님</td></tr></tbody></table>
+<blockquote><p>총평: 채널상태에 따라 프레임을 선택적으로 부호화/복호하는 시스템 레벨 대역폭·지연 최적화 아이디어로, NAND binary LDPC 부호설계·디코더에 떼어 쓸 요소가 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 무선(WSN·실시간 voice/video)용 rate 0.5 short LDPC(<code>n=100</code>, BPSK), AWGN 채널.</li><li>문제 의식: AWGN 채널이 항상 나쁘지 않은데 모든 프레임을 부호화하면 대역폭(parity)·복호지연 낭비.</li><li>제안1(선택적 인코딩): 최근 몇(예:4) 프레임이 무오류로 수신되면 다음 프레임은 무부호 전송해 <code>i/2%</code> 대역폭 절감.</li><li>제안2(선택적 디코딩): 채널이 좋다고 판단되면 codeword의 parity 부분을 버리고 message 부분만 취해 복잡한 iterative 복호 회피.</li><li>제안3(가변 길이): 채널 상태에 따라 codeword 길이(=PCM 차원)를 변경, 인코더/디코더가 다중 PCM 동시 처리 지원 필요.</li><li>핵심 도구 beacon matrix <code>H=[I | I]</code>(rate 0.5): Tanner graph에 cycle이 없고 좌·우가 동일 identity라 parity가 message의 복제본이 됨.</li><li>원리: 수신단에서 <code>ci == c_{i+k}</code> 비교로 채널상태를 추정(단일 프레임 내 채널 불변 가정), 이 beacon으로 선택적 코딩 여부 결정.</li><li>복호 실패 자연 선언·iteration 수 변동을 채널 posterior 확률 신호로 활용.</li><li>결과: Matlab 시뮬(1000 프레임)에서 3가지 방식(최근결과 기반/beacon 기반/선택복호 추가) 모두 conventional 대비 BER 개선 및 복호시간 감소(정량 수치 본문 서술 없음).</li><li>한계: 무부호 손실 프레임 복구·beacon 오류 처리 등 open issue 미해결, HW 미설계, 정정능력 자체 향상 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>beacon matrix `[I</td><td>I]` / 선택적 인코딩</td><td>대응 없음</td><td>프로토콜 레벨 스킴, 우리 인코더/디코더 이터레이션과 무관</td></tr><tr><td>채널상태 추정으로 복호 생략</td><td>대응 없음</td><td>NAND는 프레임 선택적 무부호 전송 개념 자체가 부적용</td></tr><tr><td>가변 codeword 길이(다중 PCM)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>억지 연결에 불과, 우리는 고정 QC-LDPC PCM 사용</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 무선 대역폭/지연 절감을 위한 채널적응 전송 프로토콜로, NAND binary QC-LDPC 부호설계·디코더 알고리즘·HW 어느 레이어에도 이식할 기법이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5657851",
+  "title": "Performance Optimization of LDPC Codes Using Selective Coding Approach and Beacon Parity Check Matrix",
+  "year": 2010,
+  "venue": "IC-NIDC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "100",
+  "soft_quant": "무관",
+  "key_contribution": "채널상태 추정용 beacon matrix로 프레임별 선택적 encoding/decoding(무부호 전송) 수행",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무선 대역폭/지연 최적화 프로토콜; 채널 변동 시 무부호 프레임 손실 위험, NAND 무관",
+  "todo_check": "beacon message 오류 복구·정확도 open issue, 정정능력 자체 개선 아님"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5657851---performance-optimization-of-ldpc-codes-using-selective-coding-approach-and-beacon-parity-check-matrix-2010-ic-nidc">ieee:5657851 - Performance Optimization of LDPC Codes Using Selective Coding Approach and Beacon Parity Check Matrix (2010, IC-NIDC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

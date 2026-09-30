@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1359421</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1359421---the-effect-of-noise-estimation-error-on-the-ldpc-decoding-performance-2004-iccs-2004">ieee:1359421 - The Effect of Noise Estimation Error on the LDPC Decoding Performance (2004, ICCS 2004)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>192</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Log-MAP LDPC 복호에서 채널신뢰도 Lc를 {1,2,4} 이산값으로 근사해 bit-shifting(곱셈 제거)으로 처리하고, 입력/edge/LLR 양자화 비트와 noise variance 추정오차 허용범위를 시뮬로 결정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>소형 (192,96) rate-1/2 regular 부호, AWGN/QPSK 가정, HW 미제작(향후 FPGA), 표/그림 손상으로 수치 일부 불명확</td></tr><tr><td>추가확인</td><td>Table1의 Lc 이산화·noise 추정오차 허용범위(0.8σ~1.15σ)가 NAND soft-read LLR 양자화 정책에 재사용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 입력/LLR 양자화 비트수와 noise variance 추정오차 허용범위를 시뮬로 정하고 Lc를 2의 거듭제곱으로 근사해 bit-shift 처리하는 실무적 연구지만, 소형 regular 부호·AWGN 가정·HW 미설계라 이식 가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>rate-1/2 regular LDPC(예시 (192,96), row weight 6, column weight 3)를 QPSK/AWGN 채널에서 다룬다.</li><li>문제: LDPC 복호의 입력 양자화 비트수는 HW 복잡도와 BER 사이 trade-off로 정해야 하고, 채널신뢰도 <code>Lc=2/σ²</code>를 Log-MAP 복호에 넣는 방식이 복잡도·성능에 큰 영향을 준다.</li><li>복호는 log-domain sum-product: 초기화 <code>Lq_{n→m}=Lc·r_n</code>, check node update는 <code>Φ=Σ ln tanh(Lq/2)</code>를 LUT로 계산, bit node update는 <code>Lq=Lin+ΣLr</code>.</li><li>핵심 트릭1: <code>Lc</code>를 부동소수 대신 {1,2,4,...} 이산값으로 근사하면 곱셈을 좌측 shift(<code>&lt;&lt;L*</code>)로 대체 가능 → HW 곱셈기 제거(bit-shifting).</li><li>Table 1: 추정 표준편차 σ*의 범위별로 Lc*와 shift량 L*를 non-uniform quantization으로 매핑.</li><li>핵심 트릭2/분석: noise variance 추정오차를 <code>σ*=X·σ</code>로 두고 X를 스캔, BER 열화가 무시되는 범위가 X∈[0.8, 1.15]임을 Monte-Carlo로 확인(Eb/N0=0,1,2dB).</li><li>양자화 파라미터 튜닝: 입력 n비트, bit-shift 후 m비트, edge metric r/q, LLR L 비트를 스윕.</li><li>결과: <code>(n=6, m=8, r=8, q=8, L=8)</code> 조합이 float 시뮬과 거의 동일한 BER; 최적 파라미터 표(입력 6bit, 나머지 8bit) 제시.</li><li>Lc를 이산화해도 σ* 오차가 허용범위 내면 성능 열화 없음.</li><li>한계: HW 미제작(향후 FPGA 목표), 소형 regular 부호·AWGN·QPSK 가정, 그림/표 OCR 손상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>입력/edge/LLR 양자화 비트 결정</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등 / ecc_data.h LLR 파라미터</td><td>양자화 정책 참고 가능하나 Prime ECC는 magnitude 양자화 테이블 이미 보유</td></tr><tr><td>Lc 이산화·noise variance→LLR 매핑</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-read threshold/LLR 스케일 설정과 개념적 대응</td></tr><tr><td>check node ln-tanh LUT</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 min-sum이라 tanh LUT 미사용, 직접 이식 대상 아님</td></tr><tr><td>iteration별 LLR 테이블</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>Prime ECC의 적응형 LLR 테이블이 더 정교, 신규성 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 양자화 비트·noise 추정오차 허용범위 결정이라는 실무 감각은 참고되나, Prime ECC는 이미 LLR 양자화 테이블/적응형 LLR을 보유하고 tanh 대신 min-sum을 쓰므로 떼어낼 신규 요소가 거의 없다.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:1359421",
+  "title": "The Effect of Noise Estimation Error on the LDPC Decoding Performance",
+  "year": 2004,
+  "venue": "ICCS 2004",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "192",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Lc를 {1,2,4} 이산값으로 근사해 bit-shift로 처리하고 입력/LLR 양자화 비트와 noise variance 추정오차 허용범위를 시뮬로 결정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "소형 (192,96) rate-1/2 regular 부호, AWGN/QPSK 가정, HW 미제작(향후 FPGA), 표/그림 손상",
+  "todo_check": "Lc 이산화·noise 추정오차 허용범위(0.8σ~1.15σ)가 NAND soft-read LLR 양자화 정책에 재사용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1359421---the-effect-of-noise-estimation-error-on-the-ldpc-decoding-performance-2004-iccs-2004">ieee:1359421 - The Effect of Noise Estimation Error on the LDPC Decoding Performance (2004, ICCS 2004)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5650090</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5650090---low-density-parity-check-accumulate-codes-2010-isita">ieee:5650090 - Low-Density Parity-Check Accumulate Codes (2010, ISITA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.75~0.9375</td></tr><tr><td>부호length</td><td>2304~16384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC(열가중치2) outer + accumulator inner의 직렬연접(LDPCA)으로 encoding 단순화하며 asymptotic 최소거리를 부호길이에 선형 성장시켜 error-floor 억제</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>accumulator+interleaver 직렬연접 turbo형 구조라 Prime ECC의 단일 QC-LDPC PCM/min-sum 파이프라인과 부호·복호 구조 자체가 상이</td></tr><tr><td>추가확인</td><td>"asymptotic min-distance ∝ N" 논거가 NAND 고rate QC-LDPC 부호설계 시 error-floor 검증 지표로 재활용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 고rate·저error-floor라는 목표는 NAND ECC와 맞으나, accumulator/interleaver 직렬연접 + BCJR-SPA turbo 복호라는 구조가 Prime ECC 단일 QC-LDPC min-sum과 근본적으로 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 고rate LDPCA 부호: LDPC outer(열가중치 <code>γ=2</code>) + rate-1 accumulator <code>1/(1+D)</code> inner를 pseudo-random interleaver로 직렬연접, binary-input AWGN, rate 3/4~15/16, <code>N=2304~16384</code>.</li><li>문제: 고rate 부호에서 encoding 효율과 낮은 error-floor를 동시에 확보 — PA(product accumulate) 부호는 최소거리가 작아 error-floor가 높음.</li><li>핵심가정: interleaver는 short cycle 회피용이며 uniform으로 가정, outer의 열가중치 2 열은 (γ,1) 반복부호, 행은 (ρ,ρ-1) SPC 제약.</li><li>핵심기법: outer LDPC의 weight-2 열 + accumulator zigzag 그래프를 결합해 SPCA(SPC accumulate) 형태 near-regular PCM 구성, <code>(N,K,R)=(lj, l(j-1), (j-1)/j)</code>.</li><li>핵심근거: 직렬연접 부호의 asymptotic 최소거리 <code>δ*</code>가 성분부호 최소거리 <code>t,q</code>에 좌우 — LDPCA는 <code>t=4, q=2</code>로 등가되어 <code>δ* ∝ N</code> (선형 성장) 보장, PA는 <code>d*&lt;0.001</code>로 error-floor 높음.</li><li>확장: AWE(asymptotic weight enumerator) 성장률 <code>A_LDPCA(d)</code>를 accumulator·SPC WEF 합성으로 유도, <code>d*</code> 계산(예: LDPCA-(2,8) <code>d*=0.0053</code> &gt; PA-1).</li><li>구현 트릭: 복호는 inner BCJR(간이) + outer SPA 1-iteration을 교대(BCJR-SPA turbo), 복잡도 절감 위해 normalized min-sum(NMS, factor <code>c=0.83~0.9</code>)로 대체 가능.</li><li>학습/최적화: Gaussian approximation DE로 iterative decoding threshold 산출(rate 3/4~15/16, Shannon 대비 &lt;1dB gap).</li><li>결과: LDPCA는 waterfall에서 regular LDPC와 동등(±0.1dB), error-floor는 PA 대비 우수(rate 7/8 N=4096에서 NMS 25iter로 BER 3×10⁻⁹, PA는 7×10⁻⁸). threshold는 PA보다 약간 나쁘나 rate→1에서 차이 소멸.</li><li>한계: HW 미설계, 시뮬/이론뿐, turbo형 100 iteration 복호로 latency 부담 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LDPCA 부호구조(outer LDPC+accumulator)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>낮음 - PCM 로드 계층이나 accumulator 직렬연접 구조는 단일 QC-LDPC PCM과 상이</td></tr><tr><td>accumulator 인코딩 (near-linear)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>낮음 - Prime ECC는 dual-diagonal 고정, accumulator 방식과 다름</td></tr><tr><td>NMS(normalized min-sum) 복호</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>중 - min1/min2 min-sum과 유사하나 scaling factor 방식</td></tr><tr><td>BCJR-SPA turbo 복호 스케줄</td><td>대응 없음</td><td>Prime ECC는 turbo/BCJR 없음, 단일 그래프 message-passing</td></tr><tr><td>asymptotic min-distance error-floor 논거</td><td>대응 없음</td><td>부호설계 분석 지표(코드에 대응 모듈 없음)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — error-floor 억제라는 목표는 유효하나, accumulator+interleaver 직렬연접 부호구조와 BCJR-SPA turbo 복호가 Prime ECC의 단일 QC-LDPC min-sum 파이프라인과 근본적으로 달라 떼어낼 요소가 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5650090",
+  "title": "Low-Density Parity-Check Accumulate Codes",
+  "year": 2010,
+  "venue": "ISITA",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.75~0.9375",
+  "code_length": "2304~16384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC(열가중치2) outer + accumulator inner의 직렬연접(LDPCA)으로 encoding 단순화하며 asymptotic 최소거리를 부호길이에 선형 성장시켜 error-floor 억제",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "accumulator+interleaver 직렬연접 turbo형 구조라 Prime ECC의 단일 QC-LDPC PCM/min-sum 파이프라인과 부호·복호 구조 자체가 상이",
+  "todo_check": "asymptotic min-distance ∝ N 논거가 NAND 고rate QC-LDPC 부호설계 시 error-floor 검증 지표로 재활용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5650090---low-density-parity-check-accumulate-codes-2010-isita">ieee:5650090 - Low-Density Parity-Check Accumulate Codes (2010, ISITA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

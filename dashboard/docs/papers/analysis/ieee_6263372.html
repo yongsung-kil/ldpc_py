@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6263372</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6263372---sub-gaussian-model-based-ldpc-decoder-for-sαs-noise-channels-2012-ieee-icspcsoceans-계열-학회">ieee:6263372 - Sub-Gaussian Model Based LDPC Decoder for SαS Noise Channels (2012, IEEE (ICSPCS/OCEANS 계열 학회))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SαS 노이즈를 sub-Gaussian(스칼라 A × 독립 Gaussian) 분해해 marginal 계산 없이 노이즈 성분간 dependency를 활용, 복잡도를 dependent 성분 수와 무관하게 만듦</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>수중음향 OFDM의 임펄스성 SαS(non-Gaussian) 채널 전용 - NAND(Gaussian/RBER)와 노이즈 모델 자체가 다름, sub-optimal</td></tr><tr><td>추가확인</td><td>없음(NAND read 채널은 SαS가 아니라 dependency 활용 전제가 성립 안 함)</td></tr></tbody></table>
+<blockquote><p>총평: 수중음향 snapping-shrimp 임펄스 노이즈(SαS)에 특화된 채널모델·soft-input 확장 디코더 - NAND의 Gaussian/RBER 채널과 전제가 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 warm shallow water acoustic(WSWA) 채널의 LDPC-coded OFDM으로, 부호는 <code>1000×2000</code> random PCM(<code>R=0.5</code>), BPSK, 최대 iteration <code>L=30</code>.</li><li>문제: snapping shrimp 임펄스 노이즈는 넓은 대역에 걸쳐 여러 OFDM 서브캐리어를 동시에 오염 → 노이즈 성분이 <strong>종속(dependent)</strong>이고 heavy-tail SαS 분포라 기존 LDPC soft decoder 성능이 급락.</li><li>모델: 노이즈 벡터를 등방성 SαS로 두고, dependency를 쓰려면 multivariate PDF marginal이 필요한데 binary code에서 복잡도 <code>O(2^d N)</code>(d=종속성분 수)로 지수 폭발.</li><li>핵심 기법: sub-Gaussian 표현 <code>X = A^(1/2) G</code>로 SαS 벡터를 스칼라 <code>A</code>(우편향 α/2-stable)와 독립 Gaussian 벡터 <code>G</code>로 분해 → 성분이 조건부 독립이 되어 marginal 불필요.</li><li>핵심 식: <code>w_n^G = (1/A^(1/α))(r_n − t_n)</code> = fading 채널의 <code>w = r − s·t</code>와 동형 → fading 추정 알고리즘으로 <code>A</code>를 추정.</li><li>확장: Tanner graph에 a posteriori probability 노드 <code>P_j</code>를 붙여 같은 노이즈 벡터에 영향받는 symbol 노드끼리 <code>λ_n(A_i)</code>/<code>π_n(A_i)</code> 메시지 교환으로 symbol posterior <code>p_n(x)</code>를 매 iteration 갱신.</li><li>구현 디테일: 연속분포 <code>A</code>를 이산화(<code>A_d</code>)하되 원점 근처는 조밀(δ1), 먼 곳은 성긴(δ2) 세그먼트로 이중 양자화, <code>A_max</code> 상한.</li><li>학습절차 없음 - a priori <code>π(A_i)</code>를 CDF 근사로 사전 생성.</li><li>결과: dependency 무시 대비 큰 BER 개선(성분 수 10~50에서 gain 증가), δ2로 <code>N_A</code>를 320→12까지 줄여도 성능 유지, marginal 방식은 d 큰 경우 시뮬 불가한데 본 방식은 <code>O(N_iter·N_A·N)</code>로 d와 무관.</li><li>한계: marginal 대비 sub-optimal, HW 미설계·시뮬만, SαS 임펄스 채널 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| symbol a posteriori / soft-input LLR 계산 | channel.cpp Set_R_Offset(), Set_LLR_Th() | LLR 생성 위치이나 SαS 노이즈 모델은 우리 채널(Gaussian/RBER)과 불일치 |
+| sum-product 이터레이션 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | 논문은 full sum-product 확장 - Prime ECC min-sum과 다름 |
+| A 이산화 / 노이즈 dependency 처리 | 대응 없음 | NAND read 채널에 SαS·성분 dependency 개념 부재 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - 수중음향 임펄스 SαS 채널과 성분간 dependency라는 매우 특수한 전제 위에 세워진 채널모델 확장 디코더로, NAND의 Gaussian/RBER read 채널에는 전제가 성립하지 않아 이식 여지가 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6263372",
+  "title": "Sub-Gaussian Model Based LDPC Decoder for SαS Noise Channels",
+  "year": 2012,
+  "venue": "IEEE (ICSPCS/OCEANS 계열 학회)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "2000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SαS 노이즈를 sub-Gaussian(스칼라 A × 독립 Gaussian) 분해해 marginal 계산 없이 노이즈 성분간 dependency를 활용, 복잡도를 dependent 성분 수와 무관하게 만듦",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "수중음향 OFDM의 임펄스성 SαS(non-Gaussian) 채널 전용 - NAND(Gaussian/RBER)와 노이즈 모델 자체가 다름, sub-optimal",
+  "todo_check": "없음(NAND read 채널은 SαS가 아니라 dependency 활용 전제가 성립 안 함)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6263372---sub-gaussian-model-based-ldpc-decoder-for-sαs-noise-channels-2012-ieee-icspcsoceans-계열-학회">ieee:6263372 - Sub-Gaussian Model Based LDPC Decoder for SαS Noise Channels (2012, IEEE (ICSPCS/OCEANS 계열 학회))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

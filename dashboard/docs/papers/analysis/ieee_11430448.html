@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11430448</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11430448---optimization-of-ldpc-decoding-algorithms-through-approximation-of-the-box-plus-operation-2025-icicn">ieee:11430448 - Optimization of LDPC Decoding Algorithms Through Approximation of the Box-Plus Operation (2025, ICICN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048~32768</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Box-Plus 연산의 오차항(Δ)을 min/max 기반 저복잡도 함수로 근사해 check node update 정확도를 높인 ABP 복호 알고리즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만 진행, CCSDS 우주통신 표준 코드 대상으로 NAND 검증 없음</td></tr><tr><td>추가확인</td><td>μ=0.75 고정값이 NAND 채널(rate 0.9대 고rate QC-LDPC)에서도 최적인지 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: Min-Sum 계열 check node update의 정확도를 높이는 근사식으로, Prime ECC의 min-sum CN 연산부에 이식성은 있으나 NAND 타깃 검증이 없어 추천도는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>(N,K)=(2048,1024)/(8192,4096)/(32768,16384) CCSDS 표준 LDPC, rate=1/2, AWGN+BPSK 채널.</li><li>기존 BP는 고복잡도, MSA/NMS/OMS는 경험적 보정계수로 성능 손실 있어 check node update의 정확도-복잡도 트레이드오프 개선이 목표.</li><li>Box-Plus 연산 <code>L1⊞L2</code>으로 check node 갱신식의 비선형 항을 <code>min</code> + 오차함수 <code>Δ=ln[(1+exp(-|x+y|))/(1+exp(-|x-y|))]</code>로 분해.</li><li>Δ를 <code>Z=-min(|x|,|y|)/(1+max(|x|,|y|))</code>로 근사(핵심 변수: <code>x,y</code>=incoming LLR magnitude), 지수/로그 연산 제거.</li><li>스케일 계수 <code>α</code>를 도입한 <code>Z'=-α·min(|x|,|y|)/(1+max(|x|,|y|))</code>로 MSE 최소화(α=1일 때 MSE=0.0018).</li><li>최종 check node update식: <code>rnm=∏sgn(qm'n)·[μ·min|qm'n| + min(|x|,|y|)/(1+max(|x|,|y|))]</code>, μ=0.75(경험값).</li><li>μ와 α는 Monte Carlo 시뮬레이션과 density evolution으로 탐색, 코드rate/length별로 값이 달라질 수 있음.</li><li>결과: BER 1E-05 기준 NMS/OMS 대비 약 0.4dB 이득, BP 대비 0.1dB 이내로 근접.</li><li>연산수는 BP 18회 대비 ABP 11회(NMS 8회, OMS 9회)로, NMS/OMS보다 연산은 소폭 많지만 성능 이득이 더 큼.</li><li>한계: HW 설계·합성 없이 알고리즘/시뮬레이션 수준에 그침, NAND 채널이 아닌 AWGN 우주통신 표준 코드로만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check node update (Box-Plus 근사, ABP)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN 연산 정확도 개선 함수로 직접 대체 가능한 위치</td></tr><tr><td>전체 이터레이션 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>ABP 알고리즘을 통합할 최상위 루프</td></tr><tr><td>μ 스케일 계수 최적화</td><td><code>local_opt.cpp</code> (LLR 자동최적화)</td><td>μ/α 탐색 절차가 기존 LLR 최적화 모듈과 유사한 역할</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — check node update의 min-sum 근사 정확도를 개선하는 기법으로 <code>decoder.cpp</code>의 CN 연산부에 이식 가능성은 있으나, 연산수가 NMS 대비 오히려 증가(11 vs 8)하여 HW 면적/전력 관점에서 실이득이 불확실하고 NAND 채널 검증이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11430448",
+  "title": "Optimization of LDPC Decoding Algorithms Through Approximation of the Box-Plus Operation",
+  "year": 2025,
+  "venue": "ICICN",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "2048~32768",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Box-Plus 연산의 오차항(Δ)을 min/max 기반 저복잡도 함수로 근사해 check node update 정확도를 높인 ABP 복호 알고리즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬만 진행, CCSDS 우주통신 표준 코드 대상으로 NAND 검증 없음",
+  "todo_check": "μ=0.75 고정값이 NAND 채널(rate 0.9대 고rate QC-LDPC)에서도 최적인지 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11430448---optimization-of-ldpc-decoding-algorithms-through-approximation-of-the-box-plus-operation-2025-icicn">ieee:11430448 - Optimization of LDPC Decoding Algorithms Through Approximation of the Box-Plus Operation (2025, ICICN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

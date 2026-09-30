@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9896912</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9896912---neural-belief-propagation-auto-encoder-for-linear-block-code-design-2022-ieee-trans-communications">ieee:9896912 - Neural Belief Propagation Auto-Encoder for Linear Block Code Design (2022, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.5625</td></tr><tr><td>부호length</td><td>8~128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>미분가능 오토인코더로 BP-like 디코더에 맞춘 단중길이 선형블록부호+GNBP 디코더 공동설계</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>표준형(standard form) 제약으로 PCM 밀도 높고, non-QC·짧은부호·NN 학습 기반이라 NAND 고rate QC-LDPC와 구조 불일치</td></tr><tr><td>추가확인</td><td>학습된 부호가 QC 구조나 고rate(0.9급)로 확장 가능한지, MS/OMS 저복잡 디코더 적용 시 결과</td></tr></tbody></table>
+<blockquote><p>총평: AWGN·단중길이(≤128) 선형블록부호를 NN 오토인코더로 공동설계하는 5G/6G/IoT용 연구로, NAND 고rate binary QC-LDPC 엔진에 직접 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK+AWGN, 짧은~중간 길이 (8,4)/(31,16)/(63,36)/(63,45)/(64,k)/(128,64) 선형블록부호, rate 0.5 전후, IoT/URLLC 타깃.</li><li>문제: 짧고 밀도 높은 부호는 short cycle 때문에 BP 성능이 나쁘고, 기존 부호(BCH 등)는 BP 디코더에 맞춰 설계되지 않았음.</li><li>접근: 부호(G/H)와 가중 BP 디코더(GNBP)를 미분가능 오토인코더(AE)로 <strong>공동학습</strong> — 디코더에 맞는 부호를 ex nihilo로 설계.</li><li>인코더: XOR을 bipolar 곱 reduction으로 근사, <code>G</code>를 미분가능 step함수(DSF, forward=step / backward=sigmoid)로 이진화.</li><li>디코더: GNBP = BP를 RNN cell로 표현, 엣지에 학습가능 가중치 <code>ω(μ)</code>를 곱해 short cycle 영향 완화 (식 8,9).</li><li>Bridge model: standard form 제약으로 <code>G↔H</code> 직접 변환, 인코더/디코더 행렬을 항상 정합 유지, 파라미터 <code>O(n^2)</code>로 스케일.</li><li>학습: RMSProp, Eb/N0 4dB 고정, 데이터셋을 2^k → k basis vector로 축소, BCE loss, 5 BP iteration 기본.</li><li>CN 갱신은 여전히 full <code>tanh</code>/Sum-Product 기반(식 4) — min-sum 아님.</li><li>결과: (31,16)에서 BER ~2.5e-2→2.5e-3, BCH 대비 BP 성능 우위, (128,64)에서 LDPC(AR3A/CCSDS) 대비 0.5dB 이내, 학습 부호가 저밀도(δ↓)·girth↑ 경향.</li><li>한계: HW 미설계, 시뮬만, standard form이 PCM 밀도↑, non-QC, non-binary가 아니라 binary지만 부호구조가 NAND용 고rate QC-LDPC와 완전 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GNBP 가중 BP 디코더(RNN)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>full-tanh Sum-Product+NN 가중치라 min-sum 기반 우리 CN 연산과 상이, 직접 대응 약함</td></tr><tr><td>CN full-tanh 갱신(식4)</td><td>대응 없음</td><td>우리는 min-sum(<code>CNU_Update_New_Mag()</code>) 사용, tanh Sum-Product 미보유</td></tr><tr><td>부호(G/H) 학습 설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 고정 QC-LDPC H-matrix, 학습형 non-QC 부호는 이식 부적합</td></tr><tr><td>인코더(XOR bipolar 근사)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>우리는 dual-diagonal 고정, NN 미분가능 인코더와 무관</td></tr><tr><td>iteration별 LLR 가중</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>개념적 유사(구간별 LLR)이나 학습 가중치 형태라 직접 이식 어려움</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NN 학습 기반 non-QC 단중길이 부호/디코더 공동설계로, NAND 고rate binary QC-LDPC의 고정 부호·min-sum HW 파이프라인과 구조가 맞지 않아 이식 가치가 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9896912",
+  "title": "Neural Belief Propagation Auto-Encoder for Linear Block Code Design",
+  "year": 2022,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "8~128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "미분가능 오토인코더로 BP-like 디코더에 맞춘 단중길이 선형블록부호+GNBP 디코더 공동설계",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "표준형 제약으로 PCM 밀도 높고, non-QC·짧은부호·NN 학습 기반이라 NAND 고rate QC-LDPC와 구조 불일치",
+  "todo_check": "학습된 부호가 QC 구조나 고rate(0.9급)로 확장 가능한지, MS/OMS 저복잡 디코더 적용 시 결과"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9896912---neural-belief-propagation-auto-encoder-for-linear-block-code-design-2022-ieee-trans-communications">ieee:9896912 - Neural Belief Propagation Auto-Encoder for Linear Block Code Design (2022, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

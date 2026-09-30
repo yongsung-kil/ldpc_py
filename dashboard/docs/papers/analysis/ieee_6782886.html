@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6782886</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6782886---an-ldpc-decoder-with-snr-information-2013-icics">ieee:6782886 - An LDPC Decoder with SNR Information (2013, ICICS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SNR 정보로 초기 LLR 스케일링 + CNU/BNU 재배치로 1st iteration 조기종료, 행/열 재배치로 iteration당 latency 1/3 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>674K@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.319</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>SNR을 파일럿으로 아는 802.11n 무선 전제 - NAND에선 SNR 대신 RBER/read-retry 추정 필요, 재배치는 min-sum-correct(교과서 근사)와 조기종료 재사용과 중복 소지</td></tr><tr><td>추가확인</td><td>fixed-point 4int/4dec 양자화가 NAND 고rate QC-LDPC에서도 BER 유지되는지, 행/열 재배치 스케줄이 z=32 병렬구조와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: 무선(802.11n rate-1/2) 타깃이나 CNU/BNU·PCM 재배치로 iteration latency 1/3 절감 아이디어는 partial-parallel 스케줄링 관점에서 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11n QC-LDPC, code rate <code>1/2</code>, code length <code>648</code> (info <code>324</code>), base matrix <code>Z=27/54/81</code> circulant shift, BPSK+AWGN 채널, partial-parallel 디코더.</li><li>문제: partial-parallel LDPC 디코더는 area는 작으나 routing 혼잡·긴 iteration latency, 조기종료도 최초 iteration에서 CNU/BNU 1회는 반드시 수행해야 함.</li><li>모델: 수신 <code>y_i</code>, noise variance <code>σ²</code>, 초기 LLR <code>L_Bi = -2y_i/σ²</code> (Eq.4), min-sum-correct 알고리즘(Jacobian log 근사, Eq.6).</li><li>기법1 (SNR processor): SNR은 <code>1/σ</code>에 비례하므로 입력 <code>y_i</code>에 SNR을 곱해 bit-node를 최적 초기화. 곱셈은 shift+add + SNR mapping table(Tab.I) look-up으로 대체.</li><li>의미: <code>L_Bi</code>의 <code>1/σ²</code> 항을 SNR으로 정밀 초기화 → 적은 iteration에서 BER 개선(iteration 많아지면 개선폭 감소).</li><li>기법2 (CNU/BNU 재배치): 원래 Init→CNU→BNU 순서를 BNU→CNU로 재배치, BNU에서 hard-decision과 초기화를 동시 수행 → 고SNR 시 CNU 없이 조기종료, 성능 불변·routing 공유.</li><li>구현 디테일: 조기종료 비교/hard-decision 생성 시점을 2~3 step 앞당김(Tab.II), init routing을 후속 CNU와 공유해 congestion 완화.</li><li>기법3 (latency reduction): PCM 행·열 재배치로 3개 CNU/BNU 그룹 분할, BNU1↔CNU3, BNU3↔CNU1이 비겹침 → 동시 실행으로 iteration당 clock 1/3 절감(Fig.10).</li><li>결과: BER=10⁻⁴에서 SNR 정보로 0.3dB 개선(8 iter), fixed-point 4int/4dec, TSMC 90nm 674K gate, 5.3mm² die, 151MHz, throughput 37~319Mbps.</li><li>한계: rate-1/2 무선 표준 전용, SNR을 파일럿으로 안다는 전제, error-floor·NAND soft-read 미다룸, 시뮬+합성만(실측 없음).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SNR 기반 초기 LLR 스케일링</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>우리 적응형 LLR 테이블과 유사 - SNR 대신 RBER 기반 재해석 시 참고</td></tr><tr><td>min-sum-correct CNU 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min-sum), 중복</td></tr><tr><td>CNU/BNU 재배치·조기종료</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프, partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리 partial-CRC 조기종료와 목적 중복, 스케줄 재배치 아이디어만 부분 참고</td></tr><tr><td>PCM 행/열 재배치(그룹 동시실행)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 재배치는 우리 z=32 고정구조 재검증 부담 큼</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 핵심(SNR 초기화, 조기종료, 스케줄 재배치)이 Prime ECC 보유 기법(적응형 LLR/partial-CRC/dual-update 스케줄)과 대부분 중복이고, 무선 rate-1/2 표준 전용이라 NAND 고rate로의 직접 이식 이득이 작음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6782886",
+  "title": "An LDPC Decoder with SNR Information",
+  "year": 2013,
+  "venue": "ICICS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "648",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SNR 정보로 초기 LLR 스케일링 + CNU/BNU 재배치로 1st iteration 조기종료, 행/열 재배치로 iteration당 latency 1/3 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "674K@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.319,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "SNR을 파일럿으로 아는 802.11n 무선 전제 - NAND에선 SNR 대신 RBER/read-retry 추정 필요, 재배치는 min-sum-correct·조기종료 재사용과 중복 소지",
+  "todo_check": "fixed-point 4int/4dec 양자화가 NAND 고rate QC-LDPC에서도 BER 유지되는지, 행/열 재배치 스케줄이 z=32 병렬구조와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6782886---an-ldpc-decoder-with-snr-information-2013-icics">ieee:6782886 - An LDPC Decoder with SNR Information (2013, ICICS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

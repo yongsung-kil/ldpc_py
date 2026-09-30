@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6964006</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6964006---evaluation-of-left-terminated-spatially-coupled-ldpc-codes-for-optical-communications-2014-ecoc">ieee:6964006 - Evaluation of Left-Terminated Spatially-Coupled LDPC Codes for Optical Communications (2014, ECOC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.826</td></tr><tr><td>부호length</td><td>N=7500</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>좌측종단 SC-LDPC를 윈도우 복호로 FPGA 실증, NCG 10.5~11.1dB 확인</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>광통신 특화(Eb/N0~2.7dB, AWGN), NCG는 외삽 추정치이며 NAND RBER 영역과 거리</td></tr><tr><td>추가확인</td><td>좌측종단 윈도우 복호가 고정길이 QC-LDPC 블록복호 대비 실이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 광통신용 SC-LDPC의 FPGA 성능평가로 부호종류/타깃 채널이 NAND용 고정길이 binary QC-LDPC와 상이하여 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 광통신(&gt;100Gb/s) 소프트판정 FEC, 좌측종단 무한확장 SC-LDPC(LDPC convolutional) 코드, 오버헤드 20%(rate≈0.83), sub-block 크기 <code>N=7500</code>.</li><li>문제: SC-LDPC는 우수한 waterfall를 보이나 error-floor가 존재, 외부코드로 정리하면 용량손실로 NCG가 감소 → 낮은 floor 부호가 필요.</li><li>모델: AWGN 채널, all-zero codeword, LLR 5-bit(32레벨) 양자화.</li><li>핵심기법: 무한확장 parity-check <code>H_conv</code>(syndrome former memory <code>μ=1,2</code>), 서브행렬 <code>H_i</code> 크기 <code>M×N</code>, 각 서브블록은 과거 <code>μ</code>개 서브블록만으로 인코딩 가능.</li><li>윈도우 복호: <code>w·M</code> 행 × <code>(w+μ-1)N</code> 열 부분행렬에 대해 3단계(새 서브블록 수신→<code>I</code> layered iteration→결정) 슬라이딩, latency는 <code>w+μ-1</code> 서브블록.</li><li>확장: 유효 iteration 수 = <code>(w+μ-1)·I</code>, <code>w=13, I=1</code>이면 conventional 복호 12+μ 반복에 대응.</li><li>구현 디테일: layered decoding + scaled min-sum(및 offset-corrected min-sum) 검노드 연산, 순환치환행렬 크기 <code>32×32</code> QC 구조.</li><li>참조 부호: regular block <code>d_v=3,d_c=15</code>(N'=31200)와 <code>d_v=4</code>(N'=30720); SC Code A(irregular, d_v={4,5,7,20}, d_c=18), SC Code B(regular d_v=4, d_c=20).</li><li>결과: SC Code B는 늦은 waterfall 시작 후 급강하, 외삽으로 NCG≈10.5dB(scaled MS) / 11.1dB(offset-corrected MS) @ post-FEC BER=1e-15, error-floor 미관측.</li><li>한계: HW 게이트수/throughput 미기재, NCG는 외삽 추정, error-floor는 post-processing 필요 가능성 언급뿐, 광통신 AWGN 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| scaled/offset-corrected min-sum CN 연산 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum 자체는 이미 보유, scaling/offset 파라미터만 참고 |
+| layered decoding 이터레이션 | decoder.cpp LDPC_Decoder() | Prime는 dual-update 스케줄, layered와 상이 |
+| LLR 5-bit 양자화 | channel.cpp Set_LLR_Th(), ecc_data.h PARAM_LLR | soft-2~3bit만 지원, 5-bit는 범위 밖 |
+| SC/좌측종단 윈도우 복호 구조 | 대응 없음 | Prime는 고정길이 블록 QC-LDPC, convolutional 구조 미지원 |
+| 32×32 순환치환 QC 구조 | ecc_top.cpp Load_PCM() | QC 구조는 유사하나 부호 자체 이식 부담 큼 |</code></pre>
+<p>적용 가치: 낮음 - SC-LDPC 윈도우 복호와 광통신 AWGN 타깃이 NAND 고정길이 binary QC-LDPC와 근본적으로 달라 이식 실익이 적음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6964006",
+  "title": "Evaluation of Left-Terminated Spatially-Coupled LDPC Codes for Optical Communications",
+  "year": 2014,
+  "venue": "ECOC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.826,
+  "code_length": "N=7500",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "좌측종단 SC-LDPC를 윈도우 복호로 FPGA 실증, NCG 10.5~11.1dB 확인",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "광통신 특화(Eb/N0~2.7dB, AWGN), NCG는 외삽 추정치이며 NAND RBER 영역과 거리",
+  "todo_check": "좌측종단 윈도우 복호가 고정길이 QC-LDPC 블록복호 대비 실이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6964006---evaluation-of-left-terminated-spatially-coupled-ldpc-codes-for-optical-communications-2014-ecoc">ieee:6964006 - Evaluation of Left-Terminated Spatially-Coupled LDPC Codes for Optical Communications (2014, ECOC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6239927</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6239927---incremental-redundancy-for-ldpc-codes-of-2nd-generation-dvb-systems-2012-ieee-dvbbroadcasting-conf">ieee:6239927 - Incremental Redundancy for LDPC Codes of 2nd Generation DVB Systems (2012, IEEE (DVB/broadcasting conf.))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.33~0.67</td></tr><tr><td>부호length</td><td>16200~32400</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>표준 DVB LDPC를 mother code로 확장하는 IR(증분잉여) 부호를 EXIT chart 기반 VN degree 최적화로 설계</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB 방송(HARQ/time-diversity) 특화 rate-compatible IR 설계, error-floor 아닌 waterfall(decoding threshold)만 다룸, HW 없음</td></tr><tr><td>추가확인</td><td>NAND는 재전송/IR 개념이 없어 rate-compatible 확장 자체가 부적합</td></tr></tbody></table>
+<blockquote><p>총평: DVB 표준부호를 IR로 확장하는 방송용 rate-compatible 부호설계 논문으로, EXIT 기반 degree 최적화는 표준적이며 NAND 고정 QC-LDPC ECC에는 이식 대상이 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2세대 DVB(S2/T2/NGH)의 표준 LDPC(예: DVB-T2 16k, <code>R0=2/3</code>, <code>N0=16200,K0=10800,M0=5400</code>)를 대상으로 함.</li><li>풀려는 문제: 지상파(T2)는 페이딩/셰도잉으로 복호실패 발생 → 표준부호를 확장해 증분잉여(IR)를 추가, 실패 시에만 IR 결합해 정정, 성공 시 sleep으로 전력절감.</li><li>핵심 가정: AWGN 채널 EXIT chart 분석; 표준부호가 이미 punctured code라 보고 IR 확장이 mother code가 되며, 이를 puncturing하면 원부호로 복원됨.</li><li>핵심 기법: PCM 하단에 <code>MIR</code> parity 추가(<code>N1=N0+MIR</code>, <code>R1=K0/N1</code>), DVB의 quasi-cyclic(360열 주기 순환시프트 <code>Q0,Q1</code>)과 staircase(accumulate) 구조를 보존하며 하단 <code>MIR×K0</code> 부분행렬에만 1 추가.</li><li>핵심 식: VND/CND의 EXIT 함수 가중합 <code>IE,VND(IA,γ)=Σ a1,i·i/dv,1·IE,VND(IA,i,γ)</code> — capacity-approaching은 두 EXIT 곡선 정합, 즉 curve fitting 문제로 귀결.</li><li>확장/최적화: VN degree spectrum <code>α=(a1,3,...,a1,dv,max)</code>를 변수로 두고 squared error <code>J=∫|IE,VND−h|²dIA</code> 최소화 → 제약(합=1, degree평균, QC 라운딩) 하 constrained QP(MATLAB <code>fmincon</code>)로 해.</li><li>구현 디테일: <code>α_n·N1</code>이 360 배수여야 QC 유지 → 최적화 후 수동 라운딩; 최소 girth/stopping set 회피는 별도 고려(단 확장부호 error-floor는 원부호보다 낮음 보장).</li><li>최적화 예: 16k <code>R0=2/3</code>를 <code>MIR=N0=16200</code>으로 배가, <code>R1=1/3</code>(32k). <code>dc,IR=4</code>, <code>dv,max=20</code>에서 <code>α4=0.2,α5=0.1,α13=0.033</code> 최적.</li><li>결과: AWGN에서 decoding threshold가 <code>γ0=0.1dB</code>→<code>γ1=−3.7dB</code>; DVB-T2 TU6 100Hz 체인에서 IR 결합 시 동일 BER을 10dB→3dB(약 7dB gain, time diversity 기여); FER 30%→7%로 70% 시간 IR 무시(전력절감). SPA, 최대 50 iteration.</li><li>한계: HW 설계 없음(시뮬만), 방송 HARQ/rate-compatible 특화이며 waterfall(threshold)만 개선, NAND 고정부호 맥락과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>IR PCM 확장(mother code / rate-compatible H-matrix)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>개념상 부호구조 로드에 닿으나 Prime ECC는 고정 QC-LDPC라 rate-compatible 확장 대상 아님</td></tr><tr><td>EXIT 기반 VN degree 최적화</td><td>대응 없음</td><td>Prime ECC는 특정 QC-LDPC 고정, degree spectrum 재설계 안 함</td></tr><tr><td>SPA 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 사용, full-tanh SPA는 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 방송 재전송/IR 특화 rate-compatible 부호설계로 NAND(재전송 개념 없음, 고정 QC-LDPC)에는 떼어 쓸 기법이 없고 HW/디코더 개선도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6239927",
+  "title": "Incremental Redundancy for LDPC Codes of 2nd Generation DVB Systems",
+  "year": 2012,
+  "venue": "IEEE (DVB/broadcasting conf.)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.33~0.67",
+  "code_length": "16200~32400",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "표준 DVB LDPC를 mother code로 확장하는 IR(증분잉여) 부호를 EXIT chart 기반 VN degree 최적화로 설계",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DVB 방송(HARQ/time-diversity) 특화 rate-compatible IR 설계, error-floor 아닌 waterfall(decoding threshold)만 다룸, HW 없음",
+  "todo_check": "NAND는 재전송/IR 개념이 없어 rate-compatible 확장 자체가 부적합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6239927---incremental-redundancy-for-ldpc-codes-of-2nd-generation-dvb-systems-2012-ieee-dvbbroadcasting-conf">ieee:6239927 - Incremental Redundancy for LDPC Codes of 2nd Generation DVB Systems (2012, IEEE (DVB/broadcasting conf.))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

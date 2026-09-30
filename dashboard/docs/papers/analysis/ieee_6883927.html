@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6883927</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6883927---all-bit-line-mlc-flash-memories-optimal-detection-strategies-2014-ieee-icc">ieee:6883927 - All-Bit-Line MLC Flash Memories: Optimal Detection Strategies (2014, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ABL MLC ICI 채널의 최적 MAP soft-output 검출기(FFT 기반 특성함수)로 기존 검출기 대비 SIQ 0.23dB 이득</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 복호기가 아닌 채널 검출기(pre-decoder)로, ICI 채널모델·FFT trellis에 특화되어 우리 디코더에 직접 이식 불가</td></tr><tr><td>추가확인</td><td>이 soft-output(확률벡터)을 LDPC LLR 입력으로 넘길 때 우리 채널모델(AWGN/RBER)과의 정합 방식</td></tr></tbody></table>
+<blockquote><p>총평: NAND ICI 채널 최적 MAP soft 검출기 논문 - LDPC 앞단 detector라 우리 부호/디코더에 직접 이식은 어려우나 soft-read LLR 품질 관점에서 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: ABL(all-bit-line) 4-level MLC NAND, i.i.d. 입력 pmf 0.25, SIQ 1.8 bits/cell ≈ 부호rate 0.9에 해당하는 동작점 비교.</li><li>문제: 스케일링으로 ICI 심화·레벨간 마진 축소 → 기존 hard(post-comp/coupling canceller)·양자화 soft 검출기는 채널 양자화 없는 정확한 soft-output을 못 준다.</li><li>채널모델: 1D causal 및 2D anticausal ICI 모델 <code>Y_k = X_k + ΣΓ(k)(Y_{k-ℓ}-E_{k-ℓ}) + W_k + U_k</code>, victim cell이 이후 프로그램된 3개 이웃에 영향받음.</li><li>핵심기법1(MAP): 입력 xˆ를 trellis 상 Viterbi-like MAP로 검출, 상태 <code>S_k=X_{k-M+1}^k</code>, branch metric <code>Λ_MAP</code>.</li><li>핵심식: branch metric의 조건부 pdf <code>f(y_k|x_k,y_{k-L}^{k-1})</code>는 해석적으로 어려워, 조건부 특성함수 <code>G_Yk</code>의 FFT로 pdf를 수치 계산(식 8).</li><li>핵심기법2(GA-MAP): Γ(k)를 상수 근사한 Gaussian approximation으로 <code>Λ_MAP</code> 추정, FFT 없이 2개 FIR 필터(θ_k, ν_k)만으로 구현.</li><li>구현 디테일: 정확 MAP는 2L개 FIR 필터 필요, GA-MAP은 곱셈기·덧셈기 등 DSP로 구현 가능해 HW 친화.</li><li>결과: BER은 post-comp와 대등하나, soft output 품질(SIQ=I(X_k;O_k))에서 MAP가 기존 대비 0.23dB, GA-MAP 0.14dB 이득(SNR 가변, s=0.75).</li><li>의미: SIQ는 random LDPC 부호의 달성 가능 최고 정보율 → 0.23dB 이득은 동일 LDPC로 0.23dB 약한 부호를 써도 됨을 시사.</li><li>한계: LDPC 디코더 자체 미설계, HW 미구현, 시뮬만. ICI 채널모델·MAP trellis에 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>soft-output 검출기(확률벡터/SIQ) → LDPC LLR 입력</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>검출기 출력을 우리 soft-read LLR로 변환하는 앞단, 알고리즘 자체는 이식 대상 아님</td></tr><tr><td>ICI/2D 채널모델·error injection</td><td><code>channel.cpp</code> (AWGN/RBER/fixed)</td><td>우리 채널모델과 다른 ICI trellis 모델, 대체·이식 부담 큼</td></tr><tr><td>MAP/GA-MAP trellis 검출</td><td>대응 없음</td><td>LDPC 복호(min-sum message passing)와 무관한 pre-decoder 검출기</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 부호설계·디코더가 아닌 채널 검출기(pre-decoder)라 Prime ECC 디코더/인코더에 직접 이식할 요소가 없고, soft-read LLR 품질 개선 아이디어만 간접 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6883927",
+  "title": "All-Bit-Line MLC Flash Memories: Optimal Detection Strategies",
+  "year": 2014,
+  "venue": "IEEE ICC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.9,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ABL MLC ICI 채널의 최적 MAP soft-output 검출기(FFT 기반 특성함수)로 기존 검출기 대비 SIQ 0.23dB 이득",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 복호기가 아닌 채널 검출기(pre-decoder)로 ICI 채널모델·FFT trellis에 특화되어 우리 디코더에 직접 이식 불가",
+  "todo_check": "soft-output(확률벡터)을 LDPC LLR 입력으로 넘길 때 우리 채널모델(AWGN/RBER)과의 정합 방식"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6883927---all-bit-line-mlc-flash-memories-optimal-detection-strategies-2014-ieee-icc">ieee:6883927 - All-Bit-Line MLC Flash Memories: Optimal Detection Strategies (2014, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

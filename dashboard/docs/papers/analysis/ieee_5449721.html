@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5449721</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5449721---high-throughput-layered-decoding-of-ldpc-codes-2009-미상">ieee:5449721 - High Throughput Layered Decoding of LDPC Codes (2009, 미상)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>324~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>그래프 edge-colouring 기반 스케줄링으로 TDMP(layered) 디코딩의 posterior memory 컨텐션을 제거해 병렬 처리 행 수를 늘림</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>코드 구조(H-matrix) 변경 없이 스케줄만 바꾸는 오프라인 알고리즘이라 정정성능 영향은 없고 순수 처리량/latency 개선; HW 구현·합성 결과 없음(이론/시뮬 수준)</td></tr><tr><td>추가확인</td><td>제안 스케줄링을 실제 HW 파이프라인(read-write 타이밍, 라우팅 오버헤드)에 적용했을 때의 면적/전력 영향 미상</td></tr></tbody></table>
+<blockquote><p>총평: TDMP 레이어드 디코딩의 메모리 컨텐션 문제를 그래프 edge-colouring 스케줄링으로 해결해 병렬 행 처리량을 7~15배 늘리는 순수 스케줄링 기법으로, Prime ECC의 dual-update/HCU 스케줄링과 비교해 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>대상: 802.16e/802.11n/DVB-S2 계열 LDPC 코드, 평가된 6개 코드는 length 324~2640, row weight 6~12(rate 0.5~0.9대 추정).</li><li>문제: 기존 P-TDMP(Parallel-TDMP)는 posterior memory 컨텐션 때문에 한 번에 <code>S</code>(AA-LDPC 서브행렬 크기)개 행만 병렬 디코딩 가능해 처리량이 제한됨.</li><li>가정: 코드 구조(H-matrix) 수정 없이, TDMP의 posterior 메시지 write 접근만 스케줄링으로 제어.</li><li>핵심 기법: TDMP 행별 갱신을 이분그래프(bipartite graph, check node/variable node = vertex, time slot = edge)의 <strong>edge colouring 문제</strong>로 변환.</li><li>핵심 식: <code>λi(t+1) = φ⁻¹(Σφ(ρ(t)))</code>, <code>ρ(t) = γ(t) - λi(t)</code>; posterior 갱신 <code>γ(t+1) = ρ(t) + λi(t+1)</code> — 최신 계산값을 즉시 반영해 수렴 가속(TDMP 고유 특성).</li><li>제안 스케줄링(Algorithm 1): 무작위 노드부터 시작해 미착색 edge에 순차적으로 유일 색상을 배정하는 근사 최적 edge-colouring, König 정리상 최적 색상 수 = 최대 노드 차수 <code>d</code>.</li><li>부수 트릭: 최적 edge-colouring(NP에 가까운 탐색)은 시간이 오래 걸려(4시간+ 실패) 실용성이 없어, 제안 알고리즘은 최적 대비 색상 수 +2 이내로 근사하면서 수 분 내 처리.</li><li>throughput 모델: <code>θ = bfL·PR/(cT·M)</code> (b=메시지 비트, f=클록, L=length, c=row weight, M=총 행 수, PR=병렬 처리 행 수, T=행당 클록 사이클).</li><li>결과: 제안 알고리즘의 edge colouring이 그리디(Matgraph) 대비 색상 수 25~50% 적고, P-TDMP 대비 처리량 약 7~15배 향상(6개 코드에서 6.9~15.0배).</li><li>한계: 순수 스케줄링/이론 분석뿐이며 실제 HW 합성·면적·전력 결과 없음, 코드 구조는 AA-LDPC(순열 항등행렬) 가정에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TDMP(레이어드) 디코딩, 최신값 즉시 반영 갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC도 layered/Dual-Update 스케줄 사용, 개념적으로 대응되는 반복 구조</td></tr><tr><td>Dual-Update(parity even/odd 교대) 스케줄</td><td><code>decoder.cpp</code> (Dual-Update 옵션)</td><td>컨텐션 회피 목적이 유사하나 본 논문은 그래프 컬러링 기반 일반화된 스케줄러로 이식 시 추가 검토 필요</td></tr><tr><td>posterior memory 컨텐션 회피(edge colouring 스케줄)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프 (스케줄링 로직)</td><td>병렬 처리 행 수를 늘리는 스케줄 최적화로 디코더 루프 재설계에 참고 가능(이식 난이도 낮음~중, 프로파일 §4 기준)</td></tr><tr><td>AA-LDPC(순열 항등행렬 기반) 부호 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 구조 자체를 바꾸는 요소는 아니며 컨텐션-프리 특성을 활용하는 전제조건, 부호설계 변경은 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 코드 구조 변경 없이 순수 스케줄링으로 병렬도/처리량을 높이는 기법이라 decoder.cpp 이터레이션 루프의 스케줄 재설계에 참고할 수 있으나, HW 구현·정량적 면적/전력 검증이 없어 직접 이식 전 재검증 필요.</p></blockquote>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:5449721",
+  "title": "High Throughput Layered Decoding of LDPC Codes",
+  "year": 2009,
+  "venue": "미상",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "324~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "그래프 edge-colouring 기반 스케줄링으로 TDMP(layered) 디코딩의 posterior memory 컨텐션을 제거해 병렬 처리 행 수를 늘림",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "코드 구조(H-matrix) 변경 없이 스케줄만 바꾸는 오프라인 알고리즘이라 정정성능 영향은 없고 순수 처리량/latency 개선; HW 구현·합성 결과 없음(이론/시뮬 수준)",
+  "todo_check": "제안 스케줄링을 실제 HW 파이프라인(read-write 타이밍, 라우팅 오버헤드)에 적용했을 때의 면적/전력 영향 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5449721---high-throughput-layered-decoding-of-ldpc-codes-2009-미상">ieee:5449721 - High Throughput Layered Decoding of LDPC Codes (2009, 미상)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

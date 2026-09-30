@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1523373</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1523373---an-ldpcc-decoding-algorithm-based-on-bowman-levin-approximation-comparison-with-bp-and-cccp-2005-isit">ieee:1523373 - An LDPCC decoding algorithm based on Bowman-Levin approximation (Comparison with BP and CCCP) (2005, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>486</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Bethe 자유에너지 최소화에서 master/slave 변수 역할을 교환한 Bowman-Levin(BL) 근사 복호 + natural gradient descent, BP/CCCP보다 약간 우수</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>이중루프로 BP 대비 약 6배+ 연산비용, step-width 튜닝 필요, 이득 미미(2dB 부근만), 짧은 사이클로 error floor, HW 없음</td></tr><tr><td>추가확인</td><td>tanh 기반 완전 BP 변형이라 min-sum HW로는 실익 없음; BL의 error-floor 개선 여부(그림상 세 알고리즘 동일)</td></tr></tbody></table>
+<blockquote><p>총평: 통계물리 기반 BL 복호가 BP/CCCP를 근소하게 앞서나 연산비용이 훨씬 크고 tanh 기반이라, min-sum HW인 Prime ECC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN 채널의 Gallager 앙상블 short-length <code>(3,6)</code>-regular LDPC, <code>N=486</code>, <code>M=243</code> (rate 0.5).</li><li>문제: Bethe 자유에너지를 최소화하는 방법이 BP/CCCP만 있는 것이 아니며, 다른 극값 탐색법으로 성능 개선 가능한지 검토.</li><li>모델: 사후확률 <code>P(x|y)</code>를 clique/bit 시험확률 <code>{b_μ},{q_l}</code>로 근사, 주변확률 일치조건(식10)하 Bethe 자유에너지 <code>F</code> 최소화(MPM 해).</li><li>핵심기법: Lagrange 승수로 이중지표 <code>{h_μl}</code>·단일지표 <code>{h_l}</code> 도입. BP는 <code>{h_μl}</code>을 master, CCCP는 이중루프, BL은 <code>{h_l}</code>을 master로 두어 역할 교환.</li><li>핵심식: <code>h_l = h_μl + Σ atanh(∏ tanh h_μ'l')</code> (식23) — tanh/atanh 기반 완전 BP류 연산(min 근사 아님).</li><li>확장: 단순 outer loop(식33)가 자유에너지를 오히려 증가시켜, natural gradient descent(Fisher 정보행렬 <code>H</code>, 식35→39)로 대체해 수렴 확보.</li><li>구현: BL은 inner loop(slave <code>{h_μl}</code> 결정) + outer loop(master <code>{h_l}</code> 갱신)의 double-loop, step width <code>k=0.3</code>, inner loop 6회 고정.</li><li>최적화: BP는 outer limit만, CCCP는 inner loop 수 추가, BL은 거기에 step width까지 튜닝 필요(다만 k=0.3이 경험적으로 강건).</li><li>결과: BER에서 BL이 BP/CCCP보다 소폭 우수(특히 2dB 부근); 비용비 BP:CCCP:BL ≈ 1:6:6, outer loop 포함 시 최대 1:10:12. error floor는 2.5dB 이상에서 세 알고리즘 동일(짧은 사이클 원인).</li><li>한계: 높은 연산비용(고비용 감수 시에만 이득), HW 미설계, short-length regular 시뮬만, min-sum류 저복잡도 복호는 다루지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BL/BP tanh·atanh 기반 복호</td><td>대응 없음 (full-tanh Sum-Product류)</td><td>우리는 min-sum 근사 사용, tanh 완전연산은 미대응</td></tr><tr><td>이터레이션 루프 구조</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>알고리즘 상이(double-loop, natural gradient)로 구조 이식 부적합</td></tr><tr><td>AWGN 채널 / σ² 기반 LLR</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>채널 모델만 유사, 나머지 이질적</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — tanh 기반 이중루프 BL 복호는 min-sum 대비 연산비용이 수배이고 이득이 미미하여, HW용 고rate QC-LDPC Prime ECC에 이식할 실익이 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:1523373",
+  "title": "An LDPCC decoding algorithm based on Bowman-Levin approximation - Comparison with BP and CCCP",
+  "year": 2005,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "486",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Bethe 자유에너지 최소화에서 master/slave 변수 역할을 교환한 Bowman-Levin(BL) 근사 복호 + natural gradient descent, BP/CCCP보다 약간 우수",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "이중루프로 BP 대비 약 6배+ 연산비용, step-width 튜닝 필요, 이득 미미(2dB 부근만), 짧은 사이클로 error floor, HW 없음",
+  "todo_check": "tanh 기반 완전 BP 변형이라 min-sum HW로는 실익 없음; BL의 error-floor 개선 여부(그림상 세 알고리즘 동일)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1523373---an-ldpcc-decoding-algorithm-based-on-bowman-levin-approximation-comparison-with-bp-and-cccp-2005-isit">ieee:1523373 - An LDPCC decoding algorithm based on Bowman-Levin approximation (Comparison with BP and CCCP) (2005, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

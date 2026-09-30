@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10130306</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10130306---a-study-on-accelerating-sp-decoding-by-neural-network-in-smr-system-2023-ieee-trans-magn">ieee:10130306 - A Study on Accelerating SP Decoding by Neural Network in SMR System (2023, IEEE Trans. Magn.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>4096 byte</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NN으로 SP 디코더의 신뢰도 높은 <code>ln γn</code> 선택·가중 갱신하여 iteration 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SMR/HDD의 PR1 채널+turbo equalization+trellis(Max-log-MAP) 전제, NN 전면 개입 — NAND binary QC-LDPC와 구조 불일치</td></tr><tr><td>추가확인</td><td>NN이 만드는 1.34배 스케일 게이팅 아이디어를 채널·NN 없이 순수 LLR scaling으로 환원 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: HDD SMR의 SP+turbo 디코더를 NN으로 가속한 시뮬 논문으로 NAND binary QC-LDPC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: SMR HDD, 4 Tbit/in² 기록밀도, 128/130 RLL + (30,3)-regular LDPC(code length 4096 byte, col weight 3, row weight 30) 인코딩.</li><li>문제: 기존 NN LLR modulator [2]-[4]는 NN 구조·반복횟수가 커서 계산효율이 나쁨 → 반복 디코딩 가속 필요.</li><li>채널 모델: PR1 채널, TD-FIR(3×Nt=45 tap), APP 디코더와 SP 디코더 간 turbo equalization(<code>isp</code>, <code>iglobal</code> 반복).</li><li>핵심 기법: trellis 전이확률 <code>ln γn</code>(n=1~3 sub-matrix)을 3-layer NN(N1=3,N2=5,N3=1)이 신뢰도 판정 후 선택적 갱신.</li><li>갱신 규칙: NN 출력&gt;0.9 또는 &lt;0.1이면 <code>ln γn' = ln γn × 1.34</code>(갱신), 아니면 ×1.00(비갱신)으로 신뢰 message 강화.</li><li>학습: 오차함수 <code>E=½(ŷ - y)²</code>, back-propagation으로 가중치 <code>w</code> 갱신(training signal = 기록열).</li><li>부수 디테일: <code>LLRmn</code>은 <code>ln γn', ln αn, ln βn</code>으로 Max-log-MAP 계산, extrinsic에 <code>Wext=1/col_weight=1/3</code>, <code>WLa=0.7</code> 감쇠로 error propagation 억제.</li><li>NN 정확도: 올바른 <code>ln γn</code> 입력 시 98.4% 갱신 선택, 오류 입력 시 99.9% 비갱신 선택, <code>isp=7,iglobal=13</code>에서 정확도 ≈1.00.</li><li>결과: NN 적용 시 <code>isp=7, iglobal=13</code>에서 no error 달성(기존 [2]-[4]는 isp=15,iglobal=10 필요), SNRS 0.6 dB 개선.</li><li>한계: 컴퓨터 시뮬만, HW 미설계, PR 채널·turbo equalization·trellis 전제로 NAND read 채널과 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SP(sum-product) 디코더 이터레이션</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 min-sum 사용, full-SP 미대응 — 알고리즘 상이</td></tr><tr><td>NN 기반 <code>ln γn</code> 선택·가중</td><td>대응 없음</td><td>NN/딥러닝 디코더는 프로파일상 "대응 없음"</td></tr><tr><td>LLR scaling(×1.34), extrinsic 감쇠</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>(PARAM_LLR)</td><td>개념적 유사(적응형 LLR)하나 이미 보유, 채널 전제 상이</td></tr><tr><td>turbo equalization / Max-log-MAP trellis</td><td>대응 없음</td><td>NAND에는 turbo/trellis 채널 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NN·PR채널·turbo equalization·trellis 전제가 NAND binary QC-LDPC min-sum 구조와 근본적으로 달라 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10130306",
+  "title": "A Study on Accelerating SP Decoding by Neural Network in SMR System",
+  "year": 2023,
+  "venue": "IEEE Trans. Magn.",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "4096 byte",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NN으로 SP 디코더의 신뢰도 높은 ln γn 선택·가중 갱신하여 iteration 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "SMR/HDD의 PR1 채널+turbo equalization+trellis(Max-log-MAP) 전제, NN 전면 개입 — NAND binary QC-LDPC와 구조 불일치",
+  "todo_check": "NN이 만드는 1.34배 스케일 게이팅 아이디어를 채널·NN 없이 순수 LLR scaling으로 환원 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10130306---a-study-on-accelerating-sp-decoding-by-neural-network-in-smr-system-2023-ieee-trans-magn">ieee:10130306 - A Study on Accelerating SP Decoding by Neural Network in SMR System (2023, IEEE Trans. Magn.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

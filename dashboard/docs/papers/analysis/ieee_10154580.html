@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10154580</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10154580---a-second-minimum-approximation-method-for-layered-min-sum-decoding-of-qc-ldpc-codes-2023-ictc">ieee:10154580 - A Second Minimum Approximation Method for Layered Min-Sum Decoding of QC-LDPC Codes (2023, ICTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.75~0.833</td></tr><tr><td>부호length</td><td>672~1296</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>수렴도 지표 µ(미충족 parity 수)로 단일최소 기반 MS의 근사 second-min을 동적 보정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만, β 계수가 코드별 하드코딩(802.11ad/ax 4종)이라 NAND 부호 재튜닝 필요</td></tr><tr><td>추가확인</td><td>µ 카운터의 layered 스케줄 내 실측 오버헤드와 NAND용 QC-LDPC(z=32)에서의 β 재적합</td></tr></tbody></table>
+<blockquote><p>총평: single-min layered MS의 second-min 근사를 수렴도로 보정하는 저복잡 디코더 개선으로 min-sum 엔진에 이식 용이하나 β가 부호 종속.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC(base matrix + circulant shift, z 확장)용 layered min-sum 유한워드길이 디코더로, C2V=7bit / APP=8bit / LLR=6bit 양자화.</li><li>문제: min-sum에서 first/second minima 탐색이 최대 병목이라 second-min만 근사(single-min)하면 복잡도는 줄지만 성능 손실이 큼.</li><li>기존 SAMS[11]는 워드길이 기반 오프셋 <code>γ=((2^(q-1)-1)-m1)·σ/2</code>로 <code>em2=m1+γ</code>를 추정하나 실제 <code>m2</code>와의 오차 <code>d=em2-m2</code>가 저중 SNR에서 성능을 악화.</li><li>핵심 관찰: second-min 추정오차 <code>d</code>는 미충족 parity-check 방정식 수 <code>µ</code>가 커질수록(=수렴 덜 됨) 커진다(Fig.3, Monte-Carlo).</li><li>layered 스케줄에서 layer별 partial PCM <code>Hi</code>로 갱신된 codeword의 미충족 방정식 수 <code>µ</code>를 즉석 카운트해 수렴도 지표로 사용.</li><li>보정식 <code>γ=((2^(q-1)-1)-m1)·σ/2 + β</code>, <code>β</code>는 <code>µ</code>의 구간별 선형함수(코드별 Eq.13a/b, 14a/b로 하드코딩).</li><li>상·하한 적용: exMin-n[13] 그룹법으로 얻은 pseudo-second-min <code>pm2=max{mG1,mG2}</code>를 상한 <code>mu</code>로, 하한 <code>ml=m1</code>로 clamp하여 <code>em2</code> 안정화.</li><li>알고리즘(Alg.1): 그룹분할로 m1·pm2 산출 → µ로 β 결정 → γ 계산 → m1==pm2 또는 clamp 조건에 따라 em2 확정.</li><li>결과: SAMS[11] 대비 FER=10^-3에서 0.2~1dB 이득, NMS 대비 약 0.05dB 손실·평균 iteration 약 3.4% 증가에 그침.</li><li>한계: HW 미구현, AWGN/QPSK 시뮬만, β가 특정 무선 표준 부호(802.11ad/ax) 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered min-sum 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>근사 second-min 보정을 CN 연산 경로에 삽입</td></tr><tr><td>CN min-sum(m1/m2) 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>m2 탐색 제거·근사가 직접 닿는 지점</td></tr><tr><td>iteration별 조정계수 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>β/σ 같은 iteration 종속 파라미터 저장 방식 유사</td></tr><tr><td>조기종료(미충족 parity 카운트)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>µ 지표는 parity 체크 재사용 가능하나 CRC 기반 조기종료와 별개</td></tr></tbody></table>
+<p>적용 가치: 중간 — min-sum second-min 근사로 면적/속도를 줄이면서 성능 회복을 노리는 디코더 개선이라 이식 자체는 쉬우나, Prime ECC는 이미 min1/min2 기반 min-sum을 보유하고 β가 부호 종속이라 NAND용 재튜닝 부담이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10154580",
+  "title": "A Second Minimum Approximation Method for Layered Min-Sum Decoding of QC-LDPC Codes",
+  "year": 2023,
+  "venue": "ICTC",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "672~1296",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "수렴도 지표 µ(미충족 parity 수)로 단일최소 기반 MS의 근사 second-min을 동적 보정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬만, β 계수가 코드별 하드코딩(802.11ad/ax 4종)이라 NAND 부호 재튜닝 필요",
+  "todo_check": "µ 카운터의 layered 스케줄 내 실측 오버헤드와 NAND용 QC-LDPC(z=32)에서의 β 재적합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10154580---a-second-minimum-approximation-method-for-layered-min-sum-decoding-of-qc-ldpc-codes-2023-ictc">ieee:10154580 - A Second Minimum Approximation Method for Layered Min-Sum Decoding of QC-LDPC Codes (2023, ICTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

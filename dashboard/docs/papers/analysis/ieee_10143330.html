@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10143330</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10143330---efficient-protection-of-fpga-implemented-ldpc-decoders-against-single-event-upsets-seus-on-configuration-memories-2023-ieee-trans-circuits-and-systems-i">ieee:10143330 - Efficient Protection of FPGA Implemented LDPC Decoders Against Single Event Upsets (SEUs) on Configuration Memories (2023, IEEE Trans. Circuits and Systems I)</h3>
+<h2 id="a-분류표">A. 분류표</h2>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>FPGA LDPC 디코더의 설정메모리 SEU를 Csum 누적 기반 DWC(Duplicate-With-Comparison)로 검출·정정, TMR보다 저오버헤드로 완전 제거</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>우주방사선(SEU) 내성 보강용 이중화 기법이며 채널 정정능력·복호 알고리즘 자체는 불변, NAND ASIC이 아닌 SRAM-FPGA 대상</td></tr><tr><td>추가확인</td><td>없음 (NAND ECC 부호성능·면적과 무관한 방사선 신뢰성 기법)</td></tr></tbody></table>
+<blockquote><p>총평: SRAM-FPGA LDPC 디코더의 방사선 SEU 내성을 Csum 누적 DWC로 확보하는 신뢰성 기법으로, 채널 정정능력·복호 알고리즘·NAND HW와 무관하여 Prime ECC 이식 가치가 낮음.</p></blockquote>
+<h2 id="b-알고리즘-요약">B. 알고리즘 요약</h2>
+<ol><li>대상은 SRAM-FPGA에 구현된 QC-LDPC 디코더로, 케이스 스터디는 IEEE 802.16e rate <code>r=1/2</code>, <code>K=288</code>, <code>N=576</code>, min-sum 부분병렬 구조(VNU/CNU 재사용, <code>kmax=30</code>).</li><li>풀려는 문제: 우주방사선 유발 SEU가 FPGA <strong>설정메모리(configuration memory)</strong>를 손상시키면 회로 기능이 바뀌어 재구성 전까지 복구 불가, 온보드(OBP) 시스템 신뢰성 위협.</li><li>fault injection 실험으로 SEU 영향을 4유형(system failure/wrong result/correct result/no influence)으로 분류; control 모듈 critical bit의 76%가 심각 영향, 연산·연결 모듈은 각 9.18%·5.51%만 심각(나머지는 디코더 자체 내성으로 흡수).</li><li>핵심기법 — <strong>DWC(Duplicate With Comparison)</strong>: 디코더를 2중화, 두 출력이 다를 때 각 복사본이 이미 내부에 가진 parity check sum <code>Csum</code>(=<code>c_hat×H</code>의 1 개수)과 <code>Fsd</code> 플래그로 결함 복사본 판별.</li><li><code>Csum</code>은 오류비트수 <code>Ne</code>와 대체로 비례(<code>Ne≈Csum</code> for <code>Csum≤70</code>) → 큰 <code>Csum</code>쪽을 결함으로 선택하는 근거.</li><li>단일 판정의 오검출을 줄이기 위해 여러 패킷에 걸쳐 <code>Csum</code>을 누적한 <code>C_Acc</code>를 사용, 임계 <code>Cth</code> 초과 또는 누적횟수 <code>NA</code> 도달 시 판정(작은 <code>C_Acc</code>쪽 출력 선택).</li><li>결함 검출 시 partial reconfiguration(약 38ms)으로 해당 복사본 복구, 그동안 다른 복사본이 단독 복호 지속.</li><li>최적 파라미터 <code>NA=11</code>, <code>Cth=35</code> 실험 도출; 평균 실제 누적 2~3회로 검출, 오검출확률 약 0.7%여도 BER 영향 무시 가능.</li><li>결과(FPGA 실측): Xilinx UltraScale SoC 100MHz에서 SEU 영향 완전 제거, 연산 오버헤드 2.004배·전력 1.69배(TMR의 2.2배보다 낮음), throughput/클록 불변(FDC 1 cycle 추가).</li><li>한계: 채널 정정능력·복호 알고리즘 자체는 개선하지 않는 신뢰성 보강 기법, SRAM-FPGA 설정메모리 SEU 특화(NAND ASIC/스토리지 무관), 특정 802.16e 부호 케이스.</li></ol>
+<h2 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h2>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum QC-LDPC 복호(VNU/CNU)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>케이스 스터디 복호기와 동일 계열이나 논문이 복호 알고리즘을 바꾸지 않음</td></tr><tr><td>parity check sum(Csum) 조기종료/판정</td><td>partial_CRC.cpp/full_CRC.cpp</td><td>Prime ECC는 신드롬 아닌 CRC 조기종료 사용, Csum 이중화 판정과 목적 상이</td></tr><tr><td>DWC 이중화 + SEU 검출/재구성</td><td>대응 없음</td><td>FPGA 설정메모리 방사선 내성 기법, bit-exact C++ 시뮬·NAND ASIC 범위 밖</td></tr><tr><td>fault injection/partial reconfiguration</td><td>대응 없음</td><td>HW 신뢰성 검증 인프라, ECC 부호성능과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — SRAM-FPGA LDPC 디코더의 방사선 SEU 내성을 이중화(DWC)로 확보하는 신뢰성 기법으로, 채널 정정능력·복호 알고리즘·NAND HW를 개선하지 않아 Prime ECC 이식 실익이 없음.</p>
+<h2 id="d-json-블록">D. JSON 블록</h2>
+<pre><code>{
+  "id": "ieee:10143330",
+  "title": "Efficient Protection of FPGA Implemented LDPC Decoders Against Single Event Upsets (SEUs) on Configuration Memories",
+  "year": 2023,
+  "venue": "IEEE Transactions on Circuits and Systems I: Regular Papers",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "576",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "FPGA LDPC 디코더 설정메모리 SEU를 Csum 누적 DWC로 검출·정정, TMR보다 저오버헤드로 완전 제거",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "우주방사선 SEU 내성 이중화 기법으로 채널 정정능력·복호 알고리즘 불변, SRAM-FPGA 대상(NAND ASIC 아님)",
+  "todo_check": "없음 (NAND ECC 부호성능·면적과 무관한 방사선 신뢰성 기법)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10143330---efficient-protection-of-fpga-implemented-ldpc-decoders-against-single-event-upsets-seus-on-configuration-memories-2023-ieee-trans-circuits-and-systems-i">ieee:10143330 - Efficient Protection of FPGA Implemented LDPC Decoders Against Single Event Upsets (SEUs) on Configuration Memories (2023, IEEE Trans. Circuits and Systems I)</a></li><li class="h2"><a href="#a-분류표">A. 분류표</a></li><li class="h2"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h2"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h2"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

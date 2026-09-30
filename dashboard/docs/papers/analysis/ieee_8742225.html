@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8742225</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8742225---scaling-the-fast-x86-dvb-s2-decoder-to-1-gbps-2018-ieee-aerospace-conference">ieee:8742225 - Scaling the Fast x86 DVB-S2 Decoder to 1 Gbps (2018, IEEE Aerospace Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Le Gal의 x86 SIMD 다블록 병렬 SW LDPC 디코더를 최신 멀티코어로 확장해 1Gbps 달성, 캐시가 병목임을 규명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>범용 x86 CPU SW 구현 최적화 논문 - NAND 컨트롤러 RTL/ASIC ECC와 무관, 알고리즘·정정성능 개선 없음</td></tr><tr><td>추가확인</td><td>없음 (SW 스케일링 연구로 HW ECC 이식 대상 아님)</td></tr></tbody></table>
+<blockquote><p>총평: SW SDR 수신기용 DVB-S2 디코더의 x86 성능 스케일링 연구로, NAND HW binary QC-LDPC ECC 이식과는 결이 다름 - 참고가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: DVB-S2 LDPC(대형 블록 <code>64800</code>bit, rate 예로 1/2 → 226799 non-zero, 밀도 0.01%) + BCH 연접(concatenated) 부호의 SW 디코더.</li><li>문제: FEC 복호는 수신기에서 가장 무거운 연산 - 전용 FPGA/GPU 가속기 대신 범용 CPU(GPP)만으로 실시간 고속(Gbps) 복호가 가능한지.</li><li>기반(Le Gal [2]): 각 LDPC 블록은 독립 복호 가능 + 알고리즘이 branch-free(분기 없음)라는 점을 이용, 여러 블록을 SIMD 레지스터에 묶어(transpose) 동시 복호.</li><li>SIMD 구현: SSE=16블록, AVX2=32블록을 한 instruction에 처리 - transpose 오버헤드는 반복(iteration)에 걸쳐 상각.</li><li>멀티코어 확장: 디코더 스레드를 코어별로 다수 실행, LDPC/BCH 스레드 분리(BCH는 10배 이상 빠름).</li><li>핵심 발견: 성능은 코어 수가 아니라 <strong>가용 캐시</strong>가 병목 - 스레드별 버퍼(약 360kB/블록, AVX 11.4MB/thread)가 캐시를 넘으면 throughput 포화·저하.</li><li>스레드/코어 배치: OS 자동 배치는 편차 큼 - 명시적 sequential/alternating 배치가 유리, genetic programming(DEAP)으로 최적 배치 도출.</li><li>프로세서 비교: Xeon 2세대, Intel Phi(KNL), AMD EPYC, ARM Cortex-A53; EPYC은 32코어까지 거의 선형 스케일, ARM은 캐시 1MB로 2.7Mbps에 그침.</li><li>결과: 중급 AMD EPYC 서버에서 최대 <strong>1 Gbps</strong>(채널비트 기준, 20 iter) 달성; early termination 적용 시 SNR +1.5dB마다 throughput 약 2배.</li><li>한계: 알고리즘/정정성능 개선 없음(순수 SW 성능 최적화), 다블록 묶음이라 early termination 효율 저하·latency 증가, HW(RTL/ASIC) 설계 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>x86 SIMD 다블록 병렬 SW 복호</td><td>대응 없음</td><td>우리는 HW(RTL) bit-exact 시뮬 - CPU SIMD 병렬화 대상 아님</td></tr><tr><td>DVB-S2 대형 부호 + BCH 연접</td><td>대응 없음</td><td>우리는 NAND 고rate binary QC-LDPC, BCH 연접 없음</td></tr><tr><td>early termination(수렴 검사)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>개념만 공통 - 우리는 이미 Partial/Full CRC 조기종료 보유</td></tr><tr><td>캐시/메모리 병목 분석</td><td>대응 없음</td><td>SW 캐시 이슈로 HW 라우팅/메모리와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - SW(x86) 성능 스케일링 연구로 NAND HW ECC의 부호설계/디코더/HW 어디에도 떼어 쓸 알고리즘 기여가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8742225",
+  "title": "Scaling the Fast x86 DVB-S2 Decoder to 1 Gbps",
+  "year": 2018,
+  "venue": "IEEE Aerospace Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "64800",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Le Gal의 x86 SIMD 다블록 병렬 SW LDPC 디코더를 최신 멀티코어로 확장해 1Gbps 달성, 캐시가 병목임을 규명",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "범용 x86 CPU SW 구현 최적화 논문 - NAND 컨트롤러 RTL/ASIC ECC와 무관, 알고리즘·정정성능 개선 없음",
+  "todo_check": "없음 (SW 스케일링 연구로 HW ECC 이식 대상 아님)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8742225---scaling-the-fast-x86-dvb-s2-decoder-to-1-gbps-2018-ieee-aerospace-conference">ieee:8742225 - Scaling the Fast x86 DVB-S2 Decoder to 1 Gbps (2018, IEEE Aerospace Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

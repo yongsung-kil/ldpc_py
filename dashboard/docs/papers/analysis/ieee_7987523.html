@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7987523</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7987523---ultra-high-throughput-unrolled-layered-architecture-for-qc-ldpc-decoders-2017-isvlsi">ieee:7987523 - Ultra High Throughput Unrolled Layered Architecture for QC-LDPC Decoders (2017, ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>layer-unrolling + 층간 pipeline + hard-wired shift로 barrel shifter/AP-LLR 메모리 제거, 다중 codeword로 60+Gbps</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>62.8Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>FPGA(LUT-SRL) 조직 의존 아키텍처, 소수 layer(full-layer)·array code 전제라 z=32 우리 HCU/GT 구조와 정합 부담</td></tr><tr><td>추가확인</td><td>z=108 array code 전제가 우리 z=32·N_b=129 QC구조에 맞는지, ASIC 환산 시 이득 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: layered 스케줄러의 layer-unrolling+pipeline+hard-wired shift로 초고throughput을 얻는 순수 HW 아키텍처 기법으로, 정정능력 개선은 없고 FPGA 특화라 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: array QC-LDPC, base matrix <code>B</code>를 확장계수 <code>z</code>로 lifting, <code>N = z × ncol</code>; 실험은 regular rate 3/4, dv=3, N=1296(z=108, 3 layer).</li><li>문제: layered MS 디코더에서 barrel shifter(가변 shift)와 AP-LLR 메시지 메모리가 면적·throughput 병목 → 수십 Gbps 달성이 어렵다.</li><li>핵심 기법1(layer unrolling): 각 layer를 별도 HW 블록으로 펼치고 layer 사이에 pipeline register 삽입, 한 layer 처리 = 1 clock cycle.</li><li>핵심 식: layered Min-Sum <code>α_{m,n}=γ_n−β_{m,n}</code>, <code>β̃_{m,n}=∏sign·min|α|</code>, <code>γ̃_n=α_{m,n}+β̃_{m,n}</code> (AP-LLR <code>γ</code> 갱신).</li><li>데이터 해저드: 다중 codeword 동시 처리(<code>nl</code>개)로 pipeline stall 없이 층을 채워 처리량을 layer 수만큼 증대.</li><li>라우팅: layer간 shift량을 hard-wire로 고정해 가변 shifter 제거, layer0 입력만 2-to-1 MUX로 새 codeword LLR 선택.</li><li>메모리: β는 SRL(shift register)에 compressed 포맷(sign, min1, min2, index)으로 저장; AP-LLR은 층간 pipeline flip-flop으로 대체(별도 메모리 제거).</li><li>MS 변형: SCMS/SCMS:v2(erasure 저장 없는 memory-friendly 버전) 지원, waterfall 개선하나 별 추가 이득은 부호정정보다 스케줄 효율에 집중.</li><li>결과(FPGA Virtex-7): MS(2,4) 197MHz에서 62.8Gbps, MS(4,6) 34.3Gbps; 4 iteration/FER&lt;1e-4, [10] 대비 3~4x, [14] 대비 50x throughput, BRAM·DSP 0.</li><li>한계: FPGA LUT-SRL 조직에 크게 의존, full-layer/array code(소수 layer) 전제, 정정능력·iteration 개선은 없고 ASIC 이득은 미확인.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered Min-Sum 이터레이션(α/β/γ)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>우리는 dual-update 스케줄, 논문의 layer 스케줄과 개념 인접하나 HW 펼침 방식은 상이</td></tr><tr><td>CN min1/min2 comparator tree</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>compressed β(min1/min2/index) 포맷 동일 개념, 재사용 가능</td></tr><tr><td>hard-wired shift / layer 라우팅</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code> (HW edge/MUX)</td><td>가변 shifter 제거·hard-wire 아이디어는 우리 GT MUX edge 선택과 방향 유사</td></tr><tr><td>AP-LLR 저장→층간 pipeline register</td><td>디코더 HW 모델(z=32, pipeline 6-stage)</td><td>우리 pipeline 구조와 정합 필요, z=108 array 전제라 직접 이식 부담</td></tr><tr><td>조기종료 Syndromecheck</td><td><code>partial_CRC.cpp</code>, <code>full_CRC.cpp</code></td><td>개념 대응, 우리는 CRC 기반이라 syndrome check와 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layer-unrolling/hard-wired shift/compressed β는 throughput 개선 아이디어로 참고가치가 있으나, FPGA 특화·array code 전제·정정능력 무개선이라 z=32 QC구조로의 직접 이식은 부담.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7987523",
+  "title": "Ultra High Throughput Unrolled Layered Architecture for QC-LDPC Decoders",
+  "year": 2017,
+  "venue": "ISVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.75,
+  "code_length": "1296",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "layer-unrolling + 층간 pipeline + hard-wired shift로 barrel shifter/AP-LLR 메모리 제거, 다중 codeword로 60+Gbps",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 62.8,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "FPGA(LUT-SRL) 조직 의존 아키텍처, 소수 layer(full-layer)·array code 전제라 z=32 우리 HCU/GT 구조와 정합 부담",
+  "todo_check": "z=108 array code 전제가 우리 z=32·N_b=129 QC구조에 맞는지, ASIC 환산 시 이득 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7987523---ultra-high-throughput-unrolled-layered-architecture-for-qc-ldpc-decoders-2017-isvlsi">ieee:7987523 - Ultra High Throughput Unrolled Layered Architecture for QC-LDPC Decoders (2017, ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

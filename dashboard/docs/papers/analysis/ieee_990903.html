@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_990903</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee990903---near-optimum-universal-belief-propagation-based-decoding-of-low-density-parity-check-codes-2002-ieee-trans-commun">ieee:990903 - Near Optimum Universal Belief Propagation Based Decoding of Low-Density Parity Check Codes (2002, IEEE Trans. Commun.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.77</td></tr><tr><td>부호length</td><td>273~1057</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>UMP BP-based(min-sum) check message를 정규화 factor로 나눠 BP에 근접 (normalized min-sum 원조)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·factor 2/4는 shift로 무비용이나 1.4 등은 나눗셈, error-floor 미분석</td></tr><tr><td>추가확인</td><td>Prime ECC min-sum에 이미 scaling이 있는지, 논문 정규화 factor 이론식이 우리 부호에 그대로 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: normalized min-sum(정규화 BP)의 원조 논문. min-sum에 check-msg 나눗셈 factor 하나로 BP 근접 성능 얻는 고전 기법 - 이식성 높으나 Prime ECC가 이미 유사 scaling을 갖췄다면 중복.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular Gallager LDPC ((504,252)/(1008,504), j=3 k=6)와 finite-geometry DSC 코드((273,191) w=17, (1057,813) w=33), AWGN+BPSK.</li><li>문제: UMP BP-based(=min-sum) 알고리즘은 check-sum weight가 크면(DSC 등) BP 대비 최대 1dB 손실 → soft value가 부정확.</li><li>원인 분석: min-sum의 check message <code>L_ji</code>(=z_ji)는 BP 값과 부호는 같으나 magnitude가 항상 과대추정(<code>|z_min-sum| &gt; |z_BP|</code>, Statement 1,2).</li><li>핵심 기법: 첫 iteration의 min-sum check message를 정규화 factor <code>alpha(&gt;1)</code>로 나눠 magnitude 과대추정 보정 → BP 근접.</li><li>factor 결정식: 정규화된 magnitude 평균 = BP magnitude 평균이 되도록 <code>E[|z|/alpha]=E[|z_BP|]</code> (식 (18))로 alpha 산출.</li><li>이론적 유도: 수신 LLR pdf(SNR·rate 종속)로부터 (25)(30) Taylor 급수 5항으로 factor 계산, Monte Carlo 값과 거의 일치 (Fig.1,2).</li><li>단순화: 한 부호에 SNR·iteration 무관 고정 factor 하나만 사용(critical range BER 1e-4~1e-5에서 선택) → universal 성질 유지, 채널정보 불필요.</li><li>HW 친화: factor 2.0/4.0은 register shift 1/2비트로 무비용 구현, 나눗셈 회피.</li><li>결과: DSC 코드에서 min-sum 대비 ~1dB 개선(BP에 근접), regular LDPC에서 0.2~0.25dB gain·BP보다 적은 iteration으로 수렴.</li><li>확장/한계: 같은 정규화를 turbo Max-Log-MAP에 적용(장부호 0.2dB), HW 미구현·error-floor 미분석·factor는 부호별 사전결정 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum check message 정규화(나눗셈 factor)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>CN magnitude 출력에 factor 적용 지점, min-sum 성능 개선 직결</td></tr><tr><td>정규화 factor 이론 산출(SNR/rate pdf)</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>factor를 LLR 테이블/양자화로 흡수 가능</td></tr><tr><td>iteration별 factor(첫 iter 고정)</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration 구간별 LLR threshold 테이블과 개념 정합</td></tr><tr><td>shift 기반 factor(2/4)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>HW 무비용 scaling 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — normalized min-sum은 min-sum HW 디코더에 가장 저렴하게 이식되는 성능개선(0.2~1dB)이나, Prime ECC의 magnitude 양자화 테이블/적응형 LLR이 이미 유사 scaling을 흡수하고 있을 가능성이 커 중복 위험.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:990903",
+  "title": "Near Optimum Universal Belief Propagation Based Decoding of Low-Density Parity Check Codes",
+  "year": 2002,
+  "venue": "IEEE Trans. Commun.",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.77",
+  "code_length": "273~1057",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "UMP BP-based(min-sum) check message를 정규화 factor로 나눠 BP에 근접 (normalized min-sum 원조)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·factor 2/4는 shift로 무비용이나 1.4 등은 나눗셈, error-floor 미분석",
+  "todo_check": "Prime ECC min-sum에 이미 scaling이 있는지, 논문 정규화 factor 이론식이 우리 부호에 그대로 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee990903---near-optimum-universal-belief-propagation-based-decoding-of-low-density-parity-check-codes-2002-ieee-trans-commun">ieee:990903 - Near Optimum Universal Belief Propagation Based Decoding of Low-Density Parity Check Codes (2002, IEEE Trans. Commun.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1356191</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1356191---decoding-of-low-density-parity-check-codes-over-finite-state-binary-markov-channels-2004-ieee-trans-communications">ieee:1356191 - Decoding of Low-Density Parity-Check Codes Over Finite-State Binary Markov Channels (2004, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC Tanner graph에 HMM(유한상태 마르코프 채널) 노드를 결합한 BP 복호 + Baum-Welch 블록별 채널 파라미터 joint estimation</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>채널 memory(burst) 활용이 이득의 원천 → NAND의 AWGN/RBER(대체로 memoryless) 모델엔 HMM 결합 이득이 없고 HMM/Baum-Welch 미보유</td></tr><tr><td>추가확인</td><td>NAND read burst 상관이 유의미한 특정 시나리오에서만 재검토 가치</td></tr></tbody></table>
+<blockquote><p>총평: Gilbert-Elliot 등 memory 채널의 통계를 LDPC BP에 결합해 capacity 이상 통신을 얻는 채널특화 복호로, memoryless 성격의 NAND binary QC-LDPC엔 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 유한상태 binary Markov(HMM) 채널(대표적으로 2상태 Gilbert-Elliot: good/bad state, 상태별 BEP)에서 정의된 LDPC 부호 복호. 부호는 rate-1/2 <code>(3,6)</code> regular LDPC.</li><li>문제: 채널 memory는 capacity를 높이지만(<code>C &gt; C_iid</code>), interleaver로 memory를 없애면 그 이득을 못 씀 → 채널 통계를 복호에 직접 활용하려 함.</li><li>모델: 채널을 상태집합·전이확률 <code>T</code>·상태별 출력확률(BEP)로 규정한 HMM으로 모델링.</li><li>핵심 기법: LDPC Tanner graph의 error-pattern 노드를 HMM 노드와 "link"하여 전체를 Bayesian network로 보고 message-passing(BP) 수행. check↔error-pattern↔HMM 4종 메시지 전파.</li><li>핵심 식: HMM 상 forward/backward recursion(식 1~3)으로 error-pattern에 대한 soft 사후확률 산출 — [7]의 hard estimate 대비 soft estimate로 성능 개선. Interleaver 불필요.</li><li>확장: 채널 파라미터 미지 시 매 iteration마다 Baum-Welch 재추정(식 4~10)을 병행 → 블록별 from-scratch 추정, 파라미터가 블록마다 변해도 강건.</li><li>구현 트릭: HMM 도입이 그래프 cycle을 늘리나 성능에 큰 영향 없음, pilot/training sequence 불필요.</li><li>학습/최적화: Baum-Welch(EM) joint channel estimation (별도 학습 불필요, 복호와 동시).</li><li>결과: 정상 BEP가 memoryless 한계 0.11을 넘어도(예 δ≈0.137까지) 무오류 복호; 파라미터 미지 추정 곡선이 완전정보 곡선과 겹침. 단 반복수 증가(avg iter는 채널조건에서 18 미만 등, memory 미활용 대비 더 많은 iteration 필요).</li><li>한계: 시뮬레이션만(HW 미설계), Gilbert-Elliot/버스트 채널 특화, 이득 전부가 채널 memory 활용에서 나옴.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Tanner graph에 HMM 노드 결합한 BP 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>개념상 이터레이션 루프에 채널 노드 추가가 닿으나, Prime ECC 채널이 memoryless라 결합 이득 없음</td></tr><tr><td>HMM forward/backward + Baum-Welch 채널추정</td><td>대응 없음</td><td>Prime ECC는 HMM/BCJR·EM 추정 미보유이며 NAND 모델에 불필요</td></tr><tr><td>Markov 채널 soft LLR 산출</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code> (개념만)</td><td>우리 채널은 AWGN/RBER/fixed 에러이므로 상태의존 BEP 결합 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 이득의 원천이 채널 memory(burst 상관) 활용인데 Prime ECC의 NAND 채널 모델(AWGN/RBER)은 대체로 memoryless라 HMM 결합 복호를 떼어 와도 개선 여지가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1356191",
+  "title": "Decoding of Low-Density Parity-Check Codes Over Finite-State Binary Markov Channels",
+  "year": 2004,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC Tanner graph에 HMM(유한상태 마르코프 채널) 노드를 결합한 BP 복호 + Baum-Welch 블록별 채널 파라미터 joint estimation",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "채널 memory(burst) 활용이 이득의 원천 → NAND의 AWGN/RBER(대체로 memoryless) 모델엔 HMM 결합 이득 없고 HMM/Baum-Welch 미보유",
+  "todo_check": "NAND read burst 상관이 유의미한 특정 시나리오에서만 재검토 가치"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1356191---decoding-of-low-density-parity-check-codes-over-finite-state-binary-markov-channels-2004-ieee-trans-communications">ieee:1356191 - Decoding of Low-Density Parity-Check Codes Over Finite-State Binary Markov Channels (2004, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

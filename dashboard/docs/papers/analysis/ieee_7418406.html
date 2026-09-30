@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7418406</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7418406---a-616gbs-47pjbititeration-ldpc-decoder-for-ieee-80211ad-standard-in-40nm-lp-cmos-2015-ieee-globalsip">ieee:7418406 - A 6.16Gb/s 4.7pJ/bit/iteration LDPC decoder for IEEE 802.11ad standard in 40nm LP-CMOS (2015, IEEE GlobalSIP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.8125</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>column-parallel 아키텍처(matrix segmentation + 2-stage variable shifter)로 memory 60% 절감, shifter 회로 42% 절감하며 6.16Gb/s, 4.7pJ/bit/iteration 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상(0.80mm² for LDPC 부분 포함 PHY 2.2mm x 2.7mm @40nm)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>6.16</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11ad 특유의 4개 코드레이트/Z=42 QC-LDPC 구조에 특화된 shifter 설계로 Prime ECC의 z_sb=32 구조에는 재설계 필요</td></tr><tr><td>추가확인</td><td>column-parallel(V2C sign-only, C2V min/2nd-min만 저장) 방식이 Prime ECC의 HCU/GT와 결합 가능한지, memory 절감 아이디어를 z=32 lifting에 적용 시 이득 재계산 필요</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 알고리즘 자체 개선은 없으나 column-parallel 데이터패스와 reduced-complexity variable shifter로 메모리/면적/전력을 크게 절감한 실측 HW 논문으로, Prime ECC의 HW 아키텍처(병렬화, 라우팅, shifter) 레이어에 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.11ad 표준의 QC-LDPC 4종 rate(1/2, 5/8, 3/4, 13/16), Z=42 서브행렬, mZ x nZ parity-check matrix(m=16 고정, n=3/4/6/8) 대상 min-sum 디코더.</li><li>기존 row-parallel 구조는 대용량 memory와 pipeline register로 전력 소모가 크고, eDRAM(선행연구 [2])이나 FDSOI(선행연구 [3])는 표준 저전력 CMOS 공정에 부적합해 아키텍처 혁신이 필요.</li><li>핵심 모델: min-sum 기반 VN/CN 반복 처리, LLR 5비트 양자화, 최대 iteration 7회로 고정.</li><li>핵심 기법 1단 - column-parallel 아키텍처: CN을 8Z개로 완전병렬, VN은 2Z개로 부분병렬 처리, parity-check matrix를 8개 chunk로 분할하고 각 chunk를 좌/우 half로 나눠 V2C/C2V shifter에 매핑.</li><li>메모리 절감 핵심: posterior/V2C 메시지는 sign bit만 저장(soft bit 불필요), C2V 메모리는 전체 메시지 대신 min/2nd-min 값만 저장 → 총 메모리 12096bit로 기존(30240bit) 대비 60% 절감(Table I).</li><li>핵심 기법 2단 - reduced-complexity 2-stage variable shifter: 기존 log2(Z) 단 barrel shifter 대신, 4종 rate의 12가지 shift case를 modulo-42 덧셈 두 조합으로 분해해 2단 MUX-cascade로 구현, 회로 42% 절감·critical path 33% 감소(Fig. 6).</li><li>부수 트릭: coarse clock gating(조기종료 기반, 최대 55% 전력 절감) + fine-grained gating(비제로 서브행렬 수/row 수 기준 pipeline register 선택적 활성화), shortened code(PHY header/MCS0,1)는 chunk 수만 줄여 처리해 디코딩 지연 절반 감소.</li><li>최적화 절차: shifter 분해 조합은 exhaustive search로 고정 cyclic shifter 개수를 최소화하도록 탐색(학습이 아닌 조합 탐색).</li><li>결과: 40nm LP-CMOS 시제품 6.16Gb/s, 4.7pJ/bit/iteration(정규화 후에도 최저), LDPC 디코더 면적 0.80mm², BER&lt;10^-8 @ Eb/N0=5dB, 전력 203mW(early termination 적용 시 106mW로 감소).</li><li>한계: 알고리즘(min-sum) 자체의 정정성능 개선은 없음(순수 아키텍처/회로 최적화), 802.11ad 표준의 특정 Z=42/4-rate 구조에 특화되어 일반화에는 재설계 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>column-parallel 데이터패스(V2C sign-only, C2V min/2nd-min 저장)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum(min1/min2) 기반이라 C2V min/2nd-min 저장 개념은 유사하나, column-parallel 자체 구조(2Z VN, 8Z CN)는 Prime ECC의 row-parallel + HCU/GT 구조와 상이</td></tr><tr><td>reduced-complexity 2-stage variable shifter</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code>(MUX 기반 edge 선택과 개념적 유사)</td><td>목적(회로 절감)은 유사하나 802.11ad 특정 Z=42/4-rate 조합에 특화된 설계라 z_sb=32 구조로의 직접 이식은 재설계 필요</td></tr><tr><td>coarse/fine clock gating (조기종료 기반 전력절감)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료 자체는 Prime ECC에 이미 구현(Partial CRC), gating을 통한 전력 절감 아이디어는 참고 가능하나 본 프로파일에 전력 최적화 항목 명시 없음</td></tr><tr><td>메모리 절감(C2V/V2C bit 수 축소)</td><td><code>ecc_data.h</code> <code>PARAM_DEC</code>, <code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>HW 메모리 사이즈 최적화 아이디어로 Prime ECC decoder HW 모델에 참고 가치 있음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 정정성능 개선은 없지만 실측 검증된 column-parallel HW 아키텍처와 메모리/shifter 절감 기법은 Prime ECC의 HW arch 레이어(병렬화·메모리·라우팅) 최적화에 참고할 만함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7418406",
+  "title": "A 6.16Gb/s 4.7pJ/bit/iteration LDPC decoder for IEEE 802.11ad standard in 40nm LP-CMOS",
+  "year": 2015,
+  "venue": "IEEE GlobalSIP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.8125",
+  "code_length": 672,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "column-parallel 아키텍처(matrix segmentation + 2-stage variable shifter)로 memory 60% 절감, shifter 회로 42% 절감하며 6.16Gb/s, 4.7pJ/bit/iteration 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상(0.80mm² for LDPC 부분 포함 PHY 2.2mm x 2.7mm @40nm)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 6.16,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "802.11ad 특유의 4개 코드레이트/Z=42 QC-LDPC 구조에 특화된 shifter 설계로 Prime ECC의 z_sb=32 구조에는 재설계 필요",
+  "todo_check": "column-parallel(V2C sign-only, C2V min/2nd-min만 저장) 방식이 Prime ECC의 HCU/GT와 결합 가능한지, memory 절감 아이디어를 z=32 lifting에 적용 시 이득 재계산 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7418406---a-616gbs-47pjbititeration-ldpc-decoder-for-ieee-80211ad-standard-in-40nm-lp-cmos-2015-ieee-globalsip">ieee:7418406 - A 6.16Gb/s 4.7pJ/bit/iteration LDPC decoder for IEEE 802.11ad standard in 40nm LP-CMOS (2015, IEEE GlobalSIP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

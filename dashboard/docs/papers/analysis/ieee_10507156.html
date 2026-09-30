@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10507156</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10507156---area-efficient-qc-ldpc-decoding-architecture-with-thermometer-code-based-sorting-and-relative-quasi-cyclic-shifting-2024-ieee-tcas-i">ieee:10507156 - Area-Efficient QC-LDPC Decoding Architecture With Thermometer Code-Based Sorting and Relative Quasi-Cyclic Shifting (2024, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.88</td></tr><tr><td>부호length</td><td>9472</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>thermometer code 기반 논리게이트만으로 min1/min2를 탐색하는 CNU와, 상대 shift coefficient로 QSN을 2단→1단으로 줄인 area-efficient QC-LDPC 디코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.63M gate(NAND2등가)@65nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>23.47Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>NMS 성능 자체는 개선하지 않고 동일 성능을 유지하며 순수 HW 면적/지연만 절감 - 정정능력 이득 없음</td></tr><tr><td>추가확인</td><td>thermometer code 변환기(2C-to-TC) 자체의 면적/전력이 NAND ECC의 짧은 word-length(z_sb=32) 환경에서도 이득이 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: 알고리즘(NMS) 자체는 그대로 두고 CNU의 min-search HW와 shift 네트워크를 재설계하여 순수 HW 효율(면적/지연)을 높인 논문 - Prime ECC의 CNU/CSU 레이어에 직접 이식 가능성이 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G NR QC-LDPC(BG1/BG2), row-layered scheduling, normalized min-sum(NMS) 알고리즘 기반, partially-parallel 구조(DFU 32개).</li><li>기존 min-tree 기반 CNU는 2's complement→signed-magnitude 변환과 비교기 트리로 인해 면적·지연이 크다는 문제를 해결하려 함.</li><li>V2C 메시지(5bit SM)를 절댓값 기반 thermometer code(TC, unary code)로 변환한다는 것이 핵심 가정.</li><li>핵심 기법 1단: TC 기반 CNU - <code>AND</code> 연산만으로 첫 번째 최소값을, <code>XOR+NOR</code>로 위치 마스킹 후 다시 <code>AND</code>로 두 번째 최소값을 탐색(비교기 불필요).</li><li>정규화(<code>α</code>)를 C2V 계산 후가 아니라 2C→TC 변환 시점에 결합(<code>R̂cv = S·min|α·Qv'c|</code>), TC 비트폭을 15bit→11~12bit로 축소해 추가 면적 절감.</li><li>핵심 기법 2단: 인접 layer 간 두 번의 shift(roll-back + 다음 layer shift)를 상대 shift coefficient <code>ŝ=(s_b-s_a) mod Z</code>로 통합, QSN 2단→1단으로 축소.</li><li>부수 기법: C2V memory를 two-port 대신 single-port로 구현(두 C2V 벡터를 한 워드로 결합해 매 클록 교대 접근), 면적 50%·전력 18%·지연 33% 절감.</li><li>학습/최적화 절차 없음(고정 HW 아키텍처 설계).</li><li>결과: 65nm CMOS, 500MHz, 0.63M gate, 23.47Gbps, CNU 복잡도 최대 36% 감소, QSN 면적 절반, FER 성능 열화 없음(baseline NMS와 거의 동일).</li><li>한계: 정정성능(FER) 개선은 목표가 아니며 기존 NMS와 동등 유지가 목표, TC 변환기 자체는 SM 변환기보다 약 1.59배 복잡해 대신 CNU 논리 절감으로 상쇄.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Thermometer code 기반 min1/min2 탐색</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN 연산의 비교기 로직 대체안 - 이식 난이도 낮음, HW 면적/지연 직결</td></tr><tr><td>정규화(normalization)를 TC 변환에 결합</td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>스케일링 로직 위치 재배치 아이디어, 대응 가능</td></tr><tr><td>상대 shift coefficient 기반 단일 QSN</td><td>대응 없음 (Prime ECC는 z_sb=32 row 병렬 방식으로 QSN/barrel-shifter 구조 상이)</td><td>5G의 넓은 lifting size(2~384) 대응용 shift network 최적화로, 고정 z=32인 Prime ECC 구조와는 적용 맥락 다름</td></tr><tr><td>Single-port C2V memory</td><td><code>decoder.cpp</code> 메모리 참조 로직 (C2V 저장 관련)</td><td>메모리 포트 절감 아이디어, HCU/GT와 별개로 메모리 뱅크 설계 참고 가능</td></tr><tr><td>부호구조(5G BG1/BG2, 51종 lifting size)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>5G 표준 특화, 고정 QC-LDPC인 Prime ECC엔 재구성성 자체는 불필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — CNU의 min-search를 비교기 대신 논리게이트(thermometer code)로 대체하는 아이디어는 성능 손실 없이 HW 면적·지연을 줄이는 순수 이득으로, Prime ECC의 CNU 로직(<code>CNU_Update_New_Mag</code>)에 바로 검토 가능.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10507156",
+  "title": "Area-Efficient QC-LDPC Decoding Architecture With Thermometer Code-Based Sorting and Relative Quasi-Cyclic Shifting",
+  "year": 2024,
+  "venue": "IEEE TCAS-I",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": 0.88,
+  "code_length": "9472",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "thermometer code 기반 논리게이트만으로 min1/min2를 탐색하는 CNU와, 상대 shift coefficient로 QSN을 2단→1단으로 줄인 area-efficient QC-LDPC 디코더",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.63M gate(NAND2등가)@65nm",
+  "parallelism": "부분",
+  "throughput_gbps": 23.47,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "NMS 성능 자체는 개선하지 않고 동일 성능을 유지하며 순수 HW 면적/지연만 절감 - 정정능력 이득 없음",
+  "todo_check": "thermometer code 변환기(2C-to-TC) 자체의 면적/전력이 NAND ECC의 짧은 word-length(z_sb=32) 환경에서도 이득이 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10507156---area-efficient-qc-ldpc-decoding-architecture-with-thermometer-code-based-sorting-and-relative-quasi-cyclic-shifting-2024-ieee-tcas-i">ieee:10507156 - Area-Efficient QC-LDPC Decoding Architecture With Thermometer Code-Based Sorting and Relative Quasi-Cyclic Shifting (2024, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

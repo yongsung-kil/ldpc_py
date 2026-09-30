@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9658510</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9658510---hard-reliability-based-ordered-statistic-decoding-and-its-application-to-mceliece-public-key-cryptosystem-2022-ieee-communications-letters">ieee:9658510 - Hard Reliability-Based Ordered Statistic Decoding and Its Application to McEliece Public Key Cryptosystem (2022, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1200~9602</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>신드롬 기반 hard reliability로 정렬통계(OSD) 복호를 수행해 정정능력을 병렬 BF의 2배(v)로 높이고 FER 상한을 유도</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>McEliece PKC(암호) 전용, 재부호화(가우스 소거 o(Δ^3)) 기반 OSD로 iterative min-sum과 구조 상이, NAND soft-read 무관 hard-decision</td></tr><tr><td>추가확인</td><td>재부호화/가우스 소거 복잡도가 NAND 컨트롤러 지연·면적 제약에 부적합한지, hard-decision 정정능력 상한이 soft min-sum 대비 실익 없는지</td></tr></tbody></table>
+<blockquote><p>총평: 신드롬으로 hard reliability를 만들어 OSD 방식으로 정정능력을 병렬 BF의 2배로 끌어올린 암호(McEliece PKC)용 하드복호 논문 - QC-LDPC를 쓰지만 목적/알고리즘이 NAND iterative min-sum과 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 QC-LDPC/QC-MDPC(circulant 블록 H), 예제 C1=(3,6)-regular LDPC n=1200(PEG), C2=(45,90)-regular MDPC n=9602.</li><li>문제: McEliece PKC는 LDPC/MDPC iterative 복호의 FER를 초저영역(2^-80~2^-256)에서 보증 못 해 강보안 키 설계가 어려움.</li><li>가정: 수신벡터에 soft 정보 없음(hard) - 신드롬 <code>s=r·H^T</code>만으로 신뢰도를 만든다.</li><li>핵심(HR-OSD 3단계): (1) 각 비트의 hard reliability <code>Rj=Σ si·hi,j</code> 계산, (2) <code>Rj</code> 크기로 unreliable(|L1|=n-k)/reliable(|L2|=k) 분할, (3) 신뢰비트를 재부호화(re-encode)해 후보 코드워드 산출 후 역치환.</li><li><code>Rj</code>가 클수록 비트 신뢰도 낮음 - 오류비트가 unreliable 집합 L1에 들어가도록 보장하는 것이 핵심.</li><li>정정능력 정리: g≥6 regular 부호에서 최대열교차(max column intersection)와 열무게 v로 <code>t≤min{v, ⌊(n-k)/(v(w-1)+1)⌋}</code> 정정 - 병렬 BF의 <code>⌊v/2⌋</code> 대비 약 2배.</li><li>재부호화는 sparse H면 근사삼각화 gap <code>Δ</code>에 대해 <code>o(Δ^3)</code> 가우스소거로 처리(에러당 최대 <code>v(w-1)+1</code> unreliable 비트).</li><li>FER 상한(정리 3): <code>t≤tl</code> 이면 FER=0, <code>tl&lt;t≤tr</code> 구간은 조합식으로 상한, <code>t&gt;tr</code>이면 FER=1 - error floor 조사 없이 초저 FER 보증.</li><li>결과: C1/C2 모두 병렬 BF보다 낮은 FER, 키설계에서 동일 보안수준 대비 부호길이 4.1~63배 단축(예 v=45, FER≤2^-128, 키 336521 vs 1384387 bit).</li><li>한계: 암호 응용 전용, HW 미설계·시뮬만, hard-decision·재부호화(가우스소거) 구조로 NAND soft min-sum 파이프라인과 이질적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>신드롬 기반 hard reliability 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>대상은 복호기지만 min-sum message-passing이 아닌 OSD/재부호화라 알고리즘 직접 대응 약함</td></tr><tr><td>재부호화(가우스 소거, systematic H)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>재부호화 개념은 인코더에 닿으나 dual-diagonal 고정 인코더와 방식 상이</td></tr><tr><td>QC-LDPC circulant H 구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC 구조 로드와 형태만 유사</td></tr><tr><td>OSD/Prange 정렬통계 복호</td><td>대응 없음 (Prime ECC는 iterative min-sum)</td><td>정렬통계·재부호화 복호는 Prime ECC에 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - QC-LDPC를 다루지만 목적이 McEliece 암호이고 알고리즘이 hard-decision OSD·재부호화(가우스소거)라 NAND용 soft-read iterative min-sum 파이프라인에 떼어 쓰기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9658510",
+  "title": "Hard Reliability-Based Ordered Statistic Decoding and Its Application to McEliece Public Key Cryptosystem",
+  "year": 2022,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1200~9602",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "신드롬 기반 hard reliability로 정렬통계(OSD) 복호를 수행해 정정능력을 병렬 BF의 2배(v)로 높이고 FER 상한을 유도",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "McEliece PKC(암호) 전용, 재부호화(가우스 소거 o(Δ^3)) 기반 OSD로 iterative min-sum과 구조 상이, NAND soft-read 무관 hard-decision",
+  "todo_check": "재부호화/가우스 소거 복잡도가 NAND 컨트롤러 지연·면적에 부적합한지, hard-decision 정정능력 상한이 soft min-sum 대비 실익 없는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9658510---hard-reliability-based-ordered-statistic-decoding-and-its-application-to-mceliece-public-key-cryptosystem-2022-ieee-communications-letters">ieee:9658510 - Hard Reliability-Based Ordered Statistic Decoding and Its Application to McEliece Public Key Cryptosystem (2022, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1689281</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1689281---effect-of-check-node-processing-on-the-performance-of-message-passing-algorithm-in-the-context-of-ldpc-decoding-for-dvb-s2-2005-ieee-conf">ieee:1689281 - Effect of Check Node Processing on the Performance of Message Passing Algorithm in the Context of LDPC Decoding for DVB-S2 (2005, IEEE Conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>2/3 (표준 다중 rate 중)</td></tr><tr><td>부호length</td><td>64800 (normal), 16200 (short)</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>DVB-S2 장부호에서 Min-Sum(및 noise 추정 생략 WNE)이 Sum-Product에 근접하며 edge memory·check-node 연산 감축 확인</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>신규 기법 없는 예비 비교연구(all-zero 위주), Min-Sum은 이미 Prime ECC 보유, fixed-point 미구현</td></tr><tr><td>추가확인</td><td>λ-Min/λ-Min* check-node 근사가 min1/min2 대비 성능·면적 이득이 실제 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 기존 Min-Sum 계열 check-node 처리의 DVB-S2 비교연구로, Prime ECC가 이미 보유한 min-sum과 중복되어 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: DVB-S2 위성방송 LDPC 디코더 연구. eIRA 부호, normal frame <code>64800</code>/short <code>16200</code>, rate 2/3 위주 시뮬. 외부 BCH(최대 12오류)로 error-floor 보정.</li><li>문제: 표준 부호가 매우 길어(64800) edge memory(rate 2/3에서 <code>215999</code> edges = 3.33×64800)와 check-node 연산이 커 감축 필요.</li><li>모델: AWGN, 채널 LLR <code>In</code> 입력. H=[H1 H2], H2는 staircase 하삼각(differential encoding)으로 선형복잡도 인코딩(<code>HcT=0</code> 재귀해).</li><li>핵심기법1: check-node 처리 알고리즘 비교 — 정규 Sum-Product(<code>Φ(x)=-log tanh(x/2)</code> LUT), Min-Sum, λ-Min, λ-Min*.</li><li>핵심식: Min-Sum CN update <code>E_{n,m}=∏sgn(T_{n',m})×min|T_{n',m}|</code> — <code>Φ</code> 합이 최소 extrinsic에 지배됨을 이용, LLR 계산 제거·2 magnitude만 저장.</li><li>핵심기법2: λ-Min(λ=3)은 최소 magnitude λ개만 사용(λ+1 저장), λ-Min*은 최소 외 근사에 <code>log(1+e^-|x|)</code> LUT로 self-tuning.</li><li>구현디테일: Min-Sum-WNE(noise variance 추정 생략, raw 채널값 사용)도 성능 동일 → 디코더 추가 단순화, VN 처리는 셋 다 SP와 동일.</li><li>결과: rate 2/3, 4.8/3.5/2.6 dB 반복별 오류수 비교 — Min-Sum은 SP 대비 소폭 열화(저 SNR일수록 반복 더 필요), λ-Min/λ-Min*은 SP에 근접하나 Min-Sum보다 복잡.</li><li>관찰: irregular 부호의 "wave effect"(degree-13 VN 4320개가 먼저 정정 후 저차수 견인) 수렴에서 뚜렷.</li><li>한계: all-zero codeword 위주 예비결과, 단일 rate 중심, fixed-point 미구현(향후), 신규 알고리즘 없음(기존 기법 비교).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum check-node 처리</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 이미 min1/min2 min-sum 보유 → 중복</td></tr><tr><td>Sum-Product Φ(x) / λ-Min* LUT</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>Prime ECC는 tanh 미사용(min 근사), λ-Min*은 대응 없음</td></tr><tr><td>edge memory / C2V 메시지 저장</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>이미 min1/min2 2개만 저장해 edge memory 최소화</td></tr><tr><td>반복별 수렴·조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>논문은 CRC 조기종료 없이 오류수 추적만</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 2005년 예비 비교연구로 Min-Sum·noise-est 생략이 Prime ECC 보유 기법과 중복, 신규 이식 요소 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1689281",
+  "title": "Effect of Check Node Processing on the Performance of Message Passing Algorithm in the Context of LDPC Decoding for DVB-S2",
+  "year": 2005,
+  "venue": "IEEE Conf",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.667,
+  "code_length": "64800 (normal), 16200 (short)",
+  "soft_quant": "무관",
+  "key_contribution": "DVB-S2 장부호에서 Min-Sum(및 noise 추정 생략 WNE)이 Sum-Product에 근접하며 edge memory·check-node 연산 감축 확인",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "신규 기법 없는 예비 비교연구(all-zero 위주), Min-Sum은 이미 Prime ECC 보유, fixed-point 미구현",
+  "todo_check": "λ-Min/λ-Min* check-node 근사가 min1/min2 대비 성능·면적 이득이 실제 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1689281---effect-of-check-node-processing-on-the-performance-of-message-passing-algorithm-in-the-context-of-ldpc-decoding-for-dvb-s2-2005-ieee-conf">ieee:1689281 - Effect of Check Node Processing on the Performance of Message Passing Algorithm in the Context of LDPC Decoding for DVB-S2 (2005, IEEE Conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

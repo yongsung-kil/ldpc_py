@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4595101</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4595101---ldpc-coding-schemes-for-error-control-in-a-multicast-network-2008-isit">ieee:4595101 - LDPC Coding Schemes for Error Control in a Multicast Network (2008, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>butterfly 네트워크코딩 물리계층에서 두 interactive Tanner graph 간 extrinsic 교환 joint iterative 복호 + split-codeword 전송으로 동등오류보호, waterfall·error-floor 동시 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>joint 복호 이득이 네트워크코딩(두 상관 codeword a, a⊕b) 구조에 의존해 NAND 단일 codeword ECC엔 부재, HW 미설계·시뮬만</td></tr><tr><td>추가확인</td><td>error-floor 하강이 network-coding 없이 단일 codeword에서도 재현되는지(기법 본질의 network 구조 종속성) 확인</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC/AWGN 기반이나 핵심 이득이 네트워크코딩의 두 상관 codeword joint 복호에 의존해, 단일 codeword를 다루는 NAND ECC엔 떼어 쓸 수 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: butterfly 멀티캐스트 + linear network coding, source가 두 binary LDPC codeword <code>a</code>,<code>b</code>(동일길이)를 multicast, sink는 <code>a</code>와 <code>a⊕b</code> 수신, BPSK/AWGN.</li><li>문제: network-coded 수신어(<code>a</code>, <code>a⊕b</code>)로 두 codeword를 신뢰 복원, 기존 serial 복호는 error propagation·불균등 오류보호(UEP) 유발.</li><li>serial 복호: <code>a</code>를 SPA로 먼저 복호 후 <code>(1)</code>식 tanh-rule로 <code>b</code>의 LLR 유도→<code>b</code> 복호. <code>a</code> 오류가 <code>b</code>로 전파(불균등 보호).</li><li>핵심(joint 복호): component decoder A(a)·B(b)가 internal/external message passing으로 extrinsic 교환, 두 interactive Tanner graph 위 복호로 확장.</li><li>external message: <code>(2)(3)</code>식으로 stale 메시지 차감 후 extrinsic LLR 전달 → 각 variable node에 edge 1개 추가된 효과.</li><li>주의: 두 부호가 동일하면 external 메시지 상관↑로 이득 없음 → <code>b</code>를 interleave(간단히 bit reverse)해 상관 제거.</li><li>split-codeword 전송: codeword를 반으로 분할(a1,a2,b1,b2) 후 두 time slot 대칭 network coding → 동등오류보호(EEP) 달성.</li><li>분석: 대칭조건 하 all-one codeword 가정으로 단일 SPA의 DE를 joint 복호용으로 수정, scheme1/2/3 SNR threshold 계산(Table I).</li><li>결과: joint(scheme2)이 serial 대비 threshold 약 수 dB 개선, QC-LDPC(RS+array masking) 예제서 waterfall gain 및 error-floor 하강(일부 BLER 10^-6까지 floor 소멸), 유한길이서 DE 예측보다 우수.</li><li>한계: 이득이 network coding(두 상관 codeword) 구조에 의존, HW 미설계·시뮬만, 저~중rate QC-LDPC 예제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>joint iterative message passing(두 interactive Tanner graph)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 단일 Tanner graph 복호, 두 codeword joint 구조 부재로 직접 대응 불가</td></tr><tr><td>LLR / tanh-rule soft 복호(SPA)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>channel.cpp</code></td><td>Prime ECC는 min-sum 근사(양자화 LLR)라 full-tanh SPA와 상이</td></tr><tr><td>QC-LDPC(RS-based+array masking) 부호</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC-LDPC 동일 계열이나 부호 자체는 재사용 대상 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — binary QC-LDPC/AWGN 공통점은 있으나 핵심 이득이 네트워크코딩의 두 상관 codeword joint 복호에 종속되어 NAND 단일 codeword ECC엔 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4595101",
+  "title": "LDPC Coding Schemes for Error Control in a Multicast Network",
+  "year": 2008,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "butterfly 네트워크코딩 물리계층에서 두 interactive Tanner graph 간 extrinsic 교환 joint iterative 복호 + split-codeword 전송으로 동등오류보호, waterfall·error-floor 동시 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "joint 복호 이득이 네트워크코딩(두 상관 codeword a, a⊕b) 구조에 의존해 NAND 단일 codeword ECC엔 부재, HW 미설계·시뮬만",
+  "todo_check": "error-floor 하강이 network-coding 없이 단일 codeword에서도 재현되는지(기법 본질의 network 구조 종속성) 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4595101---ldpc-coding-schemes-for-error-control-in-a-multicast-network-2008-isit">ieee:4595101 - LDPC Coding Schemes for Error Control in a Multicast Network (2008, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

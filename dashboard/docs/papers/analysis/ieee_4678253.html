@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4678253</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4678253---construction-of-short-block-length-ira-codes-based-on-modified-ipeg-algorithm-2008-미상">ieee:4678253 - Construction of Short Block length IRA Codes Based on Modified IPEG Algorithm (2008, 미상)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>IPEG 구성 시 degree-2 VN 보호 + weight-1/2 인코더입력 최소거리 최대화로 짧은 IRA 부호 error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>IRA zig-zag 구조+PEG 구성에 특화, 짧은 블록(N=648)만, HW 없음, 이득은 고SNR error-floor에 국한</td></tr><tr><td>추가확인</td><td>degree-2 보호/저weight 회피 원리가 QC-LDPC lifting 구성에 이식되는지</td></tr></tbody></table>
+<blockquote><p>총평: IRA/PEG 특화 error-floor 저감 구성법으로, QC-LDPC 고정 구조인 Prime ECC엔 원리적 시사만 있고 직접 이식은 어렵다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 짧은 블록 IRA(irregular repeat-accumulate) 부호로, <code>H = [H1, H2]</code>에서 <code>H2</code>는 zig-zag(accumulator) 고정 형태, <code>H1</code>을 구성해 rate <code>R=K/N</code>을 만든다(예 (648,324) R=1/2, (648,162) R=3/4).</li><li>풀려는 문제: 완전 랜덤 짧은 LDPC는 고SNR에서 심한 error-floor를 겪으므로, 저weight 코드워드(특히 weight-1/2 인코더 입력에서 발생)를 억제해야 한다.</li><li>미분(차등) 인코더 구조로부터 코드워드 weight를 <code>wc = Fw(v) + wu</code>로 계산하는 weight 함수 <code>Fw(v)=sum(y2-y1)</code>를 정의한다.</li><li>좋은 IRA 설계는 <code>wu=1, wu=2</code> 입력에 대해 최소 <code>Fw(v)</code>를 최대화해야 함을 지적한다.</li><li>핵심 기법: IPEG[7]의 "Check Node Selection" 절차에 세 개 우선순위 기준을 추가한다.</li><li>추가 기준 1 — degree-2 variable protection: 후보 check node 중 연결 cycle에 포함된 degree-2 VN 수가 최소인 것을 선택(degree-2 VN은 검사비트로 외부정보 교환이 제한적이라 보호).</li><li>추가 기준 2/3 — weight-2/weight-1 encoder input protection: 남은 후보 중 <code>Fw(v)</code>(테스트 열과 기존 열들의 합)를 최대화하는 것을 선택해 저weight 코드워드를 회피.</li><li><code>H2</code>를 먼저 초기화하고 이후 K개 열을 제안 절차로 구성해 <code>H1</code>을 완성하며, First-Edge/Unreachable 절차는 원 PEG와 동일하게 유지한다.</li><li>결과: AWGN 및 MIMO-OFDM Rayleigh 채널에서 고SNR error-floor가 원 IPEG 및 802.11n 부호보다 뚜렷이 낮고, 저SNR waterfall 성능 손실 없음(max iter 100).</li><li>한계: 짧은 블록·IRA 구조 특화, HW 미설계, 이득이 고SNR error-floor 영역에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>IRA H-matrix 구성(PEG)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 로드 지점이나 Prime은 QC-LDPC 고정 → 재설계 난이도 높음</td></tr><tr><td>zig-zag(accumulator) H2 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>IRA zig-zag ≈ dual-diagonal 인코더로 구조적 유사</td></tr><tr><td>degree-2 보호 / 저weight 회피(error-floor)</td><td>대응 없음</td><td>설계시간 구성 기법으로 디코더 모듈에 직접 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 기법이 IRA/PEG 구성에 특화돼 있고 Prime ECC는 QC-LDPC를 고정 사용하므로, error-floor를 저weight 코드워드 억제로 잡는 원리적 통찰만 전이 가능하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4678253",
+  "title": "Construction of Short Block length IRA Codes Based on Modified IPEG Algorithm",
+  "year": 2008,
+  "venue": "미상",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.75",
+  "code_length": 648,
+  "soft_quant": "미상",
+  "key_contribution": "IPEG 구성 시 degree-2 VN 보호 + weight-1/2 인코더입력 최소거리 최대화로 짧은 IRA 부호 error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "IRA zig-zag 구조+PEG 구성에 특화, 짧은 블록(N=648)만, HW 없음, 이득은 고SNR error-floor에 국한",
+  "todo_check": "degree-2 보호/저weight 회피 원리가 QC-LDPC lifting 구성에 이식되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4678253---construction-of-short-block-length-ira-codes-based-on-modified-ipeg-algorithm-2008-미상">ieee:4678253 - Construction of Short Block length IRA Codes Based on Modified IPEG Algorithm (2008, 미상)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

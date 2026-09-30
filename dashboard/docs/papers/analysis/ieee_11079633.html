@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11079633</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11079633---asldpc-improving-decoding-performance-with-absorbing-set-characteristic-aware-low-density-parity-check-code-2025-ieee-transactions-on-consumer-electronics">ieee:11079633 - AsLDPC: Improving Decoding Performance With Absorbing Set Characteristic Aware Low-Density Parity-Check Code (2025, IEEE Transactions on Consumer Electronics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>18656</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>초기 LLR/APP LLR 부호 불일치와 unsatisfied check node 수 조건으로 absorbing set에 빠진 variable node를 late-iteration에서 검출해 해당 노드의 initial LLR과 관련 check node LLR을 상수(0)로 리셋해 재수렴시킴</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>파라미터 a, b(둘 다 0) 및 시작 iteration 임계값(m=29)이 H-matrix/코드마다 재최적화 필요하며 HW 미구현(알고리즘·시뮬 수준)</td></tr><tr><td>추가확인</td><td>(18656,16748) QC-LDPC와 (2304,1152) WiMAX 두 코드에서만 검증, Prime ECC의 z=32 lifting/HCU 구조에 이식 시 flag 저장 오버헤드(1bit/VN)와 검출 조건의 재조정 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 디코더 루프에 소규모 후처리(1비트 flag, O(n) 연산)만 추가해 error-floor와 waterfall을 동시에 개선하고 iteration/latency를 감소시키는 저오버헤드 기법으로, decoder.cpp 이터레이션 루프에 이식 난이도가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>TLC NAND 채널, AWGN 기반 min-sum LDPC 디코더 대상. 검증 코드는 <code>(18656,16748)</code> QC-LDPC(rate 0.9, 2KB page 상당)와 <code>(2304,1152)</code> WiMAX(rate 0.5).</li><li>Absorbing set 내 잘못된 LLR이 순환 전파되며 수렴을 막아 error floor를 유발하고, quantization은 이를 악화시킴 - 기존 uniform/quasi-uniform quantization만으로는 부족.</li><li>관찰: 정확히 복호된 노드는 initial LLR과 APP LLR의 부호가 98% 일치, check node LLR과 APP LLR 부호는 89.3% 일치 - 부호 불일치를 absorbing set 진입 플래그로 사용.</li><li>Step 1(초기 LLR 최적화): <code>sign(Λk[lbit]) × sign(p[lbit]) &lt; 0</code> 이고 <code>ncheck[lbit] ≤ wcol[lbit]/2</code> 이면 <code>p[lbit] = a</code> (상수)로 리셋.</li><li>식의 의미: 부호 불일치 + unsatisfied check node가 column weight 절반 이하 = absorbing set 내부 특유 패턴(cycle 밖 unsatisfied node가 적음) 검출 조건.</li><li>Step 2(check node LLR 최적화): <code>sign(Λk[lbit]) × sign(r[s,lbit]) &lt; 0</code> 이면 <code>r[s,lbit] = b</code> (상수)로 리셋 - Step1에서 잘못 satisfied 판정된 check node의 메시지를 교정.</li><li>시작 시점 결정: 매 iteration 오류 비트 수를 추적해 더 이상 감소하지 않는 지점(실험상 29번째 iteration, Imax=32)부터 AsLDPC 활성화 - 이미 정정 가능한 비트의 오염 방지.</li><li>파라미터 a, b는 "controlling variables" 방식 시뮬레이션으로 탐색, 두 코드 모두 a=b=0으로 최적화됨. (q+1)-bit quasi-uniform quantizer(선행연구 [18]) 기반 위에 구현, LUT로 fixed-point 변환.</li><li>결과: quasi-uniform 대비 FER 58%(QC-LDPC)/48.1%(WiMAX) 감소, BER 60.7%/38.2% 감소, 저장공간은 uniform 6-bit 대비 11.9~17.4% 절감(오버헤드는 원 알고리즘 대비 1.76~2.05%만 증가), WiMAX 기준 Eb/N0=4.1dB에서 decoding latency 17% 감소.</li><li>한계: HW 구현/합성 없이 C 시뮬레이션(floating/fixed-point)만 수행, a/b/m 파라미터가 H-matrix마다 재탐색 필요, 두 코드에서만 검증되어 일반화 근거 제한적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Absorbing set 인식 후처리(Step1/Step2 LLR 리셋)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>late-iteration에서 min-sum 루프 내 조건부 LLR 재설정 로직 추가 지점</td></tr><tr><td>부호 불일치 검출(초기 LLR vs APP LLR)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 갱신 시 APP과 initial LLR 부호 비교 로직 삽입 위치</td></tr><tr><td>check node LLR 조정</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN 메시지 갱신 후 조건부 리셋 적용 대상</td></tr><tr><td>AsLDPC 시작 iteration(m) 결정</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 threshold 테이블에 시작 시점(m) 추가 가능</td></tr><tr><td>flag 저장(1-bit per VN)</td><td><code>ecc_data.h</code> (구조체 확장)</td><td>대응 없음(신규 flag 배열 필요, 기존 구조체에 없음)</td></tr><tr><td>(q+1)-bit quasi-uniform quantizer, LLR 양자화</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read LLR 테이블과 연계 가능</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>높음</strong> — 기존 min-sum 루프 변경 최소화(O(n) 조건 판정 + 1bit flag)로 error-floor와 waterfall을 동시에 개선하고 iteration/latency를 낮추는 저비용 후처리이며, Prime ECC의 decoder.cpp 이터레이션 루프에 직접 삽입 가능한 구조.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11079633",
+  "title": "AsLDPC: Improving Decoding Performance With Absorbing Set Characteristic Aware Low-Density Parity-Check Code",
+  "year": 2025,
+  "venue": "IEEE Transactions on Consumer Electronics",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "18656",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "초기 LLR/APP LLR 부호 불일치와 unsatisfied check node 수 조건으로 absorbing set에 빠진 variable node를 late-iteration에서 검출해 해당 노드의 initial LLR과 관련 check node LLR을 상수(0)로 리셋해 재수렴시킴",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "파라미터 a, b(둘 다 0) 및 시작 iteration 임계값(m=29)이 H-matrix/코드마다 재최적화 필요하며 HW 미구현(알고리즘·시뮬 수준)",
+  "todo_check": "(18656,16748) QC-LDPC와 (2304,1152) WiMAX 두 코드에서만 검증, Prime ECC의 z=32 lifting/HCU 구조에 이식 시 flag 저장 오버헤드(1bit/VN)와 검출 조건의 재조정 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11079633---asldpc-improving-decoding-performance-with-absorbing-set-characteristic-aware-low-density-parity-check-code-2025-ieee-transactions-on-consumer-electronics">ieee:11079633 - AsLDPC: Improving Decoding Performance With Absorbing Set Characteristic Aware Low-Density Parity-Check Code (2025, IEEE Transactions on Consumer Electronics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

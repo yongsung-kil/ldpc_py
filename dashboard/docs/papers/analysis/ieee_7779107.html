@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7779107</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7779107---edge-based-dynamic-scheduling-for-belief-propagation-decoding-of-ldpc-and-rs-codes-2017-ieee-trans-communications">ieee:7779107 - Edge-Based Dynamic Scheduling for Belief-Propagation Decoding of LDPC and RS Codes (2017, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.50~0.90</td></tr><tr><td>부호length</td><td>1000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check-node 신뢰도로 unreliable edge만 갱신하는 edge-based 동적 스케줄(e-Flooding/e-Shuffled)로 BP 복잡도 대폭 절감 + FER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>sum-product(tanh) 기반 BP 전제, HW 미설계, edge-state 벡터 관리·min-reliability 이웃 정렬 오버헤드가 min-sum HW와 정합성 불확실</td></tr><tr><td>추가확인</td><td>edge-based 스케줄을 min-sum(우리 CNU)에 얹었을 때 복잡도 이득·정렬비용, high-rate QC-LDPC에서 실제 iteration/latency 이득 재검증</td></tr></tbody></table>
+<blockquote><p>총평: 고rate 규칙 LDPC에서 부분 edge 갱신으로 복잡도↓·FER↑를 동시 달성하는 스케줄링 기법 — 아이디어는 유용하나 sum-product 전제·순차 정렬 오버헤드로 min-sum 파이프라인 이식엔 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 유한길이 medium-to-high rate 규칙 LDPC(colweight 3/4, rate 0.50/0.70/0.80/0.90, length 1000, PEG 구성) 및 RS 코드(binary image expansion), AWGN+BPSK 채널.</li><li>문제: 고rate 코드의 PCM은 상대적으로 dense하고 short cycle이 많아 BP message independence 가정이 깨져 성능 열화. 기존 dynamic(residual) 스케줄은 저FER이나 residual 계산 복잡도가 큼.</li><li>핵심측도: check node 신뢰도 <code>η_cm = min_{v∈N(cm)} |Λ_vn|</code> (이웃 VN LLR 최소 크기)와 syndrome <code>s_cm</code>으로 CN을 3종류로 분류.</li><li>분류: Type-1(<code>s_cm≠0</code>, 최불신뢰→모든 이웃 갱신), Type-2(<code>s_cm=0</code> &amp; <code>η≤T</code>→ t개 최소신뢰 이웃 <code>N_t-min</code>만 갱신), Type-3(<code>s_cm=0</code> &amp; <code>η&gt;T</code>→갱신 안 함).</li><li>edge-state 벡터 <code>S={ε_m,n∈{0,1}}</code>로 각 edge 수렴여부 표시, <code>ε=1</code>인 edge만 다음 iteration에서 message 갱신(Table I 기준).</li><li>e-Flooding(Alg.1): 갱신 대상 edge를 동시 갱신. e-Shuffled(Alg.2): 순차(VN 단위) 갱신.</li><li>임계값 <code>T</code>: Type-2/Type-3 확률을 같게 하는 교점으로 유도 → <code>T = ln[(2^{1/d̄c})/(2−2^{1/d̄c})]</code>, <code>d̄c</code> 증가 시 <code>T</code> 증가.</li><li><code>t</code>(최소신뢰 이웃 수)는 시뮬로 최적화(LDPC t=2, RS t=8·30).</li><li>결과: rate-0.90 LDPC에서 Flooding 대비 V2C/C2V 복잡도 최대 45%/75% 감소, 순차 스케줄 대비 C2V 최대 60~98% 감소; RS는 ABP Flooding/LRBP 대비 C2V &gt;90% 감소, FER 0.25~0.5dB 이득. message independence violation(IV)도 감소.</li><li>한계: HW 미설계·시뮬만, sum-product(tanh) BP 전제, min-reliability 이웃 정렬 comparison 오버헤드(ψ) 존재, error-floor가 아닌 waterfall/중고SNR 개선.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| edge-based 스케줄(e-Flooding/e-Shuffled) 이터레이션 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | edge-state로 갱신 edge 제한하는 스케줄 삽입 지점 |
+| check node 신뢰도 η(min LLR)·syndrome 기반 CN 분류 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min1 magnitude·sign 정보 재사용 가능(η는 min LLR) |
+| 조기종료(모든 s_cm=0) | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 우리는 CRC 조기종료 보유, syndrome 종료와 병용/대체 검토 |
+| VN 갱신/부분 edge 선택 | decoder.cpp VN_Cal_HD() 등 | ε=1 edge만 VN 갱신하도록 마스킹 |
+| min-reliability 이웃 정렬 comparison | 대응 없음 | HW 정렬 오버헤드는 우리 구조에 신규 |</code></pre>
+<p>적용 가치: 중간 — 부분 edge 갱신으로 복잡도·iteration을 줄이는 아이디어는 <code>decoder.cpp</code> 스케줄 계층에 이식 가능하나, sum-product 전제·순차 정렬 오버헤드가 min-sum 6-stage 파이프라인과의 정합성 검증을 요구한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7779107",
+  "title": "Edge-Based Dynamic Scheduling for Belief-Propagation Decoding of LDPC and RS Codes",
+  "year": 2017,
+  "venue": "IEEE Trans. Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "1000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check-node 신뢰도로 unreliable edge만 갱신하는 edge-based 동적 스케줄(e-Flooding/e-Shuffled)로 BP 복잡도 대폭 절감 + FER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "sum-product(tanh) 기반 BP 전제, HW 미설계, edge-state 벡터 관리·min-reliability 이웃 정렬 오버헤드가 min-sum HW와 정합성 불확실",
+  "todo_check": "edge-based 스케줄을 min-sum(우리 CNU)에 얹었을 때 복잡도 이득·정렬비용, high-rate QC-LDPC에서 실제 iteration/latency 이득 재검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7779107---edge-based-dynamic-scheduling-for-belief-propagation-decoding-of-ldpc-and-rs-codes-2017-ieee-trans-communications">ieee:7779107 - Edge-Based Dynamic Scheduling for Belief-Propagation Decoding of LDPC and RS Codes (2017, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9739149</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9739149---relative-entropy-based-message-combining-for-exploiting-diversity-in-information-optimized-processing-2021-eusipco">ieee:9739149 - Relative Entropy based Message Combining for Exploiting Diversity in Information Optimized Processing (2021, EUSIPCO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>KL divergence 최소화로 서로 다른 RAP의 이산 메시지를 정렬·결합(REMC LUT)해 info-optimized LUT-MP 디코더가 수신 다이버시티 이득을 얻게 함</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>핵심기여(REMC)는 다중 RAP 무선 다이버시티 결합 전용이라 단일채널 NAND read에 대응 안 됨, HW 미설계</td></tr><tr><td>추가확인</td><td>LUT-MP(정보병목 이산 디코더, 3~4bit)는 참조기법 [5][7][13]이며 본 논문 신규 아님</td></tr></tbody></table>
+<blockquote><p>총평: Cloud-RAN 무선 다이버시티 결합용 REMC 기법으로 LUT-MP 저비트 이산 LDPC 디코더 위에서 동작하나, 결합 대상이 공간 다이버시티라 단일채널 NAND ECC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 단일유저 uplink, <code>J</code>개 분산 RAP가 관측을 압축해 CPU로 전달; 코드는 짧은 <code>(3,6)</code>-regular LDPC, <code>Nc=96</code>, rate <code>Rc=0.5</code>, BPSK/16-QAM, 블록 Rayleigh fading.</li><li>문제: 각 RAP가 SNR 다른 채널을 3-bit로 양자화하면 같은 클러스터 인덱스라도 의미(LLR)가 달라, 이를 단순 결합하면 수신 다이버시티 이득을 못 살림.</li><li>모델: 접속채널 <code>p(yj|x)</code>, 양자화 <code>zj=Qj(yj)</code>는 Information Bottleneck(β→∞)으로 <code>I(x;zj)</code> 최대화하도록 설계(SNR 최적 양자화기).</li><li>핵심기법: REMC — 결합 메시지 벡터 <code>z</code>의 의미 <code>p(cν|z)</code>를 디코더 설계분포 <code>p*(c|t)</code>에 KL divergence 최소로 정렬하는 <code>tν(z)=argmin_t D_KL(p(cν|z)‖p*(c|t))</code>를 LUT로 구현.</li><li>식 의미: KL divergence로 서로 다른 분포의 이산 메시지를 목표 posterior에 맞춰 정렬해 정보손실 최소로 결합.</li><li>확장: message alignment(MA)의 일반화 — RAP별 rate 제한(|Zj| 상이)과 접속채널 차이를 CPU에서 중앙집중 처리.</li><li>구현 디테일: 디코더는 discrete density evolution으로 설계된 LUT-MP(모든 내부연산 LUT), 3~4bit 메시지로 64-bit FP-SPA에 근접.</li><li>최적화 절차: IBM 클러스터링 + 임계 SNR(<code>SNRThreshold=1.55dB</code>)에서 설계분포 고정.</li><li>결과: <code>J=2</code>에서 REMC+LUT-MP가 무양자화 벤치 대비 BER 10^-4에서 손실 ≈1.1dB로 다이버시티 이득 확보(고정 양자화기는 다이버시티 못 살림); 16-QAM에서 4-bit LUT-MP가 3-bit 대비 ≈0.6~1dB 개선.</li><li>한계: HW 미설계(시뮬), 결합 대상이 공간 다이버시티(다중 RAP)라 단일 채널 저장장치 read와 상황 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LUT-MP 이산 메시지 저비트(3~4bit) 디코더</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등 / <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>저비트 양자화 message passing이라 개념상 근접하나 Prime ECC는 min-sum(테이블) 기반, LUT 전면 대체는 큰 재설계</td></tr><tr><td>soft-read 양자화·의미(LLR) 설계</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>3-bit IB 양자화기 설계 개념은 soft-read 양자화와 유사하나 IBM 프레임워크는 미보유</td></tr><tr><td>REMC(다중 RAP 다이버시티 결합)</td><td>대응 없음</td><td>공간 다이버시티 결합은 단일채널 NAND ECC에 대응 요소 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 핵심기여 REMC는 무선 다중 RAP 다이버시티 전용이며, 재활용 가능성 있는 LUT-MP 저비트 이산 디코더는 본 논문 신규가 아닌 참조 선행기법.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9739149",
+  "title": "Relative Entropy based Message Combining for Exploiting Diversity in Information Optimized Processing",
+  "year": 2021,
+  "venue": "EUSIPCO",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "96",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "KL divergence 최소화로 서로 다른 RAP의 이산 메시지를 정렬·결합(REMC LUT)해 info-optimized LUT-MP 디코더가 수신 다이버시티 이득을 얻게 함",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "핵심기여(REMC)는 다중 RAP 무선 다이버시티 결합 전용이라 단일채널 NAND read에 대응 안 됨, HW 미설계",
+  "todo_check": "LUT-MP(정보병목 이산 디코더, 3~4bit)는 참조기법 [5][7][13]이며 본 논문 신규 아님"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9739149---relative-entropy-based-message-combining-for-exploiting-diversity-in-information-optimized-processing-2021-eusipco">ieee:9739149 - Relative Entropy based Message Combining for Exploiting Diversity in Information Optimized Processing (2021, EUSIPCO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

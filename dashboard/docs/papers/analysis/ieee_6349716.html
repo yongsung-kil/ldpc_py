@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6349716</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6349716---tree-structured-expectation-propagation-for-ldpc-decoding-over-the-awgn-channel-2012-ieee-mlsp">ieee:6349716 - Tree-Structured Expectation Propagation for LDPC Decoding over the AWGN Channel (2012, IEEE MLSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128~1024</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 위에 변수쌍 결합(tree/forest) 마르코프 구조를 얹은 TEP 복호로 waterfall·error-floor 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN에서 tree chain 선택이 open problem·cutset conditioning 필요로 HW 비친화, 이득도 짧은 부호(n&lt;512)·유한길이에 국한</td></tr><tr><td>추가확인</td><td>pairwise 결합·cutset conditioning 비용이 고rate NAND 부호(z=32 병렬 HW)에서 감당 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: BP 대비 finite-length에서 0.2~0.3 dB 이득의 EP 기반 복호 개선이나, tree 구성·cutset 비용·연속 LLR 의존으로 NAND binary QC-LDPC HW 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(3,6)</code>-regular LDPC (rate 0.5, <code>n=128~1024</code>), AWGN 채널, bitMAP 근사 복호.</li><li>문제: 표준 BP는 factor graph를 완전 분리(fully disconnected) 근사라 cycle 존재 시 최적이 아니고 finite-length에서 성능 제약.</li><li>모델: memoryless AWGN, 채널 우도 <code>p(y_i|v_i)</code>, 패리티 제약 <code>C_j(v)</code>.</li><li>핵심: Tree-structured EP(TEP)로 사후분포 <code>p(v|y)</code>를 변수쌍 <code>(i,p_i)</code> 간 tree/forest 마르코프 구조 <code>q(v)=∏ q_i(v_i|v_{p_i})</code> 로 근사.</li><li>식 (5): inclusive KL divergence <code>D_KL(p||q)</code> 최소화(moment matching)로 pairwise marginal 제약을 부과 → 애매한 두 변수의 결합확률 포착.</li><li>확장: 패리티 제약을 <code>W_j(v)=∏ w_{z,j}</code> 로 근사, 반복적으로 한 factor <code>W_m</code> 씩 refine (Algorithm 1).</li><li>구현 디테일: <code>C_m</code> 이 변수-부모를 연결해 cycle 생기면 Pearl cutset conditioning으로 cycle 끊고 message-passing으로 pairwise marginal 계산.</li><li>Tree 구성: 불확실 변수집합 <code>V_u</code>(<code>|p(y_i|v_i)−0.5|≤δ</code>)에서 cycle 탐색→disjoint chain 선택으로 tree 구조 결정.</li><li>결과: 소거(expurgated) <code>(3,6)</code> ensemble에서 BP 대비 waterfall 0.2~0.3 dB 이득(<code>n=128</code>서 0.3 dB@BER=1e-4), error-floor 감소; 이득은 <code>n</code> 증가로 감소.</li><li>한계: HW 미설계·시뮬만, chain 선택은 open problem, <code>n→∞</code> 시 이득 소멸, cutset·연속 LLR 처리로 복잡.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TEP 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프 위치는 대응하나 min-sum이 아닌 EP/cutset 기반이라 재구현 부담 큼</td></tr><tr><td>pairwise marginal / cutset conditioning</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2) 기반, full message-passing 아님</td></tr><tr><td>error-floor(짧은 SS 파괴) 개선</td><td>decoder.cpp <code>C2V_Cal()</code> (개념적)</td><td>개선 방향은 유관하나 알고리즘 이질적</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — EP·cutset conditioning·연속 LLR 기반으로 Prime ECC의 min-sum HW 구조(z=32 병렬)와 이질적이고, 이득도 finite-length 짧은 부호에 국한된다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6349716",
+  "title": "Tree-Structured Expectation Propagation for LDPC Decoding over the AWGN Channel",
+  "year": 2012,
+  "venue": "IEEE MLSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "128~1024",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 위에 변수쌍 결합(tree/forest) 마르코프 구조를 얹은 TEP 복호로 waterfall·error-floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "AWGN에서 tree chain 선택이 open problem·cutset conditioning 필요로 HW 비친화, 이득도 짧은 부호(n&lt;512)·유한길이에 국한",
+  "todo_check": "pairwise 결합·cutset conditioning 비용이 고rate NAND 부호(z=32 병렬 HW)에서 감당 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6349716---tree-structured-expectation-propagation-for-ldpc-decoding-over-the-awgn-channel-2012-ieee-mlsp">ieee:6349716 - Tree-Structured Expectation Propagation for LDPC Decoding over the AWGN Channel (2012, IEEE MLSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6319731</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6319731---bayesian-hypothesis-test-for-sparse-support-recovery-using-belief-propagation-2012-ieee-ssp-workshop">ieee:6319731 - Bayesian Hypothesis Test for Sparse Support Recovery Using Belief Propagation (2012, IEEE SSP Workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>sparse-Bernoulli 측정행렬 위에서 BP로 posterior를 구하고 Bayesian 가설검정으로 압축센싱 support set을 원소별로 검출(BHT-BP)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC 아님(압축센싱 support recovery), 실수 신호 spike-and-slab BP로 LDPC 복호와 무관, 저SNR에서만 OMP/Lasso 우위</td></tr><tr><td>추가확인</td><td>없음(NAND binary LDPC ECC 이식 관점에서 대응 요소 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 압축센싱 sparse support recovery용 BP 기반 Bayesian 가설검정 알고리즘으로 ECC/LDPC 복호가 아니며 NAND 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 압축센싱 <code>z=Φx0+n</code>, <code>x∈R^N</code>(K-sparse), <code>Φ∈{0,1,-1}^{M×N}</code> sparse-Bernoulli(열가중 L), Gaussian noise. N=128, L=3.</li><li>문제: 신호추정이 아닌 support set(비영원소 위치) 복원을 잡음에 강건하고 저복잡도로.</li><li>핵심 가정: 원소 i.i.d., spike-and-slab prior <code>fx=qN(0,σx²)+(1-q)δ(x)</code>, sparse Φ의 이분그래프가 tree-like.</li><li>핵심 기법: 각 원소별 우도비 <code>Pr{si=0|z}/Pr{si=1|z}</code>를 임계 <code>γ=q/(1-q)</code>와 비교하는 Bayesian 가설검정(H0/H1).</li><li>핵심 식: posterior <code>fxi(x|z)∝fx(x)·∏fzj(z|xi)</code>, tree 가정으로 likelihood를 독립 밀도곱으로 분해.</li><li>확장: <code>fzj(z|xi)</code>를 관련 밀도들의 선형 convolution으로 표현(noise 통계 <code>fnj</code> 포함).</li><li>구현 디테일: BP 메시지 <code>a_{i→j}</code>, <code>b_{j→i}</code>를 convolution/정규화로 상호 갱신 후 posterior 근사.</li><li>최적화 절차: 별도 학습 없음, l* 반복 후 posterior 근사.</li><li>결과: 저SNR(10dB)에서 OMP/Lasso 대비 SER 우수(noise 통계 활용), 복잡도 <code>O(NlogN)</code>로 OMP <code>O(KNM)</code>/Lasso <code>O(NM²)</code>보다 낮음. 고SNR에선 유사.</li><li>한계: HW 미설계, 시뮬만, 압축센싱 실수신호 문제로 binary LDPC 오류정정과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 메시지 패싱(압축센싱)</td><td>대응 없음</td><td>full-density convolution BP로 압축센싱 support 검출, ECC min-sum 복호와 무관</td></tr><tr><td>sparse-Bernoulli 측정행렬</td><td>대응 없음</td><td>ECC parity-check H와 목적 다름(측정행렬)</td></tr><tr><td>Bayesian 가설검정</td><td>대응 없음</td><td>ECC 복호/조기종료 판정과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 압축센싱 support recovery 알고리즘으로 NAND binary QC-LDPC ECC의 부호설계·디코더·HW에 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6319731",
+  "title": "Bayesian Hypothesis Test for Sparse Support Recovery Using Belief Propagation",
+  "year": 2012,
+  "venue": "IEEE SSP Workshop",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "sparse-Bernoulli 측정행렬 위에서 BP로 posterior를 구하고 Bayesian 가설검정으로 압축센싱 support set을 원소별로 검출(BHT-BP)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC 아님(압축센싱 support recovery), 실수 신호 spike-and-slab BP로 LDPC 복호와 무관, 저SNR에서만 OMP/Lasso 우위",
+  "todo_check": "없음(NAND binary LDPC ECC 이식 관점에서 대응 요소 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6319731---bayesian-hypothesis-test-for-sparse-support-recovery-using-belief-propagation-2012-ieee-ssp-workshop">ieee:6319731 - Bayesian Hypothesis Test for Sparse Support Recovery Using Belief Propagation (2012, IEEE SSP Workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

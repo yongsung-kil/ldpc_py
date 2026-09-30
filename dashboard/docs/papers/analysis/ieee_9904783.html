@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9904783</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9904783---exploiting-binary-equilibrium-for-efficient-ldpc-decoding-in-3d-nand-flash-2022-ieee-rtcsa">ieee:9904783 - Exploiting Binary Equilibrium for Efficient LDPC Decoding in 3D NAND Flash (2022, IEEE RTCSA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>scrambled raw data의 rZBR(0-bit 비율) 편차로 rBER 추정→zLUT로 Vref 배치+fine-tuning하는 read-retry로 read latency 최대 24% 단축</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 디코더 알고리즘 자체는 손대지 않음(Vref read-retry 전략), TLC 3D NAND·retention 특화, bit-counting HW 및 vendor별 Vth 스케일 가정</td></tr><tr><td>추가확인</td><td>zLUT offline 튜닝이 chip/공정/온도 편차에 얼마나 강건한지, Prime ECC 시뮬의 channel/soft-read threshold와 연동 가능 여부</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃의 Vref read-retry 최적화(read latency -24%)로 채널/soft-read 레이어 개선이나, LDPC 부호·디코더 자체와 무관해 대상 other·이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 3D TLC NAND(64-layer), LDPC hard/soft 이중모드 복호, read-retry로 Vref 조정. 512GB SSD, page 16KB, hard read 108us / soft(2 extra level) 288us.</li><li>문제: retention으로 Vth 왜곡→Vref 오배치 시 read-retry 반복으로 read latency 급증. block-level 이력(bRR)은 3D layer간 rBER 편차로 부정확, page-level 이력(pRR)은 500GB에 32MB DRAM 필요.</li><li>관찰: bit scrambling(LFSR)로 raw data는 0/1 균형(binary equilibrium, 0-bit≈50%). retention 진행 시 고Vth state(P7)가 좌측 이동→MSB 1→0 flip 증가로 rZBR이 50%에서 벗어남; rZBR 편차와 rBER이 강상관.</li><li>핵심기법: rZBR은 LDPC 복호 전 raw data에서 획득 가능 → probe read의 rZBR을 index로 zLUT(rZBR→Vref displacement,Vref번호)를 조회해 Vref 재배치(placement step).</li><li>근사: 최적 Vopt(두 Gaussian f,g 교점) 대신 <code>f(x)+g(x)</code> 최소인 Vfm+ign으로 근사(분산 유사 가정 하 Vopt에 근접), 512-level 프로파일링 회피.</li><li>fine-tuning: Vref를 ±1 step 읽어 인접 ΔrZBR 2개 계산, ΔrZBR이 감소하는 방향으로 Vref를 1 step씩 이동하며 재복호(각 Vref 개별 튜닝).</li><li>통합절차: probe read(hard)의 rZBR이 threshold 초과 시 soft로 전환, placement→fail 시 fine-tuning, 모든 Vref 튜닝 후 실패면 uncorrectable.</li><li>오버헤드: zLUT = 10 rZBR × 7 Vref ×(4+1+1)B = 420 bytes (&lt;1KB), page-level 32MB 대비 극소.</li><li>결과: 실 트레이스(SNIA/MSR/Fujitsu VDI) 시뮬에서 avg read latency를 bRR 대비 24%, pRR 대비 15% 개선. VDI2 120일 retention에서 zRR은 zLUT 조회만으로 다수 성공, fine-tuning은 총 read time의 21%.</li><li>한계: HW 미구현(시뮬), bit-counting HW·vendor별 Vth 스케일(최대 512) 가정, zLUT는 offline 모델 튜닝 의존, TLC retention 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Vref 배치/soft-sensing level 조정</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold/offset 설정부와 연동 가능 (read-retry 정책은 상위 firmware 영역)</td></tr><tr><td>rZBR→rBER 추정 read-retry 정책</td><td>대응 없음</td><td>Prime ECC는 디코더 bit-exact 시뮬, read-retry firmware 로직은 범위 밖</td></tr><tr><td>LDPC 디코더 이터레이션</td><td>대응 없음 (본 논문은 디코더 알고리즘 미변경)</td><td>부호/디코더 자체 개선 없음</td></tr></tbody></table>
+<p>적용 가치: 중간 — NAND soft-read Vref/threshold 배치 최적화 아이디어는 channel.cpp의 soft-read 모델과 접점이 있으나, 논문의 본질은 SSD firmware read-retry 정책이라 Prime ECC 디코더 코어에 직접 이식할 요소는 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9904783",
+  "title": "Exploiting Binary Equilibrium for Efficient LDPC Decoding in 3D NAND Flash",
+  "year": 2022,
+  "venue": "IEEE RTCSA",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "scrambled raw data의 rZBR 편차로 rBER 추정→zLUT Vref 배치+fine-tuning read-retry로 read latency 최대 24% 단축",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "LDPC 디코더 알고리즘 미변경(Vref read-retry 전략), TLC 3D NAND retention 특화, bit-counting HW·vendor Vth 스케일 가정",
+  "todo_check": "zLUT offline 튜닝의 chip/공정/온도 편차 강건성, channel.cpp soft-read threshold 연동 가능 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9904783---exploiting-binary-equilibrium-for-efficient-ldpc-decoding-in-3d-nand-flash-2022-ieee-rtcsa">ieee:9904783 - Exploiting Binary Equilibrium for Efficient LDPC Decoding in 3D NAND Flash (2022, IEEE RTCSA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

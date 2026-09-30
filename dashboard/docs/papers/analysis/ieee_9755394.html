@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9755394</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9755394---an-improved-self-corrected-min-sum-decoding-for-ldpc-codes-2021-iske">ieee:9755394 - An Improved Self-Corrected Min-Sum Decoding for LDPC Codes (2021, ISKE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SCMS의 CN 갱신을 IOMS(offset+normalize 2인자)로 교체한 ISCMS로 BER·수렴 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>HW 미설계·게인 미미(고SNR 0.025dB, 평균 iter 3.01% 감소)·CN에 곱셈 추가</td></tr><tr><td>추가확인</td><td>η/γ(0.93/0.3)가 우리 QC-LDPC H-matrix에서도 유효한지 DE 재최적화 필요</td></tr></tbody></table>
+<blockquote><p>총평: SCMS+IOMS 결합의 소폭 min-sum 개선으로 이식은 쉬우나 게인이 작고 우리가 이미 min-sum/적응형 보정을 보유해 중복성 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN 채널 + BPSK, code length <code>8000bit</code>, rate <code>1/2</code>, 최대 iteration 50. 부호종류·구조는 본문 미명시(<code>미상</code>).</li><li>문제: SCMS는 VN 메시지의 부호 반전 검출로 수렴을 가속하나, CN 갱신은 기존 MS를 그대로 써 CN 처리 정확도가 낮음.</li><li>배경: MS는 LLR-BP의 <code>tanh</code>를 min1/min2로 근사해 CN 출력 magnitude가 BP보다 과대평가됨.</li><li>핵심기법 1단(SCMS): VN 메시지 부호 <code>s_ij^(l)</code> 계산 후 이전 iteration 부호와 다르면 <code>L(q_ij^sc)=0</code>으로 저신뢰 메시지 소거.</li><li>핵심기법 2단(ISCMS): CN 갱신을 IOMS로 교체 — offset <code>γ</code>와 normalize <code>η</code> 두 인자로 <code>L(r_ji)</code>를 보정해 BP 값에 근접.</li><li>핵심 식(18): <code>L(r_ji)=s·max(min(|L(r)|)... ,0)</code> 형태로 offset·normalize를 결합, magnitude를 축소.</li><li>파라미터: density evolution으로 <code>γ=0.3</code>, <code>η=0.93</code> 도출(Fig.1/2).</li><li>결과: 고SNR에서 SCMS 대비 BER 게인 <code>0.025dB</code>, 평균 iteration <code>3.01%</code> 감소(최대 <code>6.17%</code>).</li><li>복잡도: MS/SCMS 대비 곱셈 <code>NW</code>회, 덧셈 <code>N(5W-1)+K(lbW-2)</code>로 소폭 증가.</li><li>한계: HW 미설계, 시뮬만, 게인이 매우 작고 부호종류·rate 구조가 5G eMBB 맥락(NAND 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum + offset/normalize 보정</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>ISCMS의 CN magnitude 보정을 우리 CN 연산에 대응</td></tr><tr><td>VN 부호반전 소거(self-correction)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>저신뢰 VN 메시지 소거 로직을 루프에 삽입 가능</td></tr><tr><td>iteration별 LLR/보정 파라미터</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>η/γ 보정 상수를 파라미터화</td></tr></tbody></table>
+<p>적용 가치: 낮음 — self-correction+offset/normalize는 우리가 이미 보유한 min-sum/적응형 보정과 중복이고 보고 게인(0.025dB)이 미미하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9755394",
+  "title": "An Improved Self-Corrected Min-Sum Decoding for LDPC Codes",
+  "year": 2021,
+  "venue": "ISKE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SCMS의 CN 갱신을 IOMS(offset+normalize 2인자)로 교체한 ISCMS로 BER·수렴 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "HW 미설계·게인 미미(고SNR 0.025dB, 평균 iter 3.01% 감소)·CN에 곱셈 추가",
+  "todo_check": "η/γ(0.93/0.3)가 우리 QC-LDPC H-matrix에서도 유효한지 DE 재최적화 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9755394---an-improved-self-corrected-min-sum-decoding-for-ldpc-codes-2021-iske">ieee:9755394 - An Improved Self-Corrected Min-Sum Decoding for LDPC Codes (2021, ISKE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

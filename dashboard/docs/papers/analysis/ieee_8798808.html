@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8798808</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8798808---read-voltage-optimization-in-mlc-nand-flash-memory-via-the-density-evolution-2019-ieee">ieee:8798808 - Read Voltage Optimization in MLC NAND Flash Memory via the Density Evolution (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.89</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LDPC 복호 후 BER를 DE로 예측해 read voltage를 최적화(MMI 대비 저BER)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Gaussian symmetric vth·cycle-free 무한길이 가정, 실측 vth 분포/유한길이 미검증</td></tr><tr><td>추가확인</td><td>Prime ECC의 QC-LDPC(dv=17, high-rate)와 read-count에 맞춘 DE 최적화 재수행 필요</td></tr></tbody></table>
+<blockquote><p>총평: MLC NAND read voltage를 LDPC 복호 성능 기준 DE로 최적화하는 직접 관련 기법으로 soft-read threshold 설계에 이식가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2 bits/cell MLC NAND, BICM coded modulation, regular LDPC(<code>dv=3, dc=27</code> 등), 최대 <code>50</code> iteration, 6~9 reads로 soft-info 획득.</li><li>문제: 기존 MMI(최대상호정보)로 뽑은 read voltage가 LDPC 복호 BER 최소를 보장하지 못함.</li><li>채널 모델: 4-레벨 vth를 대칭 Gaussian(분산 <code>σ²</code>)으로 두고 read voltage <code>{γ1..γ6}</code>로 DMC 양자화(3개 overlap region).</li><li>핵심기법: MSB/LSB LLR <code>L(ch)</code>를 분리해 각 soft-info의 LLR PDF를 density evolution으로 반복 추적, 복호 후 BER <code>pe</code>를 예측.</li><li>핵심식: <code>p(v)=F⁻¹{F{p(ch)}·F{p(c)}^(dv-1)}</code> (식 9), CN은 <code>Γ</code> 변환(식 11)로 LLR 분포 갱신 → 이론 BER 산출.</li><li>확장: MSB/LSB 각각의 <code>pe</code>를 평균해 전체 BER 추정(Fig.4 구조).</li><li>구현 디테일: read 수 가변(6/7/8/9), coordinate-descent식으로 <code>γi</code> 하나만 미세변경·나머지 고정하여 최소 BER <code>γi</code> 선택(Algorithm 1).</li><li>학습/최적화: DE 기반 read voltage 좌표하강 최적화, dv/dc/rate는 상수로 고정.</li><li>결과: 고SNR에서 DE read voltage가 MMI보다 넓어지며 BER 곡선이 MMI 아래; read voltage는 dv·dc·rate 의존, 저SNR에선 hard decision으로 수렴.</li><li>한계: 순수 이론/시뮬, 대칭 Gaussian·cycle-free·무한길이 가정, HW 미설계, 실측 vth 분포 미반영.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>read voltage <code>{γ1..γ6}</code> 최적화·soft-read threshold</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold 설계에 직접 대응, DE 최적화값 이식 가능</td></tr><tr><td>MSB/LSB LLR 분리·양자화</td><td>channel.cpp <code>Set_LLR_Th()</code> + ecc_data.h <code>PARAM_LLR</code></td><td>2/3SD LLR 테이블 산출 근거로 활용 가능</td></tr><tr><td>DE 기반 BP LLR 분포 추적</td><td>대응 없음</td><td>Prime ECC는 bit-exact 시뮬만, DE 분석기 부재(오프라인 튜닝용)</td></tr><tr><td>BP min-sum→여기선 full tanh CN</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 min-sum 근사, 논문 CN은 tanh(직접 이식 아님)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — read voltage/LLR threshold 최적화는 Prime ECC의 <code>channel.cpp</code> soft-read 설계에 직접 닿아 오프라인 튜닝 기법으로 유용하나, DE는 대칭 Gaussian·무한길이 가정이라 실 QC-LDPC(dv=17)에 재수행이 필요하다.</p>
+<pre><code>{
+  "id": "ieee:8798808",
+  "title": "Read Voltage Optimization in MLC NAND Flash Memory via the Density Evolution",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5~0.89",
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LDPC 복호 후 BER를 DE로 예측해 read voltage를 최적화(MMI 대비 저BER)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "Gaussian symmetric vth·cycle-free 무한길이 가정, 실측 vth 분포/유한길이 미검증",
+  "todo_check": "Prime ECC의 QC-LDPC(dv=17, high-rate)와 read-count에 맞춘 DE 최적화 재수행 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8798808---read-voltage-optimization-in-mlc-nand-flash-memory-via-the-density-evolution-2019-ieee">ieee:8798808 - Read Voltage Optimization in MLC NAND Flash Memory via the Density Evolution (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9942999</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9942999---modified-noisy-gradient-descent-bit-flipping-decoding-algorithms-for-ldpc-codes-2022-atc-2022">ieee:9942999 - Modified Noisy Gradient Descent Bit-Flipping Decoding Algorithms for LDPC Codes (2022, ATC 2022)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>M-NGDBF에서 난수생성기를 채널신호 변환(l_k)으로 대체 + 초기 GDBF 구간·tabu-list로 수렴 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·PEGReg504x1008 1개 부호만, θ 임계값이 다수(θGDBF/θNGDBF/θlimit) 튜닝 의존</td></tr><tr><td>추가확인</td><td>GDBF 계열이 Prime ECC의 min-sum 대비 실이득 있는지, QC-LDPC·soft-read(2/3SD)에서의 성능</td></tr></tbody></table>
+<blockquote><p>총평: 난수기 제거로 BF 디코더 HW 단순화한 유용한 아이디어이나 Prime ECC는 min-sum 기반이라 계열 상이, 이식은 부분적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK over AWGN, binary LDPC <code>PEGReg504x1008</code>(m=504, n=1008, rate≈0.5), 파라미터 <code>w=0.75</code>, <code>Tmax=100</code>.</li><li>문제: NGDBF는 난수생성기(Gaussian <code>q_k</code>)와 Eb/N0 종속 임계값이 필요해 디코더 HW 복잡, 이를 제거.</li><li>모델: GDBF는 복호를 목적함수 <code>f(x)=Σx_k y_k + Σs_i</code> 최대화로 보고 inversion function <code>E_k=x_k y_k + wΣs_i + q_k</code>가 임계값 미만인 비트를 flip.</li><li>핵심기법 1단: 난수 <code>q_k</code>를 수신신호 변환 <code>l_k</code>로 대체 — Transformation #1/#2/#3로 <code>y_k</code>를 [-1,1] 밖으로 재분포시켜 Gaussian 유사 섭동 생성(<code>p1=0.84, p2=0.25</code>).</li><li>식 의미: 변환된 <code>l_k</code>를 순환 시프트해 섭동으로 재사용하면 난수기 없이 동등 BER 확보(#1&amp;2&amp;3만 손실 없음).</li><li>핵심기법 2단(NGDBF+A): 초기 <code>T_GDBF=5</code> iteration은 난수 없이 M-GDBF(고정 <code>θGDBF=-0.30</code>)로 수렴 가속 후 M-NGDBF 전환.</li><li>핵심기법 3단(NGDBF+B): tabu-list로 직전 iteration flip 비트를 기록, 이들은 매우 낮은 임계값 <code>θlimit=-1.50</code>로만 flip 허용해 진동 억제.</li><li>최적화: <code>θGDBF, θNGDBF, θlimit, p1, p2</code>를 Eb/N0별 BER 스윕으로 결정(그림 2/4/6/8/9).</li><li>결과: NGDBF+B가 원 M-NGDBF 대비 BER 10^-5서 0.15dB, 수렴속도 최대 30.5% 개선(NGDBF+A는 21.5%).</li><li>한계: HW 미설계, 부호 1종·AWGN만, 임계값 다수 수동 튜닝 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| GDBF/NGDBF 디코딩 루프 | decoder.cpp LDPC_Decoder() | Prime ECC는 min-sum 기반, BF 계열은 별도 복호기라 알고리즘 교체 부담 |
+| inversion function E_k, 비트 flip | decoder.cpp VN_Cal_HD() 인접 | VN 처리 위치엔 닿으나 연산 성격(BF)이 상이 |
+| 난수 대체 채널변환 l_k | channel.cpp Set_LLR_Th() / random.cpp | soft-read LLR 경로 및 난수부와 개념적으로 연결 가능 |
+| tabu-list 진동억제 / 조기수렴 | 대응 없음 | Prime ECC 조기종료는 CRC 기반, tabu 개념 미보유 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 난수기 제거·tabu-list 수렴 가속 아이디어는 HW 친화적이나, Prime ECC가 min-sum 기반이라 GDBF 계열 전면 도입은 부담이 크고 부분 차용(수렴 판단 로직) 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9942999",
+  "title": "Modified Noisy Gradient Descent Bit-Flipping Decoding Algorithms for LDPC Codes",
+  "year": 2022,
+  "venue": "ATC 2022",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "M-NGDBF에서 난수생성기를 채널신호 변환(l_k)으로 대체 + 초기 GDBF 구간·tabu-list로 수렴 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·PEGReg504x1008 1개 부호만, θ 임계값이 다수 튜닝 의존",
+  "todo_check": "GDBF 계열이 Prime ECC의 min-sum 대비 실이득 있는지, QC-LDPC·soft-read(2/3SD) 성능"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9942999---modified-noisy-gradient-descent-bit-flipping-decoding-algorithms-for-ldpc-codes-2022-atc-2022">ieee:9942999 - Modified Noisy Gradient Descent Bit-Flipping Decoding Algorithms for LDPC Codes (2022, ATC 2022)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

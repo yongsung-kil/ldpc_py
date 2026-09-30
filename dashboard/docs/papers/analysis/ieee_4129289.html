@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4129289</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4129289---a-method-of-counting-the-number-of-cycles-in-ldpc-codes-2006-icsp2006">ieee_4129289 - A Method of Counting the Number of Cycles in LDPC Codes (2006, ICSP2006)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>96~108</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Tanner graph의 4/6/8/10-cycle 개수를 parity-check 행렬 row 조합으로 세는 조합론적 카운팅 알고리즘 제시</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>girth 좋은 QC-LDPC가 오히려 random LDPC보다 BER 성능이 나쁨을 보였을 뿐, 부호설계/디코더 개선 기법은 제시하지 않음</td></tr><tr><td>추가확인</td><td>96/108 길이의 소규모 예제뿐이라 실용 NAND rate/length로 일반화 가능한지 불명</td></tr></tbody></table>
+<blockquote><p>총평: cycle 개수를 세는 분석 도구 논문으로 이식 가능한 알고리즘/HW 요소가 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 LDPC 코드의 Tanner graph(parity-check 행렬 H, m행 n열)에서 발생하는 짧은 cycle(4/6/8/10-cycle) 개수를 세는 문제.</li><li>기존에는 cycle 개수를 정확히 세는 체계적 방법이 부족했고, girth(최단 cycle 길이)만으로는 BER 성능을 예측하기 어렵다는 문제의식.</li><li>별도의 채널/노이즈 모델 정의 없음 (H-matrix 구조 분석 + AWGN 채널에서 sum-product 디코딩 시뮬레이션으로 검증).</li><li>핵심 기법: H에서 <code>Cm2</code>, <code>Cm3</code>, <code>Cm4</code>, <code>Cm5</code> 개의 row 조합을 각각 취해, 각 row에 1,2,4,8,16의 가중치를 부여한 뒤 합산한 "sum row"에서 특정 값(예: 4-cycle은 "3")이 나타나는 열 개수(<code>num_3</code> 등)를 세어 cycle 수 <code>p(i)</code>를 산출, 전체 조합에 대해 합산.</li><li>예: 4-cycle 개수는 <code>p(i) = C(num_3, 2)</code>이고, 전체 4-cycle 수는 모든 2-row 조합에 대한 <code>p(i)</code>의 합 — 두 행에 동시에 1이 있는 열 쌍의 개수가 곧 그 두 행이 만드는 4-cycle 개수라는 조합적 관찰.</li><li>8-cycle/10-cycle은 4행/5행 조합에서 여러 num_x 값들의 곱의 합으로 확장(예: <code>num_3×num_12×num_5×num_10 + ...</code>), 4-cycle이 없다고 가정하고 계산.</li><li>별도의 근사/양자화/HW 변형 트릭은 없음 — 순수 조합 계산(row 가중치 합산 후 특정 정수값 카운팅) 절차.</li><li>학습/최적화 절차 없음 (알고리즘은 결정적 카운팅).</li><li>결과: MacKay 랜덤 LDPC(96,48)와 Fossorier 방식 QC-LDPC(108,54) 비교 — QC-LDPC가 girth 면에서 우수(6-cycle 0개 vs 191개)하지만 BER 성능은 random LDPC가 더 우수함을 시뮬레이션으로 확인.</li><li>한계: 코드 길이 96/108의 소규모 예제뿐이며, 디코더 알고리즘·HW 설계·부호 최적화 기법은 전혀 제시하지 않는 순수 분석/카운팅 방법론 논문.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| cycle 카운팅 알고리즘 (H-matrix 분석) | 대응 없음 | 오프라인 부호 분석 도구로 디코더/인코더 실행 코드와 무관 |
+| girth vs BER 상관관계 관찰 | 대응 없음 | 실험적 관찰일 뿐 코드 설계 규칙이나 구현 기법이 아님 |</code></pre>
+<p>적용 가치: 낮음 — cycle 개수를 세는 오프라인 분석 도구일 뿐 디코더/인코더/HW에 이식할 알고리즘이나 구조가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4129289",
+  "title": "A Method of Counting the Number of Cycles in LDPC Codes",
+  "year": 2006,
+  "venue": "ICSP2006",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "96~108",
+  "soft_quant": "무관",
+  "key_contribution": "Tanner graph의 4/6/8/10-cycle 개수를 parity-check 행렬 row 조합으로 세는 조합론적 카운팅 알고리즘 제시",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "girth 좋은 QC-LDPC가 오히려 random LDPC보다 BER 성능이 나쁨을 보였을 뿐, 부호설계/디코더 개선 기법은 제시하지 않음",
+  "todo_check": "96/108 길이의 소규모 예제뿐이라 실용 NAND rate/length로 일반화 가능한지 불명"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4129289---a-method-of-counting-the-number-of-cycles-in-ldpc-codes-2006-icsp2006">ieee_4129289 - A Method of Counting the Number of Cycles in LDPC Codes (2006, ICSP2006)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5394917</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5394917---fpga-based-low-complexity-high-throughput-tri-mode-decoder-for-quasi-cyclic-ldpc-codes-2009-allerton">ieee:5394917 - FPGA-Based Low-Complexity High-Throughput Tri-Mode Decoder for Quasi-Cyclic LDPC Codes (2009, Allerton)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.82</td></tr><tr><td>부호length</td><td>4095</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>OS/SRBI/HRBI-MLGD 3모드를 1-bit 메시지로 통합한 저복잡도 디코더 FPGA 구현 + memory sharing + 2 codeword 동시복호로 1.9Gbps</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.9</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>MLGD 계열은 열가중 64의 유한기하(EG) 부호에 의존 → degree-17 min-sum QC-LDPC(Prime ECC)에 부적합, SPA 대비 약 0.6dB 손실</td></tr><tr><td>추가확인</td><td>memory sharing·2 codeword 동시복호가 FPGA block RAM 특화인지(ASIC 파이프라인 이식성), hard모드(HRBI)의 NAND hard-read 적용 여지</td></tr></tbody></table>
+<blockquote><p>총평: 유한기하 EG 부호용 1-bit 메시지 MLGD 3모드 FPGA 디코더. 알고리즘 계열이 min-sum과 달라 직접 이식은 어렵지만, 2 codeword 동시복호 throughput 트릭과 soft/hard 겸용 구조는 참고가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: cyclic (4095,3367) EG-LDPC (2D 유클리드 기하 EG(2,2^6)), 열/행 가중 64, min distance 65, 크기&lt;65 trapping set 없음; QC 형태(63×63 CPM)로 변환, 총 262080 edge.</li><li>문제: SPA는 최고성능이나 HW 복잡; 저비용·고속·soft 미가용(storage) 환경 모두를 하나의 디코더로 커버하고자 함.</li><li>3개 호환 알고리즘 통합: <code>OS-MLGD</code>(1-iteration 다수결), <code>SRBI-MLGD</code>(soft 신뢰도 기반), <code>HRBI-MLGD</code>(hard 신뢰도 기반) — 초기화·신뢰도 척도만 다르고 반복 스텝 동일.</li><li>핵심 연산: 신드롬 <code>s(k)=z(k)H^T</code>, 정수합 <code>E_j(k)=Σ(1-2(s_i⊕z_j))</code>, 신뢰도 갱신 <code>R_j(k+1)=R_j(k)+E_j(k)</code> 후 부호로 hard-decision.</li><li>모든 모드가 <strong>1-bit 메시지 + XOR + 정수덧셈</strong>만 사용 → CNU가 64-bit XOR 게이트로 축소(SPA CNU 대비 대폭 단순), 배선(interconnect) 복잡도·클록 개선.</li><li>soft 입력은 2^b 레벨 균일 양자화(∆=0.015625, 8-bit: 정수2+소수6)로 신뢰도 <code>q_j</code> 표현; HRBI/OS는 ±γ hard 초기화.</li><li>Memory sharing: 같은 offset의 CPM들을 넓은 워드로 묶어 하나의 block RAM에 매핑(1-bit라 더 많이 압축) → 288개뿐인 block RAM에 4160 CPM 수용.</li><li>2 codeword 동시복호: block RAM depth(512)의 미사용 영역과 true-dual-port를 활용, VNU·CNU가 서로 다른 codeword를 처리 → waiting-time 계산 불필요, throughput 2배.</li><li>결과: Virtex-4 LX160에서 191MHz, 12857 slices, 153 block RAM, 1.9Gbps, BER 10^-11까지 하루내 측정; SRBI-MLGD는 kmax=5에서 4.9dB시 평균 2.0 iteration.</li><li>한계: SRBI-MLGD가 SPA 대비 약 0.6dB 손실, EG 고열가중 부호 특화, memory sharing 등은 FPGA block RAM 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반복 복호 알고리즘(MLGD 3모드)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>다수결(MLGD) 계열로 min-sum과 연산이 달라 루프 골격만 유사, 알고리즘 교체 필요</td></tr><tr><td>CN 갱신(XOR/신드롬)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 min1/min2 magnitude, 논문은 64-bit XOR → 직접 대응 아님</td></tr><tr><td>hard-decision 모드(HRBI/OS)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>HD 경로와 개념 대응(soft 미가용 시 사용)</td></tr><tr><td>soft 신뢰도 양자화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>2^b 균일 양자화 vs LLR 테이블, 접점 있음</td></tr><tr><td>QC H-matrix/CPM 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC 구조 로드 대응</td></tr><tr><td>memory sharing / 2 codeword 동시복호</td><td>대응 없음</td><td>FPGA block RAM 특화 트릭, 고정 z=32 파이프라인 모델과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — MLGD 계열 + 유한기하 고열가중 부호에 종속되어 degree-17 min-sum QC-LDPC 엔진에 알고리즘이 맞지 않고, HW 최적화도 FPGA block RAM 특화다. 다만 hard/soft 겸용·2 codeword throughput 아이디어는 참고할 만하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5394917",
+  "title": "FPGA-Based Low-Complexity High-Throughput Tri-Mode Decoder for Quasi-Cyclic LDPC Codes",
+  "year": 2009,
+  "venue": "Allerton",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.82,
+  "code_length": "4095",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "OS/SRBI/HRBI-MLGD 3모드를 1-bit 메시지로 통합한 저복잡도 디코더 FPGA 구현 + memory sharing + 2 codeword 동시복호로 1.9Gbps",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.9,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "MLGD 계열은 열가중 64의 유한기하(EG) 부호에 의존 → degree-17 min-sum QC-LDPC(Prime ECC)에 부적합, SPA 대비 약 0.6dB 손실",
+  "todo_check": "memory sharing·2 codeword 동시복호가 FPGA block RAM 특화인지(ASIC 파이프라인 이식성), hard모드(HRBI)의 NAND hard-read 적용 여지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5394917---fpga-based-low-complexity-high-throughput-tri-mode-decoder-for-quasi-cyclic-ldpc-codes-2009-allerton">ieee:5394917 - FPGA-Based Low-Complexity High-Throughput Tri-Mode Decoder for Quasi-Cyclic LDPC Codes (2009, Allerton)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5763047</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5763047---a-flexible-high-throughput-multi-asip-architecture-for-ldpc-and-turbo-decoding-2011-date">ieee:5763047 - A Flexible High Throughput Multi-ASIP Architecture for LDPC and Turbo Decoding (2011, DATE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>648~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC/turbo 겸용 멀티-ASIP 디코더, 인터리버 주소 룩업메모리 제거 + 메모리/통신자원 공유로 면적 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.6mm2@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.312</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선표준용 유연 멀티모드 ASIP로 NAND 고정 QC-LDPC HW와 구조 이질, 부호정정 성능 개선 아님</td></tr><tr><td>추가확인</td><td>de-Bruijn NOC 기반 ASIP 병렬화가 NAND 단일부호 파이프라인에 이득 없음(재검토 불필요)</td></tr></tbody></table>
+<blockquote><p>총평: WiMAX/LTE/WiFi/DVB 다표준 겸용 LDPC/turbo 디코더 ASIP 아키텍처로, 정정성능 개선이 아니라 유연성·면적 최적화가 목적이라 NAND 고정 binary QC-LDPC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 무선 다표준(WiMAX/LTE/WiFi/DVB-RCS)용 <strong>CC/turbo(SBTC,DBTC)/LDPC 겸용</strong> 멀티코어 디코더. LDPC는 <code>Hbase</code>(Nb x Mb 블록, 각 원소를 ZxZ 순열행렬로 확장, <code>Z&lt;=96</code>).</li><li>문제: 표준마다 부호·프레임길이·처리량 요구가 달라 유연성이 필요; 전용 인터리브 주소 룩업 메모리가 면적을 잡아먹음.</li><li>Turbo 복호: <code>Max-Log MAP</code> 기반, 상태메트릭 <code>α_k</code>,<code>β_k</code>,분기메트릭 <code>γ_k</code>; SBTC는 Radix-4(one-level look-ahead)로 trellis 절반화.</li><li>LDPC 복호: BP의 HW 효율 구현인 <strong>2-min 알고리즘</strong>(min-sum류) — CN 업데이트에서 <code>min0,min1</code>과 부호 XOR, scaling <code>α</code> 사용 (식 17~19). "Running vector"(min 계산)/"Update cycle"(Γ 갱신)로 분리.</li><li>핵심 식: <code>Γ_mn = α × sgn_nm × min_nm</code>, <code>Δ_n = λ_nm + sgn×Γ_mn</code> — 표준 정규화 min-sum.</li><li>아키텍처: 8개 ASIP를 <strong>de-Bruijn NOC</strong>로 연결, ASIP당 CN 3개 병렬, 8 ASIP로 24 CN을 2클록에 처리; turbo/LDPC가 메모리·NOC 공유.</li><li>HW 트릭: turbo shuffled 스케줄의 인터리브/디인터리브 주소를 <strong>룩업메모리 없이 재귀 생성</strong>(QPP/ARP 규칙, 식 20~23); LLR 6bit, extrinsic 8bit(turbo), LDPC는 λ 7bit / Γ 5bit 양자화.</li><li>최적화: LISA 언어 ASIP 모델링, CoWare processor designer, 90nm 합성.</li><li>결과: 총 면적 2.6mm2@90nm, <code>Fclk=520MHz</code>; LDPC 처리량 최대 312Mbps(WiMAX rate 5/6, Z=96, 10 iter), turbo 173Mbps(6 iter). 기존 대비 면적/처리량 절충 우위.</li><li>한계: 다표준 유연성·면적이 목표이며 부호 정정능력 개선 아님; NAND 단일 고정 QC-LDPC와 구조·목표가 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>2-min(min-sum류) CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 중복, 신규 기여 없음</td></tr><tr><td>VN 업데이트/양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>표준 min-sum VN, 기여 없음</td></tr><tr><td>멀티-ASIP/de-Bruijn NOC 병렬화·메모리 공유</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 파이프라인 HW, 다표준 ASIP 라우팅과 이질</td></tr><tr><td>인터리버 주소 룩업메모리 제거</td><td>대응 없음</td><td>turbo 인터리버 특화, NAND QC-LDPC와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 복호부는 이미 보유한 min-sum과 중복이고, 핵심 기여인 다표준 유연 ASIP/NOC 아키텍처는 NAND 고정 binary QC-LDPC HW에 떼어 쓸 구조적 접점이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5763047",
+  "title": "A Flexible High Throughput Multi-ASIP Architecture for LDPC and Turbo Decoding",
+  "year": 2011,
+  "venue": "DATE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.9",
+  "code_length": "648~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC/turbo 겸용 멀티-ASIP 디코더, 인터리버 주소 룩업메모리 제거와 메모리/통신자원 공유로 면적 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.6mm2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.312,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무선표준용 유연 멀티모드 ASIP로 NAND 고정 QC-LDPC HW와 구조 이질, 부호정정 성능 개선 아님",
+  "todo_check": "de-Bruijn NOC 기반 ASIP 병렬화가 NAND 단일부호 파이프라인에 이득 없음(재검토 불필요)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5763047---a-flexible-high-throughput-multi-asip-architecture-for-ldpc-and-turbo-decoding-2011-date">ieee:5763047 - A Flexible High Throughput Multi-ASIP Architecture for LDPC and Turbo Decoding (2011, DATE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

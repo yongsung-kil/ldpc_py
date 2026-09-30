@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8970730</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8970730---joint-equalization-and-ldpc-decoding-2019-icumt">ieee:8970730 - Joint Equalization and LDPC Decoding (2019, ICUMT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>DFE 등화를 별도 Turbo 반복 없이 LDPC Tanner graph의 variable node 식에 직접 통합(tanh soft-bit로 ISI tail 상쇄)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ISI 채널 등화 특화 — NAND는 ISI 채널 아님, 등화 링크 추가로 짧은 cycle 생겨 10^-6 error floor 발생</td></tr><tr><td>추가확인</td><td>등화 링크로 인한 error-floor 억제용 PEG H-matrix 재설계 결과(후속 연구 예정 상태)</td></tr></tbody></table>
+<blockquote><p>총평: ISI 통신채널용 joint 등화-복호 기법으로 NAND(등화 불필요)엔 관련성 낮아 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템/부호: LDPC + ISI 채널의 serial concatenation, length 2048·rate 1/2 irregular LDPC(<code>λ(x)=0.283x+0.399x^2+0.318x^7</code>, <code>ρ(x)=0.6x^5+0.4x^6</code>), PEG zigzag로 systematic triangular H 생성.</li><li>문제: 부호화-채널 컨볼루션(ISI)의 등화와 복호를 별도 엔티티로 Turbo 반복하면 복잡, 이를 하나로 통합하려 함.</li><li>채널/모델: minimum-phase 임펄스응답 <code>F(z)=1+f1 z^{-1}</code>(시뮬은 <code>1+0.5z^{-1}</code>, 2-tap), AWGN, DFE(feedback filter로 tail 상쇄) 구조 전제.</li><li>핵심 기법: DFE의 hard slicer 대신 VN의 LLR 추정치를 soft-bit <code>λ(ξ)=tanh(ξ/2)</code>로 변환해 아날로그 도메인에서 ISI tail을 <code>ri - f1·tanh(ξ_{i-1}/2)</code>로 상쇄한 뒤 다시 LLR화(식 2,4).</li><li>핵심 식: 수정 VN 식 <code>v_m(i)=(2/σn^2)[r(i)-Σ f_m tanh(ξ_{i-m})] + Σ u_k</code>(식 5) — 대괄호항이 아날로그 DFE-like 상쇄, CN 식(6)은 표준 그대로.</li><li>확장: <code>M</code>(채널 메모리=feedback filter 길이)차 ISI로 일반화, <code>ξ_{i-m}</code> = 해당 VN에 들어오는 모든 LLR 합(통상 복호에선 최종 단계에만 계산하나 여기선 매 iteration 필요).</li><li>스케줄링 주의: 코드 보호 전(intrinsic만으로) 사전 등화 금지 — 잡음 큰 값 처리로 성능 저하, Tanner graph 통과 후 등화해야 함.</li><li>이론 확장(미구현): density evolution의 수렴식(식 9)에 intrinsic <code>2/σ^2</code> 항 옆에 등화 성분을 add-on해야 함을 지적(근사 필요, 실제 미수행).</li><li>결과: 2-tap ISI에서 20 iteration 제한, 통합 방식이 sequential(선등화 후 복호) 대비 coding gain, iteration 늘수록 이득 증가하나 no-ISI AWGN엔 못 미침, BER ~10^-6에서 error floor(등화 링크가 만든 짧은 cycle 탓).</li><li>한계: HW 미설계, 시뮬(첫 결과)뿐, error floor 존재, H-matrix(PEG) 재설계는 후속 과제, ISI 채널 전제라 NAND 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>수정 VN 식(등화 상쇄 항 포함)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>LDPC_Decoder()</code></td><td>VN 처리 접점이나 ISI 등화 항은 NAND에 불필요</td></tr><tr><td>soft-bit <code>tanh(ξ/2)</code> 아날로그 변환</td><td>대응 없음</td><td>우리는 min-sum(tanh 미사용), full-tanh soft-value 도입은 역행</td></tr><tr><td>ISI tail 상쇄(DFE 통합)</td><td>대응 없음</td><td>NAND는 ISI 채널이 아니라 등화 개념 자체 부재</td></tr><tr><td>PEG zigzag H-matrix 설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 고정 QC-LDPC, PEG irregular 부호와 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — ISI 통신채널의 등화-복호 통합 기법으로, ISI가 없는 NAND flash에는 등화 개념이 적용되지 않는다. tanh soft-bit·irregular PEG 부호도 min-sum 기반 고정 QC-LDPC인 Prime ECC와 방향이 어긋난다.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:8970730",
+  "title": "Joint Equalization and LDPC Decoding",
+  "year": 2019,
+  "venue": "ICUMT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "DFE 등화를 별도 Turbo 반복 없이 LDPC Tanner graph의 variable node 식에 직접 통합(tanh soft-bit로 ISI tail 상쇄)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ISI 채널 등화 특화 — NAND는 ISI 채널 아님, 등화 링크 추가로 짧은 cycle 생겨 10^-6 error floor 발생",
+  "todo_check": "등화 링크로 인한 error-floor 억제용 PEG H-matrix 재설계 결과(후속 연구 예정 상태)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8970730---joint-equalization-and-ldpc-decoding-2019-icumt">ieee:8970730 - Joint Equalization and LDPC Decoding (2019, ICUMT)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

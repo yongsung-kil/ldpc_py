@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6018855</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6018855---improved-shortening-algorithm-for-irregular-qc-ldpc-codes-using-known-bits-2011-ieee-trans-consumer-electronics">ieee:6018855 - Improved Shortening Algorithm for Irregular QC-LDPC Codes Using Known Bits (2011, IEEE Trans. Consumer Electronics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>648~2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>known-bit shortening 시 최소 row-variance 우선(SRVP) 기준으로 제거할 정보열 선택 → LES 대비 Eb/No threshold 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>802.11n/16e 표준부호(rate 0.5~0.67, len&lt;2304) 전용, EXIT chart 이론+시뮬뿐 HW 없음; 저rate에서 정보비트 67% 단축 시 오히려 열화</td></tr><tr><td>추가확인</td><td>shortening은 rate/length 가변용 기법으로 고정 고rate NAND QC-LDPC에 필요성 자체가 낮음(우리 부호는 4KB 고정)</td></tr></tbody></table>
+<blockquote><p>총평: 무선표준용 rate/length 가변 shortening 열선택 기준 개선 논문으로, 고정 고rate NAND QC-LDPC 이식 필요성·관련성 모두 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 802.11n/802.16e irregular QC-LDPC (base matrix <code>Mb</code>, rate 1/2·2/3, length 648~2304).</li><li>문제: 알려진(고정값) 정보비트를 무한신뢰로 처리하는 shortening에서 "어느 정보열을 제거할지" 기준이 성능을 좌우.</li><li>가정: irregular QC-LDPC 성능은 girth보다 degree 분포가 지배; EXIT chart로 Eb/No threshold 예측(무한길이 가정).</li><li>기존 LES: 최소 column-degree 열을 우선 후보로, 그중 extrinsic sum <code>e(j)=Σ(ρ(i)-1)</code> 최대 열 제거.</li><li>저자 주장: 최소 degree 우선은 average row degree 증가로 전체 복호력 저하 가능 → trade-off라 근거 약함.</li><li>제안 SRVP: 모든 정보열을 동등 평가, degree별 그룹 조합(category)을 나눠 각 category에서 제거 후 <strong>row-degree variance</strong>가 최소인 패턴을 선택.</li><li>최종 선택: 각 category 대표 패턴들에 대해 EXIT chart로 threshold 계산, 최저 threshold 패턴을 최종 shortening 패턴으로 확정.</li><li>결과(이론): 원부호 대비 LES 0.212~0.847dB, SRVP 0.365~1.041dB gain; SRVP가 LES보다 0.009~0.414dB 우수.</li><li>결과(시뮬): 유한길이라 이론보다 gain 작음; degree-2 parity열이 short 후 최대 80% 차지 시 성능 붕괴.</li><li>한계: rate 1/2에서 정보비트 67% shortening 시 waterfall이 평탄해져 고SNR에서 원부호보다 나빠짐; HW 미설계, 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| base matrix 열 제거(shortening) | ecc_top.cpp Load_PCM() | H-matrix/base 로드부에 열 제거 가능하나 우리 부호는 고정 고rate 4KB라 shortening 불필요 |
+| degree 분포 기반 부호 조정 | 대응 없음 | rate/length 가변용 오프라인 부호설계, 런타임 디코더와 무관 |
+| EXIT chart threshold 분석 | 대응 없음 | 성능예측 도구, 코드베이스에 대응 모듈 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — shortening은 무선표준의 rate/length 가변 요구에서 나온 기법이며, 고정 고rate binary QC-LDPC를 쓰는 Prime ECC에는 필요성·관련성 모두 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6018855",
+  "title": "Improved Shortening Algorithm for Irregular QC-LDPC Codes Using Known Bits",
+  "year": 2011,
+  "venue": "IEEE Transactions on Consumer Electronics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.67",
+  "code_length": "648~2304",
+  "soft_quant": "무관",
+  "key_contribution": "known-bit shortening 시 최소 row-variance 우선(SRVP) 기준으로 제거할 정보열 선택 → LES 대비 Eb/No threshold 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "802.11n/16e 표준부호(rate 0.5~0.67, len&lt;2304) 전용, EXIT chart 이론+시뮬뿐 HW 없음; 저rate에서 정보비트 67% 단축 시 오히려 열화",
+  "todo_check": "shortening은 rate/length 가변용 기법으로 고정 고rate NAND QC-LDPC(4KB 고정)에 필요성 자체가 낮음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6018855---improved-shortening-algorithm-for-irregular-qc-ldpc-codes-using-known-bits-2011-ieee-trans-consumer-electronics">ieee:6018855 - Improved Shortening Algorithm for Irregular QC-LDPC Codes Using Known Bits (2011, IEEE Trans. Consumer Electronics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

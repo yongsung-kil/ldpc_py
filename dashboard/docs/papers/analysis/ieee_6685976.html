@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6685976</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6685976---quantized-iterative-message-passing-decoders-with-low-error-floor-for-ldpc-codes-2014-ieee-transactions-on-communications">ieee:6685976 - Quantized Iterative Message Passing Decoders with Low Error Floor for LDPC Codes (2014, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.3~0.82</td></tr><tr><td>부호length</td><td>640~4095</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>(q+1)-bit quasi-uniform 양자화로 메시지 dynamic range를 지수적으로 확대해 update rule·부호 변경 없이 error-floor를 크게 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>HW(RTL/ASIC) 미설계·게이트수 미제시, 파라미터(step Δ, 성장률 d, 입력 LLR 스케일)가 heuristic·코드종속이며 이득도 code-dependent</td></tr><tr><td>추가확인</td><td>Prime ECC의 q비트 magnitude 양자화 테이블(min-sum/OMS)에 지수 범위 표현(indicator bit)을 추가할 때 CN/VN 연산·조기종료 정합성 확인</td></tr></tbody></table>
+<blockquote><p>총평: update rule을 안 바꾸고 양자화 테이블만 quasi-uniform으로 교체해 error-floor를 크게 낮추는 min-sum/OMS 친화 기법으로, NAND high-rate QC-LDPC 디코더에 이식 유망.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>BSC/AWGN 채널, variable-regular binary LDPC; 시뮬 코드는 (640,192) QC r=0.3, (2640,1320) Margulis r=0.5, (1280,1024) AR4JA protograph r=0.8, MacKay (4095,3358) r≈0.82.</li><li>문제: 고정소수점 MP 디코더의 메시지 포화(saturation)가 작은 trapping set 탈출을 막아 error-floor를 유발.</li><li>모델: trapping set의 <code>k-separation assumption</code> 하에서 EPS 밖 correct 메시지가 지수적으로 성장하면 min-sum/OMS/AMS/SPA가 결국 EPS 오류를 정정함을 증명(Thm 1,4).</li><li>핵심 기법 1단: <code>(q+1)-bit quasi-uniform quantizer</code> — <code>|x|&lt;dNΔ</code>는 q-bit 균일 양자화, 그 이상은 성장률 <code>d&gt;1</code>로 지수 증가하는 구간에 매핑, indicator bit 1개 추가.</li><li>핵심 식 의미: computation tree에서 correct 메시지 크기가 <code>(dv-1)^l|L0|</code>로 성장(식17)하므로, 큰 포화한계가 있어야 correct가 incorrect를 이긴다.</li><li>확장: 일반화 quasi-uniform은 균일 구간 크기 <code>Nu</code>를 자유 배분; box-plus SPA(min-sum+bounded correction s(x,y))에도 적용.</li><li>구현 디테일: CN/VN update rule과 부호(H-matrix) 무변경, 후처리 단계 없음; SPA는 φ(x) 대신 box-plus로 포화 회피, 2-piece 선형근사로 5배 가속.</li><li>최적화: <code>Δ, d, Nu</code>, 입력 LLR 스케일은 heuristic 탐색(예: AR4JA d=1.3, Margulis d=1.2~1.3).</li><li>결과: (640,192) AWGN에서 (3+1)-bit가 8-bit 균일·부동소수점보다 낮은 floor; quasi-uniform SPA가 부동소수점보다 적은 iteration으로 수렴(200 iter 제한 시 우위).</li><li>한계: HW 미설계·게이트수/throughput 없음, 이득이 code-dependent, 파라미터 heuristic, 분석은 variable-regular 코드 위주(irregular 확장 비자명).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>(q+1)-bit quasi-uniform 양자화 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>magnitude 양자화 테이블을 지수 범위(indicator bit)로 확장 — 직접 대응</td></tr><tr><td>VN 처리/양자화 적용</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>양자화된 message로 VN update 수행 지점</td></tr><tr><td>CN min-sum(box-plus offset) 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum/OMS와 호환(update rule 무변경)이라 양자화만 교체</td></tr><tr><td>입력 LLR 스케일/threshold</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>입력 LLR magnitude 스케일 조정과 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Prime ECC가 이미 min-sum·magnitude 양자화 테이블·적응형 LLR을 보유하므로 quasi-uniform 확장은 테이블 교체 수준으로 이식 쉽고 error-floor 이득 기대되나, 지수 범위 표현이 우리 고정 비트폭 HW/pipeline과 정합하는지와 code-dependent 이득 재검증 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6685976",
+  "title": "Quantized Iterative Message Passing Decoders with Low Error Floor for LDPC Codes",
+  "year": 2014,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "640~4095",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "(q+1)-bit quasi-uniform 양자화로 메시지 dynamic range를 지수적으로 확대해 update rule·부호 변경 없이 error-floor를 크게 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "HW(RTL/ASIC) 미설계·게이트수 미제시, 파라미터(step Δ, 성장률 d, 입력 LLR 스케일)가 heuristic·코드종속이며 이득도 code-dependent",
+  "todo_check": "Prime ECC의 q비트 magnitude 양자화 테이블(min-sum/OMS)에 지수 범위 표현(indicator bit)을 추가할 때 CN/VN 연산·조기종료 정합성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6685976---quantized-iterative-message-passing-decoders-with-low-error-floor-for-ldpc-codes-2014-ieee-transactions-on-communications">ieee:6685976 - Quantized Iterative Message Passing Decoders with Low Error Floor for LDPC Codes (2014, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

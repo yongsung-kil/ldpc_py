@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4161830</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4161830---a-reduced-complexity-scalable-implementation-of-low-density-parity-check-ldpc-decoder-2006-icassp">ieee:4161830 - A Reduced-Complexity, Scalable Implementation of Low Density Parity Check (LDPC) Decoder (2006, ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>컬럼 그룹핑 없이 router/reverse router(shuffle-alignment-distribution) 구조로 다중 code rate/block size/표준을 파라미터만으로 지원하는 확장형 layered BP 디코더 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상(percent breakdown만 제공, 총 gatecount 수치 없음)@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.256Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정성능 개선 없이 순수 HW 아키텍처/스케줄링 논문(대상=decoder, 성능 관련 C섹션 전부 N/A)</td></tr><tr><td>추가확인</td><td>8bit(5:3) 고정소수점 양자화의 성능-복잡도 트레이드오프 근거가 본문에 명시되지 않음</td></tr></tbody></table>
+<blockquote><p>총평: IEEE 802.16e 다중 rate/블록사이즈를 파라미터화된 router/reverse-router로 지원하는 layered BP 디코더 HW 구조 논문. Prime ECC는 이미 유사한 fixed QC-LDPC 파이프라인·HCU·GT를 보유해 재구성 라우팅 아이디어의 이식가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.16e 표준 QC-LDPC(rate 1/2, 2/3A, 2/3B, 3/4A, 3/4B; 19종 block size Z=24~96; nb=24, nr=15)를 대상으로 layered BP 디코더 설계.</li><li>기존 [1,2]의 column-grouping 방식은 특정 H-matrix 1개에만 최적화되어 다중 rate/블록사이즈(95 조합) 지원 시 재설계 부담이 큼이 문제.</li><li>layered(row-serial) BP를 사용하며 <code>L(qmj) = L(qj) - Rmj</code>, check node에서 <code>Amj = sum φ(L(qmn))</code>, <code>Rmj = -Smj·φ(Amj)</code>로 갱신(식 2~6).</li><li>router/reverse router를 shuffle network - alignment bank - distribution network 3단으로 분리하여 컬럼 그룹핑 없이 임의 shift value/블록 배치를 지원.</li><li><code>φ(·)</code> 함수는 자기역함수 성질(<code>φ(φ(x))=x</code>) 이용해 sign-magnitude 변환 후 LUT 크기를 절반으로 축소.</li><li>Configuration ROM에 code type, expansion factor(Z/4), block row number를 입력하면 shift value와 row weight를 출력, 파라미터만으로 95개 조합 전환.</li><li>R memory·column sum memory를 dual bank two-port 구조로 두어 동시 read/write, alignment/reverse alignment는 mux/shifter/register 5요소로 구성.</li><li>학습/최적화 절차 없음(고정 아키텍처 설계).</li><li>TI 90nm ASIC 합성 결과 parallel factor 12, 8bit(5:3) 정밀도, 100MHz에서 15 iteration 기준 최대 throughput 256Mbps; 100MHz는 80MHz 대비 gatecount 5.6%, 동적전력 14.8% 증가.</li><li>정정성능(BER/error-floor) 개선은 다루지 않고 순수 HW 아키텍처/재설계 용이성에 집중, 총 gatecount 절대값은 본문에 미기재(percent breakdown만 표1 제공).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered BP 이터레이션 루프 (식 2~6)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동일 계열 min-sum/φ 기반 layered 알고리즘, Prime ECC는 이미 min-sum으로 구현되어 φ-LUT 방식은 참고용</td></tr><tr><td>CN 갱신 (Amj, Smj, Rmj)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>유사 연산 구조, 이미 min-sum 근사로 대체 보유</td></tr><tr><td>router/reverse router 재구성 라우팅</td><td>대응 없음</td><td>Prime ECC는 z_sb=32 고정 QC 구조+HCU 기반, 임의 다중 H-matrix 지원 목적의 range router는 대응 모듈 없음</td></tr><tr><td>Configuration ROM (다중 표준 파라미터화)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부분 대응; Prime ECC는 단일/소수 H-matrix 로드 방식으로 95조합급 파라미터화는 없음</td></tr><tr><td>dual-bank column sum memory</td><td>대응 없음</td><td>Prime ECC 메모리 뱅크 구조는 본 프로파일에 상세 기재 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 정정성능 개선이 없고, 다중 표준/rate 지원용 범용 라우팅 구조는 Prime ECC의 고정 QC-LDPC 특화 구조(HCU/GT)와 목적이 달라 이식 실익이 적음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4161830",
+  "title": "A Reduced-Complexity, Scalable Implementation of Low Density Parity Check (LDPC) Decoder",
+  "year": 2006,
+  "venue": "ICASSP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "컬럼 그룹핑 없이 router/reverse router 구조로 다중 code rate/block size를 파라미터화하여 지원하는 확장형 layered BP 디코더 아키텍처",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.256,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "정정성능 개선 없이 순수 HW 아키텍처/스케줄링 논문(C섹션 전부 N/A)",
+  "todo_check": "8bit(5:3) 고정소수점 양자화 선택 근거가 본문에 명시되지 않음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4161830---a-reduced-complexity-scalable-implementation-of-low-density-parity-check-ldpc-decoder-2006-icassp">ieee:4161830 - A Reduced-Complexity, Scalable Implementation of Low Density Parity Check (LDPC) Decoder (2006, ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

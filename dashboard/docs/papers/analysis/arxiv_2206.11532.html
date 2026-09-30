@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2206.11532</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv220611532v1---reducing-the-error-floor-of-the-sign-preserving-min-sum-ldpc-decoder-via-message-weighting-of-low-degree-variable-nodes-2022-arxiv-csit-ecoc-형식">arxiv:2206.11532v1 - Reducing the Error Floor of the Sign-Preserving Min-Sum LDPC Decoder via Message Weighting of Low-Degree Variable Nodes (2022, arXiv cs.IT / ECOC 형식)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.826</td></tr><tr><td>부호length</td><td>17664</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>강양자화 SP-MS의 degree-3 VN에만 iteration-의존 CN-to-VN 가중(shift-and-add)으로 error floor 3자릿수↓</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>시뮬만(FPGA/ASIC 미검증), 가중치가 random-search+SNR별 최적화라 코드/채널 의존, EPON 광통신 코드 대상</td></tr><tr><td>추가확인</td><td>Prime ECC의 punctured degree 9/7 col 및 z=32 QC 구조에서 low-degree VN 가중 필요성과 weight 테이블 재최적화</td></tr></tbody></table>
+<blockquote><p>총평: 강양자화 min-sum의 error floor를 저degree VN 한정 shift-and-add 가중으로 낮추는 HW-friendly 기법으로, Prime ECC의 hard/2SD/3SD min-sum 파이프라인에 iteration별 LLR/가중 테이블로 이식성 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN, IEEE 802.3ca EPON irregular LDPC <code>N=17664</code>, <code>R=0.826</code>, 광통신용. LLR은 4bit 양자화(<code>α</code> scaling으로 채널LLR→In 매핑).</li><li>문제: 저복잡도 SP-MS(Sign-Preserving MS)를 <code>q=2,3</code> bit(alphabet 4/8)로 강양자화하면 채널LLR(4bit)과 내부 메시지 alphabet 불일치로 error floor 발생(q=2 BER≈1e-3, q=3≈1e-6).</li><li>원인 규명: floor는 EPON 코드의 degree-3 VN(전체의 약 72%) 때문 — low-degree VN은 incoming 메시지가 적어 나쁜 채널LLR을 극복 못 함.</li><li>핵심 기법: SP-MS VN update(식2)에 iteration-의존 가중 <code>wn(ℓ)</code>를 CN-to-VN 메시지에 곱해 반복이 진행될수록 incoming 메시지 비중을 키움(<code>wn=1</code>이면 원 SP-MS).</li><li>식 의미: <code>μ(v→c)</code>는 sign-preserving factor(erased 메시지 방지), <code>Ψ</code>는 offset <code>ϕv</code> 적용 후 alphabet <code>2^(q-1)-1</code>로 saturate.</li><li>선택적 적용: 가중은 degree-3 VN에만 적용 → 복잡도 절감 + <code>α</code> 재최적화 불필요, 이론(conjecture) 증명 겸용.</li><li>HW 친화: weight를 최대 3개 power-of-two 합으로 제한(3bit 표현) → 곱셈을 shift-and-add로 대체, 첫 4 iteration은 w=1이라 나머지 8 iteration만 shift-add.</li><li>최적화: weight vector는 random candidate 중 최저 BER/FER 선택, 단조 제약 <code>0&lt;wn(ℓ)≤wn(ℓ+1)</code>, q=3은 SNR 2.8dB, q=2는 3.1dB에서 최적화(Tab.1).</li><li>결과: degree-3 VN에 3bit weight 적용 시 error floor를 3자릿수 이상 감소(BER 그래프 ×5.2·10^3, ×3.4·10^3 등), max 12 iteration.</li><li>한계: 시뮬만(HW-friendly 설계이나 FPGA/ASIC 미검증), weight가 코드·SNR 종속, floor 근본원인(더 낮은 BER)은 미해결로 향후과제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SP-MS VN update 가중 wn(ℓ)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>Get_VNU_Table_Idx()</code></td><td>iteration별 VN 처리에 저degree 한정 가중 삽입 — Prime ECC VN 루프에 직접 대응</td></tr><tr><td>iteration-의존 weight 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>Prime ECC의 iteration 구간별 LLR 테이블과 동일 메커니즘, weight 테이블 추가로 이식</td></tr><tr><td>min-sum CN update/offset ϕv</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>SP-MS도 min1/min2+sign 계열, Prime ECC min-sun과 정합</td></tr><tr><td>LLR 양자화 α scaling</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>4bit LLR→저bit 메시지 매핑이 Prime ECC soft-read 양자화와 대응</td></tr><tr><td>shift-and-add weight(power-of-2)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>HW-friendly 가중을 magnitude 양자화 테이블에 반영 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — 강양자화 min-sum의 error-floor를 저degree VN 한정 iteration별 shift-and-add 가중으로 낮추는 기법은 Prime ECC의 hard/2SD/3SD 저bit 파이프라인과 punctured 저degree col 구조에 직접 부합하며, weight 테이블만 추가하면 이식 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2206.11532v1",
+  "title": "Reducing the Error Floor of the Sign-Preserving Min-Sum LDPC Decoder via Message Weighting of Low-Degree Variable Nodes",
+  "year": 2022,
+  "venue": "arXiv cs.IT (ECOC 형식)",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.826,
+  "code_length": "17664",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "강양자화 SP-MS의 degree-3 VN에만 iteration-의존 가중(shift-and-add)으로 error floor 3자릿수 감소",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "시뮬만(FPGA/ASIC 미검증), weight가 random-search+SNR/코드 종속, EPON 광통신 코드 대상",
+  "todo_check": "Prime ECC punctured 저degree col·z=32 QC 구조에서 low-degree VN 가중 필요성과 weight 테이블 재최적화 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv220611532v1---reducing-the-error-floor-of-the-sign-preserving-min-sum-ldpc-decoder-via-message-weighting-of-low-degree-variable-nodes-2022-arxiv-csit-ecoc-형식">arxiv:2206.11532v1 - Reducing the Error Floor of the Sign-Preserving Min-Sum LDPC Decoder via Message Weighting of Low-Degree Variable Nodes (2022, arXiv cs.IT / ECOC 형식)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

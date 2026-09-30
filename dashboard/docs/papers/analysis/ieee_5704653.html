@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5704653</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5704653---efficient-encoding-for-hardware-implementation-of-ira-ldpc-on-80216-standard-2010-ispacs">ieee:5704653 - Efficient Encoding for Hardware Implementation of IRA LDPC on 802.16 Standard (2010, ISPACS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83 (1/2, 2/3B, 3/4A/B, 5/6)</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>dual-diagonal IRA 구조에서 시작 parity 벡터 <code>r0</code>를 레지스터에 저장·재활용하는 누적 재귀 XOR 인코더로 실시간(1-clock latency) 인코딩</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>15k~85k cell (rate 1/2~5/6, expansion 24~96, 공정 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.16e 특정 base matrix 종속, 공정·throughput(Gbps) 미기재, 디코더/정정성능 무관, IRA(dual-diagonal) 전용</td></tr><tr><td>추가확인</td><td>우리 dual-diagonal 인코더(z=32) 대비 재귀 누적 방식의 cell area/critical-path 이득, shuffled dual-diag 옵션 호환성</td></tr></tbody></table>
+<blockquote><p>총평: 802.16e IRA QC-LDPC용 dual-diagonal 재귀 누적 XOR 인코더(1-clock latency). 우리 인코더도 dual-diagonal 기반이라 개념 유사, 신규성은 register 재활용 스케줄 수준, 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.16e QC-LDPC, base matrix <code>B=[B(1),B(2)]</code>를 expansion factor <code>n</code>(24~96)로 z×z shifted-identity 확장, 예시 codeword 2304-bit rate-2/3B.</li><li>문제: LDPC 인코딩은 행렬곱으로 code length에 quadratic 복잡도 → HW 부담. 기존 [8] parity 예측·정정 방식을 재귀 누적으로 개선.</li><li>구조 가정: <code>B(2)</code>가 dual-diagonal 형태 → <code>HeT = H(1)aT + H(2)rT = 0</code>에서 parity를 순차 재귀로 유도 가능.</li><li>핵심 기법: 시작 parity 벡터 <code>r0 = Σ H(1)aT</code> 계산 후, <code>1≤i&lt;m-1</code>에서 재귀식 <code>r_{i+1}=(βi+ri+r0)</code> 또는 <code>(βi+ri)</code> (<code>B(2)</code>의 shift 부호에 따라)로 각 parity 블록 산출.</li><li>의미: <code>r0</code>를 output으로 내보내는 동시에 별도 register에 저장 → 다음 permuted 연산에 재사용, 매트릭스 실저장 없이 XOR 함수 전개로 계산.</li><li>마지막 parity: <code>r_{m-1}=β_{m-1}+perm[d]r0</code>; HW 효율 위해 <code>β_{m-1}</code>은 명시 계산 생략.</li><li>구현 디테일: XCH shift register(메시지 96-DFF cyclic 저장) + shift register β/acc 블록, MUX A로 <code>a*</code>/<code>ai</code> 누적 선택. rate/n에 따라 permutation tap 위치(Pd) 가변.</li><li>처리 흐름: 첫 1536 clock에 메시지 적재 → cyclic shift로 전환 → <code>a*</code>가 H(1) non-zero tap 합산해 <code>r0</code> 출력 → 96 clock마다 <code>r1,r2,...</code> 순차 산출.</li><li>결과: Design Vision 합성, critical path 약 0.44ns(안정적), total cell area 15k~85k(rate·expansion 선형 증가), 1-clock latency 실시간 동작.</li><li>한계: 802.16e base matrix 종속, 공정·throughput 미기재, 디코더/정정능력과 무관한 순수 인코딩 아키텍처.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dual-diagonal 재귀 누적 parity 계산</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>우리 dual-diagonal 인코더와 동일 계열, register 재활용 스케줄 참고 가능</td></tr><tr><td>부호용 PCM/base matrix 확장</td><td>encoder.cpp <code>Generate_PCM_encoding()</code></td><td>H(1)/H(2) 분할·shifted-identity 확장은 우리 PCM 생성과 대응</td></tr><tr><td>column 재배치/permutation tap</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>shift/permutation 위치 관리와 개념 유사</td></tr><tr><td>H-matrix / QC 구조 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>base matrix 로드 대응</td></tr><tr><td>디코더/정정성능</td><td>대응 없음</td><td>인코더 전용, 복호와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — dual-diagonal IRA 재귀 인코딩은 우리 인코더(dual-diagonal 고정)와 같은 계열이라 register 재활용 아이디어는 참고 여지가 있으나, 우리는 이미 dual-diagonal 인코더를 보유하고 802.16e 특정 코드 종속이라 이식 이득은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5704653",
+  "title": "Efficient Encoding for Hardware Implementation of IRA LDPC on 802.16 Standard",
+  "year": 2010,
+  "venue": "ISPACS 2010",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "2304",
+  "soft_quant": "무관",
+  "key_contribution": "dual-diagonal IRA 구조에서 시작 parity 벡터 r0를 레지스터에 저장·재활용하는 누적 재귀 XOR 인코더로 실시간(1-clock latency) 인코딩",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "15k~85k cell (rate 1/2~5/6, expansion 24~96, 공정 미상)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "802.16e 특정 base matrix 종속, 공정·throughput(Gbps) 미기재, 디코더/정정성능 무관, IRA(dual-diagonal) 전용",
+  "todo_check": "우리 dual-diagonal 인코더(z=32) 대비 재귀 누적 방식의 cell area/critical-path 이득, shuffled dual-diag 옵션 호환성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5704653---efficient-encoding-for-hardware-implementation-of-ira-ldpc-on-80216-standard-2010-ispacs">ieee:5704653 - Efficient Encoding for Hardware Implementation of IRA LDPC on 802.16 Standard (2010, ISPACS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

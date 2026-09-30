@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9829889</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9829889---improving-3-d-nand-ssd-read-performance-by-parallelizing-read-retry-2023-ieee-tcad">ieee:9829889 - Improving 3-D NAND SSD Read Performance by Parallelizing Read-Retry (2023, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>SOML read 기반으로 read-retry 단계를 병렬화(PRR)·서로 다른 aggressive RRV 병렬 적용(APR)하여 3D NAND read-response time 단축</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>FTL 펌웨어 레벨 read-retry 스케줄링 기법으로 ECC/LDPC 디코더·부호설계와 무관 - Prime ECC에 이식할 알고리즘 요소 없음</td></tr><tr><td>추가확인</td><td>RRV/RBER 예측모델(식3)의 read-retry 횟수와 우리 soft-read LLR threshold 설정 간 접점이 있는지만 참고</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃이나 FTL 레벨 read-retry 병렬화(시스템 최적화)로 LDPC 디코더/부호설계 이식 대상이 아님 → 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 256GB 3D TLC NAND SSD(48층, 4채널×2칩), LDPC를 기본 ECC로 사용, read latency <code>T_READ=(Tsense+Ttransfer+Tdecode)*(N_RR+1)</code> (90/16/20 µs).</li><li>문제: 고밀도 3D NAND에서 read-retry 횟수 <code>N_RR</code>가 커져(최악 25+회) read latency 급증, 기존 병렬read/SOML은 full-page read엔 bitline 제약으로 무력.</li><li>모델: RBER를 <code>RBER=RBER_cycle(PE)+RBER_retention(RT)+RBER_readdisturb(RC)+RBER_variation(LC)</code> 오프라인 프로파일로 예측, Arrhenius로 온도 보정.</li><li>핵심기법1(PRS): 들어온 read의 예측 RBER가 ECC 정정능력 초과 시 RRQ의 victim read와 block-decoder 제약 확인 후 병렬 read 노드 구성, 1-bit <code>PRmethod</code>로 PRR/APR 선택.</li><li>핵심기법2(PRR): full-page read를 subread로 분할→bitline 상보 subread를 SOML read로 병렬, 성공 subread의 RRV를 저장·재사용해 동일 페이지 나머지 subread의 retry를 0으로.</li><li>핵심기법3(APR): 동일 retry 특성 페이지들에 서로 다른 aggressive RRV(V_REF^i)를 병렬 인가하여 optimal RRV 탐색에 필요한 retry 횟수 자체를 감소.</li><li>부수: 저장한 RRV는 DRAM/cap-backed RAM에 임시 보관(오버헤드 무시), power-off 시 OOB 메타로 복구, NAND 칩 변경 불필요(펌웨어 구현).</li><li>최적화: 없음(모델 기반 예측+스케줄링 룰).</li><li>결과: SSDSim 12+ 트레이스에서 PaRR가 baseline 대비 평균 I/O response 33.77% 단축(최대 81.81%), read-response 35.58%, aged SSD(case4)에서 최대 43.15%.</li><li>한계: LDPC/ECC 디코더 자체 개선 없음, 성능은 시뮬레이터(SSDSim) 기반, high-density MLC/TLC에서 APR 효율 제한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SOML read/read-retry 병렬 스케줄링(PRR/APR)</td><td>대응 없음</td><td>FTL 펌웨어 레벨 스케줄링, Prime ECC 디코더/인코더와 무관</td></tr><tr><td>RBER 예측모델·RRV 조정</td><td>channel.cpp <code>Set_R_Offset()</code> / <code>Set_LLR_Th()</code></td><td>채널/RBER 계층에 개념적 인접, 그러나 read-retry는 soft-read LLR 설계와 별개</td></tr><tr><td>LDPC ECC 엔진(배경 언급)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>LDPC를 배경 ECC로만 언급, 디코더 기여 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND read 성능 시스템 최적화(FTL read-retry 병렬화)로 LDPC 부호설계→디코더→HW 어느 레이어에도 이식할 알고리즘 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9829889",
+  "title": "Improving 3-D NAND SSD Read Performance by Parallelizing Read-Retry",
+  "year": 2023,
+  "venue": "IEEE TCAD",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "SOML read 기반으로 read-retry 단계를 병렬화(PRR)·서로 다른 aggressive RRV 병렬 적용(APR)하여 3D NAND read-response time 단축",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "FTL 펌웨어 레벨 read-retry 스케줄링 기법으로 ECC/LDPC 디코더·부호설계와 무관 - Prime ECC에 이식할 알고리즘 요소 없음",
+  "todo_check": "RRV/RBER 예측모델(식3)의 read-retry 횟수와 우리 soft-read LLR threshold 설정 간 접점이 있는지만 참고"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9829889---improving-3-d-nand-ssd-read-performance-by-parallelizing-read-retry-2023-ieee-tcad">ieee:9829889 - Improving 3-D NAND SSD Read Performance by Parallelizing Read-Retry (2023, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5345453</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5345453---an-efficient-pseudo-codeword-search-algorithm-for-belief-propagation-decoding-of-ldpc-codes-2009-미상">ieee:5345453 - An Efficient Pseudo-Codeword Search Algorithm for Belief Propagation Decoding of LDPC Codes (2009, 미상)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.41~0.5</td></tr><tr><td>부호length</td><td>155~2640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Fast Flat Histogram(Wang-Landau + random walk)으로 BP 복호의 고SNR error-floor pseudo-codeword/effective-distance 스펙트럼을 SMC 대비 효율적으로 산출</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BP error-floor 평가 방법론일 뿐 코드/디코더/HW 개선 아님, rate~0.5 중길이 코드 대상</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC(NAND급)에서 FFH의 [Vmin,Vmax] self-adaptive 수렴/정확도 및 corner.cpp importance sampling 대비 이득 확인</td></tr></tbody></table>
+<blockquote><p>총평: SMC로 불가능한 극저 FER 영역에서 pseudo-codeword를 찾는 물리학 기반(Wang-Landau) error-floor 평가 방법론 — 이식 가능한 ECC 알고리즘/HW는 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>목적: BP 복호 LDPC의 고SNR error-floor 영역에서 pseudo-codeword와 pseudoweight(effective distance) 스펙트럼 산출 — Standard Monte Carlo(SMC)로는 계산 불가능한 극저 FER 영역.</li><li>문제: 고SNR에서 BP FER은 ML union bound보다 나쁘며 그 원인이 pseudo-codeword; SMC는 극저 FER에서 계산 비현실적.</li><li>채널/모델: AWGN, BPSK(±1), all-zero codeword; <code>FER_BP ~ exp(−d_BP·s²/2)</code>, <code>d_BP</code>=effective distance(BP 고유).</li><li>핵심 기법: Fast Flat Histogram(FFH) = Wang-Landau + adaptive noise sampler; noise space <code>Γ</code>를 control quantity <code>V(z)</code> 기준 <code>L</code>개 bin으로 분할.</li><li>샘플링: Metropolis random walk로 bin 방문 확률 <code>Pk</code>를 refinement factor <code>f&gt;1</code>로 on-the-fly 갱신(log domain), histogram이 flat해지면 <code>f</code>를 finer(√f)로 축소 반복(WL iteration).</li><li>트릭: rejection 시 noise 성분 permutation으로 동일 <code>V</code> bin 내 다양한 message-passing 복호 출력 확인, n-fold way로 경계 bin bias 방지.</li><li>자기적응: <code>[Vmin,Vmax]</code> 구간을 GAR(Global Acceptance Ratio) 기반으로 코드 길이/정정능력에 맞춰 자동 결정.</li><li>effective distance: 발견된 instanton pseudo-codeword <code>σ̃</code>로 <code>deff = (Σσ̃i)²/Σσ̃i²</code> 계산.</li><li>결과: 6개 코드(Tanner[155,64,20], Margulis[672,336,16], 802.11 [648/1296/1944], PEG[504,252,13])의 effective-distance 스펙트럼 도출; pseudoweight가 Hamming distance보다 error-floor 성능 예측에 더 중요함 재확인.</li><li>한계: HW 미설계, 평가 방법론(코드/디코더 개선 아님), rate~0.5 중길이 코드, BP 1000 iteration 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>pseudo-codeword / error-floor 탐색</td><td><code>corner.cpp</code> (수렴실패 추적)</td><td>error-floor 수렴실패 분석과 개념적으로 겹치나 직접 대응 함수 없음</td></tr><tr><td>AWGN noise 샘플링</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>채널/노이즈 주입 대응이나 FFH 샘플러 자체는 미구현</td></tr><tr><td>effective distance(pseudoweight) 스펙트럼</td><td>대응 없음</td><td>Prime ECC에 pseudoweight/spectrum 산출 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — error-floor 평가 방법론으로 <code>corner.cpp</code> 수렴실패 추적과 목적이 겹치나, 이식 가능한 ECC 알고리즘/HW가 없고 물리학 기반 MC 샘플러라 직접 적용 가치 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5345453",
+  "title": "An Efficient Pseudo-Codeword Search Algorithm for Belief Propagation Decoding of LDPC Codes",
+  "year": 2009,
+  "venue": "미상",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "155~2640",
+  "soft_quant": "무관",
+  "key_contribution": "Fast Flat Histogram(Wang-Landau + random walk)으로 BP 복호의 고SNR error-floor pseudo-codeword/effective-distance 스펙트럼을 SMC 대비 효율적으로 산출",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BP error-floor 평가 방법론일 뿐 코드/디코더/HW 개선 아님, rate~0.5 중길이 코드 대상",
+  "todo_check": "고rate QC-LDPC(NAND급)에서 FFH의 [Vmin,Vmax] self-adaptive 수렴/정확도 및 corner.cpp importance sampling 대비 이득 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5345453---an-efficient-pseudo-codeword-search-algorithm-for-belief-propagation-decoding-of-ldpc-codes-2009-미상">ieee:5345453 - An Efficient Pseudo-Codeword Search Algorithm for Belief Propagation Decoding of LDPC Codes (2009, 미상)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1605713</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_1605713---protograph-based-low-error-floor-ldpc-coded-modulation-2005-milcom-2005">ieee_1605713 - Protograph Based Low Error Floor LDPC Coded Modulation (2005, MILCOM 2005)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5~0.8</td></tr><tr><td>부호length</td><td>1024~4096</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>protograph 기반 ARJA 부호 + accumulator precoding으로 최소거리를 블록길이에 선형 증가시켜 low error floor 달성, weight enumerator로 설계, coded modulation(8PSK/16QAM) 지원</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>coded modulation + protograph ARJA 특화라 NAND 고rate QC-LDPC와 구조가 상이해 직접 이식 난이도 높음</td></tr><tr><td>추가확인</td><td>고rate(&gt;0.9) QC-LDPC에 protograph precoding/최소거리 설계 원리를 확장 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: error-floor를 부호설계(최소거리 선형성장·precoding)로 잡는 원리는 참고가치가 있으나, coded modulation·비QC 구조라 Prime ECC 직접 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>binary protograph LDPC 출력을 8PSK/16QAM 등 고차 변조에 매핑(VDMM 직접 매핑 또는 BICM 채널 인터리버), AWGN 채널 대상.</li><li>문제: 우수한 iterative decoding threshold와 낮은 error floor를 동시에 만족하는 구조적 LDPC가 필요.</li><li>핵심: protograph를 copy-and-permute(lift factor <code>N</code>)로 확장, degree-2 VN 비율이 threshold vs 최소거리 성장의 트레이드오프를 좌우.</li><li>최소거리 선형증가 보장을 위해 asymptotic ensemble weight enumerator <code>r(δ)</code>를 계산, 첫 non-trivial zero crossing <code>δmin</code>으로 정규화 최소거리를 판정.</li><li><code>dmin = δmin × n</code>; <code>δmin&gt;0</code>이면 최소거리가 블록길이 <code>n</code>에 선형 증가 → low error floor의 이론적 근거.</li><li>precoding: accumulator(degree-1 VN)를 삽입해 rate를 유지한 채 threshold를 낮추면서 동시에 <code>δmin</code> 증가(예: (3,6) <code>δmin</code> 0.023→0.033).</li><li>ARJA(Accumulate-Repeat-Jagged-Accumulate): ARA의 degree-2 VN 일부를 degree-3으로 교체해 최소거리 성장을 확보.</li><li>rate-compatible ARJA family(rate 1/2~4/5)를 구성, VDMM은 bit-plane 상호정보 <code>I(xb;y)</code>에 비례해 VN degree를 배분(waterfilling).</li><li>결과: k=4096 rate-1/2 QPSK에서 FER 10^-8 / BER 10^-10 @ Eb/No 1.50 dB, FPGA 시뮬로 극저 error floor 확인.</li><li>한계: gate count/throughput 미제시, coded modulation·AWGN 가정, 표준 BP 디코더로 복호 알고리즘 자체 기여는 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph/ARJA 부호 구성, precoding</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (+ H-matrix)</td><td>부호구조 로드 지점이나 QC-LDPC 고정이라 재설계·재검증 부담 큼</td></tr><tr><td>weight enumerator 기반 최소거리 설계</td><td>대응 없음</td><td>설계 이론, 대응 모듈 없음</td></tr><tr><td>coded modulation / demapper LLR</td><td>대응 없음</td><td>8PSK/16QAM 변조 LLR은 NAND read 비용과 무관</td></tr><tr><td>protograph-slice 병렬 디코더 아키텍처</td><td>디코더 HW 모델(z=32)</td><td>병렬 개념은 유사하나 QC circulant 병렬과 구조 상이</td></tr></tbody></table>
+<p>적용가치: 낮음 — 부호설계 원리(precoding·최소거리 선형성장)는 흥미롭지만 protograph·coded modulation 특화로 Prime ECC의 고rate QC-LDPC에 직접 대응 모듈이 거의 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:1605713",
+  "title": "Protograph Based Low Error Floor LDPC Coded Modulation",
+  "year": 2005,
+  "venue": "MILCOM 2005",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": "0.5~0.8",
+  "code_length": "1024~4096",
+  "soft_quant": "무관",
+  "key_contribution": "protograph 기반 ARJA 부호 + accumulator precoding으로 최소거리를 블록길이에 선형 증가시켜 low error floor 달성, coded modulation(8PSK/16QAM) 지원",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "coded modulation + protograph ARJA 특화라 NAND 고rate QC-LDPC와 구조가 상이해 직접 이식 난이도 높음",
+  "todo_check": "고rate(&gt;0.9) QC-LDPC에 protograph precoding/최소거리 설계 원리를 확장 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_1605713---protograph-based-low-error-floor-ldpc-coded-modulation-2005-milcom-2005">ieee_1605713 - Protograph Based Low Error Floor LDPC Coded Modulation (2005, MILCOM 2005)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

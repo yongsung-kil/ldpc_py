@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10179967</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10179967---deep-learning-based-pilot-free-transmission-error-correction-coding-for-low-resolution-reception-under-time-varying-channels-2023-ieee-trans-vehicular-technology">ieee:10179967 - Deep Learning Based Pilot-Free Transmission: Error Correction Coding for Low-Resolution Reception Under Time-Varying Channels (2023, IEEE Trans. Vehicular Technology)</h3>
+<h2 id="a-분류표">A. 분류표</h2>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>18444</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>transformer 오토인코더(TransECCNet)를 turbo 부호와 결합해 저해상도 수신·시변채널에서 pilot-free 전송</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN(transformer 오토인코더)+turbo inner/outer 구조로 무선 OFDM/FTN 타깃, binary QC-LDPC 디코더와 무관</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 무선 저해상도 수신용 딥러닝 ECC(오토인코더+turbo)로 NAND binary QC-LDPC와 무관, 이식가치 없음.</p></blockquote>
+<h2 id="b-알고리즘-요약">B. 알고리즘 요약</h2>
+<ol><li>시스템: 1/3 LTE turbo 부호(입력 6144bit → codeword 18444bit)를 outer code, transformer 오토인코더(TransECCNet)를 inner code로 캐스케이드 (<code>G=4</code>, <code>N=16</code>).</li><li>문제: 저해상도(1~2bit) ADC 양자화의 비선형 왜곡이 turbo/LDPC/Polar 성능을 심하게 저하시키고, 기존 딥러닝 ECC는 AWGN만 다뤄 시변채널에 부적합.</li><li>채널 모델: block fading multi-tap(PDP로 특성화), FTN 비직교 전송으로 ISI·colored noise 유발되나 오토인코더가 암묵적 등화한다고 가정.</li><li>핵심기법: 오토인코더 encoder <code>f_E</code>가 심볼을 <code>G</code>배 확장해 채널·양자화 내성 표현을 학습, FTN(<code>ρ</code>)으로 대역폭 유지 → explicit pilot 불필요(pilot-free).</li><li>디코더: ViT 스타일 transformer block <code>L=4</code>개 + TDFC layer로 MSA·feedforward를 통해 손상 심볼 복원, 장기 시변 특성 포착.</li><li>확장: soft quantization <code>Q(x)=Σ(ασ(βx-b_i)-o)</code>, temperature <code>T</code> 점증으로 비미분 양자화를 학습 가능하게 근사.</li><li>부수 기법: 두 종 preamplification (bilinear production Kronecker <code>R=r⊗z</code>, SE block)으로 시변채널 강건성 강화.</li><li>학습: end-to-end MSE loss, Adam, 500 epoch, <code>Eb/N0=35dB</code> 고정 학습 후 광범위 SNR 테스트.</li><li>결과: OFDM(LS/LMMSE) 대비 고SNR BER 우위, 1bit 양자화에서도 유효 전송, ECCNet 대비 파라미터 약 2.7배·FLOPs 2 orders 감소, 무양자화 channel A에서 약 3dB 이득.</li><li>한계: HW 미설계, 시뮬만, 무선 통신(OFDM/FTN) 특화 NN 부호이며 offline 학습 데이터 필요.</li></ol>
+<h2 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h2>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>transformer 오토인코더 디코더</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 결정론적 디코더, NN/딥러닝 디코더 미보유</td></tr><tr><td>soft quantization / 학습형 LLR</td><td>대응 없음</td><td>우리 LLR은 iteration별 고정 테이블, 학습형 아님</td></tr><tr><td>turbo outer code + FTN 전송</td><td>대응 없음</td><td>turbo·FTN·OFDM은 NAND ECC 체인 무관</td></tr></tbody></table>
+<p>적용 가치: 낮음 — NN 전면 대체형 무선 ECC로 binary QC-LDPC의 부호설계·디코더·HW 어느 레이어와도 정합되지 않는다.</p>
+<h2 id="d-json-블록">D. JSON 블록</h2>
+<pre><code>{
+  "id": "ieee:10179967",
+  "title": "Deep Learning Based Pilot-Free Transmission: Error Correction Coding for Low-Resolution Reception Under Time-Varying Channels",
+  "year": 2023,
+  "venue": "IEEE Transactions on Vehicular Technology",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.333,
+  "code_length": "18444",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "transformer 오토인코더(TransECCNet)를 turbo 부호와 결합해 저해상도 수신·시변채널에서 pilot-free 전송",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "NN(transformer 오토인코더)+turbo inner/outer 구조로 무선 OFDM/FTN 타깃, binary QC-LDPC 디코더와 무관",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10179967---deep-learning-based-pilot-free-transmission-error-correction-coding-for-low-resolution-reception-under-time-varying-channels-2023-ieee-trans-vehicular-technology">ieee:10179967 - Deep Learning Based Pilot-Free Transmission: Error Correction Coding for Low-Resolution Reception Under Time-Varying Channels (2023, IEEE Trans. Vehicular Technology)</a></li><li class="h2"><a href="#a-분류표">A. 분류표</a></li><li class="h2"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h2"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h2"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

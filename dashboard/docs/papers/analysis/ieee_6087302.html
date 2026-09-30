@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6087302</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6087302---high-speed-architectures-for-finding-the-first-two-maximumminimum-values-2012-ieee-tvlsi">ieee:6087302 - High Speed Architectures for Finding the First two Maximum/Minimum Values (2012, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>min-sum CN용 first-two-min 탐색기를 mixed/higher-radix 트리로 재구성해 latency 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>알고리즘/BER 무관, 순수 CNU 서브블록 회로 최적화이며 M(입력수)·비트폭 우리 구조(z=32, degree 17)에 맞춰 재설계 필요</td></tr><tr><td>추가확인</td><td>우리 CNU(min1/min2) 임계경로가 실제 병목인지, 6bit magnitude 양자화와 정합되는 radix 선택</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CNU의 first-two-min 회로 latency를 줄이는 순수 HW 최적화 브리프. 알고리즘/정정능력 무관하나 CNU 임계경로 개선 시 참고 가치 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 연산: 집합 <code>X={x0..x_{M-1}}</code>에서 첫째·둘째 max/min(<code>y0,y1</code>) 동시 탐색 — min-sum LDPC의 CN 출력(min1/min2)과 turbo의 Jacobian max*에 필수.</li><li>문제: 기존 radix-2 트리 구조는 <code>O(log2 M)</code> 스테이지로 delay가 커서, 피드백 루프 있는 iterative decoder에서 pipeline으로도 throughput이 안 오름.</li><li>접근: 일반 radix-K 고정 트리(FRA)로 확장 — 각 CS(comparing stage)가 K입력의 first-two를 <code>O(1)</code>에 뽑고, 트리 delay는 <code>O(log_K M)</code>으로 단축.</li><li>비용: radix-K CS는 <code>K(K-1)/2</code> 비교기 필요, 총 비교기 수 <code>C = M/2·(K + 2M/2·... )</code> 형태로 area가 radix에 따라 증가(식(1)~(3)).</li><li>확장1 IR-MRA(inter-level): 트리 레벨마다 다른 radix 사용, <code>∏K_l = M</code> 제약 하에 비교기 수 <code>C</code> 최소화(식(4)~(10)).</li><li>확장2 IA-MRA(intra-level): 같은 레벨 내 CS마다 다른 radix — 더 유연하나 최소화가 Diophantine이라 exhaustive 탐색(식(11)(12)).</li><li>회로 구성: 각 CS = 비교기 배열 + one-hot index generator(OHIG) + mux-like structure(MLS). 부호비트 <code>s_{p,q}</code>와 and/or gate로 max1(식13,14)·max2(식15,16) 인덱스를 OH로 산출.</li><li>트레이드오프 지표 <code>μ3 = (A_radix/A_radix2)·(L_radix/L_radix2)</code>; <code>μ3&lt;1</code>이면 radix-2 대비 area·latency 곱 우수.</li><li>결과(180nm P&amp;R): M=32,N=3에서 IA-MRA로 <code>C=115</code>까지 감소; M=9에서 FRA-3가 radix-2 대비 area 21025→14426 µm², latency 2→1.6 ns; 4/2/3 MRA는 latency 25%↓·area 1.1%↑. LDPC용 기존 [14][15] 대비도 우위.</li><li>한계: 순수 회로 latency/area 최적화로 BER·iteration·정정능력과 무관; 부호/디코딩 알고리즘 변경 없음, 시뮬 BER 결과 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum(first-two-min) 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 탐색 회로를 low-latency 트리로 대체 대상</td></tr><tr><td>디코딩 알고리즘 전체</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>CNU가 이터레이션 임계경로에 포함될 때만 이득</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CNU의 first-two-min 회로는 우리도 사용하지만 이 브리프는 알고리즘이 아닌 순수 HW latency 최적화라 bit-exact 시뮬(Prime ECC)엔 직접 반영점이 없고, 실제 RTL 임계경로 개선용 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6087302",
+  "title": "High Speed Architectures for Finding the First two Maximum/Minimum Values",
+  "year": 2012,
+  "venue": "IEEE TVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "min-sum CN용 first-two-min 탐색기를 mixed/higher-radix 트리로 재구성해 latency 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "알고리즘/BER 무관, 순수 CNU 서브블록 회로 최적화이며 M(입력수)·비트폭 우리 구조(z=32, degree 17)에 맞춰 재설계 필요",
+  "todo_check": "우리 CNU(min1/min2) 임계경로가 실제 병목인지, 6bit magnitude 양자화와 정합되는 radix 선택"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6087302---high-speed-architectures-for-finding-the-first-two-maximumminimum-values-2012-ieee-tvlsi">ieee:6087302 - High Speed Architectures for Finding the First two Maximum/Minimum Values (2012, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

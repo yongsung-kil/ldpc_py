@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5639060</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5639060---a-high-throughput-ldpc-decoder-architecture-with-rate-compatibility-2011-ieee-tcas-i">ieee:5639060 - A High-Throughput LDPC Decoder Architecture With Rate Compatibility (2011, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~1.0</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>dual-diagonal QC-LDPC용 puncturing(k-SR/weight-3 블록) + PLDA 병렬 layered 디코더로 rate 유연성 확보</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>1.96mm2@65nm (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.28</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMax 무선 타깃, min-sum/dual-diagonal/layered는 Prime ECC가 이미 보유; puncturing은 무선 rate-compat용</td></tr><tr><td>추가확인</td><td>offset-permutation 기반 5-cycle CNU pipeline이 z=32 Prime ECC 구조에 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: dual-diagonal QC-LDPC puncturing으로 rate-compatibility를 얻는 고throughput layered 디코더로, 핵심 기법(min-sum/dual-diag/layered)은 Prime ECC 보유와 겹쳐 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: WiMax(802.16e) rate-1/2 mother code(length 2304, submatrix z=96) 기반 rate-compatible QC-LDPC 디코더, mother rate와 1 사이 임의 rate 지원.</li><li>문제: 기존 PLDA는 layer간 고정 연결이라 단일 코드에만 맞고 rate 유연성 부족; 다중 rate 저장은 메모리·스위칭 네트워크 부담.</li><li>모델: dual-diagonal parity 구조(weight-3 열 + zigzag) QC-LDPC, AWGN 채널, BP/min-sum 복호.</li><li>핵심 기법: parity bit puncturing으로 rate 조정, <code>k-SR</code>(k-step recoverable) 변수노드 이론으로 낮은 index 그룹부터 puncture하여 성능 손실 최소화.</li><li>핵심 식: 특수 시퀀스 <code>S</code>를 재귀식으로 생성해 블록 내 punctured bit를 분산, LUT 저장 후 rate로부터 즉시 index 조회.</li><li>확장: weight-3 vertical submatrix를 puncturing 블록에 포함(scheme 3)하면 이웃 check가 많아 반복 중 정보 제공이 늘어 BER 우수.</li><li>구현 디테일: PLDA에 puncturing 통합 — LLR initialization block(punctured LLR을 0으로 patch), 12x12 LUT, address generator(accumulator step 조정)로 rate 유연성 구현.</li><li>HW 아키텍처: permutation 값 내림차순 정렬 후 layer간 message passing, offset-modified permutation으로 layer 간 최소 5 clock 간격 확보 → CNU 4~5-stage pipeline(critical path split)으로 clock 향상.</li><li>결과: dedicated WiMax 부호 대비 BER 손실 &lt;0.2dB, TSMC 65nm 합성 1.1GHz, core area 1.96mm2, 입력 throughput 1.28Gb/s(10 iter), power 908mW.</li><li>한계: WiMax 무선 특화, 소프트 양자화 bit수 본문 미명시, 정정능력 자체 향상 아닌 rate 유연성/throughput 목표.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum layered CNU 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 보유, layered 스케줄과 대응이나 중복</td></tr><tr><td>dual-diagonal parity 구조</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>(dual-diagonal)</td><td>Prime ECC도 dual-diagonal 인코딩 사용, 중복</td></tr><tr><td>puncturing으로 rate-compat</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 punct_col_num=2 고정, 무선용 가변 puncturing과 목적 상이</td></tr><tr><td>offset-permutation 5-cycle CNU pipeline</td><td>디코더 HW 모델(z=32, pipeline 6-stage)</td><td>Prime ECC pipeline 구조와 정합 검토 여지 있으나 z 단위 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 디코더 HW/스케줄링 아이디어(offset-permutation pipeline)는 참고 가치가 있으나 min-sum·dual-diagonal·layered는 Prime ECC가 이미 보유하고 puncturing은 무선 rate-compat 목적이라 NAND 이식 이득 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5639060",
+  "title": "A High-Throughput LDPC Decoder Architecture With Rate Compatibility",
+  "year": 2011,
+  "venue": "IEEE TCAS-I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~1.0",
+  "code_length": "2304",
+  "soft_quant": "미상",
+  "key_contribution": "dual-diagonal QC-LDPC puncturing(k-SR/weight-3)과 PLDA 병렬 layered 디코더로 rate 유연성 확보",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "1.96mm2@65nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1.28,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiMax 무선 타깃, min-sum/dual-diagonal/layered는 Prime ECC 보유와 중복",
+  "todo_check": "offset-permutation 5-cycle CNU pipeline이 z=32 구조에 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5639060---a-high-throughput-ldpc-decoder-architecture-with-rate-compatibility-2011-ieee-tcas-i">ieee:5639060 - A High-Throughput LDPC Decoder Architecture With Rate Compatibility (2011, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

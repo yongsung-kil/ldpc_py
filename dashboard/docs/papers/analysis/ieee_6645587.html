@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6645587</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6645587---a-low-complexity-implementation-of-qc-ldpc-encoder-in-reconfigurable-logic-2013-ieee">ieee:6645587 - A Low-Complexity Implementation of QC-LDPC Encoder in Reconfigurable Logic (2013, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>5/6</td></tr><tr><td>부호length</td><td>1944</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>GF(2) 상수행렬 곱을 LUT에 hard-wire하여 cyclic-shifter/block-memory 없이 QC-LDPC 인코더를 FPGA에 저복잡도·고throughput 매핑</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>1782 LUTs, 2187 XOR, 0 block-mem @Virtex5(xc5vlx20t)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>117.45Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>인코더 전용·FPGA 특화(LUT hard-wire), 부호가 IEEE 802.11n 표준 고정, 복호/정정성능 무관</td></tr><tr><td>추가확인</td><td>ASIC 고정 dual-diagonal 인코더 대비 hard-wire LUT 방식의 면적/속도 이점이 Prime ECC 구조에서 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC 인코더의 FPGA 저복잡도 구현(shifter 제거) 논문으로, 802.11n 표준부호·재구성 FPGA 특화라 Prime ECC의 ASIC급 dual-diagonal 인코더에는 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary QC-LDPC 인코더, <code>H_b</code>는 <code>z×z</code> circulant permutation matrix <code>P^{a_ij}</code> 블록으로 구성(예제 IEEE 802.11n rate 5/6, <code>n=1944</code>, <code>z=81</code>).</li><li>풀려는 문제: Richardson-Urbanke 일반 인코딩은 <code>φ=(E·T⁻¹·B+D)</code>의 역행렬이 non-sparse → 복잡도 높음.</li><li>B-LDPC(Myung et al. [4]) 인코딩 채택: <code>φ</code>를 identity 또는 circulant로 선택해 선형복잡도, <code>p1=φ⁻¹(E·T⁻¹·A·sᵀ+C·sᵀ)</code>, <code>p2</code>는 <code>T·p2ᵀ=A·sᵀ+B·p1ᵀ</code>로 back-substitution.</li><li>핵심 기법: GF(2) 상수행렬 곱 <code>q=L·xᵀ</code>을 최적화 — <code>H_b</code>가 거의 불변이므로 상수로 간주.</li><li>circulant 곱을 z-bit cyclic shifter로 구현하는 대신, 신호를 올바른 LUT(XOR 연산자)에 직접 배선(hard-wire).</li><li>결과적으로 cyclic-shifter, block-memory(ROM) 불필요 → gate 수·자원 감소, 최대 필요자원이 완전 예측가능.</li><li>FPGA 재구성성을 이용해 다양한 code rate/length는 재프로그래밍으로 지원(유연성 유지).</li><li>HW 검증: syndrome check <code>H·cᵀ=0</code>(Eq.3)으로 인코딩 회로 정당성 확인.</li><li>결과(Virtex5 xc5vlx20t, 802.11n 5/6 n=1944): 290MHz, 4 clock cycles, throughput 117.45Gbps, 1782 LUTs, 2187 XOR, block-mem/barrel-shifter 0 → 기존 대비 고속·저면적.</li><li>한계: 인코더만 다루고 복호/정정성능 논의 없음, LUT hard-wire는 FPGA 재구성 특화(ASIC 고정구조와 상이), 목표 응용은 long-haul optical.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC 인코딩 알고리즘 (B-LDPC)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>인코더 레이어 대응하나 Prime ECC는 dual-diagonal 고정, 본 논문은 φ⁻¹ 기반 R-U 변형</td></tr><tr><td>circulant 곱의 shifter 없는 배선 구현</td><td>디코더/인코더 HW 모델 (z=32, GT MUX)</td><td>HW 매핑 기법이나 FPGA LUT hard-wire 특화, ASIC bit-exact 구조와 정합 어려움</td></tr><tr><td>H-matrix 로드(상수 PCM)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>개념 대응하나 802.11n 표준부호 고정</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 인코더 전용 + FPGA 재구성 LUT hard-wire 특화 기법으로, Prime ECC의 ASIC급 고정 dual-diagonal 인코더 및 복호 중심 관심사와 정합성이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6645587",
+  "title": "A Low-Complexity Implementation of QC-LDPC Encoder in Reconfigurable Logic",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.833,
+  "code_length": "1944",
+  "soft_quant": "무관",
+  "key_contribution": "GF(2) 상수행렬 곱을 LUT에 hard-wire하여 cyclic-shifter/block-memory 없이 QC-LDPC 인코더를 FPGA에 저복잡도·고throughput 매핑",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "1782 LUTs, 2187 XOR, 0 block-mem @Virtex5(xc5vlx20t)",
+  "parallelism": "부분",
+  "throughput_gbps": 117.45,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "인코더 전용·FPGA 특화(LUT hard-wire), 부호가 IEEE 802.11n 표준 고정, 복호/정정성능 무관",
+  "todo_check": "ASIC 고정 dual-diagonal 인코더 대비 hard-wire LUT 방식의 면적/속도 이점이 Prime ECC 구조에서 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6645587---a-low-complexity-implementation-of-qc-ldpc-encoder-in-reconfigurable-logic-2013-ieee">ieee:6645587 - A Low-Complexity Implementation of QC-LDPC Encoder in Reconfigurable Logic (2013, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

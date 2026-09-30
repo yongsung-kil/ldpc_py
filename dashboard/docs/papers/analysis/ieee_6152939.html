@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6152939</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6152939---ldpc-decoding-for-cmmb-utilizing-openmp-and-cuda-parallelization-2011-apcc">ieee:6152939 - LDPC Decoding for CMMB Utilizing OpenMP and CUDA Parallelization (2011, APCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5, 0.75</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>H-matrix 규칙성 활용 1-D 주소 테이블로 CPU(OpenMP)+GPU(CUDA) 소프트웨어 병렬 LDPC 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.002046</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU/CPU 소프트웨어 SDR 구현으로 NAND HW ECC 엔진과 무관, Sum-Product 그대로 사용</td></tr><tr><td>추가확인</td><td>1-D 주소 재배치가 우리 HCU/GT 메모리 접근 최적화와 개념적 겹침 있는지</td></tr></tbody></table>
+<blockquote><p>총평: CMMB용 LDPC를 GPU+OpenMP로 가속한 SDR 소프트웨어 구현으로, 알고리즘 자체(Sum-Product)나 정정능력 개선이 없고 NAND HW QC-LDPC 이식과 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: CMMB(중국 모바일 TV) 규칙 LDPC, <code>N=9216</code>, rate 1/2(K=4608, dc=6) 및 3/4(K=6912, dc=12), 모두 <code>dv=3</code>.</li><li>문제: DVB-T2/CMMB의 H-matrix가 거대해 SW 복호 시간·복잡도가 커지고, 다표준·다rate를 HW로 지원하면 설계시간이 큼.</li><li>해법 골자: 호스트 멀티코어 CPU가 OpenMP로 H-matrix를 읽어 주소 테이블 생성, GPU(CUDA)가 실제 Sum-Product 복호를 병렬 수행.</li><li>핵심 기법: LLR 위치를 <code>(x,y)</code>로 저장 후 1-D 배열로 재배치. Check 주소 <code>Laddr = x·Wb + y</code>, Bit 주소 <code>Zaddr = x·Wc + y</code> (<code>Wb</code>=bit degree, <code>Wc</code>=check degree).</li><li>식 의미: 새 주소를 매번 계산하지 않고 메모리 read만으로 얻어 접근 횟수·시간 최소화.</li><li>병렬 구조: 초기화·CN update·BN update·parity check 4단계를 각각 노드 수만큼 스레드 생성해 상호 독립적으로 병렬 처리.</li><li>구현 디테일: 표준/SNR/rate 변경 시에만 주소 테이블을 GPU로 복사해 CUDA copy 오버헤드 최소화.</li><li>학습/최적화 절차 없음(순수 스케줄링·메모리 배치 최적화).</li><li>결과: i5 750 + GT 8800에서 CMMB 1/2 10,000프레임 복호 시 미병렬 대비 최대 22배 speedup, 20 iteration에서 2.046Mbps로 CMMB 요구 대역폭 충족.</li><li>한계: 순수 SW(SDR) 구현으로 HW 미설계, 정정능력·waterfall/error-floor 개선 없음, throughput도 Mbps급(NAND ECC급 Gbps와 거리 큼).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Sum-Product 복호 전체</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 min-sum, 논문은 full Sum-Product이라 알고리즘 상이</td></tr><tr><td>1-D 주소 테이블/메모리 접근 최소화</td><td>대응 없음 (GT.cpp의 edge MUX와 개념만 유사)</td><td>GPU 스레드 스케줄링용이라 HW pipeline과 직접 대응 없음</td></tr><tr><td>CN/BN/parity 병렬화</td><td>대응 없음</td><td>GPU thread 병렬로 우리 z=32 row 병렬과 층위 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — GPU 기반 SDR 소프트웨어 가속으로 알고리즘 개선·정정능력 향상이 없고, NAND용 binary QC-LDPC HW 엔진 이식과 무관.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:6152939",
+  "title": "LDPC Decoding for CMMB Utilizing OpenMP and CUDA Parallelization",
+  "year": 2011,
+  "venue": "APCC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": "0.5, 0.75",
+  "code_length": "9216",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "H-matrix 규칙성 활용 1-D 주소 테이블로 CPU(OpenMP)+GPU(CUDA) 소프트웨어 병렬 LDPC 복호",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.002046,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "GPU/CPU 소프트웨어 SDR 구현으로 NAND HW ECC 엔진과 무관, Sum-Product 그대로 사용",
+  "todo_check": "1-D 주소 재배치가 우리 HCU/GT 메모리 접근 최적화와 개념적 겹침 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6152939---ldpc-decoding-for-cmmb-utilizing-openmp-and-cuda-parallelization-2011-apcc">ieee:6152939 - LDPC Decoding for CMMB Utilizing OpenMP and CUDA Parallelization (2011, APCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

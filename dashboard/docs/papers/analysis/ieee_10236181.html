@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10236181</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10236181---efficient-fpga-based-ldpc-encoder-implementation-for-optical-communication-systems-2023-icocn">ieee:10236181 - Efficient FPGA-based LDPC Encoder Implementation for Optical Communication Systems (2023, ICOCN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9375</td></tr><tr><td>부호length</td><td>32816</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>ITU-T G975.1 QC-LDPC의 H 구조를 이용해 RU 인코딩을 전처리(E→0,T→I)로 단순화, 역행렬 차원 축소로 자원·지연 절감한 FPGA 인코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>slice 4318 / BRAM 99 @JFM7VX690T FPGA (게이트수·공정 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>10Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>ITU-T G975.1 특정 부호(row-weight 112, col-weight 7) 전용 전처리라 우리 dual-diagonal 인코더 구조와 정합 필요, encoder만 다룸</td></tr><tr><td>추가확인</td><td>우리 부호 PCM의 T/E 블록 구조가 유사 근사하삼각형화 가능한지, 역행렬 저장 차원 비교</td></tr></tbody></table>
+<blockquote><p>총평: 구조화 QC-LDPC의 RU 기반 저자원 인코더 HW 기법으로, encoder 자원/지연 절감 아이디어는 참고가치 있으나 특정 광통신 부호 전용이라 이식은 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: ITU-T G975.1 10Gbps 광통신(DWDM 해저) FEC용 구조화 QC-LDPC 인코더, H 차원 (2051, 32816), row-weight 112·col-weight 7.</li><li>문제: 전통 G 기반 인코딩은 dense 행렬로 저장자원 과다, RU의 삼각행렬 반복은 지연 큼 → HW 친화 인코더 필요.</li><li>부호구조: H는 7개 서브행렬(각 293행), 각 slope가 identity를 circular shift한 293×293 순환행렬 112개로 구성(QC 구조).</li><li>핵심기법: RU를 근사 하삼각형화 후, 앞 293행 swap으로 <code>S→T=I</code>(identity)로 만들고, 순열행렬로 <code>E</code> 블록을 zero로 소거.</li><li>식 의미: <code>E=0, T=I</code>이면 RU 검사비트 식 (1)이 단순화되어 <code>p1=A'u</code>, <code>p2=B'u+C'p1</code> 형태(식 2)로 sparse 행렬-벡터 곱만 남음.</li><li>전처리: 행변환은 순열행렬 좌곱과 등가(<code>A'=Q'*A</code> 등), binary 덧셈이므로 <code>Q_i=E_i</code> 활용해 A,B,C를 A',B',C'로 변환.</li><li>HW 디테일: FPGA에서 사이클당 64bit 처리, 입출력 FIFO 캐시, cyclic shift register로 서브행렬 반복곱, 역행렬은 ROM 저장·AND곱+XOR누산.</li><li>최적화: sparse×vector 후 중간결과 레지스터·ROM 판독 후 1단 추가 레지스터 삽입 파이프라이닝으로 critical path 단축·타이밍 개선.</li><li>결과: slice 4318·BRAM 99로 10Gbps 달성, 저장 역행렬 차원 1752로 PCM 2단법[5](차원 2045) 대비 자원 감소, [4] 대비 logic/storage 모두 절감.</li><li>한계: 인코더만 다룸(복호 무관), ITU-T G975.1 특정 부호 전용 전처리, 게이트수·공정 미기재, FPGA 검증뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RU 기반 인코딩 (E→0,T→I 전처리)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>우리는 dual-diagonal 인코더 고정, RU 근사하삼각형화 방식과 상이</td></tr><tr><td>부호용 PCM 구조/열 재배치</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>순열행렬 기반 행/열 재배치 아이디어 대응</td></tr><tr><td>QC 순환행렬 shift 곱 HW</td><td>대응 없음</td><td>cyclic shift register 인코더 회로는 우리 encoder 모델에 별도 매핑 없음</td></tr><tr><td>H-matrix 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>구조화 QC-LDPC 로드 대응</td></tr></tbody></table>
+<p>적용 가치: 중간 — encoder 자원/지연 절감 전처리 아이디어는 참고 가능하나 우리 dual-diagonal 인코더·특정 광통신 부호와 정합 부담이 있고 복호 성능과는 무관.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10236181",
+  "title": "Efficient FPGA-based LDPC Encoder Implementation for Optical Communication Systems",
+  "year": 2023,
+  "venue": "ICOCN",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9375,
+  "code_length": "32816",
+  "soft_quant": "무관",
+  "key_contribution": "ITU-T G975.1 QC-LDPC의 H 구조를 이용해 RU 인코딩을 전처리(E-&gt;0,T-&gt;I)로 단순화, 역행렬 차원 축소로 자원·지연 절감한 FPGA 인코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "slice 4318 / BRAM 99 @JFM7VX690T FPGA",
+  "parallelism": "부분",
+  "throughput_gbps": 10,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "ITU-T G975.1 특정 부호(row-weight 112, col-weight 7) 전용 전처리라 우리 dual-diagonal 인코더 구조와 정합 필요, encoder만 다룸",
+  "todo_check": "우리 부호 PCM의 T/E 블록 구조가 유사 근사하삼각형화 가능한지, 역행렬 저장 차원 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10236181---efficient-fpga-based-ldpc-encoder-implementation-for-optical-communication-systems-2023-icocn">ieee:10236181 - Efficient FPGA-based LDPC Encoder Implementation for Optical Communication Systems (2023, ICOCN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

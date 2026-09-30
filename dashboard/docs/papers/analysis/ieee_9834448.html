@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9834448</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9834448---fully-analog-noise-resilient-dynamical-systems-storing-binary-sequence-2022-ieee-isit">ieee:9834448 - Fully Analog Noise-Resilient Dynamical Systems Storing Binary Sequence (2022, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>7</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>부호 PCM 기반 potential energy의 gradient-descent SDE로 binary sequence를 아날로그 저장, 잉여 parity row 추가로 noise robustness 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(7,4) Hamming/length-7 장난감 코드뿐, 연속시간 아날로그 소자 저장장치 이론이라 디지털 LDPC 디코더/HW와 무관</td></tr><tr><td>추가확인</td><td>없음 (NAND binary QC-LDPC 디코더에 이식 요소 없음)</td></tr></tbody></table>
+<blockquote><p>총평: NAND용 binary QC-LDPC ECC와 접점이 거의 없는 아날로그 연속시간 저장 시스템의 SDE 이론 분석 논문 - 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 아날로그 adder/multiplier/integrator로 구성된 연속시간 저장 시스템에 binary sequence를 저장, 예제는 <code>(7,4)</code> Hamming code (n=7).</li><li>문제: 아날로그 소자는 thermal noise 등 stochastic disturbance에 노출되며 신호레벨이 noise레벨과 비슷할 때 정보 신뢰성 유지가 어려움.</li><li>모델: 시스템 상태 <code>x(t)∈R^n</code>, <code>dx = -∇h(x)dt + αdB(t)</code> 형태의 Langevin/SDE, <code>B(t)</code>는 표준 Wiener process, <code>α</code>가 noise 세기.</li><li>핵심기법: potential energy <code>h(x)</code>를 PCM <code>H</code> 기반으로 정의 - 첫 항 <code>(x_j^2-1)^2</code>(bipolar 제약), 둘째 항 parity-check 제약. codeword가 <code>h</code>의 최소점(equilibrium).</li><li>의미: <code>h(x)=0 ⟺ x∈C(H)</code>이므로 gradient-descent가 codeword로 수렴, noise는 codeword 주위 random walk 유발.</li><li>확장: Euler-Maruyama 이산화 <code>x(k+1)=x(k)-η∇h(x(k))+α√η z(k)</code>로 수치 해를 구함.</li><li>트릭: codeword 근방에서 Hessian <code>Q</code>로 gradient 선형근사, 오차벡터 <code>e(k)=(I-ηQ)e(k)+α√η z(k)</code> 재귀.</li><li>최적화 절차: 없음 (학습/GA/NN 없음, 순수 SDE 해석).</li><li>결과: 점근 MSE <code>E(α)=α²/2·Σ 1/λ_i</code> (Q 고유값 역수 합)로 robustness 정량화; 선형잉여 parity row 추가(case D)가 codeword 수 불변으로 robustness 최대 개선, coding rate와 robustness는 trade-off.</li><li>한계: length-7 장난감 코드, HW 미설계, 실측 없음, 이산시간 디지털 LDPC 디코더가 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PCM 기반 potential energy / SDE 저장</td><td>대응 없음</td><td>연속시간 아날로그 저장 이론, bit-exact 디지털 디코더와 무관</td></tr><tr><td>gradient-descent 수렴 (GDBF 계열)</td><td>대응 없음</td><td>Prime ECC는 min-sum message passing, GDBF/연속완화 미보유이나 이식 대상 아님</td></tr><tr><td>잉여 parity row로 noise robustness 향상</td><td>대응 없음</td><td>H-matrix 여분 row 추가 아이디어이나 아날로그 저장 문맥, ecc_top.cpp Load_PCM과 목적 불일치</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 아날로그 연속시간 저장 시스템의 SDE robustness 이론으로, NAND용 binary QC-LDPC 부호설계/디코더/HW 어느 레이어에도 이식 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9834448",
+  "title": "Fully Analog Noise-Resilient Dynamical Systems Storing Binary Sequence",
+  "year": 2022,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "7",
+  "soft_quant": "무관",
+  "key_contribution": "부호 PCM 기반 potential energy의 gradient-descent SDE로 binary sequence를 아날로그 저장, 잉여 parity row 추가로 noise robustness 향상",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "(7,4) Hamming/length-7 장난감 코드뿐, 연속시간 아날로그 소자 저장장치 이론이라 디지털 LDPC 디코더/HW와 무관",
+  "todo_check": "없음 (NAND binary QC-LDPC 디코더에 이식 요소 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9834448---fully-analog-noise-resilient-dynamical-systems-storing-binary-sequence-2022-ieee-isit">ieee:9834448 - Fully Analog Noise-Resilient Dynamical Systems Storing Binary Sequence (2022, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

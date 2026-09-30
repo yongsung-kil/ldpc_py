@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11538155</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11538155---spectral-guided-mask-generation-for-error-correction-code-transformers-2026-ieee-transactions-on-machine-learning-in-communications-and-networking">ieee:11538155 - Spectral-Guided Mask Generation for Error Correction Code Transformers (2026, IEEE Transactions on Machine Learning in Communications and Networking)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호length</td><td>31~192</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>V×V 변수노드 그래프의 정규화 라플라시안 Fiedler 벡터로 약연결 클러스터(trapping-set 관련)를 찾아 ECC Transformer(ECCT)의 attention mask를 원칙적으로 구성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iter_reduction</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Transformer 기반 신경망 디코더 전면 대체 기법으로 Prime ECC(bit-exact HW min-sum 디코더)와 알고리즘·구현 계층이 완전히 이질적</td></tr><tr><td>추가확인</td><td>논문이 다룬 LDPC(121,60)/(144,72)/(192,96)은 short block 저rate 코드로 NAND용 고rate(~0.9) QC-LDPC와 code ensemble 자체가 다름 - 규모 확장 시 유효성 미검증(저자도 future work로 명시)</td></tr></tbody></table>
+<blockquote><p>총평: 신경망 Transformer 디코더(ECCT)의 attention mask를 스펙트럴 그래프 이론으로 개선하는 알고리즘 연구로, NAND 관련성이 없고 Prime ECC의 HW min-sum 디코더와 아키텍처가 근본적으로 달라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이진 선형 블록 코드(BCH, Polar, LDPC) 일반, AWGN 채널 시뮬레이션(BPSK, <code>y_i = x_i + z_i</code>), 실험 코드는 BCH(31~63,·), Polar(64~128,·), LDPC(121~192,·) 등 short block 규모.</li><li>문제: 기존 ECCT/MM-ECCT의 attention mask는 PCM을 systematic form으로 변환 후 identity 부분을 순환이동(cyclic shift)해 경험적으로 생성 - 코드 위상구조(trapping set) 정보를 반영하지 못해 error-floor 개선이 제한적.</li><li>핵심 가정/모델: trapping-set에 관여하는 변수노드는 variable-variable(V×V) 그래프에서 "약하게 연결된" 영역에 위치한다는 가정.</li><li>핵심 기법: PCM <code>H</code>로부터 <code>A = H^T H - diag(H^T H)</code>인 V×V 인접행렬을 만들고, 정규화 라플라시안 <code>L = I - D^{-1/2} A D^{-1/2}</code>의 두 번째 고유벡터(Fiedler vector <code>u2</code>)로 그래프의 최소 conductance 컷을 근사(Cheeger 부등식 <code>λ2/2 ≤ φ ≤ sqrt(2λ2)</code>).</li><li>핵심 식: Fiedler sweep(식 27~29)으로 conductance <code>φ(S_k)</code>를 모든 분할 후보에 대해 계산해 최소값을 갖는 약한 클러스터 <code>S_sw</code>를 찾음 - 이 영역을 mask의 pivot column으로 삼아 systematic 변환.</li><li>확장: 다중 mask(<code>b=2</code>)는 pivot column을 순차 배제하며 서로 다른 스펙트럴 마스크를 만들어 병렬 attention branch로 fusion.</li><li>구현 디테일: Transformer backbone(4 layer, head 4/8, embedding dim 32~256)에 mask를 elementwise gating(<code>log(M)</code>)으로 주입, 추론 복잡도는 MM-ECCT와 동일(<code>O(b*N_layer*N^2*d)</code>), 전처리(고유분해)만 <code>O(n^3)</code> 추가.</li><li>학습/최적화: Adam, cosine annealing warm restart, MSE loss, SNR 1~6dB uniform sampling으로 학습, 최대 1000 epoch (early stopping patience=30).</li><li>결과: BCH/Polar/LDPC 전 code family에서 baseline ECCT/MM-ECCT 대비 BER 개선(예: LDPC(144,72) 6dB에서 2.67×10^-5→1.01×10^-5), 학습 수렴은 최대 4.5배 가속(BCH 979→321 epoch).</li><li>한계: 실험 코드가 모두 block length ≤192인 short block, 순수 알고리즘/시뮬레이션 검증(HW 미설계), NAND 타깃/soft-read 비용 논의 없음. Self-attention이 block length에 O(N^2) 스케일해 대형 코드(NAND용 수천~수만 bit) 확장성은 future work로 미해결.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ECCT(Transformer 기반 신경망 디코더) 전체</td><td>대응 없음</td><td>Prime ECC는 bit-exact min-sum HW 시뮬레이터이며 NN/딥러닝 디코더는 프로파일 §6에서 "대응 없음" 명시 항목</td></tr><tr><td>스펙트럴 마스크(라플라시안 Fiedler vector) 기반 attention 구조</td><td>대응 없음</td><td>attention 메커니즘 자체가 Prime ECC의 CN/VN 메시지패싱 구조(min-sum)와 무관</td></tr><tr><td>trapping-set 취약 클러스터 식별 아이디어</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (개념적 참고만)</td><td>trapping set 개념 자체는 error-floor 대책과 관련 있으나, 본 논문의 구현(그래프 스펙트럴 분해→NN mask)은 min-sum 디코더에 이식 불가능한 형태</td></tr><tr><td>PCM 기반 V×V 그래프/컨덕턴스 분석</td><td>대응 없음</td><td>Prime ECC의 H-matrix(<code>PCM_b</code>) 분석 도구로 활용 가능성은 있으나 논문은 이를 NN mask 생성에만 사용, 알고리즘적 디코더 개선안 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — NN 기반 Transformer 디코더 전면 대체 연구로 NAND 타깃이 아니고, Prime ECC의 HW min-sum 아키텍처와 이식 가능한 공통 모듈이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11538155",
+  "title": "Spectral-Guided Mask Generation for Error Correction Code Transformers",
+  "year": 2026,
+  "venue": "IEEE Transactions on Machine Learning in Communications and Networking",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "31~192",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "V×V 변수노드 그래프의 정규화 라플라시안 Fiedler 벡터로 약연결 클러스터(trapping-set 관련)를 찾아 ECC Transformer(ECCT)의 attention mask를 원칙적으로 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Transformer 기반 신경망 디코더 전면 대체 기법으로 Prime ECC(bit-exact HW min-sum 디코더)와 알고리즘·구현 계층이 완전히 이질적",
+  "todo_check": "논문이 다룬 LDPC(121,60)/(144,72)/(192,96)은 short block 저rate 코드로 NAND용 고rate(~0.9) QC-LDPC와 code ensemble 자체가 다름 - 규모 확장 시 유효성 미검증(저자도 future work로 명시)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11538155---spectral-guided-mask-generation-for-error-correction-code-transformers-2026-ieee-transactions-on-machine-learning-in-communications-and-networking">ieee:11538155 - Spectral-Guided Mask Generation for Error Correction Code Transformers (2026, IEEE Transactions on Machine Learning in Communications and Networking)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8625335</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8625335---optimization-of-bit-mapping-and-quantized-decoding-for-off-the-shelf-protograph-ldpc-codes-with-application-to-ieee-8023ca-2018-ieee-int-symp-on-turbo-codes-iterative-information-processing">ieee:8625335 - Optimization of Bit Mapping and Quantized Decoding for Off-the-Shelf Protograph LDPC Codes with Application to IEEE 802.3ca (2018, IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.8485</td></tr><tr><td>부호length</td><td>16896</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>기성 protograph LDPC의 BMD bit-mapping 순차최적화 + 양자화 sum-product 디코더 clipping을 DDE로 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>bit-mapping이 M-ASK 고차변조·PAS 종속이라 NAND(1심볼=비트)엔 무의미, sum-product/8bit 양자화라 우리 min-sum·2~3bit와 이질</td></tr><tr><td>추가확인</td><td>clipping 최적화 방법론만 떼어 min-sum·저비트(hard/2~3SD) NAND LLR 테이블 튜닝에 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 고차변조(M-ASK/PAS) bit-channel을 protograph VN에 매핑하는 최적화가 주기여로 NAND(단일 read 심볼)엔 무관. 다만 DDE로 양자화 디코더 clipping을 정하는 절차는 LLR 테이블 설계에 참고 가능하나 sum-product·8bit 기준이라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>AWGN + M-ASK(8/16-ASK) 채널, 대상은 IEEE 802.3ca PON용 기성 protograph LDPC (base 12×69, circulant 256, <code>nc=17664</code>, rate <code>Rc≈0.8485</code>, girth 6, degree-11/12 VN puncture).</li><li>문제: 고차변조 BMD의 m개 bit-channel 신뢰도가 서로 다름 - 어떤 bit-level을 어떤 VN type(degree)에 매핑하느냐로 threshold가 달라짐(기성부호 재사용 제약).</li><li>모델: BMD 메트릭 <code>q(x,y)=∏ P(bj|y)</code>, 달성률 <code>RBMD=[H(B)-ΣH(Bj|Y)]+</code>, PAS(확률적 진폭 성형)로 shaping 결합.</li><li>핵심기법: bit-mapping을 <code>m×nP,t</code> 행렬 <code>A</code>(bit-level j를 VN type i에 배분한 비율)로 정식화, <code>min SNR*(A;B,PX)</code> 최적화(식 15).</li><li>threshold 평가: DDE는 수초 소요라 최적화 내부용으로 느림 -&gt; <code>H(Bj|Y)</code>를 biAWGN surrogate 채널로 매칭하고 P-EXIT로 빠르게 threshold 산출(식 16,17).</li><li>순차최적화(Algorithm 1): bit-level을 한 번에 하나씩 patternsearch(미분없는 direct search)로 최적화, 나머지는 uniform, ordering은 uncertainty 작은 채널부터.</li><li>양자화 clipping: b비트 양자화 함수 <code>Q(·)</code>(clip값 B, <code>q=2^b-1</code> 레벨, <code>l=0</code> 무오차 - punctured VN용), sum-product 디코더의 최적 clipping B를 DDE로 결정.</li><li>최적화 결과: 가장 신뢰도 높은 bit-channel을 degree-6 VN에 할당하는 매핑이 최적, uniform 0.23dB / PAS 0.37dB threshold 이득(P-EXIT vs DDE 최대 0.12dB 오차).</li><li>유한길이: BER 1e-6에서 PAS 0.4dB / uniform 0.3dB 이득, clipping 최적화 시 4bit 손실 0.25dB·3bit 1.50dB, 8bit(B=15)는 부동소수 대비 거의 무손실.</li><li>한계: HW 미설계, sum-product·고차변조·PON 특화, gate count/throughput 부재, NAND 단일심볼 read엔 bit-mapping 무의미.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BMD bit-channel -&gt; VN 매핑 최적화</td><td>대응 없음</td><td>NAND는 단일 read 심볼, 고차변조 bit-level 매핑 개념 없음</td></tr><tr><td>양자화 clipping/LLR 이산화(DDE)</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>LLR threshold/clipping 튜닝 절차 참고 가능(단 sum-product·8bit 기준)</td></tr><tr><td>sum-product 복호</td><td>대응 없음</td><td>Prime은 min-sum(tanh 근사 미사용), full sum-product 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 주기여인 bit-mapping은 고차변조 전용이라 NAND엔 무관하고, clipping/양자화 최적화도 sum-product·soft-4bit+ 기준이라 우리 min-sum·hard/2~3SD 파이프라인과 이질적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8625335",
+  "title": "Optimization of Bit Mapping and Quantized Decoding for Off-the-Shelf Protograph LDPC Codes with Application to IEEE 802.3ca",
+  "year": 2018,
+  "venue": "IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": 0.8485,
+  "code_length": "16896",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "기성 protograph LDPC의 BMD bit-mapping 순차최적화 + 양자화 sum-product 디코더 clipping을 DDE로 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "bit-mapping이 M-ASK 고차변조·PAS 종속이라 NAND(1심볼=비트)엔 무의미, sum-product/8bit 양자화라 우리 min-sum·2~3bit와 이질",
+  "todo_check": "clipping 최적화 방법론만 떼어 min-sum·저비트(hard/2~3SD) NAND LLR 테이블 튜닝에 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8625335---optimization-of-bit-mapping-and-quantized-decoding-for-off-the-shelf-protograph-ldpc-codes-with-application-to-ieee-8023ca-2018-ieee-int-symp-on-turbo-codes-iterative-information-processing">ieee:8625335 - Optimization of Bit Mapping and Quantized Decoding for Off-the-Shelf Protograph LDPC Codes with Application to IEEE 802.3ca (2018, IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

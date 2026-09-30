@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1255474</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1255474---high-throughput-ldpc-decoders-2003-ieee-trans-vlsi-systems">ieee:1255474 - High-Throughput LDPC Decoders (2003, IEEE Trans. VLSI Systems)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>1200~4200</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>TDMP(터보복호 스케줄) + AA-LDPC(permutation-matrix 분해) + max-quartet BCJR로 메모리·iteration·라우팅 동시 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>9.41mm²@180nm (1176mW, 200MHz)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.92</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BCJR/트렐리스 기반 SISO(터보식) 복호로 우리 min-sum과 패러다임 상이, LUT-free지만 5bit+ 양자화·SPC 트렐리스 재구현 부담</td></tr><tr><td>추가확인</td><td>TDMP의 20~50% iteration 감소가 min-sum 계열/우리 partial-CRC 조기종료와 결합 시 실익 있는지</td></tr></tbody></table>
+<blockquote><p>총평: TDMP 터보복호로 메모리 75%↓·iteration 20~50%↓·라우팅 60%↓를 ASIC 합성으로 입증한 이정표 논문이나, BCJR/SPC-trellis 기반이라 우리 min-sum 파이프라인엔 알고리즘 이식보다 아키텍처 아이디어(구조화 부호·transport network) 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 랜덤 LDPC의 복호기 HW 병목(복잡 인터커넥트·메모리 오버헤드)을 code/algorithm/architecture 3계층 동시 최적화. 예: rate-2/3 irregular LDPC <code>n=2304</code> (Ramanujan graph).</li><li>문제: 랜덤 <code>H</code>는 병렬(인터커넥트 폭증)/직렬(메모리 4×Hamming weight) 양쪽 다 비효율, TPMP(2-phase)는 다중 check→bit 메시지 저장 필요.</li><li>핵심1 (부호): AA-LDPC — <code>H</code>를 <code>S×S</code> pseudo-permutation(각 행·열 ≤1) 부분행렬로 분해 → 인터커넥트를 <code>S</code>배 축소, 라우팅을 작은 인터리버로 factoring, mux <code>S</code>개로 감소.</li><li>핵심2 (알고리즘): TDMP — LDPC를 supercode 간 터보복호 문제로 변환, 인접 supercode 간에만 SISO 메시지 tandem 전달 → 다중 check-msg 저장 제거(메모리 ≥75%↓), 수렴 20~50% 빨라짐.</li><li>핵심3 (연산): SPC 트렐리스에 BCJR forward/backward 재귀 적용, <code>f(x,y)</code> 비선형 함수를 metric-difference로 변환해 정규화 불필요.</li><li>max-quartet <code>Q(x,y)</code>: <code>f</code>/<code>q</code> 보정함수를 LUT 없이 signed-magnitude 논리게이트로 근사 → LUT-free, 이상적 대비 coding gain 손실 미미.</li><li>양자화: 5-bit MPU가 6-bit Gallager 방정식보다 우수, 4-bit에서 1dB+ coding gain 개선(iteration/switching↓).</li><li>아키텍처: 프로그래머블 TDMP 디코더 — column-wise 분산 메모리 모듈 + read/write transport network(block selector·permuter·column accumulator), 포인터 기반 갱신으로 데이터 이동↓.</li><li>결과: 0.18μm 합성 200MHz, throughput 1.92 Gb/s(10 iter 시 192 Mb/s), 1176mW, 9.41mm²; TPMP 대비 power 89.13%↓·area 69.83%↓·interconnect 60.5%↓.</li><li>한계: BCJR/트렐리스 기반 SISO 복호(터보식)로 min-sum과 패러다임 상이, GF(2) binary이나 부호가 Ramanujan/cyclotomic 특정 구성.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TDMP 터보복호 스케줄 / iteration 감소</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 Dual-Update(even/odd 교대)와 유사 발상이나 supercode 터보식이라 루프 구조 상이</td></tr><tr><td>max-quartet BCJR SISO 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리는 min-sum(min1/min2+sign XOR), BCJR/max-quartet은 대체 알고리즘이라 직접 교체 대상 아님</td></tr><tr><td>AA-LDPC permutation-matrix 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code>, <code>ecc_data.h</code> <code>PCM_b</code></td><td>우리도 circulant-shift QC 구조, 개념 정합하나 부호 재설계 부담</td></tr><tr><td>메시지 transport network(read/write, permuter)</td><td>대응 없음 (우리 z=32/HCU/GT 고정 HW 모델)</td><td>HW 라우팅 아이디어 참고용, 구조 정합 필요</td></tr><tr><td>조기종료/syndrome check</td><td>full_CRC.cpp</td><td>논문은 최종 iter syndrome check, 우리는 partial/full CRC</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — TDMP의 iteration·메모리·라우팅 절감은 매력적이나 BCJR/SPC-trellis SISO 복호가 우리 min-sum 파이프라인과 상이해 알고리즘 직접 이식은 어렵고, 구조화 부호·transport network 아키텍처 아이디어 참고 가치가 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1255474",
+  "title": "High-Throughput LDPC Decoders",
+  "year": 2003,
+  "venue": "IEEE Trans. VLSI Systems",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.67",
+  "code_length": "1200~4200",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "TDMP(터보복호 스케줄) + AA-LDPC(permutation-matrix 분해) + max-quartet BCJR로 메모리·iteration·라우팅 동시 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "9.41mm²@180nm (1176mW, 200MHz)",
+  "parallelism": "부분",
+  "throughput_gbps": 1.92,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BCJR/트렐리스 기반 SISO(터보식) 복호로 우리 min-sum과 패러다임 상이, LUT-free지만 5bit+ 양자화·SPC 트렐리스 재구현 부담",
+  "todo_check": "TDMP의 20~50% iteration 감소가 min-sum 계열/우리 partial-CRC 조기종료와 결합 시 실익 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1255474---high-throughput-ldpc-decoders-2003-ieee-trans-vlsi-systems">ieee:1255474 - High-Throughput LDPC Decoders (2003, IEEE Trans. VLSI Systems)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

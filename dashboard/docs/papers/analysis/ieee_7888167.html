@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7888167</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7888167---globally-coupled-ldpc-codes-2016-ieee-isit">ieee:7888167 - Globally Coupled LDPC Codes (2016, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.85~0.9524</td></tr><tr><td>부호length</td><td>15240~15876</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>2x2 SM-constrained NB 기저행렬 CPM-분산으로 로컬 그래프를 global CN으로 결합한 고rate QC-GC-LDPC와 local/global 2단 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계, 부호가 특정 대수 구성(GF(q), 2x2 SM)에 고정되어 Prime ECC의 고정 QC-LDPC H-matrix 교체 부담 큼</td></tr><tr><td>추가확인</td><td>local/global 2단 복호가 min-sum 대비 평균 iteration/latency 실측 이득 있는지, BER 곡선의 error-floor 정량치</td></tr></tbody></table>
+<blockquote><p>총평: 고rate binary QC-LDPC를 정확한 대수구성으로 낮은 error-floor를 확보하고 2단 복호로 평균연산을 줄이는 접근이나 부호설계 이식 부담이 커 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>q=127</code> 등 소수체 <code>GF(q)</code>에서 binary QC-GC-LDPC 구성, 예제 codeword 길이 15240~15876, rate 0.85~0.9524, AWGNC/BEC 대상.</li><li>문제: SC-LDPC와 달리 작은 disjoint Tanner 그래프들을 소수의 global CN으로 묶어 error-floor를 낮추고 burst erasure를 정정하려 함.</li><li>모델: <code>GF(q)</code> 위 <code>2x2 SM-constraint</code>(임의 2x2 부분행렬 nonsingular) 기저행렬 <code>B1</code>(circulant), <code>B2</code>(cyclic subgroup)를 정의.</li><li>핵심기법1: <code>B1</code>을 <code>l x l</code> 블록의 <code>r x r</code> block-cyclic 배열로 보고 부분행렬 <code>R0,0</code>를 대각에 <code>t</code>개 배치, 하단에 <code>s</code>행의 global-CN 부분행렬 <code>Xgc,cn(s,t)</code>을 붙임 (식 (5)~(7)).</li><li>핵심식: 각 nonzero <code>GF(q)</code> 원소를 <code>(q-1)x(q-1)</code> binary CPM으로 분산(식 (6)) → <code>RC-constraint</code> 만족 → Tanner 그래프 girth&gt;=6 보장.</li><li>핵심기법2: <code>B2</code>를 삼각(type-1 lower/type-2 upper)으로 절단하고 zero-span을 삽입(식 (15)~(17))해 길이 <code>(ct-1)(q-1)+1</code>까지 erasure-burst 정정.</li><li>구현 디테일: codeword가 <code>t</code>개 섹션으로 나뉘고 각 섹션이 로컬 부호 <code>C0,0</code>의 codeword, 전체는 <code>s(q-1)</code>개 global CN 제약을 추가로 만족.</li><li>복호절차: local phase에서 각 섹션을 로컬 디코더로 고정 iteration 복호 → global CN 미충족 시에만 전체 부호로 global phase 복호(채널정보+로컬 LLR 입력).</li><li>결과: <code>C1,gc,cn,qc,1</code>(rate 0.9367)은 BER 10^-10까지 가시적 error-floor 없음, Shannon limit 대비 1.2 dB, SPB 대비 0.75 dB; 모두 50 iter MSA.</li><li>한계: HW 아키텍처 미설계(향후 과제로 언급), 성능은 시뮬만, soft-read/양자화 논의 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-GC-LDPC H-matrix 구성(CPM-분산, global CN)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 자체 교체 필요, 이식 난이도 높음</td></tr><tr><td>local/global 2단 iterative 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프에 섹션별 로컬+global 스케줄 추가 가능</td></tr><tr><td>MSA(min-sum) 로컬 복호</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>이미 보유(min-sum), 중복</td></tr><tr><td>부분/완전 병렬 로컬 디코더 트레이드오프</td><td>디코더 HW 모델(z=32, HCU)</td><td>우리 구조와 정합 필요, 중</td></tr></tbody></table>
+<p>적용 가치: 중간 - global-CN 결합으로 error-floor를 낮추는 부호설계 아이디어는 유효하나 Prime ECC의 고정 binary QC-LDPC H-matrix를 대수구성으로 교체/재검증해야 하고 HW·soft-read 근거가 없어 직접 이식가치는 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7888167",
+  "title": "Globally Coupled LDPC Codes",
+  "year": 2016,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "15240~15876",
+  "soft_quant": "무관",
+  "key_contribution": "2x2 SM-constrained NB 기저행렬 CPM-분산으로 로컬 그래프를 global CN으로 결합한 고rate QC-GC-LDPC와 local/global 2단 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계, 부호가 특정 대수 구성(GF(q), 2x2 SM)에 고정되어 Prime ECC의 고정 QC-LDPC H-matrix 교체 부담 큼",
+  "todo_check": "local/global 2단 복호가 min-sum 대비 평균 iteration/latency 실측 이득 있는지, BER 곡선의 error-floor 정량치"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7888167---globally-coupled-ldpc-codes-2016-ieee-isit">ieee:7888167 - Globally Coupled LDPC Codes (2016, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

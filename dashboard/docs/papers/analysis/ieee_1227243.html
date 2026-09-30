@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1227243</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1227243---a-hardware-gaussian-noise-generator-for-channel-code-evaluation-2003-fccm-2003">ieee:1227243 - A Hardware Gaussian Noise Generator for Channel Code Evaluation (2003, FCCM 2003)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Box-Muller 기반 FPGA AWGN 노이즈 생성기, 비균일 piecewise-linear 근사로 log/삼각함수 계산, 고σ(4~8σ) 정확도 확보</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>2514 slice+8 mult+2 BRAM@Virtex-II XC2V4000-6 (~10%)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 검증용 응용일 뿐, 부호/디코더 자체 기여 없음; AWGN 시뮬 인프라</td></tr><tr><td>추가확인</td><td>piecewise-linear 함수 근사 기법이 LLR/양자화 테이블 설계에 참고될 여지</td></tr></tbody></table>
+<blockquote><p>총평: 하드웨어 채널코드 시뮬용 AWGN 노이즈 생성기(FPGA)로 LDPC ECC 자체와 무관, error-floor 저BER 시뮬 가속 도구.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: FPGA 기반 하드웨어 AWGN 노이즈 생성기, 저BER(10^-9~10^-10) error-floor 영역 채널코드 시뮬 가속용.</li><li>문제: SW 시뮬은 저BER 탐색이 매우 느리고, 기존 HW 노이즈 생성기는 고σ(4~6σ+) 꼬리 정확도가 부족.</li><li>핵심 기법 1 (Box-Muller): 두 균일난수 <code>u1,u2</code>로 <code>f(u1)=√(-ln u1)</code>, <code>g1=√2·sin(2πu2)</code>, <code>g2=√2·cos(2πu2)</code> 계산 후 곱하여 N(0,1) 두 샘플 생성.</li><li>핵심 기법 2 (비균일 piecewise-linear): log·삼각함수를 국소 비선형성에 따라 세그먼트 길이를 달리한 최소자승 직선 근사, 경계를 <code>2^(n-32)</code>, <code>1-2^-n</code>로 잡아 세그먼트 주소를 AND/OR 게이트로 즉시 산출.</li><li>구현 디테일: gradient·y-intercept와 각 scaling factor(2의 거듭제곱)를 LUT에 저장, 큰 기울기 구간은 정밀도↔범위 트레이드로 곱셈기 크기 축소.</li><li>부수 트릭: 삼각함수 대칭성으로 [0,1/4]만 LUT 저장 후 shift/부호로 전 구간 복원, √2 곱셈과 CLT의 √2 나눗셈 상쇄.</li><li>3단계 (central limit theorem): n=2 샘플 누적(ACC(2))으로 양자화·근사 오차를 정규화, 통계검정 통과.</li><li>검증: χ² test·Kolmogorov-Smirnov test로 정규성 확인(p-value ~0.5), LDPC belief propagation 복호에 적용해 64bit float SW와 성능 차이 없음 확인.</li><li>결과: Virtex-II XC2V4000-6에서 133MHz·133M samples/s(2.13GHz PC 대비 40배), 3-instance 병렬 126MHz로 378M/s(100배), slice 2514(~10%).</li><li>한계: LDPC는 검증 응용일 뿐 부호/디코더 기여 없음, AWGN 전용(Rayleigh/Rician 등은 future work).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>AWGN 노이즈 생성(HW Box-Muller)</td><td><code>channel.cpp</code> (AWGN/RBER 에러 주입)</td><td>Prime ECC는 SW 시뮬레이터라 HW 노이즈 생성기 불필요, 개념적 접점만</td></tr><tr><td>piecewise-linear 함수 근사(LUT)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code> / <code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>LLR/양자화 테이블 근사에 아이디어 차용 여지(간접)</td></tr><tr><td>FPGA 병렬 인스턴스/LFSR 난수</td><td><code>random.cpp</code> (XOR25 난수)</td><td>대응 없음(SW 난수로 충분)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC ECC의 부호설계·디코더·HW 어느 핵심 레이어도 개선하지 않는 시뮬레이션 인프라(HW AWGN 생성기)로, piecewise-linear 근사 트릭만 LLR 테이블 설계에 원거리 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1227243",
+  "title": "A Hardware Gaussian Noise Generator for Channel Code Evaluation",
+  "year": 2003,
+  "venue": "FCCM 2003",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Box-Muller 기반 FPGA AWGN 노이즈 생성기, 비균일 piecewise-linear 근사로 log/삼각함수 계산, 고σ(4~8σ) 정확도 확보",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "2514 slice+8 mult+2 BRAM@Virtex-II XC2V4000-6 (~10%)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 검증용 응용일 뿐, 부호/디코더 자체 기여 없음; AWGN 시뮬 인프라",
+  "todo_check": "piecewise-linear 함수 근사 기법이 LLR/양자화 테이블 설계에 참고될 여지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1227243---a-hardware-gaussian-noise-generator-for-channel-code-evaluation-2003-fccm-2003">ieee:1227243 - A Hardware Gaussian Noise Generator for Channel Code Evaluation (2003, FCCM 2003)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

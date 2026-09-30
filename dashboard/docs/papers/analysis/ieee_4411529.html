@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4411529</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4411529---flexible-parallel-architecture-for-dvb-s2-ldpc-decoders-2007-ieee-globecom">ieee_4411529 - Flexible Parallel Architecture for DVB-S2 LDPC Decoders (2007, IEEE GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.25~0.9</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>M=360 주기성을 갖는 DVB-S2 LDPC-IRA 부분병렬 디코더 구조를 M의 임의 인수(N=M/L)로 일반화해, 메모리 주소 오버헤드 없이 FU 개수·barrel shifter 길이를 축소하는 서브샘플링 기법 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.09Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>DVB-S2 IRA 코드의 M=360 periodicity 구조(annex B/C 기반 shift table)에 특화된 재구성으로, 인수 L 증가 시 클록당 처리 idle cycle이 L배로 늘어 throughput이 선형 감소</td></tr><tr><td>추가확인</td><td>Prime ECC의 z_sb=32 lifting 구조에 이 서브샘플링(M=L×N) 개념이 적용 가능한지, barrel shifter 면적-throughput trade-off 곡선의 이식 가능성</td></tr></tbody></table>
+<blockquote><p>총평: 부분병렬 LDPC 디코더의 functional unit 개수를 임의 인수로 줄이면서 메모리 매핑/셔플링 구조를 그대로 유지하는 면적-throughput trade-off 기법으로, 병렬화 레벨 조정 아이디어는 참고할 만하나 DVB-S2 IRA 코드 특유의 구조에 의존적임.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>DVB-S2 표준의 LDPC-IRA 코드(frame length 16200/64800, rate 1/4~9/10), M=360 주기성을 갖는 A행렬 구조와 staircase lower-triangular B행렬로 구성된 parity-check matrix H.</li><li>문제: 기존 M-kernel 부분병렬 아키텍처([9])는 M=360개의 functional unit(FU)과 넓은 barrel shifter가 필요해 ASIC 면적이 22.74mm²(0.13um)에 달함.</li><li>핵심 가정: DVB-S2 코드의 모든 코드가 공통 인수 M=360을 공유하며, ν_I 노드를 M개씩 그룹화한 pseudo-random 연결 구조(<code>(r+i×q) mod(n-k)</code>, <code>q=(n-k)/M</code>)를 가짐.</li><li>핵심기법: M=L×N으로 인수분해해 C(c), R(r) 집합을 L개 서브그룹으로 subsampling, N개(= M/L)의 FU만으로 동일 아키텍처를 재사용하는 구조(<code>Cγ(c)</code>, <code>Rβ(r)</code>).</li><li>핵심 식 <code>shift_γ(c) = (shift_0(c)+γ) div L</code>, <code>address_β(r) = (address_0(r)+q×wC×β) mod(q×wC×L)</code> — 기존 ROM(shift/address) 테이블을 재사용하며 새 인덱스를 즉석 계산해 ROM 크기 증가 없이 재구성.</li><li>확장: barrel shifter 복잡도가 <code>O(N log2 N)</code>로 감소하고 FU 블록 하드웨어가 인수 L만큼 선형 축소, 라우팅 문제도 단순화됨.</li><li>구현 디테일: 메시지 메모리 매핑 행렬 R을 L열로 reshape((7)식)해 기존 아키텍처의 매핑 스킴을 그대로 활용, 클록당 wj-3 idle cycle이 L배로 증가.</li><li>별도 학습/최적화 절차 없음(구조적 서브샘플링 유도이며 GA/DE 등 사용 안 함).</li><li>결과: N={45,90,180} FU 구성을 Xilinx Virtex-II Pro(XC2VP30/50/100)에 합성, 최소 90Mbps(mandatory 최소 throughput) 이상 달성, 180-FU 구성은 45-FU 대비 4배 throughput.</li><li>한계: ASIC(전용 실리콘) 대신 FPGA 합성 검증만 수행했고, DVB-S2 표준의 특정 IRA 코드 계열(M=360 고정)에 특화된 구조로 일반 QC-LDPC로의 이식은 재검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>M-kernel 부분병렬 디코더를 인수 L로 서브샘플링</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>병렬화 레벨(z_sb) 조정과 유사한 개념이나 Prime ECC는 이미 z=32 고정 lifting 구조 채택</td></tr><tr><td>메시지 메모리 매핑/barrel shifter 재사용 (ROM 재계산)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>Graph Thinning의 MUX 기반 edge 선택과 유사 목적(라우팅/면적 절감)이나 구현 방식 상이</td></tr><tr><td>DVB-S2 IRA H-matrix(A/B 구조, 360-periodicity)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC base+circulant 구조로 IRA staircase 구조와 직접 대응 없음</td></tr><tr><td>FPGA 합성 검증 (면적/throughput 곡선)</td><td>대응 없음</td><td>Prime ECC는 bit-exact C++ 시뮬레이터로 RTL 합성 결과 자체는 참고 데이터에 불과</td></tr></tbody></table>
+<p>적용 가치: 중간 | 병렬화 인수(FU 개수)를 유연하게 조절하면서 기존 메모리 매핑을 재사용하는 면적-throughput trade-off 설계 아이디어는 Prime ECC의 HW 아키텍처 검토에 참고할 수 있으나, DVB-S2 IRA 코드 구조에 특화되어 있어 직접 이식은 어려움.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4411529",
+  "title": "Flexible Parallel Architecture for DVB-S2 LDPC Decoders",
+  "year": 2007,
+  "venue": "IEEE GLOBECOM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.25~0.9",
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "M=360 주기성을 갖는 DVB-S2 LDPC-IRA 부분병렬 디코더 구조를 M의 임의 인수(N=M/L)로 일반화해, 메모리 주소 오버헤드 없이 FU 개수·barrel shifter 길이를 축소하는 서브샘플링 기법 제안",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.09,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "DVB-S2 IRA 코드의 M=360 periodicity 구조(annex B/C 기반 shift table)에 특화된 재구성으로, 인수 L 증가 시 클록당 처리 idle cycle이 L배로 늘어 throughput이 선형 감소",
+  "todo_check": "Prime ECC의 z_sb=32 lifting 구조에 이 서브샘플링(M=L×N) 개념이 적용 가능한지, barrel shifter 면적-throughput trade-off 곡선의 이식 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4411529---flexible-parallel-architecture-for-dvb-s2-ldpc-decoders-2007-ieee-globecom">ieee_4411529 - Flexible Parallel Architecture for DVB-S2 LDPC Decoders (2007, IEEE GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

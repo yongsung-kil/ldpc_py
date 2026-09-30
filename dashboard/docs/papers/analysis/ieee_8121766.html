@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8121766</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8121766---design-of-ldpc-fast-encoding-based-on-dynamic-memory-structure-of-linked-list-queue-2017-ieee-ispan-fcst-iscc">ieee:8121766 - Design of LDPC Fast Encoding Based on Dynamic Memory Structure of Linked List Queue (2017, IEEE (ISPAN-FCST-ISCC))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~1920</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>IEEE802.16e QC-LDPC fast encoder를 linked-list queue 동적 메모리 + 설정가능 barrel shifter로 구현(다중 rate 대응, -1 저장 회피)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>인코더 전용·IEEE802.16e 표준부호 대상, Prime ECC는 고정 dual-diagonal 인코더라 linked-list 메모리 구조 이식 이점 낮음</td></tr><tr><td>추가확인</td><td>barrel shifter 기반 순환시프트 곱셈이 z=32 dual-diagonal 인코딩 대비 자원/속도 이점 있는지</td></tr></tbody></table>
+<blockquote><p>총평: IEEE802.16e QC-LDPC용 fast encoder를 linked-list 동적메모리로 다중 rate 대응 FPGA 구현 — 인코더 전용·복호 성능 무관, Prime ECC의 고정 dual-diagonal 인코더와 정합성 낮아 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE802.16e 표준 QC-LDPC 인코더, base matrix <code>Hb=[Hb1 Hb2]</code>를 expansion factor <code>z</code>(24~96)로 리프팅한 <code>H</code>(m×n).</li><li>문제: 기존 인코더(Gaussian elimination은 O(n^2), RU는 저throughput·비적응)는 복잡도·자원 소모 큼 → code length에 선형인 fast encoding 필요.</li><li>부호구조: <code>Hb2</code> 첫 열의 <code>h(1)=h(mb)</code> 특수열(dual-diagonal류)을 이용, <code>H2·p^T = H1·s^T</code>에서 parity를 순차 계산.</li><li>핵심기법1(fast encoding): <code>p1 = (Z^h(1)+Z^h(r)+Z^h(mb))^-1 Σ Z^Hb1(i,j)·sj</code> (식5)로 첫 parity 계산 후, <code>pi = pi-1 + Σ Z^Hb1(i-1,j)·sj</code> (식8~9) 재귀로 나머지 parity 생성.</li><li>식 의미: PCM 희소성·순환시프트 구조를 직접 활용해 생성행렬 없이 부호화 → 복잡도가 code length에 선형.</li><li>핵심기법2: 다양한 code rate의 서로 다른 열 저장길이를 수용하기 위해 linked-list queue 동적 메모리(dual-port memory, head/tail pointer, length counter)로 노드 삽입/삭제, rate 전환 시 노드 정보만 갱신.</li><li>트릭: 행렬-벡터 곱을 설정가능 barrel shifter로 구현(단위행렬 순환시프트=Hb 원소값), rate별 상이한 시프트량을 1클록에 처리, -1 원소 저장 낭비 회피(레지스터 2세트만 사용).</li><li>구현: Verilog+ISE 14.7, XC7VX485T 합성/라우팅, 입출력변환·코어코딩·제어 모듈 구성, 직병렬 변환으로 속도 개선.</li><li>결과: r=1/2에서 CLB 815·register 356·최대클록 214.5MHz(ref[14] 929/410/168MHz 대비 자원↓ 속도↑), 자원소모의 60%+가 base PCM 저장. length 576~1152, rate 1/2·2/3 검증. fast vs traditional 인코딩 실행시간 4.2s vs 25.2s.</li><li>한계: 인코더 전용(복호 성능 무관), IEEE802.16e 표준부호 특화, ASIC gatecount·Gbps throughput 미제시(FPGA CLB/register만), rate/length 적응은 향후 과제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>fast encoding parity 재귀 계산</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>인코딩 레이어 대응하나 Prime ECC는 고정 dual-diagonal, 표준 802.16e 구조와 상이</td></tr><tr><td>부호용 PCM/열 재배치</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>dual-diagonal 열 처리 개념은 유사, 그러나 linked-list 동적메모리는 무관</td></tr><tr><td>barrel shifter 순환시프트 곱셈</td><td>대응 없음</td><td>Prime ECC는 z=32 circulant 고정, 설정가능 barrel shifter 구조 미대응</td></tr><tr><td>linked-list queue 동적 메모리 / 다중 rate 저장</td><td>대응 없음</td><td>Prime ECC는 단일 고정 QC-LDPC, 다중 rate 동적 저장 불필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 인코더 전용이며 IEEE802.16e 표준부호·linked-list 동적메모리 구조가 Prime ECC의 고정 z=32 dual-diagonal 인코더와 정합되지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8121766",
+  "title": "Design of LDPC Fast Encoding Based on Dynamic Memory Structure of Linked List Queue",
+  "year": 2017,
+  "venue": "IEEE (ISPAN-FCST-ISCC)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~1920",
+  "soft_quant": "무관",
+  "key_contribution": "IEEE802.16e QC-LDPC fast encoder를 linked-list queue 동적 메모리 + 설정가능 barrel shifter로 구현(다중 rate 대응, -1 저장 회피)",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "인코더 전용·IEEE802.16e 표준부호 대상, Prime ECC는 고정 dual-diagonal 인코더라 linked-list 메모리 구조 이식 이점 낮음",
+  "todo_check": "barrel shifter 기반 순환시프트 곱셈이 z=32 dual-diagonal 인코딩 대비 자원/속도 이점 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8121766---design-of-ldpc-fast-encoding-based-on-dynamic-memory-structure-of-linked-list-queue-2017-ieee-ispan-fcst-iscc">ieee:8121766 - Design of LDPC Fast Encoding Based on Dynamic Memory Structure of Linked List Queue (2017, IEEE (ISPAN-FCST-ISCC))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

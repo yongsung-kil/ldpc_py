@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11195423</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11195423---subcode-ensemble-decoding-of-linear-block-codes-2025-isit">ieee:11195423 - Subcode Ensemble Decoding of Linear Block Codes (2025, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>132~504</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>H에 무작위 독립 row를 추가해 얻은 여러 subcode를 병렬 BP/MSA로 디코딩하고 ML-in-the-list로 최종 선택하는 앙상블 디코딩(SCED) 제안, AED·MBBP 대비 코드구조/자동사상군 지식 불필요</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>short block length(132~504) 전용 검증, 경로 수(K=11~43)만큼 디코더 인스턴스 복제 필요해 HW 면적 비용 큼, 병렬 경로 간 평균 iteration은 오히려 증가(전체 latency는 max로 정의해 개선 주장)</td></tr><tr><td>추가확인</td><td>Prime ECC 고rate(~0.9) QC-LDPC 대상 검증 없음(본 논문은 rate 0.5, 5G/PEG 코드), gatecount·throughput HW 수치 전무</td></tr></tbody></table>
+<blockquote><p>총평: short-length LDPC BP/MSA에 subcode 앙상블을 추가해 waterfall 성능과 worst-case latency를 개선하는 디코더 스케줄링/구조 기법으로, 코드구조 무관하게 적용 가능해 이식성은 있으나 다중 디코더 인스턴스로 인한 HW 비용이 미검증.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 short block length 선형블록코드(5G LDPC <code>C_5G(132,66)</code>, irregular PEG LDPC <code>C_irPEG(504,252)</code>), BI-AWGN 채널, BP(SPA/MSA) 디코딩.</li><li>풀려는 문제: short-length LDPC는 BP 디코딩과 ML 디코딩 사이 성능 gap이 있고, 기존 앙상블 기법(AED는 automorphism group 필요, MBBP는 low-weight dual codeword NP-complete 탐색 필요)은 코드구조 요구사항이 커서 일반 적용이 어려움.</li><li>핵심 가정: BP 계열 디코더의 오류확률은 전송 코드워드가 아니라 Tanner graph 구조와 채널 노이즈에만 의존(<code>[1, Lemma 4.90]</code>) → 서로 다른 subcode/그래프로 디코딩하면 다양성을 얻을 수 있음.</li><li>핵심 기법(SCED): PCM <code>H</code>에 임의의(선형독립) row <code>h_ℓ</code>을 추가한 <code>H_ℓ=[H; h_ℓ]</code>로 proper subcode <code>C_ℓ⊂C</code>를 유도, K개 경로(path)를 병렬 BP 디코딩 후 <code>x̂ = argmax_{x∈L} L(y|x)</code> (ML-in-the-list rule)로 최종 선택.</li><li>핵심 식: linear covering 조건 <code>∪C_i = C</code>(식 1) — 모든 코드워드가 최소 하나의 subcode에 속해야 이론상 전부 복호 가능; Theorem 1로 <code>h1,h2</code> 선형독립 샘플 + <code>h3=h1+h2</code>면 최소 3개 subcode로 LC 구성 가능.</li><li>확장/최적화: subcode row는 Bernoulli(p) 샘플링 또는 Algorithm 1(4-cycle 미추가 조건으로 weight <code>d_c</code>인 row 생성)로 구성, 후보 c개 중 maximum-coverage greedy 휴리스틱([17, Alg.3] 재사용)으로 최적 K개 경로 선택.</li><li>부수 트릭: 실험 결과 LC 조건을 엄밀히 만족하지 않아도(Ensemble 1, no-LC) maximum-coverage 기준 선택 시 LC 만족 앙상블(Ensemble 2)과 성능이 유사하거나 더 나음 → LC 강제보다 coverage 최적화가 실효적.</li><li>학습/최적화 절차 없음(GA·NN 아님), greedy maximum-coverage 알고리즘([17] 재사용)만 사용.</li><li>결과: 5G LDPC(132,66)에서 SCED-11이 MSA 대비 0.3dB, AED-11 대비 0.1dB 이득(FER 10^-3), SCED-43은 R-AED-43 능가하며 OSD-4(ML 근사) 대비 gap 0.8dB로 축소; PEG(504,252)에서 SCED-11이 MSA/SPA 대비 약 0.2dB 이득; relative coverage는 SCED가 98%+, R-AE는 80~92%에 그침.</li><li>한계: 병렬 경로별 반복수 평균은 오히려 증가(전체 코드워드 중 약 50%는 잘못된 subcode를 시도), latency는 <code>max_i λ_i</code>로 정의해 worst-case 기준으로만 개선 주장; K배 디코더 인스턴스 복제에 따른 HW 면적/전력 비용은 논문에 미검토, 검증도 short length(132~504) 시뮬뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>앙상블 디코딩 스케줄링(다중 subcode 병렬 BP/MSA)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>반복 루프 자체를 K개 병렬 인스턴스로 복제하고 최종 ML-list 선택을 추가하는 구조라 이식 시 디코더 이터레이션 루프 확장 필요(§4 "낮음~중": 알고리즘 자체는 min-sum 유지)</td></tr><tr><td>PCM row 추가로 subcode 유도(H_ℓ=[H; h_ℓ])</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>원본 PCM에 row를 덧붙이는 방식은 H-matrix 로드 로직과 관련되나 Prime ECC의 고정 QC-LDPC 구조와 정합성 재검증 필요</td></tr><tr><td>조기종료(hard-decision이 코드워드 만족 시 중단)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>논문의 early stopping과 개념적으로 유사하나 CRC가 아닌 parity check 만족 여부 기준이라 완전 대응은 아님</td></tr><tr><td>max-coverage 기반 앙상블 후보 선정(오프라인 설계 단계)</td><td><code>ecc_top.cpp</code> (오케스트레이션/통계)</td><td>HW 구현체가 아닌 설계 시 오프라인 시뮬레이션 도구, 실제 코드 반영 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum(MSA) 기반이라 Prime ECC 디코더 알고리즘과 이질감은 적으나, K배 디코더 인스턴스 병렬화라는 구조적 변경이 필요하고 HW 비용(면적/전력) 검증이 전무하며 short-length·rate 0.5 코드에서만 검증되어 고rate QC-LDPC로의 이득 재현성은 불확실.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11195423",
+  "title": "Subcode Ensemble Decoding of Linear Block Codes",
+  "year": 2025,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "132~504",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "H에 무작위 독립 row를 추가해 얻은 여러 subcode를 병렬 BP/MSA로 디코딩하고 ML-in-the-list로 최종 선택하는 앙상블 디코딩(SCED) 제안, AED·MBBP 대비 코드구조/자동사상군 지식 불필요",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "short block length(132~504) 전용 검증, 경로 수(K=11~43)만큼 디코더 인스턴스 복제 필요해 HW 면적 비용 큼, 병렬 경로 간 평균 iteration은 오히려 증가(전체 latency는 max로 정의해 개선 주장)",
+  "todo_check": "Prime ECC 고rate(~0.9) QC-LDPC 대상 검증 없음(본 논문은 rate 0.5, 5G/PEG 코드), gatecount·throughput HW 수치 전무"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11195423---subcode-ensemble-decoding-of-linear-block-codes-2025-isit">ieee:11195423 - Subcode Ensemble Decoding of Linear Block Codes (2025, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

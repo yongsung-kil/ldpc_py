@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8207775</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8207775---analysis-and-design-of-cost-effective-high-throughput-ldpc-decoders-2018-ieee-trans-vlsi-systems">ieee:8207775 - Analysis and Design of Cost-Effective, High-Throughput LDPC Decoders (2018, IEEE Trans. VLSI Systems)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1296~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Min-Sum 메시지를 framing function F로 저정밀(w bit) 저장하는 NS-FAID로 메모리·CN면적 축소, DE 최적화로 동등/개선 BER서 TAR 최대 58.75% 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>4bit MS(q=4) 기준 성능이라 Prime ECC의 hard/2SD/3SD 저비트 LLR 및 고rate QC-LDPC서 DE 재최적화 필수, w=2 공격적 압축은 BER 손실 큼</td></tr><tr><td>추가확인</td><td>Prime ECC의 min-sum 파이프라인(min1/min2 compressed CN 저장)에 framing/deframing 블록 삽입 시 실면적 이득과 적응형 LLR 테이블과의 상호작용 검증</td></tr></tbody></table>
+<blockquote><p>총평: Min-Sum 메시지를 저정밀 저장하는 framing function 한 장으로 메모리·CN면적을 줄이면서 DE로 성능까지 유지/개선하는 실용적 디코더 최적화로, layered QC-LDPC HW와 compressed CN 저장이 Prime ECC 구조와 정합해 이식성이 높다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (3,6)-regular QC-LDPC(N=1296, z=54) 및 WiMAX rate-1/2 irregular QC-LDPC(N=2304, z=96), AWGN, 20 iter, q=4bit 메시지.</li><li>문제: LDPC HW서 메모리·인터커넥트가 면적/지연/전력을 지배 - 메시지 저장 정밀도를 낮춰 비용·throughput을 개선하고 싶다.</li><li>핵심기법: NS-FAID - CN 갱신은 MS와 동일하되, VN 갱신 출력에 비전사(nonsurjective) framing function <code>F: M→M</code>을 적용해 이미지 집합을 좁혀 메시지를 <code>w = log2(W)+1</code> bit로 저장.</li><li>핵심 정의: <code>F</code>는 홀함수·비감소(Prop.1) LUT <code>[|F(0)|,F(1),...,F(Q)]</code>로 완전결정, weight <code>W &lt; Q+1</code>이면 비전사. OMS/POMS 등 기존 기법이 <code>F</code>의 특수해로 통합됨.</li><li>확장: 기존 정의를 <code>F(0)=±λ</code>까지 허용해 2bit 같은 극저비트서 성능 대폭 개선 - w=2 best <code>F=[±1,1,1,1,1,6,6,6]</code>.</li><li>irregular 확장: VN degree별 다른 <code>F_dv</code> 사용, 이미지 포함관계 제약(<code>Im(F_dv)⊆Im(F_max)</code>)으로 CN 메시지도 <code>w_max</code> bit로 저장 - layered에 적합.</li><li>최적화: DE로 framing function <code>F</code>와 채널 gain factor <code>μ</code>를 공동 최적화, η-threshold(BER=1e-6) 기준 방대한 후보(irregular 7M+)를 pruning 탐색.</li><li>HW: layered QC-LDPC 두 아키텍처(pipelined / full-layer), MS의 SAT 블록을 FRA(framing)로 교체 + DE-FRA(deframing) 추가, compressed CN 저장(min1/min2/sign/idx) 지원.</li><li>결과: 65nm ASIC 합성서 (3,6) NS-FAID-3는 MS 대비 BER +0.19dB에 TAR 18.88~31.61%↑, NS-FAID-2는 -0.21dB에 TAR 34.37~58.75%↑. β-memory·CNU 면적 대폭 감소. WiMAX NS-FAID-332는 NTAR 45.86 Gb/s/mm2/iter.</li><li>한계: q=4bit MS 기준 결과이며 절대 throughput(Gbps) 본문 수치 없음, framing/deframing 추가블록이 이득 일부 상쇄, 부호마다 DE 재최적화 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>framing function F(저정밀 메시지 저장)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, decoder.h <code>Get_VNU_*</code></td><td>VN 출력 재양자화 지점에 F/deframe 삽입 - min-sum 루프 그대로 두고 이식 가능(난이도 낮음)</td></tr><tr><td>Min-Sum CN 갱신(min1/min2/sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum과 동일 - NS-FAID는 CN 연산 미변경, 저장정밀도만 축소</td></tr><tr><td>이터레이션 루프 / layered 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리도 dual-update(parity 교대) layered - compressed CN 저장 구조 정합</td></tr><tr><td>DE로 F·gain μ 공동최적화 → iteration별 LLR 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블과 개념 겹침 - framing LUT를 테이블화해 통합 가능</td></tr><tr><td>gain factor 양자화 map ϕ</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>채널 LLR 양자화 지점 - 저비트 저장 시 재조정 필요</td></tr><tr><td>부호구조 로드(QC base matrix)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호는 그대로, 디코더 저장정밀도만 변경</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - framing function은 min-sum 루프를 유지한 채 VN 출력 재양자화만 추가하는 저난이도 이식이고 메모리/CN면적 절감이 Prime ECC의 실병목(메모리·라우팅)과 직결되나, q=4bit MS 기준이라 우리 hard/2SD/3SD 저비트 LLR·고rate 부호에서 DE 재최적화가 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8207775",
+  "title": "Analysis and Design of Cost-Effective, High-Throughput LDPC Decoders",
+  "year": 2018,
+  "venue": "IEEE Trans. VLSI Systems",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1296~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Min-Sum 메시지를 framing function F로 저정밀(w bit) 저장하는 NS-FAID로 메모리·CN면적 축소, DE 최적화로 동등/개선 BER서 TAR 최대 58.75% 향상",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "4bit MS(q=4) 기준 성능이라 Prime ECC의 hard/2SD/3SD 저비트 LLR 및 고rate QC-LDPC서 DE 재최적화 필수, w=2 공격적 압축은 BER 손실 큼",
+  "todo_check": "Prime ECC의 min-sum 파이프라인(min1/min2 compressed CN 저장)에 framing/deframing 블록 삽입 시 실면적 이득과 적응형 LLR 테이블과의 상호작용 검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8207775---analysis-and-design-of-cost-effective-high-throughput-ldpc-decoders-2018-ieee-trans-vlsi-systems">ieee:8207775 - Analysis and Design of Cost-Effective, High-Throughput LDPC Decoders (2018, IEEE Trans. VLSI Systems)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

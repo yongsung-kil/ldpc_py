@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6638131</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6638131---cost-effective-scalable-qc-ldpc-decoder-designs-for-non-volatile-memory-systems-2013-ieee-icassp">ieee:6638131 - Cost-Effective Scalable QC-LDPC Decoder Designs for Non-Volatile Memory Systems (2013, IEEE ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.896</td></tr><tr><td>부호length</td><td>9280</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>TDMP 디코더 FIFO 제거(re-arranged) + scalable datapath로 면적 18.5% 절감, NVMS용</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>609K@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.393Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정능력 개선 없는 순수 HW 면적 최적화, normalized min-sum·layered는 Prime ECC 기보유 기법과 중복</td></tr><tr><td>추가확인</td><td>fixed-point 양자화(γ8/ρ7/Λ6 bit)와 Prime ECC 양자화 테이블 정합, scalable permuter 구조</td></tr></tbody></table>
+<blockquote><p>총평: NVMS용 QC-LDPC 디코더의 FIFO-free layered 아키텍처로 NAND 직접 타깃이나, 알고리즘은 기보유(layered min-sum)라 이식 가치는 HW 면적/메모리 절감 아이디어에 한정.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: NVMS(SSD/MLC 플래시)용 binary QC-LDPC, 프로토타입은 rate-0.896 <code>(M,N,b)=(6,58,160)</code>, 최대 codeword 9280bit, circulant b×b 순환구조.</li><li>문제: 기존 QC-LDPC(TDMP) 디코더는 codeword 크기(페이지=수 KB)에 비례하는 FIFO 메모리 때문에 면적 비용이 과대, NVMS엔 통일 규격도 없음.</li><li>핵심 가정: circulant 내 행 간 데이터 의존성이 없어 block row의 b개 행을 병렬 복호 가능.</li><li>핵심 기법 1단: TDMP(layered, row-by-row) 복호 - 각 행 4단계(read&amp;subtract → SISO decode → CN write-back → BN write-back), prior <code>ρ=γ(Ii)-λi</code>.</li><li>핵심 식: <code>Λj=0.5·{XOR{sgn(ρi')}·min{|ρi'|}}</code> - normalized min-sum(0.5 scaling)로 SISO 함수 구현, tanh 없이 최소값·부호로 CN 갱신.</li><li>핵심 기법 2단: re-arranged FIFO-free 아키텍처 - posterior γ와 prior ρ 둘 다 저장하지 않고 prior ρ만 저장, γ는 permuter/CNU로 직접 전달해 timing 완전 overlap.</li><li>구현 디테일: fixed-point 분석으로 γ/ρ/Λ를 각각 8/7/6bit 양자화, scalable datapath는 M,N 경계조건 run-time programmable, CNU/BNU를 b값 enable로 on/off, arbitrary shift permuter.</li><li>학습/최적화: 없음(구조·양자화 최적화, exhaustive 시뮬로 bit width 결정).</li><li>결과: TSMC 90nm 1P9M, core 2.52mm², 138.8MHz, 393Mb/s@8iter, gate count 748K→609K(18.5% 절감), NAE 최고.</li><li>한계: 정정능력 개선 없음(순수 면적/메모리 최적화), 처리량 393Mbps로 고속 NAND엔 부족, BER 곡선은 그림에만 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TDMP layered 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 dual-update(parity even/odd 교대) 스케줄 보유, layered 개념 중복</td></tr><tr><td>normalized min-sum CN 갱신</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2+sign XOR 이미 구현, 0.5 scaling 여부만 참고</td></tr><tr><td>fixed-point 양자화(γ/ρ/Λ bit)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>양자화 bit width 설계 참고 가능</td></tr><tr><td>FIFO-free posterior/prior 메모리 재배치</td><td>디코더 HW 모델(z=32, pipeline)</td><td>HW 메모리 절감 아이디어 - Prime ECC pipeline 구조와 정합 검토 필요</td></tr><tr><td>scalable permuter / shift-value memory</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 구조, 가변 permuter 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - NAND 직접 타깃 QC-LDPC 디코더로 FIFO-free 메모리 절감 아이디어는 참고 가치가 있으나, TDMP/normalized min-sum 등 알고리즘 핵심은 Prime ECC가 이미 보유해 신규 정정성능 이득은 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6638131",
+  "title": "Cost-Effective Scalable QC-LDPC Decoder Designs for Non-Volatile Memory Systems",
+  "year": 2013,
+  "venue": "IEEE ICASSP",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.896,
+  "code_length": "9280",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "TDMP 디코더 FIFO 제거(re-arranged) + scalable datapath로 면적 18.5% 절감, NVMS용",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "609K@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.393,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "정정능력 개선 없는 순수 HW 면적 최적화, normalized min-sum·layered는 Prime ECC 기보유 기법과 중복",
+  "todo_check": "fixed-point 양자화(γ8/ρ7/Λ6 bit)와 Prime ECC 양자화 테이블 정합, scalable permuter 구조"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6638131---cost-effective-scalable-qc-ldpc-decoder-designs-for-non-volatile-memory-systems-2013-ieee-icassp">ieee:6638131 - Cost-Effective Scalable QC-LDPC Decoder Designs for Non-Volatile Memory Systems (2013, IEEE ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

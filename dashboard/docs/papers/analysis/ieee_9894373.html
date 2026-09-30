@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9894373</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9894373---a-low-complexity-neural-normalized-min-sum-ldpc-decoding-algorithm-using-tensor-train-decomposition-2022-ieee-communications-letters">ieee:9894373 - A Low-Complexity Neural Normalized Min-Sum LDPC Decoding Algorithm Using Tensor-Train Decomposition (2022, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NNMS에 per-edge 가변 가중치(NNMS+)를 도입하고 Tensor-Train 분해와 syndrome loss로 파라미터·곱셈 복잡도를 대폭 절감한 신경망 min-sum 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>학습 기반 NN 디코더로 HW 미설계·부동소수 가중치, NAND 고정 QC-LDPC와 무관하며 학습/추론 인프라 필요</td></tr><tr><td>추가확인</td><td>learnable normalized 계수의 정적 스칼라 근사값만 뽑아 우리 min-sum scaling에 이식할 여지가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 신경망 min-sum(NNMS)의 파라미터·복잡도를 TT 분해로 줄인 DL 디코더 연구로, HW 미설계·학습 기반이라 고정 QC-LDPC NAND ECC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 (N,K) LDPC + BPSK + AWGN. 실험 부호는 rate <code>r=0.75</code>, length <code>N=576</code>, <code>T=5</code> iter(12-layer NN).</li><li>문제: NBP류 model-driven DL 디코더는 BP보다 성능은 좋으나 edge별 학습 가중치로 파라미터·연산 복잡도가 매우 커진다.</li><li>배경 알고리즘: NNMS는 NMS를 unfold해 CN→VN 메시지의 min에 learnable <code>α</code>, VN→CN에 <code>β</code>를 곱하는 신경망(식 6~9), cross-entropy loss로 학습.</li><li>핵심 기법 1(NNMS+): edge마다 동일 가중치 대신 출력 메시지별로 별도 가변 가중치 벡터 <code>A_{v,c}</code>(CN측), <code>B_{c,v}</code>(VN측)를 도입(식 16~18) → BER↑ but 메모리·연산↑(NNMS 대비 T배 파라미터).</li><li>의미: per-input 가중치가 표현력을 키워 SP에 근접한 BER을 얻지만 그대로면 복잡도가 폭증한다.</li><li>핵심 기법 2(TT-NNMS+): 가중치 텐서들을 4th-order로 reshape 후 Tensor-Train 분해(식 19~24)해 곱셈·파라미터를 core tensor 곱으로 대체.</li><li>복잡도: <code>X×Y</code> 파라미터를 <code>Σ x_d y_d R_{d-1} R_d</code>로 축소(공간복잡도 <code>O(dIR^2)</code>). 실험서 NNMS+ 대비 파라미터 574배·곱셈 2,334배 감소.</li><li>학습: syndrome loss(soft-syndrome, 식 13~15)를 적용해 송신 codeword 없이 학습 가능 → 채널 변화 온라인 적응 도구.</li><li>결과: TT-NNMS+는 NNMS+와 유사 BER/FER(성능 열화 없이 복잡도만 감소), NNMS 대비 고SNR에서 약 0.7 dB 개선, SP엔 약간 못 미침. layer 늘리면 성능↑.</li><li>한계: 시뮬(TensorFlow)만, HW 미설계, 학습 기반 부동소수 가중치, 특정 (576, r=0.75) 부호 예시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN 연산에 학습 normalize 계수</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>정적 scaling factor로 환원하면 개념적으로 min-sum magnitude 처리에 닿으나, 학습 가중치 자체는 이식 불가</td></tr><tr><td>NN unfold 디코더 전체 / TT 분해</td><td>대응 없음</td><td>NN/딥러닝 디코더는 프로파일상 대응 없음</td></tr><tr><td>syndrome 기반 판정</td><td>full_CRC.cpp</td><td>조기종료는 CRC 기반이라 syndrome loss와 직접 매핑되지 않음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NN 학습·TT 분해 기반 디코더로 프로파일이 명시적으로 "대응 없음"으로 분류하는 딥러닝 디코더 계열이며, HW 미설계로 고정 QC-LDPC ECC 엔진에 이식할 요소가 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9894373",
+  "title": "A Low-Complexity Neural Normalized Min-Sum LDPC Decoding Algorithm Using Tensor-Train Decomposition",
+  "year": 2022,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.75,
+  "code_length": "576",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NNMS에 per-edge 가변 가중치(NNMS+)를 도입하고 Tensor-Train 분해와 syndrome loss로 파라미터·곱셈 복잡도를 대폭 절감한 신경망 min-sum 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "학습 기반 NN 디코더로 HW 미설계·부동소수 가중치, NAND 고정 QC-LDPC와 무관하며 학습/추론 인프라 필요",
+  "todo_check": "learnable normalized 계수의 정적 스칼라 근사값만 뽑아 우리 min-sum scaling에 이식할 여지가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9894373---a-low-complexity-neural-normalized-min-sum-ldpc-decoding-algorithm-using-tensor-train-decomposition-2022-ieee-communications-letters">ieee:9894373 - A Low-Complexity Neural Normalized Min-Sum LDPC Decoding Algorithm Using Tensor-Train Decomposition (2022, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

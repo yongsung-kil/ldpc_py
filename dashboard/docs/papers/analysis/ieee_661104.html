@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_661104</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee661104---early-detection-and-trellis-splicing-reduced-complexity-iterative-decoding-1998-ieee-jsac">ieee:661104 - Early Detection and Trellis Splicing: Reduced-Complexity Iterative Decoding (1998, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>신뢰도 threshold로 정보심볼을 조기확정(early detection)해 이후 iteration 연산량 축소, turbo에선 trellis splicing</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>turbo/trellis 기반, BER 악화를 감수한 연산량 절감이며 LDPC엔 단지 "적용 가능"만 언급</td></tr><tr><td>추가확인</td><td>LDPC에 codeword-bit 조기확정 적용 시 실제 iteration 절감/BER 손실 정량 필요</td></tr></tbody></table>
+<blockquote><p>총평: turbo decoder 연산량 4배 절감 기법으로, binary QC-LDPC min-sum 파이프라인엔 trellis/BCJR 전제가 맞지 않아 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate 1/3 unpunctured turbocode, 정보비트 10,000, 구성부호 (21,37), 랜덤 permuter, AWGN 채널.</li><li>문제: turbo 등 iterative decoder는 BER은 우수하나 iteration당 연산량이 커서 계산비용이 부담.</li><li>관찰: 특정 정보비트/상태/부호비트의 log-probability ratio가 디코딩 초반에 이미 신뢰성 높게 수렴 → "쉬운" 부분을 먼저 확정 가능.</li><li>핵심기법 early detection: 각 반정보비트의 소프트 신뢰도 <code>L</code>를 단순 threshold(예 15.0)와 비교해 초과 시 그 값을 clamp(조기확정)하고 이후 iteration에서 제외.</li><li>판정 근거: 고차 기준(entropy/<code>L</code> 변화율)은 곡선이 잠시 정체 후 급변하므로 오검출 유발, 단순 threshold가 오검출 최소.</li><li>Bayesian network 관점에서 iteration 연산량은 대략 <code>sum over v of |config(v)| * ...</code>(식 4)로 근사, 한 변수 조기확정 시 자식 항의 configuration 수가 2배 감소.</li><li>Trellis splicing(turbo 특화): 조기확정된 정보비트에 해당하는 trellis section을 잘라내고 새 branch metric/edge label로 이어붙여 forward-backward sweep당 section 연산 절감.</li><li>구현 디테일: 상태전이 매핑용 정수 배열 필요(불규칙), CPU 시간 6% 미만 오버헤드, 잘라낸 section의 alpha/beta/gamma 메모리 회수로 총 메모리는 오히려 감소.</li><li>결과: 동일 BER 기준 turbodecoding 대비 연산량 최대 4배 절감(Eb/N0 0.1~0.3dB, threshold 최적값 시).</li><li>한계: BER를 악화시키는(coding gain 향상 아님) 방향의 연산량 절감이며 turbo/trellis 구조 전용, LDPC엔 codeword-bit 조기확정만 개념적으로 언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>소프트 신뢰도 threshold 조기확정</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>개념상 VN 확정 pinning으로 응용 여지는 있으나 논문은 trellis 전제</td></tr><tr><td>trellis splicing / BCJR forward-backward</td><td>대응 없음</td><td>Prime ECC는 min-sum message passing으로 trellis/BCJR 미사용</td></tr><tr><td>조기종료(신뢰도 기반)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>이미 CRC 기반 조기종료 보유 → 중복</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 핵심 기여가 turbo/trellis splicing이라 binary QC-LDPC min-sum 파이프라인에 직접 대응이 없고, LDPC 언급은 개념 수준뿐이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:661104",
+  "title": "Early Detection and Trellis Splicing: Reduced-Complexity Iterative Decoding",
+  "year": 1998,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.333,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "신뢰도 threshold로 정보심볼을 조기확정(early detection)해 이후 iteration 연산량 축소, turbo에선 trellis splicing",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "turbo/trellis 기반, BER 악화를 감수한 연산량 절감이며 LDPC엔 단지 적용 가능만 언급",
+  "todo_check": "LDPC에 codeword-bit 조기확정 적용 시 실제 iteration 절감/BER 손실 정량 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee661104---early-detection-and-trellis-splicing-reduced-complexity-iterative-decoding-1998-ieee-jsac">ieee:661104 - Early Detection and Trellis Splicing: Reduced-Complexity Iterative Decoding (1998, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5759850</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5759850---a-sorting-based-architecture-of-finding-the-first-two-minimum-values-for-ldpc-decoding-2011-ieee-cspa">ieee:5759850 - A Sorting-based Architecture of Finding the First Two Minimum Values for LDPC Decoding (2011, IEEE CSPA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>min-sum CNU의 first/second-min finder를 XS(sorting) 기반으로 재설계해 MUX 수·gatecount·지연 동시 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>1386@65nm (n=32, 5bit)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호·복호성능 무관 순수 min-finder 회로 최적화라 정정능력 이득 없음, 입력 word-length 5bit·독립 유닛 가정</td></tr><tr><td>추가확인</td><td>Prime ECC의 min1/min2 산출부(CNU) 실제 구조가 이 min-finder로 교체 시 z=32 병렬·pipeline 타이밍과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CNU의 핵심 서브블록(first-two-minimum finder)을 면적·지연 모두 줄인 HW 최적화로 CNU 회로에 국소 이식 여지가 있으나 정정성능과는 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 min-sum(MS) LDPC 복호의 row operation에서 쓰이는 first-two-minimum finder HW (부호/rate 무관, 워드길이 5bit 입력 가정).</li><li>문제: MS row 연산은 각 CN에서 min_1st·min_2nd·min_1st 위치를 구해야 하며, 802.15.3c 한 layer에 21개 min-finder 필요 → 저비용 min-finder가 관건.</li><li>배경: BP의 log/곱 연산을 MS가 비교연산으로 대체, min_1st는 <code>n-1</code> 비교, min_2nd는 sorting 기반이면 <code>ceil(log2 n)-1</code> 비교로 충분(총 <code>n-2+ceil(log2 n)</code>).</li><li>핵심 기법: [10]의 XS(sorting) 접근을 개량 — min_1st tournament tree에서 각 stage가 min_2nd 후보 1개를 생성한다는 관찰 이용.</li><li>의미: min_2nd는 반드시 min_1st와 비교해 진 값이므로, m1G의 mVU를 2-mVG로 교체하면 각 2-mVG의 min_2nd 출력이 곧 후보 → 후보 탐색용 index 복제/negation 불필요.</li><li>확장: MUX_w에 후보를 모아 최종 min_2nd 선택, 비교기 수·지연은 그대로 두고 MUX·MUX_w 개수만 절감.</li><li>임의 n 확장(§IV): n을 이진 표현해 stage별 remain <code>R=(R-r0)/2+r0</code> 갱신으로 <code>ceil(log2 n)</code> stage에 도달, 6-1/3-1 MUX_w default를 최대값("11111")으로 처리(예: n=13).</li><li>학습/최적화 절차: 없음(순수 조합회로 설계).</li><li>결과(65nm 합성): gate count가 n=8 391→287(26.6%↓), n=16 951→678(28.7%↓), n=32 2127→1386(34.8%↓); delay n=32 5.197→4.435ns로 단축.</li><li>한계: 부호설계·복호성능과 무관한 서브블록 회로 최적화, throughput·전체 디코더 통합 결과 없음, word-length 5bit 고정 실험.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>first/second-min finder (min_1st/min_2nd/pos)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min-sum CN이 쓰는 min1/min2 산출부와 정확히 대응, 회로 서브블록 교체 후보</td></tr><tr><td>min_1st sign/position 처리</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>CN sign XOR·위치 정보 경로와 인접</td></tr><tr><td>MUX 기반 edge/후보 선택</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>MUX 축소 최적화라는 점에서 graph thinning의 MUX edge 선택과 성격 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum CNU의 핵심 서브블록을 면적·지연 모두 줄이는 순수 HW 최적화로 Prime ECC CNU에 국소 이식 여지가 있으나, 정정성능 이득이 없고 z=32 병렬·pipeline 타이밍 정합 검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5759850",
+  "title": "A Sorting-based Architecture of Finding the First Two Minimum Values for LDPC Decoding",
+  "year": 2011,
+  "venue": "IEEE CSPA (7th Int'l Colloquium on Signal Processing and its Applications)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "min-sum CNU의 first/second-min finder를 XS(sorting) 기반으로 재설계해 MUX 수·gatecount·지연 동시 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "1386@65nm",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "부호·복호성능 무관 순수 min-finder 회로 최적화라 정정능력 이득 없음, 입력 word-length 5bit·독립 유닛 가정",
+  "todo_check": "Prime ECC의 min1/min2 산출부(CNU) 실제 구조가 이 min-finder로 교체 시 z=32 병렬·pipeline 타이밍과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5759850---a-sorting-based-architecture-of-finding-the-first-two-minimum-values-for-ldpc-decoding-2011-ieee-cspa">ieee:5759850 - A Sorting-based Architecture of Finding the First Two Minimum Values for LDPC Decoding (2011, IEEE CSPA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5089505</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5089505---low-floor-decoders-for-ldpc-codes-2009-ieee-transactions-on-communications">ieee:5089505 - Low-Floor Decoders for LDPC Codes (2009, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.3~0.5</td></tr><tr><td>부호length</td><td>640~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>trapping set을 사전 식별해 bi-mode erasure decoder / bit-pinning+outer BCH / G-LDPC(GCP) 세 가지 low-floor 디코더를 제안, floor를 수 자릿수 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>floating-point SPA(sum-product) 기준 시뮬로 검증, HW 미설계이며 Prime ECC의 min-sum·양자화 구조에서 trapping set 자체가 다를 수 있어 재검증 필요</td></tr><tr><td>추가확인</td><td>Prime ECC의 실제 H-matrix에서 지배적 trapping set 재식별 후 bi-mode erasure/GCP 방식 이식 가능성 검토</td></tr></tbody></table>
+<blockquote><p>총평: trapping-set 기반 post-processing(bi-mode erasure)과 generalized-constraint 디코더(G-LDPC)로 error floor를 수 자릿수 낮추는 고전적이나 강력한 기법으로, min-sum 기반 HW 디코더에도 원리적으로 이식 가능성이 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: rate-0.5 (2640,1320) Margulis 코드와 rate-0.3 (640,192) QC 코드, 둘 다 SPA(sum-product) 플로팅포인트 디코더 기준, AWGN 채널.</li><li>문제: LDPC 반복복호는 저가중치 trapping set(고정 또는 진동하는 subgraph)에 갇혀 error floor가 발생, 기존 코드설계/스케줄링 개선만으로는 한계.</li><li>가정: trapping set은 사전 시뮬레이션·importance sampling(<code>Pr{ξT}</code> 식 (2))으로 식별 가능하며, 특정 코드의 지배적 trapping set(예: Margulis (12,4)/(14,4), QC (5,5)/(5,7))을 표적으로 디코더를 커스터마이징.</li><li>기법1 - bi-mode syndrome-erasure decoder: 1차 SPA 복호 후 syndrome weight가 알려진 trapping set과 일치하면 2차 모드로 전환, 미충족 CN에 연결된 VN들을 레벨별 트리(<code>L1~L4</code>)로 소거(erasure) 처리해 순수 BEC로 만든 뒤 반복 소거복호로 해결.</li><li>핵심 절차: Margulis (12,4)/(14,4) 구분을 위해 공통 level-3 CN을 갖는 두 VN(<code>va1, va2</code>)를 flip하는 보조 알고리즘(Algorithm 1)으로 352개 erasure를 생성, 3~4 iteration 내 복구.</li><li>기법2 - concatenation+bit-pinning: outer BCH 코드로 trapping set의 특정 비트를 정정 후 LDPC 디코더에 해당 LLR을 최대값으로 pin, 4개 BCH(132,124)/(77,70)/(55,49)/(33,28) 조합 시 code rate loss 0.086dB로 최소화.</li><li>기법3 - G-LDPC decoder: 미충족 CN들을 combined constraint(GCP, generalized-constraint processor)로 묶어 BCJR 알고리즘으로 처리, G-LDPC III는 trapping set 쌍의 CN을 결합(660 GCP, 2-SPC)해 Margulis에서 FER~10⁻⁸까지 floor 미관측.</li><li>학습/탐색 절차: two-step importance sampling으로 G-LDPC 디코더의 새 trapping set을 재탐색(Step a: 편향 −2 인가 후 실패패턴 기록, Step b: Gaussian bias로 안정 패턴 확정).</li><li>결과: bi-mode는 Margulis에서 FER~10⁻⁸까지 floor 미관측(SPA 대비 수 자릿수 개선), G-LDPC III는 SPA 대비 복잡도 증가 200% 이하로 유사 성능.</li><li>한계: 순수 시뮬레이션(floating-point SPA) 검증뿐 HW 미설계, trapping set은 디코더 구현(quantization 등)에 종속적이라 실제 min-sum/양자화 디코더에서는 재식별 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bi-mode syndrome-erasure post-processing (2차 모드 erasure decoding)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프 내 syndrome 기반 조건 분기 및 erasure(LLR=0) 처리 추가로 이식 가능성 있음</td></tr><tr><td>bit-pinning (LLR 최대값 고정)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>outer code 없이 pinning 개념(LLR 강제 고정)만 부분 이식 가능, outer BCH 자체는 대응 없음</td></tr><tr><td>G-LDPC / GCP (BCJR 기반 constraint 결합)</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 SPC 구조 고정, BCJR 트렐리스 결합 구조는 근본적으로 다른 디코더 아키텍처</td></tr><tr><td>trapping set 식별용 importance sampling</td><td><code>ecc_top.cpp</code> (시뮬 오케스트레이션)</td><td>오프라인 분석 도구 성격, 코드 자체 수정 없이 별도 스크립트로 병행 가능</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — bi-mode erasure decoding은 원리상 이식 난이도가 낮고 error-floor 개선 효과가 크지만, G-LDPC(BCJR)는 Prime ECC의 min-sum 아키텍처와 구조적으로 맞지 않아 부분 이식만 가능.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5089505",
+  "title": "Low-Floor Decoders for LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "640~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "trapping set을 사전 식별해 bi-mode erasure decoder / bit-pinning+outer BCH / G-LDPC(GCP) 세 가지 low-floor 디코더를 제안, floor를 수 자릿수 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "floating-point SPA 기준 시뮬로 검증, HW 미설계이며 Prime ECC의 min-sum·양자화 구조에서 trapping set 자체가 다를 수 있어 재검증 필요",
+  "todo_check": "Prime ECC의 실제 H-matrix에서 지배적 trapping set 재식별 후 bi-mode erasure/GCP 방식 이식 가능성 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5089505---low-floor-decoders-for-ldpc-codes-2009-ieee-transactions-on-communications">ieee:5089505 - Low-Floor Decoders for LDPC Codes (2009, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

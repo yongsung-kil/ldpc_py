@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10994461</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10994461---optimized-ldpc-matrices-reducing-and-redistributing-1-bits-for-enhanced-map-detection-in-bit-patterned-media-recording-systems-2025-ieee-access">ieee:10994461 - Optimized LDPC Matrices: Reducing and Redistributing 1 bits for Enhanced MAP Detection in Bit-Patterned Media Recording Systems (2025, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1353 (H 123×1353)</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>QC-LDPC H행렬의 1-bit 수를 줄이고(zero-matrix 삽입 α) 행별로 균등 재분포시켜 sum-product 복호성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BPMR 자기저장 채널(2D ISI/ITI)·MAP 결합 특화, sum-product(full tanh)·비고정 rate 예시라 NAND binary QC-LDPC 이식 가치 낮음</td></tr><tr><td>추가확인</td><td>α=0.7·β&lt;0.001의 최적성이 채널·H크기 종속으로 일반화 불명, LDPC 내부 iteration 50 고정 근거</td></tr></tbody></table>
+<blockquote><p>총평: BPMR 저장채널용 MAP+LDPC 결합 논문으로 H행렬 sparsity/분포 최적화 아이디어는 있으나 NAND 고전 QC-LDPC 이식성은 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPMR(비트패턴 자기저장) 채널에 QC-LDPC 코드([52] Tanner circulant) + serial MAP 검출을 결합, 데이터 페이지 <code>1200×1200 bit</code>, H 예시 <code>123×1353</code>.</li><li>문제: AD 증가로 2D 간섭(ISI 다운트랙·ITI 크로스트랙) 심화, 기존 sum-product용 H행렬의 suboptimal 구조가 복호성능을 저하.</li><li>모델: 2D Gaussian pulse 채널 식(2), TMR·position fluctuation·size jitter·AWGN noise 모델, <code>Lx=Lq=1</code>.</li><li>핵심기법1(검출): GPR 타깃 <code>G</code>·equalizer <code>F</code>를 식(12~14)로 추정 후, horizontal MAP(6심볼/36상태 trellis) → vertical MAP(2심볼/4상태) serial 검출.</li><li>핵심식 의미: 분기확률 <code>γk=exp(-(z-Zi)²/2σ²)·Pe(Ri)</code>로 extrinsic정보 <code>Pe</code> 반영, LDPC 출력 LLR을 <code>Pe(a)=li(t)</code>로 vertical MAP에 피드백.</li><li>핵심기법2(부호설계): shift 규칙 <code>n_{j,k}=κ·n_{j,0}·n_{0,k}-(1-κ)</code>, <code>κ=0</code>(확률 α)이면 zero-matrix 삽입 → 1-bit 밀도 감소(MALT form).</li><li>부수트릭: Algorithm 2로 행별 1-bit 히스토그램 정규화(식22)·이산 gradient(식23) 평균 <code>β&lt;0.001</code>가 될 때까지 재생성해 1-bit 균등 재분포.</li><li>최적화: α는 0~1 스윕, <code>α=0.7</code>에서 BER 최적; short cycle(특히 length-4) 감소로 belief propagation 개선 주장.</li><li>결과: 피드백 1~2회로 BER 포화, BER <code>10^-6</code>에서 기존 대비 <code>0.7 dB</code> 이득; position fluctuation 18%까지 강건.</li><li>한계: HW 미설계·시뮬만, BPMR 2D 채널·MAP 특화, sum-product(full tanh) 복호, rate/AD 가변 예시라 고정 NAND 부호로의 직접 이식 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC H행렬 zero-matrix 삽입/1-bit 재분포(부호설계)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 고정형이라 재설계 이식 난이도 높음, 밀도/분포 튜닝 아이디어만 참고</td></tr><tr><td>sum-product(full tanh) 복호</td><td>대응 없음</td><td>Prime ECC는 Min-Sum 근사 사용, full tanh Sum-Product 미대응</td></tr><tr><td>MAP 검출/extrinsic 피드백</td><td>대응 없음</td><td>NAND read 채널에 MAP detector 없음</td></tr><tr><td>채널/soft-info</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>BPMR 2D Gaussian pulse는 AWGN/RBER와 무관, 대응 약함</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BPMR 자기저장 2D 채널·MAP·full-tanh sum-product에 강하게 종속되고 부호 재설계는 고정 QC-LDPC와 정합 부담이 커서 NAND binary QC-LDPC 이식 가치가 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10994461",
+  "title": "Optimized LDPC Matrices: Reducing and Redistributing 1 bits for Enhanced MAP Detection in Bit-Patterned Media Recording Systems",
+  "year": 2025,
+  "venue": "IEEE Access",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1353 (H 123x1353)",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "QC-LDPC H행렬의 1-bit 수를 줄이고(zero-matrix 삽입 α) 행별로 균등 재분포시켜 sum-product 복호성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BPMR 자기저장 채널(2D ISI/ITI)·MAP 결합 특화, sum-product(full tanh)·비고정 rate 예시라 NAND binary QC-LDPC 이식 가치 낮음",
+  "todo_check": "α=0.7·β&lt;0.001 최적성의 채널·H크기 종속 일반화 불명, LDPC 내부 iteration 50 고정 근거"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10994461---optimized-ldpc-matrices-reducing-and-redistributing-1-bits-for-enhanced-map-detection-in-bit-patterned-media-recording-systems-2025-ieee-access">ieee:10994461 - Optimized LDPC Matrices: Reducing and Redistributing 1 bits for Enhanced MAP Detection in Bit-Patterned Media Recording Systems (2025, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

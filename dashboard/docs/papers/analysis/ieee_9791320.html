@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9791320</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9791320---hybrid-stochastic-ldpc-decoder-with-fully-correlated-stochastic-computation-2022-ieee-tcas-i">ieee:9791320 - Hybrid Stochastic LDPC Decoder With Fully Correlated Stochastic Computation (2022, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>완전상관 확률비트열 기반 stochastic CN + TCS VN으로 MSA/OMS를 저복잡도·고정밀 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>stochastic computing 패러다임 자체가 Prime ECC의 결정론적 bit-exact min-sum과 상이 - 디코더 데이터패스 전면 교체 필요</td></tr><tr><td>추가확인</td><td>5G NR·10GBASE-T 타깃이라 NAND 고rate QC-LDPC(z=32, HCU) 구조 및 hard/soft-read LLR과의 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: 성능·throughput 우수한 stochastic decoder지만 무선/이더넷 타깃이고 확률컴퓨팅 데이터패스가 Prime ECC의 min-sum HW와 근본적으로 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 10GBASE-T (2048,1723) QC-LDPC(rate≈0.84) 및 5G NR LDPC(K=8448, rate 0.32/0.5/0.81), BPSK/AWGN 채널.</li><li>기존 stochastic 디코더는 확률비트열 간 상관(correlation)으로 성능 손실·수렴 지연을 겪음 - probability tracer(EM/TFM)로 완화하나 복잡.</li><li>핵심 아이디어: MSA(BP 아님) 기반으로 CN은 stochastic, VN은 Two's Complement(TCS) binary로 처리하는 Hybrid Stochastic(HS) 구조.</li><li><code>min</code> 모듈(CN): 모든 SN을 동일 RNS로 생성해 <strong>완전상관(fully correlated)</strong> 시키면 AND 게이트가 최소값 연산기가 됨 → MSA의 min을 정확히 구현, 부호비트는 XOR broadcast.</li><li><code>sum</code> 모듈(VN): stochastic 메시지를 S2T 가산기(식 (10) Boolean)로 TCS 이진수로 변환·누산해 식 (3)의 VN 덧셈을 정확히 수행 → 저차수 VN에서도 수렴.</li><li>LLR 전처리: 채널 LLR을 <code>α</code>로 saturation(식 8)·스케일(식 9)해 [-1,1] 범위로 양자화(부호 포함 5bit), 선형연산이라 성능 무영향.</li><li>확장 IV-A: Sobol 저불일치 시퀀스를 RNS로 사용 → 짧은 SN 길이에서 RMSE 최소, 수렴 가속(latency 감소).</li><li>확장 IV-B(HS-OMS): Sobol 성질을 이용해 offset 만큼의 bit '1'을 사전에 삭제 → 추가 HW 없이 OMS/NMS 구현.</li><li>결과: (2048,1723) 65nm 합성, 750MHz, l=7 SN으로 기존 stochastic 대비 최고 BER(4.25dB@1e-7), 최고 throughput·top TAR; HS-OMS는 FP OMS 대비 0.1dB 이내.</li><li>한계: 무선/이더넷 부호 전용 검증, NAND 실측 없음, stochastic 데이터패스 자체가 특수.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min 연산(완전상관 AND)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 결정론적 min1/min2, 논문은 stochastic - 알고리즘 동일 목표이나 구현 상이</td></tr><tr><td>VN 덧셈/양자화(TCS, S2T)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 덧셈 개념 동일, 양자화 5bit는 참고 가능하나 stochastic 전제</td></tr><tr><td>OMS offset (Sobol 사전삭제)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>OMS/NMS 개념은 있으나 구현이 SN 길이 조절 방식이라 대응 어려움</td></tr><tr><td>LLR saturation/scaling</td><td>channel.cpp <code>Set_LLR_Th()</code>, LLR 테이블</td><td>LLR 전처리 개념 대응 가능</td></tr><tr><td>Sobol RNS 생성기</td><td>대응 없음</td><td>Prime ECC에 stochastic RNS 개념 없음</td></tr><tr><td>조기종료 early determination</td><td>full_CRC.cpp, <code>partial_CRC.cpp</code></td><td>조기종료 개념 대응, 논문은 parity-check 기반</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - MSA/OMS 목표는 Prime ECC와 겹치나 stochastic computing 데이터패스 자체가 결정론적 bit-exact min-sum과 근본적으로 달라 이식하려면 디코더 전면 교체 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9791320",
+  "title": "Hybrid Stochastic LDPC Decoder With Fully Correlated Stochastic Computation",
+  "year": 2022,
+  "venue": "IEEE TCAS-I",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "완전상관 확률비트열 기반 stochastic CN + TCS VN으로 MSA/OMS를 저복잡도·고정밀 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "stochastic computing 패러다임 자체가 Prime ECC의 결정론적 bit-exact min-sum과 상이 - 디코더 데이터패스 전면 교체 필요",
+  "todo_check": "5G NR·10GBASE-T 타깃이라 NAND 고rate QC-LDPC(z=32, HCU) 구조 및 hard/soft-read LLR과의 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9791320---hybrid-stochastic-ldpc-decoder-with-fully-correlated-stochastic-computation-2022-ieee-tcas-i">ieee:9791320 - Hybrid Stochastic LDPC Decoder With Fully Correlated Stochastic Computation (2022, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

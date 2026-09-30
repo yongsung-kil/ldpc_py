@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_866616</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee866616---gaussian-approximation-for-sum-product-decoding-of-low-density-parity-check-codes-2000-isit-2000">ieee:866616 - Gaussian Approximation for Sum-Product Decoding of Low-Density Parity-Check Codes (2000, ISIT 2000)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.99</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LLR 밀도를 가우시안 근사해 DE를 1차원으로 축소, threshold 고속계산 및 degree 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>N/A</td></tr><tr><td>병렬화</td><td>N/A</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 이론(무한블록 asymptotic threshold), sum-product/tanh 기반이라 우리 min-sum HW와 무관, 부호 최적화 도구일 뿐</td></tr><tr><td>추가확인</td><td>GA 최적화 degree seq를 유한길이 고rate QC-LDPC로 lifting 시 유효성, AWGN 외 NAND RBER 채널 적용성</td></tr></tbody></table>
+<blockquote><p>총평: irregular LDPC degree 최적화용 threshold 해석 이론 - 우리 고정 QC-LDPC HW 파이프라인엔 직접 이식 대상 아님(설계 단계 참고자료 수준).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>문제: memoryless binary-input AWGN에서 sum-product LDPC threshold를 full density evolution(DE)로 구하면 무겁고 직관이 부족함.</li><li>핵심 가정: variable/check node의 extrinsic LLR 분포가 근사적으로 가우시안, consistency 조건 <code>sigma^2 = 2*mean</code> 강제 → 분포를 평균 하나로 파라미터화.</li><li>핵심 기법: message 갱신을 <code>t_l = f(s, t_{l-1})</code> 1차원 재귀로 축소(<code>s = m_u0</code> 입력 LLR 평균, <code>t_l</code> = l-번째 iteration check node 출력 mean), 초기값 <code>t_0=0</code>.</li><li>핵심 식: threshold <code>s*</code> = <code>t_l(s)</code>가 무한대로 수렴하는 최소 <code>s</code>; Lemma 1: <code>t &lt; f(s,t)</code>이면 수렴. → threshold를 고속 계산.</li><li>안정성 조건(Theorem 1): <code>lambda_2 &lt; lambda_2*</code> (<code>lambda_2* = e^{1/(2*...)} / sum_j (j-1)p_j</code> 형태)일 때만 수렴 → degree-2 비율 상한 제시.</li><li>오류확률 수렴율: <code>lambda_2 &lt; lambda_2*</code>에서 <code>P_l</code>이 점근적으로 특정 형태로 감소(상수 a,b는 <code>lambda(x),rho(x),s</code> 종속), DE 실측과 잘 부합.</li><li>degree 최적화: 주어진 <code>rho(x)</code>와 rate에서 threshold 최대화하는 <code>lambda(x)</code>를 선형계획(LP)으로 탐색, <code>rho(x)</code> 최적형은 1~2개 인접 degree에 집중.</li><li>학습/최적화 절차: LP 기반 degree sequence 최적화(GA로 DE 대체해 고속화).</li><li>결과: rate&gt;0.99에서 Shannon 한계 0.05dB 이내 degree sequence 설계 성공(저rate도 양호), 온라인 데모 제공.</li><li>한계: 무한 블록길이 asymptotic 이론뿐, HW/복잡도/유한길이 성능 없음, sum-product(tanh) 기반이라 min-sum HW 직접 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>degree sequence 최적화(부호설계 이론)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호 로드 지점 - GA로 설계된 degree분포를 우리 고정 QC 구조에 반영하려면 재설계</td></tr><tr><td>sum-product / tanh 기반 threshold 해석</td><td>대응 없음</td><td>우리는 min-sum 근사 사용, full-tanh SPA 미채용</td></tr><tr><td>LLR 밀도 가우시안 근사</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code> (간접)</td><td>LLR 통계 개념은 겹치나 threshold 이론은 HW 파이프라인과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 부호설계 단계의 asymptotic threshold 해석 이론으로, 우리 고정 binary QC-LDPC HW 시뮬레이터에 떼어 이식할 알고리즘/HW 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:866616",
+  "title": "Gaussian Approximation for Sum-Product Decoding of Low-Density Parity-Check Codes",
+  "year": 2000,
+  "venue": "ISIT 2000",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": 0.99,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "LLR 밀도를 가우시안 근사해 DE를 1차원으로 축소, threshold 고속계산 및 degree 최적화",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "N/A",
+  "parallelism": "N/A",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 asymptotic threshold 이론, sum-product/tanh 기반이라 min-sum HW와 무관",
+  "todo_check": "GA 최적화 degree seq를 유한길이 고rate QC-LDPC로 lifting 시 유효성, NAND RBER 채널 적용성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee866616---gaussian-approximation-for-sum-product-decoding-of-low-density-parity-check-codes-2000-isit-2000">ieee:866616 - Gaussian Approximation for Sum-Product Decoding of Low-Density Parity-Check Codes (2000, ISIT 2000)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

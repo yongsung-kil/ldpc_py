@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1228364</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1228364---ordered-subsets-message-passing-2003-isit">ieee:1228364 - Ordered Subsets Message-Passing (2003, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>10000</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>측정데이터를 부분집합으로 분할해 short cycle을 깨는 ordered-subsets 메시지패싱(OSMP), 2D ISI 결합 등화·복호 적용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>1쪽 ISIT 요약본, 2D ISI(자기·광 기록) 결합 등화 전용. 개선은 LDPC 부호가 아닌 채널 그래프 스케줄에서 발생</td></tr><tr><td>추가확인</td><td>참고문헌 [3] IEEE Trans. Magn. 풀버전에서 스케줄·부호·성능 상세 확인</td></tr></tbody></table>
+<blockquote><p>총평: 2D ISI 채널 그래프의 short-cycle 완화용 스케줄링 기법으로, memoryless NAND binary QC-LDPC 복호와 정합 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템: ECC 인코딩 비트 <code>X</code>가 2D ISI 채널(PSF <code>h</code>) 통과, 관측 <code>R = h**X + W</code> (2D convolution, AWGN <code>W</code>).</li><li>문제: 채널 ISI 그래프에 short cycle이 많아 full-graph 메시지패싱 성능이 저하됨.</li><li>아이디어: 이미지 재구성용 ordered subsets(EM 가속)를 복호에 차용해 short cycle을 깸.</li><li>핵심 기법: 측정 데이터를 상호배타 부분집합으로 분할, 각 스텝에서 한 subset만 사용(나머지 메시지 무시)하고 고정 순서로 순환.</li><li>분할 규칙: <code>L x L</code> PSF에 대해 <code>L x L</code> 블록 내 각 엔트리가 고유 라벨을 갖도록 → 측정노드를 <code>L^2</code>개 배타 subset으로 분할.</li><li>식 의미: 적절한 분할이 그래프의 short cycle을 제거해 메시지패싱 근사 정확도 향상.</li><li>복잡도: 전체 subset 1회 순회 시간이 비분할 그래프 1 iteration과 유사(오버헤드 작음).</li><li>이론: KavčiĆ 등[2]의 1D ISI concentration 결과가 2D ISI OSMP에도 성립함을 주장.</li><li>결과: BER 10^-? 근방에서 full-graph 대비 약 0.35 dB 개선(비교용 참조부호는 rate 1/2, length 10000 regular LDPC on AWGN).</li><li>한계: 1쪽 요약, HW·양자화·복잡도 수치 없음, 2D ISI 기록채널 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 메시지패싱 반복 루프/스케줄 | decoder.cpp LDPC_Decoder() (Dual-Update 스케줄) | Prime ECC는 parity even/odd 교대 스케줄 보유, ordered-subsets 채널그래프 분할과는 층위 다름 |
+| 2D ISI 결합 등화·복호 | channel.cpp (AWGN/RBER/fixed) | Prime ECC는 memoryless 채널만, ISI/등화 미지원 |
+| subset 분할(short-cycle 완화) | 대응 없음 | 측정데이터 분할 스케줄 모듈 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — ISI 있는 2D 기록 채널의 결합 등화·복호 스케줄 기법으로, memoryless NAND read 채널·binary QC-LDPC 파이프라인과 층위가 다르고 부호 자체 개선이 아니며 1쪽 요약이라 이식 정보 부족.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1228364",
+  "title": "Ordered Subsets Message-Passing",
+  "year": 2003,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "10000",
+  "soft_quant": "미상",
+  "key_contribution": "측정데이터를 부분집합으로 분할해 short cycle을 깨는 ordered-subsets 메시지패싱(OSMP), 2D ISI 결합 등화·복호 적용",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "1쪽 ISIT 요약본, 2D ISI(자기·광 기록) 결합 등화 전용. 개선은 LDPC 부호가 아닌 채널 그래프 스케줄에서 발생",
+  "todo_check": "참고문헌 [3] IEEE Trans. Magn. 풀버전에서 스케줄·부호·성능 상세 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1228364---ordered-subsets-message-passing-2003-isit">ieee:1228364 - Ordered Subsets Message-Passing (2003, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

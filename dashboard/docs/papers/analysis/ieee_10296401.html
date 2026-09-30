@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10296401</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10296401---improving-read-performance-for-ldpc-based-ssds-with-adaptive-bit-labeling-on-vth-states-2023-ieee-rtcsa">ieee:10296401 - Improving Read Performance for LDPC-Based SSDs with Adaptive Bit Labeling on Vth States (2023, IEEE RTCSA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>보존시간에 따라 1-2-4/2-3-2 Gray 코딩을 적응적으로 전환해 read-hot 데이터를 저지연 페이지로 마이그레이션 (FTL)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 자체는 pyldpc 블랙박스로만 사용, 부호설계/디코더 기여 없음 - FTL/펌웨어 계층 최적화</td></tr><tr><td>추가확인</td><td>Vth 상태별 소프트 센싱 레벨 수 산출 모델(Eq.1 계수)이 우리 채널모델과 정합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND read latency를 bit-labeling(Gray coding) 전환+페이지 마이그레이션으로 줄이는 FTL 기법. LDPC 코어(부호/디코더/HW)와는 무관해 Prime ECC 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템: TLC 3D NAND SSD, 페이지 16KB, 블록 768페이지, LDPC 부호 rate <code>8/9</code>, 디코딩 iteration <code>100</code> (pyldpc 사용).</li><li>문제: 보존시간(retention)이 길어지면 charge leakage로 Vth 분포가 왼쪽 이동·확산 -&gt; LDPC가 성공 복호에 더 많은 soft sensing level을 쓰게 되어 read latency 급증.</li><li>채널/모델: Vth 상태를 Gaussian <code>N(μ,σ²)</code>로 모델, retention에 따른 <code>Δμ</code>, <code>Δσ²</code>를 <code>K0,K1,K2</code>, 보존시간 <code>t</code>, P/E cycle <code>N</code>으로 표현 (Eq.1, Toshiba BiCS 실측 계수).</li><li>핵심 관찰: read latency는 (참조전압 수 × 총 sensing level) 지배. bit-labeling 방식(1-2-4 vs 2-3-2)이 페이지별 sensing 횟수와 고전압 leakage 취약성을 좌우 (Table I).</li><li>두 코딩 특성: 2-3-2는 단기적으로 LSB/CSB/MSB 지연이 균형적; 1-2-4는 장기 보존 시 LSB/CSB는 매우 빠르나 MSB는 극도로 느림(6개월 1705μs).</li><li>핵심 기법(ABC): 기본 쓰기는 2-3-2 블록에 저장, 자주 읽히는(read-hot) 데이터를 1-2-4 블록의 LSB/CSB(fast page)로 백그라운드 마이그레이션.</li><li>read-hot 식별: 논리페이지별 read counter, 임계값=비영 카운터 평균(경험적), 주기적 aging.</li><li>Page Migrator: read-hot 2페이지를 fast page(LSB/CSB)로, read-cold 1페이지를 slow page(MSB)로 채워 공간 낭비 방지. 블록당 1비트 code-type 비트맵.</li><li>결과: DiskSim 기반 시뮬, MSR 트레이스 10종. Baseline 1-2-4/2-3-2 및 FastRead 대비 read latency 각각 50%/35%/23% 개선.</li><li>한계: LDPC 코어 자체는 개선하지 않음(부호/디코더/HW 기여 없음), 시뮬레이션만, 페이지당 read counter가 512GB 기준 32MB 메모리 소요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>적응적 bit-labeling / 페이지 마이그레이션 (FTL)</td><td>대응 없음</td><td>Prime ECC는 ECC 엔진 시뮬레이터로 FTL/페이지 배치 계층 없음</td></tr><tr><td>soft sensing level 수 -&gt; LLR 소프트 입력</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>Vth 상태별 soft-read 비용 모델은 우리 채널/threshold 설정과 개념적 접점 (간접)</td></tr><tr><td>retention/Vth 왜곡 모델 (Eq.1)</td><td>channel.cpp</td><td>RBER/에러 주입 모델과 개념 유사, 직접 이식은 아님</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 기법 본체가 FTL 계층 read 최적화라 Prime ECC(부호/디코더/HW)에 떼어낼 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10296401",
+  "title": "Improving Read Performance for LDPC-Based SSDs with Adaptive Bit Labeling on Vth States",
+  "year": 2023,
+  "venue": "IEEE RTCSA",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.889,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "보존시간에 따라 1-2-4/2-3-2 Gray 코딩을 적응적으로 전환해 read-hot 데이터를 저지연 페이지로 마이그레이션 (FTL)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 자체는 pyldpc 블랙박스로만 사용, 부호설계/디코더 기여 없음 - FTL/펌웨어 계층 최적화",
+  "todo_check": "Vth 상태별 소프트 센싱 레벨 수 산출 모델(Eq.1 계수)이 우리 채널모델과 정합 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10296401---improving-read-performance-for-ldpc-based-ssds-with-adaptive-bit-labeling-on-vth-states-2023-ieee-rtcsa">ieee:10296401 - Improving Read Performance for LDPC-Based SSDs with Adaptive Bit Labeling on Vth States (2023, IEEE RTCSA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

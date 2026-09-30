@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7952335</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7952335---hardware-based-linear-programming-decoding-via-the-alternating-direction-method-of-multipliers-2017-icassp-2017">ieee:7952335 - Hardware-Based Linear Programming Decoding via the Alternating Direction Method of Multipliers (2017, ICASSP 2017)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1002</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>ADMM-LP(penalized) 복호를 고정소수점 FPGA(RTL)로 구현, min-sum 대비 error-floor 없는 고SNR 성능 실증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>14315 ALMs, 106.2Kbit mem, 15 DSP@Altera Stratix V (gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.00852</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>CN당 4046 ALM(85% 자원)·47 pipeline·60 iter로 min-sum 대비 자원·throughput 대폭 열세, parity-polytope projection이 병목</td></tr><tr><td>추가확인</td><td>early termination·partial-sort 근사·ASIC화 시 자원 절감 여부, Prime ECC 고rate(~0.9) 부호에서 projection 비용</td></tr></tbody></table>
+<blockquote><p>총평: min-sum이 겪는 error-floor를 제거하는 ADMM-LP 복호의 첫 FPGA 실증으로 알고리즘 가치는 높으나, parity-polytope projection의 막대한 HW 비용이 NAND 이식의 큰 걸림돌.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (3,6)-regular QC-LDPC <code>[1002,503]</code>(rate 1/2), p×p circulant 타일링, BI-AWGN 채널, 부분병렬 FPGA 아키텍처.</li><li>문제: LP 복호가 ML을 잘 근사하고 고SNR에서 BP보다 우수하나 표준 LP solver는 현대 부호 blocklength로 확장 불가, HW 실현 가능성 미검증.</li><li>모델: ML 복호를 정수계획 <code>min l^T x, x∈C</code>로 보고 parity-polytope 완화로 LP화. centered + l1-penalized ADMM-LP 목적식 <code>min l^T x - α||x||_1 s.t. z_j=x_{Nj}, z_j∈centered PP_d</code>.</li><li>핵심 기법: ADMM 분해로 VN update(모든 incoming CN 메시지 합 - LLR, penalty ±α, degree t 정규화, centered unit interval projection)와 CN update(check-state+메시지 벡터합 → parity-polytope Euclidean projection)를 교대.</li><li>핵심 식: parity-polytope projection이 유일 주 primitive — pseudocodeword를 억제하는 penalty가 고SNR error-floor 제거의 핵심.</li><li>확장: parity-polytope projection = hypercube projection + shell(centered probability simplex <code>S_d</code>) projection의 2단 절차(membership test로 분기).</li><li>구현 디테일: 고정소수점 Q-format — LLR 8bit(Q0.7), 내부 메시지 10bit, CN-to-VN Q2.7; truncate 대신 round로 codeword bias 회피. simplex projection은 sorting network(Batcher/Knuth) + prefix-sum(Ladner-Fischer).</li><li>학습/최적화: 없음(고정 알고리즘). base matrix girth≥6 랜덤 생성, saturation=심볼 magnitude+1σ.</li><li>결과: 10bit 고정소수점이 double-precision FER에 근접, error-floor 미표시. min-sum[31] 대비 iter당 정규화 throughput 35배 낮으나 BER 약 100배 우수. 863mW, 14315 ALM.</li><li>한계: FPGA 실증(ASIC 아님), 60 iter·early termination 미적용, CN 자원 85%가 projection에 집중, degree 다양성·완전병렬 미해결.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 복호 이터레이션 루프(VN/CN update)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>min-sum 대체 알고리즘 — 이터레이션 루프에 대응하나 연산 primitive가 전혀 다름(projection vs min1/min2)</td></tr><tr><td>CN parity-polytope projection</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 CN은 min-sum, 논문은 Euclidean projection — 알고리즘 교체 시 CN 전면 재작성 필요</td></tr><tr><td>VN penalty·degree 정규화·양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>VN 처리·양자화 위치는 대응되나 penalty(pseudocodeword 억제)는 신규</td></tr><tr><td>고정소수점 LLR/메시지 양자화(Q-format)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft LLR 양자화 설계에 참고 가능</td></tr><tr><td>QC circulant 라우팅/메모리 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC 제약으로 라우팅 단순화는 Prime ECC(z=32)와 개념 정합</td></tr></tbody></table>
+<p>적용 가치: 중간 — error-floor 제거라는 목표는 Prime ECC(min-sum 보유)에 매력적이나, parity-polytope projection의 HW 비용(CN 85% 자원, 47 pipeline)이 고rate NAND ECC에 이식하기엔 과도하여 알고리즘 아이디어(penalty) 참고 수준에 그침.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7952335",
+  "title": "Hardware-Based Linear Programming Decoding via the Alternating Direction Method of Multipliers",
+  "year": 2017,
+  "venue": "ICASSP 2017",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1002",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "ADMM-LP(penalized) 복호를 고정소수점 FPGA(RTL)로 구현, min-sum 대비 error-floor 없는 고SNR 성능 실증",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "14315 ALMs, 106.2Kbit mem, 15 DSP@Altera Stratix V",
+  "parallelism": "부분",
+  "throughput_gbps": 0.00852,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "CN당 4046 ALM(85% 자원)·47 pipeline·60 iter로 min-sum 대비 자원·throughput 대폭 열세, parity-polytope projection이 병목",
+  "todo_check": "early termination·partial-sort 근사·ASIC화 시 자원 절감 여부, Prime ECC 고rate(~0.9) 부호에서 projection 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7952335---hardware-based-linear-programming-decoding-via-the-alternating-direction-method-of-multipliers-2017-icassp-2017">ieee:7952335 - Hardware-Based Linear Programming Decoding via the Alternating Direction Method of Multipliers (2017, ICASSP 2017)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

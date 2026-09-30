@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11284921</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11284921---an-improved-low-complexity-sum-product-decoding-algorithm-for-low-density-parity-check-codes-2015-frontiers-of-information-technology-electronic-engineering">ieee:11284921 - An improved low-complexity sum-product decoding algorithm for low-density parity-check codes (2015, Frontiers of Information Technology &amp; Electronic Engineering)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>648~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check node 연산을 FFT with time-shift(FFTh)로 대체하고 variable node에 최적 정수 상수를 더해 SPA 대비 42%~67% 연산 감소, 0.04~0.46dB 코딩이득 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SPA/FFT 기반 soft-decision 알고리즘으로 Prime ECC의 Min-Sum 구조와 근본적으로 다른 접근</td></tr><tr><td>추가확인</td><td>FFTh의 alphabet size(u)와 실제 LLR 비트폭 매핑 관계, HW 구현 시 tanh/arctanh 대비 실제 gate 절감 여부</td></tr></tbody></table>
+<blockquote><p>총평: SPA를 FFT 기반으로 재구성해 tanh 연산을 제거하는 기법이나, Min-Sum 계열인 Prime ECC와 알고리즘 계보가 달라 이식 실익이 낮음. HW/합성 검증도 없이 MATLAB 시뮬레이션에 그침.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>WLAN(648,324)/(1296,864), Wi-MAX(2304,1152) regular LDPC, AWGN/BPSK 채널, rate 1/2~2/3.</li><li>기존 SPA는 tanh/arctanh 연산으로 계산복잡도가 매우 높아 HW 구현에 부적합, MSPA/SSPA는 양자화로 복잡도는 낮췄지만 BER 성능이 저하됨.</li><li>채널은 AWGN, 수신값 <code>y_n = x_n + w_n</code> (w_n: 가우시안 잡음, 분산 <code>σ² = (2R_c·E_b/N_o)⁻¹</code>).</li><li>Check node에서 tanh/arctanh 대신 FFT with time-shift(FFTh)를 적용: <code>r_mn = sign(·)·FFTh⁻¹[FFTh(2|y_i|/σ²)]</code> (식 10).</li><li>FFTh는 입력을 순환 시프트한 뒤 FFT를 적용하는 변형으로, 일반 FFT/tanh 대비 연산시간·메모리 요구량이 적음.</li><li>Variable node update에 최적 정수 상수 <code>X_i</code>를 추가(<code>X_i = M/2−1</code> if <code>m_i=0</code>, <code>(M−1)/2</code> if <code>m_i=1</code>)해 FFTh로 인한 성능저하(&gt;0.1dB)를 보상(식 11~14).</li><li><code>X_i</code>는 휴리스틱 시뮬레이션으로 찾은 값이며, 초기 LLR 값은 매 반복마다 갱신되어 재사용됨.</li><li>별도 학습/최적화 절차는 없음(정수 상수는 시뮬레이션 기반 수작업 튜닝).</li><li>BER 10⁻⁴~10⁻⁵ 기준 SPA 대비 0.02~0.04dB 열화, FFT-SPA/SSPA/MSPA 대비 0.04~0.46dB 이득; alphabet size 2/4/8에서 SPA 대비 산술연산 42%~67% 감소.</li><li>HW 구현/합성 없음, MATLAB 시뮬레이션에 한정, 20회 고정 iteration만 평가(조기종료·복잡한 채널모델 없음).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FFTh 기반 check node 갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Min-Sum 기반 CNU와 알고리즘 계보 다름(full tanh/FFT 대체), 직접 대응 아님</td></tr><tr><td>variable node 정수 상수 보정</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>LLR 보정 아이디어 자체는 유사하나 Prime ECC는 min-sum 기반 magnitude 양자화 테이블 사용</td></tr><tr><td>산술연산 수 비교(alphabet size별)</td><td>대응 없음</td><td>HW gatecount/throughput과 직접 연결되는 근거 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — SPA/FFT 계열은 Prime ECC의 Min-Sum HW 구조와 근본적으로 다르고, HW 검증도 없어 이식 실익이 적음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11284921",
+  "title": "An improved low-complexity sum-product decoding algorithm for low-density parity-check codes",
+  "year": 2015,
+  "venue": "Frontiers of Information Technology &amp; Electronic Engineering",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "648~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check node를 FFT with time-shift(FFTh)로 대체하고 variable node에 최적 정수 상수를 더해 SPA 대비 42%~67% 연산 감소, 0.04~0.46dB 코딩이득 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SPA/FFT 기반 soft-decision 알고리즘으로 Prime ECC의 Min-Sum 구조와 근본적으로 다른 접근",
+  "todo_check": "FFTh의 alphabet size(u)와 실제 LLR 비트폭 매핑 관계, HW 구현 시 tanh/arctanh 대비 실제 gate 절감 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11284921---an-improved-low-complexity-sum-product-decoding-algorithm-for-low-density-parity-check-codes-2015-frontiers-of-information-technology-electronic-engineering">ieee:11284921 - An improved low-complexity sum-product decoding algorithm for low-density parity-check codes (2015, Frontiers of Information Technology &amp; Electronic Engineering)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

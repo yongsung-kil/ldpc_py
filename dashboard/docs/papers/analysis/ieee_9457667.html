@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9457667</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9457667---matched-quantized-min-sum-decoding-of-low-density-parity-check-codes-2021-ieee-itw">ieee:9457667 - Matched Quantized Min-Sum Decoding of Low-Density Parity-Check Codes (2021, IEEE ITW)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.8~0.875</td></tr><tr><td>부호length</td><td>20000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>VN 입력메시지를 extrinsic DMC로 모델링해 LLR 매칭(MQMS), CN은 min 유지하면서 QMS 대비 최대 0.7dB threshold 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>VN update가 반복별 extrinsic DMC 신뢰도 <code>D</code> 테이블(DE로 추정)에 의존, 순수 min-sum보다 VN 복잡도↑ / LUT 근사 가능성은 open</td></tr><tr><td>추가확인</td><td>irregular 대상이라 고rate QC-LDPC(dv=17)에서 이득 유지 여부, <code>D</code> 테이블을 iteration별 LLR 테이블에 통합 시 HW 비용 확인</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CN은 그대로 두고 VN에서 extrinsic-DMC LLR 매칭으로 QMS 대비 threshold를 크게 개선하는 저비트(b) 양자화 디코더 — waterfall 이득은 매력적이나 irregular/DE 의존·HW 미설계로 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: biAWGN, unstructured irregular LDPC(<code>λ(x)</code>,<code>ρ(x)</code>), PEG 설계, block length <code>n=20000</code>, rate <code>4/5</code>·<code>7/8</code>, <code>b</code>비트 균일 양자화(<code>2^b-1</code> 레벨), <code>max=30</code>.</li><li>문제: coarse 양자화 min-sum(QMS)은 SPA 대비 손실 큼 → 낮은 <code>b</code>에서 threshold 손실을 줄이려 함.</li><li>모델: CN→VN 메시지를 binary-input <code>M</code>-ary output extrinsic DMC 관측으로 모델링, 대칭조건 하 <code>L(z)=sign(z)D_|z|</code>로 신뢰도 <code>D</code> 분리(식 1,2).</li><li>핵심기법(MQMS): CN은 표준 min 근사 유지, VN은 채널·유입 CN 메시지를 각각 LLR로 변환 후 합산·재양자화 <code>m_v→c = f(Lch + Σ Lex(m_c→v))</code> (식 4), 최종 판정은 부호(식 5).</li><li>핵심식 의미: <code>Lex(m_c→v)=sign·D</code> — 유입 메시지를 그 반복의 실제 신뢰도로 가중, 이것이 QMS와의 차이(매칭)이자 이득의 원천.</li><li>확장: 채널출력도 <code>b0</code>비트로 양자화 시 <code>Lch(mch)=sign(mch)D_|mch|</code>로 대체(양자화 채널 케이스), <code>b=2</code>면 기존 TMP 디코더로 환원.</li><li>구현 디테일: 반복별 extrinsic DMC 전이확률(=<code>D</code> 테이블)이 미지 → DE로 추정, <code>∆</code>(및 <code>∆0</code>)는 threshold 최소화하도록 선택.</li><li>최적화/분석: DE로 threshold 계산 및 differential evolution으로 irregular degree distribution 최적화, 안정성 분석에서 spectral radius <code>r&lt;1</code> 조건 도출.</li><li>결과: (3,6)·(4,8) regular에서 MQMS가 QMS 대비 최대 0.7dB 이득, <code>b=b0=5</code>면 unquantized BP의 0.1dB 이내; FER 시뮬(rate 4/5,7/8)에서도 QMS 상회.</li><li>한계: HW 미설계·시뮬만, VN update가 QMS보다 복잡(반복별 <code>D</code> 테이블 필요), LUT 근사 실현성은 open question, iteration 감소는 미주장.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min 근사(min1/min2·sign)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문 CN 규칙이 Prime ECC min-sum과 동일 계열, 변경 없음</td></tr><tr><td>VN LLR 매칭(extrinsic <code>D</code>로 재가중)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN update를 <code>D</code> 기반 매칭으로 교체하면 waterfall 이득 기대 (핵심 이식 포인트)</td></tr><tr><td>반복별 extrinsic DMC 신뢰도 <code>D</code> 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>기존 iteration별 LLR 테이블 인프라에 <code>D</code> 값을 얹는 형태로 대응 가능</td></tr><tr><td>soft-read 채널 양자화(<code>b0</code>비트)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>양자화 채널출력 모델과 대응, NAND 2SD/3SD와 정합</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CN을 건드리지 않고 VN LLR 매칭만으로 QMS 대비 waterfall threshold를 크게 개선하는 점이 Prime ECC의 적응형 LLR 테이블 인프라와 잘 맞지만, irregular/DE 의존과 HW 미설계로 고rate QC-LDPC(dv=17)에서의 이득·비용 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9457667",
+  "title": "Matched Quantized Min-Sum Decoding of Low-Density Parity-Check Codes",
+  "year": 2021,
+  "venue": "IEEE ITW",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.8~0.875",
+  "code_length": 20000,
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "VN 입력메시지를 extrinsic DMC로 모델링해 LLR 매칭(MQMS), CN은 min 유지하면서 QMS 대비 최대 0.7dB threshold 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "VN update가 반복별 extrinsic DMC 신뢰도 D 테이블(DE로 추정)에 의존, 순수 min-sum보다 VN 복잡도↑ / LUT 근사 가능성은 open",
+  "todo_check": "irregular 대상이라 고rate QC-LDPC(dv=17)에서 이득 유지 여부, D 테이블을 iteration별 LLR 테이블에 통합 시 HW 비용 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9457667---matched-quantized-min-sum-decoding-of-low-density-parity-check-codes-2021-ieee-itw">ieee:9457667 - Matched Quantized Min-Sum Decoding of Low-Density Parity-Check Codes (2021, IEEE ITW)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

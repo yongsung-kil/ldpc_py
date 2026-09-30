@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8126461</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8126461---program-and-read-methods-with-offset-in-quad-level-cell-nand-design-2017-ieee-conf">ieee:8126461 - Program and Read Methods with Offset in Quad-Level-Cell NAND Design (2017, IEEE (conf.))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>QLC(16레벨) NAND의 ISPP 프로그램·Gray코딩 read와 bias(shift) read로 다단계 LLR({-7..+7}, {-10..+10}) soft-message를 생성해 LDPC BP soft-decision 디코딩 지원</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>미상</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>LDPC 부호·디코더 알고리즘 자체는 다루지 않음(read 회로/LLR 생성만), 정량 BER/성능 결과 없음</td></tr><tr><td>추가확인</td><td>bias read 횟수 대 read latency trade-off, 생성 LLR 양자화가 Prime ECC의 2SD/3SD LLR 테이블과 정합하는지</td></tr></tbody></table>
+<blockquote><p>총평: QLC NAND 디바이스 레벨 program/read와 shift-read 기반 soft-LLR 생성 기법 — LDPC 부호/디코더가 아니라 채널(soft-read)단이라 Prime ECC의 soft-read/LLR 양자화 설계에 참고가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 3D QLC(4bits/cell, 16레벨 L0~L15) NAND, CT(charge-trap) pillar 구조, WL당 4 page(bit[3:0]).</li><li>문제: QLC는 Vth 마진이 좁아 P/E·retention·program disturb로 BER가 TLC보다 커져 LDPC ECC와 soft read가 필요.</li><li>프로그램: ISPP(<code>ΔVpp</code> 증가)로 2단계 기입 — page0/1→bit[1:0] 프로그램, page2/3→bit[3:2] 프로그램, WL간 coupling 회피 위해 staggered page mapping.</li><li>핵심 기법(read): Gray 코딩(인접 레벨 1-bit Hamming)으로 15개 read voltage(Vr1~Vr15) 배치, page별 read voltage 집합 지정(예 Vr8→p0).</li><li>soft-message 생성: 표준 Vrd로 hard bit(LLR {-1,+1}) 후, ±dv bias read(Va1/Vb1 등) 결과를 XOR해 신뢰도 단계 부여.</li><li>확장: bias 레벨 수를 늘리면 LLR 해상도 상승 — 2단계 {-7,-1,+1,+7}, 3단계 {-10,-5,-1,+1,+5,+10}로 confidence 구분.</li><li>HW 디테일: bias read voltage는 내부 레지스터 조정으로 shift, read 횟수↑ = 정확도↑ but read 성능↓.</li><li>최적화: 별도 학습/최적화 절차 없음(회로/전압 설계 기반).</li><li>결과: 정량 BER/coding gain 수치 없음 — soft-message 생성이 BP-LDPC 정정효율을 크게 개선한다는 정성 서술만.</li><li>한계: LDPC 부호/디코더 알고리즘은 미다룸, 시뮬/실측 정량결과 부재, soft-read 비용(read 횟수) 정량 분석 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bias(shift) read로 soft LLR 생성·양자화</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read offset·LLR threshold 생성 지점과 직접 대응 — QLC 다단 bias read를 2SD/3SD 채널 모델에 반영 가능</td></tr><tr><td>hard/soft-decision LLR 양자화 레벨</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>LLR 파라미터 테이블(HD/2SD/3SD)과 대응 — QLC LLR 세트 매핑 참조</td></tr><tr><td>QLC program/read 회로 (ISPP, Gray)</td><td>대응 없음</td><td>Prime ECC는 컨트롤러측 ECC 시뮬레이터 — NAND 셀 프로그램/read 회로는 범위 밖</td></tr></tbody></table>
+<p>적용 가치: 중간 — LDPC 부호/디코더 기여는 없으나 QLC용 soft-read LLR 생성·양자화(2SD/3SD) 관점에서 Prime ECC의 channel/LLR 테이블 설계에 실사용 참고가치가 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8126461",
+  "title": "Program and Read Methods with Offset in Quad-Level-Cell NAND Design",
+  "year": 2017,
+  "venue": "IEEE (conf.)",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "QLC(16레벨) NAND의 ISPP 프로그램·Gray코딩 read와 bias(shift) read로 다단계 LLR({-7..+7},{-10..+10}) soft-message를 생성해 LDPC BP soft-decision 디코딩 지원",
+  "hw_designed": "O",
+  "verification": "미상",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "LDPC 부호·디코더 알고리즘 자체는 다루지 않음(read 회로/LLR 생성만), 정량 BER/성능 결과 없음",
+  "todo_check": "bias read 횟수 대 read latency trade-off, 생성 LLR 양자화가 Prime ECC의 2SD/3SD LLR 테이블과 정합하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8126461---program-and-read-methods-with-offset-in-quad-level-cell-nand-design-2017-ieee-conf">ieee:8126461 - Program and Read Methods with Offset in Quad-Level-Cell NAND Design (2017, IEEE (conf.))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

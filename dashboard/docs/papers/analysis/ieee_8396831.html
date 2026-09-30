@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8396831</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8396831---high-throughput-gpu-ldpc-encoder-and-decoder-for-dvb-s2-2018-ieee-aerospace-conference">ieee:8396831 - High Throughput GPU LDPC Encoder and Decoder for DVB-S2 (2018, IEEE Aerospace Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.9</td></tr><tr><td>부호length</td><td>16200, 64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>DVB-S2 PCM을 QC 구조로 재배열해 GPU에서 intra-codeword 병렬 인코딩/디코딩 + 조기종료</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU(CUDA) 특화 구현·DVB-S2 전용, HW(RTL)/NAND 무관, LLR도 fp16/fp32 사용</td></tr><tr><td>추가확인</td><td>조기종료 판정(checksum/volatile shared) 스케줄이 우리 partial-CRC와 겹치는지</td></tr></tbody></table>
+<blockquote><p>총평: GPU throughput 논문. 알고리즘(offset min-sum+TDMP+조기종료)은 이미 보유 범주, HW/NAND 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 DVB-S2 LDPC (<code>N</code>=16200, 64800, rate 1/4~9/10), circulant 크기 <code>S</code>=360.</li><li>문제: 기존 GPU 디코더는 inter-codeword 병렬로 고정 iteration 수행 → 유효 codeword 도달 후에도 불필요 연산, 조기종료 불가.</li><li>핵심: DVB-S2 PCM은 QC 구조가 아니므로 (a) 첫 행 제외 행 permute, (b) parity 열을 360 간격으로 grouping해 QC 구조(circulant/superimposed circulant)로 변환.</li><li>인코딩: systematic 코드에서 <code>p = -H_p^{-1} H_i m</code>을 "interleaved cumulative sum" 구조로 풀어 GPU 병렬화(3개 커널: computeGamma, transposeGamma, cumSum).</li><li>circulant는 32bit word(행 degree/열 위치/우측 rotation)로 constant memory 저장.</li><li>디코딩: intra-codeword 병렬, 한 codeword씩 offset min-sum + TDMP(layered) 스케줄로 처리.</li><li>HW 친화 트릭: <code>λ</code>를 fp16(half)로 저장, 연산은 fp32; branchless min-mag 계산으로 warp divergence 제거; superimposed circulant는 중복분(<code>L_m</code>) 별도 감산.</li><li>조기종료: 매 iteration 후 checksum 검사, early-termination flag/checksum을 volatile __shared__로 스레드 간 공유.</li><li>결과: 인코더 multi-Gbps, 디코더 rate≥1/2에서 BER&lt;1e-9시 500Mbps~1Gbps, <code>Eb/N0</code> 0.1dB당 약 100Mbps throughput 증가(조기종료 효과). min-sum offset 0.125.</li><li>한계: GPU(Titan Xp) 전용, RTL/ASIC 설계 없음, 저rate 코드는 BCH 병행 필요(error floor inflection).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| offset min-sum CN 연산(min1/min2) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 이미 보유 min-sum과 동일 범주, 신규성 낮음 |
+| TDMP(layered) 스케줄 | decoder.cpp LDPC_Decoder() 이터레이션 루프 | Dual-Update 유사, 스케줄 아이디어만 참고 |
+| 조기종료(checksum) | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 우리는 CRC 기반, 논문은 parity checksum — 개념만 겹침 |
+| QC PCM 재배열/circulant 로드 | ecc_top.cpp Load_PCM() | DVB-S2 전용 변환이라 우리 고정 QC-LDPC에 무관 |
+| superimposed circulant 중복 감산 | 대응 없음 | DVB-S2 특유 구조, 우리 base matrix에 없음 |
+| GPU 커널/fp16 저장 | 대응 없음 | HW(RTL) bit-exact 모사와 무관 |</code></pre>
+<p>적용 가치: 낮음 — 알고리즘 요소(offset min-sum/TDMP/조기종료)는 이미 보유, 구현은 GPU/DVB-S2 특화라 NAND binary QC-LDPC HW에 떼어 쓸 것이 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8396831",
+  "title": "High Throughput GPU LDPC Encoder and Decoder for DVB-S2",
+  "year": 2018,
+  "venue": "IEEE Aerospace Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.9",
+  "code_length": "16200, 64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "DVB-S2 PCM을 QC 구조로 재배열해 GPU에서 intra-codeword 병렬 인코딩/디코딩 + 조기종료",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.0,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "GPU(CUDA) 특화 구현·DVB-S2 전용, HW(RTL)/NAND 무관, LLR도 fp16/fp32 사용",
+  "todo_check": "조기종료 판정(checksum/volatile shared) 스케줄이 우리 partial-CRC와 겹치는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8396831---high-throughput-gpu-ldpc-encoder-and-decoder-for-dvb-s2-2018-ieee-aerospace-conference">ieee:8396831 - High Throughput GPU LDPC Encoder and Decoder for DVB-S2 (2018, IEEE Aerospace Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

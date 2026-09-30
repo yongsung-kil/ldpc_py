@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8170938</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8170938---protograph-qc-ldpc-codes-design-for-multi-level-cell-flash-memories-2017-ieee">ieee:8170938 - Protograph QC-LDPC Codes Design for Multi-Level Cell Flash Memories (2017, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.8095</td></tr><tr><td>부호length</td><td>4032</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MLC 비대칭 채널의 양자화 LLR을 MI로 모델링, 수정 EXIT chart로 degree sequence 최적화한 protograph QC-LDPC 설계</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·BP 50iter 시뮬만, 단순화된 MLC Gaussian 채널모델, degree-2 VN 비율이 error-floor 좌우</td></tr><tr><td>추가확인</td><td>Prime ECC 고정 H-matrix와의 재검증 부담, 3bit MMI 양자화가 우리 LLR 테이블과 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: MLC 비대칭 채널을 MI 기반 EXIT로 반영해 error-floor·waterfall 모두 개선한 NAND 직결 부호설계로 가치가 높으나, 부호설계 이식은 H-matrix 재검증 부담이 커 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 MLC(2bit/cell) NAND flash, 4개 임계전압 상태 Gaussian 모델(<code>μ11=0,μ10=3.25,μ00=4.55,μ01=6.5</code>, <code>δ11=2δ01=4δ10=4δ00</code>), 3bit 양자화 soft read.</li><li>문제: AWGN 최적 LDPC는 flash 채널의 비대칭성 때문에 최적이 아니고, 양자화 LLR은 Gaussian 근사가 깨져 통상 EXIT chart 직접 적용 불가.</li><li>모델: sense-amp 다중 read로 얻은 양자화 신호를 입출력 상호정보(MI)로 특성화(<code>Eq.3</code>), Monte Carlo 히스토그램으로 <code>p(ξ|x)</code> 추정.</li><li>핵심기법: 측정한 MI로부터 등가분산 <code>δ²mlc</code>를 역산해 VND EXIT 함수 <code>IEdvi,VND = J(√((div-1)[J⁻¹(IA)]²+δ²mlc))</code>(<code>Eq.4</code>)에 주입.</li><li>의미: 비Gaussian 양자화 채널을 MI 등가 분산으로 치환해 curve-fitting EXIT의 강건성을 활용, 채널 비대칭을 degree 최적화에 반영.</li><li>확장: 선형계획(<code>Eq.5</code>)으로 VN degree sequence <code>λ</code> 최적화 후 QC 제약 부여한 PEG로 protograph base matrix 구성(Algorithm 1), nested protograph로 rate <code>(3n+1)/(3n+4)</code> rate-compatible family 생성.</li><li>구현: protograph 기반 QC 구조로 저복잡도 encoder + 병렬화 가능 decoder, degree-2 VN 비율을 줄여 error-floor 억제.</li><li>분석: asymptotic weight distribution으로 최소거리 선형증가 검증, 전형 최소거리비 <code>ζmin=0.026</code>.</li><li>결과: N=4032,R=0.8095에서 EG-QC LDPC 대비 BER 10⁻⁶에서 0.7dB gain, 비구조 최적 random 코드와 유사 성능이면서 저장공간 절감.</li><li>한계: HW 미구현(시뮬만), 단순화된 MLC 채널모델 가정, throughput/gatecount 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph/QC H-matrix 설계·로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호구조 대응, 다만 Prime ECC는 특정 QC-LDPC 고정이라 재설계 부담 큼</td></tr><tr><td>QC 인코더(dual-diagonal 관련)</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code>, <code>LDPC_encoder_4KB()</code></td><td>저복잡도 QC encoder 개념 대응</td></tr><tr><td>양자화 LLR / MMI soft-read 설계</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>MLC MI 기반 3bit 양자화가 우리 LLR threshold 설계와 직접 맞닿음</td></tr><tr><td>iteration별 LLR 파라미터</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>degree/채널별 LLR 최적화 사상 참고</td></tr><tr><td>degree distribution·EXIT 최적화</td><td>대응 없음</td><td>오프라인 부호설계 절차로 코드베이스 직접 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND MLC 채널의 MI 기반 LLR 모델링과 3bit soft-read 설계는 <code>channel.cpp</code> LLR threshold에 직접 참고할 가치가 있으나, protograph 부호설계 자체는 Prime ECC의 고정 QC-LDPC 재검증 부담이 커 부분 채택.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8170938",
+  "title": "Protograph QC-LDPC Codes Design for Multi-Level Cell Flash Memories",
+  "year": 2017,
+  "venue": "IEEE (Letter)",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": 0.8095,
+  "code_length": "4032",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MLC 비대칭 채널의 양자화 LLR을 MI로 모델링, 수정 EXIT chart로 degree sequence 최적화한 protograph QC-LDPC 설계",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 미설계·BP 50iter 시뮬만, 단순화된 MLC Gaussian 채널모델, degree-2 VN 비율이 error-floor 좌우",
+  "todo_check": "Prime ECC 고정 H-matrix와의 재검증 부담, 3bit MMI 양자화가 우리 LLR 테이블과 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8170938---protograph-qc-ldpc-codes-design-for-multi-level-cell-flash-memories-2017-ieee">ieee:8170938 - Protograph QC-LDPC Codes Design for Multi-Level Cell Flash Memories (2017, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7459380</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7459380---error-resilience-and-energy-efficiency-an-ldpc-decoder-design-study-2016-date">ieee:7459380 - Error Resilience and Energy Efficiency: An LDPC Decoder Design Study (2016, DATE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.81</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>min-sum 디코더의 반복내성을 이용, iteration별 DVS로 APP RAM 오류율을 조절하는 UEP + greedy 전압 스케줄링으로 에너지 효율 최대 40% 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.142mm2@28nm FD-SOI</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.79Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>정정능력이 아닌 에너지만 개선(오히려 초기 iter 오류율 상향), NAND 무관 무선표준 코드(802.11ad), 저전압 SRAM DVS는 NAND 컨트롤러 디코더에 부적합</td></tr><tr><td>추가확인</td><td>우리 디코더에 별도 APP SRAM/DVS 지원이 없으므로 이식 실익 없음, soft-read 양자화 비트폭 미기재</td></tr></tbody></table>
+<blockquote><p>총평: min-sum의 fault-tolerance를 활용한 iteration별 저전압 UEP 에너지 절감 기법으로 ASIC 검증은 견고하나, NAND ECC 정정성능과 무관하고 DVS 인프라 의존이라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.11ad QC-LDPC (length 672, rate 0.81, submatrix <code>P=21</code>), min-sum 디코딩, 28nm FD-SOI ASIC.</li><li>문제: 나노공정 SRAM은 저전압에서 오류율이 지수적으로 증가—디코더 메모리 보호에 에너지를 과다 소모.</li><li>핵심 관찰: 반복 디코더는 초기 iteration 오류가 후속 iteration에서 정정되므로 초기엔 낮은 보호(고오류)로도 최종 성공 디코딩 가능.</li><li>핵심 기법 1 - UEP via DVS: APP RAM(sum message <code>m̃_v</code> 저장 SRAM)에만 iteration별 공급전압을 바꿔 오류율 <code>ρ(ℓ)</code> 조절(초기 고오류→후기 저오류).</li><li>노이즈 모델: 메모리 bit-flip을 cross-over 확률 <code>ρ</code>의 BSC로 모델링, SER(BER/s)+RWER(BER/access) 합산.</li><li>Density evolution: 메시지 PMF 재귀식 <code>p(ℓ)=A(ρ(ℓ))p̂(ℓ)</code>, <code>A</code>는 two's-complement 비트차 <code>d_i,j</code> 기반 binomial 섭동 행렬(식 2)로 iteration별 message error rate <code>p_r(ℓ)</code> 도출.</li><li>핵심 기법 2 - 최적화: 목표 잔여오류 <code>pf</code>를 <code>Lmax</code> 내 달성하며 에너지 <code>ΣE_φ(ℓ)</code> 최소화하는 보호레벨 함수 <code>φ(ℓ)</code> 결정(식 3).</li><li>greedy 알고리즘: <code>φ</code>가 단조증가·마지막 iter 오류율은 <code>pf</code> 수준이라는 두 사실로 exponential exhaustive search를 <code>O(Lmax·K)</code> 선형 복잡도로 축소(식 4).</li><li>결과: 0.7~1.0V DVS로 802.11ad 코드 에너지효율 30~40% 개선, 대개 iter당 전압변경 1회(Table III), 극소수 코드워드만 1~2 iter 추가.</li><li>한계: 정정능력 개선 아님(에너지만), APP SRAM DVS 인프라 필수, 무선표준 코드 사례로 NAND ECC와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum 디코딩 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>반복내성 활용 대상이나 우리는 bit-exact 정상동작 모델이라 오류주입 불필요</td></tr><tr><td>APP/sum message 저장</td><td>디코더 HW 모델 (z=32 메모리)</td><td>논문은 APP SRAM 오류를 표적하나 우리 pipeline 메모리 모델과 상이</td></tr><tr><td>iteration별 DVS 전압 스케줄</td><td>대응 없음</td><td>Prime ECC에 전압/오류율 제어 개념 부재</td></tr><tr><td>density evolution 기반 오류율 최적화</td><td>대응 없음</td><td>우리는 노이즈 메모리 모델·DE 미보유</td></tr><tr><td>soft-read 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>논문 비트폭 미기재로 매핑 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 에너지 절감(iteration별 SRAM DVS)은 정정성능과 무관하고 Prime ECC에 전압/노이즈 메모리 제어 인프라가 없어 이식 실익이 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7459380",
+  "title": "Error Resilience and Energy Efficiency: An LDPC Decoder Design Study",
+  "year": 2016,
+  "venue": "DATE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.81,
+  "code_length": "672",
+  "soft_quant": "미상",
+  "key_contribution": "min-sum 반복내성을 활용한 iteration별 DVS UEP + greedy 전압 스케줄링으로 에너지 효율 40% 개선",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.142mm2@28nm FD-SOI",
+  "parallelism": "부분",
+  "throughput_gbps": 0.79,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "정정능력이 아닌 에너지만 개선, NAND 무관 무선표준 코드, 저전압 SRAM DVS는 NAND 컨트롤러에 부적합",
+  "todo_check": "우리 디코더에 APP SRAM/DVS 지원 없어 이식 실익 없음, soft-read 양자화 비트폭 미기재"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7459380---error-resilience-and-energy-efficiency-an-ldpc-decoder-design-study-2016-date">ieee:7459380 - Error Resilience and Energy Efficiency: An LDPC Decoder Design Study (2016, DATE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9427170</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9427170---learning-to-decode-protograph-ldpc-codes-2021-ieee-jsac">ieee:9427170 - Learning to Decode Protograph LDPC Codes (2021, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.1172~0.3008</td></tr><tr><td>부호length</td><td>150~1500</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>protograph edge-type별 파라미터 공유 neural NMS/OMS(가중치+오프셋 학습) + iteration별 greedy 학습</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만, 파라미터 양자화 미검토, 5G BG2/BG1 protograph·AWGN/Rayleigh 채널 특화</td></tr><tr><td>추가확인</td><td>edge-type별 α/β 테이블을 QC-LDPC(binary) min-sum HW에 이식 시 iteration별 파라미터 메모리 비용, HD/soft-read 환경 학습 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum을 SP에 근접시키는 학습형 NMS+OMS 가중치를 edge-type 단위로 공유해 코드길이 무관하게 적용 - Prime ECC min-sum에 iteration별 scaling/offset 테이블로 이식 가능하나 학습·양자화 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G NR protograph LDPC(BG2, base 42x52, R=1/5~0.3, lifting Z=3~30, N=150~1500)로, min-sum(MS)을 학습으로 SP에 근접시키는 것이 목표.</li><li>문제: 기존 neural BP/OMS 디코더는 파라미터 수가 codelength에 비례해 짧은 코드(&lt;200bit)만 지원.</li><li>핵심 아이디어(parameter-sharing): protograph는 base graph의 edge-type만큼만 서로 다른 파라미터가 필요 - 같은 edge-type에서 lifting된 <code>Z</code>개 edge는 동일 α,β 공유 (식 15a/b).</li><li>학습형 CN 갱신: <code>c→v = (∏sgn) × ReLU(α^(i)·min|v→c| − β^(i))</code> (식 11) - min-sum에 iteration별 normalizing α와 offset β를 학습으로 부여한 neural NOMS.</li><li><code>α=1, β=0</code>이면 표준 MS로 환원되며, α/β가 short-cycle로 인한 message correlation을 보정.</li><li>4개 기본 타입(Type I~IV: edge별/iter별 파라미터 정도차) + damping factor <code>γ^(i)</code> 추가한 Type V/VI(식 17)로 확장.</li><li>학습: cross-entropy loss, Adam(lr=0.001), AWGN에서 최대 25 iter, iteration당 50000 batch x 50 sample.</li><li>iteration-by-iteration greedy 학습: 마지막 layer만 학습·이전 고정 - vanishing gradient 회피, 조기종료와 정합, I 재사용(recycle) 가능. codelength/rate compatible 학습으로 여러 코드 일반화.</li><li>결과: Type-I이 OMS/NMS 대비 0.2~0.5dB gain, 짧은 코드(Z=3)는 고SNR에서 SP도 능가, tanh 없어 NMS/OMS와 유사 복잡도. 이론툴 T-EXIT chart 제안.</li><li>한계: HW 미구현·시뮬만, iteration별 파라미터 저장 메모리 추가, 파라미터 양자화·HW 구현 영향은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum에 학습 α(normalizing)/β(offset) 적용</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 magnitude에 scaling·offset 삽입 지점과 직접 대응</td></tr><tr><td>iteration별 파라미터 테이블(α^(i),β^(i))</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>기존 iteration 구간별 LLR threshold 테이블 구조를 α/β 테이블로 확장 가능</td></tr><tr><td>damping(이전 iter LLR 혼합)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>VN 갱신 relaxation 추가 지점 (추가 LLR 저장 메모리 필요)</td></tr><tr><td>edge-type 파라미터 공유(protograph/QC)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC-LDPC base+circulant 구조에 edge-type 매핑 필요</td></tr><tr><td>neural 학습·greedy training</td><td>대응 없음</td><td>오프라인 학습 파이프라인 - 코드베이스 외부</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - 학습된 iteration별 α/β 테이블은 Prime ECC min-sum에 데이터 없이 이식 가능하나(waterfall gain), 학습 자체·양자화·HD/soft-read 재검증이 필요하고 5G protograph 특화라 QC-LDPC 재학습 부담이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9427170",
+  "title": "Learning to Decode Protograph LDPC Codes",
+  "year": 2021,
+  "venue": "IEEE JSAC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.1172~0.3008",
+  "code_length": "150~1500",
+  "soft_quant": "무관",
+  "key_contribution": "protograph edge-type별 파라미터 공유 neural NMS/OMS + iteration별 greedy 학습으로 min-sum을 SP에 근접",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬만, 파라미터 양자화 미검토, 5G protograph·AWGN/Rayleigh 특화",
+  "todo_check": "iteration별 α/β 테이블 메모리 비용, HD/soft-read 환경 재학습 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9427170---learning-to-decode-protograph-ldpc-codes-2021-ieee-jsac">ieee:9427170 - Learning to Decode Protograph LDPC Codes (2021, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

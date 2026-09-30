@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6735722</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6735722---implementing-the-nasa-deep-space-ldpc-codes-for-defense-applications-2013-ieee-milcom">ieee:6735722 - Implementing the NASA Deep Space LDPC Codes for Defense Applications (2013, IEEE MILCOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>2048~16384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>AR4JA(단순 circulant) protograph LDPC의 layered 디코딩을 부분병렬(L</td><td>M)로 FPGA 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>광통신/방위용 저rate·긴 부호(2K~16K), NAND ECC급 고rate 부호와 rate·length 정합 안됨</td></tr><tr><td>추가확인</td><td>LLR 5bit/LQ 8bit/Lr 6bit metric width가 NAND soft-read 3bit 이하와 맞는지, λ-min(λ=3)의 이식 이득</td></tr></tbody></table>
+<blockquote><p>총평: layered 부분병렬(L=M/z) 스케줄링·메모리 라우팅 기법은 참고가치 있으나 부호가 저rate·장블록이라 NAND 고rate QC-LDPC 직접 이식은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>NASA 심우주 AR4JA(Accumulate Repeat-4 Jagged-Accumulate) protograph LDPC 4종을 FPGA(VHDL)로 구현: rate 1/2 (2048, 16384bit), rate 7/8 (4096, 16384bit).</li><li>AR4JA는 protograph를 lifting하여 단순 circulant(단일 순환 identity)만으로 구성 -&gt; DVB-S2의 superimposed circulant보다 layered 디코더가 훨씬 단순.</li><li>circulant 한 행 = 한 "layer", layer 내 c-node는 서로 다른 v-node를 갱신하므로 메모리 충돌 없이 병렬 처리.</li><li>layered 디코딩: <code>LQi=LLR(xi)</code> 초기화 -&gt; Step1 <code>Lqij=LQi-Lrji</code> -&gt; Step2 c2v <code>Lrji</code> -&gt; Step3 <code>LQi=Lqij+Lrji</code> 갱신, layer/iteration 반복.</li><li>Step2 c2v는 <code>λ-min</code> 알고리즘(<code>λ=3</code>): Vj\i 중 최소 3개만 사용, <code>f(x)=-log tan(x/2)</code>와 min* 덧셈규칙(식8)을 소형 LUT로 근사.</li><li>circulant 크기 M(128/1024/64/256)이 코드마다 달라, 4종이 단일 디코더 아키텍처 공유하도록 <code>L=M/z</code> 부분병렬(L=64 최대) 채택.</li><li>sub-row 재배열: 원 circulant rotation <code>RM</code>을 <code>t1=RM/z</code>, <code>t2=RM%z</code>로 분해해 sub-row 정렬 rotation <code>Rs</code>·처리순서 <code>As</code> 유도(식9~12).</li><li>HW: LQ/Lr BRAM(64-wide), barrel shifter, min-sort 후 min* 연산 CNU, layer 재정렬로 pipeline 충돌 회피(불가시 wait 삽입), double-buffer 입출력.</li><li>결과: Virtex-6 LX130에서 175MHz, 30 iteration 기준 uncoded throughput 29~74Mbps, Slice reg 18627/LUT 25035/BRAM 36.</li><li>한계: BER/throughput 곡선은 그림에만 있어 수치 미상, 부호가 방위통신용 저rate·장블록이라 NAND 고rate ECC와 정합 부족.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| layered 디코딩 이터레이션 루프 | decoder.cpp LDPC_Decoder() | Prime는 dual-update 스케줄, 논문은 layered - 스케줄 개념 참고 |
+| λ-min(λ=3) c2v 연산 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | Prime는 min1/min2 min-sum, λ-min은 상위 근사 - 대체 검토 여지 |
+| circulant rotation / L 부분병렬 | ecc_top.cpp Load_PCM(), GT.cpp Make_GT_HW() | Prime z_sb=32 병렬, 논문 sub-row 정렬식은 다른 병렬화 방식 |
+| LLR/Lr metric width 양자화 | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | 5/8/6bit vs Prime 2~3bit soft, 양자화 폭 비교용 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — layered 부분병렬 스케줄링·메모리 라우팅과 λ-min CNU는 참고할 만하나, 부호가 저rate·장블록이고 정정능력/error-floor 개선 기여가 없어 Prime 고rate QC-LDPC로의 직접 이식 이득은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6735722",
+  "title": "Implementing the NASA Deep Space LDPC Codes for Defense Applications",
+  "year": 2013,
+  "venue": "IEEE MILCOM",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.5~0.875",
+  "code_length": "2048~16384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "AR4JA protograph LDPC의 layered 디코딩을 L=M/z 부분병렬로 FPGA 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "저rate·장블록(2K~16K) 방위/광통신용, NAND 고rate QC-LDPC와 rate·length 정합 안됨",
+  "todo_check": "LLR 5bit/LQ 8bit metric이 NAND soft-read 3bit 이하와 정합되는지, λ-min(λ=3) 이식 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6735722---implementing-the-nasa-deep-space-ldpc-codes-for-defense-applications-2013-ieee-milcom">ieee:6735722 - Implementing the NASA Deep Space LDPC Codes for Defense Applications (2013, IEEE MILCOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

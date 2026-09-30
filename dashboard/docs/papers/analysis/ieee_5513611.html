@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5513611</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5513611---exhaustive-search-for-small-fully-absorbing-sets-and-the-corresponding-low-error-floor-decoder-2010-isit">ieee:5513611 - Exhaustive Search for Small Fully Absorbing Sets and The Corresponding Low Error-Floor Decoder (2010, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>504~2640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>FAS 완전탐색 리스트(branch-&amp;-bound+IP)로 vi/cj 정보를 함께 쓰는 LLR 스케일링 post-processing 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>FAS 완전리스트 사전탐색이 코드별 오프라인 필수(NP-hard), 512~2640 규모만 검증, HW 미설계</td></tr><tr><td>추가확인</td><td>Prime ECC 고rate QC-LDPC의 FAS 탐색 실현가능성 및 post-processing 트리거율(BP 실패시만 동작)</td></tr></tbody></table>
+<blockquote><p>총평: FAS 완전탐색+post-processing으로 error-floor를 수 자릿수 낮추나 코드별 오프라인 탐색·시뮬만이라 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 임의 LDPC 코드(regular (3,6), Tanner155, Margulis2640 등)의 error-floor를 유발하는 fully absorbing set(FAS) 완전탐색 및 이를 쓴 post-processing 디코더.</li><li>문제: BP는 준최적이라 error-floor(10^-5~10^-7)를 남기고, 저장장치는 10^-12~10^-15가 필요. 기존 부분 EPS 리스트로는 한계.</li><li>FAS 정의: <code>A⊆V</code>가 FAS ⟺ 모든 <code>v∈V</code>에서 <code>|EA(v)|&gt;|OA(v)|</code>. <code>(s,t)</code> FAS는 크기 <code>s=|A|</code>, 홀수차 체크 수 <code>t=|OA|</code>.</li><li>완전탐색(Alg.1): <code>{0,1,*}^n</code> 문자열 집합에 branch-&amp;-bound. 라인9의 bounding에서 IP(정수계획) 하한 <code>b</code> 계산.</li><li>IP(식1~4): <code>min Σxi</code> s.t. <code>Σxi=2wj+zj</code>(패리티), <code>Σzj≤dvi/2</code>(FAS 정의), <code>Σzj≤tmax</code>. CPLEX 10.2 + [13]의 user cut, LP완화 하한만 사용해 가속.</li><li>분기정책(식5): <code>ξk</code>로 (3) 위반 가능성이 큰 <code>xk</code>를 선택 → PEGR504에서 45h43m→6h55m로 단축.</li><li>post-processing(Alg.2): BP 실패(<code>|OSupp(Y(l))|&gt;0</code>)시만 발동. FAS별 <code>βA=Σ_{cj∈OA} mcj</code>(가중치 반영) 계산 후 오름차순 정렬.</li><li>LLR 조작: <code>βAk&lt;βth</code>인 슬라이딩 윈도우 <code>d</code>개 FAS에 대해 스케일 <code>f(cj,vi)=α−hΔα</code>(unsat) 또는 역수(mis-sat)로 <code>mvi←L(0)vi+Σf·mc→v</code> 재구성 후 BP 재실행. L(0)기반·L(l)기반 순차연결.</li><li>결과: PEGR504/PEGI504/Margulis2640에서 error-floor를 수 자릿수 하강, [7]/[8] 최신 저error-floor 디코더 상회. Margulis2640 2.3dB에서 평균 FAS 사용 13.56개(절반은 1개).</li><li>한계: 코드별 FAS 완전리스트 오프라인 탐색이 전제(NP-hard), HW 미설계, 소형(≤2640) AWGN 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>post-processing LLR 재구성 후 BP 재실행</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>BP 실패 후 초기 LLR 교체·재실행 루프에 삽입 가능</td></tr><tr><td>unsat/mis-sat 체크의 c→v LLR 스케일링</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>min-sub magnitude 스케일 지점에 f(cj,vi) 곱 적용 대응</td></tr><tr><td>FAS 완전탐색(IP/branch-&amp;-bound)</td><td>대응 없음</td><td>오프라인 코드해석 도구, 런타임 코드베이스 밖</td></tr><tr><td>초기/최종 LLR·HD 벡터 관리</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>L(0)/L(l), Y(0)/Y(l) 유지에 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — error-floor 개선 아이디어(unsat/mis-sat 구분 LLR 스케일링)는 min-sum 디코더에 이식 가능하나, 코드별 FAS 완전리스트 오프라인 탐색이 필수 전제이고 Prime ECC 고rate QC-LDPC 규모에서의 탐색 실현성이 불확실하다.</p>
+<pre><code>{
+  "id": "ieee:5513611",
+  "title": "Exhaustive Search for Small Fully Absorbing Sets and The Corresponding Low Error-Floor Decoder",
+  "year": 2010,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "504~2640",
+  "soft_quant": "무관",
+  "key_contribution": "FAS 완전탐색 리스트(branch-&amp;-bound+IP)로 vi/cj 정보를 함께 쓰는 LLR 스케일링 post-processing 디코더로 error-floor를 수 자릿수 하강",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "FAS 완전리스트 사전탐색이 코드별 오프라인 필수(NP-hard), 512~2640 규모만 검증, HW 미설계",
+  "todo_check": "Prime ECC 고rate QC-LDPC의 FAS 탐색 실현가능성 및 post-processing 트리거율(BP 실패시만 동작)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5513611---exhaustive-search-for-small-fully-absorbing-sets-and-the-corresponding-low-error-floor-decoder-2010-isit">ieee:5513611 - Exhaustive Search for Small Fully Absorbing Sets and The Corresponding Low Error-Floor Decoder (2010, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

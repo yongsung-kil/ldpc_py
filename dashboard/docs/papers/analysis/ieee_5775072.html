@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5775072</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5775072---power-efficient-column-operation-based-message-passing-schedule-for-regular-ldpc-decoder-2010-ieee-학회">ieee:5775072 - Power Efficient Column Operation-Based Message-Passing Schedule for Regular LDPC Decoder (2010, IEEE 학회)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>3072</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>column operation-based 메시지패싱 스케줄로 불필요한 β 업데이트 제거, 메모리 접근·컬럼연산 축소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>95,873 gates @IBM 90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.203Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>(3,6)-regular·IEEE802.11n 전용 스케줄, 정정성능 동등(전력·연산만 개선), QC-LDPC지만 우리 z=32/HCU 구조와 정합 필요</td></tr><tr><td>추가확인</td><td>연판정 비트폭·양자화 및 우리 6-stage pipeline/GT와 스케줄 중첩 여부</td></tr></tbody></table>
+<blockquote><p>총평: regular LDPC 컬럼연산 기반 스케줄로 β 업데이트·메모리 접근을 25%/27% 줄여 전력만 개선, 정정성능 동등이라 우리 스케줄과 부분 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11n WLAN (3,6)-regular LDPC, code length 3072bit, rate 1/2, BPSK/AWGN, iteration 5~10.</li><li>문제: partial-parallel 디코더의 concurrent 스케줄은 row/column 연산 효율 저하·메모리 2배, [10]의 accelerated 스케줄은 매 row 연산 후 3개 column 연산을 순차 수행해 중복 발생.</li><li>가정: QC parity-check matrix(identity 우측 시프트)로 각 row 연산 시작점을 골라 같은 column 위치에서 처리 가능.</li><li>핵심 기법1: i1,i2,i3 row 연산을 동시에 수행하되 시작 row를 조정해, 한 번의 column 연산으로 β'(jq(1..3)) 갱신 → [10] 대비 불필요한 <code>(3-1)×3</code> β 업데이트 제거.</li><li>핵심 식: row <code>α(x,y)=∏sign(β)·f(Σf(|β|))</code>, column <code>β(x,y)=λy×Σα(x',y)</code> — β를 다음 row 연산에서 실제로 쓰일 때만 갱신.</li><li>확장: row 연산 순서를 이용해 현재 column의 β 갱신 필요 여부 판단 → β 기록횟수를 [10]의 1/4로 축소.</li><li>구현 디테일: row 연산 7-stage(CFU: β읽기/set, |β|, 1st/2nd min, select, sign 부여), column 연산 5-stage(BFU: α읽기/set, Σα, λ 가산); read/write 충돌 회피 위해 stage 분할.</li><li>결과: MATLAB로 [10]과 BER 거의 동일 확인, IBM 90nm 합성 시 gate 95,873, throughput 203Mbps(iter10), column 연산 25%↓, 정규화 전력 27%↓.</li><li>검증: Synopsys Design Compiler 합성, Table I에 [10](TSMC 0.18um) 대비 스케일링 보정 비교.</li><li>한계: 정정성능 향상 없음(전력·연산만), (3,6)-regular·802.11n 특정 부호 전용, NAND 미언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>row/column 연산 스케줄 (β 업데이트 제거)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄링 최적화 → 이식 레이어(디코더 루프)와 직접 대응</td></tr><tr><td>CFU min-sum (1st/2nd min + sign)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일</td></tr><tr><td>BFU column 연산 (Σα + λ)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>표준 VN 처리, 중복</td></tr><tr><td>메모리 접근 축소 (β 선택적 기록)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 메모리 스케줄</td><td>우리 z=32/6-stage pipeline과 정합 검토 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 정정성능은 동등하나 β 업데이트·메모리 접근을 줄이는 스케줄 아이디어가 우리 디코더 루프의 전력/메모리 최적화에 참고될 수 있음. 단 (3,6)-regular 전용이라 우리 고rate 비대칭 degree(HCU) 구조 적용엔 재설계 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5775072",
+  "title": "Power Efficient Column Operation-Based Message-Passing Schedule for Regular LDPC Decoder",
+  "year": 2010,
+  "venue": "IEEE Conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "3072",
+  "soft_quant": "미상",
+  "key_contribution": "column operation-based 메시지패싱 스케줄로 불필요한 β 업데이트 제거, 메모리 접근·컬럼연산 축소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "95,873 gates @IBM 90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.203,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "(3,6)-regular·IEEE802.11n 전용 스케줄, 정정성능 동등(전력·연산만 개선), z=32/HCU 구조 정합 필요",
+  "todo_check": "연판정 비트폭·양자화 및 6-stage pipeline/GT와 스케줄 중첩 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5775072---power-efficient-column-operation-based-message-passing-schedule-for-regular-ldpc-decoder-2010-ieee-학회">ieee:5775072 - Power Efficient Column Operation-Based Message-Passing Schedule for Regular LDPC Decoder (2010, IEEE 학회)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

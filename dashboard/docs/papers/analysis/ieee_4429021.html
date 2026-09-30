@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4429021</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4429021---efficient-check-node-update-implementation-for-normalized-min-sum-algorithm-2007-ieee">ieee_4429021 - Efficient Check Node Update Implementation for Normalized Min-Sum Algorithm (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Normalized Min-Sum CNU에서 row weight(dc)와 무관하게 곱셈기 2개만 사용하도록 m-to-2m 디코더 기반 2nd-minimum 선택 구조를 제안, 곱셈 유닛 수를 대폭 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>게이트카운트/합성결과 없이 시뮬레이션 성능(FER)과 개념적 회로 구조만 제시, 실제 ASIC/FPGA 검증 부재</td></tr><tr><td>추가확인</td><td>제안된 2-4 DEC + 4×2MUX 구조가 Prime ECC의 CNU_Update_New_Mag() 대비 실제 게이트 절감 효과가 있는지(현재 min1/min2 선택 방식과 비교) 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 계열의 CNU 하드웨어 구현 최적화(곱셈기 절감)에 특화된 논문으로 정정능력 개선은 없으나 HW 회로 레벨 최적화 아이디어는 이식 가능성 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.16e LDPC 코드(rate 1/2, 2/3, 3/4, 5/6, N=576/2304) 대상, AWGN 채널 하 Log-BP/Min-Sum/Normalized Min-Sum CNU 구현 비교.</li><li>문제: Normalized Min-Sum은 row weight <code>dc</code>만큼의 곱셈 유닛이 필요해 dc가 클수록(고rate 코드) HW 복잡도가 급증.</li><li>채널 모델: AWGN, QPSK 변조, LLR 기반 Log-BP를 기준(optimal)으로 Min-Sum(0.5dB 성능열화) 및 Normalized Min-Sum(scale factor <code>α</code>=0.75, Log-BP와 거의 동등 성능) 비교.</li><li>핵심 기법: CN 갱신에서 최소값 <code>Sm</code>과 2번째 최소값 <code>S'm</code> 및 그 위치 인덱스 <code>IDX'm</code>을 3-layer MIN 트리로 먼저 계산(row weight 무관하게 곱셈은 이 두 값에만 적용).</li><li>핵심 식: <code>Sm = min_{n∈N(M)}(V_mn)</code>, <code>S'm = min_{Vmn≠Sm}(V_mn)</code> — 곱셈을 dc개 대신 Sm, S'm 단 2개에만 적용해 곱셈 유닛을 4개(dc=4 예시)에서 2개로 축소.</li><li>2단 확장: 2-4 DEC(디코더)가 <code>IDX'm</code>을 <code>b1~b4</code> one-hot으로 변환, AND+OR+4×2MUX 조합회로가 각 출력 위치에서 Sm 또는 S'm 중 하나를 선택하는 멀티플렉서 역할.</li><li>구현 디테일: 인덱스 <code>IDX_n</code>은 <code>⌈log(n0)⌉</code> 비트로 표현, 부호(sign)와 절대값(abs)을 S/M 유닛에서 병합해 최종 <code>Um1~Um4</code> 출력.</li><li>학습/최적화 절차 없음(고정 회로 설계, scale factor α=0.75 경험적 채택).</li><li>결과: Normalized Min-Sum이 Log-BP와 거의 동일 FER 성능(그림 3,4로 N=576/2304 비교), Min-Sum 대비 약 0.5dB 우위; 제안 CNU 구조는 곱셈 유닛을 dc개→2개로 감소(구체 gatecount 수치는 본문에 없음).</li><li>한계: 시뮬레이션 성능 검증만 있고 실제 합성/게이트카운트/throughput 수치가 없어 HW 이득이 정성적 주장에 그침; 정정능력 개선이 아닌 순수 HW 구현 최적화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Normalized Min-Sum CNU 곱셈 절감 구조</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min1/min2 기반 min-sum 사용 - 곱셈기(scale factor 적용) 절감 아이디어가 유사 구조에 직접 참고 가능</td></tr><tr><td>최소값/2번째최소값 3-layer MIN 트리 + 인덱스 추적</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>min1/min2 계산 로직과 동일 개념(이미 보유), 인덱스 기반 2-4DEC 선택회로는 세부 구현 참고용</td></tr><tr><td>scale factor(normalization) 적용</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>Prime ECC의 magnitude 양자화 테이블과 역할 유사하나 정확 대응 불명(코드상 scaling factor 명시 미확인)</td></tr><tr><td>Row weight matched Min-Sum(참고문헌 [8])</td><td>(대응 없음)</td><td>본 논문 범위 밖(참조만), 대응 불명</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 - CNU 곱셈기 절감 회로(2-4DEC + MUX 기반)는 이미 Prime ECC가 min-sum 계열을 보유하고 있어 신규 기여도는 제한적이나, HW 면적 절감 관점에서 회로 세부 구현 참고 가치는 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4429021",
+  "title": "Efficient Check Node Update Implementation for Normalized Min-Sum Algorithm",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Normalized Min-Sum CNU에서 row weight와 무관하게 곱셈기 2개만 사용하는 m-to-2m 디코더 기반 구조 제안",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "게이트카운트/합성결과 없이 시뮬레이션 성능과 개념적 회로 구조만 제시, 실제 ASIC/FPGA 검증 부재",
+  "todo_check": "제안된 2-4 DEC + 4x2MUX 구조가 Prime ECC의 CNU_Update_New_Mag() 대비 실제 게이트 절감 효과가 있는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4429021---efficient-check-node-update-implementation-for-normalized-min-sum-algorithm-2007-ieee">ieee_4429021 - Efficient Check Node Update Implementation for Normalized Min-Sum Algorithm (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

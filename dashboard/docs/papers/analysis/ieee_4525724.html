@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4525724</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4525724---a-223mbps-fpga-implementation-of-10240-5120-irregular-structured-ldpc-decoder-2008-ieee-conf">ieee:4525724 - A 223Mbps FPGA implementation of (10240, 5120) irregular structured LDPC decoder (2008, IEEE Conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>10240</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>circulant offset 비정렬을 memory partition/data switch로 해결한 double-parallelism semi-parallel Log-BP 디코더로 Virtex-4서 223Mbps</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>20937 slices/166 BRAM@Virtex-4 VLX80</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.223Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>rate 1/2 저rate·min-sum 아닌 Log-BP(ψ LUT)·2008 FPGA로 throughput 낮음, ASIC gate count 없음</td></tr><tr><td>추가확인</td><td>odd-offset memory partition/data switch가 z=32 min-sum 파이프라인 이식 시 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: circulant offset 비정렬을 memory partition으로 해결한 semi-parallel QC-LDPC 디코더 HW 구현 — HW 아이디어는 참고 가능하나 min-sum 아닌 Log-BP·rate 1/2·구식이라 이식가치 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 structured(QC) LDPC로, base matrix <code>Hb</code>(16×32)에 expand factor <code>z</code>로 circulant permutation <code>P</code>를 확장한 (10240, 5120), rate 1/2 부호.</li><li>문제: 기존 Log-BP는 CNFU/VNFU 연산부하가 불균형해 critical path가 throughput을 제한.</li><li>부호 특성: column degree irregular(2~16), row degree는 항상 8로 고정해 CNFU 복잡도 단순화, error floor 없음 주장.</li><li>핵심 기법: 수정 Log-BP — CN update <code>Lm,n</code>과 VN update <code>Zm,n</code>에 <code>ψ(x)=log((1+e^-x)/(1-e^-x))</code> LUT를 나눠 배치해 두 phase 연산부하·지연을 균형화.</li><li>균형화 덕에 CNFU와 VNFU가 서로 기다리지 않고 동시 갱신 가능(MUX 네트워크로 입력 선택) → 디코딩 가속.</li><li>HW arch: semi-parallel + double parallelism(32 CNFU/64 VNFU), 32 LRAM/CRAM, MemA/MemB dual-port에 node-to-node soft info(5bit) 저장, 두 codeword 파이프라인.</li><li>구현 트릭: CNFU는 sign을 XOR tree, magnitude를 adder tree+LUT-C로 처리(대칭성으로 LUT 절반), pipeline latch로 critical path 단축.</li><li>odd shifting offset 충돌 해결: MEM_odd/MEM_even을 REG로 스위칭하는 memory partition/data switch 스킴(Fig.5)으로 클록당 2 soft info 접근.</li><li>결과: 5bit(1 sign/2 int/2 frac) 고정소수점이 double precision과 근사 성능(AWGN/BPSK), Virtex-4 VLX80서 129.2MHz, 18 iter에 223Mbps(식 (4)).</li><li>한계: rate 1/2·AWGN 시뮬만, ASIC gate count 없음, min-sum 아닌 full Log-BP.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>수정 Log-BP CN/VN update (<code>ψ</code> LUT)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 min-sum이라 알고리즘 자체는 미채택 대상</td></tr><tr><td>CNFU/VNFU semi-parallel HW arch</td><td>decoder.cpp 디코더 HW 모델(z=32)</td><td>병렬 노드 처리 구조 참고 가능하나 우리 pipeline/HCU와 상이</td></tr><tr><td>odd-offset memory partition/data switch</td><td>대응 없음</td><td>circulant shift 메모리 라우팅 문제 — 모듈 표에 직접 대응 없음</td></tr><tr><td>circulant base matrix <code>Hb</code> + expand <code>z</code> 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC-LDPC 구조 로드 관점 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — circulant offset 메모리 라우팅 아이디어는 QC-LDPC HW에 일반적으로 유효하나, 알고리즘이 min-sum 아닌 Log-BP이고 rate 1/2·2008 FPGA 수준이라 Prime ECC(z=32 min-sum) 이식 이득 작다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4525724",
+  "title": "A 223Mbps FPGA implementation of (10240, 5120) irregular structured low density parity check decoder",
+  "year": 2008,
+  "venue": "IEEE Conf",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "10240",
+  "soft_quant": "무관",
+  "key_contribution": "circulant offset 비정렬을 memory partition/data switch로 해결한 double-parallelism semi-parallel Log-BP 디코더로 Virtex-4서 223Mbps",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "20937 slices/166 BRAM@Virtex-4 VLX80",
+  "parallelism": "부분",
+  "throughput_gbps": 0.223,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "rate 1/2 저rate·min-sum 아닌 Log-BP(ψ LUT)·2008 FPGA로 throughput 낮음, ASIC gate count 없음",
+  "todo_check": "odd-offset memory partition/data switch가 z=32 min-sum 파이프라인 이식 시 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4525724---a-223mbps-fpga-implementation-of-10240-5120-irregular-structured-ldpc-decoder-2008-ieee-conf">ieee:4525724 - A 223Mbps FPGA implementation of (10240, 5120) irregular structured LDPC decoder (2008, IEEE Conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

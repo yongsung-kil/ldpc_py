@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6681070</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6681070---an-optimizing-strategy-research-of-ldpc-decoding-based-on-gpgpu-2013-ieee-trustcom">ieee:6681070 - An Optimizing Strategy Research of LDPC Decoding Based on GPGPU (2013, IEEE TrustCom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4000~20000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>GPU(CUDA) 상에서 SPA LDPC/RA 디코딩을 memory-coalescing·on-chip 자원 최적화로 383~442배 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.0293Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DPC용 GPGPU 소프트 디코더 가속(float SPA)로 NAND HW ECC와 무관, 부호설계·정정능력 개선 없음</td></tr><tr><td>추가확인</td><td>UMC/interleaver 매핑이 NAND HW pipeline에 주는 시사점은 없음(플랫폼 상이)</td></tr></tbody></table>
+<blockquote><p>총평: GPU 소프트웨어 SPA 디코더 throughput 가속 논문으로 NAND binary QC-LDPC HW ECC 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 Dirty Paper Coding(DPC)에서 채널코딩으로 쓰이는 (3,6) regular LDPC 및 RA 부호의 디코딩 가속으로, GTX280 GPU를 타깃한다.</li><li>문제: DPC는 SNR 하한 근처 동작을 위해 매우 큰 부호·많은 iteration을 요구해 CPU SPA로는 처리 불가.</li><li>채널모델은 Gaussian 간섭이 송신기에만 알려진 dirty-paper 채널이며 부호화는 LDPC/RA + source coding TCQ 조합.</li><li>핵심 기법 MSOMS: SPA를 <code>c2v_kernel</code>, <code>v2c_kernel</code>, <code>check_kernel</code> 3개 CUDA 커널로 분해하고 Tanner graph 엣지를 interleaver 배열로 표현해 non-zero 원소만 두 배열(row-major/col-major)에 저장.</li><li>log-SPA의 CN 갱신은 <code>F(x)=sign·f(Σf(x))</code>, <code>f(x)=ln(tanh(x/2))</code> 식을 사용(교과서 SPA).</li><li>UMC(unbalanced memory coalescing): 연산부하 큰 <code>c2v_kernel</code>에 불규칙 access를 몰아주고 <code>v2c_kernel</code>은 규칙적 access로 만들어 지연-연산 오버랩 개선.</li><li>구현 트릭: interleaver를 shared memory에 적재, <code>c2v_array/v2c_array</code>를 texture memory에 배치, register 적극 사용해 2~4 word 동시 디코딩(ILP↑).</li><li>block-size를 행렬 규모별(16/32/64/128) 튜닝, early termination을 최적 reduction으로 구현.</li><li>결과: CPU 대비 최대 383배(LDPC)·442배(RA) 가속, LDPC C(20000,10000)에서 29.3Mbps throughput(저SNR 영역).</li><li>한계: NAND과 무관한 통신용 소프트 디코더, HW 미설계, single-precision float 연산, error-floor/정정능력 개선 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>log-SPA CN/VN 갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>알고리즘은 full-tanh SPA로 우리 min-sum과 상이, 이식 무의미</td></tr><tr><td>GPU 커널 분할·interleaver 매핑</td><td>대응 없음</td><td>GPGPU 병렬화는 우리 z=32 HW pipeline과 무관</td></tr><tr><td>UMC/texture/shared memory 최적화</td><td>대응 없음</td><td>GPU 메모리 계층 전용 트릭</td></tr><tr><td>early termination(HvˆT=0)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>개념만 유사, 구현 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — GPU 소프트웨어 float SPA 디코더 가속으로 NAND HW binary QC-LDPC ECC의 부호설계·디코더·HW 어느 레이어에도 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6681070",
+  "title": "An Optimizing Strategy Research of LDPC Decoding Based on GPGPU",
+  "year": 2013,
+  "venue": "IEEE TrustCom",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "4000~20000",
+  "soft_quant": "무관",
+  "key_contribution": "GPU(CUDA)에서 SPA LDPC/RA 디코딩을 memory-coalescing·on-chip 자원 최적화로 383~442배 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.0293,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DPC용 GPGPU float SPA 소프트 디코더 가속으로 NAND HW ECC와 무관, 부호설계·정정능력 개선 없음",
+  "todo_check": "UMC/interleaver 매핑이 NAND HW pipeline에 주는 시사점 없음(플랫폼 상이)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6681070---an-optimizing-strategy-research-of-ldpc-decoding-based-on-gpgpu-2013-ieee-trustcom">ieee:6681070 - An Optimizing Strategy Research of LDPC Decoding Based on GPGPU (2013, IEEE TrustCom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1618876</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_1618876---code-construction-and-fpga-implementation-of-a-low-error-floor-multi-rate-low-density-parity-check-code-decoder-2006-ieee-transactions-on-circuits-and-systemsi-regular-papers">ieee_1618876 - Code Construction and FPGA Implementation of a Low-Error-Floor Multi-Rate Low-Density Parity-Check Code Decoder (2006, IEEE Transactions on Circuits and Systems—I: Regular Papers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>9036</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>base matrix 내 short cycle이 확장 후 매트릭스에서 동일 길이 cycle 집합을 만든다는 필요충분조건을 규명하고, 이를 제거하는 cycle elimination(CE) 알고리즘으로 error floor를 낮춤</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.04</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>short cycle 제거가 error floor의 근본 원인(stopping set)을 다루지 않는다고 저자 스스로 한계로 언급</td></tr><tr><td>추가확인</td><td>CE 알고리즘의 정확한 계산복잡도(코드 길이 대비 수렴시간)와 대형 base matrix(72x576)에서의 확장성 여부</td></tr></tbody></table>
+<blockquote><p>총평: base-matrix 단계 cycle-4/6/8 제거로 error floor를 억제하는 QC-LDPC 부호구성 기법이며, 부호설계 레이어라 Prime ECC 이식 난이도는 높은 편.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>QC-LDPC 부호(base matrix + square permutation 확장)로 irregular rate 1/2, regular 5/8, regular 7/8 세 코드율을 하나의 9k-bit FPGA 디코더로 지원.</li><li>기존 base matrix 확장 기법(Zhang-Parhi 등)은 확장행렬 girth가 base matrix girth 이상임만 보장하고, 특정 girth 목표값 달성은 보장하지 못함.</li><li>base matrix의 length-<code>2g</code> cycle이 순환이동값(<code>p</code>)의 수직/수평 shifted-value drop 합이 <code>0 mod L</code>일 때만 확장 후에도 동일 길이 cycle을 만든다는 lemma를 증명(L=permutation 크기).</li><li>이 lemma를 바탕으로 cycle elimination(CE) 알고리즘: 각 1의 위치에 제약조건 리스트를 만들고, cycle을 발견할 때마다 순환이동값 <code>p</code>를 증가시켜 제약을 만족시키되 값 증가가 최소인 원소만 채택.</li><li>CE로 구성한 코드는 rate 1/2, 5/8, 7/8에서 평균 girth 10, 10, 8 달성 (기존 ZP 방식은 8.06, 8.25, 5.91).</li><li>check-node 비선형 함수(<code>log(1+e^-|x|)</code>) 근사에 LUT 대신 min-sum with correction(MSC) 방식을 채택, irregular/high-rate 코드에서 LUT 대비 손실을 줄임(양자화 6:1 사용).</li><li>디코더는 partially-parallel 구조(VNU/CNU + configurable router + memory bank), 두 개 FPGA 핀으로 세 모드 전환.</li><li>최적화 절차: PEG(progressive edge growth)로 irregular 코드 변수노드 차수분포 결정 후 CE로 girth 최적화.</li><li>Xilinx XC2V8000 FPGA, 100MHz, rate 5/8·7/8에서 40Mbps(24회 반복), rate 1/2에서 15Mbps(60회 반복); CE 코드는 block error rate 10^-7 @ SNR 1.8dB, ZP 코드 대비 error floor 유의미하게 억제.</li><li>CE-구성 코드와 ZP-구성 코드의 코딩이득 차이는 0.1dB 이내로 성능저하 없이 error floor만 개선; 다만 short cycle 제거가 stopping set 기반 error floor의 근본해결책은 아님(저자 언급, 향후 과제).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Cycle Elimination(CE) 알고리즘, base matrix girth 최적화</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix/부호구조 로드 단계에 해당하나 CE 자체는 오프라인 부호 생성 도구라 코드 내 직접 대응 모듈 없음</td></tr><tr><td>Min-Sum with Correction(MSC) check-node 근사</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 이미 min-sum 기반이라 MSC 보정항 추가 여부 검토 가능</td></tr><tr><td>양자화(6:1 fixed-point)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>soft-read LLR 양자화 설계와 관련</td></tr><tr><td>Configurable VNU/CNU router (multi-rate 지원)</td><td>대응 없음</td><td>Prime ECC는 특정 QC-LDPC 고정 구조로 멀티레이트 라우터 개념 없음</td></tr><tr><td>Partially-parallel 구조, memory bank</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>병렬화/메모리 구조 철학은 유사하나 세부 대응은 낮음</td></tr></tbody></table>
+<p>적용 가치: <code>낮음</code> - 핵심 기여인 CE 알고리즘은 부호설계(base matrix 구성) 단계의 오프라인 기법으로 Prime ECC의 고정 QC-LDPC 구조에 이식하려면 H-matrix 재설계가 필요해 이식 난이도가 높고, 나머지 MSC/양자화 기법은 이미 Prime ECC가 유사 기법을 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1618876",
+  "title": "Code Construction and FPGA Implementation of a Low-Error-Floor Multi-Rate Low-Density Parity-Check Code Decoder",
+  "year": 2006,
+  "venue": "IEEE Transactions on Circuits and Systems—I: Regular Papers",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.875",
+  "code_length": 9036,
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "base matrix short cycle이 확장 후 동일 길이 cycle 집합을 만드는 필요충분조건을 규명하고 cycle elimination 알고리즘으로 error floor를 낮춤",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.04,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "short cycle 제거가 stopping set 기반 error floor 근본 원인을 다루지 않음(저자 스스로 한계로 명시)",
+  "todo_check": "CE 알고리즘의 계산복잡도와 대형 base matrix(72x576)에서의 확장성 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_1618876---code-construction-and-fpga-implementation-of-a-low-error-floor-multi-rate-low-density-parity-check-code-decoder-2006-ieee-transactions-on-circuits-and-systemsi-regular-papers">ieee_1618876 - Code Construction and FPGA Implementation of a Low-Error-Floor Multi-Rate Low-Density Parity-Check Code Decoder (2006, IEEE Transactions on Circuits and Systems—I: Regular Papers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

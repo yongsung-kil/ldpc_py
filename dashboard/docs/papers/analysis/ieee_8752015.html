@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8752015</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8752015---thresholds-of-absorbing-sets-under-scaled-min-sum-ldpc-decoding-2019-ieee-trans-communications">ieee:8752015 - Thresholds of Absorbing Sets Under Scaled Min-Sum LDPC Decoding (2019, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>scaled/normalized Min-Sum의 absorbing set threshold를 정의하고, 스케일링 α&lt;1이 AS threshold를 낮춰(quantized 포화레벨과 결합) error-floor 유발 AS를 비활성화함을 증명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만, elementary AS·regular VN-degree 가정, 분석은 통신용 규칙적 QC-LDPC(Margulis/AB/RS/802.3an) 대상이라 NAND 고rate 부호로 threshold 재계산 필요</td></tr><tr><td>추가확인</td><td>Prime ECC의 magnitude 양자화(Umax 포화)·scaling factor 존재 여부 확인 후, 우리 H-matrix의 지배 AS threshold를 이 알고리즘으로 계산해 α 튜닝 실익 검토</td></tr></tbody></table>
+<blockquote><p>총평: quantized scaled Min-Sum의 error-floor를 AS threshold로 정량화하고 α 튜닝으로 AS 비활성화 → Prime ECC min-sum 디코더 error-floor 개선에 이식가치 있는 분석기법.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary LDPC, fixed-point scaled(normalized) Min-Sum 디코더, 채널 LLR 입력, VN-degree <code>dv=3,4,5,6</code> 예제(rate 0.5 Margulis <code>Nv=2640</code>, AB-LDPC <code>p=31</code>, RS-based, 802.3an <code>(2048,1723)</code>).</li><li>문제: 실무 quantized MS 디코더의 error-floor는 message 포화레벨(<code>Umax</code>)·양자화 선택에 강하게 의존하는데, 어떤 absorbing set(AS)이 비활성화되는지 판정할 정량 기준 부재.</li><li>모델: AS 내부 extrinsic message 전개를 quasi-linear state-space <code>x^(k+1)=sat(α(A(x−1)+d−1+ℓ))</code>로 모델링, 외부 message는 +1로 포화 가정.</li><li>핵심기법: scaled-MS의 AS threshold <code>τ = max_ℓ min(ℓ)</code> (misleading equilibrium 존재/부재를 가르는 max-min 최적화)로 정의, α 인자를 (2)식 CN 또는 (3)식 VN에 적용 가능(결과 동일).</li><li>의미: 모든 VN의 channel message가 <code>τ</code>를 초과(<code>ℓ_i&gt;τ</code>)하면 유일 equilibrium이 <code>x=+1</code>(정답)로 수렴 → 성공 복호 충분조건. <code>τ&lt;0</code>이면 <code>Umax</code> 조절로 항상 만족시켜 AS를 "비활성화".</li><li>확장: minimum equilibrium이 존재하고 min channel message로 순서화됨(Property 3,4)을 증명 → threshold를 minimum equilibrium 추적으로 빠르게 계산.</li><li>HW 친화 디테일: message는 <code>Λmax</code>/<code>Umax</code>로 clip·양자화, 정규화(<code>u=U/Umax</code>)로 saturation을 <code>sat(x)=sign·min(|x|,1)</code>로 단순화.</li><li>최적화 절차: Algorithm 1 — <code>ℓ=−1/α</code>에서 시작해 Δ씩 증가시키며 equilibrium이 <code>x=+1</code>될 때까지 반복(bisection 가속), threshold lower bound <code>τ_min(α,d)=1/α+1−d</code>.</li><li>결과: Margulis 지배 (12,4)·(14,4) AS의 threshold가 α=1에서 0 → α=3/4에서 음수화(τ=−3/50)되어 qe=5bit scaled-MS에서 error-floor 대폭 감소(Monte-Carlo·Importance Sampling 확인); AB/RS/802.3an의 모든 지배 AS도 낮은 α로 비활성화.</li><li>한계: HW 미설계(시뮬만), elementary AS·regular VN-degree 가정, 통신용 규칙적 부호 대상이라 특정 부호마다 threshold 재계산 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>scaled/normalized Min-Sum CN 연산 (α 인자)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC Min-Sum(min1/min2+sign)에 scaling factor 도입 지점, error-floor 개선용</td></tr><tr><td>extrinsic message 양자화·포화(Umax)</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>AS threshold가 <code>Umax</code> 포화레벨과 직결, 양자화 테이블 튜닝으로 AS 비활성화</td></tr><tr><td>AS threshold 기반 error-floor 분석</td><td><code>corner.cpp</code> (수렴실패 추적)</td><td>수렴실패 케이스를 AS로 특성화해 threshold로 정량 진단 가능</td></tr><tr><td>iteration별 LLR threshold 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR과 scaling/saturation 상호작용 검토 대상</td></tr><tr><td>AS가 속한 H-matrix 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>우리 QC H-matrix의 지배 AS 스펙트럼 추출이 threshold 계산 전제</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Prime ECC가 이미 쓰는 min-sum + magnitude 양자화 위에 scaling factor를 얹고 우리 부호의 지배 AS threshold를 이 빠른 알고리즘으로 계산하면 HW 변경 없이 포화레벨/α 튜닝만으로 error-floor를 낮출 수 있으나, NAND 고rate QC-LDPC로의 threshold 재계산과 우리 부호 AS 추출이 선행되어야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8752015",
+  "title": "Thresholds of Absorbing Sets Under Scaled Min-Sum LDPC Decoding",
+  "year": 2019,
+  "venue": "IEEE Trans. Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "2048~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "scaled/normalized Min-Sum의 absorbing set threshold를 정의하고, 스케일링 α&lt;1이 AS threshold를 낮춰(quantized 포화레벨과 결합) error-floor 유발 AS를 비활성화함을 증명",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬만, elementary AS·regular VN-degree 가정, 통신용 규칙적 QC-LDPC 대상이라 NAND 고rate 부호로 threshold 재계산 필요",
+  "todo_check": "Prime ECC의 magnitude 양자화(Umax 포화)·scaling factor 존재 여부 확인 후, 우리 H-matrix의 지배 AS threshold를 이 알고리즘으로 계산해 α 튜닝 실익 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8752015---thresholds-of-absorbing-sets-under-scaled-min-sum-ldpc-decoding-2019-ieee-trans-communications">ieee:8752015 - Thresholds of Absorbing Sets Under Scaled Min-Sum LDPC Decoding (2019, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

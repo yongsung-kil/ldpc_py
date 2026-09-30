@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6199939</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6199939---dithered-belief-propagation-decoding-2012-ieee-transactions-on-communications">ieee:6199939 - Dithered Belief Propagation Decoding (2012, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Phase-II에서 CN 부호 랜덤 flip(RSF)/입력 dither(RIS)로 error-floor를 최소 HW 오버헤드로 제거, RSF는 CN당 XOR 1개뿐</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>Phase-II 대량 iteration(RIS는 최대 5e5~5e7회)로 low-SNR서 평균시간 폭증(4.0dB서 +528%), 실측 HW 없음</td></tr><tr><td>추가확인</td><td>4-bit NMS 기반이라 Prime ECC의 min1/min2 min-sum + 2SD/3SD 양자화에 RSF의 total-sign XOR flip을 붙일 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: NMS 디코더에 CN 부호 랜덤 flip(RSF, XOR 1개)만 추가해 error-floor를 BER 1e-12까지 낮추는 저비용 후처리 - NAND ECC error-floor 대책으로 이식 가치 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 (2048,1723) RS-LDPC(802.3an 10GbE, rate≈0.84)와 (2640,1320) Margulis 부호를, 4-bit 입력·내부 LLR <code>[-8,8]</code> NMS로 복호.</li><li>문제: 유한길이 LDPC의 BP 복호는 고SNR서 trapping set/absorbing set에 갇혀 early error-floor 발생, 기존 post-processing은 <code>U</code>(unsatisfied CN) 식별·edge당 연산으로 HW 비용 큼.</li><li>모델: absorbing set이 incorrect stable state에 갇힌 상황 - <code>Ne(T)</code>의 CN 패리티를 흔들면 노드 <code>x∈T</code>를 정정 가능하다는 성질을 이용.</li><li>핵심기법1(RSF): Phase-I(표준 NMS) 실패 시 Phase-II에서 매 iteration <code>l</code>·매 CN <code>j</code>마다 확률 <code>p</code>로 C2V 출력 부호를 랜덤 반전(<code>al,j∈{-1,1}</code>, <code>P(A=-1)=p</code>).</li><li>핵심식: <code>νj,i ← al,j·α·∏sign(μk,j)·min|μk,j|</code> - NMS의 CN 출력 total-sign에 랜덤 flip을 곱해 absorbing set stable state를 transient화(다시 갇힐 확률&lt;1).</li><li>핵심기법2(RIS): 수신벡터 <code>Y</code>에 dither <code>D</code>(i.i.d. 균등, 분산 <code>σd²=a²/3</code>)를 더해 <code>BP(y+di,LT)</code>를 <code>t=LII/LT</code>회 재시도, BP 수렴영역을 랜덤 탐색.</li><li>구현 디테일: RSF는 CN당 random bit 1개 + total sign bit에 XOR 1게이트만 추가(VN 추가 없음), RIS는 입력만 건드려 기존 디코더에 그대로 부착.</li><li>학습/최적화: 실패 수신벡터 집합 <code>S</code>에서 <code>p*</code>(RSF) 또는 <code>σd,LT</code>(RIS)를 direct search로 오프라인 최적화(<code>ΦII(p)</code> 볼록 가정), RS-LDPC서 <code>p*=0.07</code>.</li><li>결과: RSF는 <code>LII=75</code>로 RS-LDPC BER 1e-12 달성(802.3an 요구 충족). RIS는 <code>LII=2.4e7</code>서 RSF 대비 0.35dB 이득, 4.2dB서 평균시간 +3.5%뿐. Margulis 2.6dB서 FER 4자릿수 개선하며 오버헤드 ≈0%.</li><li>한계: HW 실측 없음(시뮬만), Phase-II latency는 iteration budget에 비례해 매우 커질 수 있음(magnetic recording/deep-space 등 지연 허용 응용 상정).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS base 알고리즘(CN min-sum)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min1/min2 min-sum과 동일 구조 - RSF flip은 sign 계산부에 삽입 가능</td></tr><tr><td>RSF: CN 출력 total-sign 랜덤 flip</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>sign XOR 지점에 random bit XOR 1개 추가 → 이식 매우 쉬움</td></tr><tr><td>Phase-II 재시도 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프를 Phase-I/II로 확장, 조기종료(CRC)와 결합</td></tr><tr><td>RIS: 입력 dither 후 재복호</td><td>channel.cpp <code>Set_R_Offset()</code> / input.cpp</td><td>채널 LLR/입력에 랜덤 오프셋 주입 - RIS는 입력만 건드려 부착 용이</td></tr><tr><td>랜덤 비트 생성</td><td>random.cpp</td><td>XOR25 난수로 al,j / dither 생성 대응</td></tr><tr><td>수렴실패(trapping set) 추적</td><td>corner.cpp</td><td>Phase-I 실패 케이스 수집·error-floor 재현에 활용</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> - binary LDPC error-floor 문제에 대해 RSF는 CN sign 경로에 XOR 1개만 추가하는 극저비용 개선이고 base가 min-sum(Prime ECC 보유 기법)이라 정합성이 뛰어나며, RIS도 입력 dither로 waterfall/floor 동시 개선이 가능해 NAND ECC의 error-floor 보증에 직접 유용.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6199939",
+  "title": "Dithered Belief Propagation Decoding",
+  "year": 2012,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Phase-II에서 CN 부호 랜덤 flip(RSF)/입력 dither(RIS)로 error-floor를 최소 HW 오버헤드로 제거, RSF는 CN당 XOR 1개뿐",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "Phase-II 대량 iteration(RIS는 최대 5e5~5e7회)로 low-SNR서 평균시간 폭증(4.0dB서 +528%), 실측 HW 없음",
+  "todo_check": "4-bit NMS 기반이라 Prime ECC의 min1/min2 min-sum + 2SD/3SD 양자화에 RSF의 total-sign XOR flip을 붙일 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6199939---dithered-belief-propagation-decoding-2012-ieee-transactions-on-communications">ieee:6199939 - Dithered Belief Propagation Decoding (2012, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

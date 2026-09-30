@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7347589</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7347589---vlsi-architecture-design-and-implementation-of-a-ldpc-encoder-for-the-ieee-80222-wran-standard-2015-ieee">ieee:7347589 - VLSI Architecture Design and Implementation of a LDPC Encoder for the IEEE 802.22 WRAN Standard (2015, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>384~2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>H-matrix 기반(생성행렬 G 불필요) LDPC 인코딩 알고리즘([11])을 84가지 code rate/word size 조합(802.22 WRAN 표준)에 유연 대응하도록 serial/coprocessor 두 ASIC 아키텍처로 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>14,811μm²(coprocessor)·26,284μm²(serial)@55nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.236(coprocessor,R=5/6)~0.324(coprocessor,R=1/2)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>디코더가 아닌 인코더 전용 논문이며 double-diagonal(dual-diagonal 유사) 구조 기반 H-matrix 인코딩으로 Prime ECC의 dual-diagonal 인코더와 개념적으로 유사하나 802.22 WRAN 표준 특유의 base matrix에 종속적, 정정성능/디코더 관련 항목 전부 해당 없음</td></tr><tr><td>추가확인</td><td>serial 대비 coprocessor 아키텍처가 최대 13배 빠르다는 결과의 세부 조건(어떤 code rate 조합인지) 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 802.22 WRAN 표준용 QC-LDPC 인코더의 다중 rate/length 유연 지원 ASIC 아키텍처(serial/coprocessor) 논문으로, dual-diagonal 기반 H-matrix 인코딩 기법은 Prime ECC 인코더와 개념적으로 유사하나 디코더 성능과는 무관하여 인코더 HW 최적화 참고용으로만 중간 수준 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템/코드 스펙: IEEE 802.22 WRAN 표준의 QC-LDPC, base matrix <code>Hb</code>(mb×nb) + z×z permutation/circulant shift 확장, code rate 4종(1/2, 2/3, 3/4, 5/6), word length 21종(384~2304bit, z=16~96), 총 84개 조합 지원.</li><li>문제: 생성행렬 <code>G</code>를 이용한 인코딩(<code>c=u·G</code>)은 G가 dense하여 복잡도가 <code>O(N²)</code>로 비현실적 - H-matrix만으로 인코딩하는 [11] 알고리즘을 채택하되, 84개 조합 모두를 낮은 전력·면적으로 지원하는 유연 HW 구조가 필요.</li><li>H-matrix는 <code>Hb1</code>(sparse 일반부) + <code>Hb2</code>(double-diagonal 구조, dual-diagonal과 유사)로 분할되어 이 특수 구조가 순차적 parity 계산을 가능케 함.</li><li>핵심 기법: 각 행 <code>i</code>에 대해 <code>Λ_i = Σ_j P_i,j·u_j</code>(순환左shift 누적)를 계산해 저장(식 8), 이후 double-diagonal 구조를 이용해 <code>p_0</code>을 구하고(식 9), 나머지 parity <code>p_i</code>를 역순(<code>p_{mb-1}</code>→<code>p_1</code>)으로 재귀 계산(식 13, 14).</li><li>핵심 식 <code>P_i,j·u_j = u_j &lt;&lt;&lt; P_i,j</code> (circular left shift)로, permutation 행렬 곱셈을 barrel-shifter 없이 MUX/DEMUX 기반 shift로 대체해 게이트 수 절감.</li><li>확장: 두 아키텍처 제안 - (a) Serial: 비트 단위 순차입력, 내부 SRAM(576×4) 사용, MUX/DEMUX로 shift 구현; (b) Coprocessor: 공유 시스템 메모리 사용(내부 work RAM 제거), sparse Hb의 null 값을 저장하지 않고 non-null 주소만 저장해 사이클 절감.</li><li>구현 디테일: 작업 word 크기 4bit(모든 z값의 최대공약수), Hb 저장은 512×7 ROM(serial) 또는 non-null 값+주소만 저장(coprocessor); z&lt;96일 때 shift 값 재조정 공식(식 1) 적용.</li><li>별도 학습/최적화 절차 없음 (구조적 HW 설계).</li><li>결과: 55nm ASIC 합성, 300MHz 동작, coprocessor 아키텍처 면적 14,811μm²/전력 1.96mW, serial 26,284μm²/3.60mW; throughput은 coprocessor가 R=5/6에서 236.065Mbps, R=1/2에서 324.324Mbps로 802.22 표준 요구치(22.69/13.61Mbps) 충족, 기존 문헌([11],[16],[20]) 대비 면적/전력 우위, coprocessor가 serial보다 최대 13배 빠름.</li><li>한계: 인코더 전용(디코더 미포함), 802.22 WRAN 표준 특유 base matrix에 특화되어 타 부호로 일반화 시 재검증 필요, 정정성능/BER 분석 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>H-matrix 기반 dual/double-diagonal 인코딩</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 구조의 부호 PCM(<code>PCM_b_enc</code>) 기반 인코딩을 사용 - 구조적으로 유사한 접근</td></tr><tr><td>순환 shift 기반 accumulate (barrel-shifter 대체 MUX/DEMUX)</td><td><code>encoder.cpp</code></td><td>게이트 절감형 shift 구현 트릭으로 인코더 HW 면적 최적화에 참고 가능</td></tr><tr><td>다중 rate/length 유연 지원 (84 조합)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 특정 QC-LDPC(H-matrix) 고정 구조로, 논문처럼 다수 rate/length를 하나의 재구성 가능 HW로 지원하는 접근은 부호설계 유연화 관점에서 참고 가치 있으나 이식 난이도 높음(§4 표 기준 "높음")</td></tr><tr><td>Coprocessor식 공유 메모리 접근 (내부 RAM 제거)</td><td><code>encoder.cpp</code></td><td>메모리/라우팅 최적화 아이디어로 인코더 HW arch에 참고 가능</td></tr><tr><td>ASIC 합성 결과(면적/전력/throughput)</td><td>대응 없음</td><td>Prime ECC는 bit-exact 시뮬레이터로 실제 게이트 합성 결과 비교 대상 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 - 인코더 전용 논문으로 디코더 성능과 무관하나, H-matrix 기반 double-diagonal 인코딩과 shift 연산 게이트 절감 기법은 Prime ECC의 encoder.cpp(dual-diagonal 고정) 대비 HW 면적 최적화 아이디어로 일부 참고 가능. 다만 802.22 WRAN 특화 다중 rate 지원 구조 자체를 이식하기엔 코드 재검증 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7347589",
+  "title": "VLSI Architecture Design and Implementation of a LDPC Encoder for the IEEE 802.22 WRAN Standard",
+  "year": 2015,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "384~2304",
+  "soft_quant": "무관",
+  "key_contribution": "H-matrix 기반(생성행렬 G 불필요) LDPC 인코딩 알고리즘([11])을 84가지 code rate/word size 조합(802.22 WRAN 표준)에 유연 대응하도록 serial/coprocessor 두 ASIC 아키텍처로 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "14,811μm²(coprocessor)·26,284μm²(serial)@55nm",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "디코더가 아닌 인코더 전용 논문이며 double-diagonal(dual-diagonal 유사) 구조 기반 H-matrix 인코딩으로 Prime ECC의 dual-diagonal 인코더와 개념적으로 유사하나 802.22 WRAN 표준 특유의 base matrix에 종속적, 정정성능/디코더 관련 항목 전부 해당 없음",
+  "todo_check": "serial 대비 coprocessor 아키텍처가 최대 13배 빠르다는 결과의 세부 조건(어떤 code rate 조합인지) 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7347589---vlsi-architecture-design-and-implementation-of-a-ldpc-encoder-for-the-ieee-80222-wran-standard-2015-ieee">ieee:7347589 - VLSI Architecture Design and Implementation of a LDPC Encoder for the IEEE 802.22 WRAN Standard (2015, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8108145</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8108145---mitigating-clipping-effects-on-error-floors-under-belief-propagation-decoding-of-polar-codes-2017-ieee-conference-istcscc계열">ieee:8108145 - Mitigating Clipping Effects on Error Floors under Belief Propagation Decoding of Polar Codes (2017, IEEE (conference, ISTC/SCC계열))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4096</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>polar BP의 error floor가 LLR-clipping에서 기인(decoder property)임을 규명하고 4가지 BP 수정으로 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>polar code + polar factor-graph 전용 기법 — QC-LDPC min-sum에 그대로 이식 불가, LLR-clipping/error-floor 통찰만 전용 가능</td></tr><tr><td>추가확인</td><td>scaled boxplus(α&lt;1)와 normalized/min-sum scaling의 등가성, NAND LLR 양자화폭이 error-floor에 미치는 영향 재현 여부</td></tr></tbody></table>
+<blockquote><p>총평: polar BP 전용 논문이나 "LLR-clipping/saturation이 error floor를 유발하며 decoder property"라는 통찰은 이진 LDPC min-sum의 LLR 양자화 설계에 간접 참고 가치, 그러나 알고리즘 자체 이식성은 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>N=4096, R=0.5</code> polar code, Arıkan Bhattacharyya 기반 frozen-bit 구성, BP(belief propagation) 반복 복호, GPU 32-bit 시뮬.</li><li>문제: polar은 이론상 error floor가 없다고 증명됐으나 실측 BP 곡선에서 error floor가 관측됨 — 원인 규명 필요.</li><li>모델/원인: LLR을 수치 안정성·HW bit-width 때문에 <code>LLRmax</code>로 clipping하는데, 이 saturation이 error floor의 주원인.</li><li>핵심 기법: PE(processing element) 단위 L/R 메시지 갱신에 <code>boxplus</code> <code>f(L1,L2)=L1⊞L2</code>(식 4) 사용, 신호처리로 min-approximation 채택.</li><li>핵심 식: 상대 error floor 지표 <code>NE(LLRmax)=평균(BER_LLRmax/BER_ref)</code> (ref=LLRmax=100) — 단일값으로 floor 정량화, LLRmax↑ 또는 N↓일수록 NE→1.</li><li>관찰: 소수 iteration 만에 trapping set에 빠져 clipping에 도달하므로 max-iteration 증가로는 해결 안 됨 → 알고리즘 수정 필요.</li><li>완화기법 4종: (A) oscillating 비트 sign guessing + ±LLRmax 할당, (B) 수렴 실패 시 virtual noise <code>nv~N(0,σv²)</code> 추가, (C) boxplus 출력 α(=0.9375)&lt;1 scaling, (D) multi-trellis(다른 factor-graph realization) BP.</li><li>검증 절차: Eb/N0=5dB test set(고 LLRmax 성공·저 LLRmax 실패 케이스)에서 각 수정의 success rate 측정.</li><li>결과: 성공률 A(1~3비트) 0.9585~0.9911, B 0.9925, C 0.8889, D 1.0; LLRmax↑ 시 error floor 소멸(BER 10^-9 이하), floor는 code property 아닌 decoder property로 확인.</li><li>한계: HW 미설계(GPU/CPU 시뮬만), throughput/gatecount 없음, polar factor-graph 전용 알고리즘, 부적절 frozen-bit 선택도 floor 유발 가능.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LLR-clipping/saturation ↔ error floor 통찰</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>LLR 양자화폭·threshold 테이블이 error-floor에 미치는 영향 점검에 개념적 참고</td></tr><tr><td>boxplus α-scaling (수정 C)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>min-sum scaling/normalized factor와 유사 발상 — 단 Prime ECC는 이미 magnitude 테이블 기반</td></tr><tr><td>polar BP 알고리즘/factor-graph 전체</td><td>대응 없음</td><td>polar은 QC-LDPC와 다른 부호족, factor-graph·PE 구조 이식 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — polar 전용 알고리즘이라 직접 이식은 불가하고, "LLR clipping이 min-sum 계열 error floor를 유발"한다는 통찰만 LLR 양자화 설계에 간접 참고.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8108145",
+  "title": "Mitigating Clipping Effects on Error Floors under Belief Propagation Decoding of Polar Codes",
+  "year": 2017,
+  "venue": "IEEE (conference)",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "4096",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "polar BP의 error floor가 LLR-clipping에서 기인(decoder property)임을 규명하고 4가지 BP 수정으로 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "polar code + polar factor-graph 전용 기법 — QC-LDPC min-sum에 그대로 이식 불가, LLR-clipping/error-floor 통찰만 전용 가능",
+  "todo_check": "scaled boxplus(α&lt;1)와 normalized/min-sum scaling의 등가성, NAND LLR 양자화폭이 error-floor에 미치는 영향 재현 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8108145---mitigating-clipping-effects-on-error-floors-under-belief-propagation-decoding-of-polar-codes-2017-ieee-conference-istcscc계열">ieee:8108145 - Mitigating Clipping Effects on Error Floors under Belief Propagation Decoding of Polar Codes (2017, IEEE (conference, ISTC/SCC계열))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

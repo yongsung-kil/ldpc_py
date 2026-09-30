@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8625295</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8625295---a-low-complexity-projection-algorithm-for-admm-based-lp-decoding-2018-ieee-turbo-codes-iterative-information-processing">ieee:8625295 - A Low-Complexity Projection Algorithm for ADMM-Based LP Decoding (2018, IEEE Turbo Codes &amp; Iterative Information Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>정렬(sort) 없이 성분을 반복 고정하는 parity polytope 사영 알고리즘으로 ADMM-LP 복호 연산량 최대 37% 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM-LP 복호 전용 사영 트릭 — Prime ECC의 min-sum message-passing 파이프라인과 복호 패러다임 자체가 다름</td></tr><tr><td>추가확인</td><td>정정성능·BER 곡선·부호 스펙 무제시(연산량 카운트만); LP 복호를 도입할 계획이 없다면 이식 가치 없음</td></tr></tbody></table>
+<blockquote><p>총평: ADMM-based LP 복호의 parity polytope 사영을 정렬 없이 O(d^2)로 푸는 순수 알고리즘 기여로, min-sum 기반 NAND QC-LDPC(Prime ECC)와는 복호 패러다임이 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 문제: ADMM-based LP 복호에서 각 체크노드·매 iteration마다 필요한 parity polytope <code>P_d,even</code>로의 유클리드 사영 <code>z = Π_{P_d,even}(x)</code> (<code>d</code>=체크 degree).</li><li>기존 방식은 사영을 위해 정렬(sort)이 필수였고, 정렬이 HW 구현의 주 병목이 됨 → 정렬 없는 알고리즘이 필요.</li><li>핵심 모델: even/odd 두 parity polytope를 함께 정의하고, cut-search algorithm(Zhang-Siegel)으로 위반된 forbidden-set 부등식 <code>θ^T w ≤ p</code> 하나를 찾음(최대 1개만 위반됨).</li><li>사영이 폴리토프 밖이면 초평면 <code>θ^T w = p</code>로의 직교사영 <code>v = x - ((θ^T x - p)/d)θ</code>를 계산.</li><li>핵심 정리(Thm 3): <code>v_i &gt; 1 ∧ θ_i=1 → z_i=1</code>, <code>v_i &lt; 0 ∧ θ_i=-1 → z_i=0</code> 으로 성분을 확정 고정 가능(기하학적 모순 논증으로 증명).</li><li>Thm 5: <code>v ∉ [0,1]^d</code>이면 위 조건을 만족하는 성분이 적어도 1개 존재 → 매 iteration 최소 1성분 고정.</li><li>재귀 구조: 성분 하나를 0/1로 고정하면 나머지는 <code>P_{d-1,odd}</code>/<code>P_{d-1,even}</code>로의 저차원 사영 문제로 축소, cut-search 결과(θ,p)를 재사용해 재계산 회피.</li><li>구현(Algorithm 1): 확정된 성분을 벡터 앞으로 swap하고 인덱스 벡터 Q로 추적, 문제 크기 <code>l</code>이 매번 감소, worst-case <code>O(d^2)</code>.</li><li>결과: d=2~50, 각 d당 [-5,5]^d 백만 벡터 시뮬. state-of-the-art 대비 low-complexity 연산 최대 36%, 총 연산 최대 37% 감소. d=10/30에서 while-loop 평균 3.7/4.9회.</li><li>한계: 순수 연산량 카운트만 제시(실제 HW 미구현), BER/정정성능·부호 스펙 없음, ADMM-LP 복호 프레임 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| ADMM-LP parity polytope 사영 | 대응 없음 | Prime ECC는 min-sum message-passing 복호이며 LP/ADMM 사영 연산 자체가 없음 |
+| 체크노드 처리(사영이 CN 연산 대체) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | Prime ECC CN은 min1/min2+sign, 논문의 폴리토프 사영과 연산 성격이 상이 |
+| 반복 복호 루프 | decoder.cpp LDPC_Decoder() | 반복 구조는 유사하나 갱신 규칙(ADMM vs min-sum)이 근본적으로 다름 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — LP/ADMM 복호는 Prime ECC의 min-sum 파이프라인과 다른 복호 패러다임이고, 부호 스펙·정정성능·HW 수치가 전무하여 NAND binary QC-LDPC 엔진에 떼어 쓸 요소가 없음.</p>
+<pre><code>{
+  "id": "ieee:8625295",
+  "title": "A Low-Complexity Projection Algorithm for ADMM-Based LP Decoding",
+  "year": 2018,
+  "venue": "IEEE Turbo Codes &amp; Iterative Information Processing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "정렬 없이 성분을 반복 고정하는 parity polytope 사영 알고리즘으로 ADMM-LP 복호 연산량 최대 37% 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ADMM-LP 복호 전용 사영 트릭 — Prime ECC의 min-sum message-passing 파이프라인과 복호 패러다임 자체가 다름",
+  "todo_check": "정정성능·BER 곡선·부호 스펙 무제시(연산량 카운트만); LP 복호를 도입할 계획이 없다면 이식 가치 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8625295---a-low-complexity-projection-algorithm-for-admm-based-lp-decoding-2018-ieee-turbo-codes-iterative-information-processing">ieee:8625295 - A Low-Complexity Projection Algorithm for ADMM-Based LP Decoding (2018, IEEE Turbo Codes &amp; Iterative Information Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8362696</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8362696---access-characteristic-guided-read-and-write-regulation-on-flash-based-storage-systems-2018-ieee-transactions-on-computers">ieee:8362696 - Access Characteristic Guided Read and Write Regulation on Flash Based Storage Systems (2018, IEEE Transactions on Computers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>워크로드 access characteristic(read-only/write-only)로 ISPP step size·threshold voltage를 조절해 read/write cost와 wearing을 tradeoff</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC를 블랙박스 ECC로만 사용(CBER_LDPC(N) 제약 조건). 디코더/부호설계 기여 없음, FTL/컨트롤러 시스템 최적화 논문</td></tr><tr><td>추가확인</td><td>soft-read reference voltage 수 N과 read cost 관계는 참조[7][10]에 의존 — 본 논문 자체엔 LLR/양자화 설계 없음</td></tr></tbody></table>
+<blockquote><p>총평: NAND read/write cost·wearing을 워크로드 접근특성으로 조절하는 FTL 레벨 최적화로, LDPC는 read cost 제약으로만 등장 — Prime ECC 디코더/부호에 이식할 요소 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 NAND flash SSD(8채널×4칩×4plane, 4KB 페이지, page-mapping FTL); LDPC를 기본 ECC로 채택하나 코드 스펙은 미제시.</li><li>문제: ISPP <code>DVpp</code>(program step size)를 키우면 write cost↓지만 RBER↑ → read시 필요 reference voltage 수 <code>N</code>↑ → read cost↑. 기존 기법은 물리특성만 이용, 워크로드 접근특성 미활용.</li><li>모델: write cost <code>WC(DVpp)=g/DVpp</code>, read cost <code>RC(N)=a·N + b·⌈log(N+1)⌉</code>, 제약 <code>RBER(DVpp) &lt; CBER_LDPC(N)</code>.</li><li>핵심기법1(성능): 페이지를 read-only/write-only/interleaved로 분류(history window로 식별) 후, read-only엔 high-cost write→low-cost read, write-only엔 low-cost write를 적용.</li><li>식 의미: LDPC 정정능력 <code>CBER_LDPC(N)</code> 안에서만 <code>DVpp</code>를 키울 수 있어 read/write cost의 안전한 tradeoff 경계를 규정.</li><li>핵심기법2(수명): wearing <code>we = ζ·Vp</code>(최대 threshold voltage 비례). write-only 데이터를 reduced threshold(reduced wearing) write로 프로그램, write cost는 동일 유지.</li><li>구현 디테일: FTL 매핑 엔트리에 access history + 1bit high-cost write tag 추가, idle-time re-write queue로 read-only 페이지를 재프로그램.</li><li>최적화: history window size=2로 storage overhead와 식별 정확도 trade-off; busy면 low-cost write, idle면 reduced-wearing write 선택하는 결합 방식.</li><li>결과: HCW/LCR로 read 성능 54%↑, LCW/HCR로 write 성능 26%↑; R+W read 48%↑(vs Li et al.), R+L wearing 약 20% 감소, re-write overhead &lt;1%.</li><li>한계: trace-driven 시뮬(SSDSim)만, LDPC 디코더·부호·HW 설계 없음. ECC는 read cost 제약 조건으로만 추상화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ISPP step size / threshold voltage 조절 (물리 write)</td><td>대응 없음</td><td>Prime ECC는 컨트롤러 내 복호 시뮬레이터로 NAND 물리 프로그래밍/wearing 미모델</td></tr><tr><td>RBER↔reference voltage N↔read cost 모델</td><td>대응 없음</td><td>soft-read 비용의 시스템 모델일 뿐 LLR 양자화 설계 아님(개념적으로만 <code>channel.cpp</code> 인접)</td></tr><tr><td>FTL access characteristic 식별 / re-write queue</td><td>대응 없음</td><td>FTL/스케줄러 계층, ECC 코어 밖</td></tr><tr><td>CBER_LDPC(N) 정정능력 경계</td><td>대응 없음</td><td>LDPC를 블랙박스로 사용, 디코더/부호 내부 미접촉</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 시스템/FTL 레벨 cost·wearing 최적화로 LDPC 디코더·부호설계·HW에 떼어낼 알고리즘 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8362696",
+  "title": "Access Characteristic Guided Read and Write Regulation on Flash Based Storage Systems",
+  "year": 2018,
+  "venue": "IEEE Transactions on Computers",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "워크로드 access characteristic(read-only/write-only)로 ISPP step size·threshold voltage를 조절해 read/write cost와 wearing을 tradeoff",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC를 블랙박스 ECC로만 사용(CBER_LDPC(N) 제약). 디코더/부호설계 기여 없음, FTL/컨트롤러 시스템 최적화 논문",
+  "todo_check": "soft-read reference voltage 수 N과 read cost 관계는 참조 [7][10]에 의존 — 본 논문 자체엔 LLR/양자화 설계 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8362696---access-characteristic-guided-read-and-write-regulation-on-flash-based-storage-systems-2018-ieee-transactions-on-computers">ieee:8362696 - Access Characteristic Guided Read and Write Regulation on Flash Based Storage Systems (2018, IEEE Transactions on Computers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

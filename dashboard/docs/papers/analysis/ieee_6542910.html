@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6542910</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6542910---improved-weighted-bit-flip-voting-decoding-algorithm-for-generalized-ldpc-2012-ieee">ieee:6542910 - Improved Weighted Bit Flip Voting Decoding Algorithm for Generalized LDPC (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.429~0.686</td></tr><tr><td>부호length</td><td>3780~7650</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>WBFV의 max-vote 탐색을 group-voting으로 대체해 HW 구현 단순화 + iteration 수렴 가속(무손실)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GLDPC(BCH 구성부호)+bit-flip voting 전용 - min-sum QC-LDPC와 알고리즘 계통이 달라 이식 곤란, BER 개선 없음</td></tr><tr><td>추가확인</td><td>group 규칙이 J=2/3 GLDPC에 특화 - 고전 QC-LDPC bit-flip에도 적용 가능한지 여부</td></tr></tbody></table>
+<blockquote><p>총평: GLDPC용 hard-decision WBFV 개선으로 HW 단순화·iteration 감소는 흥미로우나, Prime ECC의 min-sum QC-LDPC와 부호·복호 계통이 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: B-GLDPC(constraint node를 BCH 구성부호 <code>C0(n,k)</code>로 대체), <code>J=2/3</code> super-code, 예제 rate <code>0.429~0.686</code>, length <code>3780/7650</code>, sub-code <code>BCH(63,51)t=2</code>·<code>BCH(255,215)t=6</code>.</li><li>문제: 광/초고속 무선은 soft LLR용 초고속 ADC 확보가 어려워 hard-decision 복호가 필수; 기존 WBFV는 성능은 좋으나 수천 vote 중 max-vote 탐색이 HW에 부적합(직렬=수천 cycle latency, 병렬=<code>n·log n</code> 비교기 자원).</li><li>모델: 각 심볼이 구성부호 HDD로부터 vote(<code>V</code>=유효, <code>e</code>/<code>E</code>=오류 표시)를 받고, <code>J</code>개 vote를 pair(예 J=2: <code>VV,eV,ee,EV,Ee,EE</code>)로 묶어 신뢰도 순서화.</li><li>핵심 기법: max-vote 탐색을 제거하고 vote pair를 3개 group으로 분류(1st=최저신뢰 <code>EE,Ee</code> 등), 신뢰도 낮은 group부터 일괄 flip.</li><li>의미: weight 계산·정렬·max 탐색이 불필요 → 비교기·정렬망 제거로 HW 단순화 및 latency 단축.</li><li>스케줄: 1st group bit가 남아있는 동안 1st만 flip, 없어지면 2nd group flip, 새 1st 발생 시 다시 1st 우선; 모두 3rd(신뢰) group이면 조기종료.</li><li>구현 디테일: full-parallel J=2 decoder(register array + BCH HDD 2계열 + permutation network <code>π</code>), vote type 결정 블록(syndrome valid→<code>V</code>, 아니면 입출력 비교로 <code>E</code>/<code>e</code>)과 group voting 모듈을 AND/OR gate로 구성.</li><li>학습/최적화: 시뮬레이션으로 group 3개 분할과 J=2/3별 최적 group 규칙(Table I) 도출.</li><li>결과: BER 곡선이 WBFV와 거의 중첩(무손실). iteration은 J=3에서 min iteration <code>25~30 → 5~8</code>로 대폭 감소, J=2는 <code>10 → 5~7</code> 수준.</li><li>한계: BER 개선 없음(수렴 속도만), gate count/throughput 수치 없음, GLDPC+BCH 구성부호에 특화되어 고전 QC-LDPC와 계통 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GLDPC WBFV bit-flip 복호</td><td>대응 없음</td><td>Prime ECC는 min-sum message passing QC-LDPC - bit-flip voting 계통과 무관</td></tr><tr><td>BCH 구성부호 HDD</td><td>대응 없음</td><td>GLDPC 전용 구성부호, Prime ECC의 단일 parity-check QC-LDPC와 다름</td></tr><tr><td>iteration 조기종료(group=3rd)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>개념상 조기종료지만 Prime ECC는 CRC 기반이라 이미 보유·기법 상이</td></tr><tr><td>full-parallel HW 구조</td><td>대응 없음</td><td>GLDPC 전용 아키텍처, z=32 QC-LDPC pipeline과 정합 안 됨</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - GLDPC hard-decision bit-flip voting 전용 기법으로 Prime ECC의 min-sum QC-LDPC와 부호·복호 계통이 근본적으로 달라 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6542910",
+  "title": "Improved Weighted Bit Flip Voting Decoding Algorithm for Generalized LDPC",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "3780~7650",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "WBFV의 max-vote 탐색을 group-voting으로 대체해 HW 구현 단순화 + iteration 수렴 가속(무손실)",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "GLDPC(BCH 구성부호)+bit-flip voting 전용 - min-sum QC-LDPC와 알고리즘 계통이 달라 이식 곤란, BER 개선 없음",
+  "todo_check": "group 규칙이 J=2/3 GLDPC에 특화 - 고전 QC-LDPC bit-flip에도 적용 가능한지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6542910---improved-weighted-bit-flip-voting-decoding-algorithm-for-generalized-ldpc-2012-ieee">ieee:6542910 - Improved Weighted Bit Flip Voting Decoding Algorithm for Generalized LDPC (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

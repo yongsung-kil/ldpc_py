@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4023105</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4023105---optimal-soft-symbol-split-methods-and-performance-analysis-for-applying-to-multilevel-modulation-of-iterative-codes-2006-ieee">ieee:4023105 - Optimal Soft Symbol Split Methods and Performance Analysis for Applying to Multilevel Modulation of Iterative Codes (2006, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>2/3</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>8PSK 다중레벨 변조 신호를 LLR/MAX/Euclidean/Sector 4가지 방법으로 soft symbol split하여 turbo/LDPC/TPC 세 반복부호에 대해 성능·복잡도를 비교분석</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN/8PSK 통신채널(비-NAND) 대상이며 LDPC는 3개 부호 중 예시 하나로만 등장, 부호설계·디코더 알고리즘 자체 개선은 없음</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 8PSK 다중레벨 변조 신호에서 soft LLR을 저복잡도로 근사 계산하는 demapping 기법 비교이며, NAND binary LDPC 디코더/부호설계와 직결되지 않음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: turbo code(N=200, R=1/2), LDPC(N=64800, K=43200, row weight≈10, column weight≈13, R=2/3), TPC(BCH(15,11), R=121/225) 세 반복부호를 8PSK 변조와 결합한 통신 시스템.</li><li>문제: 8PSK 등 다중레벨 변조에서 수신 I/Q 신호를 반복복호기 입력용 soft LLR로 변환할 때 표준 LLR 방법이 지수/로그 연산으로 HW 구현이 복잡함.</li><li>채널모델: <code>r = s + n</code> (AWGN, Gaussian noise variance σ²) 기반 8PSK 성상도.</li><li>핵심기법1: LLR method - 8개 성상점과의 유클리드 거리 기반 오차확률 <code>Pi = exp(-|r-si|²/2σ²)</code> 계산 후 <code>LLR = log(ΣP_bit0 / ΣP_bit1)</code> (식 8).</li><li>핵심기법2: MAX method - <code>log(Σe^x) ≈ max(x)</code> 근사로 지수/로그 연산 제거 (식 9-10), 단 채널추정(σ²)은 유지.</li><li>핵심기법3: Euclidean method - Gray-coded 8PSK 성상도 사용, 채널추정 없이 유클리드 거리 <code>d_i</code>의 min만으로 LLR 근사 (식 11-12).</li><li>핵심기법4: Sector method - 수신 I/Q 부호(sign)로 sector를 나눠 절댓값 연산만으로 LLR 근사 (식 13, Table I).</li><li>학습/최적화 절차 없음(고정 근사식 유도, 시뮬레이션 비교).</li><li>결과: LDPC의 경우 LLR이 최고성능, Sector는 LLR 대비 BER 10⁻⁵에서 약 0.3dB 열화, MAX는 LLR과 유사 → LDPC엔 MAX 권장, turbo엔 Sector, TPC엔 MAX 권장.</li><li>한계: 통신(광대역 위성/802.16e 등) AWGN·8PSK 채널 대상 시뮬레이션뿐이며 HW 미설계, NAND flash 채널이나 LDPC 디코더 내부 알고리즘 개선과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>8PSK LLR/MAX/Euclidean/Sector demapping</td><td>대응 없음</td><td>Prime ECC는 binary LDPC 대상이며 다중레벨(8PSK) 변조 demapping 자체를 다루지 않음</td></tr><tr><td>LDPC CNU/BNU 반복복호 절차 (배경 설명)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>논문 본문의 일반 LDPC 복호 배경 설명 수준, 개선 기법 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 통신 다중레벨 변조 demapping 기법으로 NAND 고전 binary LDPC의 부호설계·디코더·HW와 직접 연관성이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4023105",
+  "title": "Optimal Soft Symbol Split Methods and Performance Analysis for Applying to Multilevel Modulation of Iterative Codes",
+  "year": 2006,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.667,
+  "code_length": 64800,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "8PSK 다중레벨 변조 신호를 LLR/MAX/Euclidean/Sector 4가지 방법으로 soft symbol split하여 turbo/LDPC/TPC 세 반복부호에 대해 성능·복잡도를 비교분석",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN/8PSK 통신채널(비-NAND) 대상이며 LDPC는 3개 부호 중 예시 하나로만 등장, 부호설계·디코더 알고리즘 자체 개선은 없음",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4023105---optimal-soft-symbol-split-methods-and-performance-analysis-for-applying-to-multilevel-modulation-of-iterative-codes-2006-ieee">ieee:4023105 - Optimal Soft Symbol Split Methods and Performance Analysis for Applying to Multilevel Modulation of Iterative Codes (2006, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

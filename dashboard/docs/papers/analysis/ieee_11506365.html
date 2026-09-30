@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11506365</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11506365---hierarchical-globally-coupled-ldpc-codes-and-adaptive-two-phase-decoding-for-nand-flash-memories-2026-ieee-communications-letters">ieee:11506365 - Hierarchical Globally Coupled LDPC Codes and Adaptive Two-Phase Decoding for NAND Flash Memories (2026, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.895~0.901</td></tr><tr><td>부호length</td><td>33712~33908</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>2계층 결합구조(local/global-local/global-global)의 HC-GC-LDPC 코드와 실패 서브코드 수에 따라 global 체크노드 부분집합만 활성화하는 AFA-TPA로 CNU를 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>정규화 min-sum(NMS) 기반이며 GC-LDPC 계열 특유의 local/global 2단계 구조가 전제라 base H-matrix 재설계 부담이 큼</td></tr><tr><td>추가확인</td><td>AFA-TPA의 서브코드 실패 패턴별 subset 선택 로직이 우리 H-matrix(단일 QC 구조, dual-update)에도 적용 가능한 형태인지, gatecount/throughput 수치 미기재로 HW 비용 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: NAND 채널을 직접 타깃으로 한 GC-LDPC 계열 구조적 개선 + 적응형 디코딩 스케줄링으로, 부호설계는 이식 난이도가 높으나 AFA-TPA의 조기 부분활성화 아이디어는 디코더 스케줄링 레이어에 낮은 난이도로 이식 검토 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NAND flash용 4KB급 QC-LDPC 계열, GF(197) 기반 구성, (37632, 33712~33908) 코드, rate 0.895~0.901.</li><li>문제: 기존 GC-LDPC/SC-GC-LDPC는 계층적 구조 최적화를 충분히 활용하지 못해 성능·복잡도 개선 여지가 있음.</li><li>핵심 가정: NAND flash 채널(문턱전압 분포, program interference, retention noise 통계적 모델) + AWGN 비교 채널.</li><li>핵심 기법 1(부호설계): 기존 GC-LDPC의 global part를 global-local(<code>G_{L,k}</code>, k=1..u)과 global-global(<code>GG</code>) 컴포넌트로 재분할하는 2계층 결합(HC-GC-LDPC) 구조, <code>g × u = n × t</code> 제약.</li><li>식의 의미: u(global-local 컴포넌트 수)와 v(GG 행 수)를 독립 조정해 coupling 세밀도와 강도를 분리 제어, u가 클수록 성능 향상, v가 클수록 성능 저하.</li><li>핵심 기법 2(디코딩): AFA-TPA는 로컬 위상에서 실패한 서브코드 벡터 <code>f</code>(4×1)를 추적, <code>|f|_1</code> 개수에 따라 필요한 global 체크노드 부분집합만 활성화(1개 실패 시 최소 subset, 3개 이상 시 전체 사용).</li><li>구현 디테일: local phase 최대 IL, global phase 최대 IG, 전체 Imax=(3,2,7); 디코딩 알고리즘 자체는 normalized min-sum(NMS, factor 0.7, 최대 반복 20)과 comparable CNU로 정렬.</li><li>최적화 절차: masking, fold expansion으로 rate/컬럼weight 튜닝(Example1: weight6·rate0.895, Example2: weight5·rate0.901, Example3: u=3,v=1로 균형).</li><li>결과: AWGN에서 BER 10⁻⁵ 기준 SC-GC-LDPC 대비 약 0.1dB 이득, AFA-TPA는 TPA 대비 CNU 약 3.5~4.1%, ITPA 대비 약 1.8~2.72% 감소.</li><li>한계: 시뮬레이션만 수행(HW 미설계), gatecount/throughput 수치 없음, GF(197) 기반 특정 대수구조에 종속된 부호설계로 일반화 난이도 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>HC-GC-LDPC H-matrix (local/global-local/global-global 2계층 결합)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>GF(197) 기반 GC-LDPC 특유 구조로 base matrix 자체가 다름, 이식 난이도 높음</td></tr><tr><td>AFA-TPA 적응형 부분 global 활성화(실패 서브코드 수 기반 subset 선택)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>실패 위치 기반 조건부 부분 디코딩은 iteration 스케줄링 최적화 아이디어로 이식 검토 가치</td></tr><tr><td>Normalized min-sum 디코딩(factor 0.7)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 보유(min-sum 변형)로 중복 기여, 신규성 낮음</td></tr><tr><td>조기 종료(로컬 phase 성공 시 즉시 종료)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>개념적으로 조기종료와 유사하나 CRC 대신 로컬 parity 체크 기반, 대응은 부분적</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 부호설계(GC-LDPC 계열, GF 기반)는 우리 QC-LDPC 구조와 달라 이식 난이도가 높지만, AFA-TPA의 "실패 서브코드 수 기반 부분 활성화" 스케줄링 아이디어는 디코더 이터레이션 최적화(iteration/CNU 절감) 관점에서 검토할 가치가 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11506365",
+  "title": "Hierarchical Globally Coupled LDPC Codes and Adaptive Two-Phase Decoding for NAND Flash Memories",
+  "year": 2026,
+  "venue": "IEEE Communications Letters",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.895~0.901",
+  "code_length": "33712~33908",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "2계층 결합구조(local/global-local/global-global)의 HC-GC-LDPC 코드와 실패 서브코드 수에 따라 global 체크노드 부분집합만 활성화하는 AFA-TPA로 CNU를 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "정규화 min-sum(NMS) 기반이며 GC-LDPC 계열 특유의 local/global 2단계 구조가 전제라 base H-matrix 재설계 부담이 큼",
+  "todo_check": "AFA-TPA의 서브코드 실패 패턴별 subset 선택 로직이 우리 H-matrix(단일 QC 구조, dual-update)에도 적용 가능한 형태인지, gatecount/throughput 수치 미기재로 HW 비용 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11506365---hierarchical-globally-coupled-ldpc-codes-and-adaptive-two-phase-decoding-for-nand-flash-memories-2026-ieee-communications-letters">ieee:11506365 - Hierarchical Globally Coupled LDPC Codes and Adaptive Two-Phase Decoding for NAND Flash Memories (2026, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

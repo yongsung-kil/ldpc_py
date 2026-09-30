@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7094412</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7094412---decoder-diversity-architectures-for-finite-alphabet-iterative-decoders-2014-ieee-itw-information-theory-workshop">ieee:7094412 - Decoder Diversity Architectures for Finite Alphabet Iterative Decoders (2014, IEEE ITW / Information Theory Workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9193</td></tr><tr><td>부호length</td><td>7807</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>trapping-set 기반으로 선택한 7개 FAID(Boolean VN map)를 직렬 적용하는 decoder diversity로 error-floor에서 guaranteed t=4 정정 확보</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>VNU 8418μm²(7-table)@180nm, 디코더 36.1mm²@180nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>33.3Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(hard-decision)·column-weight 3 전용, FAID map이 코드별로 재설계 필요, NAND soft-read(2/3bit)와 채널 모델 불일치</td></tr><tr><td>추가확인</td><td>dv=17·z=32 고rate 코드에서 FAID LUT 재설계 가능성과 soft-input(2SD/3SD)로의 확장 여부</td></tr></tbody></table>
+<blockquote><p>총평: trapping-set 기반 FAID diversity로 error-floor를 한 decade 개선하고 Min-Sum 대비 면적 52%로 합성까지 검증. 단 BSC/col-weight-3 전용이라 우리 고rate·soft-read 구조로의 이식은 재설계 부담 큼, 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (N,K) binary LDPC, BSC(cross-over <code>α</code>) 전송, 예제는 (7807,7177) QC-LDPC (dmin=10, column-weight 3).</li><li>문제: 짧은/구조화 LDPC는 error-floor에서 trapping set 때문에 저중량 error pattern을 못 고침. BP·quantized Min-Sum도 실패.</li><li>FAID: <code>|M|=2s+1</code> 레벨 유한 알파벳 iterative decoder, 4-tuple <code>(M,Y,Φ,Ψ)</code>. CN 갱신 <code>Ψ(n)=sgn(n)·min(|n|)</code> (min-sum류), VN 갱신 <code>Φ</code>는 Boolean LUT(예: 7-level dv=3 표).</li><li>핵심 아이디어 - decoder diversity: VN map <code>Φ</code>만 다른 FAID 집합 <code>{Di}</code>을 순차 적용하면 각 FAID가 서로 다른 error pattern을 고쳐 집합적으로 더 많은 pattern 정정 (<code>E=∪EDi</code>).</li><li>최소 diversity set 찾기는 Set Covering Problem(NP-hard) → greedy 알고리즘으로 근사.</li><li>FAID 생성: 코드 내 harmful (a,b) trapping set <code>Λa,b</code>만 대상으로, 그 support의 저중량 error pattern <code>E[t]</code>을 커버하도록 <code>Dbase</code>에서 FAID를 탐욕적 선택. Tanner graph automorphism으로 탐색 topology 수 축소.</li><li>반복적으로 <code>D[k]→D[k+1]→…→D[t]</code> 확장, 미해결 pattern <code>Er</code>가 공집합이 될 때까지 FAID 추가.</li><li>결과: (7807,7177) 코드에 <code>ND=7</code> FAID로 guaranteed t=4 정정, error-floor를 단일 FAID 대비 한 decade 개선, 6-bit offset Min-Sum도 수 자릿수 능가 (Fig.1, 최대 100 iter).</li><li>HW: fully-parallel flooding schedule. 7개 FAID는 VN LUT만 다르고 대부분 엔트리 공유 → 7-table VNU가 단일 대비 +89% 면적. 전체 디코더는 Min-Sum 대비 면적 52%, 33.3Gbps @180nm CMOS 합성.</li><li>한계: BSC(hard) 전용, column-weight 3 특화, FAID LUT는 코드 종속(코드마다 재설계), soft-decision/고rate 확장은 본문 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FAID VN 갱신 (Boolean LUT <code>Φ</code>)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 처리를 LUT map으로 대체하는 지점, 우리는 magnitude 양자화 테이블 사용</td></tr><tr><td>CN 갱신 `Ψ=sgn·min</td><td>n</td><td>`</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일 계열</td></tr><tr><td>iteration별/코드별 FAID LUT 선택</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration 구간별 테이블 선택 메커니즘과 유사 (diversity=순차 map 전환)</td></tr><tr><td>trapping-set 기반 error-floor 개선</td><td>corner.cpp (수렴실패 추적)</td><td>error-floor 진단·수렴실패 케이스와 연결 가능</td></tr><tr><td>완전병렬 flooding schedule / VNU 합성</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>우리 병렬구조와 정합 검토 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — error-floor를 겨냥한 trapping-set 기반 다중 VN-LUT 전환 아이디어는 우리 iteration별 테이블 구조와 개념 정합이 좋으나, BSC(hard)·col-weight-3 전용이라 고rate·soft-read 코드로의 이식엔 FAID 재설계가 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7094412",
+  "title": "Decoder Diversity Architectures for Finite Alphabet Iterative Decoders",
+  "year": 2014,
+  "venue": "IEEE Information Theory Workshop (ITW)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9193,
+  "code_length": "7807",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "trapping-set 기반으로 선택한 7개 FAID(Boolean VN map)를 직렬 적용하는 decoder diversity로 error-floor에서 guaranteed t=4 정정 확보",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "VNU 8418um2(7-table)@180nm, 디코더 36.1mm2@180nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 33.3,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "BSC(hard-decision)·column-weight 3 전용, FAID map이 코드별로 재설계 필요, NAND soft-read(2/3bit)와 채널 모델 불일치",
+  "todo_check": "dv=17·z=32 고rate 코드에서 FAID LUT 재설계 가능성과 soft-input(2SD/3SD)로의 확장 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7094412---decoder-diversity-architectures-for-finite-alphabet-iterative-decoders-2014-ieee-itw-information-theory-workshop">ieee:7094412 - Decoder Diversity Architectures for Finite Alphabet Iterative Decoders (2014, IEEE ITW / Information Theory Workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

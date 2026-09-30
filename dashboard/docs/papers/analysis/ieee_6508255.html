@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6508255</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6508255---efficient-memory-optimization-and-high-throughput-decoding-architecture-based-on-ldpc-codes-2013-ieee-conf">ieee:6508255 - Efficient Memory Optimization And High Throughput Decoding Architecture Based on LDPC Codes (2013, IEEE conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>block RAM의 configurable width/depth를 활용한 vectorization(폭)+folding(깊이)으로 FPGA QC-LDPC 디코더 메모리 대역폭·throughput 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>FPGA block RAM 특성(aspect ratio) 종속 기법이라 우리 z=32 고정 ASIC 파이프라인과 정합 낮음, 정량 throughput/gate 수치 없음(그림 손상)</td></tr><tr><td>추가확인</td><td>vectorization/folding이 우리 z=32 row-병렬·HCU/GT 구조와 충돌 없이 적용 가능한지, K 패킹과 pipeline 정합</td></tr></tbody></table>
+<blockquote><p>총평: FPGA block RAM의 미사용 대역폭(약 78%)을 vectorization+folding으로 회수해 QC-LDPC NMS 디코더 throughput을 올리는 HW 논문. 메모리 병목 아이디어는 유효하나 FPGA 특유 구조 종속이고 정량결과·정정능력 개선이 없어 우리 ASIC 구조 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(3,6)</code>-regular <strong>QC-LDPC</strong> (rate 1/2), CPM 256x256 배열, FPGA(Xilinx Virtex-4) 구현.</li><li>문제: LDPC 디코더 throughput은 <strong>메모리 대역폭</strong>에 제약; 통상 FPGA는 메시지 하나를 block RAM 워드 1개에 저장해 대역폭의 ~22%만 사용(~78% 낭비).</li><li>모델: NMS(normalized min-sum) 메시지 6~8bit, block RAM은 aspect ratio(예 512x36, 1Kx18 …) 재구성 가능.</li><li>핵심 기법1 <strong>vectorization</strong>: 한 메모리 워드에 K개 메시지 패킹(폭 활용) → <code>(γ,ρ)</code> 코드에 <code>Kγ</code> CNU, <code>Kρ</code> VNU, <code>(γ+1)×ρ</code> block RAM, throughput 최대 K배.</li><li>부수 문제: 다중 메시지 동시접근으로 메모리 충돌 발생 → 적절한 packing scheme과 message alignment unit 필요.</li><li>핵심 기법2 <strong>folding</strong>: block RAM의 남는 depth에 여러 CPM을 같은 물리 block RAM에 매핑(greedy heuristic)해 라우팅·CNU/VNU 복잡도 축소(단 다중 cycle 처리).</li><li>직교성: vectorization(폭)과 folding(깊이)은 orthogonal → vectorized-folded 디코더로 결합 가능.</li><li>구현 트릭: double buffering(CNU/VNU 접근패턴 맞춤 복제, 같은 block RAM 재사용), 새 packing strategy, 저복잡도 sequential alignment unit.</li><li>결과: DN8000K10PSX(Virtex-4 2개) FPGA 플랫폼에서 AWGN all-zero codeword 디코딩 검증, 다중 표준용 유연 디코더 구현 가능 언급(정량 throughput/gate 수치는 본문 서술에 없음).</li><li>한계: <strong>FPGA block RAM 특성 종속</strong>, 정량 성능수치·정정능력 개선 없음, 부호설계/디코더 알고리즘 자체는 표준 NMS 그대로.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CNU/VNU 병렬 처리·메시지 저장</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>우리 z=32 row-병렬 디코더에 대응하나 메모리 패킹(vector/fold)은 FPGA block RAM 종속이라 직접 대응 없음</td></tr><tr><td>normalized min-sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리도 min-sum 보유(중복), normalized factor는 코드상 미확인</td></tr><tr><td>메시지 메모리/라우팅 최적화</td><td>대응 없음</td><td>우리는 z=32 고정 pipeline/HCU/GT 구조로 FPGA aspect-ratio 기반 vectorization/folding과 정합 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 메모리 대역폭이 LDPC HW 병목이라는 통찰과 vector/fold 아이디어는 유효하나, FPGA block RAM aspect-ratio에 종속된 기법이라 우리 고정 z=32 ASIC 파이프라인(HCU/GT)과 정합이 낮고 정정능력·정량성능 개선이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6508255",
+  "title": "Efficient Memory Optimization And High Throughput Decoding Architecture Based on LDPC Codes",
+  "year": 2013,
+  "venue": "IEEE conf",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "block RAM의 configurable width/depth를 활용한 vectorization(폭)+folding(깊이)으로 FPGA QC-LDPC 디코더 메모리 대역폭·throughput 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "FPGA block RAM aspect-ratio 종속 기법이라 z=32 고정 ASIC 파이프라인과 정합 낮음, 정량 throughput/gate 수치 없음",
+  "todo_check": "vectorization/folding이 z=32 row-병렬·HCU/GT 구조와 충돌 없이 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6508255---efficient-memory-optimization-and-high-throughput-decoding-architecture-based-on-ldpc-codes-2013-ieee-conf">ieee:6508255 - Efficient Memory Optimization And High Throughput Decoding Architecture Based on LDPC Codes (2013, IEEE conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

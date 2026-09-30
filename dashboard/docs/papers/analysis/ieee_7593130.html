@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7593130</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7593130---finite-length-quasi-synchronous-ldpc-decoders-2016-ieee-int-symp-on-turbo-codes-iterative-information-processing">ieee:7593130 - Finite-Length Quasi-Synchronous LDPC Decoders (2016, IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>32000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>timing-violation 편차모델+DE로 유한길이 QS 디코더의 BER/FER·에너지(EDP)를 빠르게 예측</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>정정능력 향상이 아니라 에너지 절감 목적(타이밍위반 허용), coding gain은 오히려 손실 가능</td></tr><tr><td>추가확인</td><td>QS(전압/클록 스케일링) 접근이 NAND 컨트롤러 전력예산·신뢰성 요구와 맞는지</td></tr></tbody></table>
+<blockquote><p>총평: OMS 디코더의 타이밍위반 기반 에너지-지연(EDP) 최적화 분석 논문으로, 부호설계/정정능력 개선이 아니라 저전력 회로 운용 관점이라 NAND binary QC-LDPC 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular (3,6) LDPC, 길이 <code>N=32000</code>(4-cycle-free 랜덤 구성, MacKay 생성기), AWGN + BPSK.</li><li>문제: CMOS 공정변이로 guardband가 커지는데, 타이밍위반을 허용(quasi-synchronous)해 에너지를 줄이되 성능을 정확히 예측하고자 함.</li><li>디코더: Offset Min-Sum(OMS), row-layered 스케줄(이터레이션 약 절반 감소), 6-bit 양자화, <code>alpha=4</code>, offset=1, VNP/CNP 2단 파이프라인.</li><li>편차모델: 타이밍위반으로 손상된 메시지 <code>mu</code>를 이상 메시지 <code>v</code>에 대한 조건부분포 <code>P(mu|v,x)</code>로 모델링(운용조건 <code>gamma</code>, 메시지 에러율 <code>p^(t-1)</code> 인덱스). weak-symmetry 성립 시 DE 적용 가능.</li><li>출력 편차모델(식3): VN total belief <code>Lambda_i</code>의 손상 분포를 이상값 대비 조건부로 별도 모델링(디코더 출력 판정용).</li><li>편차/에너지 측정: extrinsic 메시지를 1-D Normal(<code>Pe</code> 파라미터)로 근사, gate-level MC로 <code>Pe</code>별 조건분포·스위칭활동 측정 → 에너지모델 <code>E(Pe)</code> 구성.</li><li>유한길이 성능: 관측채널을 <code>Pobs</code>(BSC/Gaussian 근사)로 두고 무한길이 DE 결과 <code>P_inf(Pobs)</code>를 채널분포로 적분(식5,7)해 유한길이 BER/FER를 이터레이션별 예측.</li><li>에너지: 조기종료 가정하 평균 디코딩 에너지=이터레이션별 에너지 기대합, EDP=에너지·지연(식8,9)으로 운용조건 <code>gamma</code> 최적화.</li><li>결과: 65nm 합성(TSMC, 2ns), 1.7dB에서 최적 운용조건(0.85V, 2.3ns)이 신뢰 디코더 대비 EDP 15% 개선; DE예측이 분단위로 gate-level과 일치. 단, deviation&gt;3%면 coding gain 손실·에러플로어.</li><li>한계: 정정능력 개선 아님(오히려 손실 가능), 부호설계 무관, 메모리는 신뢰·무전력 가정, 특정 공정/전압 스케일링 전제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMS 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리 min-sum과 동일 계열이나 논문은 알고리즘이 아닌 타이밍위반 편차 모델링이 핵심</td></tr><tr><td>CN min-sum 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>OMS offset은 이미 min-sum 계열로 보유, 신규성 없음</td></tr><tr><td>조기종료(에러플로어 제거)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료가 편차유발 에러플로어 제거한다는 관찰은 참고 가능하나 우리는 이미 CRC 조기종료 보유</td></tr><tr><td>HW 파이프라인/에너지모델</td><td>디코더 HW 모델(z=32)</td><td>QS 전압/클록 스케일링은 우리 bit-exact 시뮬 범위 밖(회로 타이밍 물리모델 필요)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — OMS·조기종료·layered 스케줄은 이미 보유하고, 논문의 신규 기여인 타이밍위반 편차모델·EDP 최적화는 부호정정 성능이 아니라 회로 저전력 운용 관점이라 NAND binary QC-LDPC ECC 이식 대상이 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7593130",
+  "title": "Finite-Length Quasi-Synchronous LDPC Decoders",
+  "year": 2016,
+  "venue": "IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "32000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "timing-violation 편차모델+DE로 유한길이 QS 디코더의 BER/FER와 에너지(EDP)를 빠르게 예측",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "정정능력 향상이 아니라 타이밍위반 허용 에너지절감 목적, coding gain 손실 가능",
+  "todo_check": "QS 전압/클록 스케일링이 NAND 컨트롤러 전력예산·신뢰성 요구와 맞는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7593130---finite-length-quasi-synchronous-ldpc-decoders-2016-ieee-int-symp-on-turbo-codes-iterative-information-processing">ieee:7593130 - Finite-Length Quasi-Synchronous LDPC Decoders (2016, IEEE Int. Symp. on Turbo Codes &amp; Iterative Information Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

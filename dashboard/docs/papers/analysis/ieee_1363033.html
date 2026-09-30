@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1363033</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1363033---a-reduced-complexity-decoder-architecture-via-layered-decoding-of-ldpc-codes-2004-ieee-sips">ieee:1363033 - A Reduced Complexity Decoder Architecture via Layered Decoding of LDPC Codes (2004, IEEE SIPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>layered BP를 partitioned-permutation QC-LDPC에 적용해 iteration 약 절반·메모리 약 2/3·로직 약 절반 감축</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Prime ECC의 layered(Dual-Update) 스케줄과 중복, gatecount/throughput 수치 본문 미기재, layer당 col-weight≤1 구조 가정</td></tr><tr><td>추가확인</td><td>부호블록 로우재배치(sign-bit 모니터 조기종료)가 Prime ECC의 partial-CRC 조기종료 대비 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: NAND QC-LDPC HW의 사실상 표준이 된 layered(row-layered) 디코딩 아키텍처 원류 논문 — 개념은 Prime ECC가 이미 보유(Dual-Update)해 신규성은 낮으나 메모리/로직 절감 설계 근거로 정독 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: block-partitioned permutation(QC) irregular LDPC, 각 블록은 all-zero 또는 순환이동 단위행렬(블록크기 <code>p</code>=소수), rate 1/2(정보 5000bit)·rate 3/4 예제, log-domain BP.</li><li>문제: 표준 flooding BP는 갱신 메시지를 다음 iteration에야 활용 → 수렴 느리고 메모리(<code>Lq</code>,<code>R</code> 다중 버퍼)·로직 과다.</li><li>핵심 기법: <strong>layered BP</strong> — PCM을 수평 layer(각 layer 내 열가중치 ≤1)로 나눠 각 layer를 순차 SISO 복호, 갱신된 <code>R_mj</code>를 같은 super-iteration 내 즉시 재사용.</li><li>갱신식: <code>A_mj = Σ Ψ(|Lq_mj|)</code>, <code>s_mj = Π sign(Lq_mj)</code>, <code>R_mj = s·Ψ(A)</code>, <code>Lq_j = Lq_j + (R_new − R_old)</code> — layer 처리 후 <code>Lq</code>를 in-place 갱신.</li><li>Psi 함수: <code>Ψ(x) = −log tanh(x/2)</code>, 자기 음의 역함수 → 수치적으로 강건한 CN 연산(Boutillon의 time-overlapped column summation HW와 결합).</li><li>layer당 열가중치 ≤1이라 layer 내 단일 iteration만으로 충분(sub-iteration 1 + super-iteration 반복).</li><li>HW: 기존 flexible 디코더에서 bit-update 블록이 3메모리+병렬가산기 → layered 모드에선 <strong>1메모리·가산기 불필요</strong>로 축소, PCUB(Parity Check Update Block)당 1행 처리.</li><li>조기종료: <code>Lq</code>의 sign-bit 변화를 PCUB별 HW 블록으로 모니터, 한 full 시퀀스 동안 모든 parity-check 통과+sign 무변화면 <code>Hc=0</code> 판정으로 종료.</li><li>결과: layered 모드가 동일 오율에서 표준 BP 대비 약 <strong>1/2 iteration</strong>; 메모리 bit·instance 약 2/3 감축, 속도 향상으로 로직도 약 절반 감축 → 전체 아키텍처 약 2/3 축소.</li><li>한계: HW 실측/합성 gatecount·throughput 수치 본문 미기재(시뮬 성능곡선 위주), 정정능력 개선이 아닌 수렴속도·면적 개선.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered BP 순차 layer 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC의 Dual-Update(parity even/odd 교대)와 동일 계열 layered 개념</td></tr><tr><td>CN Ψ 연산 / R 갱신</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문은 Ψ=−log tanh 기반, Prime ECC는 min-sum이라 계산부는 상이</td></tr><tr><td><code>Lq</code> in-place 갱신·메모리 축소</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>layered로 메시지 메모리 버퍼 절감 아이디어 대응</td></tr><tr><td>sign-bit 모니터 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 partial/full CRC 조기종료, 논문의 sign-based Hc=0 종료와 별개</td></tr><tr><td>partitioned-permutation QC 구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>둘 다 순환이동 단위행렬 기반 QC-LDPC</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered 디코딩과 메모리 절감 아키텍처의 원류이나 Prime ECC가 Dual-Update로 유사 이득을 이미 보유해 신규성 제한적, sign-bit 조기종료 설계만 참고 여지.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1363033",
+  "title": "A Reduced Complexity Decoder Architecture via Layered Decoding of LDPC Codes",
+  "year": 2004,
+  "venue": "IEEE Workshop on Signal Processing Systems (SIPS)",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "layered BP를 partitioned-permutation QC-LDPC에 적용해 iteration 약 절반·메모리 약 2/3·로직 약 절반 감축",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "Prime ECC의 layered(Dual-Update) 스케줄과 중복, gatecount/throughput 수치 본문 미기재, layer당 col-weight≤1 구조 가정",
+  "todo_check": "부호블록 로우재배치(sign-bit 모니터 조기종료)가 Prime ECC의 partial-CRC 조기종료 대비 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1363033---a-reduced-complexity-decoder-architecture-via-layered-decoding-of-ldpc-codes-2004-ieee-sips">ieee:1363033 - A Reduced Complexity Decoder Architecture via Layered Decoding of LDPC Codes (2004, IEEE SIPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

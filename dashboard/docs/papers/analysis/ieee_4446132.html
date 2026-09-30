@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4446132</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4446132---iterative-soft-decision-decoding-of-binary-cyclic-codes-based-on-spread-parity-check-matrices-2007-ieee">ieee_4446132 - Iterative Soft-Decision Decoding of Binary Cyclic Codes based on Spread Parity-Check Matrices (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.45~0.90</td></tr><tr><td>부호length</td><td>31~127</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BCH 등 binary cyclic code용 PCM을 "spread"(반복분산) 구성해 EPCM 대비 4-cycle을 줄이고 SPA 복호 성능을 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 QC-LDPC가 아닌 BCH(binary cyclic) 코드이며 순수 알고리즘/시뮬레이션 논문으로 HW 구현·복잡도 분석 없음</td></tr><tr><td>추가확인</td><td>코드길이 31~127의 소형 BCH 코드만 실험, NAND ECC급 대형 QC-LDPC(수천~수만 bit)에서의 확장성 미검증</td></tr></tbody></table>
+<blockquote><p>총평: BCH(cyclic) 코드에 LDPC식 BP/SPA 복호를 적용하기 위한 PCM 변형 기법으로, 대상 부호 자체가 Prime ECC의 QC-LDPC와 다르고 소형 코드 시뮬레이션에 국한되어 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 binary cyclic code(특히 BCH 코드)이며, 표준 hard-decision 복호 대신 BP 기반 soft-decision 복호를 적용하려는 시도.</li><li>문제: cyclic code의 표준 PCM(1)은 unit-weight column과 다수의 4-cycle을 가져 BP 복호에 부적합하고, 기존 대안인 확장 PCM(EPCM, <code>HE</code>)은 long/high-rate 코드에서 4-cycle이 급증해 성능이 나빠짐.</li><li>채널 모델은 BPSK + AWGN, LLR 기반 log-domain Sum-Product Algorithm(LLR-SPA)을 그대로 사용.</li><li>핵심 기법: 원래 codeword를 s번 반복한 "spread code"를 정의하고, <code>HE = Σ H_i^S</code>가 되도록 s개의 순환행렬 <code>H_i^S</code>로 분해해 <code>H^S = [H_1^S | H_2^S | ... | H_s^S]</code>를 구성(spread parity-check matrix, SPCM).</li><li>핵심 식 <code>(H^S)(c^S)^T = H_E c^T = 0</code>은 spread code에 대해서도 원 코드의 패리티 관계가 그대로 성립함을 보장 — 즉 코드/rate 변경 없이 디코더 내부에서만 더 sparse한 그래프를 사용.</li><li>부수 트릭: <code>B_E</code>(EPCM 첫 행의 1위치 집합)를 s개 블록 <code>B_i^S</code>로 분할하는 문제는 휴리스틱(전수/랜덤 탐색)으로 풀며, column weight 7이 되도록 spreading factor s를 실험적으로 선택.</li><li>디코더는 spread code에 대한 사후 LLR <code>Lpos(c_i^S)</code>와 원 코드로 합산한 <code>Lpos(c_j)</code> 두 가지를 모두 계산해 이중 parity-check test로 조기 종료, 오검출(undetected error)을 줄임.</li><li>최적화 절차는 별도 학습 없이 4-cycle 개수 최소화를 위한 조합적 탐색(exhaustive/random search)만 사용.</li><li>결과: (63,57)-BCH에서 PCM 대비 1dB, EPCM 대비 1.5dB 이상 이득, FER이 union bound에 근접; (127,71)-BCH에서도 PCM 대비 1dB, EPCM 대비 2dB 이득이나 union bound와는 격차 존재.</li><li>한계: 31~127 길이의 소형 BCH 코드만 시뮬레이션했고, HW 구현·복잡도·throughput 분석 전무하며 spread factor s 및 블록 분할은 코드별 재탐색이 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA 기반 반복 복호(LLR 갱신)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>유사 개념이나 대상 코드(BCH cyclic)가 QC-LDPC와 근본적으로 다름</td></tr><tr><td>Spread PCM 구성(H-matrix 변형)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>BCH 전용 구성법으로 QC-LDPC H-matrix 설계에는 직접 적용 불가</td></tr><tr><td>이중 parity-check 기반 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>개념적으로 유사(조기종료)하나 spread code 특유의 이중 판정 구조는 대응 없음</td></tr><tr><td>4-cycle 최소화 휴리스틱</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC 고정 구조로 cyclic code용 PCM 재구성 기법 불필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — BCH cyclic code 전용 PCM 변형 기법으로 QC-LDPC 기반 Prime ECC와 부호 구조가 근본적으로 다르며 HW 검증도 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4446132",
+  "title": "Iterative Soft-Decision Decoding of Binary Cyclic Codes based on Spread Parity-Check Matrices",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.45~0.90",
+  "code_length": "31~127",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BCH 등 binary cyclic code용 PCM을 spread(반복분산) 구성해 EPCM 대비 4-cycle을 줄이고 SPA 복호 성능을 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상 부호가 QC-LDPC가 아닌 BCH(binary cyclic) 코드이며 순수 알고리즘/시뮬레이션 논문으로 HW 구현·복잡도 분석 없음",
+  "todo_check": "코드길이 31~127의 소형 BCH 코드만 실험, NAND ECC급 대형 QC-LDPC(수천~수만 bit)에서의 확장성 미검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4446132---iterative-soft-decision-decoding-of-binary-cyclic-codes-based-on-spread-parity-check-matrices-2007-ieee">ieee_4446132 - Iterative Soft-Decision Decoding of Binary Cyclic Codes based on Spread Parity-Check Matrices (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

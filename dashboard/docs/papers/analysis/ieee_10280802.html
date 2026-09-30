@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10280802</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10280802---design-of-f-l-qc-ldpc-decoder-based-on-lnms-decoding-algorithm-2023-ieee-icnc-fskd">ieee:10280802 - Design of F-L-QC-LDPC Decoder Based on LNMS Decoding Algorithm (2023, IEEE ICNC-FSKD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2700</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Fibonacci-Lucas 수열 기반 girth-4/6 없는 가변 길이/rate QC-LDPC 구성 + Layered NMS(LNMS) 디코더와 interlayer pipeline으로 수렴·throughput 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW는 구조도(layered pipeline)만 제시하고 gatecount/throughput/공정 수치 없음, Matlab 시뮬만, 5G/무선 rate-0.5 타깃(NAND 고rate 아님), NMS·layered 모두 기지 기법</td></tr><tr><td>추가확인</td><td>Fibonacci-Lucas 구성이 고rate(~0.9)·z=32 lifting Prime ECC 구조로 스케일되는지, LNMS 수렴이 min-sum(min1/min2) HW와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: girth-보증 QC-LDPC 구성법 + layered NMS + pipeline로 iteration 절반 감소를 보였으나 rate-0.5 무선 타깃·수치 부재로 이식성은 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: QC-LDPC, 예제 (2700,1352) code length 2700 rate 0.5, BPSK+AWGN, soft-decision 입력, 5G NR 등 다중 길이/rate 지원 목표.</li><li>문제: 일반 LDPC는 H-matrix 저장·읽기 어렵고 부호화 복잡도 큼 → 구조적 QC-LDPC로 저장/주소지정 완화 필요, 가변 길이/rate 요구.</li><li>구성기법(부호설계): Fibonacci-Lucas 수열(1,3,4,7,11,18,...)을 삼각배치 후 45도 회전(triangular rotation)해 지수행렬 <code>E</code>(0×) 구성, 행/열 수와 확장인자 P로 길이·rate 가변.</li><li>확장: 지수행렬 원소값만큼 U×U 단위행렬을 순환시프트해 검사행렬 H(0U×U) 생성; 꼬리원소에 파라미터 k(T) 더해 최대원소를 확장차원 P에 근접시킴.</li><li>girth 보증: Fibonacci-Lucas 정리로 식(12)(4-ring 없음)·식(15)(6-ring 없음) 유도 — p가 지수행렬 최대원소보다 크면 4/6-ring 미발생 → error correction 향상.</li><li>핵심기법(디코더): LNMS = Layered + NMS, CN update <code>E=∏sign·γ·min|L|</code> (식17, correction factor <code>γ</code>), layered로 갱신된 사후확률을 다음 layer에 즉시 사용.</li><li>구현 디테일: correction factor <code>γ=0.75</code>가 최적(시뮬), min/sub-min을 부분병렬로 그룹 계산; layered는 layer간 직렬·layer내 병렬.</li><li>HW 구조: interlayer pipeline로 read/compute/return sub-process를 겹쳐 1 iteration 지연을 약 절반 단축, throughput 향상(NMS와 HW 자원 소비 동일).</li><li>결과: LNMS는 NMS와 BER 동등하되 iteration 절반(LNMS 10 vs NMS 20)로 동일 성능; (2700,1352) BER=10^-5에서 50 iteration SNR≈1.95dB, 50회 이후 개선 미미해 iteration 50 선택; MS 대비 BP는 ~0.7dB 우수, NMS는 BP 대비 ~0.25dB gap.</li><li>한계: HW는 layered/pipeline 구조도만 제시하고 gatecount·throughput·공정 수치 없음, Matlab 시뮬만, rate-0.5 무선 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS(min-sum+correction) CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 min-sum 보유 — NMS의 γ correction factor는 magnitude 테이블에 반영 검토 가능</td></tr><tr><td>Layered(수렴가속) 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>layered 스케줄은 Prime ECC의 Dual-Update와 유사군, iteration 감소 목적 정합</td></tr><tr><td>interlayer pipeline HW</td><td>디코더 HW 모델(z=32, pipeline 6-stage)</td><td>Prime ECC 6-stage pipeline과 개념 대응하나 구조 정합 필요</td></tr><tr><td>Fibonacci-Lucas H-matrix 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조 레이어에 닿으나 Prime ECC는 고정 고rate QC-LDPC라 재검증 부담 큼</td></tr><tr><td>soft-decision LLR 입력</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>soft 2~3bit 입력 정합</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC-LDPC+layered NMS+pipeline 방향은 Prime ECC와 정합되나, layered/NMS는 이미 유사 기법 보유(Dual-Update/min-sum)이고 부호구성은 rate-0.5 무선 타깃이라 고rate NAND 적용엔 재검증이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10280802",
+  "title": "Design of F-L-QC-LDPC Decoder Based on LNMS Decoding Algorithm",
+  "year": 2023,
+  "venue": "IEEE ICNC-FSKD",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "2700",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Fibonacci-Lucas 수열 기반 girth-4/6 없는 가변 길이/rate QC-LDPC 구성 + Layered NMS(LNMS) 디코더와 interlayer pipeline으로 수렴·throughput 개선",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW는 구조도(layered pipeline)만 제시하고 gatecount/throughput/공정 수치 없음, Matlab 시뮬만, 5G/무선 rate-0.5 타깃(NAND 고rate 아님), NMS·layered 모두 기지 기법",
+  "todo_check": "Fibonacci-Lucas 구성이 고rate(~0.9)·z=32 lifting Prime ECC 구조로 스케일되는지, LNMS 수렴이 min-sum(min1/min2) HW와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10280802---design-of-f-l-qc-ldpc-decoder-based-on-lnms-decoding-algorithm-2023-ieee-icnc-fskd">ieee:10280802 - Design of F-L-QC-LDPC Decoder Based on LNMS Decoding Algorithm (2023, IEEE ICNC-FSKD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

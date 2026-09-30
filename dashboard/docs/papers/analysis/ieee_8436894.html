@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8436894</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8436894---variable-correction-for-min-sum-ldpc-decoding-applied-in-atsc30-2018-ieee">ieee:8436894 - Variable Correction for Min-Sum LDPC Decoding Applied in ATSC3.0 (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.13~0.87</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>iteration별 가변 스케일링 계수 alpha(i)를 GMI+Monte Carlo로 오프라인 산출해 min-sum에 적용(VCMS) - NMS error-floor 제거, OMS의 채널추정 민감성 회피</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>HW 미설계·FER 시뮬만, 계수는 부호별로 오프라인 재산출 필요, 검증채널이 AWGN/QPSK(방송)이라 NAND RBER 채널서 계수 재튜닝 요함</td></tr><tr><td>추가확인</td><td>GMI+MC 계수 산출을 Prime ECC 고rate QC-LDPC로 재현 시 우리 기존 적응형 LLR 테이블 대비 실이득/중복 여부</td></tr></tbody></table>
+<blockquote><p>총평: min-sum에 iteration별 가변 scaling 계수만 얹어 error-floor 제거 + waterfall 이득을 얻고 HW 오버헤드는 RAM 상수 저장뿐이라 우리 min-sum 디코더에 이식 적합성 높음(단 계수 재산출 필요).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: ATSC3.0 LDPC, length 16200/64800, rate 2/15~13/15, IRA(고rate)/MET(저rate) 구조, dual-diagonal parity, QC 변환 가능, AWGN/QPSK, 50 iter.</li><li>문제: MS는 저복잡도지만 성능손실 큼. NMS는 일부 부호서 error-floor, OMS는 완전 채널추정 가정 필요해 imperfect 추정 시 손실.</li><li>모델: MS의 CN 과대추정을 보정하는 계수가 LLR 신뢰도(=iteration 증가)와 CN degree에 의존한다고 가정.</li><li>핵심기법: VCMS - horizontal step에서 <code>L_mn = alpha_d^(i) · sgn(...) · min(...)</code>(식10), scaling 계수를 iteration <code>i</code>(및 원안은 degree <code>d</code>)별로 가변.</li><li>핵심식: <code>alpha_d^(i) = argmin_alpha ∫ p_Ld^(i)(l) log2(1+e^{-alpha·l}) dl</code>(식11) - GMI 기준으로 MS 출력분포에 최적 계수 산출.</li><li>확장/단순화: DE의 mismatch를 피하려 Monte Carlo로 실제 <code>L_min</code>에서 계수 탐색(식12), ATSC3.0 degree 분포가 거의 regular라 degree 무관·iteration만 가변인 <code>alpha^(i)</code>로 단순화(식13).</li><li>구현 디테일: 계수는 오프라인 대량 MC로 사전결정 후 HW RAM에 저장·로드, NMS 대비 추가 복잡도 trivial. 계수는 iteration 따라 non-decreasing([alpha^(i-1),1] 탐색, step 0.01).</li><li>학습/최적화: 계수 곡선은 초반 급증 후 수렴(LLR 신뢰도 상승 반영).</li><li>결과: FER=1e-4 기준, short 부호 NMS 대비 0.01~0.89dB, long 부호 0.02~1.48dB 이득. NMS의 error-floor(표의 *) 제거, OMS와 유사/우위(저rate서 특히), rate 2/15서 OMS 대비 0.05dB 우수.</li><li>한계: HW(gate/throughput) 미설계, FER 시뮬만, 계수는 부호별 오프라인 재산출, iteration 수 감소는 없음(계수만 개선).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VCMS horizontal step(가변 scaling min-sum)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum magnitude 산출부에 alpha^(i) 곱만 추가하면 직접 이식 - 가장 쉬운 레이어</td></tr><tr><td>iteration별 계수 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 이터레이션 구간별 LLR 테이블 슬롯에 계수 저장 재활용 가능(오프라인 상수)</td></tr><tr><td>GMI+MC 계수 오프라인 최적화</td><td>local_opt.cpp</td><td>우리 LLR 자동최적화 경로에 GMI 목적식 추가 검토</td></tr><tr><td>복호 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>루프 구조 그대로, CN 연산만 교체</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — min-sum에 iteration별 상수 scaling만 추가하는 저비용 변형으로 error-floor 제거와 waterfall 이득을 노릴 수 있어 우리 min-sum 디코더에 즉시 실험 가능. 단 계수 산출을 고rate QC-LDPC·NAND 채널로 재수행해야 하고, 기존 적응형 LLR 테이블과 중복 이득 여부 확인 필요.</p>
+<pre><code>{
+  "id": "ieee:8436894",
+  "title": "Variable Correction for Min-Sum LDPC Decoding Applied in ATSC3.0",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.13~0.87",
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "iteration별 가변 scaling 계수 alpha(i)를 GMI+Monte Carlo로 오프라인 산출해 min-sum에 적용(VCMS), NMS error-floor 제거 및 OMS 채널추정 민감성 회피",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "HW 미설계·FER 시뮬만, 계수는 부호별 오프라인 재산출 필요, 검증채널이 AWGN/QPSK(방송)이라 NAND RBER 채널서 계수 재튜닝 요함",
+  "todo_check": "GMI+MC 계수 산출을 Prime ECC 고rate QC-LDPC로 재현 시 기존 적응형 LLR 테이블 대비 실이득/중복 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8436894---variable-correction-for-min-sum-ldpc-decoding-applied-in-atsc30-2018-ieee">ieee:8436894 - Variable Correction for Min-Sum LDPC Decoding Applied in ATSC3.0 (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

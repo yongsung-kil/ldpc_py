@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8292048</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8292048---efficient-fpga-implementation-of-probabilistic-gallager-b-ldpc-decoder-2017-ieee-newcasiscas-계열-컨퍼런스">ieee:8292048 - Efficient FPGA Implementation of Probabilistic Gallager B LDPC Decoder (2017, IEEE NEWCAS/ISCAS 계열 컨퍼런스)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GaB VNU에 제어된 랜덤성(p=0.8)을 주입해 trapping set에서 탈출, error floor를 최대 4자릿수 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (Virtex-6, LUT/register 상대비율만 제시)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>42.6Gbps (dv3), 37.9Gbps (dv4)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC hard-decision(1bit) 전용, rate 0.5 regular 코드로 검증 - NAND 고rate soft-read 환경과 상이</td></tr><tr><td>추가확인</td><td>LFSR 랜덤성이 고rate QC-LDPC/soft-decision(min-sum) 파이프라인에서도 error-floor를 낮추는지</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision GaB의 trapping-set 탈출용 저비용 랜덤성 트릭 - min-sum 기반 Prime ECC에는 직접 이식 어렵지만 error-floor post-processing 아이디어로 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: <code>N=1296</code>, <code>dv=4</code>(and dv=3), <code>dc=8</code>, rate <code>0.5</code> regular QC-LDPC, BSC(hard-decision) 채널.</li><li>문제: hard-decision GaB는 저복잡·고속이지만 dominant trapping set에 갇혀 error floor가 높아 soft-decision(MS/OMS) 대비 정정능력이 떨어짐.</li><li>핵심 기법(PGaB): VNU가 CNU로 보내는 메시지 <code>v2c</code> 계산에만 랜덤 비트 <code>p_n^(i)</code>를 XOR로 주입 (Eq.3), Bernoulli <code>B(p0)</code>로 생성.</li><li>Eq.1(결정형 GaB)에 확률함수를 더해 <code>p_n^(i) ⊕ (r_n + Σ c2v)</code> 형태로 임계 <code>b(i)=dv/2</code> 판정을 교란 - 국소최소/trapping set 탈출이 목적.</li><li>최적 <code>p=0.8</code>(0~1 중), 즉 VNU의 20%만 교란해도 trapping set 탈출에 충분.</li><li>HW 트릭: 고품질 RNG 대신 32-bit LFSR 기반 경량 RNG로 클록당 VNU에 1-bit 랜덤 공급 (N-크기 shift register).</li><li>iteration 최적화: <code>1≤i≤15</code>는 결정형 GaB, <code>15&lt;i≤imax</code>에서만 PGaB 적용(heuristic switch)해 평균 iteration 대폭 감소.</li><li>VNU 구조: majority voter가 2bit 출력(00/11=다수, 01/10=tie), tie 시 채널값 <code>r</code> 포워딩.</li><li>결과: FER error-floor(α=0.01)에서 GaB 대비 최대 4자릿수 개선, 처리량 42.6Gbps(dv3)로 MS(600Mbps)/OMS(593Mbps) 대비 ~84배, MS/OMS 대비 register 440%↓·LUT 대폭↓.</li><li>한계: BSC hard-decision 전용, rate 0.5 regular 코드만 검증, 게이트카운트 절대값·공정 미제시(상대비율만).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GaB/PGaB 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>hard-decision majority 복호 - min-sum 루프와 알고리즘 상이, 구조만 대응</td></tr><tr><td>VNU 계산 + 랜덤 주입</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>HD 경로 VNU에 랜덤 XOR 추가 지점으로 실험 가능</td></tr><tr><td>trapping-set 탈출 post-processing</td><td>대응 없음</td><td>Prime ECC는 CRC 조기종료·적응형 LLR 보유, 확률적 교란은 미보유</td></tr><tr><td>채널(BSC hard)</td><td>channel.cpp</td><td>Prime ECC는 HD 지원하나 BSC 1bit 전용 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision GaB 전용 트릭이라 min-sum 기반 고rate QC-LDPC Prime ECC 파이프라인에 직접 붙지 않고, error-floor 교란 아이디어만 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8292048",
+  "title": "Efficient FPGA Implementation of Probabilistic Gallager B LDPC Decoder",
+  "year": 2017,
+  "venue": "IEEE Conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GaB VNU에 제어된 랜덤성(p=0.8)을 주입해 trapping set에서 탈출, error floor를 최대 4자릿수 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 42.6,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC hard-decision(1bit) 전용, rate 0.5 regular 코드로 검증 - NAND 고rate soft-read 환경과 상이",
+  "todo_check": "LFSR 랜덤성이 고rate QC-LDPC/soft-decision(min-sum) 파이프라인에서도 error-floor를 낮추는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8292048---efficient-fpga-implementation-of-probabilistic-gallager-b-ldpc-decoder-2017-ieee-newcasiscas-계열-컨퍼런스">ieee:8292048 - Efficient FPGA Implementation of Probabilistic Gallager B LDPC Decoder (2017, IEEE NEWCAS/ISCAS 계열 컨퍼런스)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

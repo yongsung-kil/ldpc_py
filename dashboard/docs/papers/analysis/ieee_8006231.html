@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8006231</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8006231---2-d-ldpc-codes-and-joint-detection-and-decoding-for-two-dimensional-magnetic-recording-2018-ieee-trans-magnetics">ieee:8006231 - 2-D LDPC Codes and Joint Detection and Decoding for Two-Dimensional Magnetic Recording (2018, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>32768</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>3-D 패리티체크 텐서로 native 2-D QC-LDPC 부호를 구성해 2-D 버스트 소실정정 &gt;20% 향상, GBP 기반 결합 검출-복호로 0.5dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>TDMR(2-D 자기기록) 특화 - 2-D 버스트 소실·2-D ISI 대상이라 NAND 1-D binary LDPC와 오류모델·복호구조 상이, GBP는 연산복잡도 커 large page 비현실적</td></tr><tr><td>추가확인</td><td>zero-span 기반 버스트 소실정정 부호구성이 NAND 1-D 랜덤/버스트 오류에 유의미한 이득이 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 2-D 자기기록용 텐서 LDPC + GBP 결합 검출복호로, NAND binary QC-LDPC와는 오류모델(2-D 버스트/ISI)·디코더(GBP) 계열이 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 TDMR(2-D 자기기록) 채널(2-D ISI, Voronoi 매체, PR 등화), 목표 SFR~1e-15; 4kB 섹터를 <code>128×256</code> 2-D page로 처리.</li><li>문제: 1-D LDPC를 raster로 2-D에 깔면 2-D 버스트 소실(열적 asperity·결함)을 잘 못 잡음 → native 2-D 부호 필요.</li><li>모델: 채널 AWGN + 2-D ISI(3×3 span), 버스트 소실을 2-D 연결영역으로 모델, defect detector가 소실위치를 디코더에 flag.</li><li>핵심기법1(부호): 1-D QC-LDPC의 순열행렬 타일링을 확장, identity tensor의 행/열 순열 <code>P,Q</code>로 <code>p×p×p</code> cube를 <code>c×h×w</code> 스택해 3-D 패리티체크 텐서 <code>H2-D</code> 구성.</li><li>shift <code>a=i mod p</code>, <code>b=⌊(i-1)/p⌋jk</code> 선택으로 균일 열가중치 <code>c/p</code> 보장(Lemma 1); zero-span 분석으로 최소 <code>p×p</code> 2-D 버스트 소실정정 보증(Thm 1).</li><li>핵심기법2(복호): GBP(generalized belief propagation)를 Gibbs free energy 최소화로 정식화, 2-D ISI 제약과 LDPC 패리티 제약을 하나의 region graph에 결합한 결합 검출-복호 엔진 유도.</li><li>구현 디테일: region의 조상/자손 추적으로 메시지·belief 갱신식(31)(38) 도출, 패리티 위배 word의 belief를 0으로 강제; region 크기는 부호 row weight에 비례(large page 비현실).</li><li>학습/최적화: 별도 학습 없음, Kikuchi 근사 overcounting <code>cr</code>로 free energy 근사·수렴.</li><li>결과: 제안 2-D 부호는 42×42 버스트를 1-D의 38×38 수준 성능으로 정정(&gt;20% 향상, rate 0.875), 결합 엔진은 6-iter turbo loop 대비 16×16 page에서 약 0.5dB BER 이득.</li><li>한계: HW 미설계(FPGA는 future work), 시뮬만, GBP 연산복잡도가 커 실사이즈 page 적용 곤란, 자기기록 2-D 오류모델 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>순열행렬 타일링(1-D QC-LDPC 기반)의 2-D 확장</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>base+shift QC 구성 개념은 공유하나 3-D 텐서 부호는 Prime ECC의 2-D base matrix와 구조 상이</td></tr><tr><td>GBP 결합 검출-복호 엔진</td><td>대응 없음</td><td>Prime ECC는 min-sum BP 디코더, 채널검출과 분리 - GBP/region-graph 계열 없음</td></tr><tr><td>2-D 버스트 소실정정(zero-span)</td><td>대응 없음</td><td>NAND는 1-D 랜덤/버스트, defect-flag 소실복호 미대상</td></tr><tr><td>soft-info/PR 등화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>Prime ECC는 NAND read LLR, PR 자기채널 등화와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — TDMR용 2-D 텐서 LDPC와 GBP 결합복호는 NAND 1-D binary QC-LDPC의 오류모델·min-sum 디코더와 계열이 달라 떼어 쓸 공통 레이어 부재.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8006231",
+  "title": "2-D LDPC Codes and Joint Detection and Decoding for Two-Dimensional Magnetic Recording",
+  "year": 2018,
+  "venue": "IEEE Trans. Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "32768",
+  "soft_quant": "무관",
+  "key_contribution": "3-D 패리티체크 텐서로 native 2-D QC-LDPC 부호를 구성해 2-D 버스트 소실정정 &gt;20% 향상, GBP 기반 결합 검출-복호로 0.5dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "TDMR(2-D 자기기록) 특화 - 2-D 버스트 소실·2-D ISI 대상이라 NAND 1-D binary LDPC와 오류모델·복호구조 상이, GBP는 연산복잡도 커 large page 비현실적",
+  "todo_check": "zero-span 기반 버스트 소실정정 부호구성이 NAND 1-D 랜덤/버스트 오류에 유의미한 이득이 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8006231---2-d-ldpc-codes-and-joint-detection-and-decoding-for-two-dimensional-magnetic-recording-2018-ieee-trans-magnetics">ieee:8006231 - 2-D LDPC Codes and Joint Detection and Decoding for Two-Dimensional Magnetic Recording (2018, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

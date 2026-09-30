@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9238855</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9238855---a-parallel-and-memory-efficient-decoding-for-spatially-coupled-ldpc-codes-2020-ieeecic-iccc">ieee:9238855 - A Parallel and Memory-Efficient Decoding for Spatially-Coupled LDPC Codes (2020, IEEE/CIC ICCC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>windowed decoding에 병렬 처리(P개 프로세서)와 메모리 관리 개선을 적용해 지연·메모리를 동시 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>AWGN 채널 SC-LDPC 대상 시뮬레이션뿐, HW 구현/합성 없음</td></tr><tr><td>추가확인</td><td>병렬 P개 프로세서 간 스케줄 재배치가 Prime ECC의 layered/Dual-Update 스케줄과 어떻게 다른지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: SC-LDPC 전용 windowed decoding의 파이프라인/메모리 최적화로, 정정능력 개선은 없고 latency·메모리 절감에 국한된 아키텍처 논문.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 semi-infinite time-invariant SC-LDPC 코드(QC 서브행렬 구성, syndrome former memory <code>µ</code>), AWGN 채널, windowed decoding 기반.</li><li>기존 windowed decoding은 고정 크기 window(<code>w</code>)로 BP를 수행하지만 순차 처리로 latency가 크고 pipeline decoding 대비 메모리 소모가 큼.</li><li>layered 스케줄(check node 순차 업데이트)을 기반으로, window 내 인접 sub-block(<code>µ+1</code>개)만 참조하는 지역성을 이용해 병렬화 가능함을 관찰.</li><li>두 가지 개선: (1) <code>P</code>개 프로세서가 서로 다른 stage를 동시에 처리하는 parallel computation, (2) 이미 충분히 갱신된 LLR sub-block을 즉시 메모리에서 제거하는 memory-efficient management.</li><li>핵심 수식: <code>Cbit = P(1-R)(I(µ+1)+1)Ccheck</code>(연산량), <code>Storage = P(µ+1)mSdc + (P(µ+1)+µ)nS</code>(저장량), <code>∆delay = (P(µ+1)+µ)mS(I(µ+1)+1)Tcheck</code>(latency).</li><li>파라미터 <code>P</code>(병렬 프로세서 수), <code>I</code>(내부 반복 횟수)로 성능-복잡도 trade-off를 조절.</li><li>Algorithm 1로 반복문 구조 명시: 매 stage마다 LLR/R sub-block 삽입 → <code>P</code>개 프로세서 병렬 갱신 → shift.</li><li>별도 학습/최적화 절차 없음(폐형 알고리즘, 파라미터 스윕 시뮬레이션만).</li><li>Code1(µ=2)에서 windowed decoding 대비 storage 75%, latency 11%; Code2(µ=1)에서 storage 67%, latency 7%로 감소하며 BER 성능 저하 없음(windowed decoding과 동일 BER 곡선).</li><li>AWGN 채널 시뮬레이션에 국한되고 HW 아키텍처/게이트 설계는 제시되지 않음; SC-LDPC 특화(구조적 코드에만 적용 가능)라 QC-LDPC block code에는 직접 적용 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered decoding 스케줄 (병렬 processor 배치)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, Dual-Update 스케줄</td><td>Prime ECC는 이미 Dual-Update(odd/even 교대) 병렬 스케줄 보유, 본 논문의 P-processor 방식과 목적 유사하나 SC-LDPC 전용 구조라 직접 이식 어려움</td></tr><tr><td>LLR/R 메모리 관리(sliding window, 즉시 제거)</td><td>대응 없음</td><td>Prime ECC는 SC-LDPC가 아닌 고정 block QC-LDPC이므로 windowed 메모리 구조 자체가 불필요</td></tr><tr><td>H-matrix 구조 (SC-LDPC syndrome former)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>코드 구조가 다름(convolutional vs QC block), 부호설계 이식 불가</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — SC-LDPC 전용 windowed decoding 최적화로 Prime ECC의 QC-LDPC block 구조와 코드 형태 자체가 다르며, 정정능력 개선도 없어 이식 실익이 적음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9238855",
+  "title": "A Parallel and Memory-Efficient Decoding for Spatially-Coupled LDPC Codes",
+  "year": 2020,
+  "venue": "IEEE/CIC ICCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "windowed decoding에 병렬 처리와 메모리 관리 개선을 적용해 지연·메모리를 동시 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "AWGN 채널 SC-LDPC 대상 시뮬레이션뿐, HW 구현/합성 없음",
+  "todo_check": "병렬 P개 프로세서 간 스케줄 재배치가 Prime ECC의 layered/Dual-Update 스케줄과 어떻게 다른지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9238855---a-parallel-and-memory-efficient-decoding-for-spatially-coupled-ldpc-codes-2020-ieeecic-iccc">ieee:9238855 - A Parallel and Memory-Efficient Decoding for Spatially-Coupled LDPC Codes (2020, IEEE/CIC ICCC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

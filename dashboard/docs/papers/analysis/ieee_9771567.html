@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9771567</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9771567---joint-estimation-and-decoding-algorithm-for-ldpc-code-in-different-impulsive-noise-channel-2022-ieee-wcnc">ieee:9771567 - Joint estimation and decoding algorithm for LDPC code in different impulsive noise channel (2022, IEEE WCNC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>사후확률(posteriori LLR) 활용 gradient-based EM으로 impulsive(SαS) 노이즈 파라미터를 복호와 결합 추정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SαS impulsive 채널(전력선/무선/수중) 전용 채널추정 기법 — NAND read 채널과 무관, gradient update rate에 민감</td></tr><tr><td>추가확인</td><td>없음(NAND soft-read 채널로 재정의 불가)</td></tr></tbody></table>
+<blockquote><p>총평: SαS impulsive 노이즈 채널 파라미터 추정을 복호와 결합하는 무선용 기법으로, NAND flash LDPC ECC와 채널 모델이 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널은 AWGN이 아닌 additive symmetric α-stable(SαS) impulsive 노이즈, BPSK 심볼 <code>L=8000</code>, Mackay rate-1/2 (3,6) regular LDPC 부호.</li><li>문제: SαS PDF는 닫힌형이 없고(α=2 Gaussian, α=1 Cauchy 제외) 노이즈 상태가 급변, 기존 추정기는 hard-decision만 써 정보손실·성능열화.</li><li>모델: 노이즈 파라미터 <code>θ=(α,γ)</code>, α는 impulsive 정도(1≤α≤2), γ는 scale(0&lt;γ≤1); 2차 모멘트 무한이라 GSNR로 SNR 정의.</li><li>핵심: EM 프레임에서 출력 y=관측변수, 입력 x=잠재변수로 두고 ML 추정 <code>θ̂=argmax Σ log p(y_j|θ)</code>의 하한을 최대화, 입력확률을 0.5가 아닌 복호 사후확률 <code>p(x|y)</code>로 가중.</li><li>핵심 식(11): <code>Ĝ(θ)=Σ_j Σ_x 1/(1+e^{-xΛ_app(y)}) log f_θ(y_j−x_j)</code> — Sum-Product 복호가 내보낸 사후 LLR <code>Λ_app</code>로 추정목적을 재가중(cross-entropy 항은 θ와 무관해 소거).</li><li>확장: SαS PDF가 닫힌형이 없어 <code>G(θ)</code> 최대화가 이론적으로 convex 증명 불가 → gradient descent로 근사탐색(산점도상 near-convex).</li><li>구현 디테일: 유한차분 gradient <code>∇G=(G(θ+Δθ)−G(θ))/Δθ</code>, 갱신 <code>θ_{n+1}=θ_n+η_θ∇G</code>, update rate η_α=1e-4, η_γ=1e-5, gradient iter N=20, EM iter M에 민감(boundary 이탈 주의).</li><li>학습/최적화: outer EM(추정)–inner gradient descent 이중 루프로 매 EM iteration마다 Sum-Product 복호 → 사후 LLR → 파라미터 갱신 반복.</li><li>결과: 추정 α·γ의 RMSE가 EM iteration 증가로 감소, EXIT curve 상 ideal/SIR과 유사 수렴, BER은 SIR 대비 0.3~0.4dB 이득이며 채널 완전기지 ideal BP 대비 0.1dB 이내.</li><li>한계: HW 미설계(FPGA/GPU 구현 가능성만 언급), SαS impulsive 채널 전용, gradient update rate 튜닝 민감.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| SαS 채널 LLR 계산 Λ_θ(y) | channel.cpp Set_LLR_Th() | 채널 모델이 SαS라 NAND RBER/soft-read와 상이, 직접 대응 아님 |
+| Sum-Product 복호 루프 | decoder.cpp LDPC_Decoder() | 우리는 Min-Sum 기반, boxplus full Sum-Product는 미보유 |
+| EM 기반 채널 파라미터 추정 | 대응 없음 | Prime ECC에 채널파라미터 온라인추정 모듈 없음 |
+| 사후 LLR 되먹임 | 대응 없음 | 조기종료/LLR 테이블은 있으나 파라미터 추정 되먹임 구조 아님 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 채널 모델(SαS impulsive)이 NAND flash와 근본적으로 다르고, 기여의 핵심이 채널 파라미터 EM 추정이라 binary QC-LDPC ECC 디코더 이식 대상이 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9771567",
+  "title": "Joint estimation and decoding algorithm for LDPC code in different impulsive noise channel",
+  "year": 2022,
+  "venue": "IEEE WCNC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "무관",
+  "key_contribution": "사후확률(posteriori LLR) 활용 gradient-based EM으로 impulsive(SαS) 노이즈 파라미터를 복호와 결합 추정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SαS impulsive 채널(전력선/무선/수중) 전용 채널추정 기법 — NAND read 채널과 무관, gradient update rate에 민감",
+  "todo_check": "없음(NAND soft-read 채널로 재정의 불가)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9771567---joint-estimation-and-decoding-algorithm-for-ldpc-code-in-different-impulsive-noise-channel-2022-ieee-wcnc">ieee:9771567 - Joint estimation and decoding algorithm for LDPC code in different impulsive noise channel (2022, IEEE WCNC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

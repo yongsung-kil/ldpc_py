@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6294975</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6294975---an-efficient-bit-flipping-decoding-algorithm-for-ldpc-codes-2012-cross-strait-quad-regional-radio-science-and-wireless-technology-conf">ieee:6294975 - An Efficient Bit-Flipping Decoding Algorithm for LDPC Codes (2012, Cross Strait Quad-Regional Radio Science and Wireless Technology Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2000</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>BP에서 유도한 채널독립 가중 bit-flipping(CIWBF) 신뢰도 함수로 α 사전탐색 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>hard-decision BF 계열로 min-sum 대비 성능 낮음, (3,6)-regular 단일코드 시뮬만, HW 미설계</td></tr><tr><td>추가확인</td><td>soft-read NAND에서 BF의 waterfall이 우리 min-sum 대비 크게 뒤처지는지, QC-LDPC 적용성</td></tr></tbody></table>
+<blockquote><p>총평: WBF 계열 개선(α 탐색 불필요, 1.5dB gain)이나 hard-decision BF 자체가 우리 min-sum보다 열등해 이식가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (3,6)-regular LDPC, <code>N=2000</code>, <code>Rc=1/2</code>, AWGN, hard-decision BF 복호.</li><li>문제: WBF/MWBF/IMWBF는 최적 가중치 <code>α</code>를 SNR별 시뮬로 사전 탐색해야 하고, α가 최적 아니면 성능 급락.</li><li>착안: soft BP(SPA)의 첫 iteration LLR <code>L(c_j|y)</code>에서 flipping 판정을 이론 유도 → 채널독립.</li><li>근사: <code>ϕ(x)=ln((e^x+1)/(e^x−1))</code>를 3구간 piecewise-linear <code>ϕ_p</code>로 근사해 <code>E_j</code>를 단순화.</li><li>flipping 함수 <code>e_j = Σ_{i∈M(j)}(2s_i−1)w_{i,j} − y_j</code>, <code>w_{i,j}=Σ_{j'∈N(i)\j}|y_{j'}|</code> (기존 WBF의 "최소신뢰비트" 대신 참여비트 신뢰도 합).</li><li>의미: <code>e_j</code>가 클수록(양수) 위배 신드롬 많아 해당 비트가 오류 가능성 높음 → flip 대상.</li><li>절차: 초기화 시 <code>w_{i,j}</code> 저장 → 신드롬 0이면 종료, 아니면 <code>e^(k)</code> 계산 → 최대 <code>e_j</code> 비트 1개 flip → <code>k_max</code>까지 반복.</li><li>이점: <code>α</code> 사전탐색 불필요, 채널독립, hard-decision BF의 낮은 복잡도 유지.</li><li>결과: <code>BER=5e-6</code>에서 WBF 대비 1.5dB(MWBF 1dB, IMWBF 0.5dB) coding gain, iteration 25~48% 감소 (<code>Eb/N0=5dB</code>, CIWBF 88.03회).</li><li>한계: hard-decision BF 계열이라 SPA/MSA보다 성능 낮음, 단일 (3,6)-regular 시뮬만, HW·QC-LDPC 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CIWBF flipping 함수/신드롬 기반 반복</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>별도 BF 복호 경로, 우리 min-sum 루프와 알고리즘 상이</td></tr><tr><td>신드롬 계산 s=ĉH^T</td><td>decoder.cpp <code>C2V_Cal()</code> / 조기종료 신드롬</td><td>신드롬 재사용 가능하나 BF 판정은 별개</td></tr><tr><td>ϕ 근사 (BF용)</td><td>대응 없음</td><td>우리는 full-tanh 대신 min-sum 사용, ϕ piecewise 근사 불필요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision BF 계열은 Prime ECC의 min-sum(2SD/3SD soft) 대비 성능이 열등하고, α 제거 이득은 우리 min-sum 파이프라인에 직접 이식할 대상이 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6294975",
+  "title": "An Efficient Bit-Flipping Decoding Algorithm for LDPC Codes",
+  "year": 2012,
+  "venue": "Cross Strait Quad-Regional Radio Science and Wireless Technology Conference",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2000",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "BP에서 유도한 채널독립 가중 bit-flipping(CIWBF) 신뢰도 함수로 α 사전탐색 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "hard-decision BF 계열로 min-sum 대비 성능 낮음, (3,6)-regular 단일코드 시뮬만, HW 미설계",
+  "todo_check": "soft-read NAND에서 BF의 waterfall이 우리 min-sum 대비 크게 뒤처지는지, QC-LDPC 적용성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6294975---an-efficient-bit-flipping-decoding-algorithm-for-ldpc-codes-2012-cross-strait-quad-regional-radio-science-and-wireless-technology-conf">ieee:6294975 - An Efficient Bit-Flipping Decoding Algorithm for LDPC Codes (2012, Cross Strait Quad-Regional Radio Science and Wireless Technology Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

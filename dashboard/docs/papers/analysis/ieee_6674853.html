@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6674853</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6674853---high-parallel-performance-aware-ldpc-decoder-ip-core-design-for-wimax-2013-ieee-iscasconference">ieee:6674853 - High-Parallel Performance-Aware LDPC Decoder IP Core Design for WiMAX (2013, IEEE ISCAS/conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>3-state 처리 스케줄로 fully-parallel layered 병렬화 2배 + ADQ(동적 양자화)로 error-floor 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>645k gate(logic)/978k equiv.gate@65nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.021Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMAX QC-LDPC 전용 아키텍처(z, base matrix WiMAX 고정), rate/length 본문 미명시</td></tr><tr><td>추가확인</td><td>ADQ 트리거 파라미터(l, PS-TH) 결정 방식과 6-bit 대비 실제 BER 이득 곡선</td></tr></tbody></table>
+<blockquote><p>총평: OMS layered 디코더의 3-state 병렬화·동적양자화(ADQ) 기법으로 error-floor와 전력효율을 개선했으나 WiMAX 특화 HW로 이식엔 재구성이 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>WiMAX용 QC-LDPC(6 base matrix, 6 rate, 19 length; codeword 2304-bit) multi-mode를 지원하는 합성가능 fully-parallel layered 디코더 IP.</li><li>기존 partial-parallel layered는 layer당 76~88 cycle, dual-path[9]도 48~54 cycle로 병렬화가 제한되고 bit-serial[10]은 MUX 과다·message saturation 문제가 있음.</li><li>복호는 Offset Min-Sum(OMS) layered: <code>λmn=SAT(Ln-Λmn^{t-1})</code>(pre-VNU), <code>Λmn=max(min|λ|-β,0)·sgn</code>(CNU), <code>Ln=SAT(λmn+Λmn)</code>(post-VNU).</li><li>6-bit 양자화 메시지 갱신·interconnection을 2-bit serial line 3개로 분할하여 layer 1개를 6 cycle 대신 <code>3 cycle</code>에 처리 → iteration당 <code>12~24 cycle</code>(병렬 2배).</li><li>ADQ(Advanced Dynamic Quantization): CN sign 곱 <code>PS=∏sgn(λmn)</code>로 수렴 진척을 판정.</li><li>연속 <code>l</code> layer에서 음의 PS를 갖는 CN 수가 <code>PS-TH</code> 미만이면 모든 APP/CN 메시지를 2로 나눠 양자화 범위를 1회 확장 → 고정 6-bit로 7-bit 수준 BER 및 error-floor 개선.</li><li>Early-detect-logic 포화처리: S1에서 saturation을 조기감지해 추가 interconnection bit-width 없이 처리(CN range 1ulp 축소, 성능 손실 무시가능).</li><li>CN 메시지 압축저장(min1/min2 magnitude, POS, 24 sign만) + 2-layer 동시처리로 CN 메모리 9.4% 추가 절감; PN array(21 instance)·switching array로 라우팅.</li><li>SMIC 65nm 합성: 122MHz 최대, 978k equiv.gate, 55MHz·10iter에서 1021Mbps, 59.5mW, 5.8pJ/bit/iter(전력효율 [10] 대비 46.8%, [9] 대비 72.1% 개선).</li><li>한계: WiMAX 표준 QC-LDPC 특화 HW, rate/length 본문 미명시(soft-decision 6-bit LLR), 무선 채널(AWGN) 기준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMS layered CNU/VNU 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>offset min-sum 자체는 이미 보유(min1/min2+sign), layered 스케줄만 차이</td></tr><tr><td>ADQ 동적 양자화(2로 나눔)</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>iteration별 LLR 테이블에 진척기반 range 확장으로 추가 가능(error-floor 개선 관심영역)</td></tr><tr><td>CN 압축저장(min1/min2/POS/sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min1/min2+sign 구조와 동일</td></tr><tr><td>3-state PU 병렬화/PN 라우팅</td><td>디코더 HW 모델(z=32, GT) GT.cpp <code>Make_GT_HW()</code></td><td>우리 z=32 구조와 다른 fully-parallel layered, 정합 재구성 필요</td></tr><tr><td>soft 6-bit 양자화 LLR</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>우리는 soft-2~3bit까지, 6-bit는 NAND read 비용상 부적합</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — ADQ의 sign-곱 기반 진척판정→양자화 확장은 error-floor 개선 아이디어로 우리 LLR 테이블에 이식 검토 가치가 있으나, 3-state HW·6-bit soft·WiMAX 부호는 그대로 쓰기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6674853",
+  "title": "High-Parallel Performance-Aware LDPC Decoder IP Core Design for WiMAX",
+  "year": 2013,
+  "venue": "IEEE conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": "2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "3-state 처리로 fully-parallel layered 병렬화 2배 + ADQ 동적양자화로 error-floor 개선",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "645k gate(logic)/978k equiv@65nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.021,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiMAX QC-LDPC 전용 아키텍처, rate/length 본문 미명시, 6-bit soft",
+  "todo_check": "ADQ 트리거 파라미터(l, PS-TH) 결정 방식과 실제 BER/error-floor 이득 곡선"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6674853---high-parallel-performance-aware-ldpc-decoder-ip-core-design-for-wimax-2013-ieee-iscasconference">ieee:6674853 - High-Parallel Performance-Aware LDPC Decoder IP Core Design for WiMAX (2013, IEEE ISCAS/conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

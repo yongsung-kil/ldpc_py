@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7898488</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7898488---offset-and-normalized-min-sum-algorithms-for-atsc-30-ldpc-decoder-2017-ieee-trans-broadcasting">ieee:7898488 - Offset and Normalized Min-Sum Algorithms for ATSC 3.0 LDPC Decoder (2017, IEEE Trans. Broadcasting)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>10/15</td></tr><tr><td>부호length</td><td>16200,64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>ATSC3.0 QC-LDPC용 DE 기반 OMSA/NMSA 최적 offset·scaling 값 도출, NMSA의 채널미스매치 error-floor 규명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>offset/scaling 값이 ATSC3.0 부호·QPSK/AWGN 특화, NMSA는 채널미스매치로 error-floor(BCH outer로 보완 권고)</td></tr><tr><td>추가확인</td><td>Prime ECC 고rate QC-LDPC·NAND RBER 채널에서 DE 최적 offset/scaling 재도출 필요</td></tr></tbody></table>
+<blockquote><p>총평: OMSA/NMSA 최적 offset·scaling과 NMSA error-floor 원인 분석은 min-sum 튜닝에 유용하나 부호·채널 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: ATSC 3.0 QC-LDPC (Type-A/B), length 16200(short)/64800(long), QPSK/AWGN, 50 iteration.</li><li>문제: SPA는 성능 최고이나 복잡도 큼, MSA는 <code>ln cosh(x)≈|x|-ln2</code> 근사로 coding gain 손실 발생.</li><li>모델: AWGN LLR <code>Li=2/σ²·yi</code>, MSA/NMSA는 공통항 <code>2/σ²</code>가 부호결정에 무관해 채널추정(σ²) 없이 수신값만으로 복호 가능.</li><li>핵심기법: check node에 scaling <code>α&lt;1</code>(NMSA)·offset <code>β&gt;0</code>(OMSA) 적용, <code>CHKO=Σsgn·max(min(|L|)-β,0)</code>, <code>CHKN=α·Σsgn·min(|L|)</code>.</li><li><code>α</code>,<code>β</code>를 density evolution으로 각 부호·rate별 최적화(Table III)해 SPA에 근접한 성능 확보.</li><li>NMSA는 큰 LLR에서 <code>|CHK-CHKN|≈(1-α)·min(|L|)</code>로 오차가 SNR 증가에 비례해 채널미스매치 error-floor 유발.</li><li>MSA/OMSA는 큰 LLR에서 <code>CHK/CHKM≈1</code>이라 error-floor에 상대적으로 강함.</li><li>OMSA(수신값 기반)의 최적 offset은 <code>β→σ²β/2</code>로 채널추정 의존, AWGN 등 예측가능 채널에선 고정 β로 양호.</li><li>결과: SPA gap from Shannon 0.15~1.35dB, OMSA는 안정적으로 SPA 근접, NMSA는 FER&lt;1e-4에서 error-floor(rate10/15,64800에서 MSA와 cross-over near 1e-5).</li><li>한계: HW 미설계, gate/throughput 없음, 시뮬만, ATSC3.0 부호·QPSK/AWGN 특화, BCH outer 병용 권고.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMSA offset / NMSA scaling check node 갱신</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>Prime ECC min-sum의 offset/normalize 계수 튜닝에 직접 적용 가능</td></tr><tr><td>DE 기반 α,β 최적화</td><td><code>local_opt.cpp</code> (LLR 자동최적화)</td><td>파라미터 자동탐색 흐름과 개념 정합</td></tr><tr><td>iteration별 LLR 반영</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>적응형 LLR 테이블 튜닝 관점 참고</td></tr><tr><td>dual-diagonal/RA 인코딩 (Type-A/B)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>인코딩 구조 유사(dual-diag) 참고 수준</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — OMSA offset/NMSA scaling 최적화와 NMSA channel-mismatch error-floor 진단은 Prime ECC min-sum 계수 튜닝에 참고 가치가 있으나, α/β는 부호·채널 종속이라 Prime ECC 부호·NAND RBER 채널에서 재도출해야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7898488",
+  "title": "Offset and Normalized Min-Sum Algorithms for ATSC 3.0 LDPC Decoder",
+  "year": 2017,
+  "venue": "IEEE Trans. Broadcasting",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "16200,64800",
+  "soft_quant": "무관",
+  "key_contribution": "ATSC3.0 QC-LDPC용 DE 기반 OMSA/NMSA 최적 offset·scaling 값 도출, NMSA의 채널미스매치 error-floor 규명",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "offset/scaling 값이 ATSC3.0 부호·QPSK/AWGN 특화, NMSA는 채널미스매치로 error-floor(BCH outer로 보완 권고)",
+  "todo_check": "Prime ECC 고rate QC-LDPC·NAND RBER 채널에서 DE 최적 offset/scaling 재도출 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7898488---offset-and-normalized-min-sum-algorithms-for-atsc-30-ldpc-decoder-2017-ieee-trans-broadcasting">ieee:7898488 - Offset and Normalized Min-Sum Algorithms for ATSC 3.0 LDPC Decoder (2017, IEEE Trans. Broadcasting)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

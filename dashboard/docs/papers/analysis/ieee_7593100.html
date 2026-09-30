@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7593100</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7593100---a-linear-model-for-the-iterative-decoding-of-random-ldpc-codes-in-the-high-snr-region-2016-istc">ieee:7593100 - A Linear Model for the Iterative Decoding of Random LDPC Codes in the High SNR Region (2016, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>504~2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>활성 dominant TS/AS 기반으로 min-sum CN 연산을 선형화하여 고SNR error-floor BER를 예측</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더/부호 개선이 아닌 error-floor 성능 예측(IS 대체) 도구, HW 무관</td></tr><tr><td>추가확인</td><td>예측 정확도가 우리 고rate QC-LDPC(N_b=129)에 스케일하는지</td></tr></tbody></table>
+<blockquote><p>총평: 디코더/부호를 바꾸지 않고 error-floor BER를 IS보다 빠르게 예측하는 해석 도구로, Prime ECC 코드 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 랜덤/구조 irregular·regular LDPC (예제 A: <code>N=504,M=252</code> PEG, B: <code>N=2048</code> IEEE 802.3an), AWGN+BPSK, LLR clipping ±200.</li><li>문제: 고SNR error-floor 영역 BER를 importance sampling(IS)으로 구하는 데 시간이 오래 걸리고 랜덤 코드에는 구조적 선형모델([3][4])이 안 맞음.</li><li>모델: min-sum 3단계 중 VN처리(2)·사후LLR(3)는 선형, CN처리(4)만 비선형 → CN을 선형화하면 전체를 <code>R_l=A·Q_{l-1}</code>, <code>Q_l=B·R_l+L_ch</code>, <code>L_l=C·R_l+L_ch</code> 로 표현.</li><li>핵심 기법: 비선형 CN 행렬 <code>A(e,em)=∏sgn(V_j')</code>를 구하려면 최소절댓값 메시지를 보내는 VN(<code>jm</code>)을 특정해야 함.</li><li>의미: 고SNR에서는 소수의 active dominant TS의 VN만 저신뢰도라 최소메시지 원천이 됨 → TS로 <code>jm</code> 후보를 좁힘.</li><li>active TS 식별: 개별 오류확률 <code>Pek=1/(1+e^{|Lch_k|})</code>가 평균오류 상한 <code>H(X|Y)/2</code>를 넘으면 그 VN을 vulnerable로 판정, TS의 모든 VN이 vulnerable이면 active(식(20)).</li><li>A 계산(Algorithm 1): 각 edge에 대해 <code>S∩Va</code>가 1개면 <code>A=1</code>, 2개면 채널LLR 작은 쪽을 <code>jm</code>으로 잡고 <code>A=-1</code>, 없으면 extrinsic 정보량 <code>Ei</code> 최소 VN 선택.</li><li>BER 추정: 최종 iteration CNU 메시지 <code>Mcv</code>의 평균/분산으로 사후LLR 통계(식23,24) → <code>P_i=Q(...)</code> → <code>BER=(1/N)ΣP_i</code> (100개 active TS 수집까지 반복).</li><li>결과: 코드 A는 선형모델 15 iter, 코드 B는 7 iter로 IS와 유사한 error-floor BER 곡선 재현(약간 과대추정), 계산시간은 IS보다 크게 단축.</li><li>한계: 디코더/부호 개선 없음, HW 설계 없음, 시뮬만이며 error-floor 예측 정확도가 [4]보다 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| min-sum CN 선형화(A행렬) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum 자체는 이미 보유, 논문은 성능개선이 아닌 해석용 선형화 |
+| active TS/error-floor BER 예측 | corner.cpp (수렴실패 추적) | 개념적으로만 근접, 예측기법은 코드 미대응 |
+| 채널 LLR/vulnerable 판정 | channel.cpp Set_LLR_Th() | LLR 기반 판정 대응하나 논문 목적은 BER예측 |</code></pre>
+<p>적용 가치: 낮음 - 디코더/부호를 개선하지 않고 error-floor BER를 IS 대신 빠르게 예측하는 해석 도구라 Prime ECC 성능/HW에 직접 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7593100",
+  "title": "A Linear Model for the Iterative Decoding of Random LDPC Codes in the High SNR Region",
+  "year": 2016,
+  "venue": "ISTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "504~2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "활성 dominant TS/AS 기반으로 min-sum CN 연산을 선형화하여 고SNR error-floor BER를 예측",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코더/부호 개선이 아닌 error-floor 성능 예측(IS 대체) 도구, HW 무관",
+  "todo_check": "예측 정확도가 우리 고rate QC-LDPC(N_b=129)에 스케일하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7593100---a-linear-model-for-the-iterative-decoding-of-random-ldpc-codes-in-the-high-snr-region-2016-istc">ieee:7593100 - A Linear Model for the Iterative Decoding of Random LDPC Codes in the High SNR Region (2016, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

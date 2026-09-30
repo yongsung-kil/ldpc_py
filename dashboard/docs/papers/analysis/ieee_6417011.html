@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6417011</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6417011---joint-message-passing-decoding-of-ldpc-codes-and-2-d-isi-channels-2013-ieee-transactions-on-magnetics">ieee:6417011 - Joint Message-Passing Decoding of LDPC Codes and 2-D ISI Channels (2013, IEEE Transactions on Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5~0.89</td></tr><tr><td>부호length</td><td>1008~1998</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>2-D ISI 채널 검출기(state-processing node)와 LDPC 복호를 완전병렬 joint message-passing으로 통합, EXIT chart로 수렴분석</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>2-D 자기기록(TDMR/PMS) 특화 채널 검출기가 기여의 본질, LDPC 복호 자체는 표준 SPA 재사용, NAND와 채널모델 상이</td></tr><tr><td>추가확인</td><td>NAND 1-D read 채널에는 crosstrack state-processing이 불필요해 이식 실익 없음 확인</td></tr></tbody></table>
+<blockquote><p>총평: 2-D ISI 채널 검출기와 LDPC를 병렬 결합한 자기기록용 논문으로 LDPC 부분은 표준이라 NAND 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC 부호화 비트를 2-D 배열로 매핑해 2-D ISI 채널(TDMR/TwoDOS/PMS)에 기록, readback = 2-D convolution + AWGN, MacKay 부호 (1008,504) rate 0.5 및 (1998,222) rate 0.89 사용.</li><li>문제: 2-D ISI의 MLSD는 NP-complete라 실용 불가, 기존 IRCSDFA/JIDDS/MCMC 검출기는 LDPC의 저지연 병렬 이점을 살리지 못함.</li><li>핵심 가정: crosstrack(intertrack)·downtrack 두 직교방향 간섭을 각각 별도 state로 정의, LLR은 Gaussian 근사(EXIT 적용 전제).</li><li>핵심 기법: 각 비트에 대응하는 state-processing node가 downtrack forward/backward state(<code>alpha/beta</code>)와 crosstrack state를 log-domain에서 갱신, <code>max*</code>(식(8)(9)) 연산으로 a posteriori LLR 산출.</li><li>핵심 식: downtrack 상태수 <code>= 2^(memory)</code>, crosstrack 상태수 <code>= 2^(bits)</code>로 유한 window 크기가 신뢰도-지연을 트레이드오프.</li><li>확장: state-processing 반복 <code>n1</code>, VN/CN 반복 <code>n2</code>, 외부 반복 <code>n3</code>의 3중 iteration 스케줄, LLR을 variable node로 전달 후 extrinsic을 다시 state node로 피드백.</li><li>구현 디테일: 모든 state-processing node와 VN/CN을 동시(병렬) 실행 가능 -&gt; 고속·저지연 디코더.</li><li>최적화: EXIT chart로 state-processing 곡선과 variable-check 곡선을 독립 생성, 교차조건으로 수렴 판정 및 iteration 배분 최적화.</li><li>결과: (1008,504)에서 8/2/5 iteration이 최적, 두 채널 모두 MCMC 대비 BER=10^-5 부근에서 약 0.3 dB 이득.</li><li>한계: 순수 시뮬(HW 미설계), 2-D 자기기록 채널 특화, LDPC 복호는 표준 SPA로 신규성 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LDPC sum-product 복호(VN/CN)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>표준 SPA로 이미 min-sum 보유, 신규 기여 없음</td></tr><tr><td>채널 LLR 생성(state-processing)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>Prime ECC는 AWGN/RBER 1-D, 2-D ISI state 검출기와 대응 안 됨</td></tr><tr><td>EXIT chart 수렴분석</td><td>대응 없음</td><td>해석 도구로 코드베이스 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 기여의 본질이 2-D ISI 채널 검출기이고 LDPC 복호는 표준 SPA라, NAND 1-D read 채널을 쓰는 Prime ECC에 떼어 쓸 부분이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6417011",
+  "title": "Joint Message-Passing Decoding of LDPC Codes and 2-D ISI Channels",
+  "year": 2013,
+  "venue": "IEEE Transactions on Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "1008~1998",
+  "soft_quant": "무관",
+  "key_contribution": "2-D ISI 채널 검출기(state-processing node)와 LDPC 복호를 완전병렬 joint message-passing으로 통합, EXIT chart로 수렴분석",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "2-D 자기기록 특화 채널 검출기가 기여의 본질, LDPC 복호 자체는 표준 SPA 재사용, NAND와 채널모델 상이",
+  "todo_check": "NAND 1-D read 채널에는 crosstrack state-processing이 불필요해 이식 실익 없음 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6417011---joint-message-passing-decoding-of-ldpc-codes-and-2-d-isi-channels-2013-ieee-transactions-on-magnetics">ieee:6417011 - Joint Message-Passing Decoding of LDPC Codes and 2-D ISI Channels (2013, IEEE Transactions on Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

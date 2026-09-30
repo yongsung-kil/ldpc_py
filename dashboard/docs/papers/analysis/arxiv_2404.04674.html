@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2404.04674</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv240404674v1---study-of-adaptive-reweighted-sparse-belief-propagation-decoders-for-polar-codes-2024-arxiv-csit">arxiv:2404.04674v1 - Study of Adaptive Reweighted Sparse Belief Propagation Decoders for Polar Codes (2024, arXiv [cs.IT])</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.25~0.5</td></tr><tr><td>부호length</td><td>128~512</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>polar용 LDPC-like sparse BP에 적응형 LLR reweighting(ρ,β,Δ) 도입해 iteration 최대 60% 감소, SCL급 성능</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 polar code(sparse H from G_N) BP 디코더로 부호 자체가 QC-LDPC 아님, full-tanh SPA + β Q-learning 미확정</td></tr><tr><td>추가확인</td><td>reweighting ρ 갱신식이 min-sum 양자화·NAND soft-2~3bit 하에서도 iteration 이득 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: polar용 sparse-BP에 adaptive LLR reweighting으로 iteration/latency를 줄인 디코더로 아이디어(정체 판정 기반 message 가중)는 흥미로우나, 대상 부호가 polar이고 full-tanh SPA 기반이라 NAND binary QC-LDPC min-sum 엔진 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: polar code <code>PC(N,K,Ac)</code>, 주 예제 <code>PC(128,64)/(256,128)/(512,128)</code> (rate 0.25~0.5), AWGN, design-SNR 1dB, BPSK.</li><li>문제: SC/SCL은 직렬 복호로 latency 큼, 표준 BP는 고성능에 iteration 다수 필요.</li><li>기반: Cammerer식 LDPC-like polar 디코더 — dense <code>G_N</code>를 pruning해 sparse <code>H</code>(Tanner graph) 생성 후 message-passing BP 수행.</li><li>BP 갱신: CN은 full-tanh SPA <code>Λ_{c→v}=2 tanh^{-1}(Π tanh(λ/2))</code> (식6), VN은 intrinsic+ΣΛ 합산(식7).</li><li>핵심기법 AR-SBP: VN 갱신에 edge weight <code>ρ∈(0,1]</code> 곱해 reweighting — <code>λ_{v→c}=ρ·λ'_{v→c}+ΣΛ</code> (식11).</li><li><code>ρ</code> 적응식(식12): 현재/이전 iteration <code>λ_{v→c}</code> 변화(modulus)와 부호변화 <code>Δ=sign(...)</code>(식13), 보정계수 <code>β</code>로 결정 — LLR이 안정되면 <code>ρ→1</code>(표준 BP로 수렴).</li><li>직관: <code>|λ_{v→c}|</code>과 <code>|λ'_{v→c}|</code>가 가까우면 갱신 약화, 진동/큰 편차면 가중 조정해 수렴 가속. <code>β</code>는 (0,1] 범위, Q-learning으로 조정 가능(open problem).</li><li>수렴분석: reweighted SPA의 row-sum/column-sum 조건(식14,15)으로 fixed point 수렴 보장, iteration 진행 시 <code>ρ→γ=1</code>(식16). 복잡도 <code>O(2·Tmax·logN)</code>로 BP와 동일(증가 없음).</li><li>결과: <code>Eb/N0&gt;3dB</code>에서 iteration 약 60% 감소(예 N=128, 4dB: BP 15.23→AR-SBP 7.31), BER은 표준 sparse BP 상회·NW-RBP 근접·SCL(L=128)급 (Fig.2,3). NW-RBP 대비 search/classification 불필요해 계산 효율 우위.</li><li>한계: HW 미설계, 시뮬만, polar 전용(sparse H)이고 full-tanh SPA 기반, <code>β</code> 자동설정 미확정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>adaptive LLR reweighting(ρ,β,Δ) VN 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>Get_VNU_Table_Idx()</code></td><td>VN LLR 가중 개념은 우리 적응형 LLR 테이블과 유사 목표(iteration 감소)나, 논문식은 polar full-tanh BP 전제</td></tr><tr><td>iteration별 LLR/조기종료</td><td>decoder.cpp <code>PARAM_LLR</code>, partial_CRC.cpp</td><td>우리는 이미 적응형 LLR threshold + partial/full CRC 조기종료 보유(중복 기여)</td></tr><tr><td>CN full-tanh SPA 갱신(식6)</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>우리 엔진은 min-sum 근사(§3), full-tanh SPA는 미대응</td></tr><tr><td>polar sparse H 부호구조</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC PCM 고정, polar <code>G_N</code> 기반 sparse H 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — polar code용 sparse-BP 디코더로 대상 부호가 QC-LDPC가 아니고 full-tanh SPA 기반. adaptive reweighting(LLR 정체 판정 기반 가중)의 iteration 감소 아이디어만 우리 적응형 LLR/VN 갱신에 간접 참고 가능하나, 이미 적응형 LLR·CRC 조기종료를 보유해 신규성 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2404.04674v1",
+  "title": "Study of Adaptive Reweighted Sparse Belief Propagation Decoders for Polar Codes",
+  "year": 2024,
+  "venue": "arXiv [cs.IT]",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.25~0.5",
+  "code_length": "128~512",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "polar용 LDPC-like sparse BP에 적응형 LLR reweighting(ρ,β,Δ) 도입해 iteration 최대 60% 감소, SCL급 성능",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상이 polar code(sparse H from G_N) BP 디코더로 부호 자체가 QC-LDPC 아님, full-tanh SPA + β Q-learning 미확정",
+  "todo_check": "reweighting ρ 갱신식이 min-sum 양자화·NAND soft-2~3bit 하에서도 iteration 이득 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv240404674v1---study-of-adaptive-reweighted-sparse-belief-propagation-decoders-for-polar-codes-2024-arxiv-csit">arxiv:2404.04674v1 - Study of Adaptive Reweighted Sparse Belief Propagation Decoders for Polar Codes (2024, arXiv [cs.IT])</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

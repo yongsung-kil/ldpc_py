@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8723841</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8723841---new-memory-load-optimization-approach-for-software-implementation-of-irregular-ldpc-encoderdecoder-2019-ieee-conference">ieee:8723841 - New Memory Load Optimization Approach for Software Implementation of Irregular LDPC Encoder/Decoder (2019, IEEE Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>H 행렬을 4개 테이블(Vn/Cm/Switch/MEM)로 저장해 L1 캐시 miss·메모리 사용 감소(SW 복호 지연 개선)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CPU L1 캐시 SW 최적화라 NAND HW RTL·라우팅과 무관, 부호 정정성능 개선 없음(순수 데이터구조), gate/throughput 없음</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: WiMax irregular LDPC의 H 행렬을 CPU L1 캐시에 맞게 테이블로 로딩하는 SW 메모리 최적화 논문 - 정정성능·HW 구조와 무관해 NAND binary QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: WiMax <code>1152x2304</code> irregular binary LDPC(rate 0.5, ones 7296개), AWGN+BPSK, C언어 SW 인코더/디코더.</li><li>문제: 크고 sparse한 H/G 행렬의 메모리 로딩이 CPU 캐시 miss를 유발해 SW 복호 지연 증가(L1 1.4ns vs RAM 107.1ns).</li><li>인코딩: systematic <code>G=[Ik | At(B^-1)t]</code>, H를 <code>H=[A|B]</code>로 구성, B가 dual-diagonal이면 Repeat-Accumulate로 인코딩 복잡도 <code>O(N)</code>.</li><li>복호: 표준 LLR-BP(CN식 involution <code>Φ(x)=-log tanh</code>) 또는 min-sum(11)로 CN 갱신, VN <code>Zn=Lc+ΣLmn</code>, hard decision + syndrome <code>S=H∘c</code> 조기종료.</li><li>기존 방법(pointer): Tanner 그래프를 구조체+포인터(up/down/left/right) linked list로 표현 - 동적할당 주소가 비연속이라 L1 miss 증가.</li><li>제안(hybrid): 4개 테이블(Vn=dv·MEM위치, Cm=dc·switch위치, Switch=행별 1의 순서, MEM=Znm/Lmn 메시지)로 주소를 연속 배치.</li><li>메모리식: pointer는 <code>(N1+M+N+1)*sizeof</code>, hybrid는 <code>(3N1+2M+2N)*sizeof</code>로 계산.</li><li>결과(프로파일링): hybrid가 L1 not-found를 읽기 70%·쓰기 50% 감소, H 행렬 메모리 258KB-&gt;94KB, 복호 지연 개선.</li><li>검증: macaw.bmp 이미지를 부호화·AWGN 주입 후 복호(SNR=1.5dB 오류 잔존, SNR=3dB 무오류)로 기능 시연.</li><li>한계: CPU 캐시 SW 최적화뿐(HW 미설계), 부호 정정성능 개선 아님, 병렬/하드 테이블 구현은 향후과제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| H 행렬 테이블 로딩(L1 캐시 최적화) | ecc_top.cpp Load_PCM() | SW 캐시 관점 - RTL(base+shift QC) 저장방식과 무관 |
+| min-sum/LLR-BP CN 갱신 | decoder.cpp CNU_Update_New_Mag() | 이미 보유 - 중복 |
+| systematic/RA(dual-diagonal) 인코딩 | encoder.cpp LDPC_encoder_4KB(), Generate_PCM_encoding() | 개념만 유사, 특정 구현 이식성 낮음 |
+| syndrome 기반 조기종료 | full_CRC.cpp / partial_CRC.cpp | 이미 보유 |</code></pre>
+<p>적용 가치: 낮음 - CPU L1 캐시용 자료구조 최적화로, QC-LDPC를 base+shift로 저장하는 Prime ECC RTL/시뮬 구조와 정합점이 없고 정정성능 개선도 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8723841",
+  "title": "New Memory Load Optimization Approach for Software Implementation of Irregular LDPC Encoder/Decoder",
+  "year": 2019,
+  "venue": "IEEE Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "H 행렬을 4개 테이블(Vn/Cm/Switch/MEM)로 저장해 L1 캐시 miss·메모리 사용 감소(SW 복호 지연 개선)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "CPU L1 캐시 SW 최적화라 NAND HW RTL·라우팅과 무관, 부호 정정성능 개선 없음(순수 데이터구조), gate/throughput 없음",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8723841---new-memory-load-optimization-approach-for-software-implementation-of-irregular-ldpc-encoderdecoder-2019-ieee-conference">ieee:8723841 - New Memory Load Optimization Approach for Software Implementation of Irregular LDPC Encoder/Decoder (2019, IEEE Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

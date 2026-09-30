@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6525993</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6525993---fpga-implementation-and-verification-of-ldpc-encoder-with-weight-3-6-approximate-lower-triangular-matrix-2012-iccsnt-2012">ieee:6525993 - FPGA Implementation and Verification of LDPC Encoder with Weight (3, 6) Approximate Lower Triangular Matrix (2012, ICCSNT 2012)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>12</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>weight-(3,6) regular H의 Richardson-Urbanke 근사하삼각(ALT) 인코딩을 NI 5641R SDR FPGA에 구현·검증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>N=12/M=6의 장난감 규모 교과서 ALT 인코딩 재현, gatecount·throughput 수치 없음</td></tr><tr><td>추가확인</td><td>Prime ECC는 dual-diagonal 인코딩 고정 — ALT 방식 도입 이득 없음, 실규모(수 KB) 확장 시 자원</td></tr></tbody></table>
+<blockquote><p>총평: 표준 Richardson-Urbanke ALT 인코딩을 초소형(N=12) 예제로 FPGA 구현·검증한 교육용 논문, Prime ECC의 dual-diagonal 인코더에 이식할 신규 기법 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NI LabVIEW 5641R SDR FPGA 상의 LDPC 인코더. 채널/복호는 미구현(향후과제).</li><li>부호: weight-(3,6) regular H (열가중 3, 행가중 6). FPGA 구현 예제는 <code>N=12, M=6, g=2</code>의 초소형.</li><li>문제/동기: 생성행렬 없이 H로 직접 인코딩. 하삼각 방식은 Gaussian elimination으로 <code>O(n^2)</code>이고 sparsity 손실.</li><li>핵심기법: Richardson-Urbanke 근사하삼각(ALT) — H를 6개 sparse sub-matrix <code>A,B,C,D,T,E</code>로 분할, 복잡도 <code>O(n+g^2)</code>(g = E의 행수).</li><li>식: <code>HX^T=0</code>에서 잉여벡터 <code>p1 = -ψ^{-1}(-ET^{-1}A + C)m^T</code>, <code>p2 = -T^{-1}(Am^T + Bp1^T)</code>, <code>ψ = -ET^{-1}B + D</code>.</li><li>전처리 4단계: (1) T의 대각을 1로 만드는 열 재배열, (2) Gaussian elimination으로 상→하삼각 변환, (3) ψ 가역성 확인(비가역 시 열교환 재수행), (4) 가중치 (3,6)으로 복원.</li><li>FPGA 구현: H를 6개 블록으로 분할, p1/p2 계산을 Sub-VI(AmT, CmT, ET^{-1}AmT 등)로 분리, codeword <code>X=[m p1 p2]</code> 조립.</li><li>HW 검증: 무작위 X를 전치·H와 곱해 <code>HX^T=0</code>(orthogonality)로 인코딩 정확성 검증.</li><li>자원: 컴파일 결과 8종 회로소자(Add/Sub, Counter, Register, Latch, Comparator, 16-bit 6:1 MUX, Tristate, 1-bit XOR) 사용 — 정량 gatecount/throughput 미제시.</li><li>한계: 초소형 예제만·복호기 미구현·수치 성능 없음, 교과서 ALT 인코딩의 FPGA 재현 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ALT(근사하삼각) 인코딩 / 잉여벡터 p1,p2 산출</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>인코더 계층 대응하나 Prime ECC는 dual-diagonal 고정 — ALT 방식은 다른 접근</td></tr><tr><td>H 분할·열 재배열(sub-matrix A~E)</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>열 재배치 개념은 유사하나 목적(dual-update)·구조 상이</td></tr><tr><td>인코딩용 PCM 생성 / 가역성 확인</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code>, <code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호 PCM 생성 계층 대응</td></tr><tr><td>MPA 기반 복호(향후과제)</td><td>대응 없음(본 논문 미구현)</td><td>복호는 논문에서 구현되지 않음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 표준 Richardson-Urbanke ALT 인코딩의 초소형 FPGA 재현이라 Prime ECC의 dual-diagonal 인코더 대비 신규 이식 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6525993",
+  "title": "FPGA Implementation and Verification of LDPC Encoder with Weight (3, 6) Approximate Lower Triangular Matrix",
+  "year": 2012,
+  "venue": "ICCSNT 2012",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "12",
+  "soft_quant": "무관",
+  "key_contribution": "weight-(3,6) regular H의 Richardson-Urbanke 근사하삼각(ALT) 인코딩을 NI 5641R SDR FPGA에 구현·검증",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "N=12/M=6의 장난감 규모 교과서 ALT 인코딩 재현, gatecount·throughput 수치 없음",
+  "todo_check": "Prime ECC는 dual-diagonal 인코딩 고정 — ALT 방식 도입 이득 없음, 실규모(수 KB) 확장 시 자원"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6525993---fpga-implementation-and-verification-of-ldpc-encoder-with-weight-3-6-approximate-lower-triangular-matrix-2012-iccsnt-2012">ieee:6525993 - FPGA Implementation and Verification of LDPC Encoder with Weight (3, 6) Approximate Lower Triangular Matrix (2012, ICCSNT 2012)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

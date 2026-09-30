@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10318173</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10318173---adaptive-granularity-progressive-ldpc-decoding-for-nand-flash-memory-2024-ieee-tcad">ieee:10318173 - Adaptive Granularity Progressive LDPC Decoding for NAND Flash Memory (2024, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호length</td><td>21150</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>불만족 local parity check 수(L)와 general syndrome 비영원소 수(P)로 남은 비트오류를 추정해 read-retry의 read-level 증가폭을 적응적으로 선택</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.098%@decoder area 추가(밑코어 [8] 대비)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>globally coupled LDPC(GC-LDPC)의 local/global parity check 구조에 특화된 기법으로, 일반 QC-LDPC(단일 PCM)에는 L/P 정의를 재설계해야 이식 가능</td></tr><tr><td>추가확인</td><td>Prime ECC의 단일 QC-LDPC PCM에서 "local parity check" 대응 개념(예: sub-matrix 단위 syndrome)을 어떻게 정의할 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 정정능력 자체보다 read-retry granularity 선택으로 flash read latency·SSD 응답시간을 크게 낮춘 NAND 직접 타깃 실용 기법이나, GC-LDPC 특유의 local/global parity 구조에 의존해 Prime ECC(QC-LDPC)에는 개념 변환이 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>NAND Flash TLC 채널에서 GC-LDPC((21150,19050), local submatrix 3개) 코드로 hard/soft progressive decoding 및 read-retry 수행, RBER 0.003~0.017 범위.</li><li>기존 FSGPD(고정 1-level 증가)/FMGPD(고정 m-level 증가)/DMGPD(인접 페이지 기반 동적 선택) 방식은 read-level 증가폭(granularity)이 실제 필요량과 안 맞아 불필요한 재복호나 과도한 read latency 유발.</li><li>GC-LDPC PCM <code>HGC</code>는 t개 <code>Hlocal</code>(대각 배치)과 <code>Hglobal</code>로 구성, general syndrome <code>S = HGC·C^T</code>가 t개 local parity check와 1개 global parity check로 분해됨(식 1,2).</li><li>복호 실패 시 불만족 local parity check 개수 <code>L</code>이 적을수록 잔여 비트오류 <code>U</code>가 적다는 상관관계를 시뮬레이션으로 확인, <code>L</code>로 최적 read-level 증가폭 <code>PGL</code>을 선택(AGPD).</li><li><code>L≤2</code>일 때는 <code>L</code>만으로 충분하지만 <code>L≥3</code>일 때 <code>U</code>의 분산이 커서, syndrome <code>S</code>의 비영원소 개수 <code>P</code>를 추가 지표로 사용해 <code>PGL,P</code>를 결정(개선판 IAGPD).</li><li><code>P</code> 계산은 다수의 서로 다른 비트폭 adder와 9-bit comparator 2개로 구현, 기존 [8] 대비 decoder area 0.098% 추가·클록 1사이클 추가.</li><li>Algorithm 2(IAGPD): read level <code>i≤7</code> 범위에서 hard/soft decoding 후 <code>S, L, P</code> 계산, <code>S=0</code> 또는 <code>i=7</code>이면 종료, 아니면 <code>L</code>(≤2) 또는 <code>(L,P)</code>(≥3) 기반으로 <code>i</code>를 증분.</li><li>결과: FSGPD/FMGPD(3종) 대비 flash read latency 평균 43%/21%/13%/15% 감소, DMGPD·AGPD 대비도 최대 15%/16% 추가 감소.</li><li>MQsim 기반 SSD 시뮬에서 read response time 최대 32%(FSGPD 대비) 감소, RBER·워크로드별 감소폭 상이(저RBER에서는 개선폭 작음).</li><li>한계: GC-LDPC 특유 구조(local/global parity 분해) 전제이며, 정정능력·error-floor 자체 개선이 아니라 read-retry 스케줄링 최적화(latency 개선)에 국한. FPGA/ASIC 게이트카운트 상세치·throughput 언급 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>불만족 syndrome/parity check 기반 오류 추정(L, P)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프 (syndrome 계산부)</td><td>복호 실패 시 syndrome 상태로 재시도 판단하는 아이디어는 이터레이션 루프에 추가 가능하나, GC-LDPC local/global 분해 구조가 Prime ECC PCM_b와 상이해 직접 이식은 재설계 필요</td></tr><tr><td>read-retry 시 read-level 증가폭 적응 선택</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold/양자화 관리부에 read-retry 정책으로 연동 가능</td></tr><tr><td>조기종료 판단(S=0)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>개념적으로 조기종료와 유사하나 이 논문은 CRC가 아닌 syndrome 직접 사용</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 정정능력 개선이 아닌 read-retry 스케줄링(latency) 최적화이며 NAND 직접 타깃이라는 점에서 실용적이나, GC-LDPC의 local/global parity 구조 의존성 때문에 Prime ECC(단일 QC-LDPC PCM)로 옮기려면 "local parity check" 대응 개념을 새로 정의해야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10318173",
+  "title": "Adaptive Granularity Progressive LDPC Decoding for NAND Flash Memory",
+  "year": 2024,
+  "venue": "IEEE TCAD",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": 21150,
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "불만족 local parity check 수(L)와 general syndrome 비영원소 수(P)로 남은 비트오류를 추정해 read-retry의 read-level 증가폭을 적응적으로 선택",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.098%@decoder area 추가(밑코어 [8] 대비)",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "globally coupled LDPC(GC-LDPC)의 local/global parity check 구조에 특화된 기법으로, 일반 QC-LDPC(단일 PCM)에는 L/P 정의를 재설계해야 이식 가능",
+  "todo_check": "Prime ECC의 단일 QC-LDPC PCM에서 local parity check 대응 개념(예: sub-matrix 단위 syndrome)을 어떻게 정의할 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10318173---adaptive-granularity-progressive-ldpc-decoding-for-nand-flash-memory-2024-ieee-tcad">ieee:10318173 - Adaptive Granularity Progressive LDPC Decoding for NAND Flash Memory (2024, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

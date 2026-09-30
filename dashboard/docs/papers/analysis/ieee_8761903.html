@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8761903</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8761903---tdmr-detection-system-with-local-area-influence-probabilistic-a-priori-detector-2019-ieee-conference">ieee:8761903 - TDMR Detection System with Local Area Influence Probabilistic a Priori Detector (2019, IEEE (conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.66~0.705</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>TDMR용 LAIP 확률모델 검출기+BCJR 결합 검출 시스템으로 grain-bit media noise·ISI·ITI 제거 (LDPC는 하위 IRA 채널디코더로만 사용)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>자기기록(TDMR/HDD) 채널 검출기 논문 - IRA-LDPC는 기성 채널디코더로 재사용만, LDPC 알고리즘/부호 기여 없음</td></tr><tr><td>추가확인</td><td>없음 (NAND LDPC 관점에서 이식 요소 부재)</td></tr></tbody></table>
+<blockquote><p>총평: HDD TDMR 채널 검출기(LAIP+BCJR) 논문으로 LDPC는 하위 채널디코더로만 등장 - NAND binary QC-LDPC 부호/디코더/HW 이식 요소 없음, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 3-track TDMR(2D 자기기록)로 GFP media 모델 파형 입력, IRA-LDPC를 채널디코더로 사용(code rate <code>0.66~0.705</code>).</li><li>문제: 1D-PDNP의 2D 확장은 trellis state가 <code>4^(∆+I+L)</code>로 3-track 이상에서 비현실적 복잡도.</li><li>모델: readback <code>yU=αU+Σαi</code>로, 주변 8 bit cell의 local area influence(LAI) <code>α</code> 합으로 target bit 결정, grain-flipping-probability media 모델 가정.</li><li>핵심기법 1단(LAIP): offline training으로 LAI를 3×3 이웃 read값 조건부 PMF LUT에 저장, 검출 시 LUT 조회+convolution으로 <code>P(αtotal)</code> 산출.</li><li>핵심식: <code>LLR(U)=log[(P(αtotal&lt;yU)+Povw/2)/(P(αtotal&gt;yU)+Povw/2)]</code>로 coded bit LLR 산출(overwrite 확률 <code>Povw</code> 반영).</li><li>핵심기법 2단(BCJR): LAIP LLR을 a priori로 받는 trellis BCJR가 장거리 ISI/ITI 처리, PR mask 채널 기반.</li><li>부수: 2개 MMSE 선형 등화기(FR target=1은 LAIP용, PR mask는 BCJR용), LLR에 weight <code>w1,w2</code> 곱·clip(overflow 방지).</li><li>학습: 512개 3×3 패턴을 각 10301회 write/read, Lloyd-Max 40-bin 양자화로 조건부 PMF 학습, anti-symmetry 강제.</li><li>결과: 1D-BCJR/PDNP 대비 center-track 6.8%·3-track 1.2% density gain(U/G), 2D-PDNP 대비 track1/2 BER 0.55×/0.08×.</li><li>한계: 순수 시뮬(GFP media), HW 미설계, 자기기록 전용 채널모델, one-shot decoding(turbo 미적용), LDPC 자체 기여 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LAIP 확률 검출기 / BCJR trellis 검출</td><td>대응 없음</td><td>자기기록 채널 검출기로 Prime ECC(디코더) 범위 밖</td></tr><tr><td>IRA-LDPC 채널 디코더</td><td>대응 없음</td><td>IRA≠binary QC-LDPC이고 기성 디코더로 재사용만, 알고리즘 기여 없음</td></tr><tr><td>MMSE 등화 / PR mask / media noise</td><td>channel.cpp</td><td>Prime ECC 채널은 AWGN/RBER로 자기기록 ISI/ITI 모델과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - HDD TDMR 채널 검출(LAIP+BCJR) 논문으로 LDPC는 미변경 하위 채널디코더로만 쓰이고, NAND binary QC-LDPC의 부호설계·복호·HW 어느 레이어에도 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8761903",
+  "title": "TDMR Detection System with Local Area Influence Probabilistic a Priori Detector",
+  "year": 2019,
+  "venue": "IEEE (conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "TDMR용 LAIP 확률모델 검출기+BCJR 결합 검출 시스템으로 grain-bit media noise·ISI·ITI 제거 (LDPC는 하위 IRA 채널디코더로만 사용)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "자기기록(TDMR/HDD) 채널 검출기 논문 - IRA-LDPC는 기성 채널디코더로 재사용만, LDPC 알고리즘/부호 기여 없음",
+  "todo_check": "없음 (NAND LDPC 관점에서 이식 요소 부재)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8761903---tdmr-detection-system-with-local-area-influence-probabilistic-a-priori-detector-2019-ieee-conference">ieee:8761903 - TDMR Detection System with Local Area Influence Probabilistic a Priori Detector (2019, IEEE (conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

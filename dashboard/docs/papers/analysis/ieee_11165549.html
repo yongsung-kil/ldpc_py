@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11165549</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11165549---neural-adaptive-offset-min-sum-algorithm-for-ldpc-decoding-2025-bmsb">ieee:11165549 - Neural Adaptive Offset Min-Sum Algorithm for LDPC Decoding (2025, BMSB)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>OMS의 offset 파라미터를 CN 최소입력값 기반 적응형 가중치로 학습하여 NOMS 대비 BER 0.8dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN 채널·IEEE 802.16e LDPC 대상 신경망 학습 기반이라 NAND binary QC-LDPC 부호구조로 일반화 시 재학습 필요(Basic Graph A→B 테스트에서 성능 저하 확인)</td></tr><tr><td>추가확인</td><td>offset 학습에 쓰인 β, α 파라미터의 실제 양자화 비트폭 및 HW 구현 비용 미기재로 이식 시 별도 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: NOMS 기반 신경망 offset min-sum 개선이나 학습 기반·비NAND 채널·HW 미설계로 Prime ECC 이식 가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>(576,432) LDPC code, rate 3/4 (IEEE 802.16e), AWGN 채널, BPSK 변조, 32-layer(15 iteration) 신경망 구조.</li><li>기존 NOMS(Neural Offset Min-Sum)는 각 엣지별 독립적 offset 파라미터만 학습, CN의 실제 입력 특성을 반영하지 못해 학습이 최적화되지 않는 한계.</li><li>채널은 AWGN, 노이즈는 표준 가우시안 가정, 별도 NAND/비대칭 노이즈 모델 없음.</li><li>핵심 기법: OMS의 CN→VN 메시지 갱신식(<code>u^t_{c,v} = ReLU(min|u^{t-1}_{v,c}| - β^t_{c,v}) * sign(...)</code>)에서 offset <code>β^t_{c,v}</code>를 CN 최소 입력값 기반 적응형 벡터로 대체.</li><li>핵심 식(13): <code>β^t_{c,v} = (1 - α^t/2) * (min_{v'∈M(c)\v} |u^t_{v',c}|)/2</code> — offset을 CN 입력 크기에 비례시켜 반복마다 하나의 학습 파라미터 <code>α^t</code>만 필요.</li><li>NOMS는 엣지별(check node 수에 비례) 파라미터가 필요하지만, NAOMS는 iteration당 1개 파라미터만 학습 → 파라미터 수 대폭 감소.</li><li>Cross-entropy loss, mini-batch SGD(batch=120), Adam optimizer(lr=0.001), SNR 0~5dB 구간에서 학습 데이터 생성.</li><li>학습/최적화: 신경망 학습 기반(training으로 α^t 결정), 별도 DE/GA 없음.</li><li>결과: SNR=5dB에서 BER 10^-8 달성, NOMS 대비 약 0.8dB 개선. 연산량은 ADD 감소, MUL 소폭 증가로 "약간의 복잡도 증가".</li><li>한계: HW 미설계(FPGA는 future work로만 언급), AWGN 시뮬레이션뿐, 부호구조(Basic Graph) 변경 시 일반화 성능 저하(모델 기반 파라미터가 Tanner graph edge에 종속).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum offset 갱신 (NAOMS β^t 학습)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum offset 값을 신경망 학습으로 대체하는 아이디어는 대응되나, 학습 기반 파라미터 도입은 기존 정적 offset 테이블 구조와 이질적</td></tr><tr><td>VN 메시지 갱신</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>식(3) VN 갱신 자체는 표준 min-sum과 동일, 별도 개선 없음</td></tr><tr><td>신경망 학습(파라미터 최적화)</td><td>대응 없음</td><td>Prime ECC는 bit-exact HW 시뮬레이터로 신경망 학습 파이프라인 부재</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 신경망 학습 기반 offset 최적화는 Prime ECC의 정적 LLR/offset 테이블 구조와 이질적이며, AWGN·비NAND 부호(802.16e)에서만 검증되어 이식 시 재학습·재검증 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11165549",
+  "title": "Neural Adaptive Offest Min-Sum Algorithm for LDPC Decoding",
+  "year": 2025,
+  "venue": "BMSB",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.75,
+  "code_length": 576,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "OMS의 offset 파라미터를 CN 최소입력값 기반 적응형 가중치로 학습하여 NOMS 대비 BER 0.8dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN 채널·IEEE 802.16e LDPC 대상 신경망 학습 기반이라 NAND binary QC-LDPC 부호구조로 일반화 시 재학습 필요(Basic Graph A→B 테스트에서 성능 저하 확인)",
+  "todo_check": "offset 학습에 쓰인 β, α 파라미터의 실제 양자화 비트폭 및 HW 구현 비용 미기재로 이식 시 별도 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11165549---neural-adaptive-offset-min-sum-algorithm-for-ldpc-decoding-2025-bmsb">ieee:11165549 - Neural Adaptive Offset Min-Sum Algorithm for LDPC Decoding (2025, BMSB)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

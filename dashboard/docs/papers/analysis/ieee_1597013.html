@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1597013</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1597013---implementation-aspects-of-an-early-decision-decoder-for-ldpc-codes-2005-sips">ieee:1597013 - Implementation Aspects of An Early Decision Decoder for LDPC Codes (2005, SIPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>6000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Early decision 복호: pseudo-posterior 신뢰도가 임계값 t 초과한 변수를 확정·갱신 중단하여 메모리 접근 35% 절감(0.6dB SNR 대가)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>ED-VNC 35071µm², ED-CNC 45027µm² @0.35µm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>메모리 절감 대가로 0.6dB SNR 손실(정정능력 하락), rate 0.5 저rate·sum-product·0.35µm 구공정, Prime ECC GT/HCU와 메모리 최적화 목적 중복</td></tr><tr><td>추가확인</td><td>min-sum·고rate 부호에서 early decision의 SNR-메모리 trade-off, Prime ECC GT/CRC 조기종료와 병행 시 실이득</td></tr></tbody></table>
+<blockquote><p>총평: 신뢰도 높은 bit를 조기 확정해 메모리 접근·전력을 줄이는 합성 검증된 아키텍처이나, 0.6dB 정정능력 손실과 Prime ECC GT/조기종료와의 목적 중복으로 이식가치 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Regular <code>(3,6)</code> LDPC, rate <code>R=1-j/k=0.5</code>, 구조화 PCM(size L shifted-identity 상·중단 + 하단 restricted random), 예 길이 ~6000 bit.</li><li>문제: partly-parallel LDPC 복호는 interim 메시지 저장 메모리가 커 전력의 최대 95%가 메모리에서 소모 → 메모리 접근 감소가 핵심.</li><li>복호: sum-product(SPA), <code>φ(x)=2·arctanh(exp(x))</code>; 수평(β)·수직(α,λ) 스텝 반복.</li><li>Early decision: 매 iteration 후 pseudo-posterior <code>λn</code> 계산, <code>|λn|&gt;t</code>면 해당 변수를 "decided"로 확정하고 이후 메시지 갱신 중단(이후 최대 magnitude 사용).</li><li>아키텍처: <code>k²</code> PE(각 VNC 포함)가 <code>jk</code> CNC와 <code>j</code>개 permutation network로 연결, 각 PE에 <code>DIS_RAM</code>(decided 상태 L bit) 추가.</li><li>VNC: <code>|λn|&gt;t</code> 비교·disable 신호 추가; decided 변수는 VNC 연산·EXT_RAM 접근 차단.</li><li>CNC: decided 입력은 magnitude=0, sign=hard-decision으로 대체(불확실성 0), bus driver disable로 routing 스위칭 활동↓.</li><li>메모리 오버헤드: <code>w=5</code>, DIS_RAM 추가로 read 오버헤드 ≈10.5%, write ≈3.2% (efficiency보다 작음).</li><li>결과(0.35µm 합성): VNC/CNC 면적 +11%/+15%, 속도 미미 감소; <code>(3,6)</code> 예제서 메모리 접근 35% 절감에 BER 10^-5 기준 0.6dB SNR 손실, 오버헤드 보정 시 read 25%·write 32% 절감.</li><li>한계: 0.6dB 정정능력 손실 대가, sum-product·저rate·0.35µm, detected error만 계수·재복호 오버헤드 미평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Early decision (</td><td>λn</td><td>&gt;t 변수 freeze)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>VN_Cal_HD()</code></td><td>이터레이션 루프의 VN 처리에 per-bit freeze 조건 추가로 이식 가능, min-sum에도 적용 가능</td></tr><tr><td>DIS_RAM / 메모리 접근 감소</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Prime ECC GT가 MUX로 처리 edge를 이미 축소 — 메모리/연산 절감 목적 중복, 보완 여부 검토</td></tr><tr><td>bit 단위 조기확정 vs 프레임 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 프레임 단위 CRC 조기종료 보유, early decision은 bit 단위로 상보적</td></tr><tr><td>permutation network / routing 스위칭</td><td>대응 없음</td><td>Prime ECC z=32·HCU 라우팅 구조와 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — bit 단위 early-decision으로 메모리/전력을 줄이는 아이디어는 NAND 저전력에 유효하나, 0.6dB 손실과 Prime ECC의 GT/CRC 조기종료와 목적이 겹침.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1597013",
+  "title": "Implementation Aspects of An Early Decision Decoder for LDPC Codes",
+  "year": 2005,
+  "venue": "SIPS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "6000",
+  "soft_quant": "무관",
+  "key_contribution": "Early decision 복호: pseudo-posterior 신뢰도가 임계값 t 초과한 변수를 확정·갱신 중단하여 메모리 접근 35% 절감(0.6dB SNR 대가)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "ED-VNC 35071µm², ED-CNC 45027µm² @0.35µm",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "메모리 절감 대가로 0.6dB SNR 손실(정정능력 하락), rate 0.5 저rate·sum-product·0.35µm 구공정, Prime ECC GT/HCU와 메모리 최적화 목적 중복",
+  "todo_check": "min-sum·고rate 부호에서 early decision의 SNR-메모리 trade-off, Prime ECC GT/CRC 조기종료와 병행 시 실이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1597013---implementation-aspects-of-an-early-decision-decoder-for-ldpc-codes-2005-sips">ieee:1597013 - Implementation Aspects of An Early Decision Decoder for LDPC Codes (2005, SIPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

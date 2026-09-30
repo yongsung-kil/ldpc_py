@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8768221</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8768221---hardware-based-linear-program-decoding-with-the-alternating-direction-method-of-multipliers-2019-ieee-trans-signal-processing">ieee:8768221 - Hardware-Based Linear Program Decoding With the Alternating Direction Method of Multipliers (2019, IEEE Trans. Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.41~0.81</td></tr><tr><td>부호length</td><td>155~1002</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ADMM-LP 복호를 FPGA에 이식 가능하게 재정식화(centered polytope, hardware-friendly projection)하고 고정소수점 RTL 구현으로 BP/MinSum 대비 error-floor 우위 실증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Min-Sum 대비 bit-width 큼(I/O 8b, 내부 10b)·iteration 60·throughput 3~4자릿수 낮음, 고rate NAND ECC(~0.9)로의 확장 미검증</td></tr><tr><td>추가확인</td><td>high-rate QC-LDPC에서 parity polytope projection 면적/latency와 error-floor 이득이 우리 Min-Sum 대비 실제 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: BP/Min-Sum의 error-floor를 근본적으로 회피하는 ADMM-LP를 HW로 실증한 논문으로, error-floor 대책 관점에서 참고가치는 있으나 면적·throughput·bit-width 비용이 커 NAND 이식은 신중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary linear code(주로 QC-LDPC). 실험 부호는 Tanner <code>[155,64]</code>, WiGig <code>[672,546]</code>(802.11ad), <code>(3,6)</code>-regular <code>[1002,503]</code> ensemble.</li><li>문제: BP/Min-Sum은 graph cycle 때문에 수렴/성능 보장이 없고 high-reliability 채널에서 error-floor 발생 → 저장/광통신 등 극저 error-rate 응용에 부적합.</li><li>모델: ML 복호를 정수계획으로 본 뒤 LP 완화(Feldman) → check 이웃 변수를 "parity polytope" <code>PP^d</code>(짝수무게 꼭짓점의 convex hull)에 제약, 목적은 LLR <code>γ</code>에 대한 선형.</li><li>핵심기법 1단: ADMM 분해로 replica <code>z_j=x_{Nc(j)}</code>, dual <code>λ_j</code> 도입 → BP-유사 message-passing(변수업데이트/체크업데이트) 알고리즘화(Algorithm 1).</li><li>핵심식: check update의 핵심은 <code>Π_{PP^d}(v_j)</code> (parity polytope로의 Euclidean projection). 이것이 ADMM-LP의 주 연산 primitive.</li><li>핵심기법 2단: projection을 facet 식별→similarity transform→probability simplex projection(sort+prefix-sum+shift/clip)으로 환원(Algorithm 2/3), 비반복 병렬 실행경로로 만들어 HW 친화화.</li><li>구현 트릭: <code>xnew=xold-1/2</code> centering으로 signed fixed-point dynamic range 개선, <code>1</code>-penalty(<code>α</code>)로 pseudocodeword 억제(waterfall 개선), degree 역수 곱셈으로 나눗셈 회피, sorting network 사용.</li><li>HW: QC 부호 한정 partial-parallel 구조(BRAM 메시지 저장, pipelined CN/VN), CN 자원의 83%가 polytope projection(그 중 sort/simplex가 지배).</li><li>결과: 10-bit 메시지 고정소수점이 double-precision 대비 FER 0.5 dB 이내, high-SNR에서 BP/Min-Sum 상회(BER ~20× 개선), <code>α=0.1</code>·60 iteration.</li><li>한계: Min-Sum 대비 bit-width·면적 큼, throughput은 ASIC Min-Sum 대비 3~4 자릿수 낮음(FPGA), CN/VN 가변 degree 처리 미해결, ASIC은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 복호 이터레이션(변수/체크 업데이트)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>우리 min-sum CN 연산 자리를 parity polytope projection으로 대체하는 형태 - 알고리즘 자체가 이질적이라 통째 교체 필요</td></tr><tr><td>parity polytope projection(핵심 CN 연산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum(min1/min2+sign)과 완전히 다른 primitive(sort+simplex projection), 직접 대응 안 됨</td></tr><tr><td>고정소수점 LLR centering/양자화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code> + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft LLR 표현·스케일링 아이디어는 참고 가능하나 우리는 hard/2SD/3SD, 논문은 8~10bit 요구</td></tr><tr><td>QC partial-parallel 메모리/라우팅</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code> (edge/MUX)</td><td>QC 구조 message routing 개념 유사하나 우리 z=32/HCU 구조와 정합 필요</td></tr><tr><td>error-floor 대책(dual-variable 기반)</td><td>대응 없음</td><td>우리 코드에 LP/ADMM 기반 error-floor 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - BP/Min-Sum error-floor를 원리적으로 우회하는 검증된 HW 기법이나, 연산 primitive(polytope projection)가 우리 min-sum과 완전 이질적이고 bit-width·면적·throughput 비용이 커 부분참고(error-floor 아이디어) 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8768221",
+  "title": "Hardware-Based Linear Program Decoding With the Alternating Direction Method of Multipliers",
+  "year": 2019,
+  "venue": "IEEE Trans. Signal Processing",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.41~0.81",
+  "code_length": "155~1002",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ADMM-LP 복호를 FPGA에 이식 가능하게 재정식화(centered polytope, hardware-friendly projection)하고 고정소수점 RTL 구현으로 BP/MinSum 대비 error-floor 우위 실증",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "Min-Sum 대비 bit-width 큼(I/O 8b, 내부 10b)·iteration 60·throughput 3~4자릿수 낮음, 고rate NAND ECC(~0.9)로의 확장 미검증",
+  "todo_check": "high-rate QC-LDPC에서 parity polytope projection 면적/latency와 error-floor 이득이 우리 Min-Sum 대비 실제 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8768221---hardware-based-linear-program-decoding-with-the-alternating-direction-method-of-multipliers-2019-ieee-trans-signal-processing">ieee:8768221 - Hardware-Based Linear Program Decoding With the Alternating Direction Method of Multipliers (2019, IEEE Trans. Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

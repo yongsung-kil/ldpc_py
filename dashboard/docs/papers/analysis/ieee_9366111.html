@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9366111</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9366111---an-effective-learning-scheme-for-weighted-bp-with-parallel-permutation-decoding-2020-isita">ieee:9366111 - An Effective Learning Scheme for Weighted-BP with Parallel Permutation Decoding (2020, ISITA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.52~0.71</td></tr><tr><td>부호length</td><td>31~63</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>병렬 permutation decoding(mRRD) 구조를 학습 단계에도 반영해, 최종 선택된 최적 경로만으로 weighted-BP(NMSA) 가중치를 역전파 학습하는 기법 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 BCH(HDPC, non-LDPC, N=31/63 소형)이며 NN 기반 weighted-BP는 Prime ECC의 고정 min-sum(비학습) 구조와 이질적, M≥3 parallel path 필요해 병렬 복잡도 크게 증가</td></tr><tr><td>추가확인</td><td>Prime ECC는 QC-LDPC(N_b=129, z=32) 대상으로 BCH 자기동형군(automorphism) 개념이 그대로 적용 안 됨. weighted min-sum(가중치 학습) 아이디어만 별도 이식 가능성 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: Kioxia(SSD 제조사) 소속 저자가 BCH 코드의 weighted belief-propagation을 병렬 permutation decoding(mRRD) 구조에 맞춰 학습(역전파)하는 방법을 제안, 단일 디코더 학습 대비 병렬 경로 수(M≥3)가 클수록 BER 이득이 커짐을 시뮬레이션으로 확인.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 이진 primitive BCH(31,16), BCH(63,45) — SSD/디스크 드라이브에서 실제 쓰이는 HDPC(high-density parity-check) 계열이며 BPSK 변조, NMSA(normalized min-sum algorithm) 기반 BP로 복호한다.</li><li>문제: BCH 같은 HDPC는 Tanner graph에 short cycle이 많아 표준 BP 성능이 나쁘고, weighted-BP(가중치를 딥러닝으로 학습)로 완화하지만 기존 연구([12])는 병렬 permutation decoding(mRRD)에서도 단일 디코더로 학습한 가중치를 그대로 재사용해 최적이 아니었다.</li><li>채널/모델: BP 메시지 전달을 NN으로 등가 표현(각 iteration의 VN-to-CN/CN-to-VN 메시지를 layer로 매핑), CN 메시지는 <code>L_c→v = w · min|L_v'→c| · sign(Π sign(L_v'→c))</code>로 스케일 팩터 <code>w</code>가 학습 대상.</li><li>핵심 기법 1단(자기동형군 기반 병렬 복호): BCH 부호의 automorphism <code>π_{α,β}(v) = (2^α·v+β) mod N</code>로 여러 순열된 LLR을 만들어 <code>M</code>개의 weighted-BP를 병렬로 돌리고, <code>V(x'_m)=Σ(y_v - x'_{m,v})^2</code> 최소인 경로를 최종 선택(식 9).</li><li><code>V(x'_m)</code>(수신 심볼과 추정 심볼 간 제곱오차 합)이 작을수록 신뢰도 높은 경로로 간주 — 이 메트릭이 병렬 경로 선택의 핵심.</li><li>핵심 기법 2단(제안 학습법): 학습 단계에서 모든 M개 경로의 feed-forward를 수행한 뒤, 최소 <code>V</code>를 갖는 경로 하나만 선택해 그 경로에 대해서만 역전파(cross-entropy loss, Adam optimizer)로 gradient를 계산·누적한다(Algorithm 1).</li><li>구현 디테일: CN 그룹별로 <code>min1, min2, idx1, idx2, sign product</code>만 계산해 저장하는 방식으로 feed-forward 연산량을 줄이는 NMSA 효율화 트릭 사용(그림 2, 3).</li><li>학습/최적화: minibatch(120, SNR당 20샘플) 단위 gradient 누적 후 가중치 갱신, 학습 SNR 1~6dB, BP iteration L=5, 모든 weighted-BP 컴포넌트가 가중치 공유.</li><li>결과: BCH(31,16), BCH(63,45) 모두 병렬 경로 수 M≥3에서 기존(단일 디코더 학습) 대비 일관된 BER 개선; M=2에서는 개선 없음(폐기 경로가 1개뿐이라 효과 작음), M이 클수록 이득 증가.</li><li>한계: BCH(HDPC) 소형 코드(N=31/63) 시뮬레이션에 국한, HW 미설계, 학습 시간이 M배 증가(병렬 계산 자원 필요), 가중치를 모든 경로가 공유하는 가정이라 채널 비균일 상황에서 추가 이득 여지가 있음(저자도 future work로 명시).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Weighted min-sum(가중치 학습된 CN 메시지 스케일링)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Min-sum scaling factor 개념은 유사하나 Prime ECC는 고정 magnitude 양자화 테이블 기반이며 NN 학습 파이프라인 자체가 대응 없음</td></tr><tr><td>BCH 자기동형군 기반 병렬 permutation decoding(mRRD)</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC(circulant 구조)로 BCH 특유의 automorphism 개념이 성립하지 않음</td></tr><tr><td>병렬 경로 중 최적 선택(reliability metric)</td><td>대응 없음</td><td>조기종료는 <code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>가 있으나 다중 후보 비교·선택 구조 자체는 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 대상 부호가 QC-LDPC가 아닌 BCH(HDPC)이고, NN 기반 오프라인 가중치 학습 및 다중 병렬 디코더 인프라가 Prime ECC의 비학습·고정 min-sum HW 구조와 근본적으로 다르며, 이식하려면 학습 파이프라인과 병렬 자기동형 복호 구조를 통째로 새로 구축해야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9366111",
+  "title": "An Effective Learning Scheme for Weighted-BP with Parallel Permutation Decoding",
+  "year": 2020,
+  "venue": "ISITA",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.52~0.71",
+  "code_length": "31~63",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "병렬 permutation decoding(mRRD) 구조를 학습 단계에도 반영해, 최종 선택된 최적 경로만으로 weighted-BP(NMSA) 가중치를 역전파 학습하는 기법 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상 부호가 BCH(HDPC, non-LDPC, N=31/63 소형)이며 NN 기반 weighted-BP는 Prime ECC의 고정 min-sum(비학습) 구조와 이질적, M≥3 parallel path 필요해 병렬 복잡도 크게 증가",
+  "todo_check": "Prime ECC는 QC-LDPC(N_b=129, z=32) 대상으로 BCH 자기동형군(automorphism) 개념이 그대로 적용 안 됨. weighted min-sum(가중치 학습) 아이디어만 별도 이식 가능성 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9366111---an-effective-learning-scheme-for-weighted-bp-with-parallel-permutation-decoding-2020-isita">ieee:9366111 - An Effective Learning Scheme for Weighted-BP with Parallel Permutation Decoding (2020, ISITA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

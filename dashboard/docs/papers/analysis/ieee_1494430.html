@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1494430</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1494430---optimization-of-a-reduced-complexity-decoding-algorithm-for-ldpc-codes-by-density-evolution-2005-ieee-vtcconference">ieee:1494430 - Optimization of a Reduced-Complexity Decoding Algorithm for LDPC Codes by Density Evolution (2005, IEEE VTC/conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.25~0.8825</td></tr><tr><td>부호length</td><td>1000~100000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check-node 갱신의 exp/log항을 선형함수 `f(</td><td>x</td><td>)=-m</td><td>x</td><td>+t`로 근사하고 파라미터(m=0.24,t=0.6)를 density evolution으로 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·10bit LLR 양자화 가정, 근사가 exact 대비 이득이 아니라 "손실 최소화"(sig-min 대비 개선)에 그침</td></tr><tr><td>추가확인</td><td>선형근사 파라미터가 우리 min-sum(min1/min2) 스케일링 대비 실이득 있는지, high-rate NAND 코드에서 재최적화 필요 여부</td></tr></tbody></table>
+<blockquote><p>총평: check-node 선형근사를 DE로 최적화하는 고전 기법 - Prime ECC는 이미 min-sum 보유, 이식가치는 근사 정확도 향상 여부에 국한.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 규칙/불규칙 binary LDPC, AWGN/BPSK 채널, rate 0.25~0.88, PEG로 구성한 n=1k~100k 코드.</li><li>문제: BP(sum-product)의 check-node 갱신은 <code>atanh(∏tanh)</code> 형태로 exp/log·atanh 연산이 HW 구현 시 매우 복잡·비현실적.</li><li>기존 sig-min 근사(<code>sign·min</code>)는 특히 불규칙·대블록에서 0.8~0.9dB 성능 손실.</li><li>핵심 기법: check-node 갱신을 두 입력 재귀로 분해한 식 (3)에서 로그항 <code>log(1+e^{-|x|})</code>을 선형함수 <code>f(|x|)=-m|x|+t</code> (|x|&lt;t/m 구간)로 근사.</li><li>식 의미: 로그항이 sig-min의 오차를 보정 - 선형근사로 이 보정항을 저비용 복원.</li><li>파라미터 최적화: 이산화 density evolution으로 t 고정 후 slope m 최적화를 반복, 모든 분포쌍에서 임계값 최고인 <code>m=0.24, t=0.6</code> 도출([10]의 m=0.25,t=0.7보다 개선).</li><li>구현 디테일: LLR을 [-B,B]=[-25,25]로 clipping, 10bit(∆=50/2^10) 양자화, 두입력 연산자 <code>Te/Ts/Tl</code>로 exact/sig-min/linear 밀도 갱신 정의.</li><li>결과: 임계값에서 exact 대비 선형근사 손실 ~0.01dB(기존 [10] 0.08dB, sig-min 0.91dB). n=100k FER=10^-2에서도 exact와 거의 동일.</li><li>n 증가할수록 근사 간 성능차 확대 - 최적화 선형근사만 exact에 근접 유지.</li><li>한계: 순수 시뮬만, HW gatecount/throughput 없음, AWGN 가정, NAND soft-read/2~3bit 양자화 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| check-node 선형근사 갱신 f(|x|)=-m|x|+t | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | CN magnitude 계산 대체 후보, 우리는 min-sum(min1/min2) 사용 |
+| LLR 양자화·clipping ([-25,25],10bit) | channel.cpp Set_LLR_Th(), ecc_data.h PARAM_LLR | 양자화 테이블 설계 참고 |
+| density evolution 파라미터 최적화 | local_opt.cpp (LLR 자동최적화) | DE는 오프라인 설계 도구, 코드 직접 대응은 부분적 |
+| exact atanh∏tanh (full Sum-Product) | 대응 없음 | Prime ECC는 tanh 미사용(min-sum) |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - Prime ECC는 이미 min-sum을 채택했고 본 기법은 min-sum(sig-min)의 성능 손실을 로그항 선형근사로 메우는 것이라, min-sum 대비 뚜렷한 추가 이득이 불명확하고 waterfall 소폭 개선에 그친다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1494430",
+  "title": "Optimization of a Reduced-Complexity Decoding Algorithm for LDPC Codes by Density Evolution",
+  "year": 2005,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "1000~100000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check-node 갱신 로그항을 선형함수 -m|x|+t로 근사, m/t를 density evolution으로 최적화(m=0.24,t=0.6)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 미설계, AWGN·10bit 양자화 가정, exact 대비 이득이 아니라 손실 최소화에 그침",
+  "todo_check": "선형근사가 우리 min-sum(min1/min2) 대비 실이득 있는지, high-rate NAND 코드 재최적화 필요 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1494430---optimization-of-a-reduced-complexity-decoding-algorithm-for-ldpc-codes-by-density-evolution-2005-ieee-vtcconference">ieee:1494430 - Optimization of a Reduced-Complexity Decoding Algorithm for LDPC Codes by Density Evolution (2005, IEEE VTC/conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

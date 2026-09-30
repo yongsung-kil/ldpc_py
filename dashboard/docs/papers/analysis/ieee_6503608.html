@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6503608</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6503608---on-the-soft-information-extraction-from-hard-decision-outputs-in-mlc-nand-flash-memory-2012-globecom">ieee:6503608 - On the Soft Information Extraction from Hard-Decision Outputs in MLC NAND Flash Memory (2012, Globecom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.907</td></tr><tr><td>부호length</td><td>9018</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>MLC NAND의 1비트 hard-decision 출력만으로 cell-to-cell 간섭모델 기반 LLR을 추출해 read-retry 없이 LDPC 복호실패율 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>LLR 계산에 인접 word-line 추가 read(2페이지 -&gt; 4read) 필요하고 채널 파라미터(간섭·noise 분산) 추정·추적 부담 존재</td></tr><tr><td>추가확인</td><td>간섭모델 파라미터(TABLE II/III in [8],[9])와 Prime ECC 타깃 NAND의 실측 분포 정합성, 인접 페이지 버퍼링 오버헤드 산정</td></tr></tbody></table>
+<blockquote><p>총평: 1비트 hard-read만으로 채널모델 기반 soft LLR을 생성해 LDPC 이득을 확보 - Prime ECC의 채널/LLR 생성 레이어에 직접 이식가치가 높으나 부호·복호기 자체 개선은 아님(대상=other).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2 bits/cell MLC NAND, 4상태(<code>PV0~PV3</code>), Gray 매핑, LSB/MSB 페이지, even/odd bit-line 다중페이지 프로그래밍.</li><li>문제: NAND 인터페이스가 hard-decision(1비트/페이지)만 제공 - soft 정보 없으면 LDPC 이득이 BCH 수준으로 붕괴, read-retry는 지연·throughput 손해.</li><li>모델: victim cell 출력을 비선형 ISI 채널 <code>r_k = x_k + ζ(x_k,x_{k+1}) + n(x_k,x_{k+1})</code>로 모델링 - 지배적 간섭셀 1개(다음 word-line 동일 bit-line)만 고려.</li><li>핵심기법1(MLSD): 간섭모델의 branch metric <code>BM=|r_k - x_k - ζ|²/σ²</code>으로 Viterbi 순차검출 - off-chip에서 양자화 출력 <code>d_k=D(r_k)</code>에 대해 hard BER 저감.</li><li>의미: 간섭이 결정적 성분 ζ를 가지므로 이를 제거하면 유효 noise만 남아 검출성능 향상.</li><li>핵심기법2(Joint Detection): 1비트 양자화 출력쌍 <code>(d_k,d_{k+1})</code>의 조건부확률을 marginalization하여 LSB/MSB 비트별 <code>LLR_t(v_i,v_j)</code>(식3) 산출 - read-retry 없이 soft 정보 생성.</li><li>구현트릭: <code>Pr(d_k,d_{k+1}|x_k)</code>를 주어진 양자기에 대해 사전계산, Q-function 폐형식으로 양자화 구간 확률 계산.</li><li>부호: array LDPC(<code>p=167,i=54,j=5</code>) <code>n=9018, k=8183, r=0.907</code>, 비교군 [9032,8192,60] BCH r=0.907.</li><li>결과: INR s=0.2/0.4/0.8 전 구간에서 간섭모델 LLR이 BSC LLR·BCH 대비 WER 유의미 개선 - BSC LLR LDPC는 BCH와 거의 동일(soft 정보 부재 시 이득 소멸 확인).</li><li>한계: 간섭 word-line 추가 read(2페이지당 4read) 오버헤드, 채널 파라미터 추정·시간변동 추적 필요, HW 미설계·시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>cell-to-cell 간섭모델 기반 LLR 생성(식3)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>hard-1bit read에서 soft LLR을 만드는 채널 전처리로 직접 대응 - 이식성 높음</td></tr><tr><td>1비트 양자화/reference voltage 설정</td><td>channel.cpp soft-read LLR 양자화·threshold</td><td>Prime ECC의 LLR 양자화 입력단에 간섭모델 반영 가능</td></tr><tr><td>MLSD/Viterbi 사전검출</td><td>대응 없음</td><td>Prime ECC는 채널 앞단 시퀀스검출 모듈 없음(별도 전처리 필요)</td></tr><tr><td>LDPC BP 복호 자체</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>복호기는 변경 없음 - LLR 입력만 개선(간접)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - 1비트 hard-read에서 간섭모델로 soft LLR을 생성하는 아이디어는 Prime ECC 채널/LLR 레이어(<code>channel.cpp</code>)에 직접 이식가치가 있으나, 부호·복호기 개선이 아니라 채널 전처리이고 인접 word-line read 오버헤드·파라미터 추정 실무부담이 있어 검증 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6503608",
+  "title": "On the Soft Information Extraction from Hard-Decision Outputs in MLC NAND Flash Memory",
+  "year": 2012,
+  "venue": "Globecom",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.907,
+  "code_length": "9018",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "MLC NAND 1비트 hard-decision 출력만으로 cell-to-cell 간섭모델 기반 LLR을 추출해 read-retry 없이 LDPC 복호실패율 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "LLR 계산에 인접 word-line 추가 read(2페이지-&gt;4read) 필요, 채널 파라미터 추정·추적 부담",
+  "todo_check": "간섭모델 파라미터와 타깃 NAND 실측 분포 정합성, 인접 페이지 버퍼링 오버헤드 산정"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6503608---on-the-soft-information-extraction-from-hard-decision-outputs-in-mlc-nand-flash-memory-2012-globecom">ieee:6503608 - On the Soft Information Extraction from Hard-Decision Outputs in MLC NAND Flash Memory (2012, Globecom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

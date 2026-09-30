@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5463402</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5463402---a-min-algorithm-using-tap-approach-2010-isccsp-2010">ieee:5463402 - A-min Algorithm Using TAP Approach (2010, ISCCSP 2010)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>816</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>TAP(스핀글라스) 접근으로 LLR-BP와 λ-min(A-min) CN 업데이트를 재유도, sign/magnitude 분리</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>기존 Guilloud λ-min을 통계물리(TAP)로 재유도한 것으로 신규 성능이득 없음, HW 미설계</td></tr><tr><td>추가확인</td><td>λ-min의 λ개 최소 magnitude만 쓰는 CN 축소가 min-sum 대비 면적/성능 트레이드오프 실측 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 기존 λ-min 복호를 통계물리 TAP 관점에서 재도출한 이론 논문으로, Prime ECC의 min-sum(min1/min2) 대비 신규 기여 미미해 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 이진 regular LDPC (sparse PCM <code>A(MxN)</code>), 시뮬은 regular (5,10) 부호 <code>N=816</code>, rate≈0.5, 10 iteration.</li><li>문제: BP 구현이 어렵고 무작위 구성 LDPC는 정보이론 기존 도구로 분석 난해 → 통계물리(스핀글라스) 등가로 복호 알고리즘 유도.</li><li>모델: 복호를 Ising 스핀계로 보고 사후확률을 Boltzmann 분포 <code>P(S|J)=(1/Z)exp[-βH(S|J)]</code>로 표현, PCM이 스핀 간 상호작용 정의.</li><li>핵심기법: Kabashima의 TAP 접근이 BP와 등가임을 이용해 확률 대신 LLR로 다루는 LLR-BP를 재유도(곱→합, 정규화 제거).</li><li>핵심식: CN 업데이트 <code>tanh(βYμj)=tanh(βJμ)·∏ tanh(βXμl)</code> (식12) — check node 메시지의 곱형태.</li><li>확장: CN 업데이트를 sign·magnitude로 분해, <code>f(t)=-ln tanh(t/2)</code>, <code>f(f(t))=t</code> 성질로 magnitude 처리.</li><li>A-min(λ-min): <code>f(t)</code>가 최소 t에서 최대이므로, check μ에 참여하는 비트 중 magnitude 최소 λ개만으로 extrinsic 계산 (식22) → 복잡도 축소.</li><li>케이스 처리: 비트 j가 부분집합 <code>L_λ(μ)</code>에 속하면 λ-1개, 아니면 λ개로 처리(후자는 한 번만 계산).</li><li>결과: (816,5,10) 부호에서 λ 증가할수록 A-min이 LLR-BP에 근접(BER vs Eb/N0); 성능 저하 없이 extrinsic 갱신 복잡도 감소(정성적).</li><li>한계: HW 미설계, gatecount/throughput 없음, 부호 1개·시뮬만; 기존 Guilloud λ-min의 재유도라 신규 이득 부재, 향후 replica 방법 제안.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 업데이트 sign/magnitude 분리, λ-min 축소</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC는 이미 min-sum(min1/min2+sign XOR) 보유로 λ-min과 유사·중복</td></tr><tr><td>LLR-BP 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>메시지 패싱 구조는 대응하나 본 논문은 full-tanh BP 재유도라 min 근사와 다름</td></tr><tr><td>통계물리(TAP)/스핀글라스 유도</td><td>대응 없음</td><td>Prime ECC와 무관한 이론적 프레임워크</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — CN 축소(λ-min)는 Prime ECC의 min-sum과 기능적으로 겹치고 신규 HW·성능 이득이 없으며, 논문의 핵심(TAP 재유도)은 이식 대상이 아님.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5463402",
+  "title": "A-min Algorithm Using TAP Approach",
+  "year": 2010,
+  "venue": "ISCCSP 2010",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "816",
+  "soft_quant": "무관",
+  "key_contribution": "TAP(스핀글라스) 접근으로 LLR-BP와 λ-min(A-min) CN 업데이트를 재유도, sign/magnitude 분리",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "기존 Guilloud λ-min을 통계물리(TAP)로 재유도한 것으로 신규 성능이득 없음, HW 미설계",
+  "todo_check": "λ-min의 λ개 최소 magnitude만 쓰는 CN 축소가 min-sum 대비 면적/성능 트레이드오프 실측 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5463402---a-min-algorithm-using-tap-approach-2010-isccsp-2010">ieee:5463402 - A-min Algorithm Using TAP Approach (2010, ISCCSP 2010)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

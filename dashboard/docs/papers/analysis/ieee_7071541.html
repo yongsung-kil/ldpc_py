@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7071541</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_7071541---high-throughput-multi-rate-ldpc-decoder-based-on-architecture-oriented-parity-check-matrices-2006-eusipco">ieee_7071541 - High-Throughput Multi-Rate LDPC Decoder Based on Architecture-Oriented Parity Check Matrices (2006, EUSIPCO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>648~2592</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>odd/even block-column을 두 독립 메모리모듈에 균등분배하는 architecture-oriented block-structured irregular PCM 설계 + 3-stage 파이프라인 layered BP 디코더로 1Gb/s급 throughput 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>5.21mm²@0.13um</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>IEEE 802.11n 무선표준 타깃 코드/rate(1/2,2/3,3/4,5/6)이며 QC-LDPC block구조 자체는 이미 보유(§4 부호설계=이식난이도 높음), 7bit soft quantization은 NAND read 비용 관점에서 재검토 필요</td></tr><tr><td>추가확인</td><td>odd/even 메모리 분산 배치 제약과 3-stage pipeline 구조를 Prime ECC의 z=32 lifting/HCU 구조에 그대로 적용 가능한지, 파이프라인 오버랩으로 인한 0.1dB 성능손실이 우리 코드에서도 재현되는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC 블록구조 PCM을 메모리 병렬접근에 최적화하고 3-stage 파이프라인 layered BP + modified min-sum으로 ASIC 합성까지 검증한 고품질 HW 디코더 논문. 부호설계 자체는 무선표준 특화라 이식난이도 높지만, 파이프라인/메모리 아키텍처 기법은 Prime ECC의 HW 구조와 밀접히 대응.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.11n 호환 block-structured irregular QC-LDPC, codeword size 648/1296/1944/2592, rate 1/2,2/3,3/4,5/6, sub-matrix 27~108 크기의 shifted identity.</li><li>문제: 기존 fully-random 최적화 PCM은 architecture 비친화적이고, 기존 구조적(structured) 디코더는 regular 코드에 국한되거나 처리량이 낮거나 유연성이 부족.</li><li>핵심 가정: layered belief propagation(LBP, iterative layered BP) 사용 — flooding 대비 약 2배 빠른 수렴(식 1~3, horizontal layer 단위로 순차 갱신).</li><li>핵심 기법: 각 horizontal layer 내에서 연속된 두 nonzero block-column이 반드시 서로 다른 독립 APP 메모리 모듈(A/B, odd/even)에 속하도록 강제하는 architecture-oriented PCM 설계 제약.</li><li>핵심 식: <code>R_mj = ∏sign(L(q_mj')) · φ(Σφ(L(q_mj')))</code>(식 2, φ(x)=-log tanh(x/2))이 modified min-sum approximation with correcting offset로 근사되어 DFU 내부 3개 min-sum 유닛이 직렬로 최소 2개 값을 탐색.</li><li>확장: block-column 수(18/24/48/72)에 따른 short-cycle 개수와 profile 최적화 — 24 block-column이 cycle 수와 profile 균형상 최적(0.4dB 손실 이내, error-floor 미관측).</li><li>부수 트릭: 3-stage pipeline(reading/processing/writing, 식 1/2/3에 대응)로 horizontal layer를 오버랩 처리, dual-port RAM + mirror memory로 동시 read/write, permuter는 7bit 2:1 mux 다단 파이프라인으로 다중 sub-matrix 크기(27/54/81/108) 지원.</li><li>학습/최적화 절차: density evolution analysis(DEA)로 max variable node degree를 layer 수 이내로 제한하는 profile 최적화, cycle distribution 기반 shift value 선택([9] 방식 재사용).</li><li>결과: FPGA(Virtex-IV-fx60) 95.8MHz 프로토타입, 0.13um ASIC 합성 시 코어 면적 5.21mm², 최고 클럭 412MHz로 200MHz 기준 throughput 1Gb/s 이상 달성. 3-stage 파이프라이닝으로 인한 성능손실은 FER 10⁻⁴에서 약 0.1dB.</li><li>한계: IEEE 802.11n 무선통신 표준 코드/rate 세트에 특화되어 있고, 7bit 고정소수점 soft LLR 정밀도를 사용하며 NAND read/soft-decoding 비용 관점의 최적화는 다루지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Layered BP + 3-stage pipeline(reading/processing/writing)</td><td><code>decoder.cpp/.h</code> LDPC 복호 pipeline (col_M1/Z/P1~P4)</td><td>Prime ECC도 6-stage bit-exact pipeline 보유, layer-serial 파이프라인 구조 개념이 유사해 참고가치 있으나 단계수/구조는 상이</td></tr><tr><td>Modified min-sum with correcting offset (CN 내부 min1/min2 직렬 탐색)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum 계열과 동일 범주, offset correction은 신규 참고 가능하나 중복 기여로 추천도 다소 하향</td></tr><tr><td>Odd/even block-column 분리 dual-port 메모리 배치 제약 (architecture-oriented PCM)</td><td>디코더 HW 모델 (z=32 lifting, HCU) / <code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>메모리 병렬접근 최적화 아이디어는 참고 가능하나 부호(H-matrix) 구조 자체를 이 제약에 맞게 재설계해야 하므로 이식 난이도 높음</td></tr><tr><td>Multi-rate/multi-length 지원 (ROM 기반 16 PCM switching)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 특정 QC-LDPC 고정(§4 표 기준 이식난이도 높음), 다중 PCM 스위칭 구조 자체는 참고 가치 있음</td></tr><tr><td>7bit soft LLR 정밀도, permuter(shift 기반) 설계</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, HW arch(z=32 shift)</td><td>연판정 비트수/permuter 구조가 QC-LDPC circulant shift 처리와 개념적으로 유사</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — 부호(PCM) 자체는 무선표준 특화라 이식 난이도 높지만, 메모리 병렬 배치 제약과 3-stage 파이프라인/multi-rate 아키텍처는 Prime ECC의 HW 구조(HCU, GT, z=32 lifting)와 대응점이 많아 아키텍처 설계 참고 가치가 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7071541",
+  "title": "High-Throughput Multi-Rate LDPC Decoder Based on Architecture-Oriented Parity Check Matrices",
+  "year": 2006,
+  "venue": "EUSIPCO",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.9",
+  "code_length": "648~2592",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "odd/even block-column을 두 독립 메모리모듈에 균등분배하는 architecture-oriented block-structured irregular PCM 설계 + 3-stage 파이프라인 layered BP 디코더로 1Gb/s급 throughput 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "5.21mm²@0.13um",
+  "parallelism": "부분",
+  "throughput_gbps": 1,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "IEEE 802.11n 무선표준 타깃 코드/rate(1/2,2/3,3/4,5/6)이며 QC-LDPC block구조 자체는 이미 보유(부호설계=이식난이도 높음), 7bit soft quantization은 NAND read 비용 관점에서 재검토 필요",
+  "todo_check": "odd/even 메모리 분산 배치 제약과 3-stage pipeline 구조를 Prime ECC의 z=32 lifting/HCU 구조에 그대로 적용 가능한지, 파이프라인 오버랩으로 인한 0.1dB 성능손실이 우리 코드에서도 재현되는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_7071541---high-throughput-multi-rate-ldpc-decoder-based-on-architecture-oriented-parity-check-matrices-2006-eusipco">ieee_7071541 - High-Throughput Multi-Rate LDPC Decoder Based on Architecture-Oriented Parity Check Matrices (2006, EUSIPCO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

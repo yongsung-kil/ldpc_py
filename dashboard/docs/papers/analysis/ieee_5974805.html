@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5974805</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5974805---design-and-optimization-of-ldpc-encoder-based-on-lu-decomposition-with-simulated-annealing-2011-ieee-컨퍼런스">ieee:5974805 - Design and Optimization of LDPC Encoder Based on LU Decomposition with Simulated Annealing (2011, IEEE 컨퍼런스)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>1/2, 3/4</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LU 분해 시 simulated annealing으로 행/열 치환하여 L·U 삼각행렬 희소성 극대화, 인코딩 복잡도 저감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (Stratix II 로직 3%/메모리 76%, gatecount@공정 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.054Gbps(rate1/2), 0.086Gbps(rate3/4)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CMMB 인코더 특화, dual-diagonal 대비 이점 불명 - Prime ECC는 이미 dual-diagonal 인코더 보유</td></tr><tr><td>추가확인</td><td>SA 전처리가 Prime ECC의 dual-diagonal 인코딩 대비 희소성/latency 우위 있는지</td></tr></tbody></table>
+<blockquote><p>총평: LU+SA 기반 CMMB LDPC 인코더로 방송채널 특화. Prime ECC는 dual-diagonal 인코더를 이미 보유해 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: CMMB(방송) 규격 LDPC 인코더. 부호는 High-Structured regular QC 구조, 코드워드 길이 9216, <code>K=4608(rate 1/2)</code>, <code>K=6912(rate 3/4)</code>.</li><li>문제: LDPC는 복호는 쉬우나 인코딩이 어렵다. 생성행렬 <code>G</code>가 dense → 부호길이 제곱 복잡도로 HW 비현실적. <code>HP^{-1}</code>도 dense.</li><li>핵심 기법: 패리티부 <code>HP</code>를 LU 분해(<code>HP = L·U</code>)하여 dense 역행렬 회피 → 선형복잡도 인코딩. 단, 임의 행렬의 좋은 sparse LU를 찾기 어려움이 기존 한계.</li><li>개선: Gaussian elimination 중 행 치환 <code>R(i)</code>·열 치환 <code>C(i)</code>을 추가(식10~11, <code>HP·C = L·U</code>)하여 L·U를 최대한 희소하게 만듦. 전처리는 SW에서 1회만 수행, HW 인코딩 시간·자원 미소모.</li><li>인코딩 절차: <code>x=-HS·s</code>(MVM) → <code>L·y=x</code>(forward subst) → <code>U·pC=y</code>(backward subst) → <code>p=C·pC</code>(치환)로 패리티 계산(식13~16).</li><li>최적화: simulated annealing으로 pivot 선택. degree-1 열의 행 집합 <code>θ</code>에서 시작, 각 점의 행 degree 합 최대점을 pivot 후보로, 잔여행렬의 최소 열 degree 합을 accept하여 희소 삼각화. regular/irregular 모두 적용 가능(일반 알고리즘).</li><li>희소성 결과(Table I): rate 1/2 L 비영원소 88435→22468, U 231201→16753; rate 3/4 L 25649→8935, U 46535→4277로 classic 대비 대폭 감소.</li><li>HW 구조: MVM·FS·BS·CWG 4단계 파이프라인 병렬 + 단간 double buffering으로 latency·idle·메모리 최소화. 필요 행렬은 전처리 후 HW에 저장.</li><li>구현 결과: Verilog, Altera Stratix II EP1S180. 로직 3%·메모리 76% 사용, 최대 200 MHz에서 순수 인코딩률 54 Mbps(1/2)·86 Mbps(3/4)로 CMMB 규격 충족.</li><li>한계: CMMB 방송 규격 특화 인코더, 정정능력/BER·복호 성능 무관, gatecount·범용 처리량 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| LU 분해 기반 인코딩 / 패리티 계산 | encoder.cpp LDPC_encoder_4KB() | 인코딩 대상은 같으나 Prime ECC는 dual-diagonal 방식 - LU 방식 상이 |
+| 부호용 PCM 전처리(행/열 치환) | encoder.cpp Generate_PCM_encoding(), Column_Reordering_Dual_Update() | Prime ECC도 인코딩용 PCM 재배치 보유(dual-update), 개념 유사하나 SA 최적화는 미보유 |
+| SA 기반 sparse LU 전처리 | 대응 없음 | Prime ECC 인코더는 dual-diagonal 고정, LU/SA 전처리 미사용 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 이미 dual-diagonal 인코더와 인코딩용 PCM 재배치(Column_Reordering_Dual_Update)를 보유하고 있고, 이 논문의 LU+SA 전처리는 CMMB 규격 부호에 특화되어 있어 고정 QC 구조의 Prime ECC로 이식할 실익이 적다. 인코더는 이식 난이도 중~높음 영역이며 정정능력 개선도 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5974805",
+  "title": "Design and Optimization of LDPC Encoder Based on LU Decomposition with Simulated Annealing",
+  "year": 2011,
+  "venue": "IEEE (컨퍼런스, 미상)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "1/2|3/4",
+  "code_length": "9216",
+  "soft_quant": "무관",
+  "key_contribution": "LU 분해 시 simulated annealing 행/열 치환으로 L·U 삼각행렬 희소성을 극대화해 인코딩 복잡도를 저감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.086,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CMMB 인코더 특화이고 Prime ECC는 이미 dual-diagonal 인코더를 보유해 LU+SA 이식 실익 적음",
+  "todo_check": "SA 전처리가 Prime ECC의 dual-diagonal 인코딩 대비 희소성/latency 우위 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5974805---design-and-optimization-of-ldpc-encoder-based-on-lu-decomposition-with-simulated-annealing-2011-ieee-컨퍼런스">ieee:5974805 - Design and Optimization of LDPC Encoder Based on LU Decomposition with Simulated Annealing (2011, IEEE 컨퍼런스)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

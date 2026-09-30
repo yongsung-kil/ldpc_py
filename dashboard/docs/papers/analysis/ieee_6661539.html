@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6661539</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6661539---fpga-accelerator-of-quasi-cyclic-eg-ldpc-codes-decoder-for-nand-flash-memories-2013-ieee-conference">ieee:6661539 - FPGA accelerator of Quasi Cyclic EG-LDPC Codes decoder for NAND flash memories (2013, IEEE conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.919~0.96</td></tr><tr><td>부호length</td><td>4599~69615</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>고circulant/고row-weight EG-LDPC용 완전병렬 CNP + layered(NMS) 디코더를 FPGA에 구현, 기존 대비 60% 고속</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>1.63mm2@45nm(ASIC, 69615코드)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>3.24Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>아키텍처는 EG-LDPC(고row-weight)에 최적화, BER 성능 자체 개선 아닌 성능평가용 emulator, z=32 우리 구조와 정합 필요</td></tr><tr><td>추가확인</td><td>LLR 양자화(q=7, mag 4bit) 정밀도, layered vs 우리 dual-update 스케줄 정합성, high row-weight용 min1/min2 압축의 우리 HCU/GT와 상호작용</td></tr></tbody></table>
+<blockquote><p>총평: NAND 고rate EG-LDPC를 직접 타깃한 layered NMS FPGA/ASIC 디코더. layered로 iteration 50%↓·throughput 2배와 min1/min2 압축 CTV 메모리 기법은 실용적이나, layered·high row-weight EG 특화라 우리 QC-LDPC(z=32)와의 정합·재검증 부담이 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>NAND flash용 고rate EG-LDPC(type-II QC) 3종을 타깃: <code>(4599,4227)</code> rate 0.919, <code>(8176,7154)</code>, <code>(69615,66897)</code> rate 0.96; row-weight 최대 272.</li><li>문제: 고rate 장부호의 BER 10^-13~10^-16 성능 평가에 SW 시뮬은 수십일 소요 → 고속 FPGA 에뮬레이터 필요.</li><li>부호구성은 유클리드 기하 <code>EG(m,2^s)</code>의 선(line) incidence vector로 <code>H</code> 생성(cyclic/QC, girth≥6, harmful trapping set 없음 → 좋은 error floor).</li><li>디코딩은 normalized min-sum(NMS) + horizontal layered schedule; CN 업데이트 <code>q_ij = sgn곱 × min|r| × α</code>, <code>α=0.25</code>.</li><li>layered로 flooding 대비 iteration 절반 → throughput 2배; 종료조건 <code>H·Chat^T=0</code>.</li><li>HW 핵심: <code>P</code>개 완전병렬 파이프라인 CNP + barrel shifter로 QC circulant 라우팅; EG 코드는 <code>Ny=1</code>로 한 그룹이 처리, 반복당 <code>Nr+6</code> 클록.</li><li>메모리 압축: 고row-weight 때문에 CTV를 min1/min2 값과 min1 index 3개만 저장(Min/Index/Sign mem), 다음 반복에서 전체 CTV 복원.</li><li>min1/min2 탐색은 tree 구조(min16/min4 등 조건부 생성) <code>Min_Ind_det</code>, 임의 CN degree 지원; α 곱으로 magnitude 2bit 절감(<code>Nb=q-3</code>).</li><li>MATLAB 전처리 프로그램이 H를 분석해 LLR mem·APP update·shift 상수 배열의 VHDL을 자동생성(설계시 유연성).</li><li>결과: Virtex7에서 최대 3.24Gbps(1-iter), 평균 2~3 iter로 906.67Mbps, BER 10^-13을 13일에 도달; 45nm ASIC 면적 1.63mm2로 기존[11](정규화 2.59mm2)보다 작음. 성능(BER) 자체 개선은 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMS layered 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>layered 스케줄은 우리 dual-update와 다른 방식, 스케줄 교체 시 참고</td></tr><tr><td>CN min1/min2 + sign 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유 min-sam과 동일 알고리즘, min1/min2 압축 저장은 참고</td></tr><tr><td>CTV 압축(min1/min2/index) 메모리</td><td>decoder.cpp 이터레이션 루프의 message 저장</td><td>고row-weight 메모리 절감 기법, HW 메모리 모델에 참고</td></tr><tr><td>VTC 양자화/normalization(α=0.25)</td><td>channel.cpp + <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>LLR 양자화·scaling factor 설계 참고(우리는 magnitude 테이블 기반)</td></tr><tr><td>barrel shifter QC circulant 라우팅</td><td>디코더 HW 모델(z=32, GT) GT.cpp <code>Make_GT_HW()</code></td><td>QC edge 라우팅 대응이나 우리 GT/HCU 구조와 상이</td></tr><tr><td>H-matrix(EG line 기반) 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호설계는 EG 특정(고row-weight), 우리 QC base와 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND 직접 타깃 + layered/throughput/면적 지표가 실용적이나, 알고리즘(NMS)·조기종료는 이미 보유이고 아키텍처가 고row-weight EG 특화라 우리 z=32 QC-LDPC 구조로의 이식은 재검증 부담이 큼. layered 스케줄과 min1/min2 압축 저장 아이디어가 참고 가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6661539",
+  "title": "FPGA accelerator of Quasi Cyclic EG-LDPC Codes decoder for NAND flash memories",
+  "year": 2013,
+  "venue": "IEEE conference",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.919~0.96",
+  "code_length": "4599~69615",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "고circulant/고row-weight EG-LDPC용 완전병렬 CNP와 layered NMS 디코더를 FPGA에 구현해 기존 대비 60% 고속화",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "1.63mm2@45nm",
+  "parallelism": "부분",
+  "throughput_gbps": 3.24,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "아키텍처가 고row-weight EG-LDPC 특화, BER 개선이 아닌 성능평가용 emulator, z=32 우리 구조와 정합 필요",
+  "todo_check": "LLR 양자화(q=7) 정밀도, layered vs dual-update 스케줄 정합성, min1/min2 압축과 HCU/GT 상호작용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6661539---fpga-accelerator-of-quasi-cyclic-eg-ldpc-codes-decoder-for-nand-flash-memories-2013-ieee-conference">ieee:6661539 - FPGA accelerator of Quasi Cyclic EG-LDPC Codes decoder for NAND flash memories (2013, IEEE conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

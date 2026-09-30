@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9077972</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9077972---decoding-latency-of-ldpc-codes-in-5g-nr-2019-itnac">ieee:9077972 - Decoding Latency of LDPC Codes in 5G NR (2019, ITNAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.6665~0.9258</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>5G NR block-parallel LDPC 디코더의 시스템 관점 복호 지연을 사용자 수 N에 따라 분석하는 모델 및 sub-base matrix 구성법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>알고리즘/HW 미설계, 5G NR BG1/BG2·slot·rate-matching 특화 순수 지연 해석뿐이라 NAND ECC와 무관</td></tr><tr><td>추가확인</td><td>없음(NAND 이식 대상 아님)</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR LDPC 복호 지연을 시스템(사용자 수) 관점에서 해석한 이론 논문으로, NAND binary QC-LDPC ECC에 이식할 알고리즘·HW 기여가 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR uplink, PUSCH slot(14 symbol, DMRS 2 + PUSCH 12), N 사용자가 무선자원 균등 분할, BG1(mother rate 1/3)/BG2(1/5).</li><li>문제: peak throughput용으로 설계된 디코더가 낮은 code rate·낮은 lifting size의 transport block을 동일 자원·시간 내 복호하지 못할 수 있음.</li><li>모델: transport block→CRC 부착→Ci 코드블록 분할, lifting size <code>Zi</code>(2~384)로 base matrix lifting, frequency-first 매핑으로 on-the-fly 처리 가정.</li><li>기법: sub-base matrix를 base matrix 앞쪽 <code>φi</code> 행·<code>ϕi</code> 열로 잘라 구성, core part(4행)는 pruning 불가 → <code>φi = max(⌈min(Ωp,Φp)/Zi⌉, φi)</code>.</li><li>핵심식: 코드블록당 복호지연 <code>ti = I·Ui/fc</code> (I=iteration, Ui=sub-base matrix circulant 블록 수, fc=동작주파수) — block-parallel에서 circulant 수에 비례.</li><li>확장: 전체 사용자 지연 <code>t</code>를 Algorithm 1로 계산, jth 코드블록이 <code>(2+⌈12j/Ci⌉)</code>번째 symbol에서 끝나는 순차 누적 모델.</li><li>트릭: LBRM(limited buffer rate matching)으로 circular buffer <code>Ni = min(Λ, ...)</code> 제한, redundancy version 순서 0,2,3,1.</li><li>최적화: 재전송 시 effective rate 하락 → sub-base matrix 커짐 → 재전송 지연이 초기전송보다 큼.</li><li>결과: 수치해석(fc=1.2GHz, I=12, BW 100MHz, N=3~273)에서 peak throughput 디코더가 저rate/저lifting 블록을 제 시간에 복호 못함을 확인, 지연은 N 증가 시 증가.</li><li>한계: HW 미설계, 순수 시스템 지연 해석뿐, BER/정정능력·gate 수치 없음, 5G NR rate-matching 규격 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<p>대상이 other(시스템 지연 해석)이므로 C섹션 전부 N/A.</p>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>N/A</td><td>N/A</td><td>알고리즘·HW 기여 없음, 시스템 지연 해석뿐</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 5G NR slot/rate-matching 특화 지연 해석으로 NAND binary QC-LDPC 디코더/부호설계/HW에 이식할 요소 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9077972",
+  "title": "Decoding Latency of LDPC Codes in 5G NR",
+  "year": 2019,
+  "venue": "ITNAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "protograph",
+  "code_rate": "0.6665~0.9258",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "5G NR block-parallel LDPC 디코더의 시스템 관점 복호 지연을 사용자 수 N에 따라 분석하는 모델 및 sub-base matrix 구성법",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "알고리즘/HW 미설계, 5G NR BG1/BG2·slot·rate-matching 특화 순수 지연 해석뿐이라 NAND ECC와 무관",
+  "todo_check": "없음(NAND 이식 대상 아님)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9077972---decoding-latency-of-ldpc-codes-in-5g-nr-2019-itnac">ieee:9077972 - Decoding Latency of LDPC Codes in 5G NR (2019, ITNAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

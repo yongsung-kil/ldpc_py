@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7282789</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7282789---fast-systematic-encoding-of-quasi-cyclic-codes-using-the-chinese-remainder-theorem-2015-isit">ieee:7282789 - Fast Systematic Encoding of Quasi-Cyclic Codes Using the Chinese Remainder Theorem (2015, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>QC 행렬-벡터 곱셈을 CRT(중국인의 나머지 정리)로 도메인 변환해 systematic 인코딩 복잡도를 <code>O(nm log ℓ)</code>로 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 대수적 이론(field F2 특수 언급은 있으나 실험/시뮬 없음), 조건부(QC generalized inverse 존재 조건)로만 sparse H-based 인코더에 적용 가능</td></tr><tr><td>추가확인</td><td>field F2(binary) 케이스에서의 실제 XOR gate 수 등 구체적 HW 비용 수치가 본문에 없어 실이식성 재확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: QC 코드 인코딩 복잡도를 CRT 기반 다항식 도메인 변환으로 점근적으로 낮추는 순수 이론/대수 논문으로, Prime ECC의 고정 dual-diagonal 인코더 구조와는 접점이 있으나 시뮬레이션·HW 검증이 전무해 즉시 이식은 어려움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>QC 코드는 <code>ℓ×ℓ</code> circulant 서브행렬로 구성된 <code>m×n</code> 블록 행렬로 표현되며, 각 circulant를 링 <code>F_ℓ=F[x]/(x^ℓ-1)</code>의 다항식으로 대응시켜 행렬-벡터 곱을 다항식 곱셈으로 취급.</li><li>기존 shift-register 기반 QC 인코딩은 비트 복잡도가 생성행렬 비영원소 수에 비례해 고속 통신/저장 응용에 부적합, FFT 기반 다항식 곱셈은 점근적으로 빠르나 실용적 ℓ에서는 오히려 비효율적.</li><li>핵심 가정: 인코딩은 G-based(<code>p=G_p^T u</code>) 또는 H-based(<code>H_p p = s</code>, <code>s=-H_u u</code>) 두 방식 중 하나이며, 제안 CRT 알고리즘은 이 QC 행렬-벡터 곱 단계에 적용됨.</li><li>핵심 기법: <code>p(x)=p_1(x)···p_s(x)</code> (서로소 다항식 분해)로 CRT 도메인을 구성, 입력벡터를 변환행렬 <code>T</code>로 CRT 도메인으로 옮긴 뒤 포인트와이즈(작은 링별) 곱셈 <code>v'=A'u'</code> 수행, 역변환 <code>T^{-1}</code>로 원 도메인 복귀.</li><li><code>T</code>, <code>T^{-1}</code> 변환은 <code>O(ℓ log²ℓ log log ℓ)</code> field 연산, 도메인 내 곱셈 단계는 <code>O(nmlogℓ)</code> 연산 — 전체 CRT 알고리즘 복잡도가 직접곱보다 점근적으로 우수함을 보임.</li><li>확장: H-based 인코더의 <code>H_p</code>가 비가역(non-invertible)인 고rate QC-LDPC의 경우 QC generalized inverse <code>H_p^+</code>(<code>H_pH_p^+H_p=H_p</code>)를 정의해 <code>p=H_p^+ s</code>로 해를 구함.</li><li>field F2에서는 <code>T</code>, <code>T^{-1}</code>를 <code>ℓ×ℓ</code> binary 행렬곱으로 구현 가능하며 이 경우 최대 <code>ℓ²</code> 2-input XOR 게이트로 HW 구현 가능하다고 언급(수치 예시는 없음).</li><li>별도 학습/최적화 절차 없음(순수 대수적 유도).</li><li>결과: 복잡도가 기존 direct 곱셈 <code>O(ℓ²)</code> 대비 CRT 방식은 <code>O(nm logℓ)</code> (+변환 오버헤드 <code>O((n+m)log²ℓ loglogℓ)</code>)로 점근적 개선; 수치 시뮬레이션·게이트카운트 등 실측치는 본문에 제시되지 않음.</li><li>한계: 이론적 복잡도 분석에 그치며 실제 코드/HW 구현·시뮬레이션 결과가 없고, generalized inverse가 QC 구조를 유지하며 존재하는 조건이 제한적(circulant size와 field characteristic이 서로소일 때 항상 존재).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>systematic 인코딩 (H_p p = s 풀이)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 고정 구조로 CRT 기반 일반 QC 곱셈 가속과는 접근이 다름 — 재검증 부담 큼</td></tr><tr><td>QC circulant 행렬-벡터 곱 가속(CRT 도메인 변환)</td><td>대응 없음</td><td>Prime ECC 인코더는 shift/XOR 기반 dual-diagonal에 특화되어 다항식 CRT 변환 개념이 없음</td></tr><tr><td>H-matrix / 부호구조(QC 서브행렬) 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>QC 구조 자체는 공유하나 CRT 기반 가속은 부호 자체가 아닌 곱셈 알고리즘 층이라 이식 난이도 높음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 이론적 QC 행렬곱 가속 기법으로 실제 HW 구현·시뮬 검증이 없고, Prime ECC의 고정 dual-diagonal 인코더는 이미 저복잡도이므로 CRT 계층을 별도 도입할 실익이 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7282789",
+  "title": "Fast Systematic Encoding of Quasi-Cyclic Codes Using the Chinese Remainder Theorem",
+  "year": 2015,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "QC 행렬-벡터 곱셈을 CRT(중국인의 나머지 정리)로 도메인 변환해 systematic 인코딩 복잡도를 O(nm log ℓ)로 낮춤",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 대수적 이론(field F2 특수 언급은 있으나 실험/시뮬 없음), 조건부(QC generalized inverse 존재 조건)로만 sparse H-based 인코더에 적용 가능",
+  "todo_check": "field F2(binary) 케이스에서의 실제 XOR gate 수 등 구체적 HW 비용 수치가 본문에 없어 실이식성 재확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7282789---fast-systematic-encoding-of-quasi-cyclic-codes-using-the-chinese-remainder-theorem-2015-isit">ieee:7282789 - Fast Systematic Encoding of Quasi-Cyclic Codes Using the Chinese Remainder Theorem (2015, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

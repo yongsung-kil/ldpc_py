@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7146937</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7146937---reconfigurable-decoder-for-irregular-random-low-density-parity-check-matrix-based-on-fpga-2015-elnano">ieee:7146937 - Reconfigurable Decoder for Irregular Random Low Density Parity Check Matrix Based on FPGA (2015, ELNANO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.75</td></tr><tr><td>부호length</td><td>16384</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>irregular random parity-check matrix용 index-memory 기반 재구성형 partially-parallel Min-Sum FPGA 디코더와 quad-port 메모리로 throughput 4배</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.045Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>표준 Min-Sum 그대로이며 irregular random matrix 재구성/충돌회피에 초점, throughput도 45Mbit/s로 NAND ECC급 아님</td></tr><tr><td>추가확인</td><td>quad-port(2x clock) 메모리 트릭이 Prime ECC z=32 QC-LDPC 병렬 구조와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: irregular random 행렬을 런타임 교체 가능한 FPGA Min-Sum 디코더로, 알고리즘은 교과서 Min-Sum이고 QC-LDPC/NAND와 구조가 달라 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 임의 위치 non-zero를 갖는 irregular random parity-check matrix(<code>M</code>행 <code>N</code>열, 행당 최대 <code>nmax</code> non-zero)의 LDPC 부호이며, 예시는 16k열·4k행(rate≈0.75).</li><li>문제: irregular random 행렬은 Shannon 한계 근접(0.0045dB loss) 성능을 주지만 read/write·process 단계에서 collision 회피가 필요해 HW가 복잡·저throughput이 됨.</li><li>모델: 표준 Min-Sum message passing — CN 메시지 <code>α_ij = ∏sign(β)·min(|β|)</code>, VN 메시지 <code>β_ij = Σα + Z_start</code>, 최종 <code>Z_j = Σα_i + Z_start</code>.</li><li>핵심 기법: <code>β_ij = Z_j − α_ij</code> 관계로 β를 저장하지 않고 즉석 계산, <code>Z_temp_j = Z_temp_j + α_ij</code>로 vertical step을 부분 실행하여 메모리 절감.</li><li>핵심 식 의미: (4)식으로 β 메모리를 제거하고 <code>Z_j</code>만 저장하면 되므로 index memory + α memory만으로 재구성형 디코더 구성 가능.</li><li>재구성: 행당 실제 원소 수 <code>n_i &lt; nmax</code>면 특수 index값(<code>2^bits − 1</code>)으로 마스킹하고 <code>var_processing</code> 신호로 불필요 원소 스킵, FPGA 재프로그래밍 없이 index 값만 로드해 행렬 교체.</li><li>구현 디테일: CN 처리를 병렬 대신 shift-register 기반 sequential unit(고정 지연)으로 구성해 자원·복잡도 절감; index memory에 따라 <code>Z_j</code>/<code>Z_temp</code> 접근은 collision 회피 위해 순차 접근.</li><li>병렬화: two-port block-RAM을 2배 클록으로 quad-port로 모사, 4개 decoding unit 연결 시 동일 index 미충돌 조건(row permutation 전처리)으로 throughput 4배.</li><li>결과: Altera Stratix IV에서 combinational ALUT 10869, M9K 388블록 사용; 16k×4k, 200MHz, 1 iteration에서 45Mbit/s(10 iter 4.5Mbit/s), 기존 AHA4704(14.5Mbit/s) 대비 우수.</li><li>한계: 알고리즘은 표준 Min-Sum이고 error correction은 Eb/N0&gt;4.5dB에서 충분 수준의 정성 결과뿐, BER 곡선·gate count·NAND 실험 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum CN/VN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code></td><td>이미 보유한 min-sum과 동일, 중복</td></tr><tr><td>index memory 기반 행렬 재구성</td><td>대응 없음</td><td>Prime ECC는 고정 QC-LDPC(base+circulant)라 임의 위치 index 재구성 불필요</td></tr><tr><td>quad-port 메모리 병렬 4-unit</td><td>대응 없음</td><td>Prime ECC 병렬은 z=32 row 단위·GT/HCU 구조, FPGA quad-port 트릭과 무관</td></tr><tr><td>soft LLR 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>일반 LLR 양자화 언급뿐, NAND soft-read 특화 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 알고리즘이 교과서 Min-Sum이고 대상 부호가 irregular random(QC-LDPC 아님)이며 FPGA-specific 메모리 트릭이 Prime ECC의 QC-LDPC 병렬 구조와 맞지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7146937",
+  "title": "Reconfigurable Decoder for Irregular Random Low Density Parity Check Matrix Based on FPGA",
+  "year": 2015,
+  "venue": "ELNANO",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.75,
+  "code_length": "16384",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "irregular random parity-check matrix용 index-memory 기반 재구성형 partially-parallel Min-Sum FPGA 디코더와 quad-port 메모리로 throughput 4배",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.045,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "표준 Min-Sum 그대로이며 irregular random matrix 재구성/충돌회피에 초점, throughput도 45Mbit/s로 NAND ECC급 아님",
+  "todo_check": "quad-port(2x clock) 메모리 트릭이 Prime ECC z=32 QC-LDPC 병렬 구조와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7146937---reconfigurable-decoder-for-irregular-random-low-density-parity-check-matrix-based-on-fpga-2015-elnano">ieee:7146937 - Reconfigurable Decoder for Irregular Random Low Density Parity Check Matrix Based on FPGA (2015, ELNANO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

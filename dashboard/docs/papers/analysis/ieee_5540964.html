@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5540964</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5540964---high-parallel-variation-banyan-network-based-permutation-network-for-reconfigurable-ldpc-decoder-2010-asap">ieee:5540964 - High Parallel Variation Banyan Network Based Permutation Network for Reconfigurable LDPC Decoder (2010, ASAP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>VBN 기반 재구성형 permutation network + SN 종속 병렬 제어신호 생성으로 저latency·저면적 cyclic shift</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>18.3k@90nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>WiMAX/WiFi(802.16e/11n) 다중 rate·length 재구성 전용 shift 네트워크로 고정 QC-LDPC 단일부호인 Prime ECC에 재구성 요구 없음</td></tr><tr><td>추가확인</td><td>Prime ECC의 permutation/routing이 barrel/hardwired인지, throughput 병목이 shift 네트워크인지 확인</td></tr></tbody></table>
+<blockquote><p>총평: 재구성형 다중표준 LDPC 디코더의 cyclic-shift 네트워크 면적·latency 최적화 논문으로, 알고리즘·정정성능과 무관하고 단일 고정부호 NAND용에는 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: WiMAX(802.16e)/WiFi(802.11n) 재구성형 partial-parallel QC-LDPC 디코더의 permutation network. 서브행렬 크기 24~96로 가변.</li><li>문제: barrel shifter는 다양한 IN(input number)/SN(shift number) 지원에 면적 폭증, Benes 네트워크는 제어신호 메모리·단수(<code>2log2N-1</code>)로 latency·면적 큼.</li><li>제안: Banyan network를 변형한 VBN. <code>log2N+1</code> 단으로 축소하고, 모든 단의 제어신호를 이전 단과 무관하게 초기 SN에서만 직접 생성.</li><li>96=2^n 아님을 처리하려 마지막 2단을 <code>3×3</code> switch unit으로 대체(<code>3×3</code> cyclic shift, CTL 3종).</li><li>핵심 제어식: stage j에서 <code>SN %(3·2^{n-j})</code> 기준으로 <code>ctl[i]</code> 0/1 배정(Algorithm I). 첫 단 패턴은 <code>0~3·2^{n-1}-1</code>과 상위 절반이 이진 보수 관계 → 제어 생성기 축소.</li><li>IN이 <code>3·2^n</code> 아닐 때 발생하는 blocking을 bypass network(원본망 복제 + 마지막 MUX 단 선택)로 제거해 임의 IN·SN 무블로킹 달성.</li><li>HW: 96×96, 7단. <code>2×2</code>는 2입력 MUX, <code>3×3</code>은 2bit 제어. SCSG(stage control signal generator)는 7→48 regular decoder + NOT + MUX로 구현, 단간 독립이라 critical path 단축.</li><li>병렬화: expansion factor가 작을 때 idle PE 활용. stage1 제어 0 → 2-parallel(IN&lt;48), stage1·2 bar → 4-parallel(IN=24)로 동시 shift.</li><li>결과: SMIC 90nm에서 gate count 18.3k, 600MHz. 기존 [7]16.9k/300MHz, [4]37.4k(2병렬포함)/384MHz 대비 주파수·병렬성 우위.</li><li>한계: 채널부호 정정성능·디코딩 알고리즘과 무관한 순수 라우팅 HW. 다중표준 가변부호 전제라 단일 고정 QC-LDPC엔 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VBN cyclic-shift permutation network</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 단일부호로 재구성형 shift 네트워크 불요</td></tr><tr><td>병렬 데이터 라우팅/PE 매핑</td><td>디코더 HW 모델(z=32, GT) <code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>개념적 유사(edge/MUX 라우팅)이나 목적·구조 상이</td></tr><tr><td>partial-parallel 디코더 아키텍처</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>배경 아키텍처만 공유, 이식 요소 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 재구성형 다중표준 shift 네트워크 최적화로 단일 고정부호·정정성능 무관, Prime ECC에 떼어 쓸 요소 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5540964",
+  "title": "High Parallel Variation Banyan Network Based Permutation Network for Reconfigurable LDPC Decoder",
+  "year": 2010,
+  "venue": "ASAP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "VBN 기반 재구성형 permutation network + SN 종속 병렬 제어신호 생성으로 저latency·저면적 cyclic shift",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "18.3k@90nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "WiMAX/WiFi 다중 rate·length 재구성 전용 shift 네트워크로 고정 단일부호 Prime ECC에 재구성 요구 없음",
+  "todo_check": "Prime ECC permutation/routing이 barrel/hardwired인지, throughput 병목이 shift 네트워크인지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5540964---high-parallel-variation-banyan-network-based-permutation-network-for-reconfigurable-ldpc-decoder-2010-asap">ieee:5540964 - High Parallel Variation Banyan Network Based Permutation Network for Reconfigurable LDPC Decoder (2010, ASAP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

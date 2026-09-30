@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5425930</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5425930---ldpc-decoding-strategies-for-two-dimensional-magnetic-recording-2009-globecom">ieee:5425930 - LDPC Decoding Strategies for Two-Dimensional Magnetic Recording (2009, GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.4</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>TDMR 채널을 binary error-erasure channel로 변환 후 LP(선형계획) 복호를 최초 적용, BP 대비 유사·고γ 우세</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LP 복호는 선형계획 풀이라 HW 비친화, TDMR erasure 채널·grain 모델 특화이고 부호도 length 155로 짧음</td></tr><tr><td>추가확인</td><td>LP 복호는 non-iterative라 iteration/latency 미기재, min-sum 기반 NAND ECC와 패러다임 상이</td></tr></tbody></table>
+<blockquote><p>총평: TDMR용 binary error-erasure LP 복호 제안으로, min-sum 메시지패싱 기반 NAND ECC와 복호 패러다임·채널 모델이 달라 이식 가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 2D Magnetic Recording(TDMR, ~10 Tb/in²)로, 부호는 modified PEG로 구성한 <code>length 155, girth 8, rate 0.4</code> 이진 LDPC.</li><li>고밀도 TDMR은 grain 1개/bit 수준에서 심한 2D ISI와 grain 경계 불규칙 잡음(SNR~0dB)이 발생해 강력한 ECC가 필요.</li><li>grain 중심 이동을 Tikhonov 분포(파라미터 <code>γ</code>)로 모델링하고, read-head를 3셀 span의 truncated Gaussian으로 가정한 medium/readback 모델을 정의.</li><li>zero-forcing 이퀄라이저로 얻은 effective magnetization <code>x̃</code>(실수)를 임계 <code>t</code>로 <code>{-1,0,+1}</code> 3-레벨에 사상해 채널을 <strong>binary error-erasure channel(BEEC)</strong>로 변환(<code>0</code>=erasure).</li><li>BEEC의 오류확률 <code>p</code>·erasure확률로 LLR <code>g_i</code>를 <code>{-L,0,+L}</code>(<code>L=log(p/(1-p))</code>)로 설정.</li><li>핵심 기법: Feldman의 LP 복호(codeword polytope의 relaxed local polytope <code>Q</code> 위에서 <code>min Σ g_i f_i</code>)를 BEEC에 최초 적용, 정수해면 복호 성공/비정수면 실패로 판정.</li><li>비교군은 LP-BSC(<code>t=0</code>, hard), LP-BEEC(제안), 100-iter BP(soft continuous)로 설정.</li><li>임계 <code>t</code>는 오류감소와 erasure증가의 트레이드오프로 <code>t≈0.25</code> 부근이 최적(γ 의존).</li><li>결과: LP-BEEC가 LP-BSC보다 우수하고 BP와 유사, 고 γ에서 BP를 상회; grain 분산 6.3%→5.3%만 줄여도 BER 약 2자리수 개선. BP는 TDMR에서 ~10⁻⁵ error-floor(AWGN에선 없음).</li><li>한계: HW 미설계·시뮬만, LP 복호는 계산량 큼, 채널/부호가 magnetic recording 특화(NAND 무관).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| LP(선형계획) 복호 알고리즘 | 대응 없음 | Prime ECC는 min-sum 메시지패싱 전용, LP 복호 미지원 |
+| BEEC 변환·임계 기반 3-레벨 양자화 | channel.cpp Set_LLR_Th(), Set_R_Offset() | 임계 기반 양자화라는 점만 개념 대응, erasure 심볼은 미지원 |
+| BP(soft) 복호 baseline | decoder.cpp LDPC_Decoder() | min-sum이 BP의 HW 근사이나 본 논문은 BP를 비교군으로만 사용 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - LP 복호는 HW 비친화이고 TDMR erasure 채널·grain 모델에 특화되어, min-sum QC-LDPC 기반 NAND ECC에 떼어 쓸 요소가 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5425930",
+  "title": "LDPC Decoding Strategies for Two-Dimensional Magnetic Recording",
+  "year": 2009,
+  "venue": "GLOBECOM",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.4,
+  "code_length": "155",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "TDMR 채널을 binary error-erasure channel로 변환 후 LP 복호를 최초 적용, BP 대비 유사·고γ 우세",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LP 복호는 HW 비친화, TDMR erasure 채널·grain 모델 특화이고 부호 length 155로 짧음",
+  "todo_check": "LP 복호는 non-iterative라 iteration/latency 미기재, min-sum 기반 NAND ECC와 패러다임 상이"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5425930---ldpc-decoding-strategies-for-two-dimensional-magnetic-recording-2009-globecom">ieee:5425930 - LDPC Decoding Strategies for Two-Dimensional Magnetic Recording (2009, GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10016964</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10016964---on-the-woven-like-concatenation-of-ldpc-codes-2022-sibircon">ieee:10016964 - On the woven-like concatenation of LDPC codes (2022, SIBIRCON)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.25</td></tr><tr><td>부호length</td><td>4420~8840</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>outer 정정 + inner error-reducing LDPC의 woven형 직렬 concatenation과 inner protograph 최적화(SNR 최소화)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>저rate(1/4) 무선/5G 대상, 이중 LDPC + interleaver의 iterative woven 복호로 NAND 고rate·저latency 요건과 상충, HW 미설계</td></tr><tr><td>추가확인</td><td>inner 최적화가 error-floor 상승을 유발(fig.6 언급) — NAND error-floor 요건 위배 여부</td></tr></tbody></table>
+<blockquote><p>총평: outer/inner 두 LDPC를 interleaver로 엮는 woven형 concatenated 저rate 부호설계+iterative 복호 논문으로, NAND 고rate binary QC-LDPC 단일부호 파이프라인과 구조가 근본적으로 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: outer 정정 LDPC(<code>Router≈0.85</code>, <code>N=2600</code>)와 inner error-reducing LDPC(<code>Rinner≈0.29</code>) 사이에 permutation/interleaver를 둔 직렬 concatenation, 전체 <code>R≈0.25</code>.</li><li>문제: 5G 저rate LDPC 단독 대비 FER 곡선의 급경사(sharp slope)와 낮은 SNR 성능을 얻고 싶음.</li><li>채널: AWGN + BPSK 가정.</li><li>핵심 기법(인코딩): info → outer 인코딩 → permutation <code>π</code> → inner 인코딩. 병렬 concatenation의 permutation을 직렬에 차용한 woven형 구조.</li><li>핵심 아이디어: inner code를 forward error correction이 아니라 <strong>error reducing</strong>(bit error 감소)로 사용해 outer 디코더의 superchannel을 개선.</li><li>복호: woven code 복호(Kreshchuk et al.) 차용. inner/outer 모두 soft-in soft-out. inner 입력을 <code>[π(outer info) | ext_outer]</code>로 구성, <code>-=D_in(...)</code>, <code>+,=D_out(...)</code>을 iteration 간 extrinsic 교환.</li><li>inner 최적화: 초기 protograph(5G LDPC, 24x34, <code>Rinner≈0.29</code>)에서 랜덤 위치 flip → ACE 확장 → concatenated FER 시뮬 → target FER의 SNR 개선 시 채택. 150 iteration 수행.</li><li>최적화 결과: protograph에 unit diagonal 형성 + 밀도 감소 → LDGM(low-density generator matrix) 성격. 단, error-floor는 상승.</li><li>결과: <code>N=4420, R≈1/4</code>에서 5G LDPC(5120,1280) 대비 FER 0.01에서 약 0.2dB 이득, 직렬 concat 특성상 최소거리=성분부호 최소거리 곱으로 FER 급경사. iterative decoder 10회 + inner/outer BP 각 5회(총 50 BP).</li><li>한계: HW 미설계, throughput/gate 무보고, 저rate 무선 대상, inner code error-floor 상승.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>inner/outer LDPC BP 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>단일 LDPC BP는 대응되나 woven iterative 교환 스케줄은 우리 구조에 없음</td></tr><tr><td>protograph 최적화(flip+ACE 확장)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> / H-matrix</td><td>우리 QC-LDPC는 고정 H, concatenated protograph 재설계는 이식성 높음(부담 큼)</td></tr><tr><td>interleaver/permutation between codes</td><td>대응 없음</td><td>concatenation 구조 자체가 Prime ECC에 없음</td></tr><tr><td>soft extrinsic 교환(iterative)</td><td>대응 없음</td><td>단일부호 min-sum 파이프라인이라 turbo형 extrinsic 루프 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 이중 LDPC concatenation + interleaver + woven iterative 복호는 우리의 단일 고rate binary QC-LDPC min-sum 엔진과 아키텍처가 근본적으로 다르고, 저rate·error-floor 상승·HW 미설계로 NAND ECC 요건과 상충.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10016964",
+  "title": "On the woven-like concatenation of LDPC codes",
+  "year": 2022,
+  "venue": "SIBIRCON",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": 0.25,
+  "code_length": "4420~8840",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "outer 정정 + inner error-reducing LDPC의 woven형 직렬 concatenation과 inner protograph 최적화(SNR 최소화)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "저rate(1/4) 무선/5G 대상, 이중 LDPC + interleaver iterative woven 복호로 NAND 고rate·저latency 요건과 상충, HW 미설계",
+  "todo_check": "inner 최적화가 error-floor 상승 유발(fig.6) — NAND error-floor 요건 위배 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10016964---on-the-woven-like-concatenation-of-ldpc-codes-2022-sibircon">ieee:10016964 - On the woven-like concatenation of LDPC codes (2022, SIBIRCON)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

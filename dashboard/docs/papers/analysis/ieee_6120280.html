@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6120280</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6120280---causes-and-dynamics-of-ldpc-error-floors-on-awgn-channels-2011-allerton-conference">ieee:6120280 - Causes and Dynamics of LDPC Error Floors on AWGN Channels (2011, Allerton Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.4129</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>초기 iteration에서 불만족 CN의 LLR을 boosting factor로 스케일링하여 error-floor 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>짧은 regular Tanner 코드에 국한, boosting factor/구간 SNR 종속 휴리스틱이며 QC 고rate에서 재튜닝 필요</td></tr><tr><td>추가확인</td><td>absorption set(8,2)의 vmax 구조가 고rate QC-LDPC에서도 성립하는지, LLR clipping 확장이 우리 양자화 테이블과 정합하는지</td></tr></tbody></table>
+<blockquote><p>총평: absorption set 이론에 근거해 초기 iteration LLR boosting과 LLR clipping 확장으로 error-floor를 낮추는 decoder-only 기법. HW 미설계·짧은 코드 예시지만 아이디어는 min-sum에도 확장 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 Tanner <code>[155,64,20]</code> (3,5) regular LDPC (<code>R≈0.4129</code>, girth <code>g=8</code>, <code>dmin=20</code>)와 IEEE 802.3an <code>[2048,1723,14]</code> (6,32) 코드, AWGN/BPSK 채널.</li><li>문제: sub-optimal iterative decoding(SP/MP)에서 absorption set(trapping set의 지배적 부분집합)이 error-floor를 유발.</li><li>absorption set을 순서쌍 <code>(a,b)</code> (a=크기, b=extrinsic message degree)로 정의; Tanner 코드의 지배 집합은 (8,2)로 codeword 유사 구조.</li><li>선형 모델: 변수노드 출력 <code>x</code>, 입력 <code>y</code>, 순열행렬 <code>C</code>, 변수노드 합산행렬 <code>V</code>로 iteration 전개 <code>xI = Σ(VC)^i λ + ...</code> (식7).</li><li><code>VC</code>의 최대 고유값 <code>µmax≈1.7870</code>과 고유벡터 <code>vmax</code>가 실패 메커니즘을 지배; <code>β=xI^T·1 ≤ 0</code>이면 오류.</li><li>오류확률 <code>PAS = Q(mβ/√σβ²)</code> (식28)을 A,B,C,D 위상 상수로 근사.</li><li>정밀화(§III): <code>PAS=Pr(max_j xI,j ≤0)</code>로 조건 강화, 초기 iteration에서 spectral 근사 대신 행렬식(7) 직접 사용.</li><li>핵심 기법(§IV-A): 초기 4 iteration 동안 모든 불만족 CN이 되돌리는 LLR을 factor 2배 boosting, 이후 표준 SP 복귀.</li><li>결과: 6.5dB에서 error-floor를 약 1자릿수 개선, waterfall 영역 무영향; (8,2) 집합 오류 기여율 약 10%p 감소.</li><li>부가(§IV-B): LLR clipping threshold를 ±10→±100→∞로 확장하면 absorption set 지배력이 감소하는 것을 확인.</li><li>한계: HW 미설계, 짧은 regular 코드 시뮬만, boosting 정도/구간이 SNR·decoder 설정 종속 휴리스틱.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 초기 iteration LLR boosting (불만족 CN) | decoder.cpp LDPC_Decoder(), C2V_Cal() | iteration 루프 내 CN 출력 스케일 삽입 지점 |
+| iteration별 LLR 스케일/threshold | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | 이미 iteration 구간별 LLR 테이블 보유, boosting factor 추가 여지 |
+| CN min-sum 연산 (min-sum 확장 언급) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 논문이 min-sum 확장 가능 명시 |
+| LLR clipping 범위 확장 | channel.cpp Set_LLR_Th(), ecc_data.h PARAM_LLR | 양자화 magnitude 테이블 범위 조정과 대응 |
+| absorption set 이론/열거 | 대응 없음 | 부호 고유 구조 분석, 코드베이스에 해당 툴 없음 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 초기 iteration LLR boosting은 이미 보유한 적응형 LLR 테이블에 factor를 얹는 방식으로 저비용 이식 가능하나, 효과 검증이 짧은 regular 코드 한정이라 고rate QC-LDPC 재튜닝·재검증 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6120280",
+  "title": "Causes and Dynamics of LDPC Error Floors on AWGN Channels",
+  "year": 2011,
+  "venue": "Allerton Conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.4129,
+  "code_length": "155",
+  "soft_quant": "무관",
+  "key_contribution": "초기 iteration에서 불만족 CN의 LLR을 boosting factor로 스케일링하여 error-floor 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "짧은 regular Tanner 코드에 국한, boosting factor/구간 SNR 종속 휴리스틱이며 QC 고rate에서 재튜닝 필요",
+  "todo_check": "absorption set(8,2)의 vmax 구조가 고rate QC-LDPC에서도 성립하는지, LLR clipping 확장이 우리 양자화 테이블과 정합하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6120280---causes-and-dynamics-of-ldpc-error-floors-on-awgn-channels-2011-allerton-conference">ieee:6120280 - Causes and Dynamics of LDPC Error Floors on AWGN Channels (2011, Allerton Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

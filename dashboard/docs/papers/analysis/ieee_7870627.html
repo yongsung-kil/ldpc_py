@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7870627</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7870627---a-flexible-fpga-based-quasi-cyclic-ldpc-decoder-2017-ieee-access">ieee:7870627 - A Flexible FPGA-Based Quasi-Cyclic LDPC Decoder (2017, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>648~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>run-time에 여러 QC-LDPC PCM을 1클록 전환 지원하는 파라미터화 partially-parallel FPGA 디코더 + HDL 자동생성 flow</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>표준 min-sum flooding 그대로 - 정정성능 개선 없음, 기여는 멀티PCM 유연성/자동 HDL생성이며 BS 라우팅 자원이 지배</td></tr><tr><td>추가확인</td><td>Table 1/2의 ELB·throughput(Gbps)·Ia 수치는 표에만 있어 미상 - 원문 표 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 여러 무선표준 QC-LDPC를 run-time 전환하는 유연 FPGA 디코더로, 알고리즘은 표준 min-sum이라 정정성능 기여는 없고 단일고정 PCM인 Prime ECC에는 멀티모드 유연성 자체가 불필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 무선표준(WiFi 802.11n/ac, WiMAX 802.16e, WiGig 802.11ad, WPAN 802.15.3c)의 QC-LDPC PCM 집합, <code>z×z</code> circulant 서브행렬 base matrix <code>Hb</code>. LLR은 <code>W=4-bit</code> 2's complement.</li><li>문제: 기존 FPGA 디코더는 완전유연(어떤 QC PCM이든 1클록 전환) 구현이 부재 - fully-parallel은 라우팅 폭발, serial은 throughput 부족.</li><li>구조: partially-parallel, <code>P=Z/Q</code> VNPU (<code>Q</code>=병렬축소 인자로 자원/throughput trade-off), CNPU 수 <code>Pc=P/Gmin</code> (<code>G=nb/mb</code>).</li><li>스케줄: modified flooding - block-row/block-column을 <code>z</code> 단위로 동시 처리, VND/CND 분리 데이터패스 병렬 동작.</li><li>메모리: extrinsic LLR을 VMEM/CMEM 두 뱅크로 분리, 각 <code>NB</code> BRAM에 submatrix 단위 <code>P</code>개 LLR을 1워드로 묶어 저장 → BRAM 충돌 회피 (비선형 배치, Fig.5).</li><li>라우팅: programmable barrel shifter(BS)로 shift값 <code>s</code>(0≤s&lt;Z) 순환시프트, row/column-centric 표현 상호변환. BS가 다중 <code>z</code> 지원 시 자원 지배.</li><li>CN 연산: min-sum (<code>|min|</code> × 부호 누적곱), unused 입력은 VNPU=0 / CNPU=<code>2^(W-1)-1</code>로 turn-off. NPU는 log-depth adder/min tree로 critical path 최소화.</li><li>고rate 최적화: 저degree CNPU 2개를 링크(<code>L=1</code>)해 고degree row 처리 - 고rate PCM의 적은 <code>mb</code>로 iteration당 클록 상쇄.</li><li>자동화: offline design flow가 PCM집합→파라미터 추출→C++ 라이브러리로 SystemVerilog HDL 자동생성(Fig.11). Altera Stratix IV 합성, BPSK/AWGN, 최대 18 iteration, 목표 BER 10^-4로 특성화.</li><li>결과: 단일PCM F1은 [45] 대비 throughput -63%지만 자원 -17%·에너지 0.6dB 우위·latency -33%. 전체12PCM F4는 [46] 대비 throughput +167%지만 자원 7.3배. 알고리즘 정정성능 개선은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CN 연산 (min×부호)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min1/min2+sign XOR) - 중복, 추가가치 낮음</td></tr><tr><td>VNPU sum-tree / 4-bit 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, LLR 테이블</td><td>우리는 magnitude 양자화 테이블 기반, 표준 VN 합산과 유사 - 신규성 없음</td></tr><tr><td>barrel shifter / VMEM-CMEM 라우팅·메모리</td><td>디코더 HW 모델 (z=32, GT)</td><td>HW arch 레이어 - 단, 우리는 고정 z=32 단일 PCM이라 멀티z BS 유연성 불필요</td></tr><tr><td>조기종료 (parity-check register)</td><td><code>partial_CRC.cpp</code>/<code>full_CRC.cpp</code></td><td>우리는 CRC 기반 조기종료 보유 - 논문의 syndrome 방식보다 정교, 중복</td></tr><tr><td>다중 PCM ROM / run-time 전환</td><td>대응 없음</td><td>Prime ECC는 단일고정 QC-LDPC - 멀티모드 전환 자체가 요구사항 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음~중간</strong> - 표준 min-sum QC-LDPC HW 설계로 정정성능 기여는 없고, 유일한 참고가치는 partially-parallel 메모리/BS 라우팅 아이디어인데 우리는 단일 z=32 고정이라 유연성 부분은 불필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7870627",
+  "title": "A Flexible FPGA-Based Quasi-Cyclic LDPC Decoder",
+  "year": 2017,
+  "venue": "IEEE Access",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "648~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "run-time에 여러 QC-LDPC PCM을 1클록 전환 지원하는 파라미터화 partially-parallel FPGA 디코더 + HDL 자동생성 flow",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "표준 min-sum flooding 그대로 - 정정성능 개선 없음, 기여는 멀티PCM 유연성/자동 HDL생성이며 BS 라우팅 자원이 지배",
+  "todo_check": "Table 1/2의 ELB·throughput(Gbps)·Ia 수치는 표에만 있어 미상 - 원문 표 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7870627---a-flexible-fpga-based-quasi-cyclic-ldpc-decoder-2017-ieee-access">ieee:7870627 - A Flexible FPGA-Based Quasi-Cyclic LDPC Decoder (2017, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

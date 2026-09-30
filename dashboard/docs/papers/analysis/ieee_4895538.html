@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4895538</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4895538---new-stopping-criteria-for-decoding-ldpc-codes-in-h-arq-systems-2008-isita">ieee:4895538 - New Stopping Criteria for Decoding LDPC Codes in H-ARQ Systems (2008, ISITA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>syndrome weight w(si) 하나로 stagnancy check + early convergence speed check를 결합, 실패 프레임 조기감지로 H-ARQ 복호 iteration 70-80% 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>무선 H-ARQ/AMC·fading 채널 대상이며 임계(δth, Ichk, Istag)를 코드/채널별로 튜닝해야 하고 소량의 WER 저하 수반</td></tr><tr><td>추가확인</td><td>stagnancy/speed-check 임계를 NAND RBER 분포에 맞춰 uncorrectable 조기판정→soft-read 승격 트리거로 쓸 때의 오검출률</td></tr></tbody></table>
+<blockquote><p>총평: syndrome weight만으로 실패 프레임을 조기중단하는 저비용 기법으로, 기존 CRC 성공감지 조기종료를 실패 조기감지로 보완·이식 쉬움(성능이득은 복잡도/latency 한정).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE802.16e QC-LDPC(<code>N=2304, R=1/2</code> 주 실험, AMC는 길이 576/1152/1728·rate 1/2~5/6), BPSK급/AWGN 및 3-path fading, 최대 iteration 50, BP 복호.</li><li>문제: H-ARQ에서 복호 실패 프레임이 매번 최대 iteration까지 도달해 평균 iteration(=복잡도)이 급증. 낮은 SNR에서 실패를 조기감지할 필요.</li><li>핵심 관찰: 오류 프레임의 미충족 체크노드 수 <code>w(s_i)</code>(= syndrome weight)는 몇 iteration 후 0이 아닌 값으로 수렴(정체)하며, SNR이 낮을수록 <code>w(s_i)</code> 평균이 높음(Fig.1).</li><li>기법1 - Stagnancy check: 최근 <code>Istag</code> iteration 동안 <code>w(s_i)</code>의 최대-최소 차 <code>NmUaCx − NmUiCn ≤ δstag</code>(본 논문 <code>δstag=0</code>)이면 정체로 보고 복호 중단.</li><li>기법2 - Early BP convergence speed check: 고정 시점 <code>i=Ichk</code>(예: 3)에서 <code>w(s_i) &gt; δth</code>이면 회생불가 프레임으로 간주 조기중단. cycle-free 가정이 성립하는 극초기에 적용해 stagnancy가 아직 동작 못 하는 구간을 커버.</li><li>임계 <code>δth</code>는 전체 체크노드 수의 백분율(10~30%)로 코드마다 동일 원리로 설정 → 가변 rate/length에 scalable(Table 2).</li><li>결합: 기존 syndrome stopping(<code>w(s_i)=0</code>)에 두 기준을 추가하는 9-step 절차. 필요한 metric은 오직 <code>w(s_i)</code>라 추가 복잡도 거의 없음(Fig.2 flowchart).</li><li>결과(AWGN): <code>Istag=7</code>로 WER 열화 거의 없이 1.0dB 이하에서 불필요 iteration 제거; 결합 시 극저 SNR에서 평균 iteration이 3~4(≃Ichk)까지 급감(Fig.5,6).</li><li>결과(H-ARQ+AMC, Type-I 최대 4회 재전송, 288 OFDM subcarrier): 단일 임계 규칙으로 여러 코드에 걸쳐 복호 복잡도 70-80% 감소(Fig.9,10).</li><li>한계: HW 미설계·PC 시뮬만, 무선 H-ARQ/fading 특화, 임계 튜닝 필요, 정정능력 자체는 개선하지 않음(복잡도/latency만 개선).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 실패 조기중단(stagnancy/speed) 결정 | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 기존 CRC 성공감지 조기종료에 실패 조기감지 로직을 저비용 추가하는 지점 |
+| w(si) 미충족 체크노드 카운트 | decoder.cpp LDPC_Decoder() | 매 iteration syndrome/checksum 계산 지점, 이미 계산되는 값 재사용 가능 |
+| iteration 루프 조기탈출 제어 | decoder.cpp LDPC_Decoder() | 조기중단 조건을 이터레이션 루프에 삽입 |
+| H-ARQ/AMC scheduling | 대응 없음 | Prime ECC는 재전송/변조적응 계층 없음 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — syndrome weight만으로 uncorrectable 프레임을 조기중단하는 부분은 min-sum 복호와도 호환되고 이식이 매우 쉽지만(오직 기존 syndrome 재사용), NAND는 재전송 대신 read-retry/soft-read 승격이라 임계를 RBER에 맞춰 재튜닝해야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4895538",
+  "title": "New Stopping Criteria for Decoding LDPC Codes in H-ARQ Systems",
+  "year": 2008,
+  "venue": "ISITA 2008",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "2304",
+  "soft_quant": "미상",
+  "key_contribution": "syndrome weight w(si) 하나로 stagnancy check + early convergence speed check를 결합, 실패 프레임 조기감지로 H-ARQ 복호 iteration 70-80% 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "무선 H-ARQ/AMC·fading 채널 대상이며 임계(δth, Ichk, Istag)를 코드/채널별로 튜닝해야 하고 소량의 WER 저하 수반",
+  "todo_check": "stagnancy/speed-check 임계를 NAND RBER 분포에 맞춰 uncorrectable 조기판정→soft-read 승격 트리거로 쓸 때의 오검출률"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4895538---new-stopping-criteria-for-decoding-ldpc-codes-in-h-arq-systems-2008-isita">ieee:4895538 - New Stopping Criteria for Decoding LDPC Codes in H-ARQ Systems (2008, ISITA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

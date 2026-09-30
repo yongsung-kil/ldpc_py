@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6487947</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6487947---an-efficient-methodology-for-parallel-concatenation-of-ldpc-codes-with-reduced-complexity-and-decoding-delay-2013-ieee">ieee:6487947 - An Efficient Methodology for Parallel Concatenation of LDPC Codes with Reduced Complexity and Decoding Delay (2013, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>600</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>단일 LDPC 부호의 parity를 두 번 전송하고 interconnecting check node로 대칭 병렬결합해 PCGC 복잡도/지연 절반</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>rate 1/3 저rate 병렬결합(turbo형) 구조로 NAND 고rate QC-LDPC와 정반대, full tanh SPA, HW 미설계</td></tr><tr><td>추가확인</td><td>interconnecting check node 구조가 단일 QC-LDPC 디코더에 이식 시 얻는 이득이 있는지 (없을 가능성 큼)</td></tr></tbody></table>
+<blockquote><p>총평: 무선용 저rate 병렬 concatenated Gallager code 구성/복호 방법론으로, NAND 고rate binary QC-LDPC ECC 이식성이 낮은 turbo형 접근이다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>두 LDPC 성분부호를 인터리버 없이 turbo 구조로 병렬결합한 기존 PCGC의 성능/복호지연 한계를 개선하는 부호 구성+복호 방법론(rate <code>1/3</code>, frame length <code>600</code>).</li><li>문제: 기존 PCGC는 성분 디코더가 고정 local iteration 후 systematic bit LLR magnitude를 과도하게 키워 다음 디코더가 오류를 못 고쳐 coding gain을 다 못 살린다.</li><li>제안: 서로 다른 두 부호 대신 <strong>단일 LDPC 부호</strong>(MCW <code>&gt;2.5</code>, <code>200x400</code>, rate <code>1/2</code>)를 쓰고 그 parity bit <code>vp</code>를 두 번 전송하여 두 디코더 입력 <code>y1,y2</code>를 구성.</li><li>두 디코더를 <code>interconnecting check node</code>로 대칭 병렬연결, 각 interconnecting CN은 한 parity-check 방정식에 대응하며 각 디코더 bit node와 edge로 연결.</li><li>superiteration은 2 step: step1은 두 디코더가 동시에 독립 local iteration(SPA), step2는 interconnecting CN을 통해 decoder1↔decoder2 extrinsic 교환.</li><li>핵심 갱신식: CN은 <code>E = 2 tanh^-1( Π tanh(M/2) )</code> (full Sum-Product), bit node는 <code>L_i = L_i + Σ E_{j→i}</code>로 LLR 누적.</li><li>cross 갱신: decoder2 bit→interconnecting CN→decoder1 bit(<code>E13</code>), 이어 decoder1 bit→interconnecting CN→decoder2 bit(<code>E23</code>)로 정보가 상대 디코더로 전달.</li><li>매 local iteration 직후 즉시 정보 교환하므로 기존 PCGC보다 수렴이 빠름; syndrome <code>H c^T=0</code> 만족 시 조기종료.</li><li>대칭구조 활용: 제안 디코더를 동일 PCM의 단일 LDPC 디코더 + 변수노드당 추가 레지스터로 대체 가능 → 복잡도(인코더+디코더)를 기존 PCGC의 절반, 복호지연도 기존보다 작음.</li><li>결과: AWGN·flat fading Rayleigh에서 거의 전 SNR 구간 BER 향상(단 SNR≈0 부근은 기존이 약간 우세). 한계: HW 미설계, full tanh SPA, 저rate·무선 대상, min-sum은 비교용으로만 언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA(full tanh) CN 갱신</td><td>대응 없음 (Prime ECC는 min-sum, full-tanh Sum-Product 미사용)</td><td>알고리즘 계열 불일치로 이식 부적합</td></tr><tr><td>반복 message passing 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>개념은 겹치나 병렬 concatenation 구조는 우리 단일 QC-LDPC와 무관</td></tr><tr><td>syndrome 기반 조기종료</td><td><code>partial_CRC.cpp</code>/<code>full_CRC.cpp</code> (우리 방식은 CRC)</td><td>개념 유사하나 방식 다름, 이식 이득 없음</td></tr><tr><td>interconnecting check node 병렬결합</td><td>대응 없음</td><td>turbo형 부호구조로 Prime ECC 단일 QC-LDPC에 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — rate 1/3 turbo형 병렬 concatenated Gallager code 구성으로 full tanh SPA·저rate·무선채널·HW 미설계라, NAND 고rate binary QC-LDPC ECC 코드베이스에 떼어 쓸 핵심 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6487947",
+  "title": "An Efficient Methodology for Parallel Concatenation of LDPC Codes with Reduced Complexity and Decoding Delay",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.333,
+  "code_length": 600,
+  "soft_quant": "무관",
+  "key_contribution": "단일 LDPC 부호의 parity를 두 번 전송하고 interconnecting check node로 대칭 병렬결합해 PCGC 복잡도/지연 절반",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "rate 1/3 저rate 병렬결합(turbo형) 구조로 NAND 고rate QC-LDPC와 정반대, full tanh SPA, HW 미설계",
+  "todo_check": "interconnecting check node 구조가 단일 QC-LDPC 디코더에 이식 시 얻는 이득이 있는지 (없을 가능성 큼)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6487947---an-efficient-methodology-for-parallel-concatenation-of-ldpc-codes-with-reduced-complexity-and-decoding-delay-2013-ieee">ieee:6487947 - An Efficient Methodology for Parallel Concatenation of LDPC Codes with Reduced Complexity and Decoding Delay (2013, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

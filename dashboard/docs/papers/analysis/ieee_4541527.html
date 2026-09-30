@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4541527</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4541527---multi-mode-message-passing-switch-networks-applied-for-qc-ldpc-decoder-2008-ieee">ieee:4541527 - Multi-mode Message Passing Switch Networks Applied for QC-LDPC Decoder (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>barrel shifter 1개로 19+3 submatrix 크기를 지원하는 enhanced self-routing/two-way duplicated 스위치 네트워크으로 라우팅 혼잡·HW복잡도↓</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>21.9k~37.4k@130nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.063 (63.36Mb/s)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>다중표준(가변 zf) 유연성이 핵심 - Prime ECC 고정 z=32엔 불필요; correction 성능과 무관한 순수 라우팅 최적화</td></tr><tr><td>추가확인</td><td>Prime ECC 고정-z 라우팅(GT MUX)이 이미 이 문제를 커버하는지, single barrel shifter 대비 area/throughput 비교</td></tr></tbody></table>
+<blockquote><p>총평: 가변 expansion factor(19+3종)를 단일 permutation shifter로 처리하는 다중표준 라우팅 네트워크 HW로, 고정-z NAND QC-LDPC에는 유연성이 과잉이라 이식가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.16e/802.11n QC-LDPC로, <code>H</code>를 <code>zf×zf</code> circulant-shift/zero 서브행렬로 분해(802.16e <code>nb=24</code>, <code>mb≤12</code>, <code>zf=24~96</code> 19종 / 802.11n <code>zf=27~81</code> 3종), rate는 <code>mb/nb</code>.</li><li>문제: 가변 서브행렬 크기 때문에 Omega/Benes 등 고정크기 crossbar를 못 쓰고, 크기별 전용 라우팅 HW는 신호 혼잡·복잡도가 커진다.</li><li>모델: message passing 라우팅을 서브행렬 크기(zf)의 circular shift로 환원 - correction 알고리즘과 무관한 순수 순열(permutation) 문제.</li><li>핵심기법 1단: enhanced self-routing(SR) 스위치 네트워크 - 3-stage(SRB 결합 → barrel shifter 순열 → 선택)로 <code>zmax</code> 라우팅 중 기대 <code>z</code>개를 self-routing bit로 선택, shift가 <code>zmax/2</code> 초과 시 단순화된 결정규칙으로 제어로직 축소.</li><li>이유: 단일 barrel shifter만으로 모든 zf를 커버해 크기별 중복 MUX(신호 혼잡)를 제거하는 것이 목표.</li><li>핵심기법 2단: two-way duplicated 스위치 네트워크 - <code>z&lt;zmax/2</code>일 때 메시지를 복제해 서로 다른 서브행렬 두 그룹을 동시 라우팅(2zmax), 병렬성 2배.</li><li>구현 디테일: 130nm 합성에서 enhanced SR/two-way duplicated 게이트 21.9k/37.4k, 면적 0.1095/0.1872mm², 동작 384MHz.</li><li>학습/최적화: 없음(구조 설계).</li><li>결과: 작은 zf에서 two-way duplicated로 디코딩 throughput 50%↑; 90nm 1P9M 디코더 칩 6.25mm², 107MHz에서 최대 63.36Mb/s, 203mW@1.0V, 20 iteration.</li><li>한계: correction 성능 개선 없음(순수 라우팅), 다중표준 가변크기 지원 특화 - 단일 고정 z 시스템엔 불필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC circulant-shift 메시지 라우팅 스위치 | GT.cpp Make_GT_HW() | edge/MUX 라우팅에 대응하나 Prime은 고정 z=32라 가변-size 스위칭 불필요 |
+| 디코더 message passing 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | 라우팅이 붙는 상위 복호 루프 |
+| 가변 expansion factor(19+3종) 지원 | 대응 없음 | Prime ECC는 단일 고정 z=32 QC-LDPC |</code></pre>
+<p>적용 가치: 낮음 - 다중표준 가변-zf 라우팅이 핵심 기여인데 Prime ECC는 고정 z로 단일 barrel shifter면 충분하고 correction 이득도 없다.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:4541527",
+  "title": "Multi-mode Message Passing Switch Networks Applied for QC-LDPC Decoder",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "576~2304",
+  "soft_quant": "무관",
+  "key_contribution": "barrel shifter 1개로 19+3 submatrix 크기를 지원하는 enhanced self-routing/two-way duplicated 스위치 네트워크으로 라우팅 혼잡·HW복잡도 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "21.9k~37.4k@130nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.063,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "다중표준(가변 zf) 유연성이 핵심 - Prime ECC 고정 z=32엔 불필요; correction 성능과 무관한 순수 라우팅 최적화",
+  "todo_check": "Prime ECC 고정-z 라우팅(GT MUX)이 이미 이 문제를 커버하는지, single barrel shifter 대비 area/throughput 비교"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4541527---multi-mode-message-passing-switch-networks-applied-for-qc-ldpc-decoder-2008-ieee">ieee:4541527 - Multi-mode Message Passing Switch Networks Applied for QC-LDPC Decoder (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

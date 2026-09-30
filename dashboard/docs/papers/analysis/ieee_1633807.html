@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1633807</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1633807---a-new-fast-density-evolution-2006-ieee-information-theory-workshop">ieee:1633807 - A New Fast Density Evolution (2006, IEEE Information Theory Workshop)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Fourier 변환 기반으로 variable/check node의 density evolution 컨볼루션을 재역변환(inverse FFT) 없이 수행해 계산 효율과 정확도를 동시에 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>실제 디코더가 아닌 코드 설계용 asymptotic threshold 계산 도구(Density Evolution)이며 유한장 QC-LDPC나 HW 적용과 무관</td></tr><tr><td>추가확인</td><td>없음 (순수 이론/설계도구 논문)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 코드 앙상블의 asymptotic 성능(threshold)을 예측하는 Density Evolution 계산을 더 빠르고 정확하게 수행하는 수치해석 기법으로, Prime ECC의 실제 디코더/HW 설계와는 무관한 코드 설계 단계 도구.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Density Evolution(DE)은 LDPC 코드의 belief propagation 복호 성능을 앙상블 수준에서 예측하는 설계 도구이며, 기존 exit-chart 등 근사법 대신 DE를 정확하고 빠르게 계산하는 것이 목표.</li><li>DE는 variable domain(<code>R ∪ {+∞}</code>의 LLR 컨볼루션)과 check domain(<code>GF[2]×[0,∞]</code>의 컨볼루션) 두 종류의 컨볼루션 연산이 필요하며 기존 방법은 각 pairwise 컨볼루션마다 forward FFT 2회+inverse FFT 1회가 필요해 aliasing 문제와 계산비용이 큼.</li><li>핵심 가정: 대칭 채널(BSC/AWGNC) 하 all-zero 코드워드 전송 가정, LLR 밀도 <code>f(x)</code>의 대칭성(<code>f(-x)=e^{-x}f(x)</code>) 활용.</li><li>핵심 기법: <code>f(1+iw)</code> (Laplace 변환 유사 functional)를 직접 다뤄 variable node 업데이트 시 tail probability mass가 지수적으로 작아지도록 만들어 aliasing 없이 pairwise 컨볼루션을 연쇄 수행, variable node 업데이트가 끝날 때만 FFT 1회로 실도메인 전환.</li><li>핵심 근사(AppBP): check node에서 <code>log coth(z/2)</code> 대신 <code>2e^{-|z|}</code>로 근사(정리 1로 상한 증명), 이 근사로 check-to-variable 메시지 크기가 축소되지만 계산은 pointwise 곱셈으로 단순화됨.</li><li>BP(정확) 버전은 비선형 변환 <code>Ψ(x)=exp(-2e^{-x})</code> (정리 2)을 통해 AppBP 컨볼루션 구조를 재사용, check node 업데이트도 결국 컨볼루션 형태로 환원.</li><li>이산화(discretization) 세부: LLR 샘플 간격 <code>δ</code>, 주파수 스텝 <code>w=0.6/δ</code>로 설정(δ=1/2,1/4,1/8,1/16에서 검증), 역변환 커널 <code>Λ(x)</code>를 <code>∫x²Λ(x)dx</code> 최소화하는 선형계획 문제로 설계.</li><li>최적화 절차: 역양자화 커널 <code>Λ</code>의 최적 설계가 선형계획법(LP) 문제로 공식화되며, <code>δ→0</code>일 때 A가 full density evolution으로 수렴함을 증명.</li><li>결과: (3,6)-regular 코드에 대해 BSC/AWGN 채널의 BP/AppBP threshold를 channel capacity 단위로 계산(표1), δ=1/16에서 threshold 오차가 수 mdB 이내이며 AppBP-BP 격차는 약 0.01dB.</li><li>한계: 순수 asymptotic(n→∞) 앙상블 설계 도구이며, 실제 유한장 코드 디코더/HW 구현이나 시뮬레이션 결과가 전혀 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Density Evolution 계산 기법</td><td>대응 없음</td><td>Prime ECC는 특정 QC-LDPC H-matrix가 고정된 시뮬레이터로, 앙상블 설계용 DE 도구를 사용하지 않음</td></tr><tr><td>AppBP 근사(log coth 대신 2e^-</td><td>z</td><td>)</td><td>대응 없음</td><td>Prime ECC는 min-sum 근사를 이미 사용하며 이 논문의 exp 기반 근사와 다른 계열</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — 코드 앙상블의 asymptotic threshold를 계산하는 설계 단계 수치해석 도구이며, Prime ECC의 실제 디코더 알고리즘이나 HW 구조에 이식할 요소가 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1633807",
+  "title": "A New Fast Density Evolution",
+  "year": 2006,
+  "venue": "IEEE Information Theory Workshop",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Fourier 변환 기반으로 variable/check node의 density evolution 컨볼루션을 재역변환(inverse FFT) 없이 수행해 계산 효율과 정확도를 동시에 개선",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "실제 디코더가 아닌 코드 설계용 asymptotic threshold 계산 도구(Density Evolution)이며 유한장 QC-LDPC나 HW 적용과 무관",
+  "todo_check": "없음 (순수 이론/설계도구 논문)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1633807---a-new-fast-density-evolution-2006-ieee-information-theory-workshop">ieee:1633807 - A New Fast Density Evolution (2006, IEEE Information Theory Workshop)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

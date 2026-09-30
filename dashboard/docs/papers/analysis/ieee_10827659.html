@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10827659</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10827659---low-latency-high-throughput-decoder-of-qc-ldpc-codes-by-matrix-splitting-2024-wcsp-2024">ieee:10827659 - Low-Latency High-Throughput Decoder of QC-LDPC Codes by Matrix Splitting (2024, WCSP 2024)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>QC-LDPC의 base-matrix를 s^2개 소블록으로 splitting/padding하여 RAM을 분할하고 CNPU/VNPU 수를 늘려, 아키텍처 변경 없이 처리량을 s배 향상시키는 matrix splitting 기법을 FPGA로 구현·검증</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>194k LUT+252k FF+24k Block RAM(s=12)@Virtex-7 XC7VX690T</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>6.072Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>정정성능(BER/BLER) 곡선 없이 throughput/latency/resource만 보고하며, 5G-LDPC(BG1) 대상이라 NAND용 고rate QC-LDPC의 base-matrix 구조·degree 분포와는 다름</td></tr><tr><td>추가확인</td><td>matrix splitting이 Prime ECC의 z_sb=32, HCU 비대칭 degree 구조(col 127/128)에서도 padding overhead 없이 적용 가능한지, 6-bit 양자화가 기존 HD/2SD/3SD LLR 테이블과 호환되는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: SPP-NMS 디코더 구조를 유지한 채 base-matrix를 잘게 쪼개 RAM/PU를 늘려 처리량을 선형적으로(자원은 서선형으로) 늘리는 실용적 FPGA HW 기법으로, 병렬화·메모리 라우팅 관점에서 Prime ECC HW arch에 참고 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC 코드(base-matrix <code>Hb</code>, CPM 크기 <code>Z</code>, row weight <code>ρm</code>, column weight <code>γn</code>)이며 5G-LDPC BG1(정보비트 길이 <code>22×Z</code>, Z=384)을 예시로 사용, AWGN+BPSK 채널.</li><li>문제의식은 초고처리량·저지연 LDPC 디코더가 필요하나 기존 NMS 기반 구조는 블록 내 직렬 처리(<code>Z</code> clock/iteration)로 처리량이 블록크기·주파수에 종속되어 향상이 어렵다는 점.</li><li>기반 알고리즘은 normalized min-sum(NMS): C2V <code>r_mn[k] = Π sign(q) × α × min|q|</code>(식 5), V2C <code>q_mn[k] = Σ r_m'n[k] + Q_n[0]</code>(식 6), 최종 <code>Q_n[k]</code>로 하드결정.</li><li>1단계 기법은 synchronous partially parallel(SPP) NMS 구조: 한 iteration을 <code>Z</code> clock cycle로 나누고 <code>mb</code>개 CNPU와 <code>nb</code>개 VNPU가 매 clock마다 동시에 C2V/V2C를 갱신(식 8,9)해 기존 NMS 대비 iteration당 지연을 <code>2Z</code>→<code>Z</code>로 절반 단축.</li><li>처리량 식 <code>η = 22×Z×f_clk / ((k_max+1)×τ_iter)</code>(식 10)에서 τ_iter=Z이므로 SPP 구조의 throughput은 블록길이에 무관하게 주파수·최대반복수로만 결정됨(짧은 블록에서는 향상 한계).</li><li>2단계 핵심기법은 matrix splitting: base-matrix의 각 CPM 블록을 s^2개 소블록으로 분할하고, 순환구조가 깨진 부분은 padding(Q-RAM 쪽은 최댓값, R-RAM 쪽은 0으로 채움)해 min/합산 연산에 영향 없도록 함.</li><li>구현 디테일: 분할 시 CPM shift값을 <code>y = x mod (Z/s)</code>로 재계산, RAM을 s^2등분해 QR-RAM 모듈로 묶고 CNPU/VNPU 수를 배가시켜 iteration당 지연을 <code>Z/s</code>로 단축, throughput <code>η = 22×s×f_clk/(k_max+1)</code>(식 11)로 s에 비례 증가.</li><li>실장: Virtex-7 XC7VX690T FPGA, 6-bit 양자화, Z=384를 s=12 분할해 코어행렬 4×26 → 48×312(Z=32)로 확장, Block RAM 낭비 방지 위해 Distributed RAM 일부 사용.</li><li>결과: 10 iteration·253MHz 기준 SPP decoder 0.506Gbps → Splitting(s=4) 2.024Gbps → Splitting(s=12) 6.072Gbps, 기존 PipeShift decoder(2.65Gbps) 대비 2배 이상 처리량을 더 적은 비-BlockRAM 자원으로 달성. s=12에서 자원은 SPP 대비 약 3~4배 증가에 그침(throughput은 12배).</li><li>한계: BER/BLER 등 오류정정 성능 곡선 제시 없이 순수 HW 처리량/지연/자원 비교에 집중, 코드 rate·length 구체 수치는 본문 서술에 없음(BG1 예시만 언급).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| NMS(min-sum) C2V/V2C 갱신(식 5~7) | decoder.cpp `CNU_Update_New_Mag()`, `C2V_Cal_New_Sgn()` | Prime ECC도 min-sum 기반이라 알고리즘 구조 자체는 이미 보유(중복 기여) |
+| SPP(synchronous partial parallel) 구조, C2V/V2C 동시 갱신 | decoder.cpp `LDPC_Decoder()` 이터레이션 루프 | 클록당 CN/VN 동시 처리 스케줄링은 Prime ECC의 pipeline 구조와 비교 참고 가능 |
+| Matrix splitting(블록을 s^2개로 분할+padding) | decoder.cpp `LDPC_Decoder()`, HCU(비대칭 degree col 처리) | Prime ECC의 z_sb=32 고정 병렬단위를 세분화하는 아이디어로 HW throughput 개선에 직접 참고 가능(이식 난이도 낮음~중) |
+| Q-RAM/R-RAM 분할 및 QR-RAM 모듈 재구성 | 디코더 HW 모델(z=32, GT, 메모리 라우팅) | 메모리 분할·라우팅 재설계 아이디어로 HW arch 레이어에 대응 |
+| 6-bit 양자화 | ecc_data.h `PARAM_LLR`, decoder.cpp `Get_VNU_Table_Idx()` | LLR 비트폭 설계 참고용이나 Prime ECC는 HD/2SD/3SD 별도 테이블 사용 중이라 직접 대체는 아님 |</code></pre>
+<blockquote><p>적용 가치: 높음 — 알고리즘(NMS) 자체는 이미 보유하고 있으나 matrix splitting을 통한 처리량 확장 기법은 Prime ECC의 고정 병렬단위(z_sb=32) 구조에 자원 대비 처리량 이득을 주는 실질적 HW arch 아이디어로 이식 난이도가 낮음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10827659",
+  "title": "Low-Latency High-Throughput Decoder of QC-LDPC Codes by Matrix Splitting",
+  "year": 2024,
+  "venue": "WCSP 2024",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "QC-LDPC의 base-matrix를 s^2개 소블록으로 splitting/padding하여 RAM을 분할하고 CNPU/VNPU 수를 늘려, 아키텍처 변경 없이 처리량을 s배 향상시키는 matrix splitting 기법을 FPGA로 구현·검증",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "194k LUT+252k FF+24k Block RAM(s=12)@Virtex-7 XC7VX690T",
+  "parallelism": "부분",
+  "throughput_gbps": 6.072,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "정정성능(BER/BLER) 곡선 없이 throughput/latency/resource만 보고하며, 5G-LDPC(BG1) 대상이라 NAND용 고rate QC-LDPC의 base-matrix 구조·degree 분포와는 다름",
+  "todo_check": "matrix splitting이 Prime ECC의 z_sb=32, HCU 비대칭 degree 구조(col 127/128)에서도 padding overhead 없이 적용 가능한지, 6-bit 양자화가 기존 HD/2SD/3SD LLR 테이블과 호환되는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10827659---low-latency-high-throughput-decoder-of-qc-ldpc-codes-by-matrix-splitting-2024-wcsp-2024">ieee:10827659 - Low-Latency High-Throughput Decoder of QC-LDPC Codes by Matrix Splitting (2024, WCSP 2024)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9942354</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9942354---decoding-short-ldpc-codes-via-bp-rnn-diversity-and-reliability-based-post-processing-2022-ieee-transactions-on-communications">ieee:9942354 - Decoding Short LDPC Codes via BP-RNN Diversity and Reliability-Based Post-Processing (2022, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64~128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>absorbing set 클래스별로 특화 학습된 BP-RNN 디코더 diversity + 저차 OSD post-processing으로 short LDPC의 waterfall 성능을 ML에 근접시킴</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>rate 1/2·64/128bit short code 전용 + tanh BP + 학습가중치 + Z=10 디코더 diversity/OSD(가우스소거)로 NAND 고rate QC-LDPC·min-sum HW와 정합 어려움</td></tr><tr><td>추가확인</td><td>고rate 긴 QC-LDPC에서 absorbing set 수가 폭증할 때 diversity 학습·OSD 후처리 비용이 실용 범위인지</td></tr></tbody></table>
+<blockquote><p>총평: short LDPC(rate 1/2)용 NN 기반 BP diversity + OSD 후처리 논문으로 NAND 고rate binary QC-LDPC/min-sum HW와 부호·알고리즘 모두 상이해 이식성 낮음(추천도 하).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 short LDPC(rate 1/2): Code-1 = length 64 regular(VN deg3/CN deg6, PEG, girth6), Code-2 = length 128 CCSDS 코드, BI-AWGN 채널.</li><li>short code에서는 absorbing set(만족 CN이 불만족 CN보다 많은 오류 VN 집합) 크기가 정정오류수와 비슷해 waterfall 성능을 크게 떨어뜨림.</li><li>핵심1: absorbing set을 backtracking+DFS 그래프탐색으로 전수 열거하고 extended type <code>ν-(ω,ε,Pc)</code>로 세분류(brute-force <code>C(128,8)≈2^40</code> 대비 38분).</li><li>각 오류 클래스별로 truncated Gaussian으로 해당 absorbing set에만 오류를 심은 training set을 만들어 특화 BP-RNN 디코더를 학습(diversity).</li><li>BP-RNN은 tanh 기반 BP의 메시지에 학습가중치 <code>w</code>를 곱한 변형(식(1)-(4)), data-pass 가중치를 <code>w_{n→m}</code> 하나로 단순화해 기존 BP HW 재사용 가능.</li><li>손실은 all-zero 가정하의 average binary cross-entropy(식(5)), multi-loss는 cycle-reduced/CN-regular 코드에서 이득 없어 미사용.</li><li>핵심2: 상호보완성 기준(식(9))으로 <code>J</code>개 특화 디코더 중 <code>Z=10</code>개만 선택, parallel/serial 아키텍처로 실행(parallel은 worst-case latency 감소, serial은 1개 HW 재사용).</li><li>핵심3: 모든 BP-RNN이 codeword를 못 내면 각 디코더 soft-output에 저차 OSD(w≤1) post-processing 적용 후 ML rule로 선택 - cross-entropy가 신뢰 VN 오류확률을 낮춰 OSD와 시너지.</li><li>결과(FER=10^-4): D10이 BP(Itest=25) 대비 약 0.4dB, D10-OSD-1이 BP-OSD-1 대비 0.43dB(Code-1)/0.72dB(Code-2) 이득, D10-OSD-2는 ML 대비 0.2dB 이내.</li><li>한계: HW 미설계(complexity는 CN-update 카운트로만 논의), 시뮬(FER)만, rate 1/2 short code 전용, gate/throughput 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP-RNN(가중치 곱한 BP 메시지)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프 대응하나 Prime ECC는 min-sum, 논문은 tanh BP + 학습가중치</td></tr><tr><td>VN/후험 LLR 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>soft LLR 처리 위치 대응, 학습가중치·cross-entropy 손실은 미보유</td></tr><tr><td>absorbing set 열거/분류, diversity 학습</td><td>대응 없음</td><td>Prime ECC는 단일 고정 min-sum 디코더, NN diversity 미보유</td></tr><tr><td>OSD post-processing(가우스소거/ML rule)</td><td>대응 없음</td><td>Prime ECC 조기종료는 CRC(<code>partial_crc_HW_T4()</code>)이며 OSD 계열 후처리 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - tanh BP + 학습가중치 + OSD 후처리 + 다중 디코더 diversity가 Prime ECC의 단일 min-sum/CRC 조기종료 고rate QC-LDPC 구조와 정합되지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9942354",
+  "title": "Decoding Short LDPC Codes via BP-RNN Diversity and Reliability-Based Post-Processing",
+  "year": 2022,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "64~128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "absorbing set 클래스별로 특화 학습된 BP-RNN 디코더 diversity + 저차 OSD post-processing으로 short LDPC의 waterfall 성능을 ML에 근접시킴",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "rate 1/2·64/128bit short code 전용 + tanh BP + 학습가중치 + Z=10 디코더 diversity/OSD(가우스소거)로 NAND 고rate QC-LDPC·min-sum HW와 정합 어려움",
+  "todo_check": "고rate 긴 QC-LDPC에서 absorbing set 수가 폭증할 때 diversity 학습·OSD 후처리 비용이 실용 범위인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9942354---decoding-short-ldpc-codes-via-bp-rnn-diversity-and-reliability-based-post-processing-2022-ieee-transactions-on-communications">ieee:9942354 - Decoding Short LDPC Codes via BP-RNN Diversity and Reliability-Based Post-Processing (2022, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

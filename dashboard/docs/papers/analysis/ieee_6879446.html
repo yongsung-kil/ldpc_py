@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6879446</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6879446---improving-read-performance-of-nand-flash-ssds-by-exploiting-error-locality-2016-ieee-transactions-on-computers">ieee:6879446 - Improving Read Performance of NAND Flash SSDs by Exploiting Error Locality (2016, IEEE Transactions on Computers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>error locality 기반 DRAM 캐시(EC-Cache)로 LDPC 입력 오류를 사전 제거해 sensing/latency 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 디코더/부호를 블랙박스로 취급 - 알고리즘·HW·부호설계 이식 요소 없음 (컨트롤러/펌웨어 캐시 레벨)</td></tr><tr><td>추가확인</td><td>error locality 실측(70~80%)이 Prime ECC 타깃 NAND 셀·retention 조건에서도 성립하는지</td></tr></tbody></table>
+<blockquote><p>총평: 시스템/펌웨어 레벨 read 성능 최적화로 LDPC 디코더 내부(min-sum/부호/HW)와 무관 - Prime ECC 코어 이식 대상 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 SSD가 HDD 캐시로 쓰이는 대규모 스토리지, 19nm TLC NAND(page 9kB=73,728bit, user 8kB, parity 1kB), raw BER 최대 <code>1e-2</code>.</li><li>문제: LDPC 디코딩 latency가 입력 오류수에 비례 → BER 높으면 다중 sensing + iteration 증가로 read latency 악화.</li><li>핵심 관찰 "error locality": 같은 page를 erase 전까지 두 번 읽으면 오류 위치의 약 <code>70~80%</code>가 동일 (Read1→Read2 559/725≈77%).</li><li>핵심 기법 EC-Cache: 최근 읽은 page의 검출된 오류(위치+valid value)를 DRAM 해시테이블에 캐싱, 다음 read 시 LDPC 이전에 raw data에 merge하여 오류를 미리 정정.</li><li>오류 위치 저장을 <code>8-bit offset coding</code>(절대 17bit 대신 상대거리)으로 압축, dummy entry <code>(255,1)</code>로 255 초과 간격 처리, line size 1kB(=page의 1/9)로 고정 → 데이터캐시 대비 8배 line 수.</li><li>적응형 할당: SDH(stack distance histogram) + shadow cache로 워크로드 locality 추정, <code>Benefit=HitRate_Data + a·HitRate_EC</code>(a=0.4) 메트릭으로 epoch마다 DRAM을 데이터캐시/EC-Cache에 way 단위로 재분배.</li><li>구현 디테일: assisting unit이 raw buffer와 정정된 output buffer 비교로 새 EC-entry 생성, 주 HW 오버헤드는 codeword 크기 raw buffer RAM.</li><li>검증: 19nm TLC/25nm MLC 실측 error locality, 외부 LDPC 시뮬 프레임워크(9kb codeword, 922b parity)로 sensing/latency 모델, SSDSim+DiskSim으로 MSRC 워크로드 시스템 시뮬.</li><li>결과: hit 시 오류 60%+ 사전 제거 → BER 0.015에서도 평균 1 sensing, read 성능 최대 <code>2.6x</code>(static)/<code>2.2x</code>(adaptive) 향상.</li><li>한계: LDPC 디코더/부호는 블랙박스, 알고리즘·부호설계·디코더 HW 설계 없음. NAND read 시스템/컨트롤러 캐시 레벨 최적화에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>EC-Cache DRAM 오류 캐시 / offset coding</td><td>대응 없음</td><td>컨트롤러/펌웨어 레벨 - 디코더 코어 밖</td></tr><tr><td>적응형 DRAM 할당 (SDH, epoch)</td><td>대응 없음</td><td>시스템 캐시 정책 - 코드베이스 범위 밖</td></tr><tr><td>LDPC 입력 오류 사전 제거 → sensing/latency 감소</td><td>decoder.cpp <code>LDPC_Decoder()</code> (간접)</td><td>디코더는 소비자일 뿐, merge 전처리는 채널/입력 밖에서 수행</td></tr><tr><td>soft-sensing(다중 read reference voltage) LLR</td><td>channel.cpp <code>Set_LLR_Th()</code> (간접)</td><td>개념적 연결뿐, 논문은 LLR 설계를 다루지 않음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 디코더/부호/HW 어디에도 이식할 알고리즘이 없고, LDPC를 블랙박스로 다루는 SSD 컨트롤러 캐시 아키텍처라 Prime ECC 코어와 접점이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6879446",
+  "title": "Improving Read Performance of NAND Flash SSDs by Exploiting Error Locality",
+  "year": 2016,
+  "venue": "IEEE Transactions on Computers",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "9216",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "error locality 기반 DRAM 캐시(EC-Cache)로 LDPC 입력 오류를 사전 제거해 sensing/latency 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 디코더/부호를 블랙박스로 취급 - 알고리즘·HW·부호설계 이식 요소 없음 (컨트롤러/펌웨어 캐시 레벨)",
+  "todo_check": "error locality 실측(70~80%)이 Prime ECC 타깃 NAND 셀·retention 조건에서도 성립하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6879446---improving-read-performance-of-nand-flash-ssds-by-exploiting-error-locality-2016-ieee-transactions-on-computers">ieee:6879446 - Improving Read Performance of NAND Flash SSDs by Exploiting Error Locality (2016, IEEE Transactions on Computers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

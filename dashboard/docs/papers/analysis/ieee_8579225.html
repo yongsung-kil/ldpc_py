@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8579225</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8579225---layered-ldpc-decoders-with-efficient-memory-access-scheduling-and-mapping-and-built-in-support-for-pipeline-hazards-mitigation-2019-ieee-transactions-on-circuits-and-systems-i-regular-papers">ieee:8579225 - Layered LDPC Decoders With Efficient Memory Access Scheduling and Mapping and Built-In Support for Pipeline Hazards Mitigation (2019, IEEE Transactions on Circuits and Systems-I: Regular Papers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>2304~64800</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>단일포트 메모리뱅크 layered QC-LDPC 디코더의 오프라인 메모리매핑·읽기스케줄링(그래프컬러링+GA+TSP) + pipeline RAW 완화 residue-based layered 스케줄링</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정성능 개선 아님(HUE/TAR 등 HW효율 최적화), 오프라인 알고리즘이 부호별 실행(WiMAX 1h/DVB 2h), residue는 flooded와 trade-off로 n=∞ 시 미미한 성능저하</td></tr><tr><td>추가확인</td><td>z=32·HCU·GT 기반 Prime ECC pipeline에 residue-based 매핑/스케줄링이 정합되는지, 단일포트 SRAM 뱅크 전제가 우리 메모리모델과 맞는지</td></tr></tbody></table>
+<blockquote><p>총평: 단일포트 메모리 layered QC-LDPC 디코더의 메모리매핑+파이프라인 해저드 완화로 HW효율(HUE/TAR)을 높이는 실용 HW 논문, 정정성능은 불변이나 메모리라우팅·pipeline 최적화 관점서 참고가치 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 layered 스케줄링 QC-LDPC 디코더 HW, 단일포트 SRAM <code>nbanks</code>개 뱅크 구조, 검증 부호는 WiMAX(N=2304, z=96, rate 1/2~5/6)와 DVB-S2X(N=64800, z=360).</li><li>문제: 단일포트 메모리뱅크에서 동시접근 충돌과 pipeline 지연(RAW hazard)으로 stall이 발생해 throughput·HW효율(HUE) 저하.</li><li>핵심 기법 1(오프라인): 3단계 — (a) check-node 순서 σ를 genetic TSP로, (b) 메모리뱅크 매핑을 hypergraph 컬러링(Modified Misra-Gries, MMG)으로, (c) in-layer 읽기접근 재정렬 ψ로 stall 최소화.</li><li>매핑을 base graph G의 변수노드 컬러링(=뱅크 배정)으로 정식화, 뱅크당 최대 동색 이웃수 <code>TG(ξ,m)=max_c |Nξ(m,c)|</code>가 read cycle 수.</li><li>핵심 식: HUE = <code>Σ dc(m) / (IG·nbanks)</code>로 유효 메모리접근 비율을 정의, 매핑충돌+pipeline stall을 통합 평가.</li><li>핵심 기법 2(아키텍처): residue-based layered 스케줄링 — overlapping update 허용, β 갱신차이를 residue <code>δt = βnew - βold</code>로 register file에 누적했다 마지막 check-node에서 AP-LLR에 반영(=부분적 flooded).</li><li>구현 디테일: CNU는 min-sum(min1/min2/sign), barrel shifter로 α/β(AP-LLR 아닌 저양자화 메시지) 라우팅, reverse write-back, opcode ROM로 residue 제어.</li><li>최적화: 컬러링은 GA(fitness=1/TG), in-layer는 tabu search로 iteration duration <code>IG</code> 최소화.</li><li>결과: 오프라인 알고리즘만으로 HUE 3~49% 향상, residue 병용 시 25~57%, FPGA에서 conventional layered 대비 TAR 최대 85% 개선; residue n=∞ FER는 미미한 저하(AWGN, Imax=30).</li><li>한계: 정정능력 개선이 아니라 HW효율(HUE/TAR) 최적화이며, 오프라인 알고리즘이 부호별로 장시간(1~2h) 실행 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum 연산(min1/min2/sign)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리도 이미 보유(§3 min-sum) → 중복, 이식가치 낮음</td></tr><tr><td>layered 스케줄 iteration 루프/AP-LLR 갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 Dual-Update(even/odd) 스케줄이라 residue-based layered와 상이하나 스케줄링 아이디어 참고 가능</td></tr><tr><td>메모리뱅크 매핑/라우팅/pipeline</td><td>디코더 HW 모델(z=32, HCU, GT) + <code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>HW 메모리라우팅·pipeline hazard 완화 관점서 관련, 단 z/HCU/GT 구조와 정합 검증 필요(난이도 중)</td></tr><tr><td>H-matrix/부호구조 로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>오프라인 매핑이 base matrix B 종속이라 부호로드와 연계</td></tr></tbody></table>
+<p>적용 가치: 중간 — min-sum 자체는 중복이나, 단일포트 메모리뱅크 매핑+pipeline RAW 완화(residue-based layered)는 Prime ECC의 HW 메모리라우팅/pipeline 병목 관점에서 참고할 만하며, z=32·HCU·GT 구조 정합만 확인되면 부분 이식 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8579225",
+  "title": "Layered LDPC Decoders With Efficient Memory Access Scheduling and Mapping and Built-In Support for Pipeline Hazards Mitigation",
+  "year": 2019,
+  "venue": "IEEE Transactions on Circuits and Systems-I: Regular Papers",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "2304~64800",
+  "soft_quant": "미상",
+  "key_contribution": "단일포트 메모리뱅크 layered QC-LDPC 디코더의 오프라인 메모리매핑·읽기스케줄링(그래프컬러링+GA+TSP) + pipeline RAW 완화 residue-based layered 스케줄링",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "정정성능 개선 아님(HUE/TAR 등 HW효율 최적화), 오프라인 알고리즘이 부호별 실행(WiMAX 1h/DVB 2h), residue는 flooded와 trade-off로 n=∞ 시 미미한 성능저하",
+  "todo_check": "z=32·HCU·GT 기반 Prime ECC pipeline에 residue-based 매핑/스케줄링이 정합되는지, 단일포트 SRAM 뱅크 전제가 우리 메모리모델과 맞는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8579225---layered-ldpc-decoders-with-efficient-memory-access-scheduling-and-mapping-and-built-in-support-for-pipeline-hazards-mitigation-2019-ieee-transactions-on-circuits-and-systems-i-regular-papers">ieee:8579225 - Layered LDPC Decoders With Efficient Memory Access Scheduling and Mapping and Built-In Support for Pipeline Hazards Mitigation (2019, IEEE Transactions on Circuits and Systems-I: Regular Papers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

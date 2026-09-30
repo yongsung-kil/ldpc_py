@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6202041</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6202041---efficient-encoding-of-quasi-cyclic-ldpc-codes-with-continuously-variable-length-2012-ieee">ieee:6202041 - Efficient Encoding of Quasi-Cyclic LDPC Codes with Continuously Variable Length (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.67</td></tr><tr><td>부호length</td><td>1000~6720</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CVL(연속가변길이) QC-LDPC를 approximate lower-triangular(R-U) 구조와 결합해 girth-10 유지하며 cyclic-shift+XOR만으로 선형시간 인코딩</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>인코더 전용·연속가변길이 목적, NAND 고정 고rate 부호와 무관하고 Prime ECC 인코더는 dual-diagonal 고정</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 연속가변길이 QC-LDPC의 선형시간 인코더 구성법, NAND 고정 고rate·dual-diagonal 인코더와 목적이 달라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 적응형 무선/멀티미디어 통신용 QC-LDPC, 블록길이가 연속가변(CVL)이어야 QoS·채널 적응 가능. rate 1/4~2/3, 블록길이 n(Lmin+k) 형태로 연속 가변.</li><li>문제: 기존 선형시간 인코딩 가능 QC-LDPC(block-type, systematic-circulant, triple-diagonal 등)는 shift offset 고정 시 블록길이를 못 바꿈. CVL 코드[1]는 길이 가변이나 원 H는 인코딩 복잡도 O(N)+O(g^2)로 비효율.</li><li>핵심 가정: H는 m=3, aij=2^i·lj 형태로 girth-10 보장(식(2)~(5), Lmin=2(2^{m-1}-1)max(lj-lk)+1).</li><li>핵심 기법: Richardson-Urbanke approximate lower-triangular 구조 H=[A B T; C 0 E]로 재배열해 gap g=0 근처로 만들어 선형시간 인코딩 달성.</li><li>핵심 식: p1=φ^-1(ET^-1 As+Cs), p2=T^-1(As+Bp1), φ=ET^-1B — 모든 부분행렬이 quasi-cyclic이라 순환레지스터로 실현.</li><li>확장 제약: φ 단순화 위해 shift값에 4l_{n-1}+l_{n-3}=l_{n-2} mod L 제약을 걸어 φ=E1T1^T B1로 축약(식(23)).</li><li>부수 트릭: Result1(두 순환행렬 곱의 offset=a1+a2 mod L), Result2(역행렬 offset=L-ai)로 모든 연산을 cyclic-shift+XOR로 환원, 오프라인 저장 가능.</li><li>학습/최적화: 없음(구조적 구성). serial-to-parallel 변환으로 sub-vector 병렬 처리해 인코딩 시간 절감.</li><li>결과: 자원 소모 추정 — H저장 9log2L, 결과저장 3L, 순환레지스터 24L, XOR 26L. BER(SPA, 100 iter, AWGN/BPSK): R=1/2(L=2100) Shannon 대비 2dB, R=4/7 1.6dB, R=5/8 1.2dB(rate↑ 성능↑).</li><li>한계: 인코더 전용, HW는 구조 제안+자원추정만(합성/실측 없음), 연속가변길이 목적이라 NAND 고정 부호와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| CVL 선형시간 인코더 (cyclic-shift+XOR) | encoder.cpp LDPC_encoder_4KB() | 인코딩부에 닿으나 Prime ECC는 dual-diagonal 고정, R-U ALT 구조는 대응 없음 |
+| approximate lower-triangular H 구성 | encoder.cpp Generate_PCM_encoding() | 부호용 PCM 생성부에 개념적으로 닿으나 구조가 상이 |
+| girth-10 shift offset 설계 | ecc_top.cpp Load_PCM() | H-matrix 로드에만 닿음, 오프라인 부호설계는 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 연속가변길이용 선형시간 인코더 구성으로, Prime ECC의 고정 고rate dual-diagonal 인코더와 설계 목적·구조가 달라 재사용 여지 적음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6202041",
+  "title": "Efficient Encoding of Quasi-Cyclic LDPC Codes with Continuously Variable Length",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.67",
+  "code_length": "1000~6720",
+  "soft_quant": "무관",
+  "key_contribution": "CVL QC-LDPC를 approximate lower-triangular(R-U) 구조와 결합해 girth-10 유지하며 cyclic-shift+XOR만으로 선형시간 인코딩",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "인코더 전용·연속가변길이 목적, NAND 고정 고rate 부호와 무관하고 Prime ECC 인코더는 dual-diagonal 고정",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6202041---efficient-encoding-of-quasi-cyclic-ldpc-codes-with-continuously-variable-length-2012-ieee">ieee:6202041 - Efficient Encoding of Quasi-Cyclic LDPC Codes with Continuously Variable Length (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

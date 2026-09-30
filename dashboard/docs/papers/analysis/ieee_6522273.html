@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6522273</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6522273---cell-to-cell-interference-compensation-schemes-using-reduced-symbol-pattern-of-interfering-cells-for-mlc-nand-flash-memory-2013-ieee-trans-magnetics">ieee:6522273 - Cell-to-Cell Interference Compensation Schemes Using Reduced Symbol Pattern of Interfering Cells for MLC NAND Flash Memory (2013, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.95</td></tr><tr><td>부호length</td><td>34520</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>reduced symbol pattern으로 셀간간섭 추정(패턴 288→18)·보상 후 간섭 없다고 가정한 LLR 계산</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>대상이 채널측 셀간간섭 보상·LLR 생성이지 디코더 변형 아님; fine-grained sensing(&gt;4bit)이 NAND read 비용↑</td></tr><tr><td>추가확인</td><td>4비트+ 양자화 read 비용 대비 BER 이득이 Prime ECC 2SD/3SD(&lt;=3bit) 대비 실이득인지</td></tr></tbody></table>
+<blockquote><p>총평: 8-level MLC NAND 셀간간섭 보상 후 LLR을 간단·고신뢰로 생성하는 채널측 전처리로, Prime ECC의 LLR/양자화 레이어에 참고가치 있으나 soft-4bit+ read 비용이 관건.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 8-level MLC NAND flash, even/odd BL multipage programming; ECC로 rate-19/20 (34520, 32794) QC-LDPC 사용.</li><li>문제: 레벨↑에 따라 셀간간섭(coupling) 패턴이 지수적으로 증가(8레벨 288, 16레벨 2176)해 기존 postcompensation[4]은 복잡, 간섭 포함 LLR[6]은 신뢰도 저하.</li><li>채널모델: threshold voltage 분포 = erased state는 wide Gaussian, programmed state는 uniform+양측 대칭 Gaussian tail; 셀간간섭은 수평/수직/대각 coupling ratio로 표현.</li><li>핵심기법: multipage programming의 threshold voltage shift를 2레벨로 modify → interfering cell "reduced symbol pattern"으로 간섭 추정, 패턴 수를 레벨무관 18개로 축소(Table I).</li><li>핵심식: 보상 후 간섭이 제거되었다고 가정하고 sensed voltage <code>V</code>에서 LLR을 두 인접 기준전압 사이 pdf 비율로 계산(식 5) → LLR 계산이 단순·고신뢰.</li><li>확장(보상 2안): Scheme 1 = 추정 간섭만큼 read voltage shift; Scheme 2 = fine-grained oversampling 후 sensed voltage에서 간섭 bit를 binary 감산.</li><li>구현: 간섭 sensing은 3bit hard-decision(BCH 적합), LDPC LLR용은 fine-grained cell-threshold-voltage sensing(4bit+ 양자화) 필요.</li><li>최적화: 별도 학습 없음; coupling strength factor <code>s</code> 등 파라미터 설정, Scheme 2는 양자화 레벨↑ 시 정밀도 개선.</li><li>결과: 제안 기법이 기존 ECC 스킴[6] 대비 BER을 한 자릿수 이상 개선; Scheme 1이 postcompensation[4]과 동일 BER을 패턴 18개(vs 288)로 더 단순히 달성.</li><li>한계: 시뮬만, HW 미설계, LDPC 디코더 자체는 변형 없음(간섭보상+LLR 생성이 본체), soft-4bit+ sensing 비용 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>보상 후 LLR 계산(간섭-free 가정)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-read LLR threshold 설정에 대응; 간섭보상 반영한 LLR 산출 아이디어 참고 가능</td></tr><tr><td>iteration별 LLR 테이블</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>LLR 신뢰도 향상 관점에서 테이블 값 재검토 참고</td></tr><tr><td>fine-grained 4bit+ 양자화 sensing</td><td>대응 없음</td><td>Prime ECC는 hard-1bit/soft-2~3bit만 지원, soft-4bit+ 미지원</td></tr><tr><td>셀간간섭 추정/보상(read voltage shift)</td><td>대응 없음</td><td>Prime ECC는 AWGN/RBER/fixed-error 채널만, 셀간 coupling 모델 없음</td></tr><tr><td>QC-LDPC 부호(rate 19/20)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>고rate QC-LDPC로 우리와 부호계열 유사하나 부호 자체 기여는 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 셀간간섭 보상 후 고신뢰 LLR을 만드는 채널측 아이디어는 <code>channel.cpp</code> LLR 레이어에 참고가치가 있으나, soft-4bit+ sensing 비용과 셀간 coupling 모델 부재로 직접 이식은 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6522273",
+  "title": "Cell-to-Cell Interference Compensation Schemes Using Reduced Symbol Pattern of Interfering Cells for MLC NAND Flash Memory",
+  "year": 2013,
+  "venue": "IEEE Trans. Magnetics",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.95,
+  "code_length": "34520",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "reduced symbol pattern으로 셀간간섭 추정(패턴 288-&gt;18)·보상 후 간섭 없다고 가정한 LLR 계산",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "대상이 채널측 셀간간섭 보상·LLR 생성이지 디코더 변형 아님; fine-grained sensing(&gt;4bit)이 NAND read 비용↑",
+  "todo_check": "4비트+ 양자화 read 비용 대비 BER 이득이 Prime ECC 2SD/3SD(&lt;=3bit) 대비 실이득인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6522273---cell-to-cell-interference-compensation-schemes-using-reduced-symbol-pattern-of-interfering-cells-for-mlc-nand-flash-memory-2013-ieee-trans-magnetics">ieee:6522273 - Cell-to-Cell Interference Compensation Schemes Using Reduced Symbol Pattern of Interfering Cells for MLC NAND Flash Memory (2013, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

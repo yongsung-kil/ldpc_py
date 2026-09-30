@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8488239</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8488239---the-design-and-implementation-of-high-speed-codec-based-on-fpga-2018-iccsn">ieee:8488239 - The Design and Implementation of High-Speed Codec Based on FPGA (2018, ICCSN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>QC-LDPC를 block-QC로 등가변환(row/col permutation)해 인코더·디코더 병렬도↑, 2.97Gbps@5iter</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2.97</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정성능 개선 아님(속도/병렬도만), BER 곡선·gatecount 본문 미제시, 특정 CCSDS 부호에 결합된 분해(b=511=73×7)</td></tr><tr><td>추가확인</td><td>z=32 Prime ECC 구조에 block-QC 분해(b1×b2) 적용 가능성, 실제 gatecount·에러성능 손실 정도</td></tr></tbody></table>
+<blockquote><p>총평: CCSDS QC-LDPC를 block-QC로 분해해 부분병렬 HW throughput을 높인 순수 구현 최적화 논문으로, 정정성능 기여는 없고 병렬화 아이디어만 간접 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN/BPSK 채널, CCSDS 권고 <code>(8176, 7154)</code> QC-LDPC(rate≈0.875), Kintex7 XC7K325T FPGA에서 인코더·디코더 동시 구현.</li><li>문제: 완전랜덤 LDPC는 CN-VN 연결이 불규칙해 부분병렬 시분할 다중화가 어려움 → 고throughput 위해 구조화된 부호와 메모리 충돌 없는 병렬 구조 필요.</li><li>채널 모델: 초기 LLR <code>Z_n^(0)=2y_n/σ²</code>, AWGN에서 <code>σ²</code>는 반복에 무영향이라 무시 → <code>Z_n^(0)=y_n</code>, 채널추정 불필요.</li><li>핵심 기법: check matrix <code>H_qc</code>(circulant array)를 정수인자 <code>b=b1·b2</code>(단, gcd=1)로 분해해 block-circulant <code>H_bqc</code>로 등가변환(같은 row/col permutation), 생성행렬도 SC form으로 동일 변환.</li><li>핵심 식: <code>H_qc = diag(c){P_c}·H_bqc·diag(t){P_t}</code> (식8) — permutation으로 circulant을 block-circulant array로 재배열, 단순 counter 주소생성으로 다중 데이터 병렬 접근 가능.</li><li>인코더: <code>b=511</code>을 <code>b1=73, b2=7</code>로 분해, 정보 14 segment 병렬, 두 sub-encoder가 p1/p2를 병렬계산 → 1 인코딩 ≈80 clock.</li><li>디코더: 7-block 병렬, 511×511 circulant을 73×73 block-cycle(각 7×7 서브)로 변환 → 메모리 depth 73, width=7×양자화. CFUG/VFUG 각 7개 CFU/VFU.</li><li>디코딩 알고리즘: NMSA(normalized min-sum, 보정계수 `λ_k≈0.7~0.8), CN update는 min/2nd-min/부호, VN update는 합산. 3bit LLR 양자화, max iter=5, 두 프레임 교대 처리(pipeline).</li><li>결과: full iteration ≈180 clock, 1프레임 복호 ≈1065 clock(3.586µs@297MHz), throughput 2.97Gbps. 디코더 자원: FF 83253(20%), LUT 46065(22%), BRAM 40(8%). 300MHz까지 동작.</li><li>한계: BER 곡선·coding gain 수치 미제시(성능 무손실 주장만), gatecount(공정) 없음, 분해가 특정 인자분해 가능한 circulant size에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMSA(min1/min2 + sign), CN update</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC min-sum과 동일 계열(중복), 보정계수 λ 참고 정도</td></tr><tr><td>3bit LLR 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft-2~3bit 지원 범위와 일치, 이식 용이하나 신규성 낮음</td></tr><tr><td>block-QC 분해(b=b1×b2)로 부분병렬화·주소생성</td><td>ecc_top.cpp <code>Load_PCM()</code> + 디코더 HW 모델(z=32)</td><td>HW arch 영역, z=32 병렬단위와 정합 필요(이식난이도 중)</td></tr><tr><td>SC form 생성행렬 인코딩(shift register)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 고정, 구성 상이(이식난이도 중~높음)</td></tr><tr><td>두 프레임 교대 pipeline 스케줄</td><td>디코더 HW 모델(pipeline 6-stage)</td><td>pipeline 개념 겹침, 구조 재정합 필요</td></tr></tbody></table>
+<p><strong>적용 가치</strong>: 중간 — 정정성능 기여는 없으나 circulant을 block-circulant로 분해해 부분병렬 throughput을 올리는 아이디어는 Prime ECC HW 병렬화(z=32) 관점에서 간접 참고 가능. 다만 min-sum/양자화/인코더는 이미 보유 구조와 겹침.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8488239",
+  "title": "The Design and Implementation of High-Speed Codec Based on FPGA",
+  "year": 2018,
+  "venue": "ICCSN",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "8176",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "QC-LDPC를 block-QC로 등가변환(row/col permutation)해 인코더·디코더 병렬도↑, 2.97Gbps@5iter",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 2.97,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "정정성능 개선 아님(속도/병렬도만), BER 곡선·gatecount 본문 미제시, 특정 CCSDS 부호에 결합된 분해(b=511=73×7)",
+  "todo_check": "z=32 Prime ECC 구조에 block-QC 분해(b1×b2) 적용 가능성, 실제 gatecount·에러성능 손실 정도"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8488239---the-design-and-implementation-of-high-speed-codec-based-on-fpga-2018-iccsn">ieee:8488239 - The Design and Implementation of High-Speed Codec Based on FPGA (2018, ICCSN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

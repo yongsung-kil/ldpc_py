@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7418355</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7418355---coding-performance-for-signal-dependent-channels-in-visible-light-communication-system-2015-ieee-globalsip">ieee:7418355 - Coding Performance for Signal Dependent Channels in Visible Light Communication System (2015, IEEE GlobalSIP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>20000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>VLC의 signal-dependent Gaussian noise(SDGN) 채널에 맞춘 최적/근사 LLR 계산식을 유도해 min-sum 디코딩 성능을 0.7dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>APD 광검출기 shot noise 기반 signal-dependent 채널 모델로 NAND flash의 read-noise/RBER 채널과 근본적으로 다름</td></tr><tr><td>추가확인</td><td>LLR 재계산 자체는 채널모델 의존적이라 NAND soft-read 채널(비대칭 read threshold)에 유사 적용 가능성이 있는지 별도 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: VLC APD shot noise 채널 특유의 LLR 보정 기법으로, regular (3,6) LDPC를 예제로만 사용했을 뿐 부호설계/디코더 알고리즘 자체의 기여는 없어 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>VLC 시스템에서 OOK 변조 + regular (3,6) LDPC 부호(rate 0.5, block length 20000)를 사용하는 APD 수신기 모델.</li><li>기존 LLR 계산은 signal-independent Gaussian noise(SIGN)를 가정하지만 실제 APD 채널은 조명 강도에 비례한 shot noise로 인해 constellation point별 노이즈 분산이 다른 signal-dependent Gaussian noise(SDGN) 채널이다.</li><li>핵심 가정: shot noise 분산 <code>σ_sd^2 = γ·h·x</code> (수신 신호 x에 비례), 신호독립 잡음 <code>σ_si^2</code>와의 비율 <code>f = σ̄_sd^2/σ_si^2</code>로 채널 특성을 파라미터화.</li><li>최적 LLR <code>Λ_opt</code>(식 9)를 SDGN 채널의 사후확률비로 유도, κ0/κ1(식 8)로 constellation point별 분산 스케일 반영.</li><li><code>Λ_opt</code>는 σ_n 추정이 필요해 실용성이 낮으므로, MS 디코딩용 근사 LLR <code>Λ̃_opt</code>(식 12)를 σ_n 없이 유도해 계산 복잡도 절감.</li><li>correction factor <code>α</code>(기존 문헌값 0.8, rate 0.5용)를 근사 min-sum에 적용해 성능 격차를 축소.</li><li>EXIT chart로 optimal/sub-optimal detection의 decoding threshold를 계산해 BER 시뮬레이션 없이 빠르게 성능 예측.</li><li>별도 학습/최적화 절차 없음(채널 모델 유도 + EXIT 임계값 계산만).</li><li>결과: BER 10^-6 기준 modulation depth m=1, f=1.4에서 SIGN 대비 SDGN 최적검출로 0.7dB 이득. σ_n 과대추정 시 BP가 오히려 근사 MS보다 성능 열화.</li><li>한계: APD 광통신 특유의 shot noise 채널 모델(NAND read 채널과 무관), HW 미설계, 부호 자체는 표준 regular LDPC 예제일 뿐 개선 대상 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SDGN 채널 LLR 계산/양자화</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>채널 모델 자체가 VLC APD shot noise 전용이라 NAND RBER 채널에 직접 대응 안 됨, 개념적 참고만 가능</td></tr><tr><td>min-sum correction factor α</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>scaled min-sum의 α factor는 이미 일반적으로 알려진 기법(Chen &amp; Fossorier)이라 신규성 낮음</td></tr><tr><td>부호(regular (3,6) LDPC)</td><td>대응 없음</td><td>부호 자체는 개선 대상이 아닌 예제 사용</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — VLC 광통신 채널 특유의 signal-dependent noise 모델에 국한된 LLR 유도로, NAND flash 채널 특성과 무관하며 부호/디코더 알고리즘 자체의 신규 기여도 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7418355",
+  "title": "Coding Performance for Signal Dependent Channels in Visible Light Communication System",
+  "year": 2015,
+  "venue": "IEEE GlobalSIP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": 20000,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "VLC의 signal-dependent Gaussian noise(SDGN) 채널에 맞춘 최적/근사 LLR 계산식을 유도해 min-sum 디코딩 성능을 0.7dB 개선",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "APD 광검출기 shot noise 기반 signal-dependent 채널 모델로 NAND flash의 read-noise/RBER 채널과 근본적으로 다름",
+  "todo_check": "LLR 재계산 자체는 채널모델 의존적이라 NAND soft-read 채널(비대칭 read threshold)에 유사 적용 가능성이 있는지 별도 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7418355---coding-performance-for-signal-dependent-channels-in-visible-light-communication-system-2015-ieee-globalsip">ieee:7418355 - Coding Performance for Signal Dependent Channels in Visible Light Communication System (2015, IEEE GlobalSIP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

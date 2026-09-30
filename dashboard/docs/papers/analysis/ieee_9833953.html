@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9833953</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9833953---finite-alphabet-message-passing-using-only-integer-operations-for-highly-parallel-ldpc-decoders-2022-ieee-spawc">ieee:9833953 - Finite-Alphabet Message Passing using only Integer Operations for Highly Parallel LDPC Decoders (2022, IEEE SPAWC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>816</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>정보최대화 다차원 VN LUT(mLUT)를 저범위 정수 덧셈+threshold로 등가 대체한 MIC 복호기, VN/CN 모두 정수연산</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>VFU 179um2 / CFU 143um2 @22nm FD-SOI</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>dV=3,dC=6 regular (816,406) 단일코드·AWGN 검증, unrolled full-parallel 대상이라 NAND의 z=32 부분병렬 구조와 상이, throughput 미보고</td></tr><tr><td>추가확인</td><td>mLUT/MIC의 오프라인 DE 설계가 NAND 고rate QC-LDPC(고차수 CN)에서 VFU 면적이득을 유지하는지, unrolled 아닌 z-병렬 구조 이식성</td></tr></tbody></table>
+<blockquote><p>총평: FA MP 계열 최초로 VN·CN 모두에서 NMS 대비 면적/전력 개선(CFU ~50%, VFU 11~15%)을 실증한 합성수준 HW 논문. 이득은 확실하나 unrolled full-parallel·소형 regular 코드 특화라 NAND 구조 이식엔 재설계 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular LDPC (816,406), <code>dV=3</code>, <code>dC=6</code>, BPSK/AWGN, flooding 스케줄, 10 iteration. Beyond-5G/6G 100Gb/s~1Tb/s unrolled full-parallel(FP) 복호기 겨냥.</li><li>문제: FA MP 복호기는 라우팅(배선폭) 감소엔 유리하나, VN LUT 구현 비용이 커 SoA FA VN 노드가 NMS보다 오히려 면적·전력 큼.</li><li>모델: 수신 <code>yn</code>을 <code>nQ</code>-bit signed integer <code>z</code>로 양자화하는 채널 quantizer <code>Qch</code>를 MI 최대화(식3, IBM 특수형)로 설계, LLR 분리(Lemma 1: 서로 다른 preimage는 실수 threshold로 분리).</li><li>핵심 기법: 다차원 VN LUT(mLUT)를 quantized DE로 설계 — 모든 입력 메시지를 한 번에 고려(2입력 순차 LUT 분해의 MI 손실 회피), CN은 정수 min-search(식6).</li><li>핵심 식: VN MI 최대화 <code>fV,MI = argmax I(c;t)</code> (식9)가 채널 양자화 문제와 등가, LLR 합(식11)을 threshold quantizer(식12)로 표현.</li><li>확장(MIC): mLUT를 (i) <code>nQ</code>→<code>nR</code>-bit 정수 매핑 <code>φ</code>, (ii) 정수 덧셈, (iii) threshold 양자화 <code>QV,s</code>로 분해(식13). scaling <code>s</code>로 정확/근사 조절.</li><li>구현 디테일: 분리조건(식14/15)을 만족하는 최소 <code>s</code> 탐색. <code>nM</code>(교환 메시지폭)은 라우팅 핵심이라 3bit 유지, <code>nR</code>(내부 정수폭)만 4~6bit로 복잡도-성능 트레이드.</li><li>학습/설계: DE로 (5)(7)(8)(9)(10) 반복, <code>I(c;t)</code>가 1에 수렴하면 종료. 노드당 iteration별 1개 VN 함수 설계(i.i.d 가정).</li><li>결과: 3-bit MIC(<code>nR=6</code>)가 mLUT와 동일 FER, 4-bit NMS 능가. 22nm FD-SOI 합성: CFU critical-path/area/power ~48/47/51% 개선, VFU area/power 11/15% 개선(nM=3,nR=4 vs NMS nM=nR=4). FP 외삽 시 logic·routing area 약 25% 감소.</li><li>한계: 단일 소형 regular 코드·AWGN·flooding만, unrolled FP 노드 레벨 합성(full decoder·throughput 미구현), iteration 감소는 목표 아님(10 고정).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN 정수 min-search(식6)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum(min1/min2+sign)과 직접 대응, 정규화·SM/TC 변환 제거로 CFU 축소</td></tr><tr><td>VN 정수덧셈+threshold(MIC, 식13) / mLUT</td><td>decoder.cpp <code>VN_Cal_HD()</code> 계열, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 업데이트를 저범위 정수+threshold로 대체, 우리 VNU에 이식 후보</td></tr><tr><td>채널 양자화 <code>Qch</code> / LLR→정수 매핑 <code>φ</code></td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>AWGN 기반 정수 양자화, NAND soft-read(HD/2SD/3SD)로 재설계 필요</td></tr><tr><td>iteration별 VN LUT/threshold</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration 구간별 LLR 테이블과 개념 정합</td></tr><tr><td>unrolled FP HW arch (VFU/CFU)</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>구조 상이: 논문은 full-parallel, 우리는 z=32 부분병렬</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — VN·CN 노드에서 NMS 대비 면적/전력 실측(합성) 개선을 보인 몇 안 되는 HW 논문이라 우리 관심(HW 면적/전력)과 직결되나, unrolled full-parallel + 소형 regular 코드 특화이고 Prime ECC의 z=32 부분병렬·고rate QC-LDPC 구조와 아키텍처가 달라 CFU 정수화 아이디어(정규화/SM-TC 제거) 정도가 우선 이식 대상.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9833953",
+  "title": "Finite-Alphabet Message Passing using only Integer Operations for Highly Parallel LDPC Decoders",
+  "year": 2022,
+  "venue": "IEEE SPAWC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "816",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "정보최대화 다차원 VN LUT(mLUT)를 저범위 정수 덧셈+threshold로 등가 대체한 MIC 복호기, VN/CN 모두 정수연산",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "VFU 179um2 / CFU 143um2 @22nm FD-SOI",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "dV=3,dC=6 regular (816,406) 단일코드·AWGN 검증, unrolled full-parallel 대상이라 NAND의 z=32 부분병렬 구조와 상이, throughput 미보고",
+  "todo_check": "mLUT/MIC의 오프라인 DE 설계가 NAND 고rate QC-LDPC(고차수 CN)에서 VFU 면적이득을 유지하는지, unrolled 아닌 z-병렬 구조 이식성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9833953---finite-alphabet-message-passing-using-only-integer-operations-for-highly-parallel-ldpc-decoders-2022-ieee-spawc">ieee:9833953 - Finite-Alphabet Message Passing using only Integer Operations for Highly Parallel LDPC Decoders (2022, IEEE SPAWC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

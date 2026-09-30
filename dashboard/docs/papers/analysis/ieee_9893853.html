@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9893853</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9893853---breaking-the-computational-bottleneck-probabilistic-optimization-of-high-memory-spatially-coupled-codes-2023-ieee-trans-information-theory">ieee:9893853 - Breaking the Computational Bottleneck: Probabilistic Optimization of High-Memory Spatially-Coupled Codes (2023, IEEE Trans. Information Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.75~0.81</td></tr><tr><td>부호length</td><td>11900~14450</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>고memory QC-SC-LDPC의 edge분포를 gradient descent로 최적화(GRADE)+semi-greedy로 detrimental object(연쇄사이클/AS) 최소화(AO)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>부호가 SC(convolutional)+주로 GF(4) non-binary+windowed decoding 전제라 Prime ECC의 단일 block binary QC-LDPC와 구조 상이</td></tr><tr><td>추가확인</td><td>GRADE-AO의 edge분포/object-minimization 아이디어를 binary block QC-LDPC(z=32) H-matrix 설계에 응용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 고memory QC-SC-LDPC 부호구성 이론(edge분포 gradient descent + object 최소화)으로 waterfall/error-floor 모두 개선하나, SC·주로 non-binary·windowed decoding 전제라 Prime ECC의 binary block QC-LDPC 파이프라인엔 직접 이식 곤란.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: QC 구조 SC-LDPC(circulant size <code>z</code>, base <code>Π</code>=all-one <code>γ×κ</code>), 파라미터 <code>(γ,κ,m,z,L)</code>; 플래시 실험은 <code>(4,24,6,17,40)</code>, length 14450, rate~0.75.</li><li>문제: SC 부호는 memory <code>m</code>이 클수록 성능↑지만 유한길이 고memory 부호를 조합적으로 최적화(OO-CPO)하면 계산량이 폭증 — 이 병목을 깬다.</li><li>핵심가정: 유한길이 성능은 Tanner graph 내 detrimental object(short cycle, absorbing set) 개수가 지배. cycle 조건은 lifting <code>L(ik,jk)</code> mod z 로 판정(Lemma 1).</li><li>핵심기법 1 — GRADE: partitioning matrix의 edge 분포 <code>p</code>(각 component matrix로 갈 '1'의 확률)를 변수로, protograph 내 기대 cycle/object 수를 coupling polynomial <code>f(X)=Σpi X^ai</code>의 상수항으로 표현, gradient descent로 국소최적 <code>p</code> 도출.</li><li>핵심식: cycle-6 기대확률 <code>P6=[f^3(X)f^3(X^-1)]_0</code>, cycle-8은 6개 구조 가중합(Thm 2). 최적성 필요조건은 <code>[f^3(X)f^2(X^-1)]_ai=c0</code>(Lagrangian).</li><li>핵심기법 2 — 일반화(GRADE): 임의 object를 cycle basis(fundamental cycle 집합)의 characteristic polynomial로 표현, absorbing set을 이루는 연쇄사이클(2-1-2/2-1-3/2-2-2/3-1-3)까지 미세최적화.</li><li>핵심기법 3 — AO: GRADE로 얻은 <code>p</code> 근방으로 탐색공간을 제한한 semi-greedy로 partitioning matrix 탐색(GD/UNF/TC codes), 이어 CPO로 lifting 최적화. 복잡도 <code>O(Kmγκ dv^2 dc^3)</code>로 OO 대비 완만 증가.</li><li>학습/최적화: gradient descent(edge 분포) + 조합 탐색(partitioning/lifting), NN 없음.</li><li>결과: Flash(NLM, sub-20nm MLC, 3 read, GF(4), FFT-QSPA 50iter) 채널에서 GD/TC가 UNF 대비 object 40%↓, RBER 0.0235에서 UBER 약 2 orders 이득, error floor 없음. (3,17) GD는 cycle-8 29%↓.</li><li>한계: HW 미설계(시뮬만), 부호가 SC(convolutional)+주로 GF(4) non-binary+windowed/FFT-QSPA decoding 전제, 순수 binary block QC-LDPC 대상이 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GRADE-AO partitioning/lifting 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix/부호구조 설계 레이어에 닿으나 SC(convolutional) 구조라 block QC-LDPC로 재해석 필요, 이식성 높음</td></tr><tr><td>absorbing set/cycle 최소화(error-floor 대책)</td><td>ecc_top.cpp <code>Load_PCM()</code> (부호설계 단계)</td><td>error-floor 보증 개념은 유용하나 우리 QC-LDPC 고정, 재검증 부담</td></tr><tr><td>NLM flash 채널 / soft-read (3 read)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-2~3bit 대응 범위지만 채널모델 자체가 부호설계 대상일 뿐</td></tr><tr><td>FFT-QSPA / non-binary GF(q) 복호</td><td>대응 없음</td><td>Prime ECC는 binary min-sum, non-binary sum-product 미지원</td></tr><tr><td>windowed / SC convolutional decoding</td><td>대응 없음</td><td>Prime ECC는 단일 block 복호기, windowed SC 스케줄 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — GRADE(edge분포 gradient descent) 부호설계 사상은 흥미로우나 대상이 SC-LDPC이고 플래시 실험이 주로 GF(4) non-binary+FFT-QSPA/windowed decoding이라 Prime ECC의 binary block QC-LDPC min-sum 파이프라인과 정합이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9893853",
+  "title": "Breaking the Computational Bottleneck: Probabilistic Optimization of High-Memory Spatially-Coupled Codes",
+  "year": 2023,
+  "venue": "IEEE Trans. Information Theory",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": "0.75~0.81",
+  "code_length": "11900~14450",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "고memory QC-SC-LDPC의 edge분포를 gradient descent로 최적화(GRADE)+semi-greedy로 detrimental object(연쇄사이클/AS) 최소화(AO)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "부호가 SC(convolutional)+주로 GF(4) non-binary+windowed decoding 전제라 Prime ECC의 단일 block binary QC-LDPC와 구조 상이",
+  "todo_check": "GRADE-AO의 edge분포/object-minimization 아이디어를 binary block QC-LDPC(z=32) H-matrix 설계에 응용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9893853---breaking-the-computational-bottleneck-probabilistic-optimization-of-high-memory-spatially-coupled-codes-2023-ieee-trans-information-theory">ieee:9893853 - Breaking the Computational Bottleneck: Probabilistic Optimization of High-Memory Spatially-Coupled Codes (2023, IEEE Trans. Information Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

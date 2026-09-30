@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5285248</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5285248---seed-graph-expansion-for-construction-of-structured-ldpc-codes-2009-iswcs-2009">ieee:5285248 - Seed Graph Expansion for Construction of Structured LDPC Codes (2009, ISWCS 2009)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.77</td></tr><tr><td>부호length</td><td>273~2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>seed matrix(seed graph)의 circulant shift 값을 탐색으로 결정해 짧은 사이클 중 EMD가 낮은(trapping/stopping set 유발) closed walk를 우선 제거하는 구조적 QC-LDPC 구성 알고리즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호 구성(설계 단계) 알고리즘으로 실제 디코더 HW/throughput 데이터 없음, 탐색은 오프라인 1회성이라 실시간 이식 대상이 아니라 "PCM 설계 툴"로만 참고 가능</td></tr><tr><td>추가확인</td><td>Prime ECC의 고정 base matrix(N_b=129, VN degree 17) 대비 이 알고리즘으로 재설계 시 error-floor 개선폭이 실제로 유의미한지 별도 시뮬 필요</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC의 circulant shift 값을 짧은 유해 cycle(낮은 EMD) 제거 기준으로 탐색 배치하는 순수 부호설계 기법으로, HW 구조(블록 순환 시프트)는 이미 Prime ECC와 동일 계열이나 이 논문 자체는 알고리즘/시뮬 수준에 그침.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Binary-input AWGN 채널, QC-LDPC(구조화 LDPC, HW 파이프라인 친화) 부호를 대상으로 하며 H를 P×P circulant(순열) submatrix들의 D×L 블록 배열로 정의.</li><li>풀려는 문제: structured(QC) LDPC는 partially-parallel HW 디코더에 필수지만 "좋은" 그래프 특성(짧은 cycle 최소화)을 갖는 구성법 연구가 부족.</li><li>핵심 가정: 짧은 cycle 중 EMD(Extrinsic Message Degree, 외부연결도)가 낮은 것이 Trapping Set/Stopping Set을 유발해 error-floor를 악화시킨다는 그래프 이론적 모델.</li><li>핵심 기법: seed graph(작은 D×L seed matrix)의 각 edge에 순환 시프트 값 <code>s_e</code>를 할당하는 expansion 단계에서, covering graph의 cycle 존재 조건 <code>Σ±s_e ≡ 0 mod P</code> (Theorem 1)을 피하도록 컴퓨터 탐색으로 <code>s_e</code> 결정.</li><li>핵심 식 의미: 이 합동식이 0이 되지 않도록 <code>s_e</code>를 조정하면 seed graph의 특정 closed walk가 covering graph에서 실제 cycle을 형성하지 않게 되어, 짧고 저EMD인 유해 구조를 제거.</li><li>확장: 길이 4 cycle과 EMD=0 closed walk(Linearly Dependent Set 유발)를 최우선 순위로 두고, 나머지는 <code>k/2 + 1.1×EMD</code> 휴리스틱 점수로 정렬한 리스트(LCW) 순서로 순차 처리.</li><li>구현 디테일: 각 edge마다 제약행렬 <code>CON_ei</code>를 유지하며 시프트값을 1씩 증가시키는 다단계 탐색(Stage I/II), 연속 실패(cycle not removed) 1000회에서 탐색 종료.</li><li>최적화 절차: seed matrix 자체는 Improved PEG로 구성 후, 본 논문의 컴퓨터 탐색(그리디 증분 탐색)으로 shift 값만 최적화 — DE/GA 아님, 규칙 기반 탐색.</li><li>결과: N=273(R=0.52), N=1056(R=0.77), N=2048(R=0.5, irregular) 코드에서 무작위 shift 대비 FER/BER 유의미 개선, MacKay 비구조화 코드와 동등 이상 성능(단 MacKay 코드는 VLSI 비친화).</li><li>한계: 부호 구성(오프라인 설계) 알고리즘으로 디코더 HW 설계·복잡도·throughput 데이터 없음, 성능평가는 AWGN+BP 시뮬레이션뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC seed matrix + circulant shift expansion</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC도 base matrix+circulant shift(<code>PCM_b</code>) 구조이므로 새 H-matrix 설계 시 이 탐색법으로 shift 값 생성 가능</td></tr><tr><td>Trapping Set/Stopping Set(저EMD 짧은 cycle) 제거 기준</td><td>대응 없음</td><td>Prime ECC 코드베이스엔 그래프 사이클 분석/생성 모듈이 없음(고정 H-matrix 로드만)</td></tr><tr><td>Tanner graph EMD 기반 우선순위 탐색</td><td>대응 없음</td><td>부호 생성 툴 자체가 코드베이스에 없어 신규 개발 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>중간</strong> — Prime ECC와 동일한 QC-LDPC(base+circulant) 구조라 부호설계 단계 이식은 가능하나, <code>Load_PCM()</code>은 완성된 H-matrix를 읽기만 하고 생성 로직이 없어 이 알고리즘을 넣으려면 별도 오프라인 설계 툴 개발이 필요(§4 "부호설계" 항목 = 이식 난이도 높음과 일치).</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5285248",
+  "title": "Seed Graph Expansion for Construction of Structured LDPC Codes",
+  "year": 2009,
+  "venue": "ISWCS 2009",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.77",
+  "code_length": "273~2048",
+  "soft_quant": "무관",
+  "key_contribution": "seed matrix(seed graph)의 circulant shift 값을 탐색으로 결정해 짧은 사이클 중 EMD가 낮은(trapping/stopping set 유발) closed walk를 우선 제거하는 구조적 QC-LDPC 구성 알고리즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "부호 구성(설계 단계) 알고리즘으로 실제 디코더 HW/throughput 데이터 없음, 탐색은 오프라인 1회성이라 실시간 이식 대상이 아니라 PCM 설계 툴로만 참고 가능",
+  "todo_check": "Prime ECC의 고정 base matrix(N_b=129, VN degree 17) 대비 이 알고리즘으로 재설계 시 error-floor 개선폭이 실제로 유의미한지 별도 시뮬 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5285248---seed-graph-expansion-for-construction-of-structured-ldpc-codes-2009-iswcs-2009">ieee:5285248 - Seed Graph Expansion for Construction of Structured LDPC Codes (2009, ISWCS 2009)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

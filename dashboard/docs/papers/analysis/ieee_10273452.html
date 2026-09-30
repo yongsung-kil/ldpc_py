@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10273452</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10273452---ldpc-decoders-prefer-more-reliable-parity-bits-unequal-data-protection-over-bsc-2023-istc">ieee:10273452 - LDPC Decoders Prefer More Reliable Parity Bits: Unequal Data Protection Over BSC (2023, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.50~0.89</td></tr><tr><td>부호length</td><td>3020~30548</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>UDP/doping으로 parity bit를 더 신뢰성 있게 하여 regular LDPC의 threshold와 수렴속도를 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BSC(hard) + Gallager-A/3-level 이론 중심, HW 미설계, 부호구성 무관하나 parity 신뢰성 확보 수단이 NAND에 불명확</td></tr><tr><td>추가확인</td><td>NAND에서 parity bit만 낮은 crossover로 만들 실제 수단(constrained code/배치)과 고rate(~0.9)에서의 미미한 gain 검토</td></tr></tbody></table>
+<blockquote><p>총평: parity bit를 더 신뢰성 있게 하면 threshold/수렴이 좋아진다는 이론·시뮬 결과이나 BSC 기반·HW 미설계이고 고rate에서 gain이 작아 NAND binary QC-LDPC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 regular <code>(dv, dc)</code> binary LDPC, 채널은 BSC이며 parity bit와 message bit가 서로 다른 crossover probability(각각 <code>p̲</code>, <code>p</code>)를 보는 UDP(Unequal Data Protection) 설정.</li><li>문제: 고전 UDP는 message bit를 보호했으나 고rate 코드는 message가 많아 비효율 → parity bit를 대신 보호하는 것이 message로의 정보 확산에 유리한지 이론적으로 규명.</li><li>핵심 가정: 부호구성은 그대로 두고, 각 message VN이 CN마다 <code>x = dv</code>개의 신뢰성 높은 parity VN에 연결되어 고신뢰 메시지가 확산된다고 모델링.</li><li>핵심 기법 1단: Gallager-A DE 방정식을 UDP용으로 재유도. <code>p₋₁</code> 갱신에서 신뢰 VN 기여를 <code>(α, β) = (x, dc−1−x)</code>로 분리하여 반영(식 (2)).</li><li>핵심 식 의미: doping 극단(parity 완전신뢰, <code>p̲=0</code>)에서 exact polynomial의 <code>k = dc−1−x</code>로 바뀌어(식 (4),(7)) threshold를 상향.</li><li>핵심 기법 2단: 평균 threshold <code>γ̄ = 1/[(dv−1)(dc−1−x)] − dv/dc</code>(식 (11))로 doping의 closed-form 근사 유도 (기존 [12]는 수치해만 제공).</li><li>부수 트릭: 3-level(errors-and-erasures) 양자화 디코더로도 동일 UDP를 적용, <code>q0/q1/q₋1</code> DE(식 (14),(15)) 재유도.</li><li>최적화 절차: DE로 수렴 만족하는 최고 평균 <code>(p̲*, p*)</code> 쌍을 Newton법 등으로 탐색해 threshold 산출.</li><li>결과: 3-level에서 최대 38.2%, BP에서 최대 42.7% threshold gain; (5,10) 코드 평균 iteration 21.13→15.13 등 수렴속도 개선.</li><li>한계: BSC(hard) 이론·시뮬만, HW 미설계, 고rate(0.80~0.89)에서 gain이 3.4~15.8%로 작고 parity 신뢰성 확보의 실제 구현수단은 본 논문 범위 밖.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>UDP/doping message passing 반영</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>parity/message 차등 신뢰성을 이터레이션 루프에 반영하려면 여기지만 부호구조 무관 아이디어라 직접 매핑 약함</td></tr><tr><td>parity bit 신뢰성/양자화 반영</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>parity VN에 낮은 crossover(높은 LLR) 부여 시 soft-read threshold 층에서 실험 가능</td></tr><tr><td>초기 LLR/신뢰성 테이블</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>parity 열에 별도 LLR 부여 실험 대응 가능하나 이득 불확실</td></tr><tr><td>doping(known parity)</td><td>대응 없음</td><td>Prime ECC에 parity 완전신뢰 가정 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BSC hard 이론 중심이고 부호구성 무관 아이디어라 고rate NAND QC-LDPC에서의 실질 gain과 parity 신뢰성 확보 수단이 불명확.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10273452",
+  "title": "LDPC Decoders Prefer More Reliable Parity Bits: Unequal Data Protection Over BSC",
+  "year": 2023,
+  "venue": "ISTC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "3020~30548",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "UDP/doping으로 parity bit를 더 신뢰성 있게 하여 regular LDPC의 threshold와 수렴속도를 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "BSC(hard) + Gallager-A/3-level 이론 중심, HW 미설계, parity 신뢰성 확보 수단이 NAND에 불명확",
+  "todo_check": "NAND에서 parity bit만 낮은 crossover로 만들 실제 수단과 고rate(~0.9)에서의 미미한 gain 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10273452---ldpc-decoders-prefer-more-reliable-parity-bits-unequal-data-protection-over-bsc-2023-istc">ieee:10273452 - LDPC Decoders Prefer More Reliable Parity Bits: Unequal Data Protection Over BSC (2023, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

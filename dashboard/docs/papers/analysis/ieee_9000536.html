@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9000536</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9000536---admm-based-decoder-for-binary-linear-codes-aided-by-deep-learning-2020-ieee-communications-letters">ieee:9000536 - ADMM-Based Decoder for Binary Linear Codes Aided by Deep Learning (2020, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96~128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ADMM-penalized LP 디코더를 deep unfolding해 penalty parameter/penalty function을 학습 가능하게 만든 신경망 디코더(LADN, LADN-I, LADN-P)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>미상</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM-LP 디코딩 프레임워크 기반으로 Prime ECC의 min-sum 반복복호 구조와 근본적으로 다름; TensorFlow 학습 기반, 코드길이 96~128의 소형 코드만 실험(긴 코드 확장성 미확인)</td></tr><tr><td>추가확인</td><td>짧은 코드(96,128)에서만 검증되어 NAND ECC급 긴 QC-LDPC(수천~수만 bit)로 확장 시 학습 복잡도/성능 보장 여부 미상</td></tr></tbody></table>
+<blockquote><p>총평: ADMM-LP 디코더를 deep-unfolding으로 학습시켜 penalty parameter/함수를 최적화한 신경망 기반 디코더로, min-sum 계열과 이질적인 LP-relaxation 프레임워크에 의존해 Prime ECC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 이진 선형 코드(길이 <code>N</code>, <code>M×N</code> PC 행렬 <code>H</code>) ML 디코딩을 LP relaxation으로 근사하는 문제. AWGN+BPSK 채널, <code>[96,48]</code> MacKay LDPC(C1), <code>[128,64]</code> CCSDS LDPC(C2)로 실험.</li><li>문제: 기존 LP 디코더는 BP 대비 복잡도가 높고 저-SNR 성능이 열세. ADMM-penalized 디코더가 이를 완화했으나 penalty parameter <code>μ</code>/penalty function <code>g(·)</code>를 수작업 튜닝해야 함.</li><li>핵심 가정: PC 제약을 3-변수 제약으로 cascaded 분해(auxiliary variable <code>x̃</code>, 선택행렬 <code>Q_τ</code>)해 ADMM 표준형(<code>Au+z=b</code>)으로 변환, <code>g(·)</code>로 pseudocodeword에 페널티 부여.</li><li>핵심 기법 1단(LADN): ADMM 반복(<code>u</code>-update, <code>z</code>-update, <code>y</code>-update 3단계, 식 (9a)-(9c))을 K단 신경망으로 unfold, <code>{α, μ}</code>(L2 penalty 계수·penalty parameter)를 학습 가능 파라미터로 설정.</li><li>핵심 식: <code>u</code>-update는 <code>Π[0,1](η ⊙ (q+A^T(y+μ(z-b))+α/2))</code>(식 14a) — projection에 학습된 <code>α,μ</code>가 직접 관여해 pseudocodeword 억제 강도를 데이터로 최적화.</li><li>핵심 기법 2단(LADN-I/LADN-P): LADN-I는 <code>μ</code>를 iteration별 <code>μ_k</code> 시퀀스로 확장(수렴 개선), LADN-P는 조각별 선형(piecewise-linear) penalty function <code>g_l(x)</code>(기울기 <code>{φ_l}</code>만 학습)를 도입해 L1/L2보다 유연한 penalty 형상 학습.</li><li>부수 트릭: <code>z</code>-update는 <code>ReLU(b-Au-y/μ)</code>로 표현되어 DL 프레임워크의 활성함수와 동일 형태 — projection 연산을 신경망 레이어로 재해석.</li><li>학습 절차: TensorFlow+Adam, training SNR 2dB(cross-validation), C1/C2 각각 stage 50/70 고정, loss는 비지도항(<code>‖Au+z-b‖²</code>, residual)과 지도항(<code>‖F(v)-x‖²</code>)의 가중합(σ=0.3/0.9).</li><li>결과: 저-SNR에서 LADN-I가, 고-SNR에서 LADN-P가 최고 BLER 성능, 원 ADMM-L2 디코더 대비 전 SNR 구간 개선. 계산복잡도는 ADMM-L2와 동일 수준(<code>O(N+Γa)</code> 곱셈).</li><li>한계: 길이 96~128의 소형 코드만 실험, 긴 코드로 확장 시 학습 복잡도/성능 미검증(저자 자인). HW 미설계, ADMM-LP 프레임워크 자체가 min-sum과 이질적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-penalized LP 디코딩 반복 구조 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 message-passing이며 ADMM/LP-relaxation 디코더 아키텍처를 채택하지 않아 구조적으로 대응 모듈 없음</td></tr><tr><td>학습 기반 penalty parameter/function 최적화</td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code> (LLR 테이블)</td><td>개념적으로 "학습을 통한 파라미터 최적화"는 적응형 LLR 테이블과 유사하나 ADMM penalty와 min-sum LLR은 수학적으로 이질적, 직접 이식 불가</td></tr><tr><td>신경망 학습(TensorFlow, 역전파)</td><td>대응 없음</td><td>Prime ECC는 bit-exact C++ HW 시뮬레이터로 NN 학습/추론 파이프라인 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — ADMM-LP relaxation 기반 deep-unfolding 디코더로, Prime ECC의 min-sum 반복복호 프레임워크와 알고리즘적으로 이질적이며, 짧은 코드(96~128bit)에서만 검증되어 NAND ECC급 긴 QC-LDPC 확장성도 미확인.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9000536",
+  "title": "ADMM-Based Decoder for Binary Linear Codes Aided by Deep Learning",
+  "year": 2020,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "96~128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ADMM-penalized LP 디코더를 deep unfolding해 penalty parameter/penalty function을 학습 가능하게 만든 신경망 디코더(LADN, LADN-I, LADN-P)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "미상",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ADMM-LP 디코딩 프레임워크 기반으로 Prime ECC의 min-sum 반복복호 구조와 근본적으로 다름; TensorFlow 학습 기반, 코드길이 96~128의 소형 코드만 실험(긴 코드 확장성 미확인)",
+  "todo_check": "짧은 코드(96,128)에서만 검증되어 NAND ECC급 긴 QC-LDPC(수천~수만 bit)로 확장 시 학습 복잡도/성능 보장 여부 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9000536---admm-based-decoder-for-binary-linear-codes-aided-by-deep-learning-2020-ieee-communications-letters">ieee:9000536 - ADMM-Based Decoder for Binary Linear Codes Aided by Deep Learning (2020, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

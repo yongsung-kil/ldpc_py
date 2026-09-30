@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5073872</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5073872---symbol-based-belief-propagation-decoding-of-reed-solomon-codes-2009-ieee">ieee:5073872 - Symbol-Based Belief Propagation Decoding of Reed-Solomon Codes (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.81~0.94</td></tr><tr><td>부호length</td><td>31~255</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Reed-Solomon 코드를 symbol(GF(q)) 레벨에서 FFT 기반 belief propagation으로 복호하고, 신뢰도 낮은 symbol 기준으로 parity-check 행렬을 매 반복 대각화(adaptive)해 복잡도를 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 코드가 Reed-Solomon(비-LDPC, non-binary GF(2^m))이며 dense parity-check 행렬을 다룸 — binary QC-LDPC인 Prime ECC와 부호 계열 자체가 다름</td></tr><tr><td>추가확인</td><td>bit-based ABP 대비 코딩이득은 0.9~1.0dB 열세, 순수 성능보다 속도(3~3.6배) 이점 위주</td></tr></tbody></table>
+<blockquote><p>총평: RS 코드의 non-binary symbol-level BP decoder로 부호 종류·구조가 Prime ECC(binary QC-LDPC)와 근본적으로 달라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>Reed-Solomon(RS) 코드를 AWGN 채널 + BPSK/QAM 등 multilevel 변조로 전송, symbol 단위 soft-decision iterative decoding을 목표.</li><li>기존 bit-based adaptive BP(ABP, Jiang &amp; Narayanan)는 RS 코드를 binary 이미지로 확장해 처리하므로 긴 코드·큰 GF(q)에서 복잡도가 지나치게 큼.</li><li>RS 코드의 parity-check 행렬 <code>H_S</code>는 dense(비-sparse)하므로, BP를 적용하려면 신뢰도 낮은 symbol에 대응하는 부분 행렬을 대각화(diagonalize)해 sparse화하는 전처리가 필수.</li><li>핵심 기법: 채널로부터 얻은 symbol 신뢰도 <code>P(c_j|y_j)</code>를 오름차순 정렬해 최소신뢰도 symbol들의 열이 대각(diagonal) submatrix가 되도록 Gauss-Jordan(GF(q)) 또는 dual RS 코드의 erasure decoding으로 매 iteration마다 <code>H_S^(l-1)</code> 재구성.</li><li>check node 갱신은 FFT 기반 BP(<code>r_ij = IFFT{∏ FFT[q_ij'(s)]}</code>, 식 12)로 계산, <code>q=2^m</code>일 때 DFT 복잡도를 <code>q^2</code>에서 <code>mq</code>로 축소.</li><li>기존 방식과 차이: 모든 연산(정렬, 행렬 대각화, message 갱신)을 symbol 단위로만 수행해 bit-to-symbol/symbol-to-bit 변환을 완전히 제거(bit-based는 첫 반복 후 binary로 되돌아가 후속 반복을 bit 단위로 수행).</li><li>별도 학습/최적화 절차 없음, 매 iteration 신뢰도 재정렬 및 대각화가 곧 adaptation 과정.</li><li>결과: RS(31,25) AWGN/BPSK에서 HDD 대비 FER=10^-4 기준 1.3dB 이득, bit-based ABP 대비 성능은 0.9~1.0dB 열세이나 동일 FER 도달 시간은 bit-based 대비 약 3~3.6배 빠름.</li><li>iteration 5~20 범위에서 symbol-based ABP는 성능 변화가 0.2dB 이내로 안정적(bit-based는 iteration 수에 민감).</li><li>한계: HW 구현 없음(시뮬만), RS 코드 전용(LDPC 아님), non-binary GF(q) 연산 기반이라 binary decoder로의 직접 이식 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>symbol-level(GF(q)) FFT 기반 BP 복호 전체</td><td>대응 없음</td><td>Prime ECC는 binary LDPC 전용, non-binary/RS 복호기 미보유</td></tr><tr><td>신뢰도 기반 parity-check 행렬 adaptive 대각화</td><td>대응 없음</td><td>H-matrix는 고정 QC 구조(<code>ecc_top.cpp</code> <code>Load_PCM()</code>)이며 매 iteration 재구성 개념이 없음</td></tr><tr><td>soft-info 활용(채널 LLR/확률)</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>채널에서 soft 정보를 받는다는 개념만 유사, 구체 알고리즘은 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — Reed-Solomon(non-binary, dense H) 전용 알고리즘으로 Prime ECC의 binary QC-LDPC 구조 및 min-sum 디코더와 접점이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5073872",
+  "title": "Symbol-Based Belief Propagation Decoding of Reed-Solomon Codes",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.81~0.94",
+  "code_length": "31~255",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Reed-Solomon 코드를 symbol(GF(q)) 레벨에서 FFT 기반 belief propagation으로 복호하고, 신뢰도 낮은 symbol 기준으로 parity-check 행렬을 매 반복 대각화(adaptive)해 복잡도를 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상 코드가 Reed-Solomon(비-LDPC, non-binary GF(2^m))이며 dense parity-check 행렬을 다룸 — binary QC-LDPC인 Prime ECC와 부호 계열 자체가 다름",
+  "todo_check": "bit-based ABP 대비 코딩이득은 0.9~1.0dB 열세, 순수 성능보다 속도(3~3.6배) 이점 위주"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5073872---symbol-based-belief-propagation-decoding-of-reed-solomon-codes-2009-ieee">ieee:5073872 - Symbol-Based Belief Propagation Decoding of Reed-Solomon Codes (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

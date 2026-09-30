@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11100601</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11100601---parallel-network-structure-aided-neural-shuffled-offset-min-sum-decoder-2024-ieee-globecom-workshops">ieee:11100601 - Parallel Network Structure-aided Neural Shuffled Offset Min-Sum Decoder (2024, IEEE Globecom Workshops)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>156~832</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ParNet 구조 기반 학습형 offset min-sum 디코더(NSOMS)와 OEV 기반 학습법으로 곱셈연산 없이 기존 신경망 디코더 대비 수렴속도·성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>학습된 offset factor(Θ)는 오프라인 학습 필요해 부호/채널 변경 시 재학습 요구, HW 구현·게이트카운트 미검증</td></tr><tr><td>추가확인</td><td>학습된 offset factor를 실제 HW(고정소수점) 파이프라인에 적용 시 정밀도·저장 오버헤드, 5G BG2 외 고rate NAND용 코드에서의 학습 성능</td></tr></tbody></table>
+<blockquote><p>총평: OMS 알고리즘의 offset factor를 신경망으로 학습해 성능을 개선한 연구로, Prime ECC의 적응형 LLR 테이블과 유사한 개념(학습된 offset 값을 룩업 테이블화)으로 이식 가능성은 있으나 학습 파이프라인·HW 검증 부재가 걸림돌.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 5G NR 프로토그래프 QC-LDPC(BG2), rate/length는 시뮬 예시별로 다름(n=832,k=160,Z=16 / n=156,k=30,Z=3), AWGN 및 Rayleigh 페이딩 채널.</li><li>기존 신경망 디코더(NLMS, NFMS)는 일반화 능력이 부족하고 은닉층이 많이 필요하다는 문제, 그리고 ParNet 구조 미적용 문제를 다룸.</li><li>모델드리븐 딥러닝으로 shuffled LDPC 디코딩(SBP)을 해석 가능한 네트워크로 언폴딩, ParNet의 병렬 branch 구조를 채택.</li><li>핵심 기법: offset min-sum(OMS)을 신경망화한 NSOMS 디코더 - CN 메시지 업데이트를 <code>l = sign × ReLU(r - θ_λ^(t)/λ)</code>로 계산, <code>θ_λ^(t)</code>는 edge-type별 학습되는 offset factor(파라미터 공유).</li><li>VN/CN/SBP 3개 서브레이어로 그룹(group) 단위 순차 갱신(shuffled schedule), 학습단계에서만 SBP 서브레이어를 별도로 두어 라벨 역할.</li><li>확장 기법: OEV(over-estimation value) <code>d = l_CN(predicted) - l_SBP(label)</code> 기반 MSE loss로 기존 BCE loss의 낮은 학습효율 문제 해결, 파라미터를 CN 메시지 회귀 문제로 재정의.</li><li>부수 트릭: 추론(inference) 단계에서는 SBP 서브레이어 제거 및 출력층 추가로 네트워크 단순화(training/inference 구조 분리), greedy 방식으로 은닉층 1개씩 순차 학습.</li><li>학습: ADAM optimizer, 배치사이즈 1, lr=0.0001, SNR 0~5dB, 배치수 1600.</li><li>결과: NLMS/NFMS 대비 BER 1e-5 달성 SNR에서 0.45~0.85dB 이득(Rayleigh), 10 iteration에서 FER 1e-2 달성에 0.3~0.7dB 이득. 연산량 분석에서 NSOMS는 곱셈 연산 0회(NLMS/NFMS는 E회 곱셈 필요), 덧셈/비교/부호반전은 동일(3E/2E/2E).</li><li>한계: 이론+시뮬만 존재, HW gatecount/throughput 실측 없음. 학습된 offset factor의 고정소수점 양자화·저장 방식 미기술, 5G 표준 코드 외 검증 부족.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| offset min-sum CN 갱신(학습된 θ) | `decoder.cpp` `CNU_Update_New_Mag()`, `C2V_Cal_New_Sgn()` | offset factor를 iteration/edge-type별 LLR 보정값으로 적용 시 기존 min-sum 연산부에 대응 |
+| edge-type(λ)별 학습 offset 테이블 | `ecc_data.h` `PARAM_LLR`, `decoder.cpp` `Get_VNU_Table_Idx()` | 적응형 LLR 테이블과 유사 개념 - 학습된 offset을 테이블화하면 대응 가능 |
+| shuffled schedule(group 단위) | `decoder.cpp` `LDPC_Decoder()` | Dual-Update 스케줄과 유사하나 group 분할 방식은 상이 |
+| ParNet 신경망 학습(ADAM, greedy layer-wise) | 대응 없음 | NN 학습 파이프라인 자체는 Prime ECC 시뮬레이터 범위 밖 |</code></pre>
+<p>적용 가치: <code>중간</code> — 곱셈 없는 offset 기반 min-sum 연산은 기존 HW 구조와 친화적이나, 오프라인 신경망 학습으로 얻은 offset 값을 실제 고정소수점 HW LLR 테이블에 이식하려면 재검증(정밀도·수렴성)이 필요함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11100601",
+  "title": "Parallel Network Structure-aided Neural Shuffled Offset Min-Sum Decoder",
+  "year": 2024,
+  "venue": "IEEE Globecom Workshops (GC Wkshps)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": null,
+  "code_length": "156~832",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ParNet 구조 기반 학습형 offset min-sum 디코더(NSOMS)와 OEV 기반 학습법으로 곱셈연산 없이 기존 신경망 디코더 대비 수렴속도·성능 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "학습된 offset factor는 오프라인 학습 필요해 부호/채널 변경 시 재학습 요구, HW 구현·게이트카운트 미검증",
+  "todo_check": "학습된 offset factor를 실제 HW(고정소수점) 파이프라인에 적용 시 정밀도·저장 오버헤드, 5G BG2 외 고rate NAND용 코드에서의 학습 성능"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11100601---parallel-network-structure-aided-neural-shuffled-offset-min-sum-decoder-2024-ieee-globecom-workshops">ieee:11100601 - Parallel Network Structure-aided Neural Shuffled Offset Min-Sum Decoder (2024, IEEE Globecom Workshops)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

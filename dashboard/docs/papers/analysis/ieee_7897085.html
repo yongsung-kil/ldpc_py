@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7897085</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7897085---real-a-retention-error-aware-ldpc-decoding-scheme-to-improve-nand-flash-read-performance-2016-ieee">ieee:7897085 - REAL: A Retention Error Aware LDPC Decoding Scheme to Improve NAND Flash Read Performance (2016, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>2KB</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MLC retention error의 numerical-correlation을 셀 내 2bit 간 extra LLR(Ej)로 주입해 iteration/latency 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>MLC(2bit/cell) intra-cell 상관 전제 → SLC/TLC·현 코드워드 배치엔 그대로 안 맞고 codeword layout 재배치 필요</td></tr><tr><td>추가확인</td><td>Ej 상수값(-1/3/0.75·Pj)의 하드코딩 근거·양자화 스케일, 셀 내 2bit를 한 codeword에 담는 layout의 z=32 lifting 정합성</td></tr></tbody></table>
+<blockquote><p>총평: NAND retention error 특성을 min-sum 디코더에 extra decision info로 넣어 iteration/latency를 줄이는 직접 관련 아이디어 — 개념은 이식 가치 있으나 MLC 2bit-per-codeword layout 전제와 상수 Ej가 우리 QC-LDPC 구조에 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: NAND용 <code>QC-LDPC</code>, code length 2KB, column weight 4, row weight 36, rate 8/9, AWGN 채널로 flash 모사. 4-cycle 없는 H를 computer search로 구성.</li><li>문제: LDPC의 BP 복호가 latency 커서 NAND read 성능 저하 → retention error 특성을 활용해 iteration을 줄이는 것이 목표.</li><li>모델: MLC 셀 threshold voltage를 normal 분포로 모델링(식3), retention error를 <code>λ1=α1|μk-μi|</code>(transfer), <code>ρ1=β1|σk-σi|</code>(instability) factor로 정의.</li><li>핵심 관찰: retention error가 numerical-correlation 특성 — 주 전이 "00→01"(46%), "01→10"(44%), "01→11"(5%), "10→11"(2%)로 P/E 무관하게 비율 일정. → 셀 내 LSB/MSB 2bit 상호 영향.</li><li>6가지 관찰(Observation 1~6): 검출된 lower/upper page 값과 fuzzy area 여부로 같은 셀 다른 bit의 값 확률을 추론.</li><li>핵심 기법 1(codeword layout): 기존엔 셀의 2bit가 서로 다른 codeword. REAL은 codeword를 중간에서 잘라 같은 MLC 셀의 2bit가 한 codeword에 들어가게 재배치 → intra-cell 상관 활용 가능.</li><li>핵심 기법 2(REAL 복호): 표준 min-sum(odd/even iteration에서 증가/감소 순 CN 갱신, scaling <code>α</code>)에 bit node 갱신 <code>Vj,i = Pj + Ej + ΣCk,j</code>로 extra decision <code>Ej</code> 추가.</li><li><code>Ej</code> 규칙: 6 observation·부호(Pc·HDc)에 따라 하드코딩 — <code>Ej=-1</code>(upper page bit '1' 유도), <code>Ej=3</code>(lower '0' 유도), <code>Ej=0.75·Pj</code>(correct 신뢰) 등.</li><li>결과: LD-MS 대비 latency 26.44%, PD-BP 대비 33.05% 감소(SP/SNP 3.5dB). 낮은 SP/SNP(retention 심함)에서 iteration·decoding failure rate도 baseline보다 대폭 낮음. NAND read 성능 개선.</li><li>한계: HW 미설계(Matlab 시뮬만), gate count/throughput 없음, MLC 2bit-per-cell intra-cell 상관에 강하게 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit node 갱신에 extra decision Ej 추가</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VN 갱신식에 셀 상관 항 삽입 — 이식 지점 명확(낮은 난이도)</td></tr><tr><td>odd/even 순서 CN 갱신 + scaling α</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 Dual-Update(even/odd 교대)와 유사 개념, 부분 중복</td></tr><tr><td>retention error/soft-read threshold, SPI(Pi,Ii) 초기정보</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read 시 셀 상관 기반 LLR 보정 반영 지점</td></tr><tr><td>iteration별 Ej/LLR 반영</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>Ej 상수를 iteration별 LLR 테이블화 시 접목 가능</td></tr><tr><td>셀 2bit → 한 codeword layout</td><td>ecc_top.cpp <code>Load_PCM()</code> / encoder.cpp</td><td>codeword 배치 재설계 필요 — H-matrix·lifting 정합 부담(높은 난이도)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — extra decision info를 VN 갱신에 넣어 iteration/latency를 줄이는 아이디어는 NAND 직결이고 decoder.cpp에 붙일 지점이 분명하나, MLC 2bit-per-codeword layout 전제와 하드코딩 상수 Ej가 우리 고rate QC-LDPC 구조에 맞게 재설계·재검증되어야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7897085",
+  "title": "REAL: A Retention Error Aware LDPC Decoding Scheme to Improve NAND Flash Read Performance",
+  "year": 2016,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.889,
+  "code_length": "2KB",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MLC retention error의 numerical-correlation을 셀 내 2bit 간 extra LLR(Ej)로 주입해 iteration/latency 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "MLC(2bit/cell) intra-cell 상관 전제 → SLC/TLC·현 코드워드 배치엔 그대로 안 맞고 codeword layout 재배치 필요",
+  "todo_check": "Ej 상수값(-1/3/0.75·Pj)의 하드코딩 근거·양자화 스케일, 셀 내 2bit를 한 codeword에 담는 layout의 z=32 lifting 정합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7897085---real-a-retention-error-aware-ldpc-decoding-scheme-to-improve-nand-flash-read-performance-2016-ieee">ieee:7897085 - REAL: A Retention Error Aware LDPC Decoding Scheme to Improve NAND Flash Read Performance (2016, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

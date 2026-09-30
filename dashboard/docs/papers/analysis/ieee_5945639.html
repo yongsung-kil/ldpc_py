@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5945639</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_5945639---reduced-complexity-of-decoding-algorithm-for-irregular-ldpc-codes-using-split-row-method-2011-ieee">ieee_5945639 - Reduced complexity of decoding algorithm for Irregular LDPC Codes using Split Row Method (2011, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.75~0.84</td></tr><tr><td>부호length</td><td>1520~2014</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check node 행처리를 열방향 두 반쪽으로 분할(sign만 1-wire 교환)해 배선복잡도↓·병렬성↑, min-sum 대비 0.3~0.5dB 손실</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정능력 향상 아니라 복잡도↓ 대신 0.3~0.5dB BER 손실; 본 논문은 시뮬만(HW 합성 수치 없음), row weight 높을수록 손실 감소</td></tr><tr><td>추가확인</td><td>Split-Row 분할이 Prime ECC의 z=32/HCU/Graph Thinning 병렬화 구조와 정합되는지, 고rate NAND 부호에서 dB 손실폭</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 행처리를 반으로 분할해 배선·병렬화를 개선하는 디코더 HW 지향 기법이나 0.3~0.5dB 성능 손실을 감수하며, Prime ECC의 기존 병렬화(z=32/GT/HCU)와 중복 가능성이 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN 채널, irregular LDPC. 예시 부호 rate <code>R=0.75</code>(N=1536, Hs=(6,18)), <code>R=0.84</code>(N=1520 및 2014, Hs=(6,32)), <code>Imax=7~15</code>. Hp는 WiMax mobile 채택 구조, Hs는 QC 구조 예시.</li><li>문제: 고 row-weight LDPC의 표준 SPA/min-sum 디코더는 check node↔variable node 간 배선 상호연결이 복잡하고 행처리기가 커짐.</li><li>기법 배경: 표준 SPA는 row processing <code>α_ij = Πsign(β)·φ(Σφ(β))</code>, <code>φ(x)=-log(tanh(x/2))</code>; min-sum은 magnitude를 <code>min|β|</code>으로 근사하고 scale <code>s≤1</code> 정규화.</li><li>핵심 기법(Split-Row): parity check matrix를 열방향으로 두 반쪽 <code>H^Split</code>으로 나눠 행처리를 두 개의 거의 독립적인 half-processor로 분리. 두 반쪽 사이엔 방향당 sign 1-wire만 연결.</li><li>핵심 식: half 메시지만 사용해 <code>α_ij^Split = Πsign(β)·φ(Σ_{VSplit}φ(β))</code>. <code>φ</code>가 양·감소함수이므로 <code>α^Split ≥ α</code>(근사가 magnitude 과대추정).</li><li>보정: scale factor <code>S&lt;1</code>로 <code>α^Split</code>을 정규화(<code>α^Split=S·Πsign·φ(...)</code>)해 과대추정 완화. <code>S</code>는 rate·SNR별 실험 결정(예 S=0.35).</li><li>확장: 동일 분할을 Min-Sum에도 적용 가능. 이 논문은 regular용 기존 Split-Row[5]를 irregular로 확장한 것.</li><li>이점: 행처리 병렬성 2배, row processor당 메모리 접근↓, 배선 상호연결↓ → 디코더가 더 작고 빠르고 저전력(정성적 서술).</li><li>결과: MS 대비 BER 성능 손실 <code>N=1536</code>에서 ~0.5dB, <code>N=1520</code>에서 ~0.35dB, <code>N=2014</code>에서 ~0.3dB. row weight·code length 높을수록 손실 폭 작음.</li><li>한계: MATLAB 시뮬만(gatecount/throughput/합성 수치 없음), 정정능력 향상이 아니라 복잡도-성능 트레이드오프, scale S는 실험 튜닝 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Split-Row 행처리 분할 (CN 연산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN magnitude/sign 연산을 반으로 나누는 근사 이식 가능하나 GT/HCU와 목적 중복</td></tr><tr><td>반쪽 간 sign 1-wire 교환 (배선/라우팅 축소)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>Prime ECC는 이미 Graph Thinning MUX로 edge/배선 축소 → 기여 중복 가능</td></tr><tr><td>이터레이션 루프 / 조기종료(syndrome check)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>full_CRC.cpp</code></td><td>열처리·조기종료는 표준과 동일, 별도 이식 불필요</td></tr><tr><td>scale factor S 정규화</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code> / magnitude 양자화 테이블</td><td>normalized min-sum scaling은 이미 보유(중복)</td></tr></tbody></table>
+<p>마지막에 한 문장으로 <strong>적용 가치</strong>: <code>낮음</code> — 디코더 min-sum 층에 닿는 정통 기법이나 정정능력 이득 없이 0.3~0.5dB 손실을 감수하고, 배선/병렬화 축소 목적이 Prime ECC의 기존 Graph Thinning·HCU·z=32 병렬화와 중복된다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5945639",
+  "title": "Reduced complexity of decoding algorithm for Irregular LDPC Codes using Split Row Method",
+  "year": 2011,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.75~0.84",
+  "code_length": "1520~2014",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check node 행처리를 열방향 두 반쪽으로 분할(sign만 1-wire 교환)해 배선복잡도↓·병렬성↑, min-sum 대비 0.3~0.5dB 손실",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "정정능력 향상 아니라 복잡도↓ 대신 0.3~0.5dB BER 손실; 본 논문은 시뮬만(HW 합성 수치 없음), row weight 높을수록 손실 감소",
+  "todo_check": "Split-Row 분할이 Prime ECC의 z=32/HCU/Graph Thinning 병렬화 구조와 정합되는지, 고rate NAND 부호에서 dB 손실폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_5945639---reduced-complexity-of-decoding-algorithm-for-irregular-ldpc-codes-using-split-row-method-2011-ieee">ieee_5945639 - Reduced complexity of decoding algorithm for Irregular LDPC Codes using Split Row Method (2011, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

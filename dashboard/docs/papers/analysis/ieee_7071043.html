@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7071043</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_7071043---serial-ldpc-decoding-on-a-simd-dsp-using-horizontal-scheduling-2006-eusipco">ieee_7071043 - Serial LDPC Decoding on a SIMD DSP Using Horizontal Scheduling (2006, EUSIPCO)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>504~1908</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>horizontal scheduling min-sum을 SIMD DSP에 32/16bit 벡터화하고 forward-backward CN 업데이트를 2단계로 통합해 처리시간 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>범용 DSP(TMS320C6416) 소프트웨어 구현 대상이라 커스텀 ASIC/RTL 파이프라인 구조와 직접 대응 안 됨, throughput/BER 수치 없이 CPU cycle만 보고</td></tr><tr><td>추가확인</td><td>forward-backward 2단계 병합 기법을 Prime ECC의 CNU pipeline 구조에 적용 시 실제 gate/cycle 이득 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: horizontal scheduling + 개선된 forward-backward 방식으로 min-sum CN 처리를 가속화하는 스케줄링/구현 기법으로, HW ASIC이 아닌 DSP 소프트웨어 대상이지만 스케줄링 아이디어 자체는 디코더 이터레이션 루프에 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (504,252) regular(CN weight 6), (1908,1696) regular(CN weight 36), (1057,813) irregular(CN weight 17/18) LDPC 코드, AWGN+BPSK 채널, min-sum 알고리즘 기반.</li><li>문제: 전통적 flooding schedule은 병렬 처리 전제라 순차 처리하는 DSP에서 비효율적이며, cycle이 있는 실제 코드에서 최적 성능을 못 냄.</li><li>핵심 가정: horizontal(row-serial) scheduling을 채택 — CN을 하나씩 순차 처리하며 직전까지 갱신된 최신 메시지를 즉시 사용해 수렴 가속.</li><li>핵심 기법 1단: horizontal scheduling min-sum — CN 갱신 시 <code>Lr'_mn</code>(새 메시지)과 <code>Lr_mn</code>(이전 메시지) 차이만큼 사후 LLR <code>LQ_n</code>을 즉시 갱신(식 14), BN마다 <code>LQ_n</code> 하나만 메모리에 유지.</li><li>핵심 식: <code>Lq_nm = LQ_n - Lr_mn</code>(식 8)로 BN→CN 메시지를 별도 저장 없이 <code>LQ_n</code>과 <code>Lr_mn</code>만으로 재구성 — 메모리 사용량과 주소접근 부담 절감.</li><li>핵심 기법 2단: forward-backward CN 업데이트를 3단계(forward/backward/updating)에서 2단계로 병합 — backward 진행 방향을 반전시켜 backward와 updating을 동시에 계산(식 19~21), 처리시간 절반 절감.</li><li>부수 트릭: 32bit 버전은 <code>(Lr_mn, LQ_n index)</code> 쌍을 연속 메모리에 패킹해 순차 접근, 16bit 버전은 SIMD로 두 쌍을 동시 처리(패킹 순서 재배치).</li><li>학습/최적화 절차: 없음(알고리즘/구현 최적화, 학습 기반 아님).</li><li>결과: 32bit 대비 16bit(SIMD) 버전에서 (1057,813)/(1908,1696) 코드 기준 iteration당 CPU cycle 약 1.3~1.4배 감소, forward/backward/updating 단계 모두 6~9 CPU cycle 수준으로 최소화.</li><li>한계: ASIC/FPGA가 아닌 범용 고정소수점 DSP(TMS320C6416) 소프트웨어 구현 결과이며, BER/error-floor 등 정정성능 데이터 없이 CPU cycle(처리속도) 수치만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Horizontal scheduling (row-serial, 즉시갱신)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Dual-Update(even/odd 교대) 스케줄과 유사 계열의 스케줄링 아이디어이나 완전병렬 HW 구조와는 결이 다름</td></tr><tr><td>CN min-sum 연산 (<code>min1/min2</code>, sign)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일 계열 연산, 신규 기여 아님</td></tr><tr><td>Forward-backward 2단계 병합 (CN 내부 최소값 재계산 최적화)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>CN 내부 min1/min2 계산 최적화 아이디어로 참고 가능하나, DSP 순차처리 전용 기법이라 완전병렬 HW pipeline에는 이식 난이도 중</td></tr><tr><td>SIMD 16/32bit 벡터화 (DSP 명령어 최적화)</td><td>대응 없음</td><td>Prime ECC는 RTL bit-exact HW 시뮬레이터로 DSP 명령어 벡터화 개념 자체가 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — horizontal scheduling과 CN 내부 forward-backward 병합 아이디어는 이터레이션 가속 관점에서 참고할 만하나, 대상이 범용 DSP 소프트웨어 구현이라 Prime ECC의 완전병렬 HW pipeline(z=32, HCU, GT)에 직접 이식하기보다는 개념적 참고 수준.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7071043",
+  "title": "Serial LDPC Decoding on a SIMD DSP Using Horizontal Scheduling",
+  "year": 2006,
+  "venue": "EUSIPCO",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.5~0.9",
+  "code_length": "504~1908",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "horizontal scheduling min-sum을 SIMD DSP에 32/16bit 벡터화하고 forward-backward CN 업데이트를 2단계로 통합해 처리시간 절감",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "범용 DSP(TMS320C6416) 소프트웨어 구현 대상이라 커스텀 ASIC/RTL 파이프라인 구조와 직접 대응 안 됨, throughput/BER 수치 없이 CPU cycle만 보고",
+  "todo_check": "forward-backward 2단계 병합 기법을 Prime ECC의 CNU pipeline 구조에 적용 시 실제 gate/cycle 이득 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_7071043---serial-ldpc-decoding-on-a-simd-dsp-using-horizontal-scheduling-2006-eusipco">ieee_7071043 - Serial LDPC Decoding on a SIMD DSP Using Horizontal Scheduling (2006, EUSIPCO)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

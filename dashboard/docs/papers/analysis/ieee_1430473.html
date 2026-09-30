@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1430473</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1430473---short-block-ldpc-codes-for-a-low-frequency-power-line-communications-system-2005-ieee-isplcintl-symposium">ieee:1430473 - Short-Block LDPC Codes for a Low-Frequency Power-Line Communications System (2005, IEEE ISPLC/Intl Symposium)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.75~0.8</td></tr><tr><td>부호length</td><td>100~155</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>block-cyclic 고rate 단블록 LDPC에서 부호밀도로 정정능력↔미검출오류율 트레이드오프 조정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>초단블록(100~155bit)·미검출오류율 최적화가 목적, NAND(4KB급)와 블록길이/목표 상이·HW 미설계</td></tr><tr><td>추가확인</td><td>circulant weight 조정으로 min-distance/weight-spectrum 개선하는 지역탐색이 고rate QC-LDPC error-floor 설계에 응용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: circulant 블록(block-cyclic=QC) 구성으로 shift-register 저복잡도 인코딩을 갖는 고rate 단블록 LDPC를, 부호밀도·weight spectrum 조정으로 error-floor/미검출오류율을 개선하는 code-design 논문. QC 구조·저복잡도 인코딩·weight-spectrum 지역탐색은 참고가치 있으나 블록길이·최적화 목표가 NAND와 어긋남.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: TWACS 전력선 통신(자동검침), 매우 짧은 패킷(100~150bit), 고rate 요구. 기존은 (255,247) shortened Hamming(1bit 정정)+CRC-16(24bit overhead, rate≤0.85).</li><li>문제: 고rate·단블록 LDPC는 미검출오류(undetected error)가 발생하는데, 별도 CRC 추가는 대역폭 낭비 → LDPC 자체가 정정+검출을 모두 만족해야 함.</li><li>핵심 모델: 부호밀도(column weight)를 올리면 Tanner graph에 4-cycle이 추가되어 전체 오류율은 나빠지지만 min-distance가 커져 미검출오류율은 개선 → 밀도로 조정 가능한 트레이드오프.</li><li>핵심 기법(부호구성): block-cyclic 구조 <code>H=[C1 C2 ... CL]</code> (각 Cj는 square circulant) = QC-LDPC. cyclic difference family/Steiner triple로 4-cycle 회피, weight 3·M redundancy시 4-cycle-free 최대길이 <code>N=M(M-1)/6</code>.</li><li>저복잡도 인코딩: systematic <code>G^T=[IK; G1;...;GL-1]</code>, <code>Gj=CL^-1 Cj</code>도 circulant → shift-register 연산 + 블록당 벡터 1개만 저장(메모리 최소). 단 CL은 GF(2)에서 invertible 필요(홀수 weight 필요조건).</li><li>min-distance 트릭: 모든 블록이 홀수 column weight면 codeword가 all-even → min-dist 6 부호에서 weight-6 codeword 제거 시 min-dist 8로 상승.</li><li>부수: H에 circular permutation matrix를 더하고 빼서 weight spectrum(저weight codeword 수)을 조정.</li><li>최적화: fitness = <code>Σ ni/C(N,i)</code> (weight≤v codeword 비율), Hu et al.[8]로 저weight codeword 추정, 지역탐색(distance-1 이웃에서 최적 부호로 점진 이동).</li><li>결과: (155,124) 최적화 부호들 — code 4(weight7)는 BCH/CRC 대비 미검출오류율 개선+overall 약 1.4 dB 이득; code 3(weight5)은 Hamming/CRC 대비 약 3 dB 이득(단 rate 소폭 감소). soft-decision 입력이 이득 일부 기여.</li><li>한계: 순수 시뮬(HW 미설계), 블록 100~155bit로 이론한계 접근 불가, 최적화 목표가 미검출오류율(통신 검출용)이라 NAND 정정 목표와 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>block-cyclic(=QC) H 구성 <code>[C1..CL]</code></td><td>ecc_top.cpp <code>Load_PCM()</code> (H-matrix/PCM 로드)</td><td>Prime의 circulant-shift QC-LDPC 구조와 동형 (base+shift)</td></tr><tr><td>circulant <code>Gj=CL^-1 Cj</code> shift-register 인코딩</td><td>encoder.cpp <code>Generate_PCM_encoding()</code>, <code>LDPC_encoder_4KB()</code></td><td>Prime은 dual-diagonal 인코딩 고정 → circulant-G 방식은 대안적, 직접 대체 아님</td></tr><tr><td>weight-spectrum 지역탐색 / min-distance 개선</td><td>ecc_top.cpp <code>Load_PCM()</code> (H-matrix 설계 단계)</td><td>error-floor 좌우하는 저weight codeword 제거 설계에 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — QC(block-cyclic) 구조와 저복잡도 인코딩·weight-spectrum 조정으로 error-floor를 관리한다는 발상은 고rate QC-LDPC 부호설계에 참고되나, 블록길이(100~155bit)와 최적화 목표(미검출오류율)가 NAND(4KB급 정정 중심)와 크게 달라 H-matrix 재설계 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1430473",
+  "title": "Short-Block LDPC Codes for a Low-Frequency Power-Line Communications System",
+  "year": 2005,
+  "venue": "IEEE International Symposium on Power Line Communications (ISPLC)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.75~0.8",
+  "code_length": "100~155",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "block-cyclic 고rate 단블록 LDPC에서 부호밀도로 정정능력↔미검출오류율 트레이드오프 조정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "초단블록(100~155bit)·미검출오류율 최적화가 목적, NAND(4KB급)와 블록길이/목표 상이·HW 미설계",
+  "todo_check": "circulant weight 조정 지역탐색이 고rate QC-LDPC error-floor(저weight codeword 제거) 설계에 응용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1430473---short-block-ldpc-codes-for-a-low-frequency-power-line-communications-system-2005-ieee-isplcintl-symposium">ieee:1430473 - Short-Block LDPC Codes for a Low-Frequency Power-Line Communications System (2005, IEEE ISPLC/Intl Symposium)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

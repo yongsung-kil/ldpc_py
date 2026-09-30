@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10679074</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10679074---customized-branched-neural-network-aided-shuffled-min-sum-decoder-for-protograph-ldpc-codes-2025-ieee-tvt">ieee:10679074 - Customized Branched Neural Network-Aided Shuffled Min-Sum Decoder for Protograph LDPC Codes (2025, IEEE TVT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.2~0.75</td></tr><tr><td>부호length</td><td>154~1248</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>shuffled MS를 model-driven 뉴럴넷(CBNN)으로 unfold + BNMD 손실함수로 학습 가속·성능 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>model-driven 뉴럴 디코더(학습된 offset factor)로 HW 미설계·5G BG2 저rate 무선 타깃, NAND 고rate와 거리 멀고 학습 파이프라인 부담</td></tr><tr><td>추가확인</td><td>학습된 offset factor β(t) 테이블만 떼어 고정 오프셋으로 근사 시 NAND QC-LDPC에서 이득 재현 여부</td></tr></tbody></table>
+<blockquote><p>총평: shuffled min-sum을 뉴럴넷으로 unfold해 학습된 offset factor로 성능/수렴을 개선하나, HW 미설계·저rate 5G 무선 타깃·NN 학습 의존이라 NAND 고rate binary QC-LDPC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G NR protograph QC-LDPC(주로 BG2, rate 0.2, <code>(n,k)</code> 예: (156,30),(832,160),(1248,240)), BPSK/AWGN·Rayleigh 채널, 뉴럴 디코더로 복호.</li><li>문제: BP는 성능 좋으나 고복잡, MS/NMS/OMS는 저복잡이나 고정 수식이라 유연성 부족 — 기존 뉴럴 디코더는 NN과 알고리즘을 단순결합만 하고 망 구조를 개선 못함.</li><li>핵심 기법1: shuffled schedule(VN을 g그룹으로 순차 갱신)을 model-driven으로 unfold해 offset factor <code>β(t)</code>를 학습 파라미터로 두는 NSMS 디코더 구성.</li><li>핵심식: CN 갱신 <code>l_{cδ→vτ}=s·max(r-β(t),0)</code> (offset MS), a-posteriori <code>pτ=lτ+Σ l_{cδ→vτ}</code> — β를 학습해 근사오차 보정.</li><li>핵심 기법2: CBNN(Customized Branched NN) 다중스트림 구조 — 각 hidden layer의 group을 VN sublayer + CN sublayer(l_{c1}) + SBP sublayer(l_{c2}, tanh 기반 BP)로 분기해 CN 메시지 특징 포착 강화.</li><li>학습/추론 분리: 학습단계엔 SBP sublayer 포함, 추론단계엔 제거하고 출력 sublayer(n뉴런) 추가로 메모리 절감.</li><li>손실함수: BNMD(Branched Neuron Mean Difference) — CN sublayer와 SBP sublayer의 뉴런 LLR 차이를 MSE로 학습, BCE 대비 회귀문제화로 수렴 가속(sigmoid/log/power 연산 불필요).</li><li>학습: ADAM, greedy layer-by-layer 학습, learning rate 0.001, batch=1, T=10 hidden layer, g=2, TensorFlow.</li><li>결과: (156,30)서 BER 1e-5 도달에 SMS/SOMS/SBP 대비 0.74/0.41/0.1dB 이득, NFMS/NLMS 대비 0.5/0.3dB, 학습 수렴시간 128s(NFMS 660s, NLMS 636s), 추론시 곱셈연산 0회(NFMS/NLMS는 E회).</li><li>한계: 순수 시뮬(TensorFlow)로 HW 미설계, gatecount/throughput 없음, 저rate 5G BG2 무선 타깃, 학습된 파라미터 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| shuffled min-sum 이터레이션 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | Prime의 min-sum 복호 루프에 대응하나 스케줄이 shuffled(VN 순차)로 상이 |
+| 학습된 offset factor β(t) (edge-type별) | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | iteration/edge별 offset 테이블 관점 — Prime의 적응형 LLR 테이블과 유사 축이나 학습 필요 |
+| CN min-sum + offset 갱신 | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | Prime 이미 min-sum 보유(중복), offset은 추가요소 |
+| SBP sublayer (tanh Sum-Product) | 대응 없음 | Prime는 min 근사만 사용, full-tanh Sum-Product 미구현 |
+| CBNN 뉴럴 디코더 구조 / BNMD 학습 | 대응 없음 | NN/딥러닝 디코더 — Prime 모듈 지도에 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 학습된 edge-type별 offset factor 아이디어만 Prime의 적응형 LLR 테이블 관점에서 참고 가능하나, 뉴럴넷 학습 파이프라인·저rate 5G BG2·HW 미설계로 NAND 고rate binary QC-LDPC로의 이식성은 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10679074",
+  "title": "Customized Branched Neural Network-Aided Shuffled Min-Sum Decoder for Protograph LDPC Codes",
+  "year": 2025,
+  "venue": "IEEE TVT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "protograph",
+  "code_rate": "0.2~0.75",
+  "code_length": "154~1248",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "shuffled MS를 model-driven 뉴럴넷(CBNN)으로 unfold + BNMD 손실함수로 학습 가속·성능 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "model-driven 뉴럴 디코더로 HW 미설계·저rate 5G BG2 무선 타깃, NN 학습 파이프라인 의존",
+  "todo_check": "학습된 offset factor β(t)를 고정 오프셋으로 근사 시 NAND QC-LDPC에서 이득 재현 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10679074---customized-branched-neural-network-aided-shuffled-min-sum-decoder-for-protograph-ldpc-codes-2025-ieee-tvt">ieee:10679074 - Customized Branched Neural Network-Aided Shuffled Min-Sum Decoder for Protograph LDPC Codes (2025, IEEE TVT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

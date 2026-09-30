@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4202100</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4202100---layered-bp-decoding-for-rate-compatible-punctured-ldpc-codes-2007-ieee-communications-letters">ieee:4202100 - Layered BP Decoding for Rate-Compatible Punctured LDPC Codes (2007, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>2000~2080</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>punctured 변수노드의 recoverability level(k-SR)에 따라 check node를 layer로 배정하는 layered BP 스케줄링으로 RCP-LDPC 복호 수렴 속도 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>punctured(rate-compatible) 코드 전제, non-punctured NAND ECC에는 recoverability 개념 자체가 적용 안 됨; HW 구현/gatecount 없이 시뮬만</td></tr><tr><td>추가확인</td><td>Prime ECC의 Dual-Update(even/odd 교대) 스케줄과 본 layered scheduling의 중복/보완 관계 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: puncturing 특화 layered BP 스케줄링으로 iteration/latency 개선 기여가 있으나 NAND ECC는 통상 non-punctured라 적용 범위 제한적, 스케줄링 아이디어 자체는 이식 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 rate-compatible punctured LDPC(RCP-LDPC) 코드, mother code rate 0.5, block length 2000(및 3GPP-LTE 구조 코드 length 2080), AWGN/fading 채널.</li><li>문제: RCP-LDPC는 puncturing 비율이 높을수록 conventional BP 복호 수렴이 느려져, 반복횟수 제한 시 BER 성능이 크게 저하됨.</li><li>가정: punctured 변수노드의 LLR은 초기 0(채널정보 없음)으로 시작, 이웃 check node로부터 첫 non-zero 메시지를 받는 시점(iteration k)을 <code>k-SR</code>(k-step recoverable)로 정의.</li><li>핵심 기법: layered BP는 Tanner graph를 check node 서브그룹(layer)으로 분할해 iteration을 subiteration으로 쪼개고 순차 갱신; 본 논문은 punctured 변수노드를 살린(survived) check node를 그 변수노드의 recoverability level <code>k</code>에 따라 layer <code>L_k</code>(1≤k≤K)에 배정, 나머지는 <code>L_{K+1}</code>.</li><li>핵심 식은 없고 알고리즘(pseudo-code)으로 정의: 각 행(check node) i에 대해 그 행에 속한 변수노드 중 최고 recoverability level p를 찾아 <code>L_p</code>에 배정 → layer를 오름차순으로 처리하면 punctured 노드가 1회 반복 내 모두 recover됨.</li><li>확장: layering은 최고 코드율(최대 puncturing) 기준으로 한 번만 결정하면 모든 intermediate rate에 대해 재사용 가능(구현 복잡도 절감).</li><li>부수 트릭: 별도 양자화/HW 변형 없음. 순수 스케줄링(순서 재배치) 기법으로 CN/VN 업데이트 자체는 conventional BP와 동일.</li><li>최적화 절차: 없음(휴리스틱 layering, [3]의 recoverability 분석 프레임워크 재사용).</li><li>결과: rate 0.9에서 무작위 layering 대비 Eb/N0 0.7dB, conventional BP 대비 0.8dB 이득(BER 10^-4, max iter=15); max iteration=10 제한 시 이득 1.3/1.5dB로 확대; 3GPP-LTE 구조 코드(rate 0.88) fading 채널에서는 1dB/2dB 이득.</li><li>한계: puncturing이 없는 코드에는 recoverability 개념이 성립하지 않아 적용 불가, HW 구현/합성 결과 없이 시뮬레이션(BER-Eb/N0)만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Layered BP 체크노드 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄링 순서 변경 기법으로 디코더 이터레이션 루프에 직접 이식 검토 가능</td></tr><tr><td>Dual-Update(even/odd 교대) 스케줄과의 관계</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (Dual-Update 옵션)</td><td>Prime ECC가 이미 보유한 스케줄링 기법과 유사 계열(레이어드/순차 갱신)이라 중복 기여 가능성</td></tr><tr><td>punctured 변수노드 recoverability(k-SR) 분석</td><td>대응 없음</td><td>Prime ECC는 puncturing을 사용하지 않는 고정 rate 구조라 개념 자체가 대응 없음</td></tr><tr><td>조기수렴을 통한 iteration 감소</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code> (조기종료와는 결이 다름)</td><td>조기종료가 아닌 스케줄링을 통한 평균 iteration 감소로 목적은 유사하나 메커니즘 상이</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — puncturing 특화 기법이라 NAND ECC(non-punctured, 고정 rate)에는 직접 재사용 어려우나, layered/sequential scheduling 아이디어 자체는 Prime ECC의 이미 보유한 Dual-Update와 비교·보완 검토 가치 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4202100",
+  "title": "Layered BP Decoding for Rate-Compatible Punctured LDPC Codes",
+  "year": 2007,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "2000~2080",
+  "soft_quant": "무관",
+  "key_contribution": "punctured 변수노드의 recoverability level(k-SR)에 따라 check node를 layer로 배정하는 layered BP 스케줄링으로 RCP-LDPC 복호 수렴 속도 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "punctured(rate-compatible) 코드 전제, non-punctured NAND ECC에는 recoverability 개념 자체가 적용 안 됨; HW 구현/gatecount 없이 시뮬만",
+  "todo_check": "Prime ECC의 Dual-Update(even/odd 교대) 스케줄과 본 layered scheduling의 중복/보완 관계 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4202100---layered-bp-decoding-for-rate-compatible-punctured-ldpc-codes-2007-ieee-communications-letters">ieee:4202100 - Layered BP Decoding for Rate-Compatible Punctured LDPC Codes (2007, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

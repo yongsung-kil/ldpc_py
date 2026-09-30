@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7996767</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7996767---a-configurable-fpga-fec-unit-for-tbs-optical-communication-2017-ieee-icc-2017-optical-networks-and-systems-symposium">ieee:7996767 - A Configurable FPGA FEC Unit for Tb/s Optical Communication (2017, IEEE ICC 2017 Optical Networks and Systems Symposium)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>BCH product code용 확장형 FPGA HD-FEC 디코더(30G~1Tb/s 단일 FPGA)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 아닌 BCH product code·hard-decision 광통신 전용, Prime ECC binary QC-LDPC와 부호·복호 알고리즘 불일치</td></tr><tr><td>추가확인</td><td>RAM 슬라이스간 correction 분배 병목 처리 방식(우리 z=32 라우팅과 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 광통신용 BCH product code HD-FEC의 FPGA 구현으로 LDPC min-sum 파이프라인과 알고리즘이 달라 Prime ECC 이식 가치 낮음, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 단일 FPGA에서 30Gb/s~1Tb/s gross rate를 지원하는 configurable HD-FEC(hard-decision) 유닛, 광통신 대상.</li><li>문제: 1Tb/s급 광링크에서 soft-decision LDPC는 FPGA transceiver 수·복잡도 제약으로 목표 rate 달성 곤란 → hard-decision 선택.</li><li>부호: expurgated primitive <code>BCH</code> 성분부호(최대 <code>n=1023</code>, <code>t=3</code> 정정, 최소거리 6, <code>n-k=32</code>)를 row/column 양방향에 적용한 quadratic product code(frame), overhead 6.5~13%.</li><li>복호: syndrome <code>s_i=r(α^i)</code> 계산 후 error-locator 다항식을 lookup table로 풀어 근을 찾는 Gravano/Okano-Imai BCH 디코더, double parity check로 오복호 확률 저감.</li><li>반복복호: rows→columns→rows... 를 한 iteration으로 정의, 성분부호 t=3이면 이론상 pre-FEC BER ~4.5e-3(2.44 errors/row) 미만에서 성공, NCG ~9.4dB(BSC 한계보다 0.4dB 낮음).</li><li>HW: 여러 Gravano decoder를 병렬로 두고 correction을 FIFO로 처리, syndrome은 한 번만 계산 후 정정 시 갱신.</li><li>RAM: 프레임을 tile 단위로 저장하고 tile 열 수만큼 slice로 분할해 병렬화, 실병목은 slice간 correction 분배.</li><li>확장성: input width는 2의 거듭제곱, clock 250MHz 목표, Gravano decoder 수를 늘려 고rate에서도 iteration 확보(최소 4 iteration 필요).</li><li>결과: Arria10에서 32 병렬 frame decoder로 gross 1Tb/s(net 883Gb/s) 달성, latency는 µs 범위(고rate에서 &lt;0.5~2µs), 10Gb/s 랩실험으로 post-FEC vs pre-FEC BER 검증.</li><li>한계: LDPC 아닌 BCH product code, hard-decision 전용, error floor는 3x3 core로 결정(~1e-15 목표), 광통신 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BCH product code 반복복호</td><td>대응 없음 (Prime ECC는 LDPC min-sum)</td><td>부호·복호 알고리즘 상이</td></tr><tr><td>Gravano BCH syndrome 디코더</td><td>대응 없음</td><td>LDPC CN/VN 연산과 무관</td></tr><tr><td>tile/slice RAM 분할·라우팅</td><td><code>decoder.cpp</code> HW 모델(z=32) 개념적 유사만</td><td>구조 다르고 직접 이식 불가</td></tr><tr><td>iterative row/column 스케줄</td><td>대응 없음</td><td>product code 전용, LDPC 이터레이션과 무관</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 광통신용 BCH product code hard-decision FEC로, binary QC-LDPC min-sum 기반 Prime ECC와 부호종류·복호 알고리즘이 근본적으로 달라 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7996767",
+  "title": "A Configurable FPGA FEC Unit for Tb/s Optical Communication",
+  "year": 2017,
+  "venue": "IEEE ICC 2017 Optical Networks and Systems Symposium",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "BCH product code용 확장형 FPGA HD-FEC 디코더(30G~1Tb/s 단일 FPGA)",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1000,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "LDPC 아닌 BCH product code·hard-decision 광통신 전용, Prime ECC binary QC-LDPC와 부호·복호 알고리즘 불일치",
+  "todo_check": "RAM 슬라이스간 correction 분배 병목 처리 방식(우리 z=32 라우팅과 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7996767---a-configurable-fpga-fec-unit-for-tbs-optical-communication-2017-ieee-icc-2017-optical-networks-and-systems-symposium">ieee:7996767 - A Configurable FPGA FEC Unit for Tb/s Optical Communication (2017, IEEE ICC 2017 Optical Networks and Systems Symposium)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

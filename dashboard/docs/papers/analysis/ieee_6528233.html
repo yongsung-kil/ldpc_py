@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6528233</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6528233---fpga-based-hardware-architectures-for-high-performance-computing-applications-2012-ieee">ieee:6528233 - FPGA based hardware architectures for high performance computing applications (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>WiMAX LDPC 표준을 대상으로 H-matrix LUT 기반 FPGA 아키텍처를 제시하고 파이프라인/병렬화로 약 2Gbps 처리율을 추정</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코딩 알고리즘은 표준 sum-product(tanh 기반) 메시지 패싱 그대로이며 min-sum/양자화 등 NAND ECC 특화 개선이 전혀 없음. 정정성능 실험(BER/FER) 없이 throughput 수식 추정치만 제시</td></tr><tr><td>추가확인</td><td>H matrix LUT 방식이 QC-LDPC circulant 구조에도 적용 가능한지, 실제 합성/gatecount 결과가 후속 논문에 있는지 확인</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코더는 두 응용 사례 중 하나로 간략히 다뤄지며, WiMAX 표준 sum-product 복호를 FPGA LUT 기반으로 구현해 throughput을 추정한 개괄적 소개 수준의 논문으로 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>논문은 두 응용(마이크로어레이 이미지처리, LDPC 디코더)을 통해 FPGA의 공간·시간 병렬성 활용 이점을 설명하는 개괄 논문이며 LDPC는 후반부 응용 사례.</li><li>대상 코드는 WiMAX 표준 LDPC(codeword length <code>M=576</code>, iteration 수 <code>N_iterations=10</code>)로, 새로운 부호 설계는 아님.</li><li>채널/노이즈 모델에 대한 별도 정의 없이 표준 sum-product 메시지 패싱을 그대로 사용.</li><li>디코딩은 Tanner graph 상 check-node(CN)와 variable-node(VN) 간 확률 메시지를 반복 교환하는 전형적 belief propagation.</li><li>핵심 식: <code>CN = -2*tanh^-1(prod(tanh((VN_prev+CN_prev)/2)))</code>, <code>VN = LLR(i) + sum(CN)</code> — 표준 sum-product 갱신식 그대로(min-sum 등 근사 없음).</li><li>HW 구조: H-matrix를 look-up-table(LUT)에 저장, 각 행(i)의 VN 레지스터(R1) 값을 CN 갱신 함수와 누산기(Sum1)로 순차 전달, 각 열(j)은 Sum2 가산기로 CN 값을 집계.</li><li>1회 iteration의 지연은 <code>T = u+v</code> 클록(u=H 행의 1값 개수, v=Sum2 가산 클록 수), WiMAX 기준 T=10.</li><li>Throughput 추정식: <code>Throughput = M*f_clk / (N_iterations*T)</code>, f_clk=350MHz 가정 시 약 2Gbps로 계산(시뮬/합성 검증 없음).</li><li>결과: throughput 수치(~2Gbps) 외 정정능력(BER/FER), gatecount, 실측 결과는 제시되지 않음.</li><li>한계: 알고리즘적 기여 없이(표준 sum-product), FPGA 자원에 의해서만 병렬도가 결정된다는 서술 수준이며 ASIC 합성이나 실측 데이터가 전무.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Sum-Product(tanh) 기반 CN 갱신</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 이미 Min-Sum(tanh 근사)을 사용 중이라 tanh 기반 Sum-Product는 오히려 HW 비용이 큰 구식 접근, 이식 가치 낮음</td></tr><tr><td>H matrix LUT 저장 방식</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>일반적인 H-matrix 로드 개념과 유사하나 특별한 이점 없음</td></tr><tr><td>Throughput 추정(파이프라인 지연 T=u+v)</td><td><code>decoder.cpp</code> (pipeline 구조)</td><td>Prime ECC는 이미 6-stage pipeline/HCU/GT로 훨씬 정교한 지연 최적화를 갖추어 중복</td></tr></tbody></table>
+<p>적용 가치: 낮음 — WiMAX 표준 sum-product 복호를 FPGA에 개괄적으로 얹은 소개성 논문으로, Prime ECC가 이미 보유한 Min-Sum/HW 최적화 대비 기여가 없음.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:6528233",
+  "title": "FPGA based hardware architectures for high performance computing applications",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": 576,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "WiMAX LDPC 표준을 대상으로 H-matrix LUT 기반 FPGA 아키텍처를 제시하고 파이프라인/병렬화로 약 2Gbps 처리율을 추정",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코딩 알고리즘은 표준 sum-product(tanh 기반) 메시지 패싱 그대로이며 min-sum/양자화 등 NAND ECC 특화 개선이 전혀 없음. 정정성능 실험 없이 throughput 수식 추정치만 제시",
+  "todo_check": "H matrix LUT 방식이 QC-LDPC circulant 구조에도 적용 가능한지, 실제 합성/gatecount 결과가 후속 논문에 있는지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6528233---fpga-based-hardware-architectures-for-high-performance-computing-applications-2012-ieee">ieee:6528233 - FPGA based hardware architectures for high performance computing applications (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

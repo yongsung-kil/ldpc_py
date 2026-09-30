@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10231144</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10231144---admm-and-reproducing-sum-product-decoding-algorithm-applied-to-qc-mdpc-code-based-mceliece-cryptosystems-2024-ieee-transactions-on-information-theory">ieee:10231144 - ADMM and Reproducing Sum-Product Decoding Algorithm Applied to QC-MDPC Code-Based McEliece Cryptosystems (2024, IEEE Transactions on Information Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>2000~19714</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ADMM 기반 LP 디코딩의 code-polytope projection 알고리즘 오류를 수정하고, SPA 실패결과를 재활용하는 RSPA를 결합해 QC-MDPC 암호시스템의 DFR을 BF/SPA 대비 대폭 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>McEliece 암호시스템용 moderate-density(dc=45~71) MDPC 코드로 NAND용 저밀도 QC-LDPC와 구조·목적이 다르고 ADMM 디코딩은 t=134에서 평균 3000ms로 매우 느려 HW 이식 부적합</td></tr><tr><td>추가확인</td><td>ADMM projection 알고리즘의 bi-section 탐색이 실시간 NAND 디코더 수준으로 가속 가능한지 미상</td></tr></tbody></table>
+<blockquote><p>총평: 암호시스템(post-quantum McEliece) 특화 MDPC 디코딩 논문으로 NAND ECC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>QC-MDPC 코드(<code>H=[H0,...,Hn0-1]</code>, 각 Hi는 p×p circulant, column weight <code>dc</code>)를 McEliece 암호시스템에 적용, BSC 채널 가정.</li><li>표준 BF(bit-flipping) 디코딩은 최적화 기반이 아니라 DFR(decoding failure rate) 개선 여지가 있고, 낮은 DFR은 GJS 공격 방어에 직결되는 보안 요구사항.</li><li>LP 디코딩(Feldman et al.)의 relaxation을 ADMM(alternating direction method of multipliers)으로 재formulate, replica 변수 <code>zi</code>와 penalty term <code>α(xj-0.5)^2</code> 도입.</li><li>Augmented Lagrangian <code>Lμ(x,z,λ)</code>를 x/z/λ 순서로 반복 갱신(식 11), x는 폐형(closed-form) 업데이트(식 13), z는 code-polytope <code>PPd</code>로의 projection(식 14).</li><li>기존 projection 알고리즘([4]의 Algorithm 2)이 일부 케이스에서 Gurobi MIP 해와 불일치하는 오류를 발견, 수정된 projection 알고리즘(Algorithm 3, bi-section 기반)을 제시해 DFR을 약 1/10로 개선.</li><li>RSPA(reproducing sum-product algorithm): SPA 디코딩 실패 후 hard-decision 결과를 다시 SPA 입력으로 재사용하는 반복 전처리, 반복할수록 에러비트 수가 감소하는 경향을 관찰.</li><li>RSPA-ADMM: RSPA 반복 각 단계에서 ADMM 디코딩을 추가로 적용하는 하이브리드(Algorithm 5), ADMM 단계는 병렬화 가능.</li><li>파라미터 <code>(µ, α, M)</code>은 휴리스틱 탐색으로 고정(예: µ=6~13, α=15~26, M=10000), 체계적 최적화 절차는 없음.</li><li>(n,k)=(9602,4801)에서 BF는 t=87에서 DFR&lt;1e-7이지만 RSPA-ADMM은 t=103에서 동일 수준 달성; (10779,3593)에서는 t=55→66로 정정 가능 에러수 개선.</li><li>HW 미설계, ADMM 평균 디코딩 시간이 t=134에서 약 3000ms로 매우 느려 실용화엔 추가 가속 필요; Type I weak key가 ADMM에는 오히려 "strong key"로 작용하는 미해명 현상 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM 기반 LP 디코딩 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 SPA 계열이며 ADMM/LP 최적화 디코더 미보유</td></tr><tr><td>SPA(sum-product algorithm)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>개념적으로 유사하나 본 논문 SPA는 full-tanh 기반 비교군일 뿐 제안 기법 아님</td></tr><tr><td>code-polytope projection (Algorithm 3)</td><td>대응 없음</td><td>NAND HW 디코더에 LP projection 연산 자체가 존재하지 않음</td></tr><tr><td>RSPA(SPA 실패결과 재사용)</td><td>대응 없음</td><td>조기종료(<code>partial_CRC.cpp</code>)와 목적이 다르며 재입력 반복 구조는 Prime ECC에 없음</td></tr><tr><td>MDPC(moderate-density) 부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 저밀도 QC-LDPC 고정, MDPC급 고밀도 H-matrix는 별도 재검증 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 암호시스템 보안(DFR) 목적의 MDPC/ADMM 디코딩으로 NAND 저밀도 QC-LDPC HW 디코더와 부호구조·목표·복잡도 모두 상이.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10231144",
+  "title": "ADMM and Reproducing Sum-Product Decoding Algorithm Applied to QC-MDPC Code-Based McEliece Cryptosystems",
+  "year": 2024,
+  "venue": "IEEE Transactions on Information Theory",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "2000~19714",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ADMM 기반 LP 디코딩의 code-polytope projection 알고리즘 오류를 수정하고, SPA 실패결과를 재활용하는 RSPA를 결합해 QC-MDPC 암호시스템의 DFR을 BF/SPA 대비 대폭 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "McEliece 암호시스템용 moderate-density(dc=45~71) MDPC 코드로 NAND용 저밀도 QC-LDPC와 구조·목적이 다르고 ADMM 디코딩은 t=134에서 평균 3000ms로 매우 느려 HW 이식 부적합",
+  "todo_check": "ADMM projection 알고리즘의 bi-section 탐색이 실시간 NAND 디코더 수준으로 가속 가능한지 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10231144---admm-and-reproducing-sum-product-decoding-algorithm-applied-to-qc-mdpc-code-based-mceliece-cryptosystems-2024-ieee-transactions-on-information-theory">ieee:10231144 - ADMM and Reproducing Sum-Product Decoding Algorithm Applied to QC-MDPC Code-Based McEliece Cryptosystems (2024, IEEE Transactions on Information Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

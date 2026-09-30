@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2208.05795</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv220805795v1---an-modified-coles-importance-sampling-method-for-low-error-floor-qc-ldpc-codes-construction-2022-arxiv-csit">arxiv:2208.05795v1 - An Modified Cole's Importance Sampling Method For Low Error Floor QC-LDPC Codes Construction (2022, arXiv cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1008~2640</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>그래프 automorphism+iteration tree 언롤링으로 Cole IS의 Trapping Set 열거를 대폭 가속, EMD 스펙트럼·코드거리 개선으로 error-floor 저감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>TS 열거는 코드설계 오프라인 도구(디코더 자체 개선 아님), 정확 rate/length·NAND read체제 미명시, 열거에 최대 16GB RAM 소요</td></tr><tr><td>추가확인</td><td>Prime의 특정 고정 QC-LDPC(z=32) H-matrix에 SA lifting+EMD/TS 열거 파이프라인 적용 가능성과 재검증 비용</td></tr></tbody></table>
+<blockquote><p>총평: 디코더가 아닌 부호설계(EMD 스펙트럼·code distance 개선으로 harmful trapping set 제거) 도구. error-floor 보증에 유용하나 Prime의 고정 H-matrix 재설계 부담이 커 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 CPM 기반 QC-LDPC(<code>H</code>=순환치환행렬 블록, exponent matrix <code>E(H)</code>), 예제 PEG(1008,504)·Margulis(2640,1320)·4x20(2560,2048).</li><li>문제: message-passing 디코더의 error-floor를 유발하는 sublinear Trapping Set(TS)을 열거해야 하는데 LP/기존 IS 방법이 매우 느림.</li><li>모델: cycle 겹침이 만드는 비대칭 subgraph <code>TS(a,b)</code>(a=VN수, b=홀수차 CN수), harm≈b/a, TS(a,0)이 dmin에 대응.</li><li>핵심기법1: Cole의 unrolled BP impulse tree(VN-CN-VN... depth3+)로 error impulse <code>h(1-ε)</code>를 주입해 수렴실패 subgraph를 TS 후보로 열거.</li><li>핵심 modification: subgraph separation 함수 <code>T ree(·)</code>(tree-like 제거)와 <code>T S(·)</code>(cycle 추가 VN 합집합)로 <code>S1,S2</code> 정렬 sieving 시퀀스 구성, cycle 참여 필수 조건 부여.</li><li>확장: 그래프 automorphism(대칭)로 중복 제거 + iteration tree 언롤링 분해로 병렬화.</li><li>구현 디테일: girth/short-cycle 밀도(Halford-Chugg)로 iteration 수 조절, multi-stage scheduler로 RAM/병렬 제어, GPU(Titan RTX)/FPGA 가속.</li><li>최적화: Simulated Annealing lifting로 같은 mother matrix에서 EMD 스펙트럼·code distance 다른 5개 QC-LDPC 후보 생성.</li><li>결과: PEG(1008,504)서 LP 대비 5027배(멀티스레드 71463배)·Cole 43배, Margulis서 LP 대비 37958배 가속. EMD/dmin 개선(Code1 dupper=40→Code5 50)으로 error-floor 저하(Quantized Normalized Layered Min-Sum, LLR=4/C2V=4/V2C=6bit, 20iter).</li><li>한계: HW 미설계, 오프라인 열거/구성 도구(디코더 실시간 개선 아님), 정확 rate 미명시, 최대 16GB RAM 소요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC H-matrix 구성/lifting(SA) + EMD/TS 제거</td><td>ecc_top.cpp <code>Load_PCM()</code> (부호구조)</td><td>Prime의 고정 QC-LDPC H-matrix 설계 단계에 error-floor 최적화로 반영 가능(고비용)</td></tr><tr><td>TS/error-floor 검증 대상 디코더(Layered Min-Sum)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime도 min-sum이라 TS harm 모델의 scale/양자화 파라미터 정합 필요</td></tr><tr><td>양자화 메시지(LLR4/C2V4/V2C6) 하 TS 평가</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>양자화 조건이 TS 가중치에 영향 - Prime 양자화 테이블과 매칭 필요</td></tr><tr><td>IS 열거/Union Bound error-floor 예측</td><td>대응 없음</td><td>Prime엔 error-floor 예측/TS 열거 오프라인 도구 없음(별도 툴체인)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - error-floor 보증이 필요한 고rate QC-LDPC 설계에 가치 있으나, Prime의 고정 H-matrix를 재설계/재검증해야 하고 열거 툴은 오프라인 코드설계 단계에만 닿는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2208.05795v1",
+  "title": "An Modified Cole's Importance Sampling Method For Low Error Floor QC-LDPC Codes Construction",
+  "year": 2022,
+  "venue": "arXiv cs.IT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1008~2640",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "그래프 automorphism+iteration tree 언롤링으로 Cole IS의 Trapping Set 열거를 대폭 가속, EMD 스펙트럼·코드거리 개선으로 error-floor 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "TS 열거는 코드설계 오프라인 도구(디코더 자체 개선 아님), 정확 rate/length·NAND read체제 미명시, 열거에 최대 16GB RAM 소요",
+  "todo_check": "Prime의 특정 고정 QC-LDPC(z=32) H-matrix에 SA lifting+EMD/TS 열거 파이프라인 적용 가능성과 재검증 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv220805795v1---an-modified-coles-importance-sampling-method-for-low-error-floor-qc-ldpc-codes-construction-2022-arxiv-csit">arxiv:2208.05795v1 - An Modified Cole&#x27;s Importance Sampling Method For Low Error Floor QC-LDPC Codes Construction (2022, arXiv cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

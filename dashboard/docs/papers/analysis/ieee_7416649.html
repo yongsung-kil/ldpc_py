@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7416649</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7416649---read-and-write-voltage-signal-optimization-for-multi-level-cell-mlc-nand-flash-memory-2016-ieee-transactions-on-communications">ieee:7416649 - Read and Write Voltage Signal Optimization for Multi-Level-Cell (MLC) NAND Flash Memory (2016, IEEE Transactions on Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.90~0.92</td></tr><tr><td>부호length</td><td>4096~7360</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MLC 채널 write-voltage 최적화 + entropy 기반 read 양자화(controlled erasure)로 soft LDPC FER·수렴 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호/디코더 알고리즘이 아닌 채널·양자화 설계 논문 - LDPC 자체는 표준 BP, 이식 시 채널/LLR 레이어에만 적용</td></tr><tr><td>추가확인</td><td>Prime ECC의 soft-read는 hard/2SD/3SD(soft-4bit+ 미지원) - 6-level(≈3bit) 양자화가 우리 LLR 테이블과 정합되는지 확인</td></tr></tbody></table>
+<blockquote><p>총평: NAND MLC read/write 전압 최적화와 entropy 기반 양자화로 soft LDPC 입력 LLR을 개선하는 직접 관련 논문 - 부호/디코더가 아닌 채널·양자화 레이어 이식 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2bit/cell MLC NAND, 4개 write-level(<code>Vmin,V1,V2,Vmax</code>)+3~6개 read-level. binary LDPC 두 종: 4K-code(irregular, rate 0.90, <code>4096/4544</code>), 8K-code(regular col-weight 4, rate 0.92, <code>7360/8000</code>), PEG 구성, shuffled BP 복호(<code>Imax=25</code>).</li><li>문제: MLC 채널이 PE cycle·retention에 따라 비정상(non-stationary)이라 고정 전압·균일 양자화는 error-rate·복호수렴이 나쁨.</li><li>채널모델: programming noise + RTN(<code>σn=0.00025(PE)^0.62</code>) + retention noise + cell-to-cell interference(CCI)를 convolution으로 합성해 4개 심볼 분포 도출.</li><li>write 최적화: 채널 오류확률 <code>Pe</code>(식15)를 목적함수로 gradient-descent(식21)로 <code>V1*,V2*</code> 탐색, PE별 LUT 저장(오프라인).</li><li><code>Pe = (1/4)ΣP(e|sp)</code> - 인접 분포 교점(<code>R1,R2,R3</code>)을 decision boundary로 심볼오류 최소화.</li><li>read 양자화: voltage entropy 함수 <code>H(v)</code>(식24) 도입, <code>H(Rn)=θ</code>로 erasure 영역 폭을 파라미터 <code>θ</code>로 제어(controlled erasure).</li><li>트릭: erasure 영역 LLR을 0으로 리셋(가장 불확실) → 심볼오류↓ 대신 erasure확률↑ 트레이드오프, MMI 양자화 대비 유리(<code>θ=0.35</code>가 최적).</li><li>LLR: <code>Rn-1≤v≤Rn</code> 구간별 MSB/LSB LLR을 분포 적분비 log로 계산(식22,23).</li><li>결과: 제안 entropy 양자화가 MMI·uniform 대비 FER 우수(12-level uniform보다 6-level non-uniform이 더 좋음), 복호 latency 초기 16%·EOL 22% 감소, retention 6/12/24개월서도 우수. EXIT 곡선으로 최소 read-level 선택(14K PE 이후 3→6level).</li><li>한계: HW 미설계(모델기반 시뮬만), θ 최적값의 해석적 해는 future work, 디코더는 표준 BP.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>read-voltage entropy 양자화 / LLR 계산(식22-24)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold·LLR 양자화 설계에 직접 대응</td></tr><tr><td>iteration별/erasure LLR 리셋</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>LLR 테이블 값 설계에 반영 가능</td></tr><tr><td>write-voltage 최적화(GD, PE별 LUT)</td><td>대응 없음</td><td>Prime ECC는 채널 시뮬만 보유, write program 최적화는 컨트롤러 firmware 영역(코드 밖)</td></tr><tr><td>EXIT 기반 최소 read-level 선택</td><td>channel.cpp (soft-read 정밀도 결정)</td><td>soft-read 비용(bit수) 결정 로직에 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND soft-read LLR/양자화 설계(우리 <code>channel.cpp</code>)에 직접 닿지만, 부호·디코더 알고리즘은 표준 BP라 신규 기법은 아니고 Prime ECC는 soft-4bit+ 미지원이라 6-level 양자화 정합 검토 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7416649",
+  "title": "Read and Write Voltage Signal Optimization for Multi-Level-Cell (MLC) NAND Flash Memory",
+  "year": 2016,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.90~0.92",
+  "code_length": "4096~7360",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MLC write-voltage GD 최적화 + entropy 기반 read 양자화(controlled erasure)로 soft LDPC FER·수렴 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "부호/디코더가 아닌 채널·양자화 설계 논문, LDPC는 표준 BP - 채널/LLR 레이어에만 이식 가능",
+  "todo_check": "Prime ECC soft-read는 hard/2SD/3SD(soft-4bit+ 미지원) - 6-level 양자화의 LLR 테이블 정합 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7416649---read-and-write-voltage-signal-optimization-for-multi-level-cell-mlc-nand-flash-memory-2016-ieee-transactions-on-communications">ieee:7416649 - Read and Write Voltage Signal Optimization for Multi-Level-Cell (MLC) NAND Flash Memory (2016, IEEE Transactions on Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

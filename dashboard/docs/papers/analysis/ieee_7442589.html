@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7442589</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7442589---unified-designs-for-high-performance-ldpc-decoding-on-gpgpu-2016-ieee-transactions-on-computers">ieee:7442589 - Unified Designs for High Performance LDPC Decoding on GPGPU (2016, IEEE Transactions on Computers)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>672~4896</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>regular/irregular LDPC 모두 지원하는 통합 node-based(ATA)/edge-based GPGPU 병렬 디코딩 자료구조</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.08025</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPGPU(CUDA/Fermi) 전용 메모리 coalescing 최적화라 NAND HW RTL/z=32 QC-LDPC 구조와 무관</td></tr><tr><td>추가확인</td><td>없음 (throughput 80Mbps급으로 NAND ECC급 요구와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코딩을 GPGPU에 매핑하는 데이터-접근/메모리 coalescing 최적화 논문으로, NAND용 binary QC-LDPC HW 디코더 이식과 무관하다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: GPGPU(NVIDIA GTX 470, Fermi)에서 regular/irregular LDPC를 모두 처리하는 통합 병렬 디코딩 설계. 부호는 IEEE 802.15.3c <code>(672,336)</code>, 802.11n <code>(1944,972)</code>, 합성 <code>(1024,512)</code>/<code>(4896,2448)</code> 등 통신표준 행렬.</li><li>문제: 기존 GPGPU 설계는 특정 LDPC 행렬(regular 또는 QC)에 커스터마이즈되어, 다른 행렬 지원 시 재작업/재설계 필요.</li><li>스케줄링: <code>TPMP</code>(Two-Phase Message-Passing) 채택 — CN 커널/BN 커널을 분리해 phase마다 한 번씩 수행, codeword당·codeword간 병렬성 노출.</li><li>기법1(node-based, NBTGL): 노드 1개당 스레드 1개. <code>Address Translation Array(ATA)</code> = <code>LxcBegin/LxcSize/LxcStripe</code> 3배열로 노드별 edge 수가 달라도 유연 인덱싱, 접근을 coalesce.</li><li>최적화: <code>Node Grouping</code> — edge 수가 같은 노드를 정렬·클러스터링해 warp 내 스레드가 동일 edge 수를 갖게 하여 memory coalescing 향상.</li><li>기법2(edge-based, EBS): edge 1개당 스레드 1개. <code>NextLxcIndex</code> 배열로 같은 노드 edge를 연결, 노드보다 edge가 많아 concurrent codeword가 적을 때 병렬성↑.</li><li>구현 디테일: EBS는 공유데이터를 Fermi shared memory(16KB)에 적재(<code>Lxc_SharedMem</code> 등), 같은 노드의 모든 edge를 동일 thread block에 배치.</li><li>데이터 footprint: node-based는 스레드당 12원소 접근, edge-based는 6원소로 축소(단 스레드 수는 2배 이상).</li><li>결과: CPU 대비 최대 134.56x 속도향상, 최대 throughput 80.25 Mbps(256 concurrent codeword). concurrent codeword 적으면 EBS가 44~14% 우세, 많으면 NBTGL 우세.</li><li>한계: 정정능력(BER) 개선 없음(고정 iteration 비교), HW(ASIC/RTL) 미설계, single-precision float, host-device memcpy가 전체시간 40~52% 차지.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| TPMP CN/BN 메시지 패싱 루프 | decoder.cpp LDPC_Decoder() | 알고리즘은 동일 계열이나 우리는 bit-exact HW 파이프라인, GPGPU 병렬화 아님 |
+| ATA / edge 인덱싱 자료구조 | 대응 없음 | GPGPU 메모리 coalescing용 SW 자료구조, HW edge/MUX(GT)와 성격 다름 |
+| Node/Edge grouping (warp 정합) | GT.cpp Make_GT_HW() | 둘 다 edge 처리 재배치이나 목적(warp coalescing vs 클록당 edge 축소)이 달라 이식가치 낮음 |
+| 조기종료(syndrome check) | partial_CRC.cpp / full_CRC.cpp | 우리는 이미 CRC 기반 조기종료 보유 (중복) |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — GPGPU(CUDA/Fermi) 전용 메모리 접근 최적화로, NAND용 binary QC-LDPC의 부호설계·HW 디코더·정정능력 어디에도 이식 가치가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7442589",
+  "title": "Unified Designs for High Performance LDPC Decoding on GPGPU",
+  "year": 2016,
+  "venue": "IEEE Transactions on Computers",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "672~4896",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "regular/irregular LDPC 모두 지원하는 통합 node-based(ATA)/edge-based GPGPU 병렬 디코딩 자료구조",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.08025,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "GPGPU(CUDA/Fermi) 전용 메모리 coalescing 최적화라 NAND HW RTL/z=32 QC-LDPC 구조와 무관",
+  "todo_check": "없음 (throughput 80Mbps급으로 NAND ECC급 요구와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7442589---unified-designs-for-high-performance-ldpc-decoding-on-gpgpu-2016-ieee-transactions-on-computers">ieee:7442589 - Unified Designs for High Performance LDPC Decoding on GPGPU (2016, IEEE Transactions on Computers)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

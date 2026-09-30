@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1361130</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1361130---an-efficient-message-passing-schedule-for-ldpc-decoding-2004-ieee-convention-of-electrical-and-electronics-engineers-in-israel">ieee:1361130 - An Efficient Message-Passing Schedule for LDPC Decoding (2004, IEEE Convention of Electrical and Electronics Engineers in Israel)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>check-node 직렬(레이어드) 스케줄로 flooding 대비 약 절반 iteration에 수렴하며 Qvc 메모리 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·(3,6)regular 시뮬만, error-floor/정정능력 개선 아님(수렴속도만)</td></tr><tr><td>추가확인</td><td>Prime ECC의 Dual-Update(parity even/odd 교대) 스케줄과 중복도 확인</td></tr></tbody></table>
+<blockquote><p>총평: check-node serial 스케줄로 iteration을 절반으로 줄이는 고전적 layered-decoding 원류 논문 — Prime ECC의 Dual-Update와 개념 중복되나 이식은 쉬움.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular (3,6)-LDPC, rate 0.5, Gaussian 채널, 최대 20 iteration BP 복호(LLR 도메인).</li><li>문제: 기존 flooding 스케줄은 iteration당 모든 심볼노드→모든 체크노드 갱신이라 정보 전파가 느리다.</li><li>핵심 기법: 체크노드를 순서대로 방문해 각 노드로 들어오는 <code>Q_vc</code>를 계산하고 즉시 나가는 <code>R_cv</code>를 내보내는 <strong>직렬(serial/layered) 스케줄</strong> — 갱신된 메시지가 같은 iteration 내에서 즉시 전파.</li><li>Dual 스케줄: 기존 [2],[4]의 심볼노드 직렬 갱신 대신 <strong>체크노드 직렬 갱신</strong>을 제안, 메모리 요구가 더 작음.</li><li>메모리 절감: <code>Q_vc</code>를 on-the-fly로 계산해 별도 저장 없이 채널 메시지 <code>P_v</code>를 저장한 메모리에 갱신 <code>Q_v</code>를 덮어씀(식 (1)을 (3)에 대입).</li><li>semi-serial 스케줄: 체크노드를 m개 집합 B1..Bm으로 나눠 집합 단위 병렬 갱신 — flooding(m=1)과 serial(조건 (7) 만족) 사이의 하이브리드.</li><li>분석: 평균 computation-tree 깊이가 serial에서 iteration당 4씩(flooding은 2씩) 증가 → 정보 전파 2배 빠름(Theorem 3.1.1).</li><li>Density Evolution: serial 스케줄 DE는 집합 수 m에 무관(m=2 사용 가능), 용량 근처에서 평균 수렴 iteration이 flooding의 약 절반.</li><li>Concentration Theorem: 무작위 스케줄·그래프·입력에 대해 부호 길이가 커지면 실제 성능이 DE 예측값에 수렴함을 증명.</li><li>결과: (3,6)-LDPC 시뮬에서 serial이 flooding 대비 약 절반 iteration에 수렴, 반복 제한 시 BLER도 우수. 부수 이점: 수렴 판정이 변수 S 부호로 간단, 우변정규 LDPC에 자연스럽게 적합.</li><li>한계: HW 미설계, error-floor/정정능력 개선이 아닌 수렴속도·메모리 개선에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>체크노드 직렬(layered) 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC의 Dual-Update(parity even/odd 교대 스케줄)와 동일 계열, 스케줄 로직 교체 지점</td></tr><tr><td><code>R_cv</code> on-the-fly / <code>Q</code> 메모리 재사용</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>메시지 메모리 구조 최적화 아이디어 대응</td></tr><tr><td>CN 계산(φ 함수)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문은 tanh기반 SP, 우리는 min-sum이라 계산부는 상이</td></tr><tr><td>수렴 판정(변수 S 부호)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리는 CRC 조기종료, 논문의 sign-based 종료와는 별개</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — layered 직렬 스케줄로 iteration을 절반으로 줄이는 원류 아이디어이나 Prime ECC가 이미 Dual-Update로 유사 이득을 보유해 신규성이 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1361130",
+  "title": "An Efficient Message-Passing Schedule for LDPC Decoding",
+  "year": 2004,
+  "venue": "IEEE Convention of Electrical and Electronics Engineers in Israel",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "check-node 직렬(레이어드) 스케줄로 flooding 대비 약 절반 iteration에 수렴하며 Qvc 메모리 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계·(3,6)regular 시뮬만, error-floor/정정능력 개선 아님(수렴속도만)",
+  "todo_check": "Prime ECC의 Dual-Update(parity even/odd 교대) 스케줄과 중복도 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1361130---an-efficient-message-passing-schedule-for-ldpc-decoding-2004-ieee-convention-of-electrical-and-electronics-engineers-in-israel">ieee:1361130 - An Efficient Message-Passing Schedule for LDPC Decoding (2004, IEEE Convention of Electrical and Electronics Engineers in Israel)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

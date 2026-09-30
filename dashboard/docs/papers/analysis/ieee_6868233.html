@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6868233</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6868233---fault-tolerant-probabilistic-gradient-descent-bit-flipping-decoder-2014-ieee-communications-letters">ieee:6868233 - Fault-Tolerant Probabilistic Gradient-Descent Bit Flipping Decoder (2014, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.41~0.75</td></tr><tr><td>부호length</td><td>155~732</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>GDBF에 확률적 flip(파라미터 p) 도입 - trapping set 탈출 및 게이트 고장 내성 확보</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·gatecount 없음, BSC hard-decision 전용이라 NAND soft-read 이점 미흡, latency 소폭 증가</td></tr><tr><td>추가확인</td><td>QC(732,551)에서 waterfall 영역 정정능력 이득 규모와 최적 p 튜닝 재현 필요</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BF 계열에 확률적 flip으로 trapping set/error-floor를 개선하는 간단한 아이디어 - min-sum 기반 우리 디코더엔 직접 이식보다 개념 참고.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BSC(crossover α) 위 (γ,ρ)-regular binary LDPC, hard-decision 입력, 예제 코드 (155,64) Tanner 및 QC(732,551).</li><li>기존 BF는 Gallager A/B보다 성능이 낮고, unreliable 게이트(나노스케일 VLSI) 환경에서 신뢰성 분석이 부재하다는 문제.</li><li>Wadayama의 GDBF(AWGN용)를 BSC로 재유도: bipolar <code>η=(-1)^y</code>, <code>χ=(-1)^x̂</code> 대신 modulo-2로 변환.</li><li>핵심식은 modified inverse function <code>Λv = (x̂v⊕yv) + Σ_c∈Nv Σ_u∈Nc x̂u</code> 를 최대화하는 노드를 flip.</li><li><code>Λv</code> 값이 정수 <code>[0, γ+1]</code>로 제한되어 여러 노드가 동시에 최대값 <code>b(l)</code>을 만족 → 수렴엔 불리하나 게이트 고장엔 둔감.</li><li>PGDBF 신규성: <code>Λv=b(l)</code>이어도 자동 flip이 아니라 Bernoulli <code>av</code>(Pr=p)를 AND해 확률 p로만 flip.</li><li>HW 구현은 각 VN에 γ+1입력 MAJ 게이트(적응 threshold b(l)) + AND 게이트 + Bernoulli 생성기; threshold는 전 노드 공통.</li><li>고장 모델: XOR 고장확률 <code>P⊕</code>, MAJ <code>PMAJ</code>, 레지스터 <code>PR</code>를 독립 von-Neumann transient로 주입.</li><li>결과: perfect HW에서 PGDBF(p≈0.7)가 GDBF(p=1)보다 FER 감소; 놀랍게도 GDBF/PGDBF는 게이트 고장이 오히려 trapping set 탈출을 도와 FER 개선.</li><li>한계: HW는 구조 스케치뿐 gatecount·throughput 없음, BSC hard-decision 전용, latency 소폭 증가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PGDBF 이터레이션(확률적 flip 결정)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>BF 계열이라 min-sum 루프와 다르나 flip 결정 위치는 동일 계층</td></tr><tr><td>VN flip 규칙(Λv, MAJ threshold)</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>HD 경로 VN 처리에 대응(단, min-sum이 아닌 BF 규칙)</td></tr><tr><td>채널(BSC/hard-decision 입력)</td><td>channel.cpp <code>Set_R_Offset()</code></td><td>hard-1bit 입력 주입 계층 대응</td></tr><tr><td>Bernoulli 난수 생성기</td><td>random.cpp</td><td>확률적 flip용 난수원 대응</td></tr><tr><td>고장 게이트(XOR/MAJ) HW 모델</td><td>대응 없음</td><td>Prime ECC는 fault-injection HW 모델 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 우리 디코더는 min-sum(soft) 기반이고 PGDBF는 hard-decision BF 계열이라 알고리즘 계층이 달라 직접 이식성이 낮고, 다만 trapping set 탈출용 확률적 perturbation 개념만 참고 가치.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6868233",
+  "title": "Fault-Tolerant Probabilistic Gradient-Descent Bit Flipping Decoder",
+  "year": 2014,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.41~0.75",
+  "code_length": "155~732",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "GDBF에 확률적 flip(파라미터 p) 도입 - trapping set 탈출 및 게이트 고장 내성 확보",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "HW 미설계·gatecount 없음, BSC hard-decision 전용이라 NAND soft-read 이점 미흡, latency 소폭 증가",
+  "todo_check": "QC(732,551)에서 waterfall 영역 정정능력 이득 규모와 최적 p 튜닝 재현 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6868233---fault-tolerant-probabilistic-gradient-descent-bit-flipping-decoder-2014-ieee-communications-letters">ieee:6868233 - Fault-Tolerant Probabilistic Gradient-Descent Bit Flipping Decoder (2014, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

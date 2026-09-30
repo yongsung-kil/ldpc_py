@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8691508</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8691508---decoding-binary-linear-codes-using-penalty-dual-decomposition-method-2019-ieee-communications-letters">ieee:8691508 - Decoding Binary Linear Codes Using Penalty Dual Decomposition Method (2019, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>63~96</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>이산 제약을 등식 제약(보조변수)으로 변환해 PDD(penalty dual decomposition) double-loop로 ML 복호, 완전병렬·선형복잡도·정류점 수렴 보증</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>보조변수 다수라 short code 전용(control channel용)이라 명시, outer iter 수백~1000·max iter 대 매우 큼, HW 미설계</td></tr><tr><td>추가확인</td><td>고rate 긴 NAND QC-LDPC(수천 bit)에서 보조변수 폭증·수렴속도, min-sum BP 대비 실이득 여부</td></tr></tbody></table>
+<blockquote><p>총평: LP/ADMM 계열을 잇는 최적화 기반 ML 복호(PDD)로 short code에서 BP 대비 BLER gain(0.2~0.6dB)을 보이나, 저자 스스로 short code(수백 bit) 전용이라 밝히고 iteration 수가 매우 커 NAND 고rate 긴 QC-LDPC min-sum 엔진에 부적합 → 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 일반 binary linear code, 시뮬은 [96,48] MacKay LDPC(C1)·[63,45] BCH(C2), AWGN+BPSK. NAND/flash 언급 없음.</li><li>문제: LP 복호는 복잡도 높고 저SNR에서 BP보다 약함; ADMM 계열은 이산제약을 hypercube로 완화 → pseudo-codeword 문제.</li><li>모델: memoryless binary-input symmetric-output 채널, LLR <code>v_i = log(Pr(y|x=0)/Pr(y|x=1))</code>, ML을 <code>min vᵀx</code> 정수계획으로 정식화(식2).</li><li>핵심기법 1단: 고차 check node를 3변수 PC 등식으로 cascaded 분해([3])해 <code>min qᵀu s.t. Au−b≤0, u∈{0,1}</code> (식6)로 변환. 이산제약을 완화 대신 등식 <code>u_i(û_i−1)=0, u_i=û_i</code>로 변환(식8).</li><li>핵심식: augmented Lagrangian <code>P_μm(u,û,z)</code>에 모든 등식을 penalty로 흡수 — 완화 대신 등식화라 pseudo-codeword 억제.</li><li>핵심기법 2단: PDD double-loop — outer loop는 dual 변수·penalty <code>μ_{m+1}=cμ_m</code> 갱신, inner loop는 primal을 u/û/z 3블록으로 나눠 BSUM으로 각각 closed-form 병렬 갱신(식13,14,16).</li><li>구현 디테일: A가 {0,±1}뿐이라 곱을 덧셈으로 대체; AᵀA 대각이라 u 서브문제가 N+Γa개로 분리 → 완전병렬, inner당 선형복잡도.</li><li>학습/최적화: 없음; 모든 limit point가 문제(6)의 stationary point임을 보증([12]).</li><li>결과: C1에서 BP 대비 0.6dB, QP 대비 0.2dB gain(BLER 10⁻³); C2(고밀도 PC)에서 0.6dB 이상. 단 outer iter n&gt;400(C1)/n&gt;200(C2)에서 QP 추월.</li><li>한계: 보조변수 多 → short code(control channel) 전용 명시, iteration 수 매우 큼(mmax=1000), HW 미설계, NAND 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PDD/BSUM 기반 ML 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>알고리즘 전면 교체 — min-sum message-passing과 패러다임 상이, 이식이 아닌 재작성</td></tr><tr><td>CN 처리(3변수 PC 분해)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>min-sum CN 연산과 무관한 최적화식</td></tr><tr><td>LLR 입력 <code>v_i</code></td><td>channel.cpp, ecc_data.h <code>PARAM_LLR</code></td><td>표준 LLR 정의, 신규성 없음</td></tr><tr><td>PDD double-loop / 최적화 프레임워크</td><td>대응 없음</td><td>full-tanh/LP/ADMM류 계열, Prime ECC HW min-sum 파이프라인과 정합 안됨</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND 무관·short code 전용·HW 미설계인 최적화 기반 ML 복호로, HW min-sum 파이프라인 기반 Prime ECC 3.1에 이식 가치 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8691508",
+  "title": "Decoding Binary Linear Codes Using Penalty Dual Decomposition Method",
+  "year": 2019,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "63~96",
+  "soft_quant": "무관",
+  "key_contribution": "이산 제약을 등식 제약(보조변수)으로 변환해 PDD(penalty dual decomposition) double-loop로 ML 복호, 완전병렬·선형복잡도·정류점 수렴 보증",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "보조변수 다수라 short code 전용(control channel용)이라 명시, outer iter 수백~1000·max iter 대 매우 큼, HW 미설계",
+  "todo_check": "고rate 긴 NAND QC-LDPC(수천 bit)에서 보조변수 폭증·수렴속도, min-sum BP 대비 실이득 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8691508---decoding-binary-linear-codes-using-penalty-dual-decomposition-method-2019-ieee-communications-letters">ieee:8691508 - Decoding Binary Linear Codes Using Penalty Dual Decomposition Method (2019, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

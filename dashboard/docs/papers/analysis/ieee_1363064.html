@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1363064</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1363064---efficient-hardware-realization-of-ira-code-decoders-2004-sips">ieee:1363064 - Efficient Hardware Realization of IRA Code Decoders (2004, SIPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.9</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>IRA 부호용 permutation-network 기반 부분병렬 디코더 아키텍처 템플릿 + joint graph-decoder 설계, 0.13µm 합성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>7.09~9.35mm2@0.13um (P=40~80)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.1</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>IRA(repeat-accumulate/zigzag)는 QC-LDPC와 다른 부호클래스, tanh sum-product·permutation network 기반이라 우리 min-sum/circulant 구조와 이질적</td></tr><tr><td>추가확인</td><td>joint graph-decoder 설계에서 girth&gt;=6 확보용 addressing scheme만 아이디어 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 통신(Turbo-Code 대체)용 IRA 부호 디코더의 permutation-network HW 템플릿·면적/throughput 트레이드오프 분석 — NAND QC-LDPC와 부호클래스·복호알고리즘이 이질적이라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IRA(Irregular Repeat-Accumulate) 부호, LDPC의 하위클래스, 선형시간 인코딩(zigzag accumulator) 가능. rate <code>R=0.33~0.9</code>, 최대 <code>I=5000</code> 정보비트.</li><li>문제: LDPC/IRA 디코더의 permutation network(Tanner 그래프 연결)가 고병렬시 라우팅·메모리 병목이라 유연·고throughput 구현이 어렵다.</li><li>부호 구조: 정보노드(IN, 가변 degree <code>fi</code>) + 패리티노드(PN, zigzag) + 체크노드(CN, <code>a</code>개 IN 연결), 연결 <code>Π</code>가 error-floor 결정.</li><li>복호: LLR message passing, VN update <code>λk=λch+Σλl</code>, CN update <code>tanh(λk/2)=Πtanh(λl/2)</code> (sum-product, tanh LUT).</li><li>아키텍처: 부분병렬 P (동시처리 edge 수), IN/PN branch 분리, CN유닛이 IN/PN 두 입력 병렬 처리, permutation network + zigzag network + 메시지/주소/permutation RAM.</li><li>joint graph-decoder 설계: permutation network(shuffling) 제약 하에서 IRA ensemble 중 성능저하 없는 부호 선택, girth&gt;=6 위해 addressing scheme 적용.</li><li>양자화: 6bit 메시지시 무한정밀 대비 손실 &lt;=0.1dB, 5bit시 0.1~0.2dB.</li><li>throughput 모델: <code>T=I/(#cycles)·fcycle</code>, <code>#cycles≈It·2·EΠ/P</code>, <code>fcycle=334MHz</code>.</li><li>결과: 0.13µm 합성, P=40~80에서 면적 7.09~9.35mm2, 30 iteration시 throughput 53~106Mbit/s(~100Mbit/s), IRA(30 iter)가 CDMA2000 Turbo-Code(10 iter)와 동등, 40 iter시 상회.</li><li>한계: 통신채널(AWGN/BPSK, FER-vs-Eb/N0) 대상, NAND 무관, 정정능력 개선 아닌 구현 트레이드오프 분석, tanh sum-product(우리 min-sum 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LLR message passing / CN·VN update</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>개념적 대응이나 tanh sum-product라 우리 min-sum과 알고리즘 상이</td></tr><tr><td>6bit 메시지 양자화</td><td>channel.cpp LLR 테이블(<code>PARAM_LLR</code>)</td><td>양자화 손실 데이터는 참고 가능하나 soft-4bit+라 우리(2SD/3SD)와 불일치</td></tr><tr><td>IRA 부호구조(zigzag/accumulate)</td><td>대응 없음</td><td>QC-LDPC 고정 코드베이스, IRA는 이질적 부호클래스</td></tr><tr><td>permutation network / zigzag network</td><td>대응 없음</td><td>우리는 circulant shift 기반, permutation RAM 구조 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — IRA는 우리 binary QC-LDPC와 다른 부호클래스이고, permutation-network·tanh sum-product 아키텍처가 z=32 circulant/min-sum 구조와 이질적. 양자화 손실 참고 정도만 유효.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1363064",
+  "title": "Efficient Hardware Realization of IRA Code Decoders",
+  "year": 2004,
+  "venue": "SIPS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "IRA 부호용 permutation-network 부분병렬 디코더 템플릿 + joint graph-decoder 설계, 0.13um 합성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "7.09~9.35mm2@0.13um",
+  "parallelism": "부분",
+  "throughput_gbps": 0.1,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "IRA(zigzag/accumulate)는 QC-LDPC와 다른 부호클래스, tanh sum-product·permutation network가 우리 min-sum/circulant와 이질적",
+  "todo_check": "joint graph-decoder의 girth&gt;=6 addressing scheme만 아이디어 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1363064---efficient-hardware-realization-of-ira-code-decoders-2004-sips">ieee:1363064 - Efficient Hardware Realization of IRA Code Decoders (2004, SIPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

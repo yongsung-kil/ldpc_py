@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8094003</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8094003---ldpc-code-design-for-distributed-storage-balancing-repair-bandwidth-reliability-and-storage-overhead-2018-ieee-trans-communications">ieee:8094003 - LDPC Code Design for Distributed Storage: Balancing Repair Bandwidth, Reliability, and Storage Overhead (2018, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>60~240</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>분산저장용 binary QC-PEG LDPC의 repair bandwidth 공식화 - CN/VN regular(dv=2)로 최소화, stopping number로 MTTDL(신뢰도) 극대화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>데이터센터 노드소실(BEC) 복구·repair bandwidth 목적으로 dv=2 저차 부호 지향, NAND read-noise 정정과 채널·목적함수 상이</td></tr><tr><td>추가확인</td><td>stopping number/girth 기반 신뢰도 설계가 NAND의 error-floor/waterfall 관점으로 재해석되는지 (여기선 BEC 소실만)</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC를 쓰지만 분산저장 repair bandwidth·MTTDL 최적화(BEC 소실)가 목적이라, NAND read-noise 정정용 부호설계로는 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 데이터센터 분산저장용 binary QC-PEG LDPC (BEC 소실채널); 예제 rate 1/2·2/3·3/4, stripe 길이 (60,40)~(240,160) 등 short 부호.</li><li>문제: RS(MDS) 부호는 노드 1개 복구에 k블록 다운로드(예: (14,10) RS는 10× repair BW) → repair bandwidth 과다.</li><li>모델: 노드고장률 λ·복구율 μ 연속시간 Markov 모델, 각 state=stripe 내 소실 블록수, VN 소실=BEC 소실로 등가.</li><li>핵심기법1(repair BW): 평균 repair bandwidth <code>γ = Σ dc,r(dc,r−1)/E</code>를 정의, Cauchy-Schwarz로 CN-regular일 때 <code>γmin=dc−1</code> 최소(Lemma 1, Thm 1).</li><li>식 <code>dv/dc=1−R</code> 하에서 dv를 최소(dvmin=2)로 두면 CN·VN 모두 regular가 최소 repair BW → dv=2 regular 부호가 최적.</li><li>핵심기법2(신뢰도): LDPC MTTDL 일반식(Lemma 2) 유도, stopping number <code>s*</code>가 클수록 MTTDL 단조증가(Thm 2); dv=2에선 <code>s*=g/2</code>(girth의 절반)라 PEG로 girth 극대화.</li><li>구현 디테일: 조건부 생존확률 <code>pi=q_{i+1}/q_i</code>를 소실복호 시뮬로 추정, MTTDL은 사실상 단일 확률 <code>p_{s*−1}</code>가 지배(Remark 2, (B.3)).</li><li>학습/최적화: VN 차수분포 λd 최적화 문제(9)(10)로 given 신뢰도(decoding threshold εcon)에서 dc 최소화; DE로 threshold 검증.</li><li>결과: rate 2/3 LDPC는 (14,10) RS 대비 repair BW 절반(5× vs 10×), 부호길이↑ 시 동일 repair BW로 MTTDL이 RS·LRC 초과; 복호는 XOR만(add 4·mul 0).</li><li>한계: HW 미설계·시뮬/이론만, BEC 노드소실 전용 목적함수(repair BW/MTTDL)라 NAND read-noise BER 정정과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-PEG binary LDPC 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>binary QC-LDPC 로드 관점은 겹치나, dv=2·저rate repair 지향은 NAND 고rate(~0.9) QC와 정반대</td></tr><tr><td>stopping number/girth 기반 신뢰도 설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>girth·stopping set 관리 아이디어 자체는 일반적이나 BEC-MTTDL 목적함수라 NAND error-floor로 직결 안 됨</td></tr><tr><td>repair bandwidth / MTTDL Markov 분석</td><td>대응 없음</td><td>분산저장 복구 지표, NAND ECC에 대응 모듈 없음</td></tr><tr><td>BEC peeling(XOR) 소실복호</td><td>대응 없음</td><td>Prime ECC는 min-sum soft BP, 소실 전용 XOR 복호 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — binary QC-LDPC를 쓰나 분산저장 repair bandwidth·MTTDL(BEC 소실) 최적화가 목적이라 NAND read-noise 정정용 고rate 부호설계·min-sum 디코더에 떼어 쓸 요소 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8094003",
+  "title": "LDPC Code Design for Distributed Storage: Balancing Repair Bandwidth, Reliability, and Storage Overhead",
+  "year": 2018,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.75",
+  "code_length": "60~240",
+  "soft_quant": "무관",
+  "key_contribution": "분산저장용 binary QC-PEG LDPC의 repair bandwidth 공식화 - CN/VN regular(dv=2)로 최소화, stopping number로 MTTDL(신뢰도) 극대화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "데이터센터 노드소실(BEC) 복구·repair bandwidth 목적으로 dv=2 저차 부호 지향, NAND read-noise 정정과 채널·목적함수 상이",
+  "todo_check": "stopping number/girth 기반 신뢰도 설계가 NAND의 error-floor/waterfall 관점으로 재해석되는지 (여기선 BEC 소실만)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8094003---ldpc-code-design-for-distributed-storage-balancing-repair-bandwidth-reliability-and-storage-overhead-2018-ieee-trans-communications">ieee:8094003 - LDPC Code Design for Distributed Storage: Balancing Repair Bandwidth, Reliability, and Storage Overhead (2018, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

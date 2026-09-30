@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8577709</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8577709---efficient-encoding-of-quasi-cyclic-low-density-parity-check-codes-2018-iaeac">ieee:8577709 - Efficient Encoding of Quasi-Cyclic Low-Density Parity-Check Codes (2018, IAEAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.25~0.75</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>RU 인코딩을 3-phase로 압축, back-substitution 회로 공유 + 고속 vector-dense-matrix 곱셈기로 속도/메모리 트레이드오프</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 인코더 속도/자원 최적화, ASIC/FPGA 실측 없이 clock/자원 이론 산정만, 부호설계·복호 무관</td></tr><tr><td>추가확인</td><td>Prime ECC는 dual-diagonal 인코더 고정 사용 - 임의구조 H용 back-substitution 방식이 우리 부호에 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 임의 비특이 H에 대한 고속 QC-LDPC 인코더 구조 제안이나, Prime ECC의 dual-diagonal 인코더와 다른 접근이고 복호/정정과 무관해 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 임의 비특이 구조의 QC-LDPC 부호 인코딩. H는 <code>c×t</code> 배열의 <code>b×b</code> circulant로 구성(예: CDR 시스템 <code>b=256</code>, rate <code>1/4,1/3,1/2,3/4</code>).</li><li>문제: 고속·저복잡도 인코더 필요. G 기반보다 sparse H 기반이 유리하나, 기존 RU 방식은 H를 6개 submatrix로 쪼개 무결성을 훼손.</li><li>핵심 아이디어: RU의 5개 작은 sparse submatrix를 하나의 큰 sparse 행렬 <code>X</code>(=H에서 far-right diagonal의 항등행렬만 제거한 <code>H'</code>)로 대체해 인코딩을 3-phase로 축약.</li><li>Phase 1: <code>px=0</code>으로 두고 back-substitution으로 <code>q(=py), x</code> 계산 (식 <code>(6)</code>).</li><li>Phase 2: dense circulant 배열 <code>Φ</code>에 대해 vector-dense-matrix 곱셈기로 <code>px = xΦ^T</code> 계산 (식 <code>(4)</code>).</li><li>Phase 3: 같은 back-substitution 회로로 <code>py</code> 재계산 (<code>x</code> 불필요), 최종 parity <code>p=(px,py)</code> 확정.</li><li>Back-substitution 회로: LUT(ROM)에 블록열번호·shift값 저장, RAM에 <code>v</code> 저장, barrel shifter로 <code>si,k</code>만큼 좌회전 후 Acc1 누산. Phase1/3이 동일 회로 공유.</li><li>Path latency: barrel shifter가 <code>τ=⌈log2 b⌉</code> 파이프라인 단, 목적지 주소 생성기에 <code>τ</code> 사이클 지연 보상, <code>k≥i'</code> 충돌 시 0 입력 처리.</li><li>곱셈기: RLA-IV 변형 - LUT를 circulant 첫 R행으로 확장해 병렬도 R배(CDR에서 <code>R=4</code>), <code>⌈b/R⌉</code> 사이클 소요.</li><li>결과: CDR에서 <code>[6]</code> 대비 속도 약 6.7~11.9배, flip-flop/XOR/read-addr-gen은 2.4~4.5% 수준으로 감소. 단 메모리는 7.9배 더 소모. 실측 없이 clock cycle·자원 bit 이론 산정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>3-phase 인코딩 / parity 생성</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>인코딩 계층 대응하나 Prime은 dual-diagonal 고정, 논문은 임의 H용 back-substitution 방식</td></tr><tr><td>부호 PCM 생성</td><td>encoder.cpp <code>Generate_PCM_encoding()</code></td><td>H'(circulant 제거) 구성 대 Prime의 <code>PCM_b_enc</code> 생성 - 접근 상이</td></tr><tr><td>H-matrix 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>circulant/shift LUT 로드 관점에서만 느슨히 관련</td></tr><tr><td>back-substitution barrel-shifter HW</td><td>대응 없음</td><td>Prime은 dual-diagonal 인코더라 back-substitution HW 회로 대응부 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 순수 인코더 속도/자원 최적화이며 Prime의 dual-diagonal 인코더와 상이한 접근, 복호·정정능력과 무관하고 실측 검증도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8577709",
+  "title": "Efficient Encoding of Quasi-Cyclic Low-Density Parity-Check Codes",
+  "year": 2018,
+  "venue": "IAEAC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.25~0.75",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "RU 인코딩을 3-phase로 압축, back-substitution 회로 공유 + 고속 vector-dense-matrix 곱셈기로 속도/메모리 트레이드오프",
+  "hw_designed": "O",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 인코더 속도/자원 최적화, ASIC/FPGA 실측 없이 clock/자원 이론 산정만, 부호설계·복호 무관",
+  "todo_check": "Prime ECC는 dual-diagonal 인코더 고정 사용 - 임의구조 H용 back-substitution 방식이 우리 부호에 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8577709---efficient-encoding-of-quasi-cyclic-low-density-parity-check-codes-2018-iaeac">ieee:8577709 - Efficient Encoding of Quasi-Cyclic Low-Density Parity-Check Codes (2018, IAEAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

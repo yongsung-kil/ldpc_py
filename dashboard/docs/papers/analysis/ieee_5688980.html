@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5688980</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5688980---an-fpga-design-of-low-power-ldpc-decoder-for-high-speed-wireless-lan-2010-ieee-conf">ieee:5688980 - An FPGA Design of Low Power LDPC Decoder for High-speed Wireless LAN (2010, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>부분그룹 순차복호 + early detection으로 iteration·연산량 감소, FPGA 저전력 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (7,081 slices/19,761 LUTs@Virtex5, gatecount@공정 없음)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.11Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>802.11n WLAN 타깃, N=648 소형·rate 1/2 저rate, error-floor 미검증, gatecount 없음</td></tr><tr><td>추가확인</td><td>early detection threshold(Tb=26,Tc=9)의 BER 무손실 조건이 고rate NAND QC-LDPC에서도 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 기반 순차복호+early detection으로 iteration/연산량을 줄이는 저전력 디코더. 아이디어는 간단·이식가능하나 성능(정정능력) 이득은 없고 저rate 소형 부호 검증에 그침.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.11n WLAN LDPC, <code>N=648</code>, <code>Z=27</code>, rate <code>1/2</code> (dc=8, dv=12), 반복 약 8회.</li><li>문제: 기존 BP/sum-product 복호가 연산량·전력·지연이 커서 고속 저전력 구현이 어려움.</li><li>핵심기법1 (부분그룹 순차복호): check node를 <code>p</code>개 그룹 <code>S_m</code>으로 나눠 group-by-group 직렬 갱신. 앞 그룹의 bit node 확률을 다음 그룹 초기값으로 전달.</li><li>효과: <code>p=2</code>일 때 <code>Nr=4~6</code>으로도 conventional <code>p=1, Nr=8</code>과 거의 동일 BER — 반복수 약 절반.</li><li>CN 갱신식: <code>g(a,b)=sgn(a)·sgn(b)·min(|a|,|b|)+LUT_g(a,b)</code>, <code>LUT_g</code> = <code>log(1+e^-|a+b|)-log(1+e^-|a-b|)</code> (min-sum + 보정 LUT).</li><li>핵심기법2 (early detection): LLR magnitude가 threshold 초과(<code>Tb=26</code>, <code>Tc=9</code>)인 bit/check node를 신뢰 확정으로 조기검출, 이후 반복에서 갱신 생략.</li><li>구현 디테일: partial-parallel 구조, FSMU/IBU/RDR/OBU/CNUU/L-Memory/BNUU 블록, r*w edge 병렬·Z 클록 직렬, dual-port RAM으로 CN edge 버퍼링.</li><li>학습절차: 없음 (threshold 실험적 튜닝).</li><li>결과: Xilinx Virtex5-xc5vlx155t, 7,081 slices/19,761 LUTs, 10ns 클록, 110Mbps (conventional 56Mbps 대비 약 2배, early detection 시 비용 45% 감소).</li><li>한계: 정정능력 개선 없음(순서만 변경), 소형 저rate 부호, error-floor 미검증, gatecount·공정 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>부분그룹 순차복호 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>그룹 단위 순차 갱신은 Dual-Update 교대 스케줄과 유사, 스케줄 변형으로 이식 가능</td></tr><tr><td>early detection (LLR threshold로 노드 조기확정)</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>반복별 LLR threshold 테이블과 개념 유사, 노드 skip 로직 추가 필요</td></tr><tr><td>CN min-sum + 보정 LUT</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 보유, 보정 LUT는 중복</td></tr><tr><td>partial-parallel HW 구조</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>구조 상이 (그룹 직렬 vs 우리 pipeline), 직접 대응 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 그룹 순차복호와 early detection의 iteration/연산 절감 아이디어는 우리 스케줄·조기종료와 접목 여지가 있으나, 정정능력 이득이 없고 저rate 소형 부호 검증뿐이라 고rate NAND QC-LDPC 재검증 부담이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5688980",
+  "title": "An FPGA Design of Low Power LDPC Decoder for High-speed Wireless LAN",
+  "year": 2010,
+  "venue": "IEEE Conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "648",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "부분그룹 순차복호 + early detection으로 iteration·연산량 감소, FPGA 저전력 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.11,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "802.11n WLAN 타깃, N=648 소형·rate 1/2 저rate, error-floor 미검증, gatecount 없음",
+  "todo_check": "early detection threshold(Tb=26,Tc=9)의 BER 무손실 조건이 고rate NAND QC-LDPC에서도 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5688980---an-fpga-design-of-low-power-ldpc-decoder-for-high-speed-wireless-lan-2010-ieee-conf">ieee:5688980 - An FPGA Design of Low Power LDPC Decoder for High-speed Wireless LAN (2010, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9463813</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9463813---performance-balanced-general-decoder-design-for-qc-ldpc-codes-using-vivado-hls-2021-iceiec">ieee:9463813 - Performance Balanced General Decoder Design for QC-LDPC Codes Using Vivado HLS (2021, ICEIEC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>128~8176</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Vivado HLS 기반 범용 QC-LDPC 복호기: QC 성질로 메시지 압축저장 + 대각별 분산저장(access conflict 회피) + wide-pipeline로 클록당 1 row/col 처리</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.153~0.356</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HLS 설계라 RTL 대비 logic 사용량 큼; 표준 min-sum 그대로(정정능력 개선 없음), 다중 모드 시 partition 스케줄링 폭증</td></tr><tr><td>추가확인</td><td>대각별 분산저장(access conflict 회피) 기법이 Prime의 z=32 메모리/GT 라우팅에 이식 가치 있는지, 6bit 양자화 정합</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 알고리즘 자체는 표준(정정능력 개선 없음)이나, QC 구조를 활용한 메시지 압축·대각별 분산저장으로 메모리 access conflict를 없애고 wide-pipeline로 throughput을 높인 HW 아키텍처 논문. Prime의 메모리 라우팅/병렬화 관점에서 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 802.11n/802.16e/CCSDS QC-LDPC. PCM은 <code>Z×Z</code> 순환시프트 non-zero submatrix(NZS)들로 구성, base matrix <code>Hb</code>(<code>Mb×Nb</code>)가 위치 저장. 예: <code>(648,324)Z=27</code>~<code>(8176,7154)Z=511</code>.</li><li>문제: FPGA LDPC 복호기의 RTL 개발이 오래 걸리고, 기존 HLS 설계는 성능/자원 균형이 나쁘거나 특정 부호 전용이라 범용성 부족.</li><li>채널/부호: min-sum(MSA) 반복복호. 6bit 양자화(부호1/정수3/소수2). AWGN 등 채널 가정은 명시 없음(표준 부호 사용).</li><li>핵심 기법 — MSA를 min/sub-min 탐색으로 변환: C2V <code>mci→vj = min|Lvb→ci|·∏sign</code>, comparison tree(4의 배수 입력, <code>log2X</code> 클록)로 pipeline 친화 구현.</li><li>병렬화: C2V/V2C 병렬도 각각 <code>Mb</code>/<code>Nb</code>, 한 iteration을 <code>2×Z</code> 클록에 완료. pipeline directive로 II를 1클록까지 단축.</li><li>압축저장: 반복 메시지를 <code>Mes[T×Z]</code>(NZS별 1행)로 압축, <code>Mlab</code>/<code>Pos</code>로 PCM 구조정보 저장하여 BRAM 절감.</li><li>대각별 분산저장: 다중 대각 submatrix는 같은 배열에 두면 병렬접근 충돌 → 원 PCM을 <code>Q</code>개 단일대각 sub-PCM 중첩으로 보고 대각별 배열 <code>Mes(q)</code> 분리 저장.</li><li>최적화: array partitioning(L/Out/Mes 1차원 완전분할), ping-pong으로 초기화·복호·출력 파이프라인화.</li><li>결과: Kintex-7 330MHz, throughput 153~356 Mbps. [10] 대비 2~5배, [13] 대비 22배(자원 5배) throughput. Table II 3모드로 유연성 시연.</li><li>한계: HLS라 RTL 대비 logic 사용량 많음; 다중 모드(802.11n 12모드 등) 지원 시 대형 배열 완전분할로 HLS 스케줄링에 수시간~하루 소요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum C2V (min/sub-min tree)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime의 min1/min2 min-sum과 동일 개념 (이미 보유, 중복)</td></tr><tr><td>V2C 업데이트/사후확률</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>표준 V2C, 신규성 낮음</td></tr><tr><td>대각별 분산저장·압축저장(access conflict 회피)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Prime의 edge/MUX 라우팅·z=32 메모리 배치와 유사 문제, 참고 가치</td></tr><tr><td>QC PCM 구조 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>base+NZS 위치 저장 방식 유사</td></tr></tbody></table>
+<p>적용 가치: 중간 — 복호 알고리즘(min-sum)은 Prime이 이미 보유해 중복이나, QC 구조 기반 메시지 압축저장과 대각별 분산저장으로 메모리 access conflict를 제거하는 HW 메모리 배치 전략은 Prime의 z=32 병렬 메모리/GT 라우팅 설계에 참고할 만함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9463813",
+  "title": "Performance Balanced General Decoder Design for QC-LDPC Codes Using Vivado HLS",
+  "year": 2021,
+  "venue": "ICEIEC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.833",
+  "code_length": "128~8176",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Vivado HLS 기반 범용 QC-LDPC 복호기: QC 성질로 메시지 압축저장 + 대각별 분산저장(access conflict 회피) + wide-pipeline로 클록당 1 row/col 처리",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.356,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HLS 설계라 RTL 대비 logic 사용량 큼; 표준 min-sum 그대로(정정능력 개선 없음), 다중 모드 시 partition 스케줄링 폭증",
+  "todo_check": "대각별 분산저장(access conflict 회피) 기법이 Prime의 z=32 메모리/GT 라우팅에 이식 가치 있는지, 6bit 양자화 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9463813---performance-balanced-general-decoder-design-for-qc-ldpc-codes-using-vivado-hls-2021-iceiec">ieee:9463813 - Performance Balanced General Decoder Design for QC-LDPC Codes Using Vivado HLS (2021, ICEIEC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

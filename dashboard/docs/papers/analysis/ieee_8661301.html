@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8661301</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8661301---protograph-based-ldpc-code-design-for-ternary-message-passing-decoding-2019-scc-2019">ieee:8661301 - Protograph-Based LDPC Code Design for Ternary Message Passing Decoding (2019, SCC 2019)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.67~0.9</td></tr><tr><td>부호length</td><td>22176</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>VN-CN 교환 메시지를 ternary(-1/0/+1)로 제한하되 VN이 채널 soft-info를 활용하는 TMP 복호와 그에 맞춘 protograph 부호설계(DE+가중치스펙트럼)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>biAWGN 무선/광통신 타깃이며 HW 미설계, 부호가 TMP 전용 재설계 필요(기존 Prime ECC QC-LDPC와 부정합)</td></tr><tr><td>추가확인</td><td>ternary 메시지+가중치 <code>D_C→V</code> 스킴을 min-sum 대신 적용 시 NAND read/양자화 비용 및 error-floor 실측 확인</td></tr></tbody></table>
+<blockquote><p>총평: 메시지를 3진(erasure 포함)으로 극단 양자화해 데이터 흐름을 줄이는 저복잡도 복호+공동 부호설계 논문으로, NAND용 저비트 soft-decision 아이디어로는 참고가치가 있으나 부호·HW 미정합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: biAWGN 채널, binary protograph LDPC (base matrix <code>B</code> lifting), rate 2/3~9/10, 유한길이 예제 <code>n=22176</code> QC 구조(PEG lifting).</li><li>문제: BP의 데이터 흐름 복잡도는 메시지 양자화 비트 수에 선형이라 고throughput에 부담 → 극저비트 메시지 복호 필요.</li><li>모델: VN-CN 간 외재채널을 binary error-and-erasure channel(BEEC)로 모델링, 오류확률 <code>θ</code>·소실확률 <code>ε</code>.</li><li>핵심기법(TMP): 교환 메시지 alphabet <code>M={-1,0,+1}</code>(0=erasure). CN은 이웃 메시지 곱, VN은 <code>f(Lch+Lin)</code> 재양자화(임계 <code>a</code>), Gallager 알고리즘 E와 유사하나 채널 soft-info 활용.</li><li>핵심식 의미: 신뢰가중 <code>D_C→V=ln((1-q0-q-1)/q-1)</code>(식(5)/(6))로 erasure/error 확률 기반 메시지 신뢰도를 반영, 양자화 임계 <code>a</code>와 함께 설계단계 확정(복호 복잡도 무증가).</li><li>확장: 비구조(unstructured) 및 protograph 앙상블 각각에 대해 정확 DE 유도.</li><li>구현 디테일: 임계값 최소화하도록 <code>a</code>, <code>D_C→V</code> 튜닝; 메시지는 2비트로 표현되나 한 레벨을 erasure에 할당.</li><li>최적화: differential evolution으로 protograph 앙상블 최적화, 임계값을 cost로, 안정조건 <code>γ&lt;1</code>(J 행렬 spectral radius)으로 사전 제거, 가중치 스펙트럼 <code>G(ω)</code>로 error-floor(양의 최소거리) 제약.</li><li>결과: TMP가 BMP 대비 임계값 최대 0.6 dB(R=2/3)~0.37 dB(R=9/10) 개선; 유한길이에서 unquantized BP AR4JA 대비 손실 0.5 dB(R=3/4)~0.2 dB(R=7/8), TMP로 AR4JA 복호 시 최적화 부호가 0.2~0.5 dB 우위.</li><li>한계: HW 미설계, biAWGN 가정, 부호가 TMP 전용으로 재설계되어야 이득 발생.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ternary 메시지 VN/CN 갱신·재양자화 <code>f(·)</code></td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>CNU_Update_New_Mag()</code></td><td>CN을 곱(부호)·VN을 3진 양자화로 대체하는 스케줄로, 기존 min-sum 이터레이션 루프 변형 지점</td></tr><tr><td>신뢰가중 <code>D_C→V</code> / 양자화 임계 <code>a</code> 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR/신뢰 테이블과 개념 유사(설계단계 확정), 2~3SD 양자화 경로에 매핑 시도 가능</td></tr><tr><td>채널 LLR 양자화(soft-read)</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>3진(erasure 포함) soft 양자화를 NAND 2/3SD read 임계로 대응 검토</td></tr><tr><td>protograph/DE 기반 부호설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호가 고정 QC-LDPC라 TMP 전용 protograph 재설계는 이식 부담 큼</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 극저비트(ternary) 메시지로 데이터 흐름을 줄이는 아이디어는 NAND의 저비트 soft-read 비용 절감 관점에서 참고가치가 있으나, 이득이 TMP 전용 부호 재설계에 의존하고 HW 미설계라 Prime ECC 고정 QC-LDPC/min-sum 파이프라인과 직접 정합이 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8661301",
+  "title": "Protograph-Based LDPC Code Design for Ternary Message Passing Decoding",
+  "year": 2019,
+  "venue": "SCC 2019",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": "0.67~0.9",
+  "code_length": "22176",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "VN-CN 교환 메시지를 ternary(-1/0/+1)로 제한하되 VN이 채널 soft-info를 활용하는 TMP 복호와 그에 맞춘 protograph 부호설계",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "biAWGN 무선/광통신 타깃이며 HW 미설계, 부호가 TMP 전용 재설계 필요(기존 Prime ECC QC-LDPC와 부정합)",
+  "todo_check": "ternary 메시지+가중치 D_C→V 스킴을 min-sum 대신 적용 시 NAND read/양자화 비용 및 error-floor 실측 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8661301---protograph-based-ldpc-code-design-for-ternary-message-passing-decoding-2019-scc-2019">ieee:8661301 - Protograph-Based LDPC Code Design for Ternary Message Passing Decoding (2019, SCC 2019)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

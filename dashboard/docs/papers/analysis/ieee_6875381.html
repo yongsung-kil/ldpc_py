@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6875381</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6875381---adaptive-linear-programming-decoding-of-polar-codes-2014-ieee-isit">ieee:6875381 - Adaptive Linear Programming Decoding of Polar Codes (2014, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64~128</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>극부호용 modified-adaptive cut generation LP 디코더 + factor graph 축소로 ML 근접 FER·시간복잡도 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>극부호(polar) 전용 LP 디코딩, LDPC min-sum과 무관하고 시간복잡도가 SC-List보다 커 HW 부적합</td></tr><tr><td>추가확인</td><td>없음 (Prime ECC의 binary QC-LDPC와 코드종류·디코더 원리가 상이)</td></tr></tbody></table>
+<blockquote><p>총평: 극부호 LP 디코딩 논문으로 NAND binary QC-LDPC ECC와 무관, 이식가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate-0.5, length <code>N=64,128</code> polar code, BAWGN 채널, CVXOPT LP solver 기반 소프트웨어 디코딩.</li><li>문제: polar code는 고밀도 PCM이라 LP polytope 표현이 불가능하고, 기존 sparse factor graph LP 디코더(<code>[4]</code>)는 BAWGN에서 성능이 매우 나쁨.</li><li>모델: sparse factor graph <code>HP</code>(degree-2/3 check node) + frozen bit 정보로 polytope <code>P</code>를 정의, <code>O(N logN)</code> 보조 변수노드 사용.</li><li>핵심기법 1: adaptive cut generation LP(ACG-ALP, <code>[6]</code>)를 극부호용으로 변형 - 4가지 조합 중 초기 LP는 <code>P</code>로, cut-inducing RPC는 원 PCM <code>H</code>에서 생성하는 방식(ACG-ALP-4) 선택.</li><li>식 의미: cut = <code>[0,1]^N</code>의 현재해에서 위배되는 parity check 제약, RPC(parity check의 mod-2 합)로 추가 cut을 찾아 polytope를 tighten.</li><li>핵심기법 2: reduced factor graph(RFG) 알고리즘 - Z-structure에서 frozen bit 전파·제거, degree-2 check node 축약, degree-1 보조 변수노드 삭제.</li><li>이론: RFG는 degree-3 check node만 남고(Lemma 2), 그 fundamental polytope <code>R</code>이 원 polytope의 projection <code>P̃</code>와 동일(Theorem 1)해 ML-certificate 유지, FER 불변.</li><li>결과: (64,32)에서 FER이 ML lower bound에 근접, SC-List-32와 동등; (128,64)는 저SNR에서 다소 열세.</li><li>결과: RFG로 표현 복잡도(변수노드 수)와 평균 디코딩 시간 감소, 고SNR에서 SC-List-32보다 빠름.</li><li>한계: HW 미설계, 소프트웨어 LP solver 기반이며 중~장블록에서 시간복잡도가 prohibitive.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>polar LP 디코딩 (cut/RPC 기반)</td><td>대응 없음</td><td>LP polytope 디코딩은 Prime ECC의 min-sum message passing과 원리 자체가 다름</td></tr><tr><td>polar sparse factor graph 축소</td><td>대응 없음</td><td>극부호 recursive 구조 전용, binary QC-LDPC H-matrix와 무관</td></tr><tr><td>ML-certificate / FER 분석</td><td>대응 없음</td><td>이론 분석, 이식 대상 코드/함수 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 극부호(polar) LP 디코딩 전용으로 Prime ECC의 binary QC-LDPC min-sum 디코더와 코드종류·디코딩 원리가 모두 달라 이식 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6875381",
+  "title": "Adaptive Linear Programming Decoding of Polar Codes",
+  "year": 2014,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "64~128",
+  "soft_quant": "무관",
+  "key_contribution": "극부호용 modified-adaptive cut generation LP 디코더 + factor graph 축소로 ML 근접 FER·시간복잡도 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "극부호(polar) 전용 LP 디코딩, LDPC min-sum과 무관하고 시간복잡도가 SC-List보다 커 HW 부적합",
+  "todo_check": "없음 (Prime ECC의 binary QC-LDPC와 코드종류·디코더 원리가 상이)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6875381---adaptive-linear-programming-decoding-of-polar-codes-2014-ieee-isit">ieee:6875381 - Adaptive Linear Programming Decoding of Polar Codes (2014, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

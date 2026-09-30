@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1046693</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1046693---optimized-irregular-gallager-codes-for-ofdm-transmission-2002-ieee-pimrc">ieee:1046693 - Optimized Irregular Gallager Codes For OFDM Transmission (2002, IEEE PIMRC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>FS(주파수선택) 채널 스펙트럼 형태에 맞춰 위치별 degree profile을 Gaussian approx+differential evolution로 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OFDM/ADSL FS 채널의 subcarrier별 SNR에 degree를 매핑하는 채널특화 구성법, NAND 균일 채널엔 부적합</td></tr><tr><td>추가확인</td><td>없음(순수 구성법, NAND read 모델과 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 송신단이 아는 FS 채널 스펙트럼에 맞춰 irregular LDPC degree profile을 최적화하는 OFDM 특화 부호설계 논문 - NAND 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 COFDM: <code>N_c=1024</code> subcarrier, cyclic prefix 12, LDPC codeword length <code>N=N_c</code>, rate <code>R=1/2</code>, BPSK, MMSE 주파수영역 등화 후 BP 복호.</li><li>문제: FS(frequency-selective) 채널은 일부 subcarrier가 강하게 감쇠되어 codeword bit마다 SNR이 달라 균일 보호가 비효율.</li><li>채널 모델: <code>Y_k=H_k X_k+N_k</code>, 등화 후 LLR <code>u_0</code>가 mean <code>2H_k²/σ²</code>, variance는 mean의 2배인 Gaussian.</li><li>핵심 기법: 채널을 degree 수(<code>t_max-1</code>)만큼 rectangular 구간으로 분할, 각 대역 폭 <code>λ_i</code>에 해당 degree <code>i</code> bit를 배치 → 새 다항식 <code>λ(z)=Σλ_i^(p') z^{i-1}</code>로 위치별 degree 지정.</li><li>Gaussian Approximation(Chung)으로 복호 message 평균만 추적: <code>m_u,i^(l)=m_u0(H_i)+(i-1)m_v^(l-1)</code> 및 check-node update로 iteration별 evolution 계산.</li><li>최적화 기준: Chung의 threshold 최소화 대신 유한길이 OFDM에 맞게 주어진 Eb/No에서 bit error probability 최소화(threshold 현상 없음).</li><li>최적화 도구: differential evolution(genetic algorithm) - 초기 벡터집합을 mutation/recombination/selection로 병렬 갱신, local minima 회피.</li><li>파라미터: <code>R=1/2</code>, <code>ρ(z)=z^7</code>(check degree 고정), <code>t_max=10</code>; ADSL은 Eb/No=5.3dB, chB는 4.4dB에서 최적화.</li><li>결과: 최적 degree profile은 redundant bit 대역에서 degree 2로 최소, 정보 bit는 SNR에 반비례하는 degree; ADSL에서 regular 대비 Pe=10⁻⁴에서 2dB, chB에서 1.25dB 이득(AWGN에선 0.2dB뿐).</li><li>한계: HW 설계 없음, 30-iteration BP 시뮬만, 송신단 채널지식 전제의 OFDM/ADSL FS 채널 특화 구성법.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>degree profile 최적 부호설계</td><td>ecc_top.cpp <code>Load_PCM()</code> / H-matrix</td><td>고정 QC-LDPC 구조라 irregular profile 재설계 부담 큼, 채널특화라 정합 낮음</td></tr><tr><td>BP(tanh rule) 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문은 full sum-product, 우리 min-sum과 무관</td></tr><tr><td>FS 채널 LLR/Gaussian approx</td><td>대응 없음</td><td>NAND는 균일 RBER/AWGN 모델, FS subcarrier별 SNR 매핑은 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 송신단 채널지식 기반 OFDM/FS 채널 subcarrier별 degree 매핑 구성법이라 균일 채널의 NAND 고rate binary QC-LDPC에는 이식 이점이 없다.</p>
+<pre><code>{
+  "id": "ieee:1046693",
+  "title": "Optimized Irregular Gallager Codes For OFDM Transmission",
+  "year": 2002,
+  "venue": "IEEE PIMRC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1024",
+  "soft_quant": "무관",
+  "key_contribution": "FS 채널 스펙트럼에 맞춰 위치별 degree profile을 Gaussian approx+differential evolution로 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "OFDM/ADSL FS 채널의 subcarrier별 SNR에 degree를 매핑하는 채널특화 구성법, NAND 균일 채널엔 부적합",
+  "todo_check": "없음(순수 구성법, NAND read 모델과 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1046693---optimized-irregular-gallager-codes-for-ofdm-transmission-2002-ieee-pimrc">ieee:1046693 - Optimized Irregular Gallager Codes For OFDM Transmission (2002, IEEE PIMRC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

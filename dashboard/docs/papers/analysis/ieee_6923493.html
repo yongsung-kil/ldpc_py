@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6923493</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6923493---a-792-gbs-4372-mw-stochastic-ldpc-decoder-chip-for-ieee-802153c-applications-2015-ieee-tcas-i">ieee:6923493 - A 7.92 Gb/s 437.2 mW Stochastic LDPC Decoder Chip for IEEE 802.15.3c Applications (2015, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>재구성형 stochastic CNU/VNU + RCA-TFM PTU로 다중rate 지원, routing wire 90% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>760.3K@90nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>7.92Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>stochastic 복호는 저SNR/고차변조에서 성능손실, 무선(mmWave) 전용 아키텍처</td></tr><tr><td>추가확인</td><td>RCA-TFM 라우팅 절감 아이디어가 NAND QC-LDPC 배선에 부분 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 무선 802.15.3c 전용 stochastic 완전병렬 디코더 실리콘 논문 - min-sum 대비 정정성능 손실, NAND binary QC-LDPC 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 IEEE 802.15.3c HSI 모드의 4종 irregular QC-LDPC-BC(길이 672, rate 1/2·5/8·3/4·7/8), rate 7/8 base matrix에서 파생, 32개 그룹 21×21 circulant.</li><li>문제: 완전병렬 LDPC 디코더의 실질 병목은 게이트가 아니라 CNU↔VNU 메시지 교환 배선 congestion이며, 다중rate 지원 시 더 복잡해짐.</li><li>채널/모델: BPSK/16-QAM over AWGN, 채널값을 LLR→확률→stochastic bit stream으로 변환(RNG+comparator).</li><li>핵심기법: stochastic 복호에서 CNU=XOR, VNU=flip-flop+control로 구현, 1-bit 메시지 교환(DC 단위), counter로 통계 수집 후 hard decision.</li><li>핵심식: <code>P=∑ b_i·2^{-i}</code> 형태로 RCA-TFM 각 자리에 base-2 가중치를 부여해 regenerative bit 확률 추정.</li><li>확장1: 재구성형 32-input CNU가 concealed syndrome checking 내장, degree-32를 4개 8-input XOR로 분해해 (672,336)/(672,588) 공유.</li><li>확장2: 재구성형 VNU가 degree-2/3/4를 2-input sub-VNU 캐스케이드로 처리, latching 문제는 RCA-TFM 기반 PTU로 완화.</li><li>부수트릭: RCA-TFM 값을 0.5로 고정해 adder/mux 제거, layer re-permutation+input reallocation으로 V-to-C mux 완전 제거·C-to-V mux 축소.</li><li>결과: 90nm 760.3K gate, 768MHz에서 7.92Gb/s, 437.2mW(55.2pJ/bit), routing wire [7] 대비 90.7% 절감, 90% chip utilization.</li><li>한계: HW 검증은 실측이나 stochastic 복호가 min-sum 대비 저SNR·고차변조에서 성능 손실, decoding cycle 최대 1000으로 latency 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>stochastic 복호(bit-stream) 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum LLR 기반, stochastic 산술 미보유</td></tr><tr><td>재구성형 CNU(XOR 분해)/syndrome checking</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>CN 연산 개념 대응하나 산술 방식 상이</td></tr><tr><td>routing 재배치(V-to-C/C-to-V mux 절감)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>edge/배선 축소 목적은 유사, 구조 정합 어려움</td></tr><tr><td>채널값→확률 변환/양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>soft-info 변환 지점 대응하나 stochastic 변환은 미대응</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 무선 전용 stochastic 아키텍처로 정정성능 손실을 감수하는 방식이며, Prime ECC의 binary min-sum QC-LDPC 파이프라인과 산술·복호 패러다임이 근본적으로 달라 이식 가치가 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6923493",
+  "title": "A 7.92 Gb/s 437.2 mW Stochastic LDPC Decoder Chip for IEEE 802.15.3c Applications",
+  "year": 2015,
+  "venue": "IEEE TCAS-I",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.875",
+  "code_length": "672",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "재구성형 stochastic CNU/VNU + RCA-TFM PTU로 다중rate 지원, routing wire 90% 절감",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "760.3K@90nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 7.92,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "stochastic 복호는 저SNR/고차변조에서 성능손실, 무선(mmWave) 전용 아키텍처",
+  "todo_check": "RCA-TFM 라우팅 절감 아이디어가 NAND QC-LDPC 배선에 부분 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6923493---a-792-gbs-4372-mw-stochastic-ldpc-decoder-chip-for-ieee-802153c-applications-2015-ieee-tcas-i">ieee:6923493 - A 7.92 Gb/s 437.2 mW Stochastic LDPC Decoder Chip for IEEE 802.15.3c Applications (2015, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

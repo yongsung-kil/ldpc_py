@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5074385</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5074385---a-parallel-decoding-algorithm-of-ldpc-codes-using-cuda-2008-asilomarieee-conf">ieee:5074385 - A Parallel Decoding Algorithm of LDPC Codes using CUDA (2008, Asilomar/IEEE conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>NVIDIA CUDA GPU에서 thread-per-node로 BP(belief propagation) 복호를 완전 병렬화, 큰 H-matrix에서 CPU 대비 유의미한 speedup</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU/CUDA 소프트웨어 전용, 표준 BP(sum-product)라 알고리즘 신규성 없음, NAND HW/RTL 무관</td></tr><tr><td>추가확인</td><td>실제 speedup 배수·H-matrix rate/length가 표/그림 손상으로 본문 확인 불가</td></tr></tbody></table>
+<blockquote><p>총평: 표준 BP 복호를 GPU(CUDA)로 병렬 가속한 소프트웨어 구현 논문으로, 알고리즘 개선이 없고 GPU 플랫폼이 NAND HW ECC에 부적합해 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 sparse <code>M×N</code> parity-check matrix로 정의된 binary LDPC 부호, 채널은 BSC(오류확률 <code>p</code>).</li><li>문제: BP 복호는 H-matrix 크기에 선형 비례하는 시간복잡도를 가져 큰 부호에서 CPU 복호가 느림.</li><li>핵심 기법: NVIDIA CUDA 프로그래밍 모델로 GPU에서 message-passing을 병렬화 — bit-node/check-node 각각에 1 thread 할당해 모든 노드를 동시 갱신.</li><li>BP 절차: check-node에서 <code>r_ij(b)</code>, bit-node에서 <code>q_ji(b)</code> 확률을 반복 교환하고 <code>Q_j(b)=K_j·P_j·∏r_ij</code> 로 추정 비트 <code>x̂_j</code> 결정.</li><li>곱셈을 덧셈으로 대체하는 log-domain 최적화 적용(<code>r_ij</code> 갱신을 로그영역으로).</li><li>CUDA 워크플로우: host(CPU)→device(GPU) global memory 복사, 확률 초기화·codeword 추정·<code>r_ij</code>/<code>q_ji</code> 계산·비트 갱신을 각 커널로 병렬 실행 후 결과 회수.</li><li>구현 디테일: shared memory로 다수 곱셈 가속, mapping array로 각 노드의 접근 위치 인덱싱, global memory latency는 thread scheduler로 은닉.</li><li>(학습/최적화 절차 없음)</li><li>결과: Intel Core Duo 2GHz + NVIDIA GT GPU 환경에서 H-matrix가 커질수록 GPU 실행시간은 완만한 선형 증가, CPU는 급증 → 대형 부호에서 GPU가 수배 빠름(정확 배수는 표 손상으로 미상). 작은 부호에서는 GPU≈CPU.</li><li>한계: 소프트웨어 GPU 가속뿐이며 HW(RTL/ASIC) 설계 없음, 표준 BP라 정정성능·iteration 개선 없음, 부호 rate/length·speedup 수치가 추출 손상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP message-passing 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 구조는 대응되나 Prime ECC는 min-sum, 본 논문은 full BP</td></tr><tr><td>log-domain sum-product 연산</td><td>대응 없음</td><td>Prime ECC는 min-sum(min1/min2+sign) 근사 사용, full-tanh/log BP 미채용</td></tr><tr><td>GPU thread-per-node 병렬화</td><td>대응 없음</td><td>Prime ECC는 HW z=32 row 병렬(HCU/GT), GPU 플랫폼과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 표준 BP의 GPU 가속으로 복호 알고리즘·HW 아키텍처 기여가 없고, Prime ECC의 min-sum HW 디코더에 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5074385",
+  "title": "A Parallel Decoding Algorithm of LDPC Codes using CUDA",
+  "year": 2008,
+  "venue": "Asilomar/IEEE conf.",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "NVIDIA CUDA GPU에서 thread-per-node로 BP 복호를 완전 병렬화, 큰 H-matrix에서 CPU 대비 유의미한 speedup",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "GPU/CUDA 소프트웨어 전용, 표준 BP(sum-product)라 알고리즘 신규성 없음, NAND HW/RTL 무관",
+  "todo_check": "실제 speedup 배수·H-matrix rate/length가 표/그림 손상으로 본문 확인 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5074385---a-parallel-decoding-algorithm-of-ldpc-codes-using-cuda-2008-asilomarieee-conf">ieee:5074385 - A Parallel Decoding Algorithm of LDPC Codes using CUDA (2008, Asilomar/IEEE conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

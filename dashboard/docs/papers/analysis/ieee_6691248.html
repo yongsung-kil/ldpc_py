@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6691248</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6691248---design-of-masking-matrix-for-qc-ldpc-codes-2013-ieee">ieee:6691248 - Design of Masking Matrix for QC-LDPC Codes (2013, IEEE)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.375~0.5</td></tr><tr><td>부호length</td><td>12192</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>두 동일 그래프를 결합한 구조적 masking matrix Znew(블록 [[Z1,0,0],[0,Z1,0],[A,B,C]])로 동일 threshold·degree 유지하며 수렴속도↑·약 0.2dB coding gain</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>GF(q) 유한체 base matrix(Vandermonde/Latin square)+SPA·AWGN 시뮬만, HW 미설계, error-floor 미검증</td></tr><tr><td>추가확인</td><td>Znew 결합구조가 우리 고rate binary QC-LDPC base matrix(z=32, dual-diag 인코더)와 정합·재검증 부담</td></tr></tbody></table>
+<blockquote><p>총평: masking matrix를 spatial-coupling식으로 구조화해 같은 threshold에서 수렴 가속·0.2dB 이득을 얻는 QC-LDPC 부호설계. AWGN/SPA 시뮬만이고 우리 QC-LDPC 재검증 부담이 커 참고 가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: GF(q) 유한체 base matrix(type-1 Vandermonde/type-2 Latin square)를 masking+dispersion해 얻는 irregular binary QC-LDPC, 예제 rate 0.5(6096,12192)·0.375(5080,8128).</li><li>문제: masking matrix가 부호 오류성능을 좌우하나 대개 computer search로 얻어짐 — 구조적 masking matrix 설계 부재.</li><li>masking 연산: <code>M(γ,ρ)=Z(γ,ρ)⊗H(γ,ρ)</code> (<code>z_ij h_ij</code>), zero 항목이 base matrix를 마스킹 -&gt; dispersion으로 <code>Hdisp</code>(circulant/zero blocks) 생성, null space가 QC-LDPC.</li><li>핵심 기법: spatial-coupling에서 착안, 원본 <code>Zorig</code>를 재배선해 구조적 <code>Znew = [[Z1,0,0],[0,Z1,0],[A,B,C]]</code>(식 6) — 동일 크기·동일 degree distribution 유지, 두 동일 <code>Z1</code> 그래프를 특수 결합.</li><li><code>Znew</code> 생성: PEG로 <code>Z1</code>, <code>Z2=[A B C]</code> 각각 생성 후 결합, 요구 degree distribution <code>v(X),c(X)</code> 만족할 때까지 반복(Step1~3).</li><li>분석 도구: protograph-based LDPC용 Gaussian Approximation(PGA) 제안 — <code>b_ij</code>(엣지 다중도) 반영해 V-&gt;C(식 9), C-&gt;V(식 10, <code>φ</code> 함수) LLR 평균 갱신.</li><li>수렴속도 지표: 전 변수노드 APP-LLR 평균 <code>mAPP=(1/ρ)Σ m_APP^(L)(j)</code>(식 7) 도입, <code>mAPP&gt;M*(~45)</code>이면 decodable.</li><li><code>φ(x)</code> 근사식(식 13) 2구간(x∈[0,10], x&gt;10)으로 복잡도 절감.</li><li>결과: code A threshold <code>Eb/N0*</code>=0.7109(orig)/0.7067dB(new)로 거의 동일하나, threshold 이하 SNR에서 new의 <code>mAPP</code>가 항상 큼 -&gt; 더 빠른 수렴, BER 1e-6에서 약 0.2dB(code A)/&gt;0.1dB(code B) coding gain(SPA 50 iter, AWGN/BPSK).</li><li>한계: AWGN/SPA 시뮬만, HW 미설계, error-floor 미검증, spatial-coupling과 엄밀히 동일 구조 아님(향후 이론분석 필요).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>masking matrix로 QC-LDPC H-matrix 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code> (H-matrix/PCM 로드)</td><td>부호설계 레이어, 특정 QC-LDPC 고정이라 이식난이도 높음</td></tr><tr><td>protograph GA(PGA) 수렴/threshold 분석</td><td>대응 없음 (Prime ECC는 bit-exact 시뮬레이터, DE/GA 분석기 없음)</td><td>설계도구, 코드 이식 대상 아님</td></tr><tr><td>SPA(sum-product <code>φ</code>/<code>tanh</code>) 복호</td><td>대응 없음 (min-sum 근사 사용, full-tanh SPA 미사용)</td><td>복호 알고리즘 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 구조적 masking matrix로 동일 threshold에서 수렴 가속·소폭 coding gain을 얻는 아이디어는 고rate QC-LDPC 부호설계에 참고 가치가 있으나, GF(q) 유한체 base matrix·SPA·AWGN 시뮬 한정이고 Prime ECC의 고정 QC-LDPC(z=32, dual-diag)에 이식하려면 H-matrix 재설계·재검증 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6691248",
+  "title": "Design of Masking Matrix for QC-LDPC Codes",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.375~0.5",
+  "code_length": "12192",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "두 동일 그래프를 결합한 구조적 masking matrix Znew(블록 [[Z1,0,0],[0,Z1,0],[A,B,C]])로 동일 threshold·degree 유지하며 수렴속도↑·약 0.2dB coding gain",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "GF(q) 유한체 base matrix(Vandermonde/Latin square)+SPA·AWGN 시뮬만, HW 미설계, error-floor 미검증",
+  "todo_check": "Znew 결합구조가 우리 고rate binary QC-LDPC base matrix(z=32, dual-diag 인코더)와 정합·재검증 부담"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6691248---design-of-masking-matrix-for-qc-ldpc-codes-2013-ieee">ieee:6691248 - Design of Masking Matrix for QC-LDPC Codes (2013, IEEE)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

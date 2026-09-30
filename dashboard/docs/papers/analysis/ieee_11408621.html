@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11408621</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11408621---fully-parallelized-bp-decoding-for-quantum-ldpc-codes-can-outperform-bp-osd-2026-ieee-hpca">ieee:11408621 - Fully Parallelized BP Decoding for Quantum LDPC Codes Can Outperform BP-OSD (2026, IEEE HPCA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>72~288</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>BP 반복 중 비트 오실레이션 패턴을 추적해 후보 비트를 식별하고, 이를 신드롬 도메인에서 플립한 다중 후보를 병렬 BP로 재시도하는 Chase-유사 후처리(BP-SF)로 Gaussian elimination(OSD) 없이 BP-OSD급 성능 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>대상은 quantum stabilizer(qLDPC, CSS) 코드이며 degeneracy(동일 syndrome을 만족하는 다중 등가 코드워드 인정)를 전제로 최초 유효해를 채택하는 구조라, degeneracy 없는 classical binary NAND LDPC에는 최종 후보선택(ML/최소weight) 로직 보강 없이 그대로 이식 불가</td></tr><tr><td>추가확인</td><td>오실레이션-비트 추적 + 신드롬 플립 Chase 후보생성 아이디어 자체는 classical trapping-set 대응 기법(참고문헌 Chase decoding 원형)과 동일 계열이므로, Prime ECC의 error-floor 대책으로 이식 시 최소weight 후보선택 로직을 별도 설계해야 함</td></tr></tbody></table>
+<blockquote><p>총평: quantum LDPC 전용 디코더이나 핵심 아이디어(BP 오실레이션 추적 → 후보 비트 신드롬 플립 → 병렬 재시도)는 classical trapping-set/error-floor 대책과 원리적으로 유사해 간접 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: quantum stabilizer(CSS) 코드 기반 qLDPC(bivariate bicycle 계열, n=72~288, k=6~28), min-sum BP로 X/Z 오류를 독립 신드롬 디코딩.</li><li>문제: 기존 BP-OSD는 BP 실패 시 Gaussian elimination(O(N³)) 기반 OSD로 후처리해 지연이 크고 하드웨어 구현이 어려움; 기존 BP 개선(layered BP, symmetry-breaking)은 직렬 구조라 지연이 늘어남.</li><li>핵심 관찰: BP가 수렴 실패할 때 일부 비트가 반복 간 0/1로 진동(oscillation)하며, 이 진동 비트 집합이 실제 오류 위치와 높은 상관(precision/recall)을 가짐.</li><li>핵심 기법(BP-SF, syndrome flip): 진동 빈도 상위 <code>|Φ|</code>개 비트를 후보로 선정, <code>s' = s ⊕ tH^T</code>로 신드롬을 플립한 다중 시행벡터 <code>t</code>를 생성해 각기 독립적으로 짧은 BP를 병렬 실행, 성공 시 출력에서 해당 비트를 되돌려 원래 신드롬과 일치시킴.</li><li>핵심 식 의미: 신드롬 플립은 두 경쟁 오류패턴의 weight 균형을 깨뜨려 BP가 특정 해로 수렴하도록 유도하는 것으로, 최소 weight 해를 선호하는 BP min-sum 특성을 이용.</li><li>degeneracy 활용: qLDPC는 다수의 등가(같은 coset) 저weight 코드워드가 존재하므로 ML 선택 없이 신드롬을 만족하는 첫 번째 성공 해를 그대로 채택(병렬 시행 중 최초 성공만 반환).</li><li>구현: min-sum BP(damping factor <code>α=1-2^-i</code>) 기반, 후보선택은 partial sort, 시행 신드롬 생성은 sparse matrix-sparse vector 곱으로 하드웨어 친화적 구현 가능함을 논의(FPGA/ASIC 언급, 실제 HW 미구현).</li><li>결과: 144,12,12 코드에서 BP-OSD 대비 평균 지연 70%(병렬 후처리 시 55%, 최악 케이스 18%)로 감소, error-floor 영역에서 trapping-set 기인 저weight 오류를 효과적으로 우회.</li><li>한계: HW 미구현(FPGA/ASIC 언급뿐), circuit-level noise에서는 더 많은 시행횟수 필요, degeneracy 없는 classical LDPC에 적용 시 최초-성공 채택 전략의 정당성 재검토 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 오실레이션 추적 기반 trapping-set 후보 비트 식별</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>반복 중 비트 flip 이력을 추적해 trapping-set/error-floor 원인 비트를 특정하는 아이디어는 Min-Sum 이터레이션 루프에 후처리 훅으로 추가 가능</td></tr><tr><td>신드롬 플립 기반 다중 후보 병렬 재시도 (Chase-like)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>후보 비트를 신드롬 도메인에서 플립해 병렬 short-BP 재시도하는 구조는 CN 갱신 루프에 다중 인스턴스 병렬화로 대응 가능하나, 최소weight/ML 후보선택 로직 추가설계 필요</td></tr><tr><td>degeneracy 기반 최초 성공 채택(ML 스킵)</td><td>대응 없음</td><td>classical binary LDPC는 degeneracy 없어 최초 성공 채택이 곧 최선 해가 아닐 수 있음 — 이식 시 별도 검증(weight 비교) 필요</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — quantum 전용 디코더지만 오실레이션 기반 trapping-set 식별과 병렬 speculative 재시도라는 알고리즘적 아이디어는 classical binary LDPC의 error-floor 대책(Prime ECC 조기종료/재시도 로직)에 참고할 여지가 있음. 단 degeneracy 가정 제거 시 후보선택 로직 재설계가 필수.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11408621",
+  "title": "Fully Parallelized BP Decoding for Quantum LDPC Codes Can Outperform BP-OSD",
+  "year": 2026,
+  "venue": "IEEE HPCA",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "72~288",
+  "soft_quant": "무관",
+  "key_contribution": "BP 반복 중 비트 오실레이션 패턴을 추적해 후보 비트를 식별하고, 이를 신드롬 도메인에서 플립한 다중 후보를 병렬 BP로 재시도하는 Chase-유사 후처리(BP-SF)로 Gaussian elimination(OSD) 없이 BP-OSD급 성능 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "대상은 quantum stabilizer(qLDPC, CSS) 코드이며 degeneracy(동일 syndrome을 만족하는 다중 등가 코드워드 인정)를 전제로 최초 유효해를 채택하는 구조라, degeneracy 없는 classical binary NAND LDPC에는 최종 후보선택(ML/최소weight) 로직 보강 없이 그대로 이식 불가",
+  "todo_check": "오실레이션-비트 추적 + 신드롬 플립 Chase 후보생성 아이디어 자체는 classical trapping-set 대응 기법(참고문헌 Chase decoding 원형)과 동일 계열이므로, Prime ECC의 error-floor 대책으로 이식 시 최소weight 후보선택 로직을 별도 설계해야 함"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11408621---fully-parallelized-bp-decoding-for-quantum-ldpc-codes-can-outperform-bp-osd-2026-ieee-hpca">ieee:11408621 - Fully Parallelized BP Decoding for Quantum LDPC Codes Can Outperform BP-OSD (2026, IEEE HPCA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

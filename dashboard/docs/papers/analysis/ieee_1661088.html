@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1661088</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1661088---particle-filtering-for-iterative-data-and-phase-estimation-2006-icassp">ieee:1661088 - Particle Filtering for Iterative Data and Phase Estimation (2006, ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>phase noise가 강한 채널에서 particle filtering 기반 message-passing으로 위상을 추정하여 이터레이티브 데이터/위상 공동추정 복잡도를 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 (3,6)-regular 표준 부호를 채널 디코더로만 사용, 부호설계·디코더 알고리즘 개선과 무관하고 phase-noisy AWGN(무선/광통신) 특화 위상추정 기법임</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: NAND와 무관한 phase-noise 채널의 위상 추정(particle filter) 논문으로 LDPC는 부수적으로만 등장하여 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널모델: <code>r_k = c_k e^{jθ_k} + n_k</code>, θ_k는 random walk 위상잡음(<code>θ_k=(θ_{k-1}+Δ_k) mod 2π</code>), M-PSK 변조에 (3,6)-regular LDPC(length 4000) 부호화.</li><li>문제: phase와 data를 동시추정은 intractable, EM은 프레임 내 위상이 일정해야만 효율적 → 강한 위상잡음(σ∆=6)에서 반복 추정 필요.</li><li>채널코더(LDPC/turbo)와 위상 추정기 간 message-passing을 factor graph(그림1)로 모델링, forward-backward 노드 활성화 스케줄 사용.</li><li>핵심 기법: 위상공간을 particle filter로 이산화(<code>p_f(θ_k) ≈ Σ w̃_k^(i) δ(θ_k-θ_k^(i))</code>)해 phase discretization(트렐리스 L개 위상, 복잡도 O(L²)) 대비 복잡도를 O(N_part)로 낮춤.</li><li>세 가지 추정 변형: MMSE phase estimation, forward-only phase pdf(FOPP), forward-backward phase pdf(FBPP, <code>p_u(θ_k)≈½(p_f+p_b)</code>로 계산량 O(K·N_part)로 단순화).</li><li>resampling 단계로 particle degeneracy(유효 particle 수 N_eff &lt; 임계값) 완화.</li><li>시뮬 설정: QPSK, pilot 20심볼당 1개, global iteration 10회 × LDPC 내부 iteration 20회.</li><li>결과: N_part=64 FBPP가 L=20 discretization과 유사 성능, L=32(사실상 최대) 대비 BER=1e-3에서 약 0.4dB 열화이나 branch metric 계산은 64 vs 400으로 대폭 감소.</li><li>N_part=16과 256 FBPP 간 성능차 0.25dB에 불과해 저복잡도로도 준수한 성능.</li><li>한계: HW 미설계, 순수 시뮬 결과뿐이며 무선 phase-noisy AWGN 채널 특화, LDPC 부호 자체는 표준 규칙 부호로 개선 대상이 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Particle filter 기반 위상 추정</td><td>대응 없음</td><td>Prime ECC는 NAND binary QC-LDPC 디코더로 위상잡음 채널/캐리어 동기화 기능 없음</td></tr><tr><td>LDPC message passing (채널디코더)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>표준 message-passing 사용 예시일 뿐 논문 기여는 위상추정 쪽이라 관련성 낮음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 논문의 핵심 기여(particle filter 위상추정)는 무선/광통신 phase-noisy 채널 특화 기법으로 NAND binary LDPC ECC 설계와 무관.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1661088",
+  "title": "Particle Filtering for Iterative Data and Phase Estimation",
+  "year": 2006,
+  "venue": "ICASSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "4000",
+  "soft_quant": "무관",
+  "key_contribution": "phase noise가 강한 채널에서 particle filtering 기반 message-passing으로 위상을 추정하여 이터레이티브 데이터/위상 공동추정 복잡도를 낮춤",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 표준 규칙 부호를 채널 디코더로만 사용, phase-noisy AWGN 채널 특화 위상추정 기법으로 부호설계/디코더 알고리즘과 무관",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1661088---particle-filtering-for-iterative-data-and-phase-estimation-2006-icassp">ieee:1661088 - Particle Filtering for Iterative Data and Phase Estimation (2006, ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

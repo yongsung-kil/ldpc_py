@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4387554</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4387554---an-area-efficient-fpga-based-architecture-for-fully-parallel-stochastic-ldpc-decoding-2007-sips">ieee_4387554 - An Area-Efficient FPGA-Based Architecture for Fully-Parallel Stochastic LDPC Decoding (2007, SiPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Stochastic computation(확률을 비트스트림으로 표현) 기반 완전병렬 LDPC 디코더를 FPGA에 최초 구현, edge memory로 latching 문제 해결</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>32875 slices@Xilinx Virtex-4 XC4VLX200(36%)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.706Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코딩 메커니즘이 stochastic computation(확률의 비트스트림 인코딩+up/down counter)으로 min-sum/sum-product LLR 메시지패싱과 근본적으로 다른 패러다임이라 기존 HW 디코더 구조에 이식 불가</td></tr><tr><td>추가확인</td><td>Prime ECC가 min-sum LLR 기반 고정기능 디코더라 stochastic 방식과 아키텍처 공유점이 없음을 재확인</td></tr></tbody></table>
+<blockquote><p>총평: min-sum/sum-product와 전혀 다른 stochastic decoding 패러다임의 FPGA 구현으로, 라우팅 혼잡 완화라는 아이디어는 흥미로우나 Prime ECC의 결정론적 LLR 기반 구조에 이식할 여지는 거의 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 (1024,512) regular LDPC 코드(dv=3, dc=6), AWGN+BPSK 채널, FPGA(Xilinx Virtex-4 XC4VLX200) 완전병렬 구현.</li><li>문제: 완전병렬 LDPC 디코더는 인터리버 라우팅 혼잡이 심해 긴 실용 코드에서 구현이 어려움 — min-sum도 라우팅 문제를 완전히 해결하지 못함.</li><li>핵심 가정: 확률을 Bernoulli 확률적 비트스트림({a_i})으로 표현하는 stochastic computation 모델을 LDPC 팩터그래프에 적용.</li><li>핵심 기법: variable node는 <code>Pc = PaPb / (PaPb + (1-Pa)(1-Pb))</code>(식 1), check node(dc=3)는 <code>Pc = Pa(1-Pb) + Pb(1-Pa)</code>(식 2)로 단순 논리게이트(AND 등)로 구현.</li><li>의미: 확률연산이 비트단위 논리연산으로 축소되어 노드당 복잡도와 엣지당 배선폭(1비트)이 극소화되어 라우팅 혼잡을 완화.</li><li>확장 기법: Noise-Dependent-Scaling(NDS, <code>L'_i=(4α/Y)y_i</code>)으로 스위칭 활동 증대, Edge Memory(EM, M=64 shift register)로 hold-state 시 랜덤 재생성 비트를 사용해 latching(lock-up) 문제 해결.</li><li>HW 디테일: EM은 Virtex-4 4-input LUT를 SRL로 캐스케이드 구현(4개로 64bit), 6bit saturating up/down counter로 최종 hard-decision, LFSR 10개 기반 랜덤화 엔진으로 난수 공유.</li><li>별도 학습/최적화 절차 없음(파라미터 α=3, Y=6, M=64는 선행연구[20] 기준 채택).</li><li>결과: 32875/89088 slice(36%) 사용, 212MHz, BER 10^-6에서 SPA(32회 반복) 대비 0.1dB 손실, 평균 300 DC로 706Mbps 처리량; 기존 근사 min-sum FPGA 디코더 대비 면적 약 53% 절감.</li><li>한계: FPGA 검증뿐(ASIC 미검증), 코드 길이가 (1024,512)로 제한적, stochastic 방식 특유의 latching/switching 활동 문제로 高SNR에서 별도 대책(NDS, EM) 필수, 정정성능 개선이 아닌 순수 HW 구현 효율화 논문.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>stochastic variable/check node 연산(확률 비트스트림)</td><td>대응 없음</td><td>Prime ECC는 LLR 크기값 기반 min-sum이라 확률 비트스트림 인코딩 자체가 없음</td></tr><tr><td>edge memory(latching 방지)</td><td>대응 없음</td><td>Prime ECC의 결정론적 메시지패싱에는 latching 문제가 존재하지 않아 개념 자체가 불필요</td></tr><tr><td>완전병렬 인터리버/라우팅 최적화</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (구조적 참고만)</td><td>라우팅 혼잡 완화 아이디어는 일반적이나 Prime ECC는 이미 z=32 GT/HCU 등 자체 방식으로 해결</td></tr><tr><td>up/down counter 기반 hard-decision</td><td>대응 없음</td><td>Prime ECC는 LLR sign 기반 HD/2SD/3SD로 전혀 다른 메커니즘</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — stochastic computation은 min-sum/sum-product와 근본적으로 다른 디코딩 패러다임으로, Prime ECC의 결정론적 LLR 기반 HW 구조와 공유 가능한 모듈이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4387554",
+  "title": "An Area-Efficient FPGA-Based Architecture for Fully-Parallel Stochastic LDPC Decoding",
+  "year": 2007,
+  "venue": "SiPS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": 1024,
+  "soft_quant": "무관",
+  "key_contribution": "Stochastic computation(확률을 비트스트림으로 표현) 기반 완전병렬 LDPC 디코더를 FPGA에 최초 구현, edge memory로 latching 문제 해결",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "32875 slices@Xilinx Virtex-4 XC4VLX200(36%)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.706,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코딩 메커니즘이 stochastic computation(확률의 비트스트림 인코딩+up/down counter)으로 min-sum/sum-product LLR 메시지패싱과 근본적으로 다른 패러다임이라 기존 HW 디코더 구조에 이식 불가",
+  "todo_check": "Prime ECC가 min-sum LLR 기반 고정기능 디코더라 stochastic 방식과 아키텍처 공유점이 없음을 재확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4387554---an-area-efficient-fpga-based-architecture-for-fully-parallel-stochastic-ldpc-decoding-2007-sips">ieee_4387554 - An Area-Efficient FPGA-Based Architecture for Fully-Parallel Stochastic LDPC Decoding (2007, SiPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

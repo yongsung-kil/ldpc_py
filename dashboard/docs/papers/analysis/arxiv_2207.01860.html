@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2207.01860</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv220701860v1---high-throughput-decoder-of-quasi-cyclic-ldpc-codes-with-limited-precision-for-continuous-variable-quantum-key-distribution-systems-2022-arxiv-quant-ph">arxiv:2207.01860v1 - High-throughput decoder of quasi-cyclic LDPC codes with limited precision for continuous-variable quantum key distribution systems (2022, arXiv quant-ph)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.1~0.2</td></tr><tr><td>부호length</td><td>80000~96000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>유한정밀도 디코더의 잔여오류비트를 신뢰도(</td><td>Lqn</td><td>) 임계값으로 지우는 post-processor로 FER 저감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.36092Gbps(rate0.2)/0.19465Gbps(rate0.1)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CV-QKD 초저rate(0.1~0.2)/저SNR(&lt;0dB) 특화, MET-LDPC 대상 - NAND 고rate binary QC-LDPC와 체제 상이</td></tr><tr><td>추가확인</td><td>erase 임계값 ∆ 설정법과 정정능력향상이 정밀도 손실 보상 이상인지(부동소수점 대비) 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: FPGA layered BP + 신뢰도 기반 잔여오류 erase post-processor. CV-QKD 초저rate 특화라 NAND 이식가치 낮으나 신뢰도 임계 post-processing 아이디어만 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>CV-QKD 정보조정용 QC MET-LDPC 부호(rate 0.1/0.2, length 96000/80000, BI-AWGN, SNR&lt;1)의 실시간 FPGA 복호기 설계가 목표.</li><li>문제: on-chip 자원 제약으로 고정소수점 정밀도(w=8/10bit)를 낮추면 waterfall 영역에서도 FER가 급증해 실시간 SKR 생성 불가.</li><li>채널/모델: BI-AWGN, LLR 초기화 <code>Lqn(0)=2Rn/σ²</code>, layered BP(flooding 대비 적은 iteration으로 동등 성능).</li><li>핵심기법1: layered BP로 VNU→CNU→total-message 순차 갱신, <code>Φ(x)=-ln(tanh(x/2))</code> 기반 CN 갱신, syndrome <code>s=uH^T</code>로 조기판정.</li><li>핵심 관찰: 실패 codeword의 오류심볼은 신뢰도값 <code>∆=|Lqn|</code>이 정답심볼보다 작다(히스토그램으로 확인).</li><li>핵심기법2: 잔여오류비트 erase 모듈 - <code>|Lqn|&lt;∆</code>인 심볼을 의심집합에 넣어 지움(rate0.2는 ∆=40, rate0.1은 ∆=180 고정).</li><li>구현 디테일: fixed-point w=1+I+F, partial-parallel+pipeline, RAM_L/RAM_R 이중 RAM + shift-right/left로 QC 순환시프트, read/write 충돌 회피용 H 설계.</li><li>학습/최적화: density evolution로 degree distribution 최적화 후 PEG로 QC MET-LDPC 구성.</li><li>결과: Virtex-7 FPGA에서 360.92/194.65 Mbps throughput, erase 모듈로 SKR 425.64%/139.13% 개선, erase 비용은 ~2.4~3 iteration 상당.</li><li>한계: 초저rate/저SNR CV-QKD 특화, MET-LDPC 전용, erase가 정밀도 손실을 사후 보정할 뿐 부동소수점 성능엔 미달, latency 추가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered BP CN/VN 갱신</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime은 min-sum, 논문은 full-<code>tanh</code> Φ 함수라 알고리즘 상이</td></tr><tr><td>신뢰도 기반 잔여오류 erase post-processor</td><td>대응 없음</td><td>Prime의 조기종료(partial/full CRC)와 목적 다름, 별도 post-processing 없음</td></tr><tr><td>고정소수점 정밀도/양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>Prime은 magnitude 양자화 테이블, 논문은 w-bit fixed-point</td></tr><tr><td>RAM_L/RAM_R + shift 라우팅</td><td>대응 없음</td><td>Prime HW 모델(z=32, GT/HCU)과 메모리 구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - MET-LDPC 초저rate CV-QKD 특화이며 핵심인 잔여오류 erase는 저정밀도 보상용이라 Prime의 고rate binary QC-LDPC 파이프라인에 그대로 이식하기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2207.01860v1",
+  "title": "High-throughput decoder of quasi-cyclic LDPC codes with limited precision for continuous-variable quantum key distribution systems",
+  "year": 2022,
+  "venue": "arXiv quant-ph",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "80000~96000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "유한정밀도 디코더의 잔여오류비트를 신뢰도(|Lqn|) 임계값으로 지우는 post-processor로 FER 저감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.36092,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "CV-QKD 초저rate(0.1~0.2)/저SNR(&lt;0dB) 특화, MET-LDPC 대상 - NAND 고rate binary QC-LDPC와 체제 상이",
+  "todo_check": "erase 임계값 ∆ 설정법과 정정능력향상이 정밀도 손실 보상 이상인지(부동소수점 대비) 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv220701860v1---high-throughput-decoder-of-quasi-cyclic-ldpc-codes-with-limited-precision-for-continuous-variable-quantum-key-distribution-systems-2022-arxiv-quant-ph">arxiv:2207.01860v1 - High-throughput decoder of quasi-cyclic LDPC codes with limited precision for continuous-variable quantum key distribution systems (2022, arXiv quant-ph)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6136889</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6136889---a-flexible-noc-based-ldpc-code-decoder-implementation-and-bandwidth-reduction-methods-2011-ieee-vlsiarxiv">ieee:6136889 - A Flexible NoC-based LDPC code decoder implementation and bandwidth reduction methods (2011, IEEE (VLSI/arXiv))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>임의 H 지원 NoC 기반 완전유연 디코더 + message stopping/early stopping으로 트래픽 감소해 면적·에너지 최대 50% 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.68~4.72mm2@130nm (게이트수 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.082Gbps (82Mbps@WiMAX)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>NoC(mesh/torus)+PE 라우팅 아키텍처는 Prime ECC z=32 QC 전용 파이프라인과 완전히 다름; message stopping은 BER 0.1~0.3dB 손실</td></tr><tr><td>추가확인</td><td>message stopping(신뢰 extrinsic 포화·전송 생략)이 QC-LDPC 고정 라우팅 min-sum에서 iteration/전력 절감으로 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NoC 라우팅 아키텍처 자체는 이식 불가하나, "message stopping"(신뢰도 임계 초과 메시지 전송 중단) 아이디어는 QC-LDPC min-sum 디코더의 트래픽·전력 절감 관점에서 개념 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: 임의 구조 LDPC(구조/비구조 무관), 결과는 WiMAX(802.16e) 576~2304 rate 0.5~0.83 및 WiFi(802.11n) 1944 코드로 제시.</li><li>문제: 표준 다양화로 임의 H를 지원하는 완전유연 디코더 필요. QC 전용 barrel-shifter 라우팅은 유연성 부족 → NoC로 임의 통신패턴 수용.</li><li>디코딩 모델: layered decoding(2-phase 대비 수렴 ×2) + normalized min-sum. LLR <code>L(qj)</code> 초기화 후 각 PCC에서 <code>L(qmj)=L(qj_old)-Rm_old</code>, <code>Rm_new=-smj·A1mj/α</code>(또는 A2mj) 갱신.</li><li>핵심 기법 (NoC): 2D toroidal mesh(5×5 등), 각 노드에 PE+RE(라우팅). ZONoC로 코드별 최적 경로를 오프라인 정적 도출해 routing memory에 저장, 패킷 헤더·FIFO 축소.</li><li>PE 아키텍처: <code>L(qj) MEMORY</code>(Npc×Nd), WAG(오프라인 주소생성), MINIMUM EXTRACTION(1st/2nd min), cumulative XOR(부호), COMPARE(식8), ×1/α 후 output buffer.</li><li>핵심 기법1 (Message Stopping): extrinsic가 임계 THR 초과(충분히 신뢰)하면 포화시키고 이후 NoC 전송 생략. 정지 메시지 Smsg 19~40%, throughput gain 소형 NoC서 10~15%.</li><li>핵심 기법2 (Early Stopping): syndrome accumulation vector <code>ai=Σsi+kz</code> 계산해 SAV가 전부 짝수(Type II)면 조기종료. ANI 고SNR서 약 20% 감소, ESB latency 2M/P.</li><li>시뮬: C++/Python 고정소수점 전체 체인(encoder+AWGN+decoder) 모델로 THR·정밀도 결정, 8bit 정밀도.</li><li>결과: 5×5 NoC 80Mbps+(WiMAX), MS+ES 결합으로 면적 최대 43%·에너지 40~57% 절감(130nm), NoC를 3×3까지 축소해도 throughput 유지(BER 0.3dB 손실). 65nm 정규화 면적 최대 4.72mm2.</li><li>한계: NoC 오버헤드로 전용 디코더 대비 면적 큼, 정정능력 개선 없음, message stopping은 BER penalty 수반.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Normalized min-sum (1st/2nd min, α)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 이미 min1/min2 min-sum 보유</td></tr><tr><td>Message stopping (신뢰 메시지 포화·전송 생략)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>트래픽·전력 절감 아이디어로 개념 참고 가치</td></tr><tr><td>Early stopping (SAV syndrome)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>Prime ECC는 이미 Partial/Full CRC 조기종료 보유(중복)</td></tr><tr><td>NoC mesh/torus 라우팅, PE 인터커넥트</td><td>대응 없음</td><td>Prime ECC는 z=32 QC 전용 파이프라인, NoC 아키텍처 무관</td></tr></tbody></table>
+<p>적용 가치: 낮음 — NoC 라우팅 아키텍처는 QC-LDPC 전용 파이프라인과 무관하고 조기종료는 이미 보유. message stopping만 min-sum 트래픽/전력 절감 개념으로 소폭 참고 가능.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:6136889",
+  "title": "A Flexible NoC-based LDPC code decoder implementation and bandwidth reduction methods",
+  "year": 2011,
+  "venue": "IEEE (VLSI)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "임의 H 지원 NoC 기반 완전유연 디코더 + message stopping/early stopping으로 면적·에너지 최대 50% 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.68~4.72mm2@130nm",
+  "parallelism": "부분",
+  "throughput_gbps": 0.082,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "NoC(mesh/torus)+PE 라우팅 아키텍처는 Prime ECC z=32 QC 전용 파이프라인과 완전히 다르고 message stopping은 BER 0.1~0.3dB 손실",
+  "todo_check": "message stopping(신뢰 extrinsic 포화·전송 생략)이 QC-LDPC min-sum에서 iteration/전력 절감으로 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6136889---a-flexible-noc-based-ldpc-code-decoder-implementation-and-bandwidth-reduction-methods-2011-ieee-vlsiarxiv">ieee:6136889 - A Flexible NoC-based LDPC code decoder implementation and bandwidth reduction methods (2011, IEEE (VLSI/arXiv))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

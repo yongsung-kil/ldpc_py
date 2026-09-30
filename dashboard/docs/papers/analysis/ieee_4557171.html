@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4557171</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4557171---edge-based-scheduled-bp-in-ldpc-codes-2007-isit">ieee_4557171 - Edge-based Scheduled BP in LDPC Codes (2007, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>204~2640</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>edge를 원자 단위로 하는 새로운 스케줄(Serial-E) 제안, 반복 중 edge 순서를 동적으로 재정렬하여 flooding/serial 대비 수렴 성능 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>genie-aided(전송 codeword를 아는) 이론적 상한 분석이 핵심이며, 실용적 대체안(differential schedule)은 이득이 크게 줄어듦(1.85dB→100 iter에서는 gain 없음); full-precision BP(tanh) 기반이라 min-sum 근사와 직접 비교 불가</td></tr><tr><td>추가확인</td><td>Differential schedule의 정렬 기준(sorting rule) 계산이 HW에서 매 스텝마다 전체 edge 재정렬을 요구해 실제 구현 복잡도가 상당할 것으로 추정되나 본문에 gatecount/HW 분석 없음</td></tr></tbody></table>
+<blockquote><p>총평: edge 단위 동적 스케줄링으로 초기 반복에서 큰 성능 이득을 보이는 이론적 결과이나, 실용 스케줄은 이득이 제한적이고 HW/양자화 분석이 전무해 이식 시 추가 검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템: regular (3,6) LDPC 코드, <code>n=1008</code> (일부 실험 <code>n=204~2640</code>), rate 0.5, BPSK+AWGN, full-precision belief-propagation(BP) 복호.</li><li>문제: 기존 flooding/serial(Serial-V, Serial-C) 스케줄은 variable/check node 단위 고정 순서로만 메시지를 갱신해 성능·수렴 여지가 제한적임(Forney의 미해결 질문: 스케줄로 반복복호 개선 가능한가).</li><li>핵심 아이디어: edge <code>e_cv</code>를 스케줄링의 "원자 단위"로 삼는 일반화된 Serial-E 스케줄 제안. <code>Serial-V</code>, <code>Serial-C</code>는 Serial-E의 특수 사례.</li><li>핵심 기법: 매 iteration 초기에 edge 리스트를 정렬하고, <code>k_sort</code>개 메시지 처리마다 남은 fresh edge를 재정렬(재정렬 주기 <code>k_sort</code>가 성능-복잡도 트레이드오프 제어).</li><li>핵심 식: <code>m_v^(l) = m_v + Σ m_{c'v}^(l-1)</code> 갱신에서 edge <code>e_cv</code>가 가져오는 증분 <code>Δm_{v/c}^(l)</code>를 정렬 기준으로 사용(식 (5)) — 이 값이 클수록 해당 edge를 먼저 처리해야 LLR이 빨리 개선됨.</li><li>이론적 상한: genie-aided 스케줄(전송 codeword를 알고 <code>Δm</code> 부호가 맞는 edge를 우선 처리) 도입, 실현 불가능하지만 스케줄링 이득의 tight upper bound로 사용.</li><li>실용 스케줄: 확률적 정렬(메시지 정확 확률 기반)은 불안정해 실패, 대안으로 differential schedule(<code>Δm_{v/c}^(l-1)</code> 절대값 기준 정렬)을 제안해 실용성 확보.</li><li>분석 기법: 유한장 코드에 맞춘 Gaussian Approximation(GA) 일반화 — 한 iteration을 <code>n·d_v</code>개의 edge-step으로 쪼개 단계별 LLR 기대값(Lemma 2)과 확률벡터를 결합해 첫 iteration 성능을 해석적으로 예측.</li><li>결과: genie-aided 스케줄은 단일 iteration에서 BER=10^-3 기준 3dB 이상, 100 iteration 시 serial 대비 0.75dB 이득. 실용 differential schedule은 단일 iteration 기준 약 1.85dB 이득이나 100 iteration에서는 이득 소멸(단, 필요 iteration 수는 serial보다 적음). 짧은 코드일수록 스케줄링 이득이 큼.</li><li>한계: 순수 시뮬레이션(HW 미설계), full-precision tanh 기반 BP로 min-sum/양자화 영향 미검토, differential schedule의 실질적 이득은 iteration 수가 커질수록 감소.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 메시지 스케줄링(flooding→edge 단위 동적순서) | `decoder.cpp` `LDPC_Decoder()`, `C2V_Cal()` | 현재 Dual-Update(even/odd 교대) 스케줄과 다른 축의 스케줄링 아이디어로 이터레이션 루프 구조 변경 필요 |
+| CN/VN 메시지 갱신(식 (1)~(4)) | `decoder.cpp` `CNU_Update_New_Mag()`, `C2V_Cal_New_Sgn()` | full-precision tanh BP이며 Prime ECC는 min-sum이라 메시지 정의는 다르나 스케줄 순서 개념은 이식 가능 |
+| edge 재정렬(differential schedule) 로직 | 대응 없음 | 매 스텝 edge 우선순위 재계산·정렬은 현재 pipeline HW(z=32 row 병렬)와 구조적으로 상충, 별도 하드웨어 큐/정렬 로직 필요 |
+| iteration별 LLR 테이블 | `ecc_data.h` `PARAM_LLR`, `decoder.cpp` `Get_VNU_Table_Idx()` | 스케줄 도입 시 iteration 정의가 달라져(edge-step 단위) 기존 LLR threshold 테이블 재설계 필요 |</code></pre>
+<p>적용 가치: 중간 — 스케줄링을 통한 iteration 감소/waterfall 개선 아이디어는 흥미로우나, edge 단위 동적 재정렬은 Prime ECC의 병렬 pipeline(HCU, GT) 구조와 정합이 어렵고 실용 스케줄의 실이득도 제한적.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:4557171",
+  "title": "Edge-based Scheduled BP in LDPC Codes",
+  "year": 2007,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "204~2640",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "edge를 원자 단위로 하는 동적 재정렬 스케줄(Serial-E)을 제안해 flooding/serial 대비 수렴 속도와 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "genie-aided 결과는 이론적 상한이며 실용 differential schedule은 iteration이 많아지면 이득이 소멸, HW/양자화 분석 전무",
+  "todo_check": "매 스텝 edge 재정렬 로직의 HW 구현 복잡도(gatecount, pipeline 정합성) 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4557171---edge-based-scheduled-bp-in-ldpc-codes-2007-isit">ieee_4557171 - Edge-based Scheduled BP in LDPC Codes (2007, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

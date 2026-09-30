@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8806962</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8806962---leveraging-approximate-data-for-robust-flash-storage-2019-dac">ieee:8806962 - Leveraging Approximate Data for Robust Flash Storage (2019, DAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>approximate data를 알려진 값(all-1)으로 대체해 코드워드 유효 RBER를 낮추고 regular data 신뢰성 강화(데이터 조직/할당/GC)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더/부호 미변경, ECC를 블랙박스로 두고 코드워드 내 절반을 known bit로 채우는 FTL/데이터배치 기법 (SSDSim 시뮬만)</td></tr><tr><td>추가확인</td><td>known-bit 삽입으로 RBER 낮추는 아이디어 자체는 부호 무관, Prime ECC 채널/입력 계층과 개념적 접점만</td></tr></tbody></table>
+<blockquote><p>총평: 오류허용 approximate data를 known bit(all-1)로 대체해 코드워드 유효 RBER를 낮추는 데이터 조직·할당·GC 기법으로, LDPC 디코더/부호는 손대지 않아 Prime ECC 디코더 코어 이식 대상이 아니다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC 기반 3D NAND SSD (SSDSim, 2ch/2chip/4plane, 256blk, 64×4KB page). ECC rate 예시 <code>8/9</code>.</li><li>문제: 고 RBER 데이터는 LDPC soft decoding에 다중 sensing이 필요해 read latency 급증.</li><li>관찰: 모바일/PC 워크로드에 오류허용 approximate data(멀티미디어 캐시 등, 1시간 미만 보존, 대부분 초 단위 삭제)가 다량 존재 → 신뢰성 요구 완화 가능.</li><li>핵심 기법(Robust ECC): 한 페이지에 regular+approximate를 함께 담되, approximate <code>k/2</code>bit는 ECC에 미포함, <code>n-k</code> parity 전량을 <code>k/2</code>bit regular 보호에 사용.</li><li>인코딩: regular <code>r_{k/2}</code>에 known vector(예 <code>1_{k/2}</code>)를 결합해 <code>k</code>bit 구성 → parity <code>p_{n-k}</code> 생성 → known 부분 제거 후 프로그램. read 시 all-1을 자동 재결합해 디코딩.</li><li>핵심 식: <code>RBER2 = RBER1·(1 - k/2n)</code> — known bit엔 오류가 없어 코드워드 유효 RBER 감소(rate 8/9면 5/9로 감소).</li><li>데이터 할당: 요청 큐의 regular/approximate 비율에 따라 RAB/RB/HRB/AB 4종 블록에 write buffer로 재조직, RAB 최대화가 목표. L2P 매핑은 RAB/HRB에서 half-page 단위로 2배.</li><li>GC: <code>IVmax - min(IVR,IVA) ≤ T</code>이면 RB+AB 쌍을 victim으로 골라 valid page를 RAB로 합침(GC효율 소폭 희생, T=2 최적).</li><li>결과: Baseline 대비 read latency early 12%/late 30% 감소, HRB 사용 시 lifetime 15% 연장. RAB 비중 ~10%라 FTL 매핑 오버헤드 낮음.</li><li>한계: 디코더/부호 자체 미변경(ECC를 블랙박스로 사용), HW 미설계, SSDSim trace 시뮬만, approximate data 식별은 파일타입 태그 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>코드워드 내 known-bit(all-1) 삽입으로 유효 RBER 감소</td><td>input.cpp <code>input.cpp/.h</code> (DIN/MSG 파싱)</td><td>개념적으로 message 일부를 고정하는 셈이나 Prime ECC 부호/인코더 변경 아님</td></tr><tr><td>approximate/regular 데이터 배치·GC 정책</td><td>대응 없음 (FTL/컨트롤러 상위 계층)</td><td>데이터 조직·할당·GC는 Prime ECC 코드베이스 범위 밖</td></tr><tr><td>ECC 인코딩(parity 생성)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>인코더를 그대로 쓰고 입력만 바꾸므로 인코더 자체 이식 요소 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 디코더/부호를 전혀 바꾸지 않고 오류허용 데이터를 known bit로 채우는 FTL/데이터배치·GC 기법이라, Prime ECC 디코더 코어에 떼어 넣을 알고리즘이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8806962",
+  "title": "Leveraging Approximate Data for Robust Flash Storage",
+  "year": 2019,
+  "venue": "DAC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": 0.889,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "approximate data를 알려진 값(all-1)으로 대체해 코드워드 유효 RBER를 낮추고 regular data 신뢰성 강화(데이터 조직/할당/GC)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코더/부호 미변경, ECC를 블랙박스로 두고 코드워드 내 절반을 known bit로 채우는 FTL/데이터배치 기법 (SSDSim 시뮬만)",
+  "todo_check": "known-bit 삽입으로 RBER 낮추는 아이디어 자체는 부호 무관, Prime ECC 채널/입력 계층과 개념적 접점만"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8806962---leveraging-approximate-data-for-robust-flash-storage-2019-dac">ieee:8806962 - Leveraging Approximate Data for Robust Flash Storage (2019, DAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

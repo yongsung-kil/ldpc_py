@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4392663</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4392663---novel-efficient-check-node-update-implementations-for-row-weight-matched-min-sum-algorithm-2007-imsccs">ieee:4392663 - Novel Efficient Check Node Update Implementations for Row Weight Matched Min-Sum Algorithm (2007, IMSCCS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Row Weight Matched Min-Sum의 CNU를 m-to-2m 디코더+2-to-1 MUX 구조로 재설계해 비교/선택 연산 수를 줄임</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>성능은 기존 Row Weight Matched Min-Sum과 동일(=Log-BP급)하며 HW 게이트/타이밍 정량 결과 없이 구조 제안에 그침</td></tr><tr><td>추가확인</td><td>제안 CNU 구조의 실제 게이트카운트/critical path 감소량이 본문에 없어 정량적 이득 확인 불가</td></tr></tbody></table>
+<blockquote><p>총평: IEEE802.16e급 고rate QC-LDPC CNU의 비교/선택 연산을 줄이는 HW 구조 제안이나, min-sum 계열 변형이라 Prime ECC가 이미 보유한 기법과 개념적으로 중복되고 정량 검증이 부족함.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE802.16e 기반 QC-LDPC(rate 1/2, 2/3, 3/4, 5/6, N=576/2304), AWGN 채널, QPSK.</li><li>고rate 코드는 row weight <code>dc</code>가 14~20으로 커서 Normalized Min-Sum의 CNU가 <code>dc</code>번 곱셈을 필요로 해 HW 복잡도가 높음.</li><li>채널은 AWGN, 목표는 곱셈 없이 Log-BP에 근접한 성능을 유지하는 CNU 구조.</li><li>핵심 기법은 Row Weight Matched Min-Sum: 최소값에서 <code>λmn</code>을 빼는 보정항을 추가. <code>λmn = ln(dcm−1)/4</code> (조건: <code>min|Vmn'| ≥ 3ln(dcm−1)/8</code>), 아니면 0.</li><li>이 보정식은 min-sum의 근사 오차를 row weight에 따라 조정해 Log-BP와 유사한 성능을 얻기 위함.</li><li>제안 CNU는 기존 4개의 C/S(비교/선택) 유닛을 2개로 줄이고, 3-8 디코더(진리표 기반 IDX→b1~b6 매핑)와 2-MUX로 대체.</li><li>구현 디테일: AND 게이트, 2-to-1 MUX, m-to-2m 디코더 조합 로직으로 곱셈기 없이 부호/크기 분리 처리.</li><li>별도 학습/최적화 절차 없음(HW 구조 재설계).</li><li>결과: Row Weight Matched Min-Sum이 Log-BP와 거의 동일한 성능을 보였고, Min-Sum은 Log-BP 대비 약 0.5dB 열화. 제안 CNU 구조의 정량적 게이트/지연 감소 수치는 본문에 없음.</li><li>한계: HW 합성/타이밍 결과 없이 구조도(Fig.4, Fig.5)만 제시. 성능 시뮬은 기존 알고리즘(Row Weight Matched Min-Sum) 자체에 대한 것이며 제안 CNU 구조 자체의 성능 영향은 검증되지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Row Weight Matched Min-Sum CNU</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 보정항 계산이 CN 연산부에 대응, 단 로직 재설계 방식만 다름</td></tr><tr><td>C/S 유닛 축소 (MUX/디코더 구조)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>HW 구현 세부 최적화로 개념상 대응되나 코드 구조 자체가 다름</td></tr><tr><td>Normalized Min-Sum 비교 대상</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>이미 Min-Sum 계열 보유, 중복 기여</td></tr></tbody></table>
+<p>적용 가치: <code>낮음</code> — CNU 곱셈 제거용 HW 구조 제안이나 정량 검증(게이트카운트/타이밍) 부재, min-sum 계열 개념 중복으로 이식 실익이 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4392663",
+  "title": "Novel Efficient Check Node Update Implementations for Row Weight Matched Min-Sum Algorithm",
+  "year": 2007,
+  "venue": "IMSCCS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Row Weight Matched Min-Sum의 CNU를 m-to-2m 디코더+2-to-1 MUX 구조로 재설계해 비교/선택 연산 수를 줄임",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "성능은 기존 Row Weight Matched Min-Sum과 동일(=Log-BP급)하며 HW 게이트/타이밍 정량 결과 없이 구조 제안에 그침",
+  "todo_check": "제안 CNU 구조의 실제 게이트카운트/critical path 감소량이 본문에 없어 정량적 이득 확인 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4392663---novel-efficient-check-node-update-implementations-for-row-weight-matched-min-sum-algorithm-2007-imsccs">ieee:4392663 - Novel Efficient Check Node Update Implementations for Row Weight Matched Min-Sum Algorithm (2007, IMSCCS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

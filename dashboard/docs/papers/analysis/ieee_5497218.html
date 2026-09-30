@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5497218</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5497218---a-time-aware-fault-tolerance-scheme-to-improve-reliability-of-multilevel-phase-change-memory-in-the-presence-of-significant-resistance-drift-2011-ieee-tvlsi">ieee:5497218 - A Time-Aware Fault Tolerance Scheme to Improve Reliability of Multilevel Phase-Change Memory in the Presence of Significant Resistance Drift (2011, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.89~0.94</td></tr><tr><td>부호length</td><td>34816~36864</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>데이터 lifetime(time stamp)으로 셀 저항분포를 추정해 양자화 threshold·LLR을 time-aware로 재조정, drift 보상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>PCM drift 모델(Gaussian) 전제 — NAND retention/RTN과 물리모델 다름, HW 미설계·시뮬만, LDPC PER은 10^-4에서 외삽</td></tr><tr><td>추가확인</td><td>NAND retention drift에 time-aware LLR LUT 재조정을 적용 시 read 비용/타이밍 오버헤드 검토</td></tr></tbody></table>
+<blockquote><p>총평: PCM 대상이나 lifetime 기반 soft-read LLR 재양자화(MAX-LOG-MAP LLR LUT) 아이디어는 NAND retention-aware LLR 설계에 개념 이식 가능 — 부호/디코더 자체는 표준 min-sum QC-LDPC.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 multilevel(4-level/8-level) per cell PCM으로, 4kB user data를 보호하는 BCH 3종과 QC-LDPC 2종(len 34816 rate-0.94, len 36864 rate-0.89, circulant 1024x1024)을 test vehicle로 쓴다.</li><li>풀려는 문제: PCM 비정질 상태의 structural relaxation으로 저항이 시간에 따라 drift(<code>R(t)=R0·t^ν</code>)하여 레벨 간 overlap이 커지고 신뢰도가 급락한다.</li><li>채널 모델: 로그영역 저항 <code>logR</code>이 시간에 선형 증가, 초기저항 <code>R0</code>와 drift exponent <code>ν</code>가 Gaussian → lifetime <code>t</code>에서 <code>logR(t)</code>도 Gaussian <code>N(μ_i(t),σ_i(t))</code>.</li><li>핵심 기법: 워드 write 시 33-bit time stamp를 붙이고, read 시 lifetime을 계산해 drift 통계모델로 각 레벨 분포 파라미터를 추정, 양자화 threshold와 soft LLR을 time-aware로 재조정한다.</li><li>hard-decision(BCH)용: 인접 레벨 오류확률 <code>P_e</code>를 최소화하는 최적 양자화 threshold <code>T_{i,i+1}</code>을 (8)식으로 lifetime별 계산.</li><li>soft-decision(LDPC)용: 미세 양자화 저항값에서 비트 LLR을 Q-function 기반으로 산출, MAX-LOG-MAP 근사(<code>log Σexp ≈ max</code>)로 division/exp를 LUT+사전계산으로 단순화 (식 10~11).</li><li>구현 디테일: threshold는 정수 3bit+소수 4bit(총 7bit)로 표현, LDPC 디코딩 메시지·LLR은 각 3-bit 양자화.</li><li>디코딩: min-sum 알고리즘, 최대 32 iteration, PER은 10^-4까지 Monte Carlo 후 10^-15로 외삽.</li><li>결과: time-aware로 허용 content lifetime이 4-level PCM에서 BCH 약 4자릿수, LDPC 약 7자릿수 향상; LDPC가 soft-info 활용으로 BCH보다 개선폭 큼, information-theoretic bound와의 gap 대폭 축소.</li><li>한계: HW 미설계(시뮬만), Gaussian drift 모델·PCM 물리 전제, self-refresh 미고려, LDPC 극저 PER은 외삽 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>lifetime 기반 soft-read LLR 재조정</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>중 — NAND retention-aware LLR threshold 재조정에 대응, drift→retention로 물리모델 치환 필요</td></tr><tr><td>3-bit LLR 양자화 / iteration별 값</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>중 — 3-bit soft LLR 테이블 구조와 정합</td></tr><tr><td>min-sum QC-LDPC 복호(32 iter)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>낮음 — 표준 min-sum, 이미 보유(중복)</td></tr><tr><td>QC-LDPC circulant 부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>낮음 — 부호 자체는 표준 random QC-LDPC</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 디코더/부호는 표준(이미 보유)이나, "저장경과시간에 따라 soft-read 양자화·LLR을 재조정"하는 프레임워크는 NAND retention-aware LLR 설계로 개념 이식할 여지가 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5497218",
+  "title": "A Time-Aware Fault Tolerance Scheme to Improve Reliability of Multilevel Phase-Change Memory in the Presence of Significant Resistance Drift",
+  "year": 2011,
+  "venue": "IEEE Transactions on VLSI Systems",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.89~0.94",
+  "code_length": "34816~36864",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "데이터 lifetime(time stamp)으로 셀 저항분포 추정해 양자화 threshold/LLR을 time-aware로 재조정, drift 보상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "PCM drift(Gaussian) 모델 전제로 NAND retention/RTN과 물리모델 상이, HW 미설계·시뮬만, LDPC PER 외삽",
+  "todo_check": "NAND retention drift에 time-aware LLR LUT 재조정 적용 시 read 비용/타이밍 오버헤드 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5497218---a-time-aware-fault-tolerance-scheme-to-improve-reliability-of-multilevel-phase-change-memory-in-the-presence-of-significant-resistance-drift-2011-ieee-tvlsi">ieee:5497218 - A Time-Aware Fault Tolerance Scheme to Improve Reliability of Multilevel Phase-Change Memory in the Presence of Significant Resistance Drift (2011, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

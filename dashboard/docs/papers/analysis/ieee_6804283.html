@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6804283</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6804283---unconventional-behavior-of-the-noisy-min-sum-decoder-over-the-binary-symmetric-channel-2014-ieee-conf">ieee:6804283 - Unconventional Behavior of the Noisy Min-Sum Decoder over the Binary Symmetric Channel (2014, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>noisy HW의 adder 노이즈가 MS를 fixed-point attractor에서 탈출시켜 정정능력을 오히려 향상시킬 수 있음을 DE로 규명, functional threshold 개념 제시</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(hard) 전용, (3,6)-regular 특수 케이스 이득이며 유익 이득은 msg alphabet 미사용(홀수 message)에서 기인</td></tr><tr><td>추가확인</td><td>NAND soft-read(2SD/3SD)·irregular·QC-LDPC에서도 noise-aided 이득이 유지되는지, 조기종료가 error-floor를 없애는 메커니즘</td></tr></tbody></table>
+<blockquote><p>총평: min-sum HW를 이미 보유한 코드베이스엔 직접 이식 대상은 아니나, 채널 scale factor μ·양자화 최적화와 조기종료가 error-floor에 미치는 통찰은 참고 가치가 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템/코드: BSC(crossover <code>p0</code>), (3,6)-regular LDPC, 유한정밀 MS 디코더 — 메시지 <code>q=4</code>bit(<code>Q=7</code>), APP <code>q̃=5</code>bit(<code>Q̃=15</code>); finite-length <code>N=1008</code>, <code>N=10000</code>(MacKay).</li><li>문제: 나노공정 소자의 신뢰성 저하로 디코더 로직(adder/comparator/XOR)이 불안정 → 불신뢰 소자 위 MS 거동을 정량 분석 필요.</li><li>에러 모델: noiseless 연산 출력 <code>v</code>에 error set <code>E</code>에서 뽑은 <code>e</code>를 bitwise XOR 주입. adder는 full-depth(부호비트까지)와 sign-preserving 두 모델, 주입확률 <code>pa</code>; comparator 뒤집힘 <code>pc</code>, XOR 뒤집힘 <code>px</code>.</li><li>핵심 알고리즘: Noisy-MS(Algorithm 1) — CN은 부호 <code>xpr</code>(noisy XOR)와 크기 <code>mpr</code>(noisy min), VN은 nested noisy adder <code>apr</code>로 <code>q̃</code>bit 합 후 <code>q</code>bit 포화.</li><li>핵심 관찰: <code>dv=3</code>이라 무잡음 MS의 APP 분포 <code>C(l)</code>이 짝수값에만 지지되며 이 "gap"이 DE fixed-point attractor를 유발.</li><li>Noise-aided 효과: adder 노이즈가 gap을 채워 attractor 탈출을 가능케 함 → noiseless 대비 정정능력 증가(comparator/XOR 노이즈는 gap을 못 채워 효과 없음).</li><li>새 임계 개념: noisy 디코더는 <code>Pe(∞)</code>가 0으로 수렴 못하므로 useful region, η-threshold, discontinuity line = functional threshold <code>p0(DL)</code>(무잡음 threshold의 일반화) 정의.</li><li>Scale factor 최적화: 유한정밀에선 채널 scale <code>μ</code>가 성능 좌우, <code>μ∈{1,3,5}</code>에서 noisy가 noiseless보다 우수, 최적 <code>μ=6</code>; Proposition 1: <code>Pe(∞) ≥ pa/(2Q̃)</code>.</li><li>결과: <code>μ=6</code>에서 noisy MS BER가 BP에 근접, <code>pa=10⁻⁴</code>에서 <code>Pe(∞)≈3.33e-6</code>; 조기종료(syndrome check) 유무로 error-floor(<code>~3.33e-5</code>) 발생/소멸.</li><li>한계: BSC(hard) 전용, HW 미합성(에러 확률 파라미터만), 이득이 (3,6)-regular의 message-alphabet 미사용 특성에 의존, latency는 수백~수천 iteration으로 악화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Noisy-MS 이터레이션(Algorithm 1)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동일 MS 루프 구조, 노이즈 주입은 옵션 추가 형태로 실험 가능</td></tr><tr><td>CN min/XOR 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>noisy comparator/XOR 모델 대응 지점</td></tr><tr><td>VN nested adder·q/q̃ 양자화·scale μ</td><td>decoder.cpp <code>VN_Cal_HD()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>scale factor·양자화 최적화 통찰이 LLR 테이블 튜닝에 참고</td></tr><tr><td>조기종료(syndrome check)</td><td>full_CRC.cpp, partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료가 error-floor를 억제하는 관찰이 CRC 종료 설계와 연결</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — MS를 이미 보유해 알고리즘 직접 이식은 불필요하나, 유한정밀 scale factor/양자화 최적화와 조기종료의 error-floor 억제 통찰은 참고할 만하다(단 BSC hard 전용, NAND soft-read로의 일반화는 미검증).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6804283",
+  "title": "Unconventional Behavior of the Noisy Min-Sum Decoder over the Binary Symmetric Channel",
+  "year": 2014,
+  "venue": "IEEE Conf.",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "noisy HW의 adder 노이즈가 MS를 fixed-point attractor에서 탈출시켜 정정능력을 오히려 향상시킬 수 있음을 DE로 규명, functional threshold 개념 제시",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "BSC(hard) 전용, (3,6)-regular 특수 케이스 이득이며 유익 이득은 msg alphabet 미사용(홀수 message)에서 기인",
+  "todo_check": "NAND soft-read(2SD/3SD)·irregular·QC-LDPC에서도 noise-aided 이득이 유지되는지, 조기종료가 error-floor를 없애는 메커니즘"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6804283---unconventional-behavior-of-the-noisy-min-sum-decoder-over-the-binary-symmetric-channel-2014-ieee-conf">ieee:6804283 - Unconventional Behavior of the Noisy Min-Sum Decoder over the Binary Symmetric Channel (2014, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

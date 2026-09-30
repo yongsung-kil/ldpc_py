@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8369398</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8369398---a-study-on-iterative-decoding-with-llr-modulator-by-parity-check-information-in-smr-system-2018-ieee-trans-magnetics">ieee:8369398 - A Study on Iterative Decoding With LLR Modulator by Parity Check Information in SMR System (2018, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.88</td></tr><tr><td>부호length</td><td>33280</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>parity-check 정보(0/1/2/3)로 신뢰 LLR을 선별·가중해 SP 복호 error-floor를 제거하고 SNR 0.5dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SMR/ITI·turbo equalization(APP+SP) 특화, 연속 LLR·MAP 채널 전제, HW·복잡도 없음</td></tr><tr><td>추가확인</td><td>NAND(양자화 2~3bit LLR, ITI 없음) 채널에서 parity-check 가중이 min-sum에도 유효한지</td></tr></tbody></table>
+<blockquote><p>총평: SMR turbo equalization에서 parity-check 정보로 LLR을 선택 가중해 error-floor를 제거하는 SP 복호 보정 기법 — 아이디어는 흥미로우나 SMR/APP 연동·연속 LLR 전제로 binary QC-LDPC NAND ECC 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 SMR(shingled magnetic recording), 4 Tbit/in² 밀도, 128/130 RLL + LDPC 인코더, 섹터 4096바이트, 전체 rate ≈ <code>0.88</code>, 부호는 정보길이 33280·행중량 30·열중량 3 (Gallager 구성 + row permutation) regular LDPC.</li><li>풀려는 문제: SMR의 inter-track interference(ITI)로 반복복호 성능이 열화되고 특정 섹터에서 error-floor 발생 (SP 복호가 수렴 실패).</li><li>채널/모델: granular medium(Voronoi slope model, grain 5.0nm), AWGN 시스템 잡음, 2D-FIR(15탭) + PR1 등화, <code>SNRS = 20log10(A/σS)</code>.</li><li>핵심 기법: <code>LLR modulator</code> — APP(max-log-MAP) 출력 LLR의 부호로 hard decision 후 parity-check 수행, 각 채널비트별로 만족한 검사식 수를 열방향 합산해 parity-check 정보 <code>{0,1,2,3}</code> 생성.</li><li>의미: parity-check 정보 <code>0</code>(또는 <code>1</code>)인 LLR은 참일 확률이 높다고 보고 변조 후보로 선별 — 신뢰 높은 LLR만 강화해 오정보 전파 억제.</li><li>확장: 선별 LLR에 threshold를 적용하고 weight로 gain (parity-check <code>0</code>은 weight 3.0·threshold 0.3에서 BER 최소, <code>1</code>도 별도 threshold/weight로 추가).</li><li>구조: APP 디코더와 SP 디코더 사이 turbo equalization(<code>iglobal</code>), SP 내부 반복 <code>isp=15</code>, LLR modulator가 그 사이에서 LLR 재조정.</li><li>학습/최적화: weight·threshold를 BER 곡선 스윕으로 실험적 결정 (Fig.4/5).</li><li>결과: LLR modulator 없으면 <code>iglobal≥8</code>에서 error-floor, 적용 시 <code>iglobal≥17</code>에서 무오류 도달, SNRS 0.5dB 개선 (SNRS=21.5dB).</li><li>한계: 시뮬만(HW·gatecount·throughput 없음), SMR/ITI·연속 LLR·APP 연동 전제, NAND soft-read(2~3bit 양자화)와 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>parity-check 정보 기반 LLR 선별·가중(LLR modulator)</td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>개념상 iteration별 LLR 조정과 유사하나 Prime ECC는 syndrome-가중 재조정 로직 없음</td></tr><tr><td>syndrome/parity-check 결과 활용</td><td><code>partial_CRC.cpp</code>/<code>full_CRC.cpp</code></td><td>Prime ECC는 parity를 조기종료 판정에만 사용, LLR 변조에 미사용</td></tr><tr><td>APP(max-log-MAP)+SP turbo equalization</td><td>대응 없음</td><td>Prime ECC는 채널 등화기/turbo loop 없음, 독립 LDPC 복호만</td></tr><tr><td>PR1/2D-FIR SMR 채널</td><td><code>channel.cpp</code></td><td>Prime ECC는 AWGN/RBER, 자기기록 채널·ITI 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — parity-check 만족도로 신뢰 LLR을 가중한다는 착상은 min-sum 후처리에 응용 여지가 있으나, SMR turbo equalization·연속 LLR·APP 연동에 강결합되어 있고 HW/복잡도 근거가 없어 binary QC-LDPC NAND ECC로의 직접 이식가치는 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8369398",
+  "title": "A Study on Iterative Decoding With LLR Modulator by Parity Check Information in SMR System",
+  "year": 2018,
+  "venue": "IEEE Trans. Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.88,
+  "code_length": "33280",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "parity-check 정보(0/1/2/3)로 신뢰 LLR을 선별·가중해 SP 복호 error-floor를 제거하고 SNR 0.5dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SMR/ITI·turbo equalization(APP+SP) 특화, 연속 LLR·MAP 채널 전제, HW·복잡도 없음",
+  "todo_check": "NAND(양자화 2~3bit LLR, ITI 없음) 채널에서 parity-check 가중이 min-sum에도 유효한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8369398---a-study-on-iterative-decoding-with-llr-modulator-by-parity-check-information-in-smr-system-2018-ieee-trans-magnetics">ieee:8369398 - A Study on Iterative Decoding With LLR Modulator by Parity Check Information in SMR System (2018, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

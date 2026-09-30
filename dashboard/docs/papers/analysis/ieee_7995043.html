@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7995043</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7995043---dynamic-scheduling-decoding-of-ldpc-codes-based-on-tabu-search-2017-ieee-trans-communications">ieee:7995043 - Dynamic Scheduling Decoding of LDPC Codes Based on Tabu Search (2017, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576~1152</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>tabu list로 안정/불신뢰 변수노드를 일시 배제해 IDS(RBP)의 greediness 완화, 수렴속도·BER 동시 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>tanh 기반 IDS 순차 스케줄링으로 min-sum·row병렬 우리 HW와 상충, edge/node별 동적선택은 병렬 파이프라인에 부적합</td></tr><tr><td>추가확인</td><td>tabu list 저장·잔차 pre-computation 오버헤드가 z=32 병렬 HW에서 실현 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: BP 동적 스케줄링(IDS)의 greediness를 tabu search로 완화하는 순차 디코더 알고리즘으로 min-sum·병렬 NAND HW와 정합이 어려워 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN·BPSK, IEEE 802.16e irregular LDPC <code>(576,288)/(1152,576)</code> 및 PEG regular <code>(1008,504)</code>, rate 1/2, max iter 5(또는 50).</li><li>문제: RBP류 IDS(informed dynamic scheduling)는 잔차 최대 edge만 우선 갱신해 빠르나 greedy — 일부 변수노드에 자원이 편중되어 수렴 후 BER가 나쁨.</li><li>핵심 기법: tabu search 도입(TSDS) — 갱신된 변수노드를 두 tabu 조건으로 판정, 만족 시 FIFO tabu list에 저장하고 일정 기간 재선택 금지.</li><li>tabu 조건1: 불만족 parity-check 카운터가 변수노드 degree와 같음(불신뢰), 조건2: 갱신 전후 LLR 변화 5% 미만(안정) — 둘 다 만족 시 배제.</li><li>선택전략: 변수노드 잔차 <code>r(vn)</code>와 V2C 잔차 <code>r(vn→cm)</code> 결합, 갱신 순서를 VN→CN으로 재배치.</li><li>동적 tabu 길이: <code>TL = α·N·β^k</code>(상한 0.5N), <code>α=0.01, β=1.6</code> — 초반 짧게(빠른 수렴)·후반 길게(greediness 완화).</li><li>단순화: 최대 잔차 변수노드에 대해서만 V2C pre-computation 수행(<code>E_{v→c}</code> 마킹)으로 검색·갱신 복잡도 축소.</li><li>복잡도: 갱신 V2C <code>E</code>, C2V <code>E(dc−1)</code>, 검색 비교 <code>E(N−TL+dv−1)</code> — IDS 중 VC RBP 제외 최저 갱신복잡도, tabu list 저장 추가.</li><li>결과: BER 1e-6에서 LQRD 대비 0.3 dB, SVNF 대비 0.2 dB 이득, length 1008에서 BER 1e-7에서 SVNF 대비 0.15 dB, 수렴속도 최상.</li><li>한계: HW 미설계, AWGN 시뮬만, tanh 기반 순차 IDS(edge/node 동적선택)라 병렬 하드웨어와 상충.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| TSDS 동적 스케줄링 이터레이션 루프 | decoder.cpp LDPC_Decoder() | 이터레이션·스케줄 레이어 접점이나 우리는 dual-update 고정 스케줄 |
+| C2V/V2C 메시지 계산(tanh 기반 SPA) | decoder.cpp C2V_Cal(), CNU_Update_New_Mag() | 우리는 min-sum, 논문은 full-tanh SPA로 연산 상이 |
+| 변수노드 LLR 안정성 판정(tabu 조건2) | decoder.cpp VN_Cal_HD() 등 | VN LLR 접근 접점이나 tabu list 로직 미대응 |
+| 잔차 기반 조기종료/스킵 | partial_CRC.cpp partial_crc_HW_T4() | 우리는 CRC 조기종료, 논문은 잔차 스케줄링으로 개념 다름 |
+| tabu list 메모리 큐 | 대응 없음 | 동적 스케줄링용 노드 배제 큐, HW 모델 미대응 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 순차 IDS/tabu 스케줄링은 z=32 row-병렬 min-sum 파이프라인과 근본적으로 상충하고, full-tanh SPA·edge별 동적선택이라 우리 병렬 HW에 이식하려면 사실상 재설계가 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7995043",
+  "title": "Dynamic Scheduling Decoding of LDPC Codes Based on Tabu Search",
+  "year": 2017,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "576~1152",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "tabu list로 안정/불신뢰 변수노드를 일시 배제해 IDS(RBP)의 greediness 완화, 수렴속도·BER 동시 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "tanh 기반 IDS 순차 스케줄링으로 min-sum·row병렬 우리 HW와 상충, edge/node별 동적선택은 병렬 파이프라인에 부적합",
+  "todo_check": "tabu list 저장·잔차 pre-computation 오버헤드가 z=32 병렬 HW에서 실현 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7995043---dynamic-scheduling-decoding-of-ldpc-codes-based-on-tabu-search-2017-ieee-trans-communications">ieee:7995043 - Dynamic Scheduling Decoding of LDPC Codes Based on Tabu Search (2017, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

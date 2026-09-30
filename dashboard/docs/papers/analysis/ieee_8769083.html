@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8769083</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8769083---construction-of-high-performance-block-and-convolutional-multi-edge-type-qc-ldpc-codes-2019-tsp-2019">ieee:8769083 - Construction of High Performance Block and Convolutional Multi-Edge Type QC-LDPC codes (2019, TSP 2019)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>261924</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>PEXIT+simulated annealing lifting(girth/EMD 최대화) 기반 code sieving으로 장길이 고성능 MET QC-LDPC(블록/spatially-coupled) 구성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>MET QC-LDPC + spatially-coupled + AWGN/QPSK 대상, non-NAND·초장길이(N=26만/78만)로 우리 4KB/고정 QC-LDPC와 부호구조 상이</td></tr><tr><td>추가확인</td><td>EMD/girth 기반 TS 제거 기준을 우리 z=32 lifting에 적용 가능한지, QRCBP(7/7/5bit) 양자화가 우리 min-sum 양자화와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: EMD/girth 최적화 lifting으로 error-floor를 낮추는 QC-LDPC 구성 방법론은 흥미로우나, MET/spatially-coupled + 비-NAND AWGN 대상 + 초장길이 부호라 우리 고정 binary QC-LDPC 4KB 엔진 이식성은 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 장길이 MET(Multi-Edge Type) QC-LDPC 블록 및 spatially-coupled convolutional(MET QC-LDPCC) 부호를 QRCBP 디코더 하에서 구성, <code>rate=0.8</code>, AWGN/QPSK.</li><li>문제: iterative decoding threshold(점근 성능)와 graph 특성(EMD/girth)을 동시에 만족하는 lifting이 QC 구조 제약상 어려움, error-floor 방지 필요.</li><li>채널/디코더 모델: AWGN, QRCBP(Quantized Reduced-Complexity Box-Plus) 디코더 - min-sum 대비 12.5% 오버헤드로 sum-product 성능 달성, 입력 LLR 7bit/variable msg 7bit/check msg 5bit 양자화.</li><li>핵심기법 1(부호구성 1단): differential evolution + Protograph EXIT-chart로 mother matrix(protograph) 탐색해 threshold를 Shannon(단중길이는 Polyanskiy) 한계에 근접시킴.</li><li>핵심식/개념: cycle의 <code>EMD</code>(cycle의 VN에 단일 연결된 CN 수)를 최대화 - 각 cycle이 trapping set이므로 harm=<code>b/a</code> 기반 등확률 TS 제거로 pseudocodeword weight 개선.</li><li>핵심기법 2(부호구성 2단): simulated annealing lifting <code>SALift(M(H),L)</code>으로 girth·EMD 제약 하 CPM shift 최적화, threshold와 EMD가 상충하면 Shannon 한계에서 penalty(shift)를 줘 error-correcting 요건 만족 lifting 확보(Alg.1 code sieving).</li><li>구현 디테일: mother matrix 92 VN × 20 CN, 최대 column weight 17, weight-1 circulant, punctured VN 2개(threshold 개선용).</li><li>검증 절차: Cole's Tree Impulse Importance Sampling(ISRCBP)로 후보 부호의 error-floor를 예측·선별, <code>Cardm=50</code> protograph × <code>Cardc=100</code> lifting 후보 sieving.</li><li>결과: base matrix threshold <code>Eb/N0=2.333dB</code>(200 iter, BER&lt;10−15, Shannon 대비 0.289dB), 블록 <code>N=261924</code>/convolutional 등가 <code>N=785772</code>가 32 iter에서 각각 <code>2.56dB</code>/<code>2.478dB</code>, error-floor BER≈10−16.</li><li>한계: 순수 부호구성 방법론(HW 미설계), AWGN/QPSK 대상이며 NAND 무관, 초장길이 부호로 barrel shifter 복잡도만 정성 언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MET QC-LDPC base matrix / CPM lifting</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호 PCM 로드 지점이나 MET/SC 구조·초장길이라 우리 4KB 고정 QC-LDPC와 상이</td></tr><tr><td>QRCBP(box-plus) check-node 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum(min1/min2) 고정, box-plus로 교체는 별개 근사·양자화 재설계 필요</td></tr><tr><td>LLR 7bit / msg 양자화 grid</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp VN 양자화</td><td>우리 hard/2SD/3SD 테이블과 bit-width·grid 상이</td></tr><tr><td>girth/EMD 기반 lifting·TS 제거(오프라인 설계)</td><td>대응 없음</td><td>부호설계 툴체인, 런타임 코드에 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — EMD/girth 최적화 lifting 아이디어 자체는 우리 QC-LDPC 부호품질 개선에 참고 가능하나, MET/spatially-coupled + AWGN + 초장길이 전제가 우리 고정 binary QC-LDPC 4KB 엔진과 크게 달라 직접 이식 가치는 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8769083",
+  "title": "Construction of High Performance Block and Convolutional Multi-Edge Type QC-LDPC codes",
+  "year": 2019,
+  "venue": "TSP 2019",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.8,
+  "code_length": "261924",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "PEXIT+simulated annealing lifting(girth/EMD 최대화) 기반 code sieving으로 장길이 고성능 MET QC-LDPC(블록/spatially-coupled) 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "MET QC-LDPC + spatially-coupled + AWGN/QPSK 대상, non-NAND·초장길이(N=26만/78만)로 우리 4KB/고정 QC-LDPC와 부호구조 상이",
+  "todo_check": "EMD/girth 기반 TS 제거 기준을 우리 z=32 lifting에 적용 가능한지, QRCBP(7/7/5bit) 양자화가 우리 min-sum 양자화와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8769083---construction-of-high-performance-block-and-convolutional-multi-edge-type-qc-ldpc-codes-2019-tsp-2019">ieee:8769083 - Construction of High Performance Block and Convolutional Multi-Edge Type QC-LDPC codes (2019, TSP 2019)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

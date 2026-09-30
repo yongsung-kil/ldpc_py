@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9778904</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9778904---layered-bit-flipping-algorithms-for-decoding-ldpc-codes-2022-ieee-icccbda">ieee:9778904 - Layered Bit-Flipping Algorithms for Decoding LDPC Codes (2022, IEEE ICCCBDA)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>column layered scheduling을 BF(ISBF) 복호에 최초 적용(LISBF), flipping threshold 계산을 forward-backward/two-max로 O(1) 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>hard-decision BF/BSC 전용 - Prime ECC는 min-sum(soft) 기반이라 알고리즘 자체는 이식 부적합, 단 column-layered 스케줄 아이디어만 참고 가능</td></tr><tr><td>추가확인</td><td>LISBF의 layered 스케줄이 min-sum column-layered(ref[14] two-min)에 이미 알려진 것과 실질 차별성 있는지, HW gate/throughput 미제시</td></tr></tbody></table>
+<blockquote><p>총평: hard-decision BF에 column-layered 스케줄을 얹어 FER 1자리·iter 40% 개선했으나, soft min-sum 기반 Prime ECC엔 알고리즘 직접 이식보다 스케줄링 아이디어 참고 수준.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>코드: <code>(dv,dc)=(3,6)</code> regular QC-LDPC, <code>N=1296</code>, <code>R=0.5</code>, base matrix 6×12, CPM 크기 108×108 (자체 PEG-like 구성).</li><li>문제: ISBF가 BF 계열 중 최고 FER이나 수렴이 느림 → 수렴 가속·성능 개선 필요. 채널은 BSC(crossover <code>α</code>), hard-info만 사용.</li><li>모델: <code>Si</code>=i번째 VN에 연결된 unsatisfied CN 수, 에너지 <code>Ei = ci⊕yi + Si</code> (클수록 unreliable).</li><li>기법1 LISBF: 전체 VN을 <code>L=12</code> layer로 분할(각 layer=base matrix 1열=108bit), layer 내 병렬·layer 간 직렬 처리로 정보전파 가속·HW 재사용.</li><li>flipping 규칙: <code>Si≥T</code>면 확률 <code>p0</code>로, <code>Ei≥T</code>면 확률 <code>p1(≤p0)</code>로 flip; threshold <code>T</code>는 전체 layer threshold <code>Tl</code>의 최대값(이전 iter 기반 → 임계경로 단축).</li><li>기법2 forward-backward: <code>T</code> 계산을 forward <code>T</code>/backward <code>T</code>의 max로 분해, layer당 complexity/latency O(1)로 정확 계산.</li><li>기법3 two-max(ALISBF): layer threshold 상위 2개만 pair 벡터 <code>A</code>로 유지·on-the-fly 갱신, <code>T=A11</code>로 근사 계산(저장부담↓, 저정밀).</li><li>flip 시 갱신: <code>ci=ci⊕1</code>, <code>Ei=dv+1-Ei</code>, 연결된 CN syndrome <code>sj=sj⊕1</code>.</li><li>결과: <code>Imax=50</code>, <code>p0=0.75,p1=0.45</code>. ISBF 대비 FER 최대 1자리 감소, 평균 iteration 약 40% 감소. LISBF≈ALISBF.</li><li>한계: HW 미설계(gate/throughput 없음), BSC·hard-decision BF 전용, code 1종(N=1296)만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| BF 복호 이터레이션(LISBF) | decoder.cpp LDPC_Decoder() | Prime ECC는 min-sum이라 BF 알고리즘 자체는 교체가 아닌 참고 수준 |
+| column layered 스케줄(layer 병렬/직렬) | decoder.cpp LDPC_Decoder() 이터레이션 루프 | dual-update(parity 교대 스케줄)와 유사 개념 - 부분 중복 |
+| two-max/forward-backward threshold 계산 | decoder.cpp CNU_Update_New_Mag() | min-sum의 min1/min2(two-min)와 유사한 최대2값 추적 - 이미 보유 기법과 근접 |
+| 에너지/syndrome 기반 flip | 대응 없음 | Prime ECC는 LLR 기반 soft min-sum, hard-BF 에너지 개념 부재 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - column-layered 스케줄과 two-max 아이디어는 참고 가치가 있으나 Prime ECC의 min-sum/dual-update/min1-min2와 상당 중복이고, 논문 알고리즘(hard BF, BSC)은 soft min-sum 파이프라인에 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9778904",
+  "title": "Layered Bit-Flipping Algorithms for Decoding LDPC Codes",
+  "year": 2022,
+  "venue": "IEEE ICCCBDA",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "column layered scheduling을 BF(ISBF) 복호에 최초 적용(LISBF), flipping threshold 계산을 forward-backward/two-max로 O(1) 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "hard-decision BF/BSC 전용 - Prime ECC는 min-sum(soft) 기반이라 알고리즘 직접 이식 부적합, column-layered 스케줄 아이디어만 참고 가능",
+  "todo_check": "LISBF layered 스케줄이 min-sum column-layered(two-min)와 실질 차별성 있는지, HW gate/throughput 미제시"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9778904---layered-bit-flipping-algorithms-for-decoding-ldpc-codes-2022-ieee-icccbda">ieee:9778904 - Layered Bit-Flipping Algorithms for Decoding LDPC Codes (2022, IEEE ICCCBDA)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

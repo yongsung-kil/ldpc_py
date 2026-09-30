@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1178450</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1178450---iterative-decoding-of-ldpc-codes-over-channels-with-intersymbol-interference-2002-isit">ieee:1178450 - Iterative decoding of LDPC codes over channels with intersymbol interference (2002, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ISI(메모리) 채널용으로 Gallager 복호에 BCJR를 결합, 분리(separation) 방식 대비 BER 2~3자릿수 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ISI 채널 전용(BCJR trellis 필요), NAND는 셀간 ISI 없이 read를 채널로 봄 → 채널 모델 불일치</td></tr><tr><td>추가확인</td><td>ISI 채널 특화 여부(NAND cell-to-cell 간섭에 유사 적용 가능성) — 대체로 무관</td></tr></tbody></table>
+<blockquote><p>총평: LDPC를 ISI(메모리) 채널에 확장(Gallager+BCJR)한 이론·시뮬 논문. NAND read는 memoryless 근사가 표준이라 BCJR 결합은 이식 이득 없음, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC(sparse parity check) 부호를 intersymbol interference(ISI)가 있는 memory 채널(HDD, 전화선, 방송 반사 등)로 전송.</li><li>문제: Gallager 복호는 memoryless 채널 가정 → ISI 채널에서 부정확. "separation"(MLSE/DFE로 ISI 제거 후 복호)보다 통합 복호가 우수.</li><li>모델: finite-memory ISI 채널, 인접 심볼 간 상관을 명시적으로 모델링.</li><li>핵심기법1(basic): Gallager 복호에 BCJR를 1회 사용해 인접 digit 상관으로 prior 확률 추정 개선, iterative 부분은 그대로 유지.</li><li>핵심식: BCJR로 얻은 인접 심볼 상관 → variable node의 prior LLR을 갱신(memoryless 가정 완화).</li><li>핵심기법2(generalized): 인접 digit이 참여하는 parity check 정보까지 활용해 rightbound 메시지를 수정, 주어진 인접 digit 수 기준 BER 관점에서 asymptotically optimal.</li><li>트릭: 병렬 독립 소형 디코더 구조 유지(복호 지연 최소화 가능)라고 언급.</li><li>최적화: 없음(closed-form 유도 + DE).</li><li>결과: 두 알고리즘 모두 separation 방식 대비 BER 2~3자릿수 개선, generalized &gt; basic; DE 이론 threshold와 시뮬 일치.</li><li>한계: HW 미설계, 시뮬만, ISI 채널 전용(memoryless NAND read와 채널 모델 불일치), generalized 알고리즘은 DE 시 all-zero codeword 가정 불가(arbitrary codeword 필요).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Gallager iterative 복호 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>개념 대응하나 본문은 full Sum-Product/BCJR, Prime ECC는 min-sum</td></tr><tr><td>BCJR 기반 prior LLR 갱신(ISI 제거)</td><td>대응 없음</td><td>Prime ECC는 memoryless read 채널, ISI equalizer/BCJR 모듈 없음</td></tr><tr><td>채널 상관 → soft prior 주입</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>soft-read LLR 설정과 형식만 유사, ISI 상관은 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — ISI(메모리) 채널용 BCJR 결합 복호라 memoryless read를 쓰는 NAND ECC와 채널 모델이 달라 이식 이득 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:1178450",
+  "title": "Iterative decoding of LDPC codes over channels with intersymbol interference",
+  "year": 2002,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ISI 메모리 채널용으로 Gallager 복호에 BCJR 결합, separation 방식 대비 BER 2~3자릿수 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ISI 채널 전용(BCJR trellis 필요), NAND read는 memoryless 근사라 채널 모델 불일치",
+  "todo_check": "NAND cell-to-cell 간섭에 유사 적용 가능성(대체로 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1178450---iterative-decoding-of-ldpc-codes-over-channels-with-intersymbol-interference-2002-isit">ieee:1178450 - Iterative decoding of LDPC codes over channels with intersymbol interference (2002, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

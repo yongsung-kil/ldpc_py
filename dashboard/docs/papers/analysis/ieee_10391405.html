@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10391405</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10391405---a-concise-polytope-projection-method-for-admm-assisted-lp-decoding-of-ldpc-codes-2023-ieee-iq-cchess">ieee:10391405 - A Concise Polytope Projection Method for ADMM-Assisted LP Decoding of LDPC Codes (2023, IEEE iQ-CCHESS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ADMM-LP 복호의 parity-polytope 사영을 probability simplex의 재귀구조로 매핑해 정렬 없이 매 iteration 최소 1좌표 고정, 실행시간 최대 22% 단축</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ADMM-LP 복호는 우리 min-sum message-passing과 전혀 다른 패러다임, 사영 서브루틴만 개선 (BER/정정능력 결과 없음)</td></tr><tr><td>추가확인</td><td>LP 복호 자체를 도입할 계획이 없으면 무관 - 우리 파이프라인엔 polytope projection 단계가 존재하지 않음</td></tr></tbody></table>
+<blockquote><p>총평: ADMM 기반 LP 복호의 병목인 check-polytope 사영을 정렬 없는 저복잡도 알고리즘으로 대체하는 순수 알고리즘 논문. Prime ECC의 min-sum 파이프라인에 대응 모듈이 없어 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이진 LDPC 부호(<code>m×n</code> H-matrix), BI-AWGN 등 memoryless symmetric 채널, LLR <code>γ_i=ln P(y|0)/P(y|1)</code> 입력. ADMM-assisted LP(ML) 복호.</li><li>문제: ADMM-LP는 복잡도가 거의 선형이나, 매 iteration의 parity-polytope <code>P_{d_j}</code> 사영(step 4)이 가장 무거워 HW 구현의 병목.</li><li>기존 한계: 사영 알고리즘들이 벡터 정렬(sort)이나 복잡한 반복을 요해 HW 부담 (문헌 [7] simplex, [9] 근사, [10] 최대 37% 연산감소지만 여전히 정렬/θ 의존).</li><li>핵심 기법: CSA로 위반 facet의 <code>θ</code>를 구하고, <code>T_θ</code>로 사영문제를 probability simplex <code>S_d={x∈[0,1]^d: Σx_i=1}</code>의 동형(isomorphic) 문제로 매핑.</li><li>핵심 식/이론: <code>component-sum one</code> 초평면 <code>H</code>로 사영한 <code>h=Π_H(v̄)</code>에서 (Theorem 1) <code>h∉S_d</code>면 최소 한 성분이 음수, (Theorem 2) <code>h_i≤0</code>이면 최종 사영 <code>z_i=0</code> -&gt; 음수좌표를 0 고정.</li><li>재귀 구조: 좌표 하나 고정 후 남은 부분벡터에 동일 절차 반복, 매 iteration 최소 1좌표 확정 -&gt; 유한 iteration 내 종료 (정렬 불필요).</li><li>구현: Algorithm 1 - CSA(1-6), <code>T_θ</code> 매핑(7), polytope 포함여부 체크(8-10), while 루프에서 음수성분 검출·swap·k 증가(14-24), 원좌표 복원 후 <code>T_θ</code>로 역매핑(25-29).</li><li>최적화 포인트: 정렬 제거, <code>T_θ</code>가 θ를 영벡터로 매핑해 비교·곱·나눗셈 연산 축소([10] 대비 θ 의존 제거).</li><li>결과: MATLAB, <code>d</code>별 입력벡터 10만개 평균 실행시간. 최신기법([8] ε=0.001 근사, [10]) 대비 실행시간 최대 22% 단축.</li><li>한계: BER/정정능력 실험 없음(속도만), 이진 LDPC 전용(non-binary는 future work), HW 미구현·복잡도 수치(gatecount 등) 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ADMM-LP 복호 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing, LP/ADMM 복호 경로 없음</td></tr><tr><td>parity-polytope 사영 서브루틴</td><td>대응 없음</td><td>우리 복호기에 polytope projection 단계가 존재하지 않음</td></tr><tr><td>LLR 입력 <code>γ_i</code></td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>LLR 정의는 공통이나 복호 알고리즘이 달라 사영 최적화가 무의미</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 개선 대상(polytope projection)이 Prime ECC의 min-sum 파이프라인에 존재하지 않아 떼어 쓸 접점이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10391405",
+  "title": "A Concise Polytope Projection Method for ADMM-Assisted LP Decoding of LDPC Codes",
+  "year": 2023,
+  "venue": "IEEE iQ-CCHESS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ADMM-LP 복호의 parity-polytope 사영을 probability simplex의 재귀구조로 매핑해 정렬 없이 매 iteration 최소 1좌표 고정, 실행시간 최대 22% 단축",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "ADMM-LP 복호는 우리 min-sum message-passing과 전혀 다른 패러다임, 사영 서브루틴만 개선 (BER/정정능력 결과 없음)",
+  "todo_check": "LP 복호 자체를 도입할 계획이 없으면 무관 - 우리 파이프라인엔 polytope projection 단계가 존재하지 않음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10391405---a-concise-polytope-projection-method-for-admm-assisted-lp-decoding-of-ldpc-codes-2023-ieee-iq-cchess">ieee:10391405 - A Concise Polytope Projection Method for ADMM-Assisted LP Decoding of LDPC Codes (2023, IEEE iQ-CCHESS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

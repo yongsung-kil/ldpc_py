@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4387553</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4387553---reconfigurable-fpga-implementation-of-product-accumulate-codes-2007-sips">ieee:4387553 - Reconfigurable FPGA Implementation of Product Accumulate Codes (2007, SiPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Product Accumulate(PA) 코드용 3단 파이프라인 min-sum 디코더를 FPGA로 구현하고 QPP 인터리버로 성능/비용 균형을 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.004Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 PA(product accumulate) 코드로 LDPC와 그래프 구조가 다르며 코드 자체가 QC-LDPC가 아님</td></tr><tr><td>추가확인</td><td>QPP 인터리버의 dual-port BRAM 활용(동일 패턴으로 interleave/de-interleave 동시 처리) 아이디어가 Prime ECC의 메모리 라우팅 설계에 참고될 여지가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: PA 코드(product code + 누산기 직렬결합) 전용 FPGA 파이프라인/인터리버 설계로, NAND 고전 binary QC-LDPC와 부호 구조 자체가 달라 직접 이식성은 낮으나 min-sum 파이프라이닝과 dual-port 메모리 인터리빙 기법은 일반적 HW 설계 아이디어로 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호는 Product Accumulate(PA-I) 코드 - 외부 SPC(single parity check) product 코드 + 인터리버(Π2) + 내부 rate-1 누산기(1/(1+D))의 직렬 결합, rate&gt;1/2.</li><li>문제: PA 코드는 시뮬레이션상 성능은 좋으나(SP 알고리즘) 효율적 HW 구현이 부재 - 본 논문은 최초의 FPGA 구현.</li><li>핵심 가정: BPSK + AWGN 채널, soft-info는 16bit 2's complement AWGN 후 5bit로 클리핑해 LLR(Lch)로 사용.</li><li>핵심 기법 1단: SP(sum-product) 대신 min-sum(MS) 근사 사용 - <code>Le(xi) ≈ sign(La(xj)) * min|La(xj)|</code> (tanh 규칙을 부호+최소값으로 근사), SP 대비 0.2dB 손실이나 복잡도 대폭 감소.</li><li>핵심 식 의미: check-node 업데이트에서 tanh 다중곱 대신 min 연산으로 대체해 HW 곱셈기/비선형 함수 제거.</li><li>핵심 기법 2단: QPP(quadratic permutation polynomial) 인터리버 <code>F(x)=(Ax+Bx²) mod N</code>을 재귀형 <code>F(x+1)=F(x)+H(x) mod N</code>으로 변환해 곱셈 없이 compare-and-subtract로 구현, dual-port BRAM 한 포트는 순차주소, 다른 포트는 인터리브주소로 사용해 별도 de-interleaver 없이 처리.</li><li>부수 트릭: 3단 파이프라인(inner decoder, outer decoder 2 SPC branch)으로 매 클록 1비트 처리, 이전 iteration 정보를 사용해 파이프라인 지연 보완, SPC Checker로 조기종료 지원.</li><li>학습/최적화 절차 없음 - 인터리버 3종(coprime, helical prime-factor, QPP)을 BER 시뮬레이션으로 비교 선정.</li><li>결과: Xilinx 2v3000FG676-4에서 인코더 62.5Mbps, 디코더 30 iteration에서 4Mbps; "ideal" SP 플로팅포인트 대비 BER 1e-5에서 0.25dB 열세; LDPC-CC 대비 slice/BRAM 활용비 더 균형적.</li><li>한계: 대상 부호가 QC-LDPC가 아닌 PA 코드이며, 처리량이 매우 낮고(Mbps급) NAND ECC가 요구하는 Gbps급 throughput과 거리가 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum 근사(tanh→sign+min)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 동일한 min-sum 근사를 사용하나 이미 보유 기법이라 중복</td></tr><tr><td>3단 파이프라인 구조</td><td><code>decoder.cpp</code> pipeline(col_M1/Z/P1~P4)</td><td>Prime ECC는 이미 6-stage pipeline 보유, PA 코드의 3단 구조는 부호 구조(outer/inner) 특이적이라 직접 대응 어려움</td></tr><tr><td>QPP 인터리버 dual-port BRAM 활용</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC 순환치환(circulant shift) 기반 라우팅이라 PA코드의 알고리즘적 인터리버 방식과 구조가 다름</td></tr><tr><td>SPC Checker 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>목적(조기종료)은 유사하나 메커니즘(parity check 자체 만족여부 vs CRC)이 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 - 대상 부호가 PA 코드로 QC-LDPC와 구조가 근본적으로 다르고, min-sum/파이프라이닝은 Prime ECC가 이미 보유한 기법과 중복되며 throughput도 NAND ECC 요구 수준에 크게 못 미침.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4387553",
+  "title": "Reconfigurable FPGA Implementation of Product Accumulate Codes",
+  "year": 2007,
+  "venue": "SiPS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Product Accumulate(PA) 코드용 3단 파이프라인 min-sum 디코더를 FPGA로 구현하고 QPP 인터리버로 성능/비용 균형을 달성",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.004,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "대상 부호가 PA(product accumulate) 코드로 LDPC와 그래프 구조가 다르며 코드 자체가 QC-LDPC가 아님",
+  "todo_check": "QPP 인터리버의 dual-port BRAM 활용(동일 패턴으로 interleave/de-interleave 동시 처리) 아이디어가 Prime ECC의 메모리 라우팅 설계에 참고될 여지가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4387553---reconfigurable-fpga-implementation-of-product-accumulate-codes-2007-sips">ieee:4387553 - Reconfigurable FPGA Implementation of Product Accumulate Codes (2007, SiPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

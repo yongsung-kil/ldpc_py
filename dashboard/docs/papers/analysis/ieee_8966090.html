@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8966090</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8966090---decoding-scheduling-for-unequal-error-protection-quasi-cyclic-low-density-parity-check-codes-2019-ieee-isitapcc-class-conf">ieee:8966090 - Decoding Scheduling for Unequal Error Protection Quasi-Cyclic Low-Density Parity-Check Codes (2019, IEEE ISIT/APCC-class conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>7376</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>UEP QC-LDPC의 upper-triangular PCM 구조에 맞춘 subcodeword-update-terminating 기반 3가지 스케줄링(flooding/shuffled/NVCRBP)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>UEP(보호레벨 차등) 부호 전용 구조 가정, 우리 uniform QC-LDPC엔 subcodeword 종료 이득이 직접 적용 안 됨</td></tr><tr><td>추가확인</td><td>subcodeword-update-terminating의 조기종료 아이디어를 UEP 없는 단일 부호에 부분 syndrome 기반으로 일반화 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: UEP 부호 전용 스케줄링이라 그대로는 이식성 제한적이나, 부분 syndrome 조기종료·shuffled/dynamic 스케줄 개념은 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템/부호: <code>l</code>-level UEP QC-LDPC, codeword <code>v=(v1,...,vl)</code> 각 레벨 <code>nj</code> bit, masked upper-triangular PCM <code>M</code>으로 레벨별 blockwise 최소거리 <code>d1≤...≤dl</code> 차등 부여. 시뮬은 2-level, length 7376, rate 1/2, circulant size 461, girth≥6.</li><li>문제: 기존 복호 스케줄링은 UEP 부호(레벨별 정정능력 상이)를 위해 설계되지 않아 불필요한 연산 낭비 발생.</li><li>채널/모델: BPSK, AWGN, 초기 LLR <code>Lj=(4R Eb/N0)yj</code>, sum-product 메시지패싱(<code>VAR</code>=합, <code>CHK</code>=<code>2tanh^{-1}(∏tanh)</code> = min-sum + 보정항 <code>Δ</code>).</li><li>핵심 기법(공통): subcodeword-update-terminating — upper-triangular 구조상 최상위 레벨부터 부분 syndrome <code>s(k)</code>로 정답 여부 판정, <code>sk=0</code>이면 해당 레벨 갱신 중단하고 <code>k</code>를 낮춰 남은 저레벨에 연산 집중.</li><li>핵심 식: 고정 VN의 LLR magnitude를 ∞로 두면 <code>CHK</code> 연산이 <code>sgn(x1)·x2</code>로 단순화(식 7의 sign 누적항) — 확정된 상위 subcodeword가 하위 갱신에 sign 정보만 기여.</li><li>기법 1(scheme-C): flooding 스케줄에 종료 메커니즘 결합(Algorithm 1), 현재 최상위 레벨 <code>k</code> 범위 <code>V(k)(i)</code>만 갱신.</li><li>기법 2(scheme-S): shuffled(serial) 스케줄, VN을 최상위→최하위 레벨 순으로 순차 갱신해 수렴 가속(Algorithm 2).</li><li>기법 3(scheme-N): NVCRBP informed dynamic 스케줄, variable-to-check residual <code>r=|q_new-q_old|</code> 최대 노드를 우선 갱신(Algorithm 3), 대신 residual 계산으로 복잡도 최고.</li><li>결과: 최대 20/50 equivalent iteration 제한 하 제안 3기법이 flooding 대비 특히 level-1(저보호) BER 개선, 평균 iteration 수 감소, level-1 수렴속도 대폭 향상(Fig.1~4). 절대 gate/throughput 수치 없음.</li><li>한계: HW 미설계, 시뮬(AWGN)뿐, 개선이 주로 저레벨 coded bit에 국한, 고레벨 개선은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>3가지 스케줄링(flooding/shuffled/NVCRBP) 반복 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 스케줄 계층 — 스케줄 교체 시도 시 접점 (단 UEP 전제)</td></tr><tr><td>부분 syndrome <code>s(k)</code> 기반 subcodeword 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리 조기종료(Partial CRC)와 유사 목적, 다만 UEP syndrome 방식은 다름</td></tr><tr><td>CHK 연산(min-sum + Δ 보정)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리는 이미 min-sum 보유(중복 기여)</td></tr><tr><td>확정 VN sign 고정(LLR→∞) 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>VN 처리 접점이나 UEP 특화 로직</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — UEP 부호 구조 전제라 uniform 단일 rate QC-LDPC인 Prime ECC엔 subcodeword-terminating 이득이 직접 이식되지 않는다. 다만 부분 syndrome 조기종료와 shuffled/dynamic 스케줄 개념은 avg-iteration 감소 관점에서 참고할 만하다.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:8966090",
+  "title": "Decoding Scheduling for Unequal Error Protection Quasi-Cyclic Low-Density Parity-Check Codes",
+  "year": 2019,
+  "venue": "IEEE conference",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "7376",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "UEP QC-LDPC의 upper-triangular PCM 구조에 맞춘 subcodeword-update-terminating 기반 3가지 스케줄링(flooding/shuffled/NVCRBP)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "UEP(보호레벨 차등) 부호 전용 구조 가정, 우리 uniform QC-LDPC엔 subcodeword 종료 이득이 직접 적용 안 됨",
+  "todo_check": "subcodeword-update-terminating의 조기종료 아이디어를 UEP 없는 단일 부호에 부분 syndrome 기반으로 일반화 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8966090---decoding-scheduling-for-unequal-error-protection-quasi-cyclic-low-density-parity-check-codes-2019-ieee-isitapcc-class-conf">ieee:8966090 - Decoding Scheduling for Unequal Error Protection Quasi-Cyclic Low-Density Parity-Check Codes (2019, IEEE ISIT/APCC-class conf)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

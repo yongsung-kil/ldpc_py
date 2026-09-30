@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4806043</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4806043---programmable-architecture-for-flexi-mode-qc-ldpc-decoder-supporting-wireless-lanman-applications-and-beyond-2010-ieee-tcas-i">ieee_4806043 - Programmable Architecture for Flexi-Mode QC-LDPC Decoder Supporting Wireless LAN/MAN Applications and Beyond (2010, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>프로그래머블 flexi-mode QC-LDPC 디코더: mTDMP(층상복호) 복잡도 절감 + 계층적 메모리 접근 최적화 + ESS-SPC 조기종료</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>198k gate@180nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.45Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호가 802.11n/16e 무선용 QC-LDPC(rate 0.5~0.83, length 576~2304), 핵심은 층상(TDMP)복호로 우리 min-sum 반복복호와 스케줄 상이</td></tr><tr><td>추가확인</td><td>ESS-SPC 조기종료가 우리 partial/full CRC 조기종료와 중복인지, mTDMP correction term(min1/min2 기반) 단순화가 우리 min-sum CNU에 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: mTDMP 기반 프로그래머블 QC-LDPC 디코더로 메모리접근 최적화·조기종료(ESS)·SISO 게이팅 등 저전력 기법이 풍부하나, 우리의 min-sum 반복복호와 달리 층상(TDMP)복호 골격이고 부호는 무선용.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.11n/16e 무선 LAN/MAN QC-LDPC(<code>(24,96,1/2)</code> 등), 확장인자 z 27/54/81(LAN)·최대 96(MAN), rate 1/2~5/6, AWGN, 최대 iteration 30.</li><li>문제: rate/length/pattern을 on-the-fly로 바꾸는 flexi-mode 디코더는 메모리·순열망(PN)이 면적·전력 병목.</li><li>기본 알고리즘: TDMP(turbo-decoding message passing, 층상복호) — 최신 posterior로 다음 subiteration 수행해 수렴 가속, LUT 없이 채널파라미터 독립.</li><li>핵심 기법 1: mTDMP — SISO의 forward-backward 재귀에서 correction term을 min1/min2(<code>M1</code>,<code>M2</code>) 기반 forward 연산(비교+덧셈+간단보정)으로 단순화, 식 (11).</li><li>결과: mTDMP는 원 TDMP 대비 0.1 dB 미만 손실, (6) 대비 복잡도 50%+ 감소, OMS보다 덧셈 1개만 더 쓰고 채널/부호 파라미터 독립.</li><li>핵심 기법 2: 구조적 메모리 — base matrix 최적화로 인접 subiteration 간 최대상관 정렬 → PMEM 계층화(레지스터파일+소형레지스터)로 접근 40%+ 감소, EMEM은 read/write 버퍼링으로 접근 최적화.</li><li>부수 기법: SISO cell 게이팅(확장인자 z에 따라 동적 활성/비활성), 로그시프터 기반 저복잡도 PPN(programmable permutation network)으로 permutation size·확장인자 지원.</li><li>핵심 기법 3: ESS-SPC 조기종료 — satisfied parity check 관찰로 진동/stuck하는 미복호 iteration을 조기종료, 저SNR(1.2 dB 이하)에서 평균 iteration 40%+ 감소.</li><li>결과 수치: SMIC 180nm 칩 10.12 mm2, 198k gate, 100 MHz, NTh 4.4 Mbps~1.45 Gbps, mTDMP+양자화+ESS로 [4] 대비 0.3 dB BER 개선, NEE 410 pJ/(bit·iter).</li><li>양자화: posterior 6-bit, extrinsic 8-bit(압축형 M1/M2/loc/sign 저장)로 성능손실 0.1 dB 미만.</li><li>한계: 부호는 무선 표준 QC-LDPC(rate 0.5~0.83, length ~2304)이며 복호골격이 층상(TDMP)이라 우리 flooding min-sum과 스케줄 상이.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>mTDMP correction term(min1/min2 단순화)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>min1/min2 기반 보정은 우리 min-sum과 접점, 단 TDMP 스케줄은 상이</td></tr><tr><td>ESS-SPC 조기종료</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>우리는 CRC 조기종료 보유, SPC 기반 ESS는 대안/중복</td></tr><tr><td>계층적 PMEM/EMEM 접근 최적화</td><td>대응 없음</td><td>우리 z=32 pipeline·메모리 구조와 별개, HW 재설계 필요</td></tr><tr><td>PPN(로그시프터 순열망)</td><td>대응 없음</td><td>우리는 고정 QC 구조(HCU/GT), 유연 순열망 불필요</td></tr><tr><td>SISO cell 게이팅/양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>양자화/게이팅 아이디어 일부 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — mTDMP correction 단순화와 저전력 메모리/조기종료 기법은 참고가치 있으나, 핵심 골격이 층상(TDMP)복호이고 우리 flooding min-sum·CRC 조기종료와 상당 부분 중복.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4806043",
+  "title": "Programmable Architecture for Flexi-Mode QC-LDPC Decoder Supporting Wireless LAN/MAN Applications and Beyond",
+  "year": 2010,
+  "venue": "IEEE TCAS-I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "프로그래머블 flexi-mode QC-LDPC 디코더: mTDMP(층상복호) 복잡도 절감 + 계층적 메모리 접근 최적화 + ESS-SPC 조기종료",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "198k gate@180nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1.45,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "부호가 802.11n/16e 무선용 QC-LDPC(rate 0.5~0.83, length 576~2304), 핵심은 층상(TDMP)복호로 우리 min-sum 반복복호와 스케줄 상이",
+  "todo_check": "ESS-SPC 조기종료가 우리 partial/full CRC 조기종료와 중복인지, mTDMP correction term(min1/min2 기반) 단순화가 우리 min-sum CNU에 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4806043---programmable-architecture-for-flexi-mode-qc-ldpc-decoder-supporting-wireless-lanman-applications-and-beyond-2010-ieee-tcas-i">ieee_4806043 - Programmable Architecture for Flexi-Mode QC-LDPC Decoder Supporting Wireless LAN/MAN Applications and Beyond (2010, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4252973</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4252973---fpga-implementation-of-ldpc-decoders-based-on-joint-row-column-decoding-algorithm-2007-ieee">ieee:4252973 - FPGA Implementation of LDPC Decoders Based on Joint Row-column Decoding Algorithm (2007, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.667</td></tr><tr><td>부호length</td><td>1920</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>row processing 안에 column processing을 통합한 joint row-column 디코딩으로 layered(TDMP)를 일반화, iteration당 다회 LLR 갱신으로 수렴 가속</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>6825 gates(joint row-column processor, 공정 미상, Xilinx XC4VLX160)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>IEEE 802.16e 특정 QC-LDPC(rate 2/3, length 1920) 한 코드로만 검증, 4비트 정밀도 고정</td></tr><tr><td>추가확인</td><td>α=0.75, β=0의 min-algorithm 보정계수가 다른 rate/length 코드에도 일반화되는지 미상</td></tr></tbody></table>
+<blockquote><p>총평: layered decoding을 컬럼 프로세서 제거 방향으로 확장한 구조로, iteration 감소·HW 비용 절감·error-floor 개선을 동시에 보인 이식가치 높은 논문.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>IEEE 802.16e 표준 QC-LDPC(rate 2/3, length 1920), AWGN + BPSK 채널로 시뮬레이션.</li><li>전통 MP(row/column 분리) 디코더는 메모리 충돌·라우팅 혼잡, iteration당 1회 LLR 갱신으로 수렴이 느림.</li><li>TDMP(layered decoding)를 일반화해 row 처리 안에 column 처리를 결합한 joint row-column processor 제안.</li><li>핵심 갱신식: <code>uij = Uj - vij</code>, <code>v'ij = sign(uik)·φ[Σφ(|uik|)]</code> (row별로 순차 처리하며 즉시 <code>U'j = uij + v'ij</code> 갱신).</li><li>이 갱신 방식으로 각 row 처리 후 즉시 최신 LLR을 다음 row에 반영, iteration당 여러 번 LLR이 갱신되어 수렴 가속.</li><li>min-algorithm 변형: <code>v'ij = sign(uik)·min|uik|</code>, 보정 <code>v''ij = α×v'ij - β</code> (α=0.75, β=0)로 연산 단순화.</li><li>row processor의 φ 함수는 7bit LUT(4bit fractional) 구현, extrinsic message는 8bit(부호 1bit + magnitude) 표현, tree 구조로 덧셈 전파지연 단축.</li><li>별도 학습/최적화 절차 없음(보정계수는 실험적으로 고정).</li><li>결과: 40-parallel 디코더가 XC4VLX160의 20% 로직으로 2Gbps 달성, 동일 BER(10⁻⁵)에 필요한 iteration이 14→7로 감소, serial decoder HW 비용 3% 감소·병렬 decoder는 30% 감소, 속도 4배(병렬) ~ 8배(serial) 향상, error floor는 10⁻⁷에서 10⁻⁸ 이하로 개선.</li><li>한계: 단일 코드(rate 2/3, length 1920)만 검증, ASIC 합성 결과 없음(FPGA만), min-algorithm 버전은 FPGA 구현 결과 미포함.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>joint row-column 디코딩(layered 일반화, iteration당 다회 LLR 갱신)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>스케줄링 변형으로 Dual-Update와 비교 이식 검토 가능</td></tr><tr><td>min-algorithm 기반 CN 연산(min-sum 근사 + 보정계수 α,β)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 보유, 보정계수 방식만 참고 가치</td></tr><tr><td>extrinsic message 저장/메모리 충돌 회피(컬럼 프로세서 제거)</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>메모리·라우팅 최적화 아이디어로 참고 가능</td></tr><tr><td>φ 함수 LUT 양자화(7bit LUT, 4bit fractional)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>양자화 정밀도 설계 참고</td></tr><tr><td>H-matrix (802.16e QC-LDPC, sub-matrix 80)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>특정 부호 고정이라 이식 난이도 높음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 높음 — layered decoding 변형으로 iteration 감소·error floor 개선·HW 비용 절감을 동시 달성했고 스케줄링 레이어(decoder.cpp)에 낮은 난이도로 이식 가능.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4252973",
+  "title": "FPGA Implementation of LDPC Decoders Based on Joint Row-column Decoding Algorithm",
+  "year": 2007,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.667,
+  "code_length": "1920",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "row processing 안에 column processing을 통합한 joint row-column 디코딩으로 layered(TDMP)를 일반화, iteration당 다회 LLR 갱신으로 수렴 가속",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "6825 gates(joint row-column processor, 공정 미상, Xilinx XC4VLX160)",
+  "parallelism": "부분",
+  "throughput_gbps": 2,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "IEEE 802.16e 특정 QC-LDPC(rate 2/3, length 1920) 한 코드로만 검증, 4비트 정밀도 고정",
+  "todo_check": "α=0.75, β=0의 min-algorithm 보정계수가 다른 rate/length 코드에도 일반화되는지 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4252973---fpga-implementation-of-ldpc-decoders-based-on-joint-row-column-decoding-algorithm-2007-ieee">ieee:4252973 - FPGA Implementation of LDPC Decoders Based on Joint Row-column Decoding Algorithm (2007, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

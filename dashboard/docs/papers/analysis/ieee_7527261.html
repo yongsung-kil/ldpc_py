@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7527261</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7527261---construction-of-parallelized-decoding-ldpc-codes-2016-ieee-icassp">ieee:7527261 - Construction of Parallelized-Decoding LDPC Codes (2016, IEEE ICASSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>핵심기여</td><td>Smith normal form으로 cycle-free 부등식을 풀어 대girth(g=12)·메모리충돌-free 병렬복호 LDPC 부호를 구성</td></tr><tr><td>한계,주의</td><td>non-cyclic 구조라 QC-LDPC(우리 부호)와 부호형식 불일치, rate 0.5·통신용으로 NAND 고rate와 거리</td></tr><tr><td>추가확인</td><td>제안 부호가 QC 구조가 아니어서 z=32 lifting/circulant 기반 Prime ECC에 직접 이식 불가 여부</td></tr></tbody></table>
+<blockquote><p>총평: 통신용 대girth 부호 구성법(비순환) — 이론적으로 error-floor를 낮추지만 QC 구조가 아니고 HW·NAND 근거가 없어 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 고throughput 병렬복호를 위한 대girth(g=12) LDPC 부호 구성. 예제 rate 0.5, length 4800, 열가중 <code>J=3</code>.</li><li>문제: 부분병렬 복호 시 서로 다른 프로세서가 같은 메모리에 접근하는 memory collision이 throughput을 지배함. 대girth 부호는 병렬화가 어려움.</li><li>표현: PCM을 <code>J×K</code>개의 <code>L×L</code> 블록으로 분할(각 블록은 행·열당 nonzero 1개 = regular sparseness), 블록의 nonzero 위치를 접근순서로 해석한 simplified matrix <code>H</code> 사용.</li><li>충돌회피: 각 행에서 정수(접근순서)가 최대 1회만 등장하는 row uniqueness <code>H(b,a)≠H(b,a')</code> 제약으로 프로세서 간 동시 동일메모리 접근을 방지.</li><li>cycle 조건: 길이 <code>2n</code> cycle을 access difference 합 <code>Σ H^{ai,ai+1}_{bi} = 0</code>(식 8)으로 표현, girth <code>g</code> 만족은 이 합이 0이 되지 않는 부등식으로 환원.</li><li>선형화: 모든 cycle-check 부등식을 행렬곱 <code>PD=C</code>(C의 각 원소 ≠0, 식 9)로 정식화. <code>P</code>는 cycle checking 행렬, <code>D</code>는 entry 차분 벡터.</li><li>핵심 기법: <code>P</code>를 Smith normal form <code>UPV=E</code>로 분해해 좌역행렬 <code>P'=VE'U</code> 도출, <code>D</code>를 독립 열벡터 <code>B=εP'</code>의 정수 선형결합 <code>D=Σ k_i B(i) (mod L)</code>으로 구성(식 13).</li><li>rank 제약: <code>r=w</code>(full column rank)일 때만 해 존재, <code>r&lt;w</code>면 구성 실패로 보고 초기 entry 재배치(재배치는 드물다고 보고).</li><li>절차: 첫 블록행·블록열을 cycle 없이 초기화 후, 블록을 순차 추가하며 rank 검증→P' 도출→k 결정→미지 entry 계산(Step1~8) 반복.</li><li>결과: AWGN에서 랜덤 QC-LDPC 대비 BER 1e-7에서 약 0.1dB 개선·error floor 하강. 구성 성공률 7.85e-4 vs 랜덤 2.73e-5. HW 미설계·시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>대girth 부호 구성(비순환 블록 구조)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 설계 레이어에 닿으나 우리 QC(circulant shift) 구조와 다른 비순환 구조라 이식 난이도 높음</td></tr><tr><td>병렬복호 memory collision 회피(row uniqueness)</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>우리는 QC circulant로 이미 병렬성 확보, 접근순서 재배치 개념은 우리 구조와 정합 안 됨</td></tr><tr><td>Min-Sum 병렬 처리</td><td>decoder.cpp <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리 min-sum 이미 보유, 본 논문 알고리즘 기여 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 비순환 부호 구성법이라 QC-LDPC 기반 Prime ECC와 부호형식이 근본적으로 불일치하고, 통신용 저rate·HW 미설계로 NAND ECC 이식 근거가 약하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7527261",
+  "title": "Construction of Parallelized-Decoding LDPC Codes",
+  "year": 2016,
+  "venue": "IEEE ICASSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "4800",
+  "soft_quant": "무관",
+  "key_contribution": "Smith normal form으로 cycle-free 부등식을 풀어 대girth(g=12)·메모리충돌-free 병렬복호 LDPC 부호를 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "non-cyclic 구조라 QC-LDPC(우리 부호)와 부호형식 불일치, rate 0.5·통신용으로 NAND 고rate와 거리",
+  "todo_check": "제안 부호가 QC 구조가 아니어서 z=32 lifting/circulant 기반 Prime ECC에 직접 이식 불가 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7527261---construction-of-parallelized-decoding-ldpc-codes-2016-ieee-icassp">ieee:7527261 - Construction of Parallelized-Decoding LDPC Codes (2016, IEEE ICASSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

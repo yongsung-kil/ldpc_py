@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5356202</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5356202---jointly-designed-architecture-aware-ldpc-convolutional-codes-and-high-throughput-parallel-encodersdecoders-2010-ieee-tcas-i">ieee:5356202 - Jointly Designed Architecture-Aware LDPC Convolutional Codes and High-Throughput Parallel Encoders/Decoders (2010, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>circulant 대각구조를 PCM에 삽입해 부호·인코더·디코더를 공동설계, 노드 병렬 + iteration 파이프라인으로 충돌 없는 메모리 접근과 2Gbps 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상 (decoder core ~1mm²@90nm, encoder 0.1mm²@90nm; gatecount는 본문 미제시)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>2.0</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC-CC(컨볼루셔널) 전용 구조로 sliding-window/circular-buffer 아키텍처가 Prime ECC의 block QC-LDPC와 직접 호환 안 됨; 병렬도 ρ 커지면 error-floor 발생</td></tr><tr><td>추가확인</td><td>6bit min-sum 양자화·switch network 라우팅 기법 중 block QC-LDPC에 재활용 가능한 요소가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 컨볼루셔널 부호의 공동설계·고throughput 병렬 인코더/디코더 논문으로, HW·ASIC 검증은 탄탄하나 NAND용 block QC-LDPC와 부호 클래스가 달라 이식성은 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 통신용 시분산(time-varying) LDPC 컨볼루셔널 부호(LDPC-CC), rate <code>b/c</code>(1/2, 2/3, 3/4 예시), 대표코드 (472,3,6) regular.</li><li>문제: LDPC-CC 디코더는 보통 iteration 차원만 병렬(각 프로세서=1 iteration)이라 throughput이 제한되고, node 차원 병렬화 시 메모리 접근 충돌이 발생.</li><li>핵심 접근: 부호·인코더·디코더를 공동설계(architecture-aware)하여 PCM에 대수구조를 삽입, 병렬 인코딩/디코딩 제약(C1~C6)을 만족시킨다.</li><li>핵심 기법: syndrome former를 <code>M×M</code> circulant(weight-1 순환, permutation 행렬 특수형) 블록으로 구성 — parity-row/information-row 행렬을 circulant로 채워 C3(CNU 1클록 접근), C4(노드 병렬 충돌 없음)를 자동 충족.</li><li>circulant 구조 이유: 같은 circulant에 속한 노드들이 서로 다른 메모리 뱅크로 정렬되어 switch matrix(SW1, <code>ρ-to-ρ</code> 순환 시프트)만으로 충돌 없는 병렬 접근 가능.</li><li>인코더: partial syndrome 인코더를 <code>ρ</code>-병렬화(SW0 switch matrix), all-phase termination을 circulant 링 상의 행렬 역변환으로 병렬화 — termination 회로 면적을 [9] 대비 15%로 축소.</li><li>부수 디테일: <code>ρ=8</code>(byte 정렬, modulo 단순화), CNU는 min-sum(단순성), 메시지 6bit 균일 양자화(BER 손실 없음, min-sum은 SP 대비 ~0.4dB 손실).</li><li>학습/최적화: 없음. 부호는 modified edge-growth(girth 유지, C6)로 구성, ACE/protograph 대체 가능.</li><li>결과: 90nm CMOS ASIC 합성에서 encoder 2.0Gbps @250MHz(0.1mm²), 단위 디코딩 프로세서 2.0Gbps @250MHz(&lt;1mm²), FPGA 디코더 400Mbps/프로세서(직렬 대비 10배), 에너지 ~70% 절감.</li><li>한계: circulant 병렬도 <code>ρ</code> 상승 시(대략 upper-20s) error floor 발생, block code가 아닌 컨볼루셔널 부호 전용 sliding-window/circular-buffer 구조.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>circulant 기반 병렬 디코더 아키텍처</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적으로만 겹침 — Prime ECC는 block QC-LDPC circulant, 논문은 LDPC-CC sliding-window라 접근 스케줄이 다름</td></tr><tr><td>min-sum CNU (6bit 양자화)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 이미 min-sum 보유 → 중복 기여</td></tr><tr><td>circulant PCM 부호 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호 클래스(CC vs BC)가 달라 직접 로드 불가</td></tr><tr><td>병렬 partial syndrome 인코더 + termination</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>Prime ECC는 dual-diagonal block 인코더 → CC용 syndrome 인코더와 대응 안 됨</td></tr><tr><td>switch network / 메모리 뱅크 라우팅</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>라우팅 최적화 아이디어는 유사하나 CC 전용이라 직접 이식 어려움</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — HW/ASIC 완성도는 높지만 LDPC 컨볼루셔널 부호 전용 공동설계로, NAND용 block QC-LDPC(Prime ECC)와 부호 구조·디코더 스케줄이 근본적으로 달라 떼어 쓰기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5356202",
+  "title": "Jointly Designed Architecture-Aware LDPC Convolutional Codes and High-Throughput Parallel Encoders/Decoders",
+  "year": 2010,
+  "venue": "IEEE TCAS-I",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": "0.5~0.75",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "circulant 대각구조를 PCM에 삽입해 부호·인코더·디코더를 공동설계, 노드 병렬 + iteration 파이프라인으로 충돌 없는 메모리 접근과 2Gbps 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 2.0,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "LDPC-CC(컨볼루셔널) 전용 구조로 sliding-window/circular-buffer 아키텍처가 Prime ECC의 block QC-LDPC와 직접 호환 안 됨; 병렬도 ρ 커지면 error-floor 발생",
+  "todo_check": "6bit min-sum 양자화·switch network 라우팅 기법 중 block QC-LDPC에 재활용 가능한 요소가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5356202---jointly-designed-architecture-aware-ldpc-convolutional-codes-and-high-throughput-parallel-encodersdecoders-2010-ieee-tcas-i">ieee:5356202 - Jointly Designed Architecture-Aware LDPC Convolutional Codes and High-Throughput Parallel Encoders/Decoders (2010, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

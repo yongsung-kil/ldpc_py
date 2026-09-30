@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8110001</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8110001---low-latency-software-ldpc-decoders-for-x86-multi-core-devices-2017-ieee-icecs">ieee:8110001 - Low-Latency Software LDPC Decoders for x86 Multi-core Devices (2017, IEEE ICECS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.81</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>x86 SIMD 기반 intra-frame 병렬화 + 템플릿 코드생성으로 소프트웨어 LDPC 디코딩 latency를 10µs 이하로</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.385</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>x86 AVX2 SIMD/캐시 특화 소프트웨어 구현이라 HW RTL 디코더에 이식 여지 거의 없음, 무선표준 타깃</td></tr><tr><td>추가확인</td><td>VN rotation을 SIMD로 에뮬레이션하는 twin-read 트릭이 우리 z=32 HW barrel-shifter 설계에 시사점 있는지</td></tr></tbody></table>
+<blockquote><p>총평: x86 CPU SIMD용 저지연 소프트웨어 QC-LDPC 디코더로, 알고리즘(layered OMS)은 표준 수준이고 최적화가 전부 CPU 아키텍처 특화라 NAND HW ECC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: IEEE 802.11e/802.11ad QC-LDPC (C1~C6), <code>N=576~2304</code>, rate <code>1/2~13/16</code>, <code>Z=24~96</code>, circulant identity 서브블록 구조.</li><li>문제: GPU/inter-frame 병렬 SW 디코더는 throughput은 높지만 latency가 수백µs~ms — 5G/SDR는 저지연 요구.</li><li>접근: 단일 프레임 내부(intra-frame)를 병렬화해 프레임 버퍼링 제거, latency를 µs급으로 단축.</li><li>스케줄: horizontal layered OMS(offset min-sum) — flooding 대비 iteration 절반, 메모리 ~30% 절감.</li><li>도전1: 프로세서 SIMD 폭 <code>Q</code>(8-bit 값 병렬) vs. 코드의 <code>Z</code> CN 구조 불일치 → <code>Z/Q</code> 서브이터레이션 분해, 비정수 시 padding으로 효율 저하(예 Z=42, Q=64 → 66%).</li><li>도전2: gather/scatter 부재 → VN rotation 접근이 난제. HW barrel shifter 동작을 SW로 재현.</li><li>핵심 트릭: <code>rid</code> 회전값에 대해 twin aligned memory read + mask/AND/OR 로 VN 세트를 정렬 재구성 (generic 8b gather의 24~42 cycle을 5~10 cycle로 단축).</li><li>구현: 코드길이·<code>Z</code>·<code>rid</code>가 컴파일 타임 상수 → C++11 template 파라미터화로 디코더 소스 자동생성, 루프 언롤·레지스터 배치 (LLVM 4.0, -Ofast).</li><li>결과: 실측(Core-i7, ~3GHz) throughput 102~385 Mbps, latency &lt;10µs. inter-frame[7] 대비 throughput 16~60%↓ 이지만 latency ~×22 개선. 양자화 8b VN/6b msg, OMS로 C6는 float 대비 0.1dB 열화.</li><li>한계: 순수 소프트웨어(x86 AVX2) 구현으로 HW 설계·gatecount 없음, 정정능력 개선 없음, 최적화가 CPU 캐시/SIMD에 강결합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered OMS 디코딩 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>알고리즘은 우리 min-sum과 유사(중복), 논문 기여는 SW 매핑이라 알고리즘 이식가치 낮음</td></tr><tr><td>CN min-sum 커널</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>표준 min-sum, 새 기여 없음</td></tr><tr><td>VN rotation twin-read 트릭</td><td>대응 없음</td><td>x86 SIMD 메모리접근 특화, 우리는 HW barrel-shifter(z=32) 모델 — SW 트릭 이식 불가</td></tr><tr><td>조기종료(syndrome check)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리는 CRC 기반, 논문은 syndrome 기반 — 개념만 유사</td></tr><tr><td>양자화(8b VN/6b msg)</td><td>channel.cpp LLR 테이블</td><td>우리는 hard/2SD/3SD, 논문 SW 8b와 직접 대응 안 됨</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 알고리즘은 표준 layered OMS이고 핵심 최적화가 전부 x86 SIMD/캐시 특화 소프트웨어여서 NAND HW binary QC-LDPC 디코더에 떼어 쓸 요소가 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8110001",
+  "title": "Low-Latency Software LDPC Decoders for x86 Multi-core Devices",
+  "year": 2017,
+  "venue": "IEEE ICECS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.81",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "x86 SIMD intra-frame 병렬화 + 템플릿 코드생성으로 소프트웨어 LDPC 디코딩 latency를 10us 이하로",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.385,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "x86 AVX2 SIMD/캐시 특화 소프트웨어 구현이라 HW RTL 디코더에 이식 여지 거의 없음, 무선표준 타깃",
+  "todo_check": "VN rotation twin-read 에뮬레이션이 우리 z=32 HW barrel-shifter 설계에 시사점 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8110001---low-latency-software-ldpc-decoders-for-x86-multi-core-devices-2017-ieee-icecs">ieee:8110001 - Low-Latency Software LDPC Decoders for x86 Multi-core Devices (2017, IEEE ICECS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

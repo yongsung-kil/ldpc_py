@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9496603</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9496603---exploiting-uncorrectable-data-reuse-for-performance-improvement-of-flash-memory-2022-ieee-tcad">ieee:9496603 - Exploiting Uncorrectable Data Reuse for Performance Improvement of Flash Memory (2022, IEEE TCAD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>근사연산 앱의 오류내성을 활용해 refresh 시 데이터 대신 enhanced ECC parity만 remap하는 FTL/refresh 기법(ApproxRefresh)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC는 교과서 BCH (n,k,t) 모델로만 취급, LDPC는 각주 "also applicable"뿐 - 디코더/부호 기여 없음</td></tr><tr><td>추가확인</td><td>없음 (Prime ECC 디코더/부호 레이어와 무관한 FTL·GC·refresh 스케줄링 논문)</td></tr></tbody></table>
+<blockquote><p>총평: SSD FTL의 refresh 비용을 근사연산 오류내성으로 줄이는 시스템 논문 - binary LDPC ECC 코어에 이식할 알고리즘·부호 기여 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: NAND SSD의 periodic data refresh 오버헤드 문제 (SSDsim 트레이스 시뮬, 128GB MLC, read/prog/erase = 95/700µs/3.5ms).</li><li>문제: retention 오류 방지용 refresh가 잦아지며 write amplification·read 방해로 성능/수명 저하.</li><li>핵심 관찰: refresh 후 원본 데이터는 ECC 정정능력을 넘긴 "uncorrectable data"가 되지만, 근사연산 앱(이미지/영상)은 이를 재사용(UDR) 가능.</li><li>핵심 기법 RFR(Remapping-Free Refresh): 전체 페이지를 옮기지 않고, 정정 후 <strong>enhanced ECC parity bit만</strong> 계산해 전용 ECC block에 remap → refresh write 대폭 감소.</li><li>Enhanced ECC 모델: 기본 ECC로 binary BCH <code>(n,k,t)</code>, <code>n=2^m-1</code>, <code>k≥2^m-m·t</code> 채택. UBER-RBER 관계식과 신뢰성 모델 <code>log(RBER)=(a·PE+b)·log(RET)+c·PE+d</code>로 필요 parity 수 산출 (LDPC는 각주에서 "적용 가능"만 언급).</li><li>AR-RFR: 페이지를 approx/precise read hotness로 4분류(AP_hot/P_cold/A_cold/AP_cold), 카운터 임계 <code>Tpread=1</code>,<code>Taread=3</code>로 RFR / RBR / RBR+UDR 선택.</li><li>구현 디테일: A_READ(ECC 우회 근사읽기, 80µs), P_READ_RF(데이터+parity 2회 읽기, 210µs) 신규 커맨드, PMT/EMT/UMT 3중 매핑 테이블.</li><li>PV 관리: strong/weak page 구분해 refresh mode별 재배치, TBER=2.2e-3 초과 시 UDR 비활성화.</li><li>결과: FCR 대비 refresh latency 36.19% 감소, I/O throughput 21.39% 향상, 에너지 24.70% 절감.</li><li>한계: 순수 FTL/시스템 레벨 최적화 - LDPC 디코더/부호 설계 기여 없음, HW ECC 엔진 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RFR/AR-RFR refresh 스케줄링</td><td>대응 없음</td><td>FTL/컨트롤러 레벨, ECC 시뮬레이터 범위 밖</td></tr><tr><td>enhanced BCH (n,k,t) parity 모델</td><td>대응 없음</td><td>binary QC-LDPC min-sum 디코더와 무관</td></tr><tr><td>A_READ/P_READ_RF 커맨드, PMT/EMT/UMT</td><td>대응 없음</td><td>SSD 인터페이스/매핑 테이블, 디코더 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - refresh/FTL/GC 시스템 최적화라 Prime ECC의 부호설계→디코더→HW 어느 레이어에도 닿지 않음. ECC는 교과서 BCH 모델로만 쓰여 이식할 알고리즘 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9496603",
+  "title": "Exploiting Uncorrectable Data Reuse for Performance Improvement of Flash Memory",
+  "year": 2022,
+  "venue": "IEEE TCAD",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "근사연산 앱의 오류내성을 활용해 refresh 시 데이터 대신 enhanced ECC parity만 remap하는 FTL/refresh 기법(ApproxRefresh)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC는 교과서 BCH (n,k,t) 모델로만 취급, LDPC는 각주 also applicable뿐 - 디코더/부호 기여 없음",
+  "todo_check": "없음 (Prime ECC 디코더/부호 레이어와 무관한 FTL·GC·refresh 스케줄링 논문)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9496603---exploiting-uncorrectable-data-reuse-for-performance-improvement-of-flash-memory-2022-ieee-tcad">ieee:9496603 - Exploiting Uncorrectable Data Reuse for Performance Improvement of Flash Memory (2022, IEEE TCAD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

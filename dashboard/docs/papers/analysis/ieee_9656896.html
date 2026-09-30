@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9656896</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9656896---error-floor-analysis-of-ldpc-column-layered-decoders-2022-ieee-communications-letters">ieee:9656896 - Error Floor Analysis of LDPC Column Layered Decoders (2022, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.3~0.75</td></tr><tr><td>부호length</td><td>576~640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>컬럼 레이어드(shuffled) SPA의 error floor를 LETS 상태공간 모델로 예측하고 error floor 최소화 스케줄을 탐색</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>SPA(box-plus) 기반 분석이라 min-sum HW 디코더에 직접 적용 불가, HW·throughput 무관, WiMAX/Tanner 저rate 부호 대상</td></tr><tr><td>추가확인</td><td>Prime ECC의 컬럼블록(N_b=129) 스케줄에 이 error-floor 최소화 탐색이 실익 있는지, min-sum 근사 하에서 분석 유효성</td></tr></tbody></table>
+<blockquote><p>총평: 컬럼 레이어드 스케줄 순서가 error floor에 미치는 영향을 상태공간 모델로 정량화하고 최적 스케줄을 찾는 분석 논문 - Prime ECC의 dual-update/레이어 스케줄 설계 참고용이나 min-sum·NAND 직접 이식은 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 QC-LDPC(base matrix + <code>p</code>-lifting circulant)이며, 컬럼 레이어드=shuffled 디코더로 VN을 <code>n_b</code>개 컬럼블록 레이어로 나눠 순차 갱신한다.</li><li>문제: 레이어 갱신 순서(schedule)가 error floor를 바꾸는데, row layered용 [1] 모델을 column layered로 확장한 분석이 없었다.</li><li>채널/알고리즘은 [1]과 동일(BI-AWGN, box-plus SPA), 차이는 message-passing schedule(column vs row)뿐.</li><li>핵심: LETS(leafless elementary TS)를 상태벡터 <code>x̃(ℓ,j)</code>(레이어 j, 반복 ℓ)로 두고 선형 상태공간 모델 <code>x̃ = Gj(ℓ)Aj·x̃ + Bj·L + ...</code>로 SPA 동역학을 근사.</li><li>전이행렬 <code>Aj</code>, 게인행렬 <code>Gj(ℓ)</code>가 레이어 스케줄(TSLP)에 따라 바뀌며, 이것이 TS failure rate와 error floor를 좌우.</li><li>missatisfied CN의 선형 게인은 부분게인 <code>θk</code>의 곱 <code>ḡi=∏θk1·∏θk2</code>(식 8)로 계산 - 부분게인을 사전 계산해 스케줄 최적화 복잡도를 낮춤.</li><li>근사 DE로 한 스케줄의 CN↔VN 분포 평균 <code>ψ̄j</code>를 구해 모든 스케줄에 재사용, <code>n_b!</code> 순열 전탐색을 회피.</li><li>최적화: 지배 LETS의 전이행렬 지배 고유값 <code>r̃</code>를 최소화하는 후보 스케줄만 골라 정확 DE로 error floor를 확정.</li><li>결과: C1(640,192, rate 0.3, dv=5)은 모든 컬럼 스케줄이 동일 <code>r̃=16.9536</code>(row보다 큼→평균적으로 열보다 행이 우수), C2(576,432, rate 0.75 WiMAX)는 최적 스케줄이 원래 순서보다 소폭 개선.</li><li>한계: SPA(box-plus)·시뮬 전용, HW 미설계, 저rate 부호 예제, min-sum 양자화 디코더로의 직접 전이 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>컬럼 레이어드 스케줄/이터레이션 갱신</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>레이어(dual-update) 갱신 순서 설계에 error-floor 관점 추가 시사</td></tr><tr><td>LETS/error-floor 분석 결과의 스케줄 선택</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>컬럼 재배치=스케줄 결정과 개념적으로 대응, error floor 최소 순서 탐색 참고</td></tr><tr><td>SPA box-plus CN 연산 / tanh 게인</td><td>대응 없음 (Prime ECC는 min-sum)</td><td>SPA 기반 게인식은 min-sum 디코더에 직접 대응 없음</td></tr><tr><td>H-matrix / QC 구조 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>base graph 기반 분석이 QC 구조 로드와 연계</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - dual-update/컬럼 스케줄 순서를 error-floor 관점에서 선택하는 통찰은 유용하나, 분석이 SPA·저rate·시뮬 전용이라 min-sum·고rate NAND 디코더로의 직접 이식은 재검증 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9656896",
+  "title": "Error Floor Analysis of LDPC Column Layered Decoders",
+  "year": 2022,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "576~640",
+  "soft_quant": "무관",
+  "key_contribution": "컬럼 레이어드(shuffled) SPA의 error floor를 LETS 상태공간 모델로 예측하고 error floor 최소화 스케줄을 탐색",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "SPA(box-plus) 기반 분석이라 min-sum HW 디코더에 직접 적용 불가, HW·throughput 무관, WiMAX/Tanner 저rate 부호 대상",
+  "todo_check": "Prime ECC의 컬럼블록 스케줄에 error-floor 최소화 탐색이 실익 있는지, min-sum 근사 하에서 분석 유효성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9656896---error-floor-analysis-of-ldpc-column-layered-decoders-2022-ieee-communications-letters">ieee:9656896 - Error Floor Analysis of LDPC Column Layered Decoders (2022, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

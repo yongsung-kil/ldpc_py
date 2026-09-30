@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7541291</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7541291---generalized-belief-propagation-based-tdmr-detector-and-decoder-2016-ieee-isit">ieee:7541291 - Generalized Belief Propagation Based TDMR Detector and Decoder (2016, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.66</td></tr><tr><td>부호length</td><td>756</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>TDMR 2D-ISI/media noise를 GBP(region-based BP)로 검출해 soft-LLR 생성, 이후 BP로 LDPC 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 2D-ISI 검출기(GBP)로 LDPC 복호기 자체 개선 아님, TDMR/Voronoi 자기채널 특화</td></tr><tr><td>추가확인</td><td>GBP LLR을 NAND soft-read LLR로 대체 활용 가능한지(개념 참고용)</td></tr></tbody></table>
+<blockquote><p>총평: TDMR 2D-ISI 채널용 GBP 검출기 논문으로, LDPC는 표준 BP 복호로만 사용 - NAND 단일 채널/binary QC-LDPC 복호 개선과 무관해 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>TDMR(2D 자기기록) 채널, Voronoi grain 기반 media model, 3×3 ISI span. 32×32 페이지 단위 검출.</li><li>풀려는 문제: TDMR은 grain 경계 media noise가 down/cross-track 상관성을 가져 2D ISI+media noise 동시 처리 필요.</li><li>채널모델: read-back <code>y_{i,j}</code>는 3×3 span의 <code>x_{i,j}</code>에 의존, pattern-dependent media noise를 AWGN(<code>σ²_{xR}</code>)으로 근사.</li><li>핵심 기법(GBP): region 단위 메시지 전달 알고리즘. Gibbs free energy를 Kikuchi/RBA 근사(<code>F̂</code>)로 최소화, overcounting <code>cR</code>로 region entropy 합산.</li><li>핵심 식: 제약 <code>Σ b(xp)=b(xR)</code> 하에서 Lagrange multiplier로 marginal <code>b(xR)</code> 최적화 → APP/soft-LLR 산출.</li><li>이론 기여: pseudo-marginal 공간 <code>Δ_P</code>에서 GBP hard decision이 FER-optimal 결정영역 <code>D̂_FER</code>로 수렴함을 convex opt으로 증명(Prop 1,2).</li><li>region 선택: 3×3 이하 모든 sub-region(2×3,3×2,...,1×1) 포함 시 최적, <code>R=R̄</code>가 유일해·balanced 보장.</li><li>LDPC 연동: GBP soft-LLR을 BP LDPC 복호에 입력. SIR(mutual info) 상·하한으로 채널용량 추정해 rate 선택.</li><li>결과: region 전부 사용 시 JTED 대비 0.2dB 우수. 부호 QC-LDPC N=756, R=0.66, circulant L=126, small trapping set free(구성법 [12] 인용). TW=16.2nm에서 BCH(1023,675) 대비 FER 2자릿수 이상 이득.</li><li>한계: 시뮬만, HW 미설계, 검출기(GBP) 중심이라 LDPC 복호기 자체는 표준 BP, TDMR/Voronoi 채널 전용 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| GBP 2D-ISI 검출기 (region-based BP) | 대응 없음 | 채널 검출기 계층, Prime ECC는 검출기 없음(디코더 전용) |
+| GBP soft-LLR → BP LDPC 복호 | decoder.cpp LDPC_Decoder() | LDPC 복호 대응하나 논문은 표준 BP만 사용(개선 없음) |
+| soft-LLR(APP ratio) 생성 | channel.cpp Set_LLR_Th() | soft-read LLR 개념 유사, 단 2D 자기채널 산출식은 미대응 |
+| QC-LDPC N=756 R=0.66 (small trapping-set free) | ecc_top.cpp Load_PCM() | 부호구조 로드 대응, 단 부호는 외부 구성법 인용일 뿐 논문 기여 아님 |</code></pre>
+<p>적용 가치: 낮음 - 논문 핵심은 TDMR 채널용 GBP 2D-ISI 검출기이며 LDPC는 표준 BP로만 사용되어, NAND용 binary QC-LDPC 복호기/부호설계를 개선하는 이식 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7541291",
+  "title": "Generalized Belief Propagation Based TDMR Detector and Decoder",
+  "year": 2016,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.66,
+  "code_length": "756",
+  "soft_quant": "무관",
+  "key_contribution": "TDMR 2D-ISI/media noise를 GBP(region-based BP)로 검출해 soft-LLR 생성, 이후 BP로 LDPC 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상이 2D-ISI 검출기(GBP)로 LDPC 복호기 자체 개선 아님, TDMR/Voronoi 자기채널 특화",
+  "todo_check": "GBP LLR을 NAND soft-read LLR로 대체 활용 가능한지(개념 참고용)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7541291---generalized-belief-propagation-based-tdmr-detector-and-decoder-2016-ieee-isit">ieee:7541291 - Generalized Belief Propagation Based TDMR Detector and Decoder (2016, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

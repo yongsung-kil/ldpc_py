@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7572021</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7572021---a-grouping-based-on-local-girths-for-the-group-shuffled-belief-propagation-decoding-2016-ieee-communications-letters">ieee:7572021 - A Grouping Based on Local Girths for the Group Shuffled Belief Propagation Decoding (2016, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1024~1296</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>GSBP 그룹 분할을 degree+local girth 순으로 정렬해 신뢰도 높은 업데이트 메시지를 먼저 전파</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>저iteration(lmax=5) waterfall 영역에서만 이득, SNR 5dB 이상·error-floor에서는 오히려 성능 저하</td></tr><tr><td>추가확인</td><td>local girth 사전계산 비용과 QC-LDPC 고정 그래프에서의 그룹 정렬 효과, HW 스케줄러 정합성</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 대신 BP 기반이지만 그룹 셔플 스케줄링을 girth로 정렬하는 아이디어는 우리 이터레이션 루프 스케줄에 저비용 이식 가능, 다만 이득 폭은 작음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: N=1296/1056(IEEE 802.11/802.16 rate-1/2 LDPC) 및 N=1024 IRA rate-1/2, AWGN+BPSK 채널.</li><li>문제: GSBP는 그룹을 순차 처리해 같은 iteration 내 갱신 메시지를 재사용하나, 초기 그룹이 부정확하면 오류가 조기 전파되어 수렴이 느려질 수 있음.</li><li>가정: 짧은 cycle(작은 local girth)이 BP 성능을 저하시킨다는 통념 활용. 각 그룹 <code>Gk</code>는 동일 크기 <code>NG=N/r</code>.</li><li>핵심 기법: 변수노드를 <code>degree d(v)</code> 내림차순으로 1차 정렬, 동일 degree 내에서 <code>local girth g(v)</code> 내림차순으로 2차 정렬해 그룹 배정(Algorithm 1의 subset A→B→최소 index 선택).</li><li>의미: girth가 큰(cycle 짧지 않은) 노드의 신뢰 메시지를 iteration 초반에 먼저 전파해 이후 그룹에 좋은 정보를 공급.</li><li>확장: cycle에 포함 안 된 노드에는 충분히 큰 girth 값(예: 100) 부여해 최우선 처리.</li><li>구현 디테일: 그룹핑은 사전 1회 수행이며, 그룹핑 후 원본 GSBP 대비 복호 복잡도 증가 없음.</li><li>최적화 절차: 별도 학습 없음, 결정론적 정렬 알고리즘.</li><li>결과: C1에서 r=4, SNR=4.5dB일 때 BER 6.2% improvement rate, BER=10^-8에서 0.2dB coding gain, 평균 iteration은 원본 GSBP 이하.</li><li>한계: HW 미설계, 시뮬만, lmax=5 소규모 iteration 및 waterfall 영역에 국한, 고SNR/error-floor에서 이득 소멸 또는 역효과.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GSBP 그룹 셔플 스케줄링(그룹 순차 업데이트)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 Dual-Update(짝/홀 교대) 스케줄과 유사 계열, 그룹 순서를 girth로 재정렬 삽입 가능</td></tr><tr><td>local girth 기반 변수노드 정렬</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code> (H-matrix 로드 시 사전 girth 계산)</td><td>QC-LDPC 고정 구조에서 1회 정렬 테이블 산출</td></tr><tr><td>그룹별 메시지 갱신(V2C/C2V)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>VN_Cal_HD()</code> 등</td><td>그룹 단위 병렬·순차 갱신 대상 모듈</td></tr></tbody></table>
+<p>적용 가치: 중간 — girth 기반 그룹 순서화는 이터레이션 루프에 저비용 삽입 가능하나, BP(SPA) 전제이고 이득이 저iteration waterfall에 국한되어 min-sum 기반 우리 엔진 이득은 불확실.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7572021",
+  "title": "A Grouping Based on Local Girths for the Group Shuffled Belief Propagation Decoding",
+  "year": 2016,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1024~1296",
+  "soft_quant": "무관",
+  "key_contribution": "GSBP 그룹 분할을 degree+local girth 순으로 정렬해 신뢰도 높은 업데이트 메시지를 먼저 전파",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "저iteration(lmax=5) waterfall 영역에서만 이득, SNR 5dB 이상·error-floor에서는 오히려 성능 저하",
+  "todo_check": "local girth 사전계산 비용과 QC-LDPC 고정 그래프에서의 그룹 정렬 효과, HW 스케줄러 정합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7572021---a-grouping-based-on-local-girths-for-the-group-shuffled-belief-propagation-decoding-2016-ieee-communications-letters">ieee:7572021 - A Grouping Based on Local Girths for the Group Shuffled Belief Propagation Decoding (2016, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

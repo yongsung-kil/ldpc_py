@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6157842</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6157842---modified-multistage-linear-programming-decoding-of-ldpc-codes-2011-ieee-vtcconference">ieee:6157842 - Modified Multistage Linear Programming Decoding of LDPC Codes (2011, IEEE (VTC/conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>adaptive cut-search 기준으로 multistage LP(MLP) 디코딩의 constraint 수를 대폭 줄여 성능 유지+복잡도 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LP/Branch-and-Bound 기반 최적화 디코더로 min-sum 파이프라인과 구조 무관, 길이 96 단소부호 시뮬만</td></tr><tr><td>추가확인</td><td>LP solver의 실제 연산량·수렴시간(HW 관점)이 전혀 제시되지 않음</td></tr></tbody></table>
+<blockquote><p>총평: ML-certificate LP 디코딩의 학술적 복잡도 절감 연구로, NAND용 min-sum QC-LDPC HW 이식과는 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 길이 <code>n=96</code>, (3,6) regular LDPC, AWGN+BPSK 채널의 LP 디코딩.</li><li>문제: multistage LP(MLP) 디코딩은 성능은 좋으나 Branch-and-Bound로 constraint가 폭증해 복잡도가 큼.</li><li>기본: Feldman의 LP relaxation — box constraint <code>0≤f_i≤1</code> + parity 부등식 <code>(5)</code>로 pseudocodeword polytope <code>P</code> 구성.</li><li>핵심 기법1(adaptive): 초기엔 box constraint만으로 풀고, 현재 해에서 cut이 되는 parity 부등식 <code>(10)</code>만 골라 반복 추가(adaptive LP [3]) → 불필요 constraint 배제.</li><li>핵심 기법2(criterion): non-integer 해에서 각 노드의 불확실성 <code>|f_l - 1/2|</code>을 정의, 평균 불확실성 최대인 check node <code>j*</code>를 선택해 부분집합 <code>T=N(j*)∩M'</code> 구성.</li><li><code>T</code>의 각 even-sized subset <code>S_j*</code>마다 <code>f_l=1/0</code> 설정을 새 constraint로 부여, 여러 sub-LP 문제 생성.</li><li>AB&amp;B로 sub-LP들을 풀어 목적값 최소 해 <code>f_opt</code>를 최종 선택 → Proposition 1로 ML-certificate 성질 증명.</li><li>학습/최적화 절차 없음(순수 조합 최적화).</li><li>결과: 원 MLP와 동일 BER, BER=1e-2에서 BP/LP 대비 약 0.3 dB 이득; SNR 2 dB에서 사용 constraint 최대 ~340 (원 MLP는 1536).</li><li>한계: HW 미설계, 길이 96 단소부호 시뮬만, LP solver 실연산 비용/latency 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LP/Branch-and-Bound 디코딩 전체</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing, LP solver 없음</td></tr><tr><td>ML-certificate/pseudocodeword 이론</td><td>대응 없음</td><td>error-floor 개선용 구조가 아니라 최적화 이론</td></tr><tr><td>parity 부등식(cut) 탐색</td><td>대응 없음</td><td>CN 연산은 decoder.cpp <code>CNU_Update_New_Mag()</code>이나 알고리즘 성격 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LP/AB&amp;B 최적화 디코더는 min-sum 파이프라인 HW와 구조가 완전히 달라 이식 경로가 없다.</p>
+<pre><code>{
+  "id": "ieee:6157842",
+  "title": "Modified Multistage Linear Programming Decoding of LDPC Codes",
+  "year": 2011,
+  "venue": "IEEE (conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "96",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "adaptive cut-search 기준으로 MLP 디코딩 constraint 수를 대폭 줄여 성능 유지+복잡도 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LP/Branch-and-Bound 최적화 디코더로 min-sum 파이프라인과 구조 무관, 길이 96 단소부호 시뮬만",
+  "todo_check": "LP solver 실연산량·수렴시간(HW 관점)이 전혀 제시되지 않음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6157842---modified-multistage-linear-programming-decoding-of-ldpc-codes-2011-ieee-vtcconference">ieee:6157842 - Modified Multistage Linear Programming Decoding of LDPC Codes (2011, IEEE (VTC/conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

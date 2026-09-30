@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11195686</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11195686---in-memory-ber-estimation-using-syndromes-of-ldpc-codes-2025-isit">ieee:11195686 - In-Memory BER Estimation Using Syndromes of LDPC Codes (2025, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>syndrome weight로부터 irregular LDPC의 BER을 ML 추정하는 폐형 추정식과, right-regular 부호가 MSE·threshold-crossing 검출 성능 모두를 최적화함을 증명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>in-memory computing(logic-in-memory) 아키텍처를 전제로 한 것이며, LDPC 디코딩 자체나 디코더 성능 개선이 아니라 "디코딩 필요 여부 판단"용 BER 추정 기법</td></tr><tr><td>추가확인</td><td>Prime ECC의 partial CRC 조기종료(termination point)와 이 syndrome-weight 기반 BER 추정을 결합해 read-retry/재디코딩 트리거로 활용 가능한지 검토</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코딩 없이 syndrome weight만으로 BER을 추정해 재복호 필요 여부를 판단하는 이론적 기법으로, NAND ECC의 디코더 자체 개선은 아니지만 read-retry 트리거·soft-read threshold 설계에 간접 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 채널은 binary symmetric channel(BSC, crossover probability <code>p</code>)이며, in-memory computing(logic-in-memory) 환경에서 저장된 코드워드의 BER을 추정하는 문제.</li><li>문제: LDPC/polar 등 강력한 코드는 in-memory logic으로 디코딩하기 어렵고, 매 read마다 디코딩하는 것은 비용이 큼 → BER이 허용치(<code>p_tol</code>) 이하일 때는 디코딩을 생략하고 syndrome만으로 판단.</li><li>두 개의 중첩된 코드 <code>C1 ⊆ C2</code> (correction code, estimation code)를 사용: <code>C1</code>로 인코딩·저장, <code>C2</code>(부분 parity-check row)로 주기적 syndrome <code>s = H2c'^T</code> 계산.</li><li>핵심 기법: syndrome Hamming weight <code>w_s</code>가 (근사적으로) Poisson 분포를 따른다는 가정(<code>w_s ~ Pois(λ(p))</code>, <code>λ(p) = (m/2)(1-Ω(1-2p))</code>) 하에 irregular 코드의 ML BER 추정량 <code>p̂_irr(w_s) = (1/2)(1-Ω^{-1}([1-2w_s/m]^+))</code> 유도.</li><li><code>Ω^{-1}</code>는 check-degree 분포 다항식의 역함수로, right-regular 코드(<code>Ω(x)=x^{d_c}</code>)에서는 닫힌 형태 <code>Ω^{-1}(x)=x^{1/d_c}</code>로 단순화됨(기존 [17] 결과의 일반화).</li><li>확장 기법: BER threshold(<code>p_tol</code>) 초과 여부를 Karlin-Rubin 정리 기반 uniformly-most-powerful hypothesis test로 검출, 검출 성능 하한 <code>D*(Δ)</code>를 유도해 코드 degree 설계에 사용.</li><li>부수 결과: MSE와 검출성능 모두 fixed 평균 degree에서 check-degree 분산(<code>var(Ω)</code>)이 작을수록(즉 right-regular일수록) 최적임을 증명, 최적 degree <code>a_R* = (1+2p_tol)/(4p_tol)</code>.</li><li>최적화 절차: <code>p_tol</code>, <code>δ</code>(추정 gap), <code>β*</code>(허용 miss 확률)를 시스템 파라미터로 주고, Procedure 1을 통해 <code>d_c</code>, threshold <code>p_T</code>를 순차 결정하는 코드 설계 절차 제시.</li><li>결과: Monte-Carlo 시뮬레이션으로 MSE 근사식과 검출성능 하한이 실제 값과 잘 일치함을 확인(수치 그래프, 정량적 gate/throughput 수치는 없음).</li><li>한계: 순수 이론/시뮬레이션 단계이며 HW 설계·합성 결과 없음, 실제 LDPC 디코딩(오류정정) 성능 개선이 아니라 "언제 디코딩할지"를 판단하는 상위 레벨 정책이라 정정능력 자체와는 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>syndrome weight 기반 BER 추정</td><td>대응 없음</td><td>Prime ECC는 syndrome 계산(parity check) 후 즉시 min-sum 디코딩을 수행하며, BER 자체를 추정해 디코딩 여부를 판단하는 상위 정책 모듈은 없음</td></tr><tr><td>BER threshold-crossing hypothesis test</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료(early termination) 목적은 유사하나, CRC 기반 codeword 일치여부 판정과 syndrome-weight 기반 BER 추정은 메커니즘이 다름 (대응 없음에 가까움)</td></tr><tr><td>right-regular 코드가 BER 추정에 최적이라는 부호설계 지침</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC 고정 H-matrix(irregular, HCU 비대칭 degree)라 right-regular 설계 지침과는 상충, 참고용으로만 관련</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 디코더/부호구조 자체 개선이 아니라 in-memory computing 환경에서 "디코딩 필요 여부"를 판단하는 상위 시스템 정책이며 Prime ECC의 min-sum 디코더·조기종료 로직과 메커니즘이 근본적으로 달라 직접 이식 모듈이 없음. 다만 read-retry 트리거 설계 아이디어로 참고 가치는 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11195686",
+  "title": "In-Memory BER Estimation Using Syndromes of LDPC Codes",
+  "year": 2025,
+  "venue": "ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "syndrome weight로부터 irregular LDPC의 BER을 ML 추정하는 폐형 추정식과, right-regular 부호가 MSE·threshold-crossing 검출 성능 모두를 최적화함을 증명",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "in-memory computing(logic-in-memory) 아키텍처를 전제로 한 것이며, LDPC 디코딩 자체나 디코더 성능 개선이 아니라 디코딩 필요 여부 판단용 BER 추정 기법",
+  "todo_check": "Prime ECC의 partial CRC 조기종료(termination point)와 이 syndrome-weight 기반 BER 추정을 결합해 read-retry/재디코딩 트리거로 활용 가능한지 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11195686---in-memory-ber-estimation-using-syndromes-of-ldpc-codes-2025-isit">ieee:11195686 - In-Memory BER Estimation Using Syndromes of LDPC Codes (2025, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

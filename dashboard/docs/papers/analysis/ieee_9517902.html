@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9517902</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9517902---a-weighted-bit-flipping-decoder-for-qc-mdpc-based-cryptosystems-2021-ieee-isit">ieee:9517902 - A Weighted Bit Flipping Decoder for QC-MDPC-based Cryptosystems (2021, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>syndrome 신뢰도(votes θ)로 NUC를 가중한 WBF bit-flipping으로 QC-MDPC DFR 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>MDPC(고밀도) 암호용 부호 대상 - NAND 저밀도 LDPC와 부호 특성 상이, WBF는 iteration이 BGF의 ~7배(avg 34 vs 5)</td></tr><tr><td>추가확인</td><td>WBF의 votes 기반 syndrome 가중 개념이 저밀도 LDPC MinSum에도 이득을 줄 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: QC-MDPC 암호(BIKE/NIST PQC)용 hard-decision BF 개선 논문으로, NAND binary LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 (n, r, w)-QC-MDPC 부호 기반 McEliece 암호(BIKE security level 1), <code>n0=2</code>, <code>r≈9000~13000</code>, rate 1/2, MDPC(중밀도) 부호.</li><li>문제: MDPC는 LDPC보다 parity-check가 훨씬 조밀해 Tanner graph 단주기(short cycle)가 많아 기존 BF 디코더의 DFR(=FER)이 나쁨.</li><li>채널 모델: 복호를 crossover <code>ε=t/n</code>인 BSC로 해석, hard-decision 출력을 LLR <code>yi=µ(1−2xi)</code>로 변환.</li><li>핵심 관찰(식8): 단일 오류가 <code>wd</code> 개 zcv를 오염시켜, NUC <code>σv</code>가 "극도로 noisy" — error/error-free 위치 구분이 불확실.</li><li>아이디어: syndrome 성분 <code>sc</code>의 신뢰도를 그 체크의 "flip 투표 수" <code>θc = Σχ(σi&gt;w/2)</code>(식9)의 함수로 가중.</li><li>신뢰도 함수 <code>A0(θ), A1(θ)</code>(식10)를 Example1 부호에서 경험적으로 추정 — 투표 적은 체크에 3~4배 큰 가중치.</li><li>단순화 WBF(Fig.2): 만족/불만족 체크별 최소 투표수를 찾아, 최소 근방(≤min+3) syndrome을 계수 3으로 증폭 후 metric 최대 VN을 flip.</li><li>하이브리드: WBF 2 iteration 후 BGF 3 iteration로 전환(초기 오류 많을 때만 비싼 WBF 사용) — 계산량 절충.</li><li>결과: 동일 r에서 WBF/Hybrid가 BGF보다 DFR 낮음; DFR=2^−128 도달 r 외삽 WBF 13379, Hybrid 13018, BGF 13660 (작을수록 우수).</li><li>한계: HW 미설계(constant-time 구현은 out-of-scope), 시뮬만, WBF avg iteration 34(BGF 5)로 지연 큼, 암호 전용 MDPC 부호.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>WBF bit-flipping 이터레이션</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 MinSum 소프트 복호 기반 - hard BF와 알고리즘 계열 상이, 직접 대응 낮음</td></tr><tr><td>syndrome 투표수→가중 신뢰도(A0/A1)</td><td>대응 없음</td><td>Prime ECC엔 syndrome-vote 가중 BF 개념 없음</td></tr><tr><td>조기종료(전 zero syndrome)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>개념적 유사(조기종료)나 Prime ECC는 CRC 기반, syndrome 기반 아님</td></tr></tbody></table>
+<p>적용 가치: 낮음 - MDPC 암호용 hard-decision BF 계열이라 NAND용 binary QC-LDPC MinSum 소프트 디코더에 이식할 요소가 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9517902",
+  "title": "A Weighted Bit Flipping Decoder for QC-MDPC-based Cryptosystems",
+  "year": 2021,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "syndrome 신뢰도(votes θ)로 NUC를 가중한 WBF bit-flipping으로 QC-MDPC DFR 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "MDPC(고밀도) 암호용 부호 대상 - NAND 저밀도 LDPC와 부호 특성 상이, WBF는 iteration이 BGF의 약 7배",
+  "todo_check": "WBF의 votes 기반 syndrome 가중 개념이 저밀도 LDPC MinSum에도 이득을 줄 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9517902---a-weighted-bit-flipping-decoder-for-qc-mdpc-based-cryptosystems-2021-ieee-isit">ieee:9517902 - A Weighted Bit Flipping Decoder for QC-MDPC-based Cryptosystems (2021, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

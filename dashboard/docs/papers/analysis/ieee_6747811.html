@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6747811</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6747811---an-efficient-ldpc-encoder-based-on-block-row-cycle-structure-for-cmmb-2013-icist">ieee:6747811 - An Efficient LDPC Encoder Based on Block-Row-Cycle Structure for CMMB (2013, ICIST)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>개선 ALT 인코딩 + block-row-cycle 구조로 순환성·동일 row weight 활용해 인코더 메모리 대폭 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CMMB 전용 cyclic(비 QC-LDPC) 부호에 특화, Prime ECC의 dual-diagonal 인코더와 구조·부호가 상이</td></tr><tr><td>추가확인</td><td>ALT 방식 자체가 우리 dual-diagonal 대비 이점 없음 — 이식 가치 사실상 없음</td></tr></tbody></table>
+<blockquote><p>총평: CMMB용 cyclic LDPC 인코더 메모리 절감 기법으로 NAND QC-LDPC와 무관, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템은 CMMB 표준의 두 binary regular LDPC 부호: rate 1/2 <code>(9216,3,6)</code>, rate 3/4 <code>(9216,3,12)</code>, 둘 다 cyclic(QC 아님)이며 18/9행마다 36열씩 순환.</li><li>문제: LDPC 직접 인코딩은 블록길이 제곱 복잡도. RU의 ALT(approximately lower triangular)는 선형이지만 permutation 후 submatrix들이 원행렬의 순환성·동일 row weight를 잃어버림.</li><li>개선 ALT: <code>H_ALT</code>를 <code>H0=[F L 0]</code>, <code>H1=[A B T]</code>, <code>H2=[C D E]</code>로 3분할(L,T는 하삼각).</li><li>패리티 계산 5단계: <code>p0=L^-1 F s^T</code>(backward substitution), 임시 <code>p2=T^-1 A[s p0]^T</code>, <code>q=C[s p0]^T + E p2^T</code>, <code>p1=Φ q^T</code> (Φ=(E T^-1 B + D)^-1 고밀도 행렬), 최종 <code>p2</code> 재계산.</li><li>핵심 아이디어: <code>H_ALT</code>↔원본 <code>H</code>의 행 매핑을 테이블(MRMT)로 유지해 permutation을 명시 저장하지 않고 원본 H의 순환 구조로 주소를 on-the-fly 생성.</li><li>인코더는 controller/VM/DAT/HDMT/MRMT/FBRET/AG/RU/HA/PA 10개 블록으로 구성.</li><li>FBRET(1×2Mρ)에 첫 block row의 nonzero 열번호 저장, 주소는 <code>Address[i][j]=(N*Row[i]+Column[Index[i]+j])%n</code> 로 순환 오프셋 N=36 이용해 생성.</li><li>HA(horizontal accumulator)가 modulo-2 누산으로 backward substitution과 q를 계산, PA(parallel accumulator)가 Φ·q 곱으로 p1 생성.</li><li>결과: ALTERA Cyclone EP3C55 FPGA에서 원본 대비 M9K RAM 147→34 블록(113블록 절감), logic cell 1969→1179, 최대 184.88MHz, 순수 인코딩 27.58/29.62 Mbps(100MHz).</li><li>한계: 디코더·정정성능 무관(순수 인코더), CMMB cyclic 부호 특화로 QC-LDPC/NAND에 직접 적용 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ALT 기반 패리티 계산/인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>낮음 - Prime ECC는 dual-diagonal 인코딩 고정, ALT와 무관</td></tr><tr><td>부호용 PCM/행 매핑 테이블</td><td>encoder.cpp <code>Generate_PCM_encoding()</code></td><td>낮음 - cyclic(비 QC) H 특화 테이블 구조</td></tr><tr><td>H-matrix 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>낮음 - CMMB 전용 부호, QC-LDPC 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — CMMB cyclic(비 QC-LDPC) 전용 인코더 메모리 절감 기법이라 Prime ECC의 고rate binary QC-LDPC + dual-diagonal 인코더에 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6747811",
+  "title": "An Efficient LDPC Encoder Based on Block-Row-Cycle Structure for CMMB",
+  "year": 2013,
+  "venue": "ICIST (Int. Conf. on Information Science and Technology)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "9216",
+  "soft_quant": "무관",
+  "key_contribution": "개선 ALT 인코딩 + block-row-cycle 구조로 순환성·동일 row weight 활용해 인코더 메모리 대폭 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CMMB 전용 cyclic(비 QC-LDPC) 부호에 특화, Prime ECC의 dual-diagonal 인코더와 구조·부호가 상이",
+  "todo_check": "ALT 방식 자체가 dual-diagonal 대비 이점 없음 — 이식 가치 사실상 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6747811---an-efficient-ldpc-encoder-based-on-block-row-cycle-structure-for-cmmb-2013-icist">ieee:6747811 - An Efficient LDPC Encoder Based on Block-Row-Cycle Structure for CMMB (2013, ICIST)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

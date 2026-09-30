@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9682155</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9682155---parity-check-matrix-partitioning-for-layered-decoding-of-qc-ldpc-codes-2021-ieee-globecom-workshops">ieee:9682155 - Parity Check Matrix Partitioning for Layered Decoding of QC-LDPC Codes (2021, IEEE Globecom Workshops)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>row-layered min-sum 복호용 PCM 행 분할을 block cyclic shift 보장 + 레이어별 최대 열가중치 최소화로 정식화, greedy/enumerative 알고리즘과 하한 유도</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부분병렬 layered HW의 PCM 분할 최적화 기법으로 정정성능(BER/iteration)은 불변, RTL 구현·gatecount·throughput 실측 없음</td></tr><tr><td>추가확인</td><td>Prime ECC의 고정 QC-LDPC(z=32, 특정 H-matrix)에 block cyclic shift 분할이 적용 가능한지, 우리 병렬단위(row 32)와 정합되는지</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC row-layered 복호 HW 복잡도/지연을 PCM 행 분할로 줄이는 부호구조-무관 최적화 기법으로, 정정성능은 그대로지만 병렬 layered HW 구현에 간접 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 CPM(circulant permutation matrix)/zero로 구성된 <code>M×N</code> base matrix <code>B</code>, lifting <code>Z</code>의 QC-LDPC(예: 5G LDPC, <code>Z</code>=112/384); row-layered min-sum 복호(Alg.1).</li><li>문제: layered 복호는 partial parallelism으로 각 레이어에 여러 행을 병렬처리하는데, PCM을 어떻게 분할하느냐가 HW 복잡도·throughput을 크게 좌우함.</li><li>첫 레이어 <code>F</code>에 대해 <code>φ^{(l-1)S}_Z(F)</code>가 각 레이어 PCM이 되도록 <code>block cyclic shift</code> 성질을 유지하며 <code>α(H)</code>를 분할.</li><li>핵심 최적화 <code>P1</code>: <code>min ω(F)</code> (레이어별 최대 열가중치), 제약은 <code>φ</code> shift들이 <code>α(H)</code>의 disjoint 분할을 이루는 것. <code>S=1</code>은 기존 [11] 상황에 해당.</li><li><code>ω(F)</code> 최소화가 곧 레이어 내 계산 로직 지연·구현 복잡도 감소로 직결 (Alg.1의 line 10-12 연산).</li><li>이론: block S-cyclic shift equivalence class(S-class) 정의, Lemma 1-4로 <code>LS|Z</code>일 때 해가 존재함을 보이고 Theorem 1로 최적해 구조 <code>C_S</code> 특성화.</li><li><code>P1</code>을 열가중치=1 단순화(<code>P2</code>)하면 <code>MS</code>-partite 그래프에서 <code>MS</code>-clique 찾기 문제와 등가(Theorem 2)임을 증명 (다항시간해 없음).</li><li>두 알고리즘: enumerative(Alg.2, <code>O(MNZ²L^{MS-1})</code>)와 greedy(Alg.3, <code>O(M²SNZ²)</code>); Theorem 3으로 열 일부만 계산해 <code>ω(·)</code>를 <code>Z/LS</code>배 가속.</li><li>결과: Theorem 4로 하한 <code>ω_LB=⌈ω(H)/L⌉</code> 유도(조기종료용); 5G LDPC 5개 PCM에서 두 알고리즘 모두 대체로 <code>ω_LB</code> 달성 또는 +1, <code>Ŝ&gt;1</code>이 최적인 신규 사례(PCM1 L=12) 발견.</li><li>한계: HW 미설계(RTL/gatecount/throughput 실측 없음), 복호 정정성능(BER/iteration)은 불변, 순수 PCM 분할 최적화 기법.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>row-layered min-sum 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리도 min-sum이나 dual-update(even/odd 교대) 스케줄이라 layered 분할 개념과 직접 대응은 아님</td></tr><tr><td>PCM/H-matrix 행 분할·로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 고정 QC-LDPC H-matrix에 레이어 분할 적용 시 로드 단계에 닿음</td></tr><tr><td>레이어 간 HW 재사용(block cyclic shift)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>클록당 edge/MUX 스케줄과 개념적으로 인접(HW 라우팅 재사용)</td></tr><tr><td>병렬단위(circulant/CPM)</td><td>대응 없음</td><td>우리 <code>z_sb=32</code> row 병렬과 정합 필요, 논문의 <code>Z</code>·레이어 수 <code>L</code>과 직접 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 부호구조-무관한 layered PCM 분할 최적화로 병렬 layered HW 구현의 열가중치·라우팅 재사용에 참고 가치는 있으나, Prime ECC는 dual-update 스케줄+고정 H-matrix(z=32)라 정정성능 이득 없이 아키텍처 정합·재검증 부담이 있어 이식성 <code>중</code>.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9682155",
+  "title": "Parity Check Matrix Partitioning for Layered Decoding of QC-LDPC Codes",
+  "year": 2021,
+  "venue": "IEEE Globecom Workshops (GC Wkshps)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "row-layered min-sum 복호용 PCM 행 분할을 block cyclic shift 보장 + 레이어별 최대 열가중치 최소화로 정식화, greedy/enumerative 알고리즘과 하한 유도",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "부분병렬 layered HW의 PCM 분할 최적화 기법으로 정정성능(BER/iteration)은 불변, RTL 구현·gatecount·throughput 실측 없음",
+  "todo_check": "Prime ECC의 고정 QC-LDPC(z=32, 특정 H-matrix)에 block cyclic shift 분할이 적용 가능한지, 우리 병렬단위(row 32)와 정합되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9682155---parity-check-matrix-partitioning-for-layered-decoding-of-qc-ldpc-codes-2021-ieee-globecom-workshops">ieee:9682155 - Parity Check Matrix Partitioning for Layered Decoding of QC-LDPC Codes (2021, IEEE Globecom Workshops)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

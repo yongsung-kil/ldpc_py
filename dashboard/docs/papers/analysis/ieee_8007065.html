@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8007065</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8007065---message-alignment-for-discrete-ldpc-decoders-with-quadrature-amplitude-modulation-2017-ieee-isit">ieee:8007065 - Message Alignment for Discrete LDPC Decoders with Quadrature Amplitude Modulation (2017, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>QAM용 discrete LDPC 디코더를 가능케 하는 message alignment(정수 메시지 재라벨링) 기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>QAM 다중비트 심볼 특유 문제 해결이라 NAND 셀-per-read 채널과 무관, 정수 LUT 디코더 전체가 우리 min-sum 구조와 이질적</td></tr><tr><td>추가확인</td><td>LUT 크기·메모리 요구량, irregular 코드로의 확장 가능성(future work)</td></tr></tbody></table>
+<blockquote><p>총평: QAM 무선용 정보병목 기반 정수 LUT 디코더 기법으로, NAND binary QC-LDPC(min-sum) 이식 관점에서 채널 모델·디코더 구조 모두 이질적이라 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>(dv,dc)=(3,6)</code> regular LDPC, rate <code>Rc=1/2</code>, length <code>Nv=8000</code>, 16-QAM Gray labeling, 복소 AWGN 채널.</li><li>문제: 기존 discrete LDPC 디코더(정수 메시지+LUT 노드연산)는 BPSK 등 binary 입력에만 설계법 존재, 고차 변조(QAM)로 확장 불가.</li><li>모델: 한 QAM 심볼이 <code>log2 M</code>개 비트를 실어, 수신 샘플 <code>r̃k</code>의 real/imag를 각각 양자화해 정수 인덱스 <code>rkre, rkim</code> 생성.</li><li>핵심기법1(양자화기): Information Bottleneck으로 <code>p(srke, r̃kre)</code>에서 상호정보 최대화 양자화기 설계(<code>|T|=16</code>, 즉 4bit).</li><li>문제 심화: 같은 QAM 심볼 내 비트 인덱스 <code>ν</code>마다 <code>p(ck,ν, rkre)</code>(따라서 posterior LLR)가 달라, check node가 어느 <code>ν</code>인지 몰라 discrete DE의 단일 LUT 설계가 깨짐.</li><li>핵심기법2(message alignment): KL divergence 최소화(식 5)로 <code>zk,1(rkre)=argmin DKL(...)</code> 재라벨링을 설계, 서로 다른 <code>ν</code>의 정수 메시지가 같은 posterior에 대응하도록 정렬.</li><li>트릭: <code>ν=0,2</code>는 identity 매핑, <code>ν=1,3</code>만 정수 LUT 1회 추가 → 디코더 설계 자체는 BPSK와 동일하게 offline 유지.</li><li>최적화: discrete density evolution(IB clustering) 오프라인으로 노드 LUT 생성, 단일 joint <code>p(bl,yl)</code>(식 7)로 통합.</li><li>결과: 4bit 정수 디코더가 quantized-LLR BP 대비 0.15dB 손실(BER≈1e-6), double-LLR min-sum을 능가; alignment 없으면 복호 완전 실패.</li><li>한계: HW 미설계, 시뮬만, QAM 무선 채널 특화, irregular 코드는 미해결(future work).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>정수 LUT 기반 check node 연산</td><td>대응 없음</td><td>우리는 min-sum(min1/min2+sign) 기반, full LUT 디코더 아님</td></tr><tr><td>Information Bottleneck 양자화기</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>soft-read LLR 양자화와 개념적 근접이나 QAM 심볼 대상이라 직접 이식 불가</td></tr><tr><td>message alignment(비트 인덱스별 재라벨링)</td><td>대응 없음</td><td>QAM 심볼 내 다중비트 정렬 문제로 NAND per-cell read에 부재</td></tr><tr><td>iteration별 discrete DE 설계</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 iteration별 LLR 테이블과 발상만 유사, 설계 파이프라인 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — QAM 다중비트 변조 특유 문제를 푸는 정수 LUT 디코더로, NAND binary QC-LDPC(채널=per-cell read, 디코더=min-sum) 구조와 이질적이라 떼어 쓸 요소가 사실상 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8007065",
+  "title": "Message Alignment for Discrete LDPC Decoders with Quadrature Amplitude Modulation",
+  "year": 2017,
+  "venue": "IEEE ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "QAM용 discrete LDPC 디코더를 가능케 하는 message alignment(정수 메시지 재라벨링) 기법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "QAM 다중비트 심볼 특유 문제 해결이라 NAND 셀-per-read 채널과 무관, 정수 LUT 디코더 전체가 우리 min-sum 구조와 이질적",
+  "todo_check": "LUT 크기·메모리 요구량, irregular 코드로의 확장 가능성(future work)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8007065---message-alignment-for-discrete-ldpc-decoders-with-quadrature-amplitude-modulation-2017-ieee-isit">ieee:8007065 - Message Alignment for Discrete LDPC Decoders with Quadrature Amplitude Modulation (2017, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

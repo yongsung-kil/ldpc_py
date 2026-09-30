@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1693779</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1693779---a-parallel-lsi-architecture-for-ldpc-decoder-improving-message-passing-schedule-2006-iscas">ieee:1693779 - A Parallel LSI Architecture for LDPC Decoder Improving Message-Passing Schedule (2006, ISCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>3336</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>row 연산 직후 갱신된 메시지를 즉시 사용해 3회의 column 연산을 파이프라인으로 병렬 수행하는 high-efficiency message-passing schedule 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.112Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>(3,6)-regular LDPC 및 min-sum 근사 기반 2006년 FPGA 구현으로 QC-LDPC/HD·2~3SD 중심 Prime ECC와 부호 구조가 상이함</td></tr><tr><td>추가확인</td><td>본문 표(Table I/II) 수치가 OCR로 심하게 손상되어 gatecount 등은 확인 불가</td></tr></tbody></table>
+<blockquote><p>총평: row-column 연산을 파이프라인으로 겹쳐 iteration 수와 BER을 개선한 2006년 FPGA 스케줄링 연구로, 스케줄링 아이디어는 참고 가능하나 부호·양자화 스펙이 Prime ECC와 달라 이식성은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>(3,6)-regular LDPC, codeword length 3336bit, AWGN 채널 대상 partially-parallel 디코더.</li><li>기존 스케줄(Refs.[2]-[4])은 row/column 연산을 dual memory로 동시 수행하나, column 연산이 갱신된 메시지 <code>α'</code>를 즉시 반영하지 못해 message-passing 효율이 저하됨.</li><li>채널모델은 AWGN, block-structured parity check matrix(<code>w_c x w_r</code> 서브블록, 각 서브블록은 <code>b x b</code> 순환 시프트 행렬).</li><li>제안 스케줄: row 연산이 먼저 column 연산 위치를 결정하고, 그 직후 해당 위치에서 column 연산을 수행하는 2단계 구조.</li><li>row 연산 완료 시점마다 갱신 메시지 <code>α'</code>를 이용해 매 column 연산을 즉시 수행 - 기존 대비 3배 많은 column 연산을 단일 iteration 내 수행.</li><li>파이프라인 BFU(Bit Functional Unit)가 3개 column 연산의 덧셈을 병렬 수행해 6클록 내 처리, row 연산(10클록)의 지연을 확장하지 않음.</li><li>CFU는 Gallager 함수 대신 근사 minimum 함수(min-sum)를 사용해 게이트 수 절감.</li><li>별도 학습/최적화 절차 없음 (스케줄링·HW 구조 설계).</li><li>결과: 기존 스케줄 대비 평균 iteration 수 감소(3.983→3.063 @Imax=4,SNR=5.0), throughput 최대 112Mbps, BER 0.000000(SNR=4.5, Imax=8)까지 개선.</li><li>한계: (3,6)-regular 코드 및 2006년 FPGA(Xilinx Virtex-II)로 제한적 검증, 최신 QC-LDPC/고rate NAND ECC와 직접 비교 어려움, 본문 OCR 손상으로 정량적 세부수치(gatecount 등) 다수 확인 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>row/column 연산 파이프라인 스케줄링</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>iteration 루프 스케줄링 개선 아이디어로 참고 가능</td></tr><tr><td>CN min-sum(근사) 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 Prime ECC가 min-sum 보유, 중복 기여</td></tr><tr><td>메모리 뱅크 구조/주소지정</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>메모리 뱅크 분할 방식이 상이해 직접 대응 어려움</td></tr><tr><td>block-structured PCM (QC 유사 서브블록)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>(3,6)-regular 구조로 Prime ECC의 QC-LDPC와 상이, 부분 대응</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 | (3,6)-regular 코드 기반 2006년 스케줄링 연구로 이미 Prime ECC가 min-sum·pipeline·HCU 등 유사 개념을 보유하고 있어 중복도가 높고, 코드 구조 차이로 직접 이식 난이도가 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1693779",
+  "title": "A Parallel LSI Architecture for LDPC Decoder Improving Message-Passing Schedule",
+  "year": 2006,
+  "venue": "ISCAS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "3336",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "row 연산 직후 갱신된 메시지를 즉시 사용해 3회의 column 연산을 파이프라인으로 병렬 수행하는 high-efficiency message-passing schedule 제안",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.112,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "O",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "(3,6)-regular LDPC 및 min-sum 근사 기반 2006년 FPGA 구현으로 QC-LDPC/HD·2~3SD 중심 Prime ECC와 부호 구조가 상이함",
+  "todo_check": "본문 표(Table I/II) 수치가 OCR로 심하게 손상되어 gatecount 등은 확인 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1693779---a-parallel-lsi-architecture-for-ldpc-decoder-improving-message-passing-schedule-2006-iscas">ieee:1693779 - A Parallel LSI Architecture for LDPC Decoder Improving Message-Passing Schedule (2006, ISCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

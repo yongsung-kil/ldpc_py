@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6134485</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6134485---high-throughput-low-power-ldpc-decoder-and-code-design-2011-ieee-globecom">ieee:6134485 - High-Throughput Low-Power LDPC Decoder and Code Design (2011, IEEE Globecom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>432</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>열별 cyclic shift를 등간격 relative shift로 제약해 HW shift 회로를 최소화하는 HW친화 부호설계</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>13,948 gates@65nm (1-shift/col) vs 58,856@65nm (unconstrained)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiGig(802.11ad) 무선 타깃, 짧은 블록(N=432)·저rate, NAND 고rate와 정합성 낮음</td></tr><tr><td>추가확인</td><td>shift 제약이 error-floor/최소거리에 미치는 영향, 고rate·긴 블록으로 확장 시 성능 재검증</td></tr></tbody></table>
+<blockquote><p>총평: layered decoder의 cyclic-shift HW를 줄이는 부호설계 제약 기법으로, QC/protograph shift 라우팅 개선 아이디어는 유용하나 무선 저rate 타깃이라 NAND 고rate 이식엔 재검증 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: layered-schedule LDPC 디코더용 protograph 부호, Z-factor 확장(예 Z=27→N=432), rate 1/2·5/8·3/4 코드 패밀리, 8bit/coded-bit shift HW.</li><li>문제: 기존 code-first 설계는 열마다 cyclic-shift 값이 제각각이라 layered 디코더의 shift(permutation) 회로가 커지고 지연·전력이 증가.</li><li>핵심 관찰: (a) 단일 cyclic shift는 VN-CN 배선 순서만 바꾸므로 사실상 공짜, (b) 같은 열의 연속 행 shift가 등간격이면 HW는 열당 relative shift 1개만 구현하면 됨.</li><li>핵심 기법: base H-matrix를 열 단위로 채우되, 열마다 <code>첫 shift값 P(offset)</code> + 단일 <code>relative shift X</code>로 shift 수열 <code>S_i=(S_{i-1}+X) mod Z</code>를 생성해 열당 shift 수를 s개(권장 s=1)로 제약.</li><li>사이클 회피: PEG 변형으로 size-4 사이클 발생 시 다른 X 선택, size-6 사이클 최소화·최소거리 최대화를 위해 Step3 여러 번 재시작.</li><li>확장: iteration 간 정렬용 열당 relative shift 1개 추가(inter-iteration shift <code>F=(Z-S_i) mod Z</code>).</li><li>offset 트릭: 열별 shift offset P는 그래프 구조·AWGN 성능에 무영향이나, 주기적 HW 손상 오류에 대해 인터리버처럼 성능 개선 가능.</li><li>부호 패밀리: 동일 length·Z·shift 제약으로 여러 rate 부호군 구성, multi-step lifting으로 N=1728 등 큰 블록 확장.</li><li>결과: 1-shift/col 시 shift HW 지연 75%·면적 76% 감소(13,948 vs 58,856 gates@65nm), 전체 디코더 throughput +10%·면적/전력 -7%; BER/FER은 WiGig 부호와 동등(RCB 대비 0.5~0.95dB).</li><li>한계: 무선(WiGig) 짧은 저rate 부호 실증, soft/양자화·NAND 채널 미고려, 부호설계 논문으로 디코더 알고리즘 개선은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>제약된 cyclic-shift base H-matrix 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix(base+shift) 로드 구조와 직접 대응, shift 제약을 PCM에 반영 가능</td></tr><tr><td>shift HW(permutation network) 축소</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>edge/MUX 라우팅 축소 관점에서 유사, 다만 GT는 edge thinning으로 접근이 다름</td></tr><tr><td>protograph/QC 부호설계</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호구조 고정 재검증 부담(프로파일 §4 "높음")</td></tr><tr><td>inter-iteration shift 정렬</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 QC 구조, 별도 정렬 로직 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — cyclic-shift 라우팅 HW를 줄이는 부호설계 아이디어는 Prime ECC의 QC-LDPC shift 배선/GT에 개념적으로 유용하나, 무선 저rate·짧은 블록 실증이라 NAND 고rate QC-LDPC로의 이식엔 H-matrix 재설계·성능 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6134485",
+  "title": "High-Throughput Low-Power LDPC Decoder and Code Design",
+  "year": 2011,
+  "venue": "IEEE Globecom",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "protograph",
+  "code_rate": "0.5~0.75",
+  "code_length": "432",
+  "soft_quant": "미상",
+  "key_contribution": "열별 cyclic shift를 등간격 relative shift로 제약해 HW shift 회로를 최소화하는 HW친화 부호설계",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "13,948 gates@65nm (1-shift/col)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "WiGig(802.11ad) 무선 타깃, 짧은 블록(N=432)·저rate, NAND 고rate와 정합성 낮음",
+  "todo_check": "shift 제약이 error-floor/최소거리에 미치는 영향, 고rate·긴 블록 확장 시 성능 재검증"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6134485---high-throughput-low-power-ldpc-decoder-and-code-design-2011-ieee-globecom">ieee:6134485 - High-Throughput Low-Power LDPC Decoder and Code Design (2011, IEEE Globecom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

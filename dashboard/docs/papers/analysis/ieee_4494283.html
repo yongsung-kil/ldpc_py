@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4494283</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4494283---an-fpga-architecture-for-low-density-parity-check-codes-2008-ieee-conf">ieee:4494283 - An FPGA Architecture for Low Density Parity Check Codes (2008, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96~1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>코드별 맞춤+동적 재구성 가능한 LDPC 인코더/디코더 FPGA 아키텍처(min-sum 노드, XOR-tree 인코더) 합성 면적/지연 제시</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>인코더(1008,504) 24643 LUT @Virtex4</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>완전병렬 노드 인스턴스화로 대형부호 라우팅 혼잡·확장성 미해결, BER/throughput 없이 합성수치만</td></tr><tr><td>추가확인</td><td>완전병렬 배선 라우팅 혼잡/실디바이스 fmax, 고rate NAND 부호(&gt;0.9) 면적 스케일</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 노드·XOR-tree 인코더·신드롬 체크로 구성된 기본형 재구성 FPGA LDPC 구현으로, 모든 요소가 Prime ECC에 이미 있고 동적 재구성은 고정 NAND 부호에 무의미해 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 임의 rate/form의 일반 binary LDPC를 대상으로 한 인코더+디코더 FPGA 아키텍처(코드별 bit-file을 Flash ROM 저장, 마이크로컨트롤러가 동적 로드).</li><li>문제: 일반화 HW는 비용과다, code-specific ASIC은 동적 noise 채널에 비유연 → 재구성 가능한 FPGA로 mid-transmission 코드 전환 지원.</li><li>인코더: 입력벡터 × 생성행렬 <code>G</code>를 컬럼별 XOR-tree로 구현(<code>G</code>의 앞 <code>k</code>열 항등부는 bypass).</li><li>인코더 합성((96,48)/(204,102)/(1008,504) @Virtex4): LUT 331/1279/24643, max delay 7.98/9.88/11.62ns.</li><li>디코더: check node, symbol(variable) node, quantizer 3모듈. 부호가 irregular여도 되도록 노드 집합 비균질 허용.</li><li>CN 연산: <code>tanh/atanh</code> 회피 위해 sign-min 근사 사용(<code>sgn</code> 곱 × 최소 magnitude) - 즉 min-sum.</li><li>VN 연산: 전체 수신메시지+LLR 합을 구한 뒤 각 입력을 빼서 출력(합은 quantizer LLR로 재활용).</li><li>quantizer: LLR 부호로 hard-decision 후 <code>ĉ·Hᵀ=0</code> 여부로 유효 codeword 판정(아니면 재iteration).</li><li>노드 합성(message 4/8/16bit, degree별): 예 check node deg8·8bit 1025 LUT, quantizer(N=1008) 2017 LUT; 완전병렬(모든 노드 인스턴스화).</li><li>한계: BER/throughput 성능결과 없음, 라우팅 혼잡 미논의, min-sum 등 기법이 모두 표준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN sign-min(min-sum) 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC가 이미 보유한 min-sum과 동일(중복)</td></tr><tr><td>symbol/VN 노드 처리+양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등</td><td>표준 VN 합/차 처리로 대응하나 신규성 없음</td></tr><tr><td>유효 codeword 판정(<code>ĉ·Hᵀ=0</code>)</td><td><code>full_CRC.cpp</code>, <code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>Prime ECC는 CRC 조기종료로 더 진보(raw 신드롬 대비)</td></tr><tr><td>XOR-tree 인코더(<code>G</code> 곱)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 인코딩이라 방식 상이</td></tr><tr><td>FPGA 동적 재구성/코드 선택</td><td>대응 없음</td><td>고정 QC-LDPC 쓰는 NAND ECC엔 무의미</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - min-sum 노드·XOR-tree 인코더·신드롬 판정이 전부 표준이며 Prime ECC가 더 진보된 형태로 이미 보유하고, 핵심 셀링포인트인 동적 재구성은 고정 NAND 부호에 불필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4494283",
+  "title": "An FPGA Architecture for Low Density Parity Check Codes",
+  "year": 2008,
+  "venue": "IEEE Conf.",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "96~1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "코드별 맞춤+동적 재구성 가능한 LDPC 인코더/디코더 FPGA 아키텍처(min-sum 노드, XOR-tree 인코더)",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "인코더(1008,504) 24643 LUT @Virtex4",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "완전병렬 노드 인스턴스화로 대형부호 라우팅 혼잡·확장성 미해결, BER/throughput 없이 합성수치만",
+  "todo_check": "완전병렬 라우팅 혼잡/실디바이스 fmax, 고rate NAND 부호(&gt;0.9) 면적 스케일"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4494283---an-fpga-architecture-for-low-density-parity-check-codes-2008-ieee-conf">ieee:4494283 - An FPGA Architecture for Low Density Parity Check Codes (2008, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

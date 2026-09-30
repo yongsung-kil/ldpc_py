@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5349137</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5349137---a-new-forced-convergence-decoding-scheme-for-ldpc-codes-2009-iccta-2009">ieee:5349137 - A New Forced Convergence Decoding Scheme for LDPC Codes (2009, ICCTA 2009)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1152</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>수렴한 변수노드를 Tanner 그래프에서 삭제해 PCM을 반복마다 축소, 노드갱신 복잡도 감소 + 오삭제 복구 메커니즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>반복마다 H 열을 동적 삭제 → 고정 z=32 병렬 QC-LDPC 파이프라인에 매핑 곤란, 복잡도 지표가 "info bit당 처리 degree"로 추상적</td></tr><tr><td>추가확인</td><td>삭제/복원 오버헤드가 실제 HW latency·면적에 미치는 영향, SPA 대비 MSA에서의 FER 이득 폭</td></tr></tbody></table>
+<blockquote><p>총평: forced-convergence 계열 복잡도 절감(노드 삭제형) 시뮬 논문. 아이디어는 명확하나 동적 그래프 축소가 고정 병렬 HW에 부적합하고 기존 graph thinning/조기종료와 겹쳐 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 이진 (1152,576) LDPC(IEEE 802.16e, QC-LDPC), BPSK/AWGN, horizontal-vertical 스케줄링, 최대 60 iteration, CN 갱신은 SPA·MSA 둘 다 실험.</li><li>문제: 저전력 단말용 LDPC 복호에서 반복당 처리 노드(edge) 수를 줄여 복잡도를 낮추고자 함 (기존 forced convergence[FC]는 비활성화만 하고 edge는 유지).</li><li>핵심 기법: 수렴 판정된 변수노드를 edge까지 <strong>완전 삭제</strong>하여 <code>H</code>의 해당 열을 0으로 만들고, 반복마다 Tanner 그래프가 축소됨.</li><li>수렴집합 <code>D</code>는 모든 CN 메시지 부호가 노드 soft info와 일치하는 노드 중 <code>|O(vk)| &gt; -ln(p0/k)</code> 를 만족하는 집합으로 정의.</li><li>이 임계식은 오삭제 확률 <code>P_D ~ p0(ln|D|+γ)</code> (Euler 상수 γ) 형태로 근사되어 단일 파라미터 <code>p0</code>만으로 관리 → FC의 (tv,tc) 휴리스틱 튜닝보다 단순.</li><li>노드 삭제 시 홀/짝 parity 관계 <code>p</code> 를 갱신하고, degree-1 CN이 생기면 연결 변수노드도 known으로 보고 삭제(연쇄 축소).</li><li>오삭제 복구: decodable codeword는 max iteration 전에 <code>H</code>가 전부 0으로 축소되는 경우가 많고, 이때 원 Tanner 그래프를 복원해 남은 반복으로 재복호.</li><li>tentative check는 첫 <code>s_j=1</code>에서 중단 가능해 검사 edge 수가 크게 감소.</li><li>결과: 기존 대비 노드갱신 복잡도 28~49%, tentative checking 44~84% 감소(2.0dB에서 42%/83%); FER은 동등하거나 MSA에서 개선, FC와 달리 error floor 없음.</li><li>한계: HW 미설계·시뮬만, 복잡도는 "info bit당 처리 degree"라는 추상 지표, 동적 H 축소의 실제 구현 비용 미평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반복 복호 루프 / 노드 스케줄링</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>삭제 로직을 이터레이션 루프에 삽입해야 하나 고정 파이프라인과 충돌</td></tr><tr><td>CN min-sum(MSA) 갱신</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문의 MSA 삭제 기준(min 재사용)과 접점</td></tr><tr><td>tentative syndrome / 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기 검사·종료 개념 대응 (이미 보유)</td></tr><tr><td>edge 축소(그래프 씨닝)</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>정적 MUX edge 축소로 유사하나 논문은 동적 노드 삭제 → 직접 대응 아님</td></tr><tr><td>H-matrix 로드/구조 변경</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>정적 로드만 지원, 런타임 열 삭제는 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 동적 Tanner 축소가 고정 z=32 병렬 QC-LDPC HW와 정합되지 않고, 기존 graph thinning·조기종료와 기여가 중복된다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5349137",
+  "title": "A New Forced Convergence Decoding Scheme for LDPC Codes",
+  "year": 2009,
+  "venue": "ICCTA 2009",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1152",
+  "soft_quant": "무관",
+  "key_contribution": "수렴한 변수노드를 Tanner 그래프에서 삭제해 PCM을 반복마다 축소, 노드갱신 복잡도 감소 + 오삭제 복구 메커니즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "반복마다 H 열을 동적 삭제 → 고정 z=32 병렬 QC-LDPC 파이프라인에 매핑 곤란, 복잡도 지표가 info bit당 처리 degree로 추상적",
+  "todo_check": "삭제/복원 오버헤드가 실제 HW latency·면적에 미치는 영향, SPA 대비 MSA에서의 FER 이득 폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5349137---a-new-forced-convergence-decoding-scheme-for-ldpc-codes-2009-iccta-2009">ieee:5349137 - A New Forced Convergence Decoding Scheme for LDPC Codes (2009, ICCTA 2009)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

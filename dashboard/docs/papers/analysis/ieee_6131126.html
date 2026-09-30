@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6131126</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6131126---overlapped-message-passing-technique-with-resource-sharing-for-high-speed-cmmb-ldpc-decoder-2011-ieee-trans-consumer-electronics">ieee:6131126 - Overlapped Message Passing Technique with Resource Sharing for High Speed CMMB LDPC Decoder (2011, IEEE Trans. Consumer Electronics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5,0.75</td></tr><tr><td>부호length</td><td>9216</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>CMMB HS-LDPC용 OMP + adder 기능유닛 공유 + 메모리 그룹핑으로 throughput 최대 45% 향상, 메모리 최소화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>178k@0.18um (NAND2 게이트)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.031Gbps (31.34Mbps@rate3/4)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CMMB 전용 HS-LDPC(비-QC, AGU 기반 H 생성)에 특화된 스케줄링·매트릭스 permutation이라 QC-LDPC와 구조 상이</td></tr><tr><td>추가확인</td><td>OMP CTV/VTC 오버랩 스케줄링이 Prime ECC z=32 row 병렬 파이프라인과 정합 가능한지 확인</td></tr></tbody></table>
+<blockquote><p>총평: CMMB 방송표준의 비-QC HS-LDPC에 특화된 HW throughput 최적화라 NAND용 QC-LDPC에 그대로 이식하기 어려움; OMP/기능유닛 공유 아이디어만 개념 참고.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: CMMB 표준 regular LDPC, 길이 <code>N=9216</code>, rate 1/2 <code>(9216,4608)</code> dc=6/dv=3, rate 3/4 <code>(9216,6912)</code> dc=12/dv=3. QC-LDPC 아닌 "high-structured(HS)" 코드.</li><li>문제: 긴 코드워드로 반복 복호 latency 크고 메모리 요구량 큼 → high throughput + 저비용 HW 동시 달성 목표.</li><li>H 생성 모델: 기본 서브행렬(rate1/2는 18×6, rate3/4는 9×12)만 저장하고 나머지는 <code>Hm,n = H'(m mod 18),(n+36·qu(m/18)) mod N</code> AGU로 동적 생성 → 메모리 절감.</li><li>핵심 기법1 (OMP): CTV(check→var)와 VTC(var→check) 연산을 메모리 충돌·데이터 종속 없는 범위에서 병렬 처리. H-matrix permutation으로 0 블록을 좌하/우상에 몰아 오버랩 가능 영역 확보.</li><li>permutation 제약: CMMB AGU 생성식 유지 위해 행은 18(또는 9)의 배수, 열은 36의 배수 단위로만 회전 → 1260 cycle 오버랩(약 10% latency 감소).</li><li>핵심 기법2 (기능유닛 공유): VTC 연산(식3,4의 덧셈)과 min 연산을 adder로 통합, CTV용 adder 유휴 시 VTC에 재사용. 비교는 2's complement 뺄셈 <code>Y-X = Y+X̄+1</code>으로 adder가 수행.</li><li>핵심 기법3 (메모리 그룹핑): LLR을 permuted matrix 열-major로 8개 메모리 그룹에 배치, 주소 하위 3bit로 그룹 선택, CTV read→VTC read→VTC write→CTV write 순서로 충돌 회피.</li><li>아키텍처: 8세트 기능유닛의 partially-parallel 구조, 185MHz 동작.</li><li>결과: rate1/2 17.37Mbps, rate3/4 31.34Mbps(20 iter), throughput 40%+ 향상(OMP 10% + 기능유닛공유 33%), 게이트 178k@0.18um, 메모리 163kbit로 [20](212k gate)/21 대비 소형.</li><li>한계: CMMB HS-LDPC 특정 구조 종속, 정정능력 개선 없음(스케줄링·면적 최적화만), 연판정 비트폭 명시 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Modified min-sum CTV/VTC 연산</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>동일 min-sum 계열이나 Prime ECC가 이미 보유</td></tr><tr><td>OMP (CTV/VTC 오버랩 스케줄링)</td><td>decoder.cpp 이터레이션 루프</td><td>개념 참고 가능하나 Prime ECC는 이미 pipeline/Dual-Update 스케줄 보유</td></tr><tr><td>H-matrix permutation / AGU 생성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>CMMB HS 구조 전용, QC circulant과 상이</td></tr><tr><td>메모리 그룹핑/라우팅</td><td>대응 없음</td><td>Prime ECC HW 메모리 구조(z=32)와 정합 필요</td></tr></tbody></table>
+<p>적용 가치: 낮음 — CMMB 비-QC HS-LDPC에 묶인 HW 스케줄링/메모리 최적화라 NAND QC-LDPC 이식 가치 적고, min-sum·오버랩 스케줄은 Prime ECC가 이미 보유.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:6131126",
+  "title": "Overlapped Message Passing Technique with Resource Sharing for High Speed CMMB LDPC Decoder",
+  "year": 2011,
+  "venue": "IEEE Trans. Consumer Electronics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "9216",
+  "soft_quant": "미상",
+  "key_contribution": "CMMB HS-LDPC용 OMP + adder 기능유닛 공유 + 메모리 그룹핑으로 throughput 최대 45% 향상",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "178k@0.18um",
+  "parallelism": "부분",
+  "throughput_gbps": 0.0313,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "CMMB 전용 HS-LDPC(비-QC, AGU 기반 H 생성) 특화 스케줄링/permutation이라 QC-LDPC와 구조 상이",
+  "todo_check": "OMP CTV/VTC 오버랩 스케줄링이 Prime ECC z=32 row 병렬 파이프라인과 정합 가능한지 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6131126---overlapped-message-passing-technique-with-resource-sharing-for-high-speed-cmmb-ldpc-decoder-2011-ieee-trans-consumer-electronics">ieee:6131126 - Overlapped Message Passing Technique with Resource Sharing for High Speed CMMB LDPC Decoder (2011, IEEE Trans. Consumer Electronics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

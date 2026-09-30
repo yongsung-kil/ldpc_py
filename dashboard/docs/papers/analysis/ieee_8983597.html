@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8983597</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8983597---efficient-belief-propagation-list-decoding-of-polar-codes-2019-ieee">ieee:8983597 - Efficient Belief Propagation List Decoding of Polar Codes (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>64~512</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>R층 초기화 갱신(RMS)+BP-list+CRC로 BP 디코딩을 SCL 수준까지 끌어올림</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>polar code 전용 알고리즘 - binary LDPC와 부호/디코더 구조가 근본적으로 다름</td></tr><tr><td>추가확인</td><td>실측 gatecount/throughput 없음, HW는 (8,4)/개념 블록도 수준</td></tr></tbody></table>
+<blockquote><p>총평: polar code BP-list 디코딩 개선 논문으로 NAND binary QC-LDPC와 무관, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G eMBB 제어채널용 <strong>polar code</strong>(<code>N</code>=64~512, <code>R</code>=1/2), BPSK/AWGN 채널.</li><li>문제: polar BP 디코딩은 병렬성·throughput은 좋으나 수렴 느리고 정정성능이 SCL/CA-SCL에 못 미침.</li><li>관찰: BP factor graph의 R층 초기화 열 <code>R(i,1)</code>이 느린 수렴의 주 원인 (frozen→info 전파만 유효, 나머지 중복 연산).</li><li>핵심기법1 - <strong>RMS(renew min-sum)</strong>: 매 iteration마다 정보비트 위치의 <code>R(i,1)=L(i,1)</code>로 갱신, 갱신 순서는 <code>reverse(A)</code>(가장 불신뢰 채널 우선).</li><li>식 의미: <code>g(a,b)=sign(a)sign(b)min(|a|,|b|)</code> 기반 SMS(scaled min-sum, 계수 <code>α</code>) 위에서 R층만 재초기화해 loop 영향 완화.</li><li>핵심기법2 - <strong>EBPL</strong>: RMS를 <code>L</code>개 permuted factor graph(우측 시프트로 <code>2L</code> 경로 생성)에 병렬 적용해 BPL과 결합.</li><li>구현 디테일: 최종 판정은 유클리드거리 정렬 후 CRC 통과 codeword 중 최소거리 선택(2회 sort).</li><li>조기종료: <code>uG==x</code> 조기종료 기준 + CRC-4를 함께 사용(성능 손실 최소화 위해 4비트만 추가).</li><li>결과: (256,132) EBPL(L=8,crc=4)이 동급 SCL(L=4) BER를 상회, RMS가 SMS 대비 FER 개선.</li><li>한계: HW는 (8,4) 개념도/블록도 수준, gatecount·throughput 실측치 없음, 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| polar BP-list 디코딩 전체 | 대응 없음 | polar code는 Prime ECC(binary QC-LDPC)와 부호·디코더 구조가 다름 |
+| min-sum 연산 g(a,b) | decoder.cpp CNU_Update_New_Mag() | 개념적 min 근사만 유사, 그래프/스케줄 상이해 직접 이식 불가 |
+| CRC 조기종료 | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 이미 보유(Partial+Full CRC), 중복 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — polar code 전용 BP-list 기법으로 NAND binary QC-LDPC 디코더에 떼어 쓸 실질 요소가 없고, min-sum/CRC 조기종료는 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8983597",
+  "title": "Efficient Belief Propagation List Decoding of Polar Codes",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "64~512",
+  "soft_quant": "무관",
+  "key_contribution": "R층 초기화 갱신(RMS)+BP-list+CRC로 BP 디코딩을 SCL 수준까지 끌어올림",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "polar code 전용 알고리즘 - binary LDPC와 부호/디코더 구조가 근본적으로 다름",
+  "todo_check": "실측 gatecount/throughput 없음, HW는 (8,4)/개념 블록도 수준"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8983597---efficient-belief-propagation-list-decoding-of-polar-codes-2019-ieee">ieee:8983597 - Efficient Belief Propagation List Decoding of Polar Codes (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

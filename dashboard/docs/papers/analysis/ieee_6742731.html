@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6742731</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6742731---reduced-complexity-min-sum-algorithm-for-decoding-ldpc-codes-with-low-error-floor-2014-ieee-trans-circuits-and-systemsi">ieee:6742731 - Reduced-Complexity Min-Sum Algorithm for Decoding LDPC Codes With Low Error-Floor (2014, IEEE Trans. Circuits and Systems—I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.84</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>iteration 의존 가변 보정계수 + 짝/홀 그룹 min으로 second-min 추정하는 (s)vwMS로 error-floor를 수차수 낮춤</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>3.84mm^2@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>12.8Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>가중/문턱 벡터가 부호별 오프라인 탐색 필요, 802.3an RS-LDPC 특화 검증(NAND 부호 재튜닝 필요)</td></tr><tr><td>추가확인</td><td>Prime ECC z=32 구조·2SD/3SD 양자화에서 iteration별 weight table 재탐색 비용과 min2 emulation 정합성</td></tr></tbody></table>
+<blockquote><p>총평: min-sum second-min을 iteration별 가변 가중으로 과소추정해 trapping-set 수렴을 늦춰 error-floor를 없애는 저복잡도 기법 — 우리 min-sum 디코더 루프에 직접 이식 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK+AWGN, IEEE 802.3an RS(2048,1723) QC-LDPC(<code>M=384, N=2048</code>, col-wt 6, row-wt 32) 및 802.15.3c(len 672, rate 1/2·3/4·7/8), max iter 30.</li><li>문제: single-min MS(smMS)는 second-min을 상수 보정으로 근사해 복잡도는 낮지만 성능 열화·수렴 실패, error-floor 존재.</li><li>관찰: MS의 min1·min2 및 그 차이가 iteration마다 증가 → 보정계수도 iteration에 따라 커져야 비율 유지.</li><li>핵심기법1(vwMS): check-node 갱신에서 second-min을 <code>min2 = min1 + w(iter)</code> 형태의 iteration 의존 가변 가중 <code>w</code>로 emulation.</li><li>핵심식: <code>min2</code> 과소추정이 trapping-set VN의 소프트값 급증을 억제 → FS-CN 강화 지연으로 bit이 trap되지 않게 함(수렴 slow-down이 floor 제거 원리).</li><li>핵심기법2(svwMS): 다중-최소 존재판정을 위한 전수비교 대신 입력을 even/odd 두 그룹으로 나눠 각 min 계산, <code>min1=min(even,odd)</code>, 두 값이 같으면 다중최소로 판단 → 비교기 32개 절감, 성능 동일.</li><li>구현 디테일: 채널/V2C [5:1]·[6:2]·[7:2] 양자화, C2V는 <code>w</code>에 따라 비트폭 +1, weight는 SNR 무관 고정값 사용(소폭 손실 감수).</li><li>최적화: iteration 범위를 2/4/8 등분해 weight vector(0~4, step 0.25)·threshold vector를 3.8dB부터 0.2dB씩 올리며 survivor set 방식 전수탐색(4등분 이상은 이득 미미).</li><li>결과: waterfall에서 MS 대비 802.3an 0.03dB 손실(또는 floor용 factor로 0.14dB 손실), BER 1e-x 이하 error-floor free; 90nm ASIC 12.8Gbps, 3.84mm^2, layered decoder(최소 면적·최고 Th/A).</li><li>한계: weight/threshold 벡터가 부호·양자화별 오프라인 탐색 필요, 실측(칩 측정) 아닌 합성·FPGA 에뮬 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>vwMS/svwMS check-node 갱신(min1+가변가중=min2)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>second-min emulation을 우리 min1/min2 CN 연산에 대체·삽입 가능(핵심 이식점)</td></tr><tr><td>iteration별 가변 weight 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>이미 iteration 구간별 LLR 테이블 보유 → weight vector도 동형으로 수용</td></tr><tr><td>even/odd 그룹 min으로 다중최소 판정</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>비교기 절감 트릭을 CN 유닛에 반영 가능</td></tr><tr><td>양자화([6:2] 등) / soft-read</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>우리 2SD/3SD 양자화와 정합(4bit+ 불요)</td></tr><tr><td>layered/early-termination HW</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료 개념 일치(우리는 CRC 기반)</td></tr></tbody></table>
+<p>적용 가치: 높음 — 이미 보유한 min-sum 프레임에 second-min 가변 가중이라는 작은 변경만으로 error-floor 개선을 노릴 수 있어 이식 난이도 낮고 관심영역(waterfall·floor·면적/throughput) 정합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6742731",
+  "title": "Reduced-Complexity Min-Sum Algorithm for Decoding LDPC Codes With Low Error-Floor",
+  "year": 2014,
+  "venue": "IEEE Trans. Circuits and Systems—I: Regular Papers",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.84,
+  "code_length": "2048",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "iteration 의존 가변 보정계수 + 짝/홀 그룹 min으로 second-min 추정하는 (s)vwMS로 error-floor를 수차수 낮춤",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "3.84mm^2@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 12.8,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "상",
+  "caveat": "가중/문턱 벡터가 부호별 오프라인 탐색 필요, 802.3an RS-LDPC 특화 검증(NAND 부호 재튜닝 필요)",
+  "todo_check": "Prime ECC z=32 구조·2SD/3SD 양자화에서 iteration별 weight table 재탐색 비용과 min2 emulation 정합성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6742731---reduced-complexity-min-sum-algorithm-for-decoding-ldpc-codes-with-low-error-floor-2014-ieee-trans-circuits-and-systemsi">ieee:6742731 - Reduced-Complexity Min-Sum Algorithm for Decoding LDPC Codes With Low Error-Floor (2014, IEEE Trans. Circuits and Systems—I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

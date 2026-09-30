@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9136683</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9136683---an-efficient-fec-encoder-core-for-vcm-leo-satellite-ground-communications-2020-ieee-access">ieee:9136683 - An Efficient FEC Encoder Core for VCM LEO Satellite-Ground Communications (2020, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>2/3~4/5</td></tr><tr><td>부호length</td><td>16200</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>DVB-S2 IRA-LDPC의 주기성·유사성을 활용한 FASPR(fast accumulate semi-parallel recursive) 병렬 인코딩 알고리즘으로 자연순서 출력 병렬 parity-check bit 산출</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.19Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>DVB-S2 IRA-LDPC(dual-diagonal B행렬 기반)의 인코더 전용 논문으로 디코더/정정성능 언급 없음; Prime ECC는 이미 dual-diagonal 인코딩을 보유해 중복</td></tr><tr><td>추가확인</td><td>Sr 분산 RAM 저장·주소계산 방식이 Prime ECC의 encoder.cpp 대비 실질적 이득이 있는지 추가 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: DVB-S2 위성통신용 BCH-LDPC concatenated 인코더의 VCM(가변부호율) 대응 FPGA 구현으로, 인코더 자원 재사용·병렬화 기법은 있으나 Prime ECC가 이미 보유한 dual-diagonal 인코딩과 개념적으로 중복되어 이식 가치는 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>DVB-S2 표준의 BCH(외부코드)+IRA-LDPC(내부코드) concatenated FEC를 LEO 위성-지상국 VCM(가변부호변조, 코드rate <code>2/3</code>~<code>4/5</code>, 프레임길이 <code>n=16200</code>) 시스템용으로 인코더 코어 하나에 통합 구현.</li><li>문제: 기존 CCM(고정 부호변조)은 최악 링크버짓 기준 설계로 링크자원 낭비; VCM은 다양한 code rate/모듈레이션을 지원해야 하는데 하드웨어 자원 재사용과 고속 인코딩을 동시에 만족하는 인코더가 부족.</li><li>IRA-LDPC의 parity-check matrix <code>H=[A|B]</code>(B는 계단형 하삼각행렬)를 이용, parity bit는 <code>pr = Sr ⊕ p_{r-1}</code> 재귀식(식7)으로 계산되며 <code>Sr = ⊕ i_z (z∈IN(r))</code>는 정보비트 그룹(360개 단위)의 XOR합.</li><li>핵심 기법: FASPR(Fast Accumulate Semi-Parallel Recursive) 인코딩 - D개 병렬 정보비트가 들어올 때마다 관련 <code>Sr</code>을 갱신(<code>Sr = Sr ⊕ ic</code>)하고, <code>Sr</code>을 bit-inversion으로 단순화(<code>Sr=Sr̄</code> when <code>ic=1</code>)해 XOR 대신 반전 연산만 사용해 HW 오버헤드 절감.</li><li><code>Sr</code>을 D열 분산 RAM 행렬(식10)로 저장, 정보비트 입력 완료 후 D개 parity bit를 자연순서(natural order)로 한 번에 산출(식11) - 기존 [14]는 non-natural order 출력이라 별도 인터리버 필요했던 것을 개선.</li><li>병렬 BCH 인코더는 state-space 변환(<code>R(t+D)=F^D·(R(t)+M(t+D))</code>) 기반, D는 변조차수에 따라 결정(8PSK: D=3, 16APSK: D=4), 재구성 가능한 조합논리로 다양한 VCM 모드의 생성다항식 <code>F^D</code>를 MATLAB으로 사전계산.</li><li>부수 트릭: dual-port RAM + distributed storage(v·D개 Sr RAM)로 latency 축소, ROM에 parity-check 초기주소 저장, 계층적 저장관리로 VCM 모드별 적절한 ROM 행 선택.</li><li>별도 학습/최적화 절차 없음(고정 표준 코드 파라미터 기반 하드웨어 설계).</li><li>결과: Xilinx XC7K325t FPGA에서 clock 389.5MHz, 인코딩 throughput 최대 <code>1.19Gb/s</code> 달성; CCM 대비 VCM 시스템 전체 데이터처리량 30.9% 향상; 기존 [9] 대비 LUT 41% 절감(단일모드 대비 3개 VCM 모드 지원).</li><li>한계: 인코더 전용 설계로 디코더/복호 성능(오류정정능력, error-floor, iteration) 관련 내용 전무; SRAM 기반 FPGA라 방사선 환경 단일이벤트 대비 scrubbing+TMR 별도 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>IRA-LDPC dual-diagonal(B행렬) 기반 recursive parity 계산</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 인코딩을 이미 보유해 개념적으로 중복되는 접근</td></tr><tr><td>FASPR 병렬 accumulate(D-bit 단위 Sr 갱신)</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>병렬 처리·컬럼 재배치 아이디어는 관련 있으나 목적(다중 VCM rate 호환)이 상이</td></tr><tr><td>VCM 모드별 재구성 가능 컨트롤러/ROM 주소테이블</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>다중 부호rate/length 지원을 위한 H-matrix/주소 로드 구조와 유사한 개념이나 실존 대응은 아님</td></tr><tr><td>BCH 외부코드 인코더</td><td>대응 없음</td><td>Prime ECC는 BCH concatenation 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 인코더 하드웨어 자원 재사용·병렬화 기법은 흥미로우나 Prime ECC가 이미 dual-diagonal 인코딩을 보유하고 있어 개념 중복이며, 디코더/정정성능과 무관한 순수 인코더 논문이라 핵심 관심사(min-sum 성능, error-floor, throughput/면적) 대비 이식 가치가 낮음.</p>
+<h3 id="d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</h3>
+<pre><code>{
+  "id": "ieee:9136683",
+  "title": "An Efficient FEC Encoder Core for VCM LEO Satellite-Ground Communications",
+  "year": 2020,
+  "venue": "IEEE Access",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "16200",
+  "soft_quant": "무관",
+  "key_contribution": "DVB-S2 IRA-LDPC 주기성 활용 FASPR 병렬 recursive 인코딩 알고리즘으로 자연순서 병렬 parity bit 산출",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.19,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "DVB-S2 IRA-LDPC 인코더 전용 논문으로 디코더/정정성능 언급 없음; Prime ECC는 이미 dual-diagonal 인코딩 보유해 중복",
+  "todo_check": "Sr 분산 RAM 저장·주소계산 방식이 Prime ECC encoder.cpp 대비 실질적 이득이 있는지 추가 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9136683---an-efficient-fec-encoder-core-for-vcm-leo-satellite-ground-communications-2020-ieee-access">ieee:9136683 - An Efficient FEC Encoder Core for VCM LEO Satellite-Ground Communications (2020, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록-db-적재용">D. JSON 블록 (DB 적재용)</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

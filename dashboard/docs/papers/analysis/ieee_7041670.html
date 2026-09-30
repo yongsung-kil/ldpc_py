@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7041670</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7041670---partial-reverse-concatenation-for-data-storage-2014-ieee-apsipaxplore">ieee:7041670 - Partial Reverse Concatenation for Data Storage (2014, IEEE APSIPA/Xplore)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.941</td></tr><tr><td>부호length</td><td>4768</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>변조코드-ECC 연접 순서를 바꾼 partial reverse concatenation으로 오버헤드↓·error propagation 제거</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>테이프/디스크 변조코드 연접 아키텍처 논문, LDPC는 표준 BP 내부코드로만 쓰임</td></tr><tr><td>추가확인</td><td>modulation-code 연접은 NAND ECC 구조와 무관, 이식 대상 아님</td></tr></tbody></table>
+<blockquote><p>총평: 테이프 저장용 modulation+ECC 연접 순서 재배치 아키텍처 - LDPC는 array-based 내부코드로만 등장하고 부호설계·디코더 기여 없음, NAND 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>데이터 저장(HDD/광/테이프)의 modulation code + error-correction code 연접 구조를 다루며, 테이프 채널 실측으로 평가.</li><li>문제: forward concatenation은 짧은 저rate 변조코드·detector→ECC로 soft-info 전달 불가; 기존 reverse concatenation은 구현이 매우 복잡.</li><li>핵심: partial reverse concatenation - inner <code>C1</code> 인코딩은 modulation 인코딩 후에, outer <code>C2</code> 인코딩은 modulation 인코딩 전에 수행(순서만 재배치)해 forward 대비 소폭 변경으로 RC 이점 획득.</li><li>inner <code>C1</code>을 RS 또는 binary LDPC로 선택; LDPC-based에서 detector→ECC로 soft-decision 전달과 iterative detection/decoding 가능.</li><li>사용 LDPC는 shortened array-based(Fan) binary LDPC, base <code>LDPC(4831,4550)</code> (<code>n'=p^2, p=71</code>, column weight <code>c=6</code>)를 shortened해 <code>LDPC(4768,4487)</code>, rate≈0.941.</li><li>복호는 표준 belief propagation(<code>iterDec=4</code>)과 dual-max(NPML) detector 간 extrinsic 교환(<code>iterDet=8</code>)의 joint iterative detection/decoding.</li><li>고rate 변조코드는 enumerative <code>(d=3,I=6,M=22)</code> + sliding-window substitution으로 rate-232/234 구성(변조코드 자체는 별도 설계).</li><li>평가는 IBM TS1140 테이프 드라이브 실측 readback 샘플 + EPR4 등화 소프트웨어 채널로 BER/block-error rate 측정.</li><li>결과: LDPC-based partial RC가 forward concatenation 대비 SNR 약 1.8dB, RS-based partial RC 대비 약 0.5dB 이득(BER 1e-20 목표, overall rate 0.876 동일).</li><li>한계: HW 미설계, LDPC는 표준 array-code+BP 재사용일 뿐 부호설계·디코더 신규 기여 없음, 테이프 특유 product-code/deep-interleaving·modulation 제약 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>modulation-code / ECC 연접 순서 재배치</td><td>대응 없음</td><td>Prime ECC는 modulation code 미사용, 연접 아키텍처와 무관</td></tr><tr><td>joint iterative detection/decoding (dual-max NPML)</td><td>대응 없음</td><td>NAND는 detector-decoder 반복검출 구조 아님</td></tr><tr><td>array-based binary LDPC + BP 복호</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>표준 array-code 로드 수준, min-sum HW 디코더와 무관</td></tr><tr><td>product/outer RS code</td><td>대응 없음</td><td>Prime은 QC-LDPC 단독, RS product code 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — modulation code + ECC 연접 아키텍처는 테이프/디스크 채널 전용이고 NAND QC-LDPC ECC 파이프라인과 접점이 없다. LDPC는 표준 array-based 부호를 BP로 복호하는 참조용일 뿐 신규 부호설계·디코더 기여가 없어 이식 대상이 아니다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7041670",
+  "title": "Partial Reverse Concatenation for Data Storage",
+  "year": 2014,
+  "venue": "IEEE Xplore",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.941,
+  "code_length": "4768",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "변조코드-ECC 연접 순서를 바꾼 partial reverse concatenation으로 오버헤드 감소·error propagation 제거",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "테이프/디스크 변조코드 연접 아키텍처 논문, LDPC는 표준 BP 내부코드로만 쓰임",
+  "todo_check": "modulation-code 연접은 NAND ECC 구조와 무관, 이식 대상 아님"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7041670---partial-reverse-concatenation-for-data-storage-2014-ieee-apsipaxplore">ieee:7041670 - Partial Reverse Concatenation for Data Storage (2014, IEEE APSIPA/Xplore)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

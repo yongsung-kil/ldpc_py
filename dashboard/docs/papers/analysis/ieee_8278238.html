@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8278238</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8278238---joint-channel-estimation-and-ldpc-decoding-over-time-varying-impulsive-noise-channels-2018-ieee-trans-communications">ieee:8278238 - Joint Channel Estimation and LDPC Decoding Over Time-Varying Impulsive Noise Channels (2018, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>8000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>SIR 채널파라미터 추정기와 LDPC sum-product 복호를 factor graph 상 반복 결합(E-RWM 재샘플링)해 임펄스 잡음 채널 정정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SαS 임펄스 잡음(무선/전력선/위성) 특화 채널추정기가 본질 기여, NAND AWGN/RBER 채널과 무관</td></tr><tr><td>추가확인</td><td>E-RWM 재샘플링 오프셋 보정 아이디어가 NAND soft-read LLR 오정합 보정에 개념적 참고 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 임펄스 잡음 채널의 결합 추정-복호 논문으로 부호/복호기 자체는 표준 (3,6) LDPC + sum-product, NAND binary QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate 1/2, length 8000 MacKay (3,6) regular LDPC + BPSK, time-varying block-memoryless 임펄스 잡음 채널 (<code>N = h×b</code>, b=200, h=40).</li><li>문제: SαS(대칭 알파-안정) 임펄스 잡음의 파라미터(<code>α</code>,<code>γ</code>)가 블록마다 변하고 미지라 복호기 intrinsic 정보가 오정합됨. 기존 quantile 등 비베이즈 추정기는 시변 잡음에 취약.</li><li>모델: 블록당 <code>α_i</code>(특성지수), <code>γ_i</code>(스케일) 고정, 블록간 독립 변화. SαS PDF는 특성함수 <code>φ(ω)=e^{-|γω|^α}</code>의 역푸리에로 수치계산.</li><li>핵심기법 1단: LDPC check/variable 노드에 채널함수 노드·채널파라미터 노드를 추가한 factor graph 상 message passing으로 joint 추정-복호.</li><li>핵심식: <code>L_v = log[f_α(γ;y_v−1)/f_α(γ;y_v+1)]</code> intrinsic LLR이 추정 파라미터에 의존 → 추정 정확도가 복호 성능 직결.</li><li>핵심기법 2단: 연속값 파라미터 공간을 SIR(Sampling-Importance Resampling)로 이산화, 중요도 가중치 <code>w ∝ po_{i,j}(α_i,γ_i)</code>를 LDPC 사후확률로 계산.</li><li>부수 트릭: 재샘플링에 Random-Walk Metropolis(RWM) 적용, 샘플 퇴화·빈곤 완화. burn-in 반복으로 수렴.</li><li>최적화: mismatched decoding 성능을 QDE(quantized density evolution)로 분석 → 추정 오프셋 편향 발견 → 샘플값 기반 수용확률 조정한 Enhanced RWM(E-RWM) 제안 (<code>p_α</code>,<code>p_γ</code>=0.5).</li><li>결과: 이상적 복호기 대비 약 0.3 dB 이내(high SNR), quantile 추정기 대비 light/moderate 임펄스에서 개선(heavy에서는 더 많은 outer iteration 필요).</li><li>한계: HW 미설계, 시뮬레이션만. AWGN 아닌 SαS 임펄스 잡음 특화. memory 있는 채널로의 확장은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>sum-product LDPC 복호 이터레이션</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>우리는 min-sum, 논문은 full-tanh sum-product → 알고리즘 상이</td></tr><tr><td>채널 파라미터 추정 → intrinsic LLR 생성</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>SαS 임펄스 잡음 추정, NAND AWGN/RBER와 잡음모델 무관</td></tr><tr><td>SIR/E-RWM 재샘플링 추정기</td><td>대응 없음</td><td>Prime ECC에 채널파라미터 추정 노드 개념 없음</td></tr><tr><td>QDE 기반 mismatched 성능분석</td><td>대응 없음</td><td>부호 threshold 분석용 도구, 코드베이스에 미대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 부호/복호기는 표준 (3,6) sum-product이고 실질 기여는 SαS 임펄스 잡음 전용 채널추정기라 NAND binary QC-LDPC와 채널·목표가 어긋난다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8278238",
+  "title": "Joint Channel Estimation and LDPC Decoding Over Time-Varying Impulsive Noise Channels",
+  "year": 2018,
+  "venue": "IEEE Trans. Communications",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "8000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "SIR 채널파라미터 추정기와 LDPC sum-product 복호를 factor graph 상 반복 결합(E-RWM 재샘플링)해 임펄스 잡음 채널 정정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "SαS 임펄스 잡음(무선/전력선/위성) 특화 채널추정기가 본질 기여, NAND AWGN/RBER 채널과 무관",
+  "todo_check": "E-RWM 재샘플링 오프셋 보정 아이디어가 NAND soft-read LLR 오정합 보정에 개념적 참고 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8278238---joint-channel-estimation-and-ldpc-decoding-over-time-varying-impulsive-noise-channels-2018-ieee-trans-communications">ieee:8278238 - Joint Channel Estimation and LDPC Decoding Over Time-Varying Impulsive Noise Channels (2018, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

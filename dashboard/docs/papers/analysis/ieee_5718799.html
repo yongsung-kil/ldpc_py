@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5718799</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5718799---a-scalable-ldpc-decoder-on-gpu-2011-vlsi-design-conf">ieee:5718799 - A Scalable LDPC Decoder on GPU (2011, VLSI Design Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>IEEE 802.16e QC-LDPC layered Min-Sum 복호를 CUDA GPU에 다중코드워드/메모리최적화로 매핑 (160Mbps)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.16</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU/CUDA 소프트웨어 병렬화 논문 - 알고리즘·부호 신규성 없음(layered MSA 기존기법), NAND HW와 무관</td></tr><tr><td>추가확인</td><td>없음 (GPU 특화 최적화라 ASIC NAND 파이프라인에 비이식)</td></tr></tbody></table>
+<blockquote><p>총평: 기존 802.16e QC-LDPC layered Min-Sum 복호를 GPU에 효율 매핑한 소프트웨어 병렬화 연구로, 알고리즘/부호 신규성이 없고 Prime ECC(고정 HW min-sum)에 떼어 쓸 요소가 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.16e block-structured QC-LDPC(rate 1/2, n=576~2304, base 24열, expansion factor <code>zf</code>=24~96), AWGN+BPSK, GeForce 9800 GTX+ GPU.</li><li>문제: layered decoding은 수렴 빠르나(TPMP 대비 ~2배) data-parallelism이 layer 크기 <code>zf</code>로 제한돼 GPU 코어가 유휴 → HW 이용률 저하.</li><li>채널/복호: layered(TDMP) Min-Sum - <code>Q=L-R</code>, <code>R=sign·min|Q|</code>, <code>L=Q+R</code> 식(1)(2)(3)을 layer 순차 처리, 층내 갱신 estimate 재사용으로 5 iter가 TPMP 10 iter와 동등 BER.</li><li>핵심1 (multi-codeword): block당 threads=<code>zf</code>로 한 코드워드 담당, SM당 최대 block 실행(식4~8 NBR/NBS/NBT)으로 여러 코드워드 동시복호해 global memory latency 은닉.</li><li>핵심2 (H 표현): edge 저장 대신 base matrix 비영 submatrix의 열위치 P·shift S만 constant memory에 저장, <code>addr=P[j]*zf+(S[j]+tid)mod zf</code>로 tid별 1 위치 계산(레지스터급 접근).</li><li>핵심3 (data packing): 서로 다른 4 코드워드의 8/6bit 메시지를 32bit 워드에 pack → global memory 접근 1/4, 동시복호 코드워드 4배(식10).</li><li>핵심4 (async transfer): multi-stream으로 kernel 실행과 CPU-GPU 전송 overlap, 전송시간 비중 10%→1.38%(식11).</li><li>핵심5 (coalesced access): 랜덤 permutation의 <code>Lj</code> 접근을 write는 permutation 수정(2nd shifter 제거 기법), read는 shared memory prefetch로 coalescing.</li><li>결과: throughput 160Mbps(n=1536/2304), CPU 대비 2 자릿수·기존 GPU[9] 대비 4배 빠름, ASIC(60~71Mbps)/FPGA 대비 comparable, 6bit 고정소수점.</li><li>한계: 순수 GPU/CUDA 소프트웨어 병렬화로 부호·복호 알고리즘 신규성 없음(layered MSA 그대로), ASIC/RTL 미설계라 NAND 컨트롤러 HW에 비이식.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered Min-Sum 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>Prime이 이미 min-sum 보유 - 알고리즘 중복</td></tr><tr><td>base matrix P/S로 H 압축표현</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC base+shift 로드는 Prime도 동일 개념, GPU 특화 무의미</td></tr><tr><td>다중코드워드/memory coalescing</td><td>대응 없음</td><td>GPU 스레드 구조 전용, ASIC pipeline(z=32)과 무관</td></tr><tr><td>6bit 메시지 packing</td><td>대응 없음</td><td>Prime은 HD/2SD/3SD 양자화 테이블 기반, GPU packing 불요</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 기존 layered Min-Sum QC-LDPC 복호의 GPU/CUDA 소프트웨어 최적화라 알고리즘·부호 신규성이 없고, Prime ECC의 고정 HW(z=32, HCU, pipeline) 파이프라인에 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5718799",
+  "title": "A Scalable LDPC Decoder on GPU",
+  "year": 2011,
+  "venue": "24th Annual Conference on VLSI Design",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "576~2304",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "IEEE 802.16e QC-LDPC layered Min-Sum 복호를 CUDA GPU에 다중코드워드/메모리최적화로 매핑 (160Mbps)",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.16,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "GPU/CUDA 소프트웨어 병렬화 논문 - 알고리즘·부호 신규성 없음(layered MSA 기존기법), NAND HW와 무관",
+  "todo_check": "없음 (GPU 특화 최적화라 ASIC NAND 파이프라인에 비이식)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5718799---a-scalable-ldpc-decoder-on-gpu-2011-vlsi-design-conf">ieee:5718799 - A Scalable LDPC Decoder on GPU (2011, VLSI Design Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

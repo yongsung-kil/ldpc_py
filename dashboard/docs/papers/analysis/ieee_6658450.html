@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6658450</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6658450---scaling-challenges-of-nand-flash-memory-and-hybrid-memory-system-with-storage-class-memory-nand-flash-memory-2013-ieee">ieee:6658450 - Scaling Challenges of NAND Flash Memory and Hybrid Memory System with Storage Class Memory &amp; NAND flash memory (2013, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>Error-Prediction LDPC(EP-LDPC): 3 Vref만으로 inter-cell coupling·W/E cycle·retention을 보정해 수명 10배·read 7배 가속</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>미상</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>invited 서베이라 LDPC 부호·디코더 세부(rate/length/알고리즘) 없음, EP 상세는 원문 [4,5] 참조 필요</td></tr><tr><td>추가확인</td><td>EP table(W/E, retention, inter-cell) 기반 LLR 보정을 Prime ECC LLR 테이블/soft-read threshold에 매핑 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND 스케일링·3D·하이브리드 SSD 서베이 안에 EP-LDPC ECC가 포함되어 있으며, 3 Vref만으로 read latency를 7배 줄이는 soft-read 비용 절감 아이디어가 NAND ECC에 직접 관련되나 부호/디코더 세부가 없어 개념 참조 수준.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 2D/3D NAND(1Xnm, MLC/TLC/QLC) 신뢰성으로, ECC 절은 FG-FG capacitive coupling에 의한 셀 열화 대응.</li><li>문제: design rule 축소로 inter-cell coupling이 심해지고, 기존 soft-decoding LDPC는 정확한 VTH 정보를 위해 21개 Vref가 필요 → 21×50µs = 1050µs read(3b/4b/cell은 2~5배)로 read latency 과대.</li><li>핵심 기법(EP-LDPC): 단 3개의 Vref만 읽고, VTH 정보에 더해 inter-cell coupling, write/erase cycle <code>Nw/e</code>, retention time <code>Tretention</code>을 함께 이용해 셀 상태를 예측·보정.</li><li>즉, 부족한 soft-read 해상도(3 Vref)를 error-prediction 모델(EP table)로 보완해 실질 LLR 정확도를 확보하는 방식.</li><li>HW: NAND 컨트롤러 내 error prediction sequencer + EP/Nw/e/Tretention table + error mode detector + error recovery sequencer를 단순 로직으로 구현, 추가 면적은 무시할 수준.</li><li>인코더 측: initial data의 "1" 개수 <code>N"1"initial</code> 카운터 값을 user data에 부가(에러 모드 검출용).</li><li>read flow: LDPC decode 실패 시 error mode detect → error recovery pulse 적용(ER scheme).</li><li>결과: 기존 LDPC 대비 read 7배 빠름, over 10배 수명 연장.</li><li>(논문 나머지: bulk/SOI NAND 스케일 한계 13nm/8nm, 3D BiCS 18층 40nm pitch=15nm planar, ReRAM/NAND 하이브리드 SSD가 성능 11배·write energy 93%↓·endurance 6.9배 — ECC와 무관한 device/system 절.)</li><li>한계: invited 서베이라 LDPC 부호종류·rate·length·복호 알고리즘·검증 방식이 본문에 없고 EP 세부는 참조문헌 [4,5]에 있음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>EP 기반 3 Vref soft-read + LLR 보정</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read threshold/양자화 대응, EP table을 LLR 보정에 접목 가능(3SD와 유사한 저Vref 전략)</td></tr><tr><td>iteration별/조건별 LLR 보정 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>Nw/e·retention 종속 LLR 보정을 적응형 LLR 테이블에 확장 매핑 가능</td></tr><tr><td>LDPC 인코더 / N"1" 부가</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>인코딩 존재하나 N"1" 카운터는 EP 전용 부가정보, 직접 대응은 아님</td></tr><tr><td>error recovery sequencer(디코드 실패 후 recovery pulse)</td><td>대응 없음</td><td>Prime ECC는 CRC 조기종료/수렴실패 추적(corner.cpp)까지, NAND recovery pulse는 컨트롤러 영역</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 3 Vref만으로 error-prediction하여 soft-read 비용을 줄이는 아이디어는 Prime ECC의 soft-read threshold·적응형 LLR 테이블과 직접 맞닿아 관심 축(soft-read 비용 절감)에 부합하나, 부호/디코더 세부가 서베이 수준이라 원문 [4,5] 확인이 선행돼야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6658450",
+  "title": "Scaling Challenges of NAND Flash Memory and Hybrid Memory System with Storage Class Memory &amp; NAND flash memory",
+  "year": 2013,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "Error-Prediction LDPC(EP-LDPC): 3 Vref만으로 inter-cell coupling·W/E cycle·retention 보정해 수명 10배·read 7배 가속",
+  "hw_designed": "O",
+  "verification": "미상",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "invited 서베이라 LDPC 부호·디코더 세부(rate/length/알고리즘) 없음, EP 상세는 원문 [4,5] 참조 필요",
+  "todo_check": "EP table(W/E, retention, inter-cell) 기반 LLR 보정을 Prime ECC LLR 테이블/soft-read threshold에 매핑 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6658450---scaling-challenges-of-nand-flash-memory-and-hybrid-memory-system-with-storage-class-memory-nand-flash-memory-2013-ieee">ieee:6658450 - Scaling Challenges of NAND Flash Memory and Hybrid Memory System with Storage Class Memory &amp; NAND flash memory (2013, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

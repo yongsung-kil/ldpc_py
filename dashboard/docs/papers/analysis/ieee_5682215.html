@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5682215</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5682215---tree-structured-expectation-propagation-for-decoding-finite-length-ldpc-codes-2011-ieee-communications-letters">ieee:5682215 - Tree-Structured Expectation Propagation for Decoding Finite-Length LDPC Codes (2011, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>256~2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>degree-2 check node까지 활용해 peeling 디코더가 실패하는 stopping set을 BP 동일 복잡도로 깨는 TEP 알고리즘</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC(이레이저 채널) 전용 peeling 확장이라 NAND의 AWGN/soft-LLR min-sum 파이프라인에 직접 이식 불가</td></tr><tr><td>추가확인</td><td>error-floor는 BP와 동등, 개선은 waterfall 한정; AWGN 일반화 가능성 별도 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: BEC 전용 peeling 디코더 확장(degree-2 check 활용)으로 waterfall 개선하나 NAND soft-LLP min-sum 구조와 무관해 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 이진 이레이저 채널(BEC)에서 유한길이 LDPC 복호. rate 1/2 regular (3,6) 및 irregular 부호, 길이 <code>n = 2^8~2^11</code>.</li><li>문제: 유한길이 부호에서 BP(=peeling) 디코더는 stopping set(SS)에 걸려 복호 실패, 특히 waterfall 영역 성능이 큰 SS에 지배됨.</li><li>모델: Tanner 그래프 위 peeling 표현 - 비이레이저 변수노드를 매 iteration마다 제거, degree-1 check로 변수 복원.</li><li>핵심기법 1단: TEP는 degree-1뿐 아니라 <strong>degree-2 check node</strong>도 사용. degree-2 check는 연결된 두 변수노드가 같음(parity 0) 또는 반대(parity 1)임을 알려줌.</li><li>핵심연산: degree-2 check 발견 시 check와 변수노드 하나(<code>V2</code>)를 제거하고, <code>V2</code>의 모든 연결을 남은 변수노드(<code>V1</code>)로 상속(reconnect), parity 1이면 재연결된 check의 parity 반전.</li><li>의미: 이 상속 단계가 SS의 cycle을 깨뜨려 <code>P6</code> 같은 check를 degree-1로 만들어 갇힌 변수(<code>V2</code>)를 복원 가능하게 함.</li><li>복잡도: TEP도 iteration당 check 하나+변수 하나 제거 → BP와 <strong>동일 연산 복잡도</strong>. 제거 순서에 무관하게 해가 유일.</li><li>학습/최적화: 없음(알고리즘적, 학습 불필요). expurgation 파라미터 <code>s_e</code>로 짧은 cycle 제거해 error-floor 완화 실험 포함.</li><li>결과: regular/irregular 모두 waterfall에서 WER가 BP 대비 유의미 개선, 특히 짧은 부호에서 gain 큼. error-floor는 BP와 유사.</li><li>한계: BEC 전용, HW 미설계, AWGN/soft-read 미대응. 유한길이 부호설계와 결합해야 gain 극대화(향후 과제).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TEP 디코딩 루프(degree-2 check 상속)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념상 이터레이션 루프 위치는 같으나 BEC peeling과 min-sum 메시지패싱은 알고리즘이 근본적으로 다름</td></tr><tr><td>SS/cycle 처리</td><td>대응 없음</td><td>Prime ECC는 min-sum + CRC 조기종료 구조, peeling/SS 제거 로직 없음</td></tr><tr><td>BEC 채널</td><td>대응 없음</td><td>Prime ECC 채널은 AWGN/RBER/fixed-error, 이레이저 채널 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BEC 전용 peeling 확장으로 NAND AWGN/soft-LLR min-sum 디코더 구조와 알고리즘적으로 이질적이라 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5682215",
+  "title": "Tree-Structured Expectation Propagation for Decoding Finite-Length LDPC Codes",
+  "year": 2011,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "256~2048",
+  "soft_quant": "무관",
+  "key_contribution": "degree-2 check node까지 활용해 peeling 디코더가 실패하는 stopping set을 BP 동일 복잡도로 깨는 TEP 알고리즘",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "BEC(이레이저 채널) 전용 peeling 확장이라 NAND의 AWGN/soft-LLR min-sum 파이프라인에 직접 이식 불가",
+  "todo_check": "error-floor는 BP와 동등, 개선은 waterfall 한정; AWGN 일반화 가능성 별도 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5682215---tree-structured-expectation-propagation-for-decoding-finite-length-ldpc-codes-2011-ieee-communications-letters">ieee:5682215 - Tree-Structured Expectation Propagation for Decoding Finite-Length LDPC Codes (2011, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

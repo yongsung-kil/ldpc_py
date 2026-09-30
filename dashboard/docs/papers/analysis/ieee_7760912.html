@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7760912</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7760912---variable-throughput-ldpc-decoders-using-simd-based-adaptive-quantization-2016-ieee-tsp">ieee:7760912 - Variable Throughput LDPC Decoders Using SIMD-based Adaptive Quantization (2016, IEEE TSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>min-sum VNU/CNU를 SIMD화해 1/2/4비트 메시지로 4/2/1 코드워드 동시복호, 메모리 증가 없이 최대 4x throughput</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>LUT-FF 24401(WiMAX SIMD)/11210(dv3 SIMD)@Virtex7</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.817Gbps(WiMAX HD 4x)/1.108Gbps(dv3 HD 4x)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>처리량 적응만 목적(정정능력 개선 아님), 4비트 양자화 상한이라 soft-4bit+ 지원은 Prime ECC(2/3bit) 범위 밖, flooding+serial-node 구조</td></tr><tr><td>추가확인</td><td>Prime ECC z=32 pipeline/HCU/GT 구조에 SIMD VNU/CNU 이식 시 면적·주파수 영향, HD/2SD 모드만 필요 시 오버헤드 재산정</td></tr></tbody></table>
+<blockquote><p>총평: min-sum QC-LDPC 디코더 처리유닛을 SIMD화해 양자화 비트를 처리량과 맞바꾸는 HW 기법으로, NAND에서 SNR/RBER별 가변 throughput 컨트롤러 설계에 참고 가치가 있으나 정정능력 개선은 없고 Prime ECC 구조와의 정합 검증이 필요하다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: QC-LDPC(base matrix + circulant). 평가는 WiMAX rate-1/2 irregular(z=96)와 regular (3,6) rate-1/2(z=54) 두 부호.</li><li>문제의식: 채널 SNR별로 정정능력 vs 처리량 트레이드오프를 하나의 아키텍처에서 적응적으로 조절.</li><li>복호: flooded min-sum(offset/normalized 변형) — CNU <code>β=∏sgn(α)·min|α|</code>, VNU <code>α=γ+Σβ</code>, a-posteriori <code>γ=γ+Σβ</code>, 덧셈·비교만 사용.</li><li>핵심 기법: 3-모드 SIMD 처리유닛 — 4비트 1개, 2비트 2개, 1비트(HD) 4개 메시지를 동일 유닛에서 병렬 처리(<code>MQ</code> 모드 레지스터로 정적 선택).</li><li>처리량-양자화 교환: 작은 양자화일수록 코드워드 4/2/1개 동시복호 → 4비트 대비 4x/2x/1x throughput.</li><li>VNU 변경: β누산기·α감산기·β FIFO·파이프라인 레지스터를 3모드 공유(비포화 누산기가 면적/타이밍 우수), HD 모드는 Gallager-B 다수결 임계 <code>t=dv/2</code> 적용, unpack/saturation만 분기.</li><li>CNU 변경: C2→sign-magnitude 변환 후 min1/min2·인덱스 계산, 2비트 모드는 3-in/3-out LUT 2세트, sign FIFO 4비트 확장으로 3모드 공유, 인덱스 로직만 중복.</li><li>아키텍처: partial-parallel flooding, VNU/CNU 노드 레벨 serial 처리, circulant 크기만큼 유닛 병렬, barrel shifter 라우팅, dual-frame(dual-port mem)으로 HW 이용률↑, 코드 종속 정보는 ROM LUT.</li><li>결과: Xilinx XC7VX485T 합성 — SIMD가 baseline 대비 로직 50~60% 증가, 메모리·인터커넥트 증가 0. WiMAX SIMD 24401 LUT-FF, HD 4x 시 1817Mbps; dv3 SIMD 11210 LUT-FF, HD 4x 시 1108Mbps.</li><li>한계: throughput 적응이 목적이라 정정능력·BER 개선은 없음, 4비트가 양자화 상한, flooding+node-serial 특정 구조에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum CNU(min1/min2, sign xor)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>동일 min-sum 근사, SIMD 병렬화 아이디어를 CN 연산부에 접목 가능</td></tr><tr><td>VNU 처리/양자화 모드</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등(HD/2SD/3SD)</td><td>Prime ECC의 HD/2SD/3SD 모드와 대응, SIMD로 다중 코드워드 처리 확장 참고</td></tr><tr><td>1/2/4비트 다중 양자화</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>Prime ECC는 hard-1bit/2SD/3SD 지원(4bit+ 미지원), 4비트 모드는 범위 밖</td></tr><tr><td>barrel shifter 라우팅/circulant 병렬</td><td>대응 없음</td><td>Prime ECC는 z=32 GT(MUX)·HCU 구조로 라우팅 상이, 직접 대응 모듈 없음</td></tr><tr><td>dual-frame 다중 코드워드 스케줄</td><td>대응 없음</td><td>Prime ECC는 6-stage pipeline·dual-update 스케줄, SIMD dual-frame과 다른 접근</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 동일 min-sum 계열이고 양자화 비트를 throughput과 교환하는 SIMD 처리유닛 설계는 NAND RBER별 가변 처리량 제어에 참고되나, Prime ECC의 z=32 GT/HCU/pipeline 구조와 라우팅·스케줄이 달라 정합 재검증이 필요하고 정정능력 이득은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7760912",
+  "title": "Variable Throughput LDPC Decoders Using SIMD-based Adaptive Quantization",
+  "year": 2016,
+  "venue": "IEEE TSP",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "min-sum VNU/CNU를 SIMD화해 1/2/4비트 메시지로 4/2/1 코드워드 동시복호, 메모리 증가 없이 최대 4x throughput",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "LUT-FF 24401(WiMAX SIMD)/11210(dv3 SIMD)@Virtex7",
+  "parallelism": "부분",
+  "throughput_gbps": 1.817,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "처리량 적응만 목적(정정능력 개선 아님), 4비트 양자화 상한이라 soft-4bit+ 지원은 Prime ECC(2/3bit) 범위 밖, flooding+serial-node 구조",
+  "todo_check": "Prime ECC z=32 pipeline/HCU/GT 구조에 SIMD VNU/CNU 이식 시 면적·주파수 영향, HD/2SD 모드만 필요 시 오버헤드 재산정"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7760912---variable-throughput-ldpc-decoders-using-simd-based-adaptive-quantization-2016-ieee-tsp">ieee:7760912 - Variable Throughput LDPC Decoders Using SIMD-based Adaptive Quantization (2016, IEEE TSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

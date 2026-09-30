@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2602.21124</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv260221124v1---quantum-approximate-optimization-for-decoding-of-low-density-parity-check-codes-2026-arxiv-quant-ph">arxiv:2602.21124v1 - Quantum Approximate Optimization for Decoding of Low-Density Parity-Check Codes (2026, arXiv quant-ph)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.5</td></tr><tr><td>부호length</td><td>6~8</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC 복호를 패리티+채널 LLR Ising Hamiltonian 최소화로 정식화해 QAOA로 전역 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>양자회로(QAOA) 기반이라 고전 HW 디코더에 이식 불가, 검증 부호가 [6,2]~[8,4] 초단길이뿐</td></tr><tr><td>추가확인</td><td>실용 블록길이(수천 bit)로의 확장성 및 큐빗 수·회로깊이 요구량</td></tr></tbody></table>
+<blockquote><p>총평: 양자 QAOA 디코더로 아이디어는 참신하나 초단길이 시뮬뿐이고 고전 NAND binary QC-LDPC HW와 완전히 다른 계산 패러다임이라 이식 불가.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 고전 선형블록/LDPC 부호, BPSK+AWGN 채널, 실험 부호는 <code>[n,k]=[6,2],[7,3],[8,4]</code>의 초단길이.</li><li>문제: BP는 국소 message-passing이라 short cycle·trapping set에서 수렴 실패/국소최적에 빠짐.</li><li>모델: 비트 <code>xi∈{0,1}</code>를 Ising 스핀 <code>Zi=(-1)^xi∈{+1,-1}</code>로 매핑, 패리티 제약 <code>∏_{i∈c}Zi=1</code>.</li><li>핵심 1단 - 패리티 Hamiltonian <code>Hparity(Z)=Σ_c (1/2)(1-∏_{i∈c}Zi)</code>: 모든 패리티 만족 시 0, 위반 시 양의 에너지.</li><li>핵심 2단 - 채널 Hamiltonian <code>Hchannel(Z)=Σ_i (|hi|/2)(1-sign(hi)Zi)</code>, <code>hi</code>=채널 LLR; 채널 관측과 일치할수록 저에너지.</li><li>총 비용 <code>H=Hparity+Hchannel</code>의 최소값이 곧 패리티 만족 + 채널 최대일치 codeword (Theorem 1).</li><li>QAOA ansatz <code>|γ,β⟩=Π_j e^{-iβj HM} e^{-iγj HP}|s⟩</code>, 믹싱 <code>HM=Σ Xj</code>, 초기 <code>|+⟩^⊗n</code>, 회로깊이 <code>l=10</code>.</li><li>최적화: parameter-shift rule로 gradient 해석적 계산, momentum 기반 gradient descent로 <code>(γ,β)</code> 갱신.</li><li>결과: <code>σ∈{1,1.5,2}</code>에서 100회 시행, 성공확률이 BP 대비 우세(예 [6,2] σ=1: BP 0.82→QAOA 0.83, σ=2: 0.44→0.62).</li><li>한계: HW 미설계, 검증 부호가 n=6~8 초단길이뿐, 실블록길이 확장성 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QAOA 양자 디코더 (Ising Hamiltonian 최소화)</td><td>대응 없음</td><td>양자회로 기반이라 고전 min-sum HW 디코더에 대응 불가</td></tr><tr><td>채널 LLR penalty (<code>Hchannel</code>)</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>LLR 사용 개념만 공유, 양자 penalty로는 이식 불가</td></tr><tr><td>패리티 제약 인코딩 (<code>Hparity</code>)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>동일 패리티 개념이나 알고리즘 구조 완전 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 양자 QAOA 디코더로 고전 binary QC-LDPC HW 파이프라인과 계산 패러다임이 근본적으로 달라 이식 불가.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "arxiv:2602.21124v1",
+  "title": "Quantum Approximate Optimization for Decoding of Low-Density Parity-Check Codes",
+  "year": 2026,
+  "venue": "arXiv quant-ph",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "6~8",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC 복호를 패리티+채널 LLR Ising Hamiltonian 최소화로 정식화해 QAOA로 전역 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "양자회로(QAOA) 기반이라 고전 HW 디코더에 이식 불가, 검증 부호가 [6,2]~[8,4] 초단길이뿐",
+  "todo_check": "실용 블록길이로의 확장성 및 큐빗 수·회로깊이 요구량"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv260221124v1---quantum-approximate-optimization-for-decoding-of-low-density-parity-check-codes-2026-arxiv-quant-ph">arxiv:2602.21124v1 - Quantum Approximate Optimization for Decoding of Low-Density Parity-Check Codes (2026, arXiv quant-ph)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

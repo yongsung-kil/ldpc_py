@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1543369</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1543369---lowering-error-floors-of-irregular-ldpc-code-on-fast-fading-environment-with-and-without-perfect-csi-2005-ieee-vtc-2005">ieee:1543369 - Lowering Error Floors of Irregular LDPC Code on Fast Fading Environment with and without Perfect CSI (2005, IEEE (VTC 2005))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CRC를 외부부호로 연접해 OSD가 만든 parity-check 만족 오codeword를 CRC로 검출, error-floor 저하</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OSD(Gaussian elimination + phase-l flipping)는 연산량이 커 NAND HW에 부적합, fast fading·CSI 채널 특화</td></tr><tr><td>추가확인</td><td>Prime ECC의 CRC 조기종료와 다른 "OSD 오codeword 검출용 CRC" 아이디어가 NAND에서 error-floor에 도움될 여지 있는지</td></tr></tbody></table>
+<blockquote><p>총평: irregular LDPC의 error-floor를 CRC+OSD 연접으로 낮추는 무선 fading 특화 기법으로, OSD의 높은 복잡도와 채널 가정 때문에 NAND binary QC-LDPC 이식성은 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (800,400) irregular LDPC + CCITT-CRC(<code>G(x)=x^16+x^12+x^5+1</code>) 연접, fast fading 채널(CSI 유/무), 비교군 (800,384) LDPC·turbo.</li><li>문제: 유한길이 irregular LDPC는 small stopping set/작은 최소거리로 error-floor 발생, OSD가 근사 ML로 낮추려 해도 OSD 출력이 항상 LDPC parity-check를 만족해 오codeword를 골라낼 수 없음.</li><li>핵심 아이디어: 정보비트를 CRC로 먼저 부호화 후 LDPC로 부호화 → OSD 출력의 오류를 CRC syndrome <code>s=0</code> 여부로 검출.</li><li>복호 흐름: LLR-BP로 임시추정 <code>x̂</code> 생성 → <code>Hx̂ᵀ=0</code> 및 CRC <code>s=0</code> 모두 만족 시 종료, 아니면 OSD 수행.</li><li>OSD: APP-LLR <code>|zn|</code> 기반 신뢰도 정렬 → 순열 <code>Γ1,Γ2</code> + Gaussian elimination으로 MRB(Most Reliable Basis) 재부호화, phase-l에서 l비트 flip.</li><li>제안 OSD 변형: OSD 시작 iteration을 지정(LLR 충분 전파 후), 신뢰 낮은 비트만 flip해 오codeword 유입 억제(시뮬 최적: iter=5 시작, 5비트 flip).</li><li>최종판정: OSD 출력 <code>ĉ</code>가 CRC 만족하면 채택, 아니면 LLR-BP 재시작, 최대 iteration 도달 시 <code>y</code>에 가장 가까운 codeword 선택.</li><li>CSI 처리: LLR-BP는 초기 LLR에, OSD는 비트 순서결정에 CSI 사용; imperfect CSI 시 OSD 순서 오류로 성능 저하하나 error-floor 영역(고신뢰)에선 여전히 유효.</li><li>결과: 고 Eb/N0(error-floor) 영역에서 제안기법이 기존 LDPC+OSD/LLR-BP 및 turbo(MAP) 대비 BLER 저하(CSI 유·무 모두), 저 Eb/N0에선 기존과 동등.</li><li>한계: HW 미설계(시뮬만), OSD의 Gaussian elimination 연산량 큼, 무선 fading·CSI 채널 특화로 NAND와 정합성 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CRC로 오codeword 검출(외부부호)</td><td>full_CRC.cpp, partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>Prime ECC도 CRC 보유하나 용도가 조기종료→여기선 오codeword 판별로 확장 개념</td></tr><tr><td>CRC+LDPC 연접 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code></td><td>인코딩 체인에 CRC 선행 부호화(개념적 대응)</td></tr><tr><td>OSD/ML 후처리 디코딩</td><td>대응 없음</td><td>OSD(Gaussian elimination, MRB flip)는 Prime ECC min-sum HW 구조와 무관</td></tr><tr><td>irregular LDPC 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC 고정이라 irregular 구성 이식 부담 큼</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — OSD 기반 error-floor 저하는 NAND HW에 비현실적이며, 부호는 irregular·채널은 fading 특화라 binary QC-LDPC 이식성이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1543369",
+  "title": "Lowering Error Floors of Irregular LDPC Code on Fast Fading Environment with and without Perfect CSI",
+  "year": 2005,
+  "venue": "IEEE (VTC 2005)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "800",
+  "soft_quant": "무관",
+  "key_contribution": "CRC 외부부호 연접으로 OSD가 만든 parity-check 만족 오codeword를 CRC 검출, error-floor 저하",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "OSD(Gaussian elimination + phase-l flipping) 연산량 큼, fast fading·CSI 채널 특화",
+  "todo_check": "OSD 오codeword 검출용 CRC 개념이 NAND error-floor에 도움될 여지 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1543369---lowering-error-floors-of-irregular-ldpc-code-on-fast-fading-environment-with-and-without-perfect-csi-2005-ieee-vtc-2005">ieee:1543369 - Lowering Error Floors of Irregular LDPC Code on Fast Fading Environment with and without Perfect CSI (2005, IEEE (VTC 2005))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

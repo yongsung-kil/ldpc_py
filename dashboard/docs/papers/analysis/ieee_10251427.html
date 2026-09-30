@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10251427</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10251427---an-efficient-strategy-to-count-cycles-in-the-tanner-graph-of-quasi-cyclic-ldpc-codes-2023-ieee-jsait">ieee:10251427 - An Efficient Strategy to Count Cycles in the Tanner Graph of Quasi-Cyclic LDPC Codes (2023, IEEE JSAIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.41~0.59</td></tr><tr><td>부호length</td><td>128~155</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>다항식 PCM의 TBC-walk/mset 반복으로 k-cycle(4~12) 수를 lifting factor N에 로그 복잡도로 계수</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>순수 조합론적 cycle 계수 도구, 부호구성/디코더 자체는 아니고 girth 개선은 다른 최적화 단계에 위임</td></tr><tr><td>추가확인</td><td>우리 z=32 QC-LDPC H-matrix에 이 계수식을 적용해 short-cycle/near-girth 진단·부호선택 보조로 쓸 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC의 short-cycle 분포를 저복잡도로 계수하는 이론 도구로 부호설계 진단에 유용하나 디코더/HW 직접 이식 대상은 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 nc×nv protograph를 lifting factor <code>N</code>으로 확장한 QC-LDPC(regular/irregular), 다항식 PCM <code>H=(pij)</code>로 표현.</li><li>문제: girth·short-cycle 수는 iterative 복호 성능을 좌우하나 기존 cycle 계수는 <code>O(|E|^3)</code> 등 lifting N 증가 시 비용 급증.</li><li>핵심모델: 이분 Tanner graph의 k-cycle(k&lt;2g)은 protograph의 TBC(tailless backtrackless closed) walk와 1:1 대응(Lemma 2,4).</li><li>핵심기법1: 다항식 인접행렬 거듭제곱 <code>Bm(H)=(HH^T)^{m/2}H^{m mod 2}</code>로 protograph 내 길이 m walk를 표현, 각 항 지수가 permutation shift.</li><li>핵심식: <code>Nk = Σ_{d|k}(|W(d,k/d)|-Σ|W(d',...)|)·N/(k/d)</code> (Thm 5) — walk 지수가 Z_N에서 0이 되는 반복(repetition)이 N개 cycle로 lift됨.</li><li>핵심기법2: k=4,6,8,10,12에 대해 mset(다중집합) 내 원소 반복을 세는 폐형식 정리(Thm 6~10) 제시, all-ones/masking으로 irregular까지 커버.</li><li>부수 디테일: multi-edge(irregular) protograph는 길이2 TBC walk 존재 등 보정식(Thm 11), CCSDS [128,64,14] 예로 시연.</li><li>학습/최적화: 없음 (조합론적 폐형식·알고리즘, SageMath 구현).</li><li>결과: 3×nv fully-connected에서 N4,N6,...,N12 복잡도가 각각 <code>O(nv^2 log N)</code>~<code>O(nv^6 log^6(nv) log N)</code>로 lifting N에 로그 의존; Tanner [155,64] 코드에서 N8=465, N10=3720, N12=22630 등 계수.</li><li>한계: HW 미설계, 디코더/부호구성 자체는 아니고 cycle "계수"만; girth 향상은 별도 최적화 단계 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC-LDPC 다항식 PCM/circulant shift | ecc_top.cpp Load_PCM() | 우리 base+shift PCM_b(ecc_data.h) 구조에 cycle 진단 적용 가능 |
+| short-cycle/girth 진단(부호선택 보조) | ecc_top.cpp Load_PCM() | H-matrix 선택·검증 시 오프라인 부호품질 평가 도구로 활용 |
+| 디코더 이터레이션/메시지패싱 | 대응 없음 | 논문은 복호 알고리즘 아님, 대응 없음 |
+| error-floor/trapping-set 대책 | 대응 없음 | cycle 계수만 제공, trapping-set 제거 알고리즘은 미포함 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 우리 고정 QC-LDPC H-matrix의 short-cycle 분포를 저비용으로 계수해 부호품질 진단·비교에 쓸 수 있으나, 런타임 디코더/HW와 무관한 오프라인 설계 보조 도구다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10251427",
+  "title": "An Efficient Strategy to Count Cycles in the Tanner Graph of Quasi-Cyclic LDPC Codes",
+  "year": 2023,
+  "venue": "IEEE JSAIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "128~155",
+  "soft_quant": "무관",
+  "key_contribution": "다항식 PCM의 TBC-walk/mset 반복으로 k-cycle(4~12) 수를 lifting factor N에 로그 복잡도로 계수",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "순수 조합론적 cycle 계수 도구, 부호구성/디코더 자체는 아니고 girth 개선은 다른 최적화 단계에 위임",
+  "todo_check": "우리 z=32 QC-LDPC H-matrix에 이 계수식을 적용해 short-cycle/near-girth 진단·부호선택 보조로 쓸 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10251427---an-efficient-strategy-to-count-cycles-in-the-tanner-graph-of-quasi-cyclic-ldpc-codes-2023-ieee-jsait">ieee:10251427 - An Efficient Strategy to Count Cycles in the Tanner Graph of Quasi-Cyclic LDPC Codes (2023, IEEE JSAIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

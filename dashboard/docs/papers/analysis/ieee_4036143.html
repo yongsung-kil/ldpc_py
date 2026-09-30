@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4036143</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4036143---design-of-rate-compatible-irregular-ldpc-codes-for-incremental-redundancy-hybrid-arq-systems-2006-isit">ieee_4036143 - Design of Rate-Compatible Irregular LDPC Codes for Incremental Redundancy Hybrid ARQ Systems (2006, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.94</td></tr><tr><td>부호length</td><td>1024(정보)~2048(부호)</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>k-SR(step recoverable) 매트릭스를 순차 배치한 H2(비체계부) 구조로 efficiently-encodable + 고puncturing rate에서도 성능 좋은 E2RC 부호 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>IR-HARQ/MIMO(V-BLAST, Rayleigh fading) 무선 통신 타깃, 가변 rate puncturing 프레임워크로 NAND 고정 고rate 설계와 목적 상이</td></tr><tr><td>추가확인</td><td>고rate(0.9 이상) 영역 성능 우위가 NAND 채널(고정 단일 rate)에서도 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: efficiently-encodable + rate-compatible puncturing에 특화된 irregular LDPC(E2RC) 설계로, IR-HARQ/MIMO 무선 환경의 가변 rate 요구에 최적화되어 있어 NAND 고전 binary QC-LDPC의 고정 단일 고rate 부호 설계와는 목적이 다르고 이식성이 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IR-HARQ + V-BLAST MIMO(2x2, QPSK, Rayleigh flat fading) 환경의 irregular LDPC 부호, 정보길이 1024, rate 0.5~0.94(9단계 puncturing).</li><li>문제: 기존 Ha et al. puncturing 알고리즘은 1-SR(step recoverable) 노드 수가 한계(예: 512개)에 도달하면 이후 무작위 puncturing으로 전환되어 트리 구조가 깨지고 고puncturing rate에서 성능이 급락.</li><li>가정: IR-HARQ는 Chase combining 규칙 사용, CRC로 오류검출 후 NACK 시 추가 parity 전송, 채널은 MMSE 검출 후 log-domain LLR 소프트 복호.</li><li>핵심 기법: 비체계부(H2)를 k-SR 행렬(<code>k=1,...,d</code>)을 순차 배치한 구조로 구성 — <code>d = log2(M)</code>, <code>J(k) = M/2^k</code> (M은 power of 2). 각 열은 특정 시퀀스 <code>h_{k,j}</code>로 nonzero 위치 결정.</li><li>핵심 식 의미: 이 구조는 모든 parity 비트가 최대 <code>d+1</code> 반복(iteration) 내에 erasure decoder만으로 완전 복구 가능 → 인코더 없이 LDPC 복호기 하나로 인코딩·디코딩 공유 가능(encoder-free 구현).</li><li>확장: H2의 오른쪽부터(즉 lower-SR 노드부터) 순서대로 puncturing하면 별도 최적화 없이 자연스럽게 rate-compatible 패밀리 획득.</li><li>부수: H1(체계부)은 degree&gt;2 노드로 구성해 error floor 억제, PEG 알고리즘으로 girth 확보, 우변 degree 분포 <code>ρ(x)</code>는 k-SR 구조에 의해 사실상 고정.</li><li>최적화: density evolution으로 H1 부분의 degree distribution 탐색(H2는 구조상 고정).</li><li>결과: 처리량(throughput) 0.8 기준 eIRA 대비 2dB, 일반 irregular LDPC 대비 2.2dB 이득; rate 0.67~0.94(고puncturing) 영역에서 FER 우위, rate 0.5~0.62에서는 동등하거나 약간 열세.</li><li>한계: 무선 MIMO/IR-HARQ 시뮬레이션(FER, throughput)뿐, HW 구현·gatecount·throughput(Gbps) 등 실측 전무, 가변 rate 최적화가 목적이라 NAND의 고정 고rate 단일부호와 설계 철학이 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>k-SR 구조 기반 rate-compatible puncturing</td><td>대응 없음</td><td>Prime ECC는 고정 단일 rate QC-LDPC로 IR-HARQ용 가변 puncturing 미지원</td></tr><tr><td>Erasure decoder 기반 encoder-free 인코딩</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>Prime ECC는 별도 dual-diagonal 인코더 고정 사용, encoder-free 구조와 대응되지 않음(개념만 참조 가능)</td></tr><tr><td>H-matrix(H1/H2) 구성/로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 취급 지점은 겹치나 k-SR 구조 자체는 이식 대상 아님</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — IR-HARQ/MIMO 무선 통신용 가변 rate irregular LDPC 설계로, NAND 고전 binary QC-LDPC의 고정 고rate 단일부호 설계와 목적이 근본적으로 다름.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4036143",
+  "title": "Design of Rate-Compatible Irregular LDPC Codes for Incremental Redundancy Hybrid ARQ Systems",
+  "year": 2006,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.94",
+  "code_length": "1024~2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "k-SR(step recoverable) 매트릭스를 순차 배치한 H2(비체계부) 구조로 efficiently-encodable + 고puncturing rate에서도 성능 좋은 E2RC 부호 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "IR-HARQ/MIMO(V-BLAST, Rayleigh fading) 무선 통신 타깃, 가변 rate puncturing 프레임워크로 NAND 고정 고rate 설계와 목적 상이",
+  "todo_check": "고rate(0.9 이상) 영역 성능 우위가 NAND 채널(고정 단일 rate)에서도 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4036143---design-of-rate-compatible-irregular-ldpc-codes-for-incremental-redundancy-hybrid-arq-systems-2006-isit">ieee_4036143 - Design of Rate-Compatible Irregular LDPC Codes for Incremental Redundancy Hybrid ARQ Systems (2006, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

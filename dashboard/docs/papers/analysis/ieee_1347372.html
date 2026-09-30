@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1347372</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1347372---an-efficient-maximum-likelihood-decoding-of-ldpc-codes-over-the-binary-erasure-channel-2004-ieee-trans-inform-theory">ieee:1347372 - An Efficient Maximum-Likelihood Decoding of LDPC Codes Over the Binary Erasure Channel (2004, IEEE Trans. Inform. Theory)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>BEC에서 reference variable 도입으로 반복복호를 확장한 효율적 ML 복호(Gaussian elimination 상수 대폭 감소)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC(소거채널) 전용 - GF(2) 희소 선형계 풀이라 AWGN/NAND soft-read min-sum 복호와 채널모델이 근본적으로 다름</td></tr><tr><td>추가확인</td><td>NAND는 BEC가 아님 (erasure만이 아닌 bit-flip) - 이식하려면 채널 가정 자체가 성립하지 않음</td></tr></tbody></table>
+<blockquote><p>총평: BEC 전용 ML 복호로 정정능력을 iterative 대비 threshold 근처까지 끌어올리나, NAND의 AWGN/RBER·min-sum 경로와 채널모델이 상이해 Prime ECC에 직접 이식 불가.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BEC(binary erasure channel)에서 irregular LDPC를 ML로 복호, degree 분포 <code>(λ,ρ)</code> Tanner graph로 정의된 앙상블.</li><li>문제: iterative 복호는 stopping set에 걸려 ML threshold까지 못 감 - iterative와 ML 사이 threshold gap을 사용자 조절 비용으로 메우고자 함.</li><li>모델: ML 복호 = erasure된 변수에 대한 GF(2) 희소 선형계 <code>H_K x_K^T = z^T</code> 풀이 (unique 해 존재 ⟺ H_K 열 독립).</li><li>핵심 기법: iterative 삼각화(triangulation)가 멈추면 <code>βN</code>개 reference variable을 선언, 나머지 미지 bit을 reference의 affine 조합으로 표현 (structured Gaussian elimination 아이디어).</li><li>핵심 식: straightforward 복잡도 <code>((1-R)+Δ')·γ·2·N^3</code>에서 reference 도입 시 <code>((1-R-δ+β)+Δ')·γ·2·N^3</code>로 상수 축소 (계수 최소한 <code>(δ/β)^2</code>배 개선).</li><li>확장: reference 선택법 3가지(A: 사전 random, B: 삼각화 정지시마다 random, C: [18]의 greedy 벡터 <code>ω</code> 기반) 제시, <code>β_A ≥ β_B</code>, 각 방법 typical <code>β</code>를 미분방정식으로 유도.</li><li>트릭: residual graph degree 분포 진화를 미분방정식 <code>dλ̃_i/dt</code>, <code>dρ̃_i/dt</code>, <code>dΛ_0/dt</code>로 추적해 필요 reference 수 <code>β</code>를 해석적으로 계산.</li><li>최적화: 사용자가 <code>β</code>(reference 비율) 조절 → 성능 향상 vs 계산량 tradeoff 조정, β=0이면 표준 iterative와 동일.</li><li>결과: (3,6) regular, ε=0.47에서 Method A는 naive 대비 최소 131배, Method B 286배, Method C 397배 효율; Method C로 β=0.01 허용시 threshold가 0.429→0.45로 향상.</li><li>한계: HW 미설계, 순수 이론(complexity 분석)이며 BEC 소거채널 전용이라 AWGN/NAND의 bit-flip·soft-read 상황엔 부적용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BEC ML 복호 (GF(2) 선형계 풀이)</td><td>대응 없음</td><td>Prime ECC는 AWGN/RBER min-sum message-passing, erasure 선형계 풀이 아님</td></tr><tr><td>iterative 삼각화 + reference variable</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>반복복호 루프는 존재하나 삼각화/reference 기법은 채널모델 불일치로 이식 불가</td></tr><tr><td>stopping set 회피 post-processing 개념</td><td>corner.cpp <code>random.cpp</code></td><td>수렴실패 추적 관점 유사하나 BEC 전제라 직접 대응 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - BEC 전용 ML 복호 이론으로 NAND의 AWGN/RBER·soft-read min-sum 복호와 채널모델이 근본적으로 달라 Prime ECC에 이식할 알고리즘/HW 기여가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1347372",
+  "title": "An Efficient Maximum-Likelihood Decoding of LDPC Codes Over the Binary Erasure Channel",
+  "year": 2004,
+  "venue": "IEEE Trans. Inform. Theory",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "BEC에서 reference variable 도입으로 반복복호를 확장한 효율적 ML 복호(Gaussian elimination 상수 대폭 감소)",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BEC(소거채널) 전용 - GF(2) 희소 선형계 풀이라 AWGN/NAND soft-read min-sum 복호와 채널모델이 근본적으로 다름",
+  "todo_check": "NAND는 BEC가 아님 (erasure만이 아닌 bit-flip) - 이식하려면 채널 가정 자체가 성립하지 않음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1347372---an-efficient-maximum-likelihood-decoding-of-ldpc-codes-over-the-binary-erasure-channel-2004-ieee-trans-inform-theory">ieee:1347372 - An Efficient Maximum-Likelihood Decoding of LDPC Codes Over the Binary Erasure Channel (2004, IEEE Trans. Inform. Theory)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

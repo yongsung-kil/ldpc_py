@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6487024</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6487024---enhanced-min-sum-decoding-for-dvb-t2-ldpc-codes-2013-icce-ieee-international-conference-on-consumer-electronics">ieee:6487024 - Enhanced Min-Sum Decoding for DVB-T2 LDPC Codes (2013, ICCE (IEEE International Conference on Consumer Electronics))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.333</td></tr><tr><td>부호length</td><td>64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td><code>ln cosh(x)</code>를 2단 계단함수로 근사한 check node update 규칙을 제안, SNR 정보 없이 정수 덧셈/비교/비트시프트만으로 SPA에 근접한 성능(BER=1e-5에서 0.02dB 차)을 달성.</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>DVB-T2용 rate 1/3 LDPC(N=64800, AWGN 채널) 시뮬레이션에만 검증되었고 HW 구현·gatecount·throughput 미제시, 최적 동작점 σ_op를 사전 컴퓨터 시뮬레이션으로 찾아야 함(채널정보 불필요 주장과 다소 상충).</td></tr><tr><td>추가확인</td><td>σ_op(동작점 노이즈 분산) 최적값이 NAND RBER 환경에서도 안정적으로 유지되는지, offset/scaled MSA 대비 실제 HW 복잡도(가산기/비교기 수) 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: check node update의 <code>ln cosh</code> 근사를 2-step으로 개선한 min-sum 변형으로, 곱셈/나눗셈/메모리(LUT) 없이 SPA에 근접한 waterfall 성능을 달성해 Prime ECC의 CN 연산부와 직접 비교 가능한 디코더 알고리즘 논문.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: DVB-T2 방송용 LDPC 코드(<code>N=64800</code>, rate <code>1/3</code>), AWGN 채널, BPSK 가정.</li><li>문제: 표준 min-sum(및 scaled/offset 변형)은 <code>ln cosh(x)</code>를 <code>x-ln2</code> 1차 근사로 대체해 구현은 쉽지만 낮은 LLR(<code>x≈0</code>) 영역에서 최대 <code>ln2(≈0.693)</code> 오차로 성능 저하.</li><li>가정: check node update는 <code>CHK(Λ1,Λ2)=ln cosh((Λ1+Λ2)/2)-ln cosh((Λ1-Λ2)/2)</code>(식 2)이며, 채널 LLR <code>Λ=2r/σ²</code>, LLR은 uniform 분포로 가정.</li><li>핵심 기법: <code>ln cosh(x)</code>를 2단 계단함수로 근사(<code>x if x≤ln2, else x-ln2</code>, 식 8)해 min-sum 업데이트에 4구간 조건부 offset <code>C_offset=σ_op²·ln2/4</code> 적용(식 9).</li><li>핵심 식: <code>CHK(Λ1,Λ2)≈sgn(r1)sgn(r2)[min(|r1|,|r2|)∓C_offset]</code> (구간별 <code>|r1±r2|</code> 대소에 따라 offset 부호/적용 여부 결정) — 기존 offset-MSA의 고정 <code>β</code>보다 정밀한 조건부 보정.</li><li>확장: 없음(check node update 단일 개선).</li><li>부수 트릭: 곱셈/나눗셈/LUT 메모리 불필요, 정수 덧셈·비교·비트시프트만으로 구현 가능; SNR/채널 정보 불필요(σ_op는 사전 오프라인 시뮬로 고정값 결정).</li><li>최적화 절차: 별도 학습 없음, <code>σ_op</code>(동작점 노이즈 분산)를 컴퓨터 시뮬레이션으로 탐색해 상수로 고정.</li><li>결과: iteration 50회 고정, BER=1e-5에서 제안기법이 SPA 대비 0.02dB, Offset-MSA 대비 0.14dB, Scaled-MSA 대비 0.23dB 우수(Shannon limit -0.495dB 대비 근접).</li><li>한계: HW 미설계(gatecount/throughput 없음), 단일 채널(AWGN)·단일 코드(rate 1/3, N=64800) 시뮬 검증뿐, <code>σ_op</code> 최적값을 사전 탐색해야 하는 튜닝 부담.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum 연산(check node update 근사)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>논문의 2-step <code>ln cosh</code> 근사 check node update는 Prime ECC의 min-sum CN 연산과 직접 대응되는 후보 개선점</td></tr><tr><td>offset/scaled min-sum과의 성능 비교</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC가 이미 min-sum 기반이므로 대체 알고리즘으로서 이터레이션 루프에 삽입 검토 가능</td></tr><tr><td>채널정보(SNR) 불필요 설계 철학</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read LLR 양자화 threshold 설계와 관련되나, 논문은 AWGN 연속값 기반이라 NAND 이산 soft-read LLR 테이블 적용 시 재검증 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum CN 업데이트 근사 개선이라는 점에서 Prime ECC의 디코더 알고리즘 레이어(<code>decoder.cpp</code>)와 직접 대응되나, 연속 LLR/AWGN 가정과 곱셈 없는 정수 연산이라는 장점이 NAND의 이산 soft-read LLR 양자화 체계와 얼마나 정합되는지 재검증이 필요하고 HW 검증(gatecount/throughput)이 전무함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6487024",
+  "title": "Enhanced Min-Sum Decoding for DVB-T2 LDPC Codes",
+  "year": 2013,
+  "venue": "ICCE (IEEE International Conference on Consumer Electronics)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.333,
+  "code_length": 64800,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ln cosh(x)의 2-step 계단 근사로 check node update를 개선해 SNR 정보나 LUT/곱셈 없이 SPA에 근접한 성능 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "AWGN·단일 코드(rate1/3, N=64800) 시뮬 검증뿐, HW gatecount/throughput 미제시, sigma_op 사전 튜닝 필요",
+  "todo_check": "sigma_op 최적값의 NAND RBER 환경 안정성 및 offset/scaled MSA 대비 실제 HW 복잡도 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6487024---enhanced-min-sum-decoding-for-dvb-t2-ldpc-codes-2013-icce-ieee-international-conference-on-consumer-electronics">ieee:6487024 - Enhanced Min-Sum Decoding for DVB-T2 LDPC Codes (2013, ICCE (IEEE International Conference on Consumer Electronics))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

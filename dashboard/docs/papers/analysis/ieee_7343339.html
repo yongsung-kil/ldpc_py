@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7343339</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7343339---modified-forced-convergence-decoding-of-ldpc-codes-with-optimized-decoder-parameters-2015-ieee-pimrc">ieee:7343339 - Modified Forced Convergence Decoding of LDPC Codes with Optimized Decoder Parameters (2015, IEEE PIMRC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>648~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>forced convergence(per-bit 조기고정) 대상 노드의 extrinsic message를 aposteriori LLR로 근사하는 수정 OMS 규칙을 제안하고, 복잡도 모델 기반 gradient-descent(SA) 최적화로 threshold θ를 채널조건에 맞춰 자동 탐색</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>성능(FER) 개선이 아니라 동일 FER 유지하에서의 연산/메모리 접근량 감소이며, HW 미구현·AWGN/QPSK 802.11n 코드 시뮬뿐, θ 최적화는 온라인 SA(수만~수십만 블록 수렴)로 NAND 환경 실시간성 미검증</td></tr><tr><td>추가확인</td><td>forced convergence로 인한 error-floor/waterfall 성능 저하 정도와 NAND용 고rate QC-LDPC에서의 재현성</td></tr></tbody></table>
+<blockquote><p>총평: 이미 보유한 forced convergence(§3, partial CRC 유사 조기고정 개념)와 겹치는 layered OMS 기반 노드별 조기고정+복잡도 최적화 기법으로, 연산/메모리 접근 55%/75% 절감을 보이나 NAND 이식 시 θ 최적화 절차(SA)의 실시간성과 부호 특이성 재검증이 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>코드 스펙: IEEE 802.11n LDPC 3종(Code1 R=1/2,N=1944 / Code2 R=1/2,N=648 / Code3 R=3/4,N=648), AWGN 채널, QPSK 변조, layered offset min-sum(OMS) 디코더 기반.</li><li>문제: OMS/BP 반복복호의 높은 연산·메모리접근 비용을 줄이되 FER 성능 저하를 허용범위 내로 제한하는 것이 기존 forced convergence(FC)의 과제.</li><li>채널/노드 모델: 반복이 진행될수록 신뢰도 높은 variable node의 LLR <code>Qv</code>가 <code>±∞</code>로 발산한다는 관찰에 기반, <code>|Qv|&gt;θ</code>인 노드를 "frozen"으로 고정.</li><li>핵심 기법: 기존 FC는 frozen node도 <code>Rcv</code>를 매 iteration 재계산했으나, 본 논문은 frozen node의 <code>Qtemp,vc</code>를 <code>Qv,frozen</code>으로 근사(extrinsic message simplification)해 layered OMS 계산에서 완전히 제외 (<code>Q_temp,vc = Qv,frozen if frozen else Qv-Rcv</code>, 식(1)).</li><li>이 근사로 frozen node는 min1/min2 탐색·<code>Rcv</code> 계산·<code>Qv</code> 갱신 3단계 모두 skip되어, 활성 노드 수 <code>ñ_a</code>에 비례하던 layer당 복잡도 <code>3ñ_a + ñ_x + log2(ñ_x) + 2</code>가 감소.</li><li>확장: θ를 채널조건 <code>ρ</code>(SNR)에 맞춰 자동 결정하는 제약최적화 <code>min C(θ,ρ) s.t. FER(θ,ρ)≤FERc</code>를 stochastic approximation(SA, Kiefer-Wolfowitz 변형)로 풀이 - <code>θ_{k+1}=Π_Θ[θ_k - a_k·∂Ĉ/∂θ]</code>.</li><li>구현 디테일: 복잡도/FER는 폐형식이 아니라 window W=1000 블록의 표본평균으로 노이즈 추정, feasible set projection(θ≥0, FER(θ)≤φc)으로 발산 방지.</li><li>학습/최적화 절차: SA 알고리즘(Algorithm II)이 온라인으로 θ*를 탐색, 수렴에 약 5만~10만 블록(100Mbps 가정 시 0.16~0.32초) 소요.</li><li>결과: 기존 FC(θ grid search) 대비 동일 코드(802.11n R=1/2,N=648)에서 복잡도 절감 35%→53%(수정 규칙만), adaptive θ까지 적용 시 최대 55% 연산 절감·75% 메모리 접근(노드 활성) 절감.</li><li>한계: HW 구현/합성 없음, AWGN·QPSK·802.11n irregular 코드 시뮬로만 검증, FER 개선이 아닌 동일 FER 유지 하 복잡도 절감이 목적(정정능력 향상 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Forced convergence (노드별 조기 고정)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC는 Partial/Full CRC 기반 코드워드 단위 조기종료(§3)만 보유, per-bit(per-VN) 단위 조기고정은 미보유 - 개념적으로 유사하나 세부 구현 다름</td></tr><tr><td>min-sum CN 연산 (Qmin1/Qmin2, offset ω)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min1/min2 기반 min-sum과 동일 계열 연산 구조</td></tr><tr><td>복잡도-성능 최적화(θ 자동탐색, SA)</td><td>대응 없음</td><td>Prime ECC는 iteration별 LLR threshold 테이블을 사전 설계(<code>PARAM_LLR</code>)하며 온라인 SA 최적화 루틴은 없음</td></tr><tr><td>메모리 접근(활성 노드 수) 절감</td><td><code>decoder.cpp</code> VN 처리 파이프라인 (<code>VN_Cal_HD()</code> 등)</td><td>frozen node skip에 의한 메모리 read/write 절감 아이디어는 HW pipeline 최적화에 참고 가능</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 - layered OMS의 노드별 조기고정 아이디어는 Prime ECC의 Partial CRC 조기종료(§3)와 개념적으로 겹치며 완전히 새로운 기법은 아니지만, "frozen 노드의 extrinsic message를 상수로 근사해 연산·메모리 접근을 절감"하는 세부 트릭은 decoder.cpp 파이프라인 최적화에 참고 가치가 있음. 단 θ 자동탐색(SA)은 NAND 실시간 요구와 맞지 않아 이식 우선순위는 낮음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7343339",
+  "title": "Modified Forced Convergence Decoding of LDPC Codes with Optimized Decoder Parameters",
+  "year": 2015,
+  "venue": "IEEE PIMRC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": "0.5~0.75",
+  "code_length": "648~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "forced convergence(per-bit 조기고정) 대상 노드의 extrinsic message를 aposteriori LLR로 근사하는 수정 OMS 규칙을 제안하고, 복잡도 모델 기반 gradient-descent(SA) 최적화로 threshold θ를 채널조건에 맞춰 자동 탐색",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "성능(FER) 개선이 아니라 동일 FER 유지하에서의 연산/메모리 접근량 감소이며, HW 미구현·AWGN/QPSK 802.11n 코드 시뮬뿐, θ 최적화는 온라인 SA(수만~수십만 블록 수렴)로 NAND 환경 실시간성 미검증",
+  "todo_check": "forced convergence로 인한 error-floor/waterfall 성능 저하 정도와 NAND용 고rate QC-LDPC에서의 재현성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7343339---modified-forced-convergence-decoding-of-ldpc-codes-with-optimized-decoder-parameters-2015-ieee-pimrc">ieee:7343339 - Modified Forced Convergence Decoding of LDPC Codes with Optimized Decoder Parameters (2015, IEEE PIMRC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

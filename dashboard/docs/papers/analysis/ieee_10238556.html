@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10238556</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10238556---column-weighted-probabilistic-gdbf-decoder-for-irregular-ldpc-codes-2023-isvlsi">ieee:10238556 - Column-Weighted Probabilistic GDBF Decoder for Irregular LDPC Codes (2023, ISVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>열가중치(column-weighting)로 irregular 코드의 degree 불균형 보정한 GDBF 계열 하드결정 디코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(hard-decision) 전용, irregular 코드 특화 - NAND soft-read/QC-LDPC(우리 부호)와 정합성 낮음</td></tr><tr><td>추가확인</td><td>우리 고rate QC-LDPC의 column-degree 분포에서 열가중치 이득이 유효한지, min-sum 대비 정정능력 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: irregular BF 디코더의 error-floor 제거는 유용하나 min-sum 기반 QC-LDPC인 우리 파이프라인엔 알고리즘 패러다임이 달라 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BSC 채널, 하드결정(hard-decision) bit-flipping 디코더. 대상 부호는 irregular LDPC (4986.93xb.329, PEGirReg504x1008; N=1008 등).</li><li>문제: 기존 BF/PGDBF는 regular 코드용이라 irregular 코드의 서로 다른 column degree <code>dv</code>가 inversion value 범위를 불균형하게 만들어 저degree 열이 거의 flip되지 못함.</li><li>모델: inversion value <code>Ev(i) = (vi⊕yi) + Sv(i)</code>, <code>Sv(i)</code>는 연결된 unsatisfied parity-check 수의 합.</li><li>핵심 기법1(열가중치): degree별 가중치 <code>w</code>를 두 번째 항에 곱해 <code>w1·dv1 = w2·dv2</code>가 되도록 범위 정규화 (예: dv1=3, dv2=9 → w1=3, w2=1).</li><li>식 의미: <code>w1×dv1 = w2×dv2</code>로 서로 다른 degree 열이 flip될 공정한 기회를 갖게 함.</li><li>확장(다중 degree): degree가 3개 이상이면 LCM/degree 가중치가 너무 커져, degree를 두 그룹으로 나눠 그룹당 동일 가중치(예: w=3,1) 적용.</li><li>구현 트릭(수정 확률 flip): 열가중치 전에 각 그룹의 <code>Smax</code>를 먼저 찾아 bit-width 증가 회피. <code>Emax</code>와 같으면 확률 <code>p1</code>, <code>Emax+1</code>이면 <code>p2</code>로 flip.</li><li>최적화: <code>(p1,p2)</code>를 0.1~1.0 그리드로 수치탐색. p2=1.00이 최적이라 RG(난수생성) 모듈 제거 가능.</li><li>결과: TRGDBF/ISBF가 error floor를 보이는 구간에서 CW-PGDBF는 error floor 없이 더 나은 FER. 짧은 길이·높은 column weight 코드에서 하드웨어 오버헤드까지 감소(PEGirReg504x1008).</li><li>한계: BSC 하드결정 전용, Tmax=300으로 반복이 많음, throughput/gatecount 절대값은 표에만 있어 본문 서술로 확정 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GDBF 반복 flip 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>이터레이션 루프 위치는 같으나 min-sum이 아닌 BF 패러다임이라 알고리즘 교체 수준</td></tr><tr><td>CN parity-checksum XOR</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>XOR 기반 syndrome은 유사하나 메시지 전달 방식 상이</td></tr><tr><td>VN inversion value/flip 판정</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>HD 경로에 대응하나 열가중치 개념은 신규</td></tr><tr><td>조기종료(all checks=0)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>우리는 CRC 조기종료, 논문은 syndrome=0 - 대체로 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - BSC 하드결정 BF 계열이라 soft-read min-sum QC-LDPC 파이프라인과 패러다임이 다르고, 열가중치 아이디어만 개념적으로 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10238556",
+  "title": "Column-Weighted Probabilistic GDBF Decoder for Irregular LDPC Codes",
+  "year": 2023,
+  "venue": "ISVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": "1008",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "열가중치로 irregular 코드의 degree 불균형 보정한 GDBF 계열 하드결정 디코더",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC(hard-decision) 전용, irregular 코드 특화 - NAND soft-read/QC-LDPC와 정합성 낮음",
+  "todo_check": "우리 고rate QC-LDPC column-degree 분포에서 열가중치 이득 유효성, min-sum 대비 정정능력 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10238556---column-weighted-probabilistic-gdbf-decoder-for-irregular-ldpc-codes-2023-isvlsi">ieee:10238556 - Column-Weighted Probabilistic GDBF Decoder for Irregular LDPC Codes (2023, ISVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

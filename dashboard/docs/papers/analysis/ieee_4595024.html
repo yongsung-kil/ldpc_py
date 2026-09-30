@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4595024</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4595024---error-rate-estimation-of-finite-length-ldpc-codes-decoded-by-soft-decision-iterative-algorithms-2008-isit">ieee:4595024 - Error Rate Estimation of Finite-Length LDPC Codes Decoded by Soft-Decision Iterative Algorithms (2008, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.30~0.50</td></tr><tr><td>부호length</td><td>273~1008</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>cycle 열거 기반으로 quantized soft-decision MS 디코더 FER(특히 error floor)을 Monte Carlo보다 훨씬 적은 연산으로 추정하는 조합적 방법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>block length ≳1000이면 연산량 여전히 큼(NAND 4KB급 확장성 불명), 통계적 가정(Assumption 1-3) 근사</td></tr><tr><td>추가확인</td><td>NAND급 대형 QC-LDPC(수천~수만 bit)에 cycle 열거가 실행 가능한지, error-floor 추정이 실측과 정합하는지</td></tr></tbody></table>
+<blockquote><p>총평: quantized min-sum FER/error-floor 추정 방법론 — Prime ECC 양자화 스킴 평가 오프라인 툴로 참고 가치, 단 codec 이식 대상 아니고 대형부호 확장성 한계.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: finite-length binary LDPC, quantized <code>q-bit</code> soft-decision iterative(min-sum) 복호, AWGN, LLR 도메인·대칭 디코더 가정.</li><li>문제: error-floor 성능이 양자화 스킴에 강하게 의존 → 다양한 <code>q</code>의 FER을 Monte Carlo 없이 빠르게 추정 필요.</li><li>핵심: all-zero 전송 가정, 최신뢰 입력벡터 <code>R=(2^{q-1}-1,…)</code>로부터 Euclidean distance <code>d</code> 작은 입력벡터를 열거해 복호실패집합 <code>E_d</code> 추정 (trapping set 식별 불필요).</li><li>FER 식: <code>FER=Σ_d (P(E_d)/P(S_d))·P(S_d)</code>, partial ordering <code>r≤t</code>와 Assumption 1-3으로 <code>E_d≈S_d</code>(below <code>E_{dm}</code>) 근사.</li><li>Modified cycle enumeration(Alg 1): girth부터 cycle set <code>T_k={C_g,…,C_{g+2k}}</code> 사용, distance 오름차순으로 입력벡터 생성·복호해 첫 <code>d_m</code>·<code>E_{d1}</code> 획득. 실험상 첫 3-4 cycle set이면 충분.</li><li>위치 기반 분해: <code>E_{d1}∪E_{d2}</code>를 동일 location <code>l</code>로 분할해 <code>P(U(E_{D1,l}))</code>를 효율 계산(Lemma 1).</li><li>q 확장(Alg 2): 작은 <code>q1</code>(2,3bit)의 문제 location <code>L</code>을 재사용해 큰 <code>q2</code> 디코더 추정 → q마다 Alg 1 재실행 불필요.</li><li>확률 계산(Alg 3): <code>P(S_d)</code>를 위치 1개씩 증분하며 distance list에 누적, <code>P(S_{d&gt;dth})</code> 산출.</li><li>결과: (273,82)·(1008,504) 부호, 3/4/5-bit MS에서 Monte Carlo 대비 훨씬 적은 복호 인스턴스로 정확한 FER 추정; 5-bit ≈ floating-point MS.</li><li>한계: block length ≳1000이면 여전히 고비용, 통계적 가정 근사, HW 미설계.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>평가 대상 quantized MS 디코더</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>평가 대상 디코더와 동일 계열이나 논문은 개선이 아닌 FER 추정</td></tr><tr><td>양자화/LLR 스킴 error-floor 비교</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>2SD/3SD 양자화 스킴별 error-floor 비교 시 참고</td></tr><tr><td>cycle 기반 error-floor 원인 구조</td><td>corner.cpp (수렴실패 추적)</td><td>문제 cycle 열거 아이디어 정성 참고</td></tr><tr><td>조합적 FER 추정기 자체</td><td>대응 없음</td><td>Prime ECC는 RBER/Monte Carlo 시뮬, 조합적 추정기 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Prime ECC 양자화(2SD/3SD) error-floor를 Monte Carlo 없이 평가하는 오프라인 툴로 유용하나, codec 이식 대상이 아니고 NAND급 대형 부호엔 연산량 확장성 문제.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:4595024",
+  "title": "Error Rate Estimation of Finite-Length Low-Density Parity-Check Codes Decoded by Soft-Decision Iterative Algorithms",
+  "year": 2008,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "273~1008",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "cycle 열거 기반으로 quantized soft-decision MS 디코더 FER(특히 error floor)을 Monte Carlo보다 훨씬 적은 연산으로 추정하는 조합적 방법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "block length ≳1000이면 연산량 여전히 큼(NAND 4KB급 확장성 불명), 통계적 가정(Assumption 1-3) 근사",
+  "todo_check": "NAND급 대형 QC-LDPC(수천~수만 bit)에 cycle 열거가 실행 가능한지, error-floor 추정이 실측과 정합하는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4595024---error-rate-estimation-of-finite-length-ldpc-codes-decoded-by-soft-decision-iterative-algorithms-2008-isit">ieee:4595024 - Error Rate Estimation of Finite-Length LDPC Codes Decoded by Soft-Decision Iterative Algorithms (2008, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

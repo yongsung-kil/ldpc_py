@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9647697</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9647697---the-ldpc-challenge-in-software-based-5g-new-radio-physical-layer-processing-2021-ieee-meditcom">ieee:9647697 - The LDPC Challenge in Software-Based 5G New Radio Physical Layer Processing (2021, IEEE MeditCom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.33~0.89</td></tr><tr><td>부호length</td><td>8448</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>5G NR LDPC 인코딩/디코딩을 FPGA로 오프로딩하고 OAI에 통합, PCIe 오버헤드가 오프로딩 효율을 좌우함을 정량 분석</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G NR 규격 특화 시스템 통합 논문, 알고리즘/부호설계 기여 없음, Xilinx LDPC IP Core를 블랙박스로 사용</td></tr><tr><td>추가확인</td><td>없음(NAND binary QC-LDPC와 직접 이식 접점 없음)</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR LDPC를 FPGA로 오프로딩하고 PCIe 데이터 전송 오버헤드를 정량화한 시스템 통합 논문으로, NAND binary QC-LDPC ECC 이식 관점에서 활용 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: OpenAirInterface(OAI) 기반 소프트웨어 5G NR 물리계층 처리에 FPGA LDPC 가속기를 PCIe(Gen2 8-lane)로 연결한 오프로딩 프로토타입.</li><li>문제: 범용 CPU 소프트웨어 처리에서 LDPC 디코딩이 PUSCH 수신 처리 시간의 최대 63%를 차지하는 병목이라 5G NR 실시간(30kHz SCS, slot 500us) 요건 미충족.</li><li>코드 스펙: 3GPP 5G NR LDPC(BG1/BG2), code block <code>K=8448</code>, code rate <code>R=1/3</code>~<code>8/9</code>, LLR 8-bit 표현, 2/5/8 iteration.</li><li>핵심 기법: LDPC Encoder/Decoder Wrapper를 독립 VHDL 모듈로 구현하고 Xilinx LDPC IP Core를 인스턴스화, RIFFA 프레임워크로 PCIe 인터페이스 구성.</li><li>스트리밍 구조: code block별 설정 레지스터를 두지 않고 128-bit 헤더에 config/status를 실어 파이프라이닝, 인코더/디코더 채널 독립·병렬 접근 지원.</li><li>통합 디테일: OAI LLR 포맷의 saturation·sign inversion, 인코더 출력 포맷 변환 등 데이터 포맷 정합 작업 수행.</li><li>FPGA 구현: VC707 보드, 250MHz 클록, Intel Xeon E5-1620 v3 호스트, nr_ulsim/nr_dlsim 테스트벤치로 기능·성능 검증.</li><li>결과1: 디코더 오프로딩은 큰 code block·낮은 rate·많은 iteration에서 유리, 최대 5.23배 속도 향상(BG1, K=8448, R=1/3, 8It).</li><li>결과2: rate 8/9 2It에서는 오버헤드가 오프로딩 시간의 90.2%로 속도 향상 거의 없음; PCIe 송신 20.24us가 최대 기여(8-bit LLR로 송신 크기 24배).</li><li>한계: 알고리즘/부호 개선 없음, 5G NR IP Core 블랙박스 사용, 오프로딩이 항상 유리하지 않음을 밝힌 시스템 레벨 분석에 그침.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>5G NR LDPC IP Core 디코더 (블랙박스)</td><td>대응 없음</td><td>알고리즘 비공개 IP, NAND binary QC-LDPC와 무관</td></tr><tr><td>PCIe/RIFFA 오프로딩 인프라</td><td>대응 없음</td><td>시뮬레이터/HW 아키텍처 레벨 접점 없음</td></tr><tr><td>LLR 8-bit 포맷 정합</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>매우 약함, 개념적 유사만 존재</td></tr></tbody></table>
+<p>마지막 한 문장 - <strong>적용 가치</strong>: 낮음 (5G NR 규격 특화 FPGA 오프로딩 시스템 통합 논문으로 부호설계·디코더 알고리즘·HW 아키텍처 어떤 레이어도 NAND binary QC-LDPC에 이식할 요소가 없음).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9647697",
+  "title": "The LDPC Challenge in Software-Based 5G New Radio Physical Layer Processing",
+  "year": 2021,
+  "venue": "IEEE MeditCom",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "8448",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "5G NR LDPC 인코딩/디코딩을 FPGA로 오프로딩하고 OAI에 통합, PCIe 오버헤드가 오프로딩 효율을 좌우함을 정량 분석",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "5G NR 규격 특화 시스템 통합 논문, 알고리즘/부호설계 기여 없음, Xilinx LDPC IP Core를 블랙박스로 사용",
+  "todo_check": "없음(NAND binary QC-LDPC와 직접 이식 접점 없음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9647697---the-ldpc-challenge-in-software-based-5g-new-radio-physical-layer-processing-2021-ieee-meditcom">ieee:9647697 - The LDPC Challenge in Software-Based 5G New Radio Physical Layer Processing (2021, IEEE MeditCom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

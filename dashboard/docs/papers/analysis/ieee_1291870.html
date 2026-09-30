@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1291870</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1291870---accelerating-the-convergence-of-message-passing-on-loopy-graphs-using-eigenmessages-2003-ieee-icassp">ieee:1291870 - Accelerating the Convergence of Message Passing on Loopy Graphs Using Eigenmessages (2003, IEEE (ICASSP))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.33</td></tr><tr><td>부호length</td><td>15000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>cycle 내 메시지를 자기 자신의 선형결합(eigenequation)으로 풀어 폐루프 fixed point를 즉시 구함 → iteration 약 68~70% 감소, 성능 손실 없음</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>확률/tanh-rule 도메인 full BP 기반 + cycle별 2x2 eigenequation 풀이·최단루프 전처리 필요 → min-sum HW 파이프라인과 정합 어려움</td></tr><tr><td>추가확인</td><td>cycle 전처리·eigenmessage 스케줄이 우리 dual-update/pipeline 6-stage에 결합 시 실제 HW 오버헤드 및 min-sum 근사와의 호환성</td></tr></tbody></table>
+<blockquote><p>총평: iteration 68~70% 감소는 매력적이나 확률 도메인 full BP + 그래프 cycle별 eigenequation 전처리에 의존해, min-sum 기반 HW 파이프라인(z=32, GT/HCU) 아키텍처로의 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: irregular LDPC <code>(N,K)=(15000,5000)</code>, avg column weight 2.66, AWGN. loopy Tanner graph BP의 수렴 가속이 목표(예시는 (10,5) 코드).</li><li>문제: cycle 때문에 BP가 fixed point까지 수백 iteration 필요, 복잡도·latency 증가. cycle의 "double counting"으로 정확 Bayesian inference도 아님.</li><li>모델: cycle을 따라 도는 메시지 <code>p_{1,A}</code>가 한 바퀴 후 자기 자신의 선형변환으로 표현됨 → 고정점(fixed point)이 eigenequation의 해.</li><li>핵심 기법(eigenmessage): cycle의 다른 입사 edge를 고정한 채 <code>p_{1,A}(x1)=L·p_{1,A}(x1)</code> 형태의 선형연산자 <code>L</code>을 세우고, 그 고유벡터(binary는 2x2 문제)를 "eigenmessage"로 계산.</li><li>의미: 이 eigenequation 해는 해당 cycle을 <strong>무한 번 반복한</strong> 폐루프 message passing의 fixed point와 동치 → 한 cycle을 한 번에 수렴.</li><li>방향성: Tanner graph는 무방향이므로 각 cycle을 forward <code>L1^f=[1,A,2,E]</code>, reverse <code>L1^r=[1,E,2,A]</code> 양방향으로 각각 eigenmessage 계산·전파.</li><li>스케줄링/전처리: 각 bit node의 최단 cycle만 취하고 중복 제거(짧은 loop이 영향 큼). 나머지 edge는 independent로 마킹(전 edge의 약 2.3%만 independent).</li><li>반복 절차(Alg.2): 표준 BP 1회 초기화 → (a) 저장된 loop에 eigenmessage passing, (b) independent edge에 표준 BP, (c) belief 계산·판정, <code>A·z=0</code>이면 정지.</li><li>결과: (15000,5000) 코드에서 40000 edge 중 592개만 independent, 8536 cycle 사용. 오류성능은 표준 BP와 거의 동일(Fig.4), iteration은 SNR 전반에서 <strong>68% 이상(약 70%) 감소</strong>(Fig.3).</li><li>한계: HW 미설계(시뮬만), 확률/tanh-rule 도메인 full BP 가정, cycle 탐색·eigenequation 전처리 비용, min-sum·양자화 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>eigenmessage / cycle fixed-point 계산</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>이터레이션 루프에 cycle별 eigenmessage 스케줄 삽입 개념적 대응 (단 full BP 전제)</td></tr><tr><td>eigenmessage vs 표준 BP 인터레이싱 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (Dual-Update 교대 스케줄과 유사 위치)</td><td>메시지 스케줄 개선 계열, 우리 parity even/odd 교대와 대비</td></tr><tr><td>CN tanh-rule 메시지</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum 근사라 tanh-rule full BP 수식 직접 대응 없음</td></tr><tr><td>cycle/최단루프 전처리</td><td>대응 없음</td><td>Prime ECC는 고정 QC-LDPC H-matrix로 런타임 cycle 탐색 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — iteration 대폭 감소는 매력적이나 확률 도메인 full BP + 그래프 cycle별 eigenequation 전처리에 의존하여, min-sum 기반 고정 QC-LDPC HW 파이프라인(z=32)으로의 이식 부담이 큼.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1291870",
+  "title": "Accelerating the Convergence of Message Passing on Loopy Graphs Using Eigenmessages",
+  "year": 2003,
+  "venue": "IEEE (ICASSP)",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.33,
+  "code_length": "15000",
+  "soft_quant": "무관",
+  "key_contribution": "cycle 내 메시지를 자기자신의 선형결합(eigenequation)으로 풀어 폐루프 fixed point를 즉시 획득 → iteration 약 68~70% 감소, 성능 손실 없음",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "확률/tanh-rule full BP 기반 + cycle별 2x2 eigenequation 풀이·최단루프 전처리 필요, min-sum HW 파이프라인과 정합 어려움",
+  "todo_check": "cycle 전처리·eigenmessage 스케줄을 dual-update/pipeline 6-stage에 결합 시 HW 오버헤드 및 min-sum 근사와의 호환성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1291870---accelerating-the-convergence-of-message-passing-on-loopy-graphs-using-eigenmessages-2003-ieee-icassp">ieee:1291870 - Accelerating the Convergence of Message Passing on Loopy Graphs Using Eigenmessages (2003, IEEE (ICASSP))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

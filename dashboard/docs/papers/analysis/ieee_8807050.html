@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8807050</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8807050---the-best-of-both-worlds-on-exploiting-bit-alterable-nand-flash-for-lifetime-and-read-performance-optimization-2019-dac">ieee:8807050 - The Best of Both Worlds: On Exploiting Bit-Alterable NAND Flash for Lifetime and Read Performance Optimization (2019, DAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>bit-alterable NAND의 bit-level rewrite로 error bit만 제거해 LDPC sensing latency·lifetime 동시 최적화하는 FTL 스킴(BER)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC를 블랙박스로 sensing-level/latency 테이블만 사용 - 부호설계·디코더·HW 기여 전무, FTL/refresh 레이어 논문</td></tr><tr><td>추가확인</td><td>없음 (Prime ECC 디코더/부호와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: NAND read 성능·수명 최적화 FTL 스킴으로 LDPC는 sensing latency 소비원으로만 참조 - Prime ECC 코드 이식 대상 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 시스템: 3D NAND flash controller의 FTL 레이어, LDPC ECC는 read 시 error 정정 블랙박스로만 사용(부호 스펙 명시 없음).</li><li>풀려는 문제: RBER 상승으로 soft-decision sensing 단계가 늘어 read latency 증가, 기존 page-based refresh는 lifetime capacity를 크게 소모.</li><li>핵심 가정: bit-alterable 3D NAND(p-channel/dual-channel)로 cell 단위 program/erase 가능, error 패턴은 sparse, 정규분포 error 모델.</li><li>핵심 기법 1단 - <code>read speed tracking</code>: 각 page의 초기 read speed(target read speed)를 program 직후 verify latency로 기록.</li><li>핵심 식/판단: <code>speedDiff = targetReadSpeed - currentReadSpeed</code>가 1 soft-sensing level latency보다 크면 rewrite-required 표기(current/target/average 3속도 비교, Algorithm 1).</li><li>핵심 기법 2단 - <code>sensing latency reduction</code>: rewrite-required page를 idle time에 bit-level rewrite로 일부 error bit만 제거해 sensing level을 낮춤(예: level6-&gt;5).</li><li>구현 디테일: subpage(64B, cache line) 단위 rewrite + refresh pivot을 circular 패턴으로 이동해 intra-page wear leveling.</li><li>bit comparator(HW-assisted, ref[4])로 subpage별 error bit 수 계산, correctable = bit error - refresh-failed(permanent) error.</li><li>결과: read latency 최대 25.22% 개선(평균 12.64%), sensing latency 최대 35.13% 감소, rewritten bit 평균 40.39% 감소(page-based 대비).</li><li>한계: LDPC 디코더/부호 자체는 손대지 않음, flash simulator + 실trace 시뮬만, HW 미설계, sensing level-error 관계는 선행연구 테이블 인용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LDPC sensing level / soft-read latency</td><td>대응 없음</td><td>FTL 상위 관점의 sensing 횟수만 다룸, channel.cpp LLR threshold와 개념적 접점만 있고 알고리즘 기여 없음</td></tr><tr><td>bit-level rewrite / refresh 스킴</td><td>대응 없음</td><td>FTL/컨트롤러 정책 레이어로 ECC 엔진 밖</td></tr><tr><td>bit comparator (error bit 식별)</td><td>대응 없음</td><td>re-encode 후 XOR 비교, 디코더 내부 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - LDPC를 latency 소비원으로만 참조하는 FTL 스킴이라 Prime ECC의 부호설계/디코더/HW 어느 레이어에도 이식할 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8807050",
+  "title": "The Best of Both Worlds: On Exploiting Bit-Alterable NAND Flash for Lifetime and Read Performance Optimization",
+  "year": 2019,
+  "venue": "DAC",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "bit-alterable NAND의 bit-level rewrite로 error bit만 제거해 LDPC sensing latency와 lifetime을 동시 최적화하는 FTL BER 스킴",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC를 블랙박스로 sensing-level/latency 테이블만 사용 - 부호설계·디코더·HW 기여 없는 FTL/refresh 레이어 논문",
+  "todo_check": "없음 (Prime ECC 디코더/부호와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8807050---the-best-of-both-worlds-on-exploiting-bit-alterable-nand-flash-for-lifetime-and-read-performance-optimization-2019-dac">ieee:8807050 - The Best of Both Worlds: On Exploiting Bit-Alterable NAND Flash for Lifetime and Read Performance Optimization (2019, DAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

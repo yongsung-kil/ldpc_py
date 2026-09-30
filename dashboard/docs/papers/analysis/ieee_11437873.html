@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11437873</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11437873---efficient-noisy-gradient-descent-bit-flipping-algorithm-for-decoding-ldpc-codes-2025-iccc-2025">ieee:11437873 - Efficient Noisy Gradient Descent Bit-Flipping Algorithm for Decoding LDPC Codes (2025, ICCC 2025)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NGDBF의 Gaussian 잡음을 [-1,1] 균일잡음(소형 LFSR)으로 대체해 SNR추정·scaling factor 제거한 저복잡도 BF 복호기</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>GDBF/NGDBF는 min-sum(BP) 대비 성능 낮은 BF 계열, soft-read LLR 대신 채널값 y 상관 사용 — 우리 min-sum HW와 별개 계열이라 직접 대체는 성능 트레이드오프</td></tr><tr><td>추가확인</td><td>LFSR 균일잡음이 우리 고rate NAND QC-LDPC(z=32) 및 soft-read(2/3SD)에서도 유효한지, min-sum 대비 error-floor·정정능력 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: SNR추정·scaling 없는 LFSR 기반 저복잡도 NGDBF 복호기 — HW 친화적이나 BF 계열이라 min-sum 기반 Prime ECC엔 대체 아닌 참고용.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN·BPSK 채널, binary LDPC 두 부호 — <code>C1</code>=PEGReg504×1008 (3,6)-regular, <code>C2</code>=array-based QC-LDPC 124×961 (4,31)-regular.</li><li>문제: BF 복호는 저복잡도이나 BP보다 성능 낮음, GDBF는 비볼록 목적함수의 local minima에 갇힘. NGDBF가 Gaussian 잡음으로 탈출하나 HW에서 Gaussian 난수 생성·SNR추정·scaling factor 튜닝이 부담.</li><li>모델: GDBF 목적함수 <code>f(x)=Σ x_k y_k + Σ s_i</code> (채널상관 + 미충족 parity 벌점), inversion function <code>E_k = x_k y_k + Σ_{i∈M(k)} s_i</code>.</li><li>핵심기법: inversion function에 균일잡음을 더한 <code>E_k = x_k y_k + Σ s_i + u_k</code>, <code>u_k ~ U[-1,1]</code>. <code>E_k&lt;θ</code>인 비트를 플립.</li><li>핵심식: CDF 분석상 소분산(η²N0/2≈0.25) Gaussian 잡음의 CDF가 <code>U[-1,1]</code> CDF와 근사 → Gaussian을 균일잡음으로 대체 정당화.</li><li>확장: 적응형 threshold <code>θ_k(t+1)=λθ_k(t)</code> (미플립 시 축소, <code>λ=0.98</code>).</li><li>구현: <code>u_k = 2d_k-1</code>로 [0,1] 균일난수 선형변환, <code>d_k</code>는 primitive 다항식 기반 최대길이 LFSR(stage 3~5)로 생성 — Gaussian 난수의 비선형연산·SNR추정·scaling factor 불필요.</li><li>학습/최적화: 별도 학습 없음, threshold(C1 -0.6, C2 -0.7)·λ만 고정 설정.</li><li>결과: SNR&gt;3dB에서 제안 복호기가 표준 GDBF 상회, 고SNR에서 Gaussian NGDBF와 동등(C2는 소폭 상회), stage-3 LFSR로도 근접 성능. NGDBF들의 평균 반복수(ANI)가 GDBF보다 낮아 빠른 수렴.</li><li>한계: HW 미설계(MATLAB 시뮬뿐), gate count·throughput 없음, BF 계열이라 BP/min-sum 절대성능엔 미달, error-floor 영역 미보고.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GDBF/NGDBF 복호 이터레이션</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>BF 계열 복호로 min-sum 루프와 다른 알고리즘, 대체 시 전면 교체 필요</td></tr><tr><td>inversion function E_k(채널상관+syndrome)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code> / <code>CNU_Update_New_Mag()</code></td><td>CN 연산 대신 syndrome 합 사용, 개념적 대응만</td></tr><tr><td>적응형 threshold θ</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 임계 테이블과 유사 개념(적응형 임계)</td></tr><tr><td>LFSR 균일난수 생성</td><td><code>random.cpp</code> (XOR25 난수)</td><td>난수 소스 대응, 잡음주입은 우리 복호기에 없음</td></tr><tr><td>syndrome <code>s_i</code> 계산</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>parity-check 계산 공통</td></tr></tbody></table>
+<p>마지막에 한 문장으로 <strong>적용 가치</strong>: <code>중간</code> — binary LDPC용 저복잡도·HW친화 복호 아이디어(LFSR 균일잡음, SNR-free)로 참고 가치는 있으나, Prime ECC는 min-sum 기반이라 BF 계열 대체는 성능 트레이드오프가 크고 HW 검증도 없어 직접 이식보다는 조기수렴·저면적 참고용.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11437873",
+  "title": "Efficient Noisy Gradient Descent Bit-Flipping Algorithm for Decoding LDPC Codes",
+  "year": 2025,
+  "venue": "ICCC 2025",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NGDBF의 Gaussian 잡음을 [-1,1] 균일잡음(소형 LFSR)으로 대체해 SNR추정·scaling factor 제거한 저복잡도 BF 복호기",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "GDBF/NGDBF는 min-sum(BP) 대비 성능 낮은 BF 계열, soft-read LLR 대신 채널값 y 상관 사용 — 우리 min-sum HW와 별개 계열이라 직접 대체는 성능 트레이드오프",
+  "todo_check": "LFSR 균일잡음이 우리 고rate NAND QC-LDPC(z=32) 및 soft-read(2/3SD)에서도 유효한지, min-sum 대비 error-floor·정정능력 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11437873---efficient-noisy-gradient-descent-bit-flipping-algorithm-for-decoding-ldpc-codes-2025-iccc-2025">ieee:11437873 - Efficient Noisy Gradient Descent Bit-Flipping Algorithm for Decoding LDPC Codes (2025, ICCC 2025)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

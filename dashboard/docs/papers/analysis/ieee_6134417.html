@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6134417</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6134417---soft-information-for-ldpc-decoding-in-flash-mutual-information-optimized-quantization-2011-ieee-globecom">ieee:6134417 - Soft Information for LDPC Decoding in Flash: Mutual-Information Optimized Quantization (2011, IEEE Globecom)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.9021</td></tr><tr><td>부호length</td><td>9118</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>multi-read word-line voltage를 mutual-information 최대화로 최적 배치해 NAND soft-read LLR 품질 극대화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>i.i.d. Gaussian threshold 모델 가정(ICI/retention/비대칭 tail 미반영), HW·error-floor 미분석</td></tr><tr><td>추가확인</td><td>우리 채널모듈의 RBER/threshold 세팅과 MI 최적 q* 비교, 실 NAND 분포(비Gaussian)로 재최적화 필요</td></tr></tbody></table>
+<blockquote><p>총평: NAND 소수 추가 read의 word-line 전압을 mutual-information으로 최적화하는 방법론으로, Prime ECC의 soft-read LLR threshold 설계에 직접 이식 가치가 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: NAND SLC/MLC(4-level) flash. threshold voltage를 m-PAM+AWGN으로 모델링, <code>Es</code>/<code>N0</code> 파라미터. 실험은 rate <code>0.9021</code> irregular LDPC (<code>n=9118</code>, <code>k=8225</code>, ACE+stopping-set 최적화), 비교군 BCH(<code>n=9152</code>).</li><li>문제: flash는 관례적으로 hard 1-bit(sense-amp comparator)만 제공. LDPC의 이점을 살리려면 soft 정보 필요하나, 균등 간격 word-line 전압은 성능이 나쁘다.</li><li>모델: 각 read는 word-line 전압에서 1비트만 제공. 여러 word-line 전압으로 다중 read 시 threshold voltage를 여러 구간으로 양자화 → 등가 read 채널을 확률전이행렬로 표현.</li><li>핵심 기법: 각 양자화(read 수)에 대해 입력 X와 출력 Y 사이 상호정보 <code>I(X;Y)=H(Y)-H(Y|X)</code>를 최대화하는 word-line 전압 <code>q*</code>를 수치 탐색.</li><li>핵심 식 의미: <code>I(X;Y)</code> 최대화가 곧 양자화가 전달하는 정보량 최대화 → 주어진 양자화 레벨에서 근사 최적 LDPC 복호 성능 보장. <code>q*</code>는 <code>Es/N0</code>의 함수.</li><li>확장: SLC 2-read(1.6bit)/3-read(2bit), 4-level MLC는 기본 3 word-line에 3개 추가해 6-read(2.8bit, 7구간). Gray labeling(00,01,11,10)로 raw BER 최소화.</li><li>복호: 최적화된 전이행렬로 표준 belief-propagation(sequential BP) 복호.</li><li>결과: 2-read soft가 1-read 대비 대부분의 full-soft gap 회복, 6-read MLC는 full-soft에 근접. soft 정보 사용 LDPC가 동급 rate/length BCH를 명확히 상회(hard-only에선 격차 작음).</li><li>한계: i.i.d. Gaussian threshold 모델 단순 가정(ICI/retention/tail 비대칭 미반영, 확장 가능하다고만 언급). HW 설계 없음, error-floor는 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>word-line 전압/soft-read threshold 최적 배치</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>MI 최적 read 지점을 우리 soft-read threshold 세팅에 직접 반영 가능</td></tr><tr><td>다중 read → LLR 양자화(2SD/3SD)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 계열, ecc_data.h <code>PARAM_LLR</code></td><td>2~3bit soft 양자화 테이블 값 산정 근거로 활용</td></tr><tr><td>등가 read 채널 확률전이행렬</td><td>channel.cpp</td><td>RBER/soft-read 에러주입 모델과 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — NAND 소수 추가 read의 word-line 전압을 MI로 최적 배치하는 방법론이 Prime ECC의 soft-read LLR threshold 설계(2SD/3SD)에 직접 대응하며, read 비용 대비 정정성능을 높이는 profile §5 관심 영역이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6134417",
+  "title": "Soft Information for LDPC Decoding in Flash: Mutual-Information Optimized Quantization",
+  "year": 2011,
+  "venue": "IEEE Globecom",
+  "portability": "상",
+  "nand_relevance": "직접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.9021,
+  "code_length": "9118",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "multi-read word-line voltage를 mutual-information 최대화로 최적 배치해 NAND soft-read LLR 품질 극대화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "i.i.d. Gaussian threshold 모델 가정(ICI/retention/비대칭 tail 미반영), HW·error-floor 미분석",
+  "todo_check": "우리 채널모듈의 RBER/threshold 세팅과 MI 최적 q* 비교, 실 NAND 분포(비Gaussian)로 재최적화 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6134417---soft-information-for-ldpc-decoding-in-flash-mutual-information-optimized-quantization-2011-ieee-globecom">ieee:6134417 - Soft Information for LDPC Decoding in Flash: Mutual-Information Optimized Quantization (2011, IEEE Globecom)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

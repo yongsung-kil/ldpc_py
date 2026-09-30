@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5117904</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5117904---vlsi-implementation-of-a-soft-bit-flipping-decoder-for-pg-ldpc-codes-2009-ieee">ieee:5117904 - VLSI Implementation of a Soft Bit-Flipping Decoder for PG-LDPC Codes (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.769</td></tr><tr><td>부호length</td><td>1057</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>high-weight PG-LDPC를 위해 SPA 대신 soft bit-flipping(SBF) 알고리즘을 제안, SPA 대비 0.6dB 열화로 6.5Gbps VLSI 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.5mm2 (p=64 pipelined SNPU)@0.18um</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>6.5Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>projective-geometry LDPC(row/column weight 33)라는 고weight 정규 부호 전용 최적화로 NAND용 QC-LDPC(irregular, 저weight)와 구조가 다름</td></tr><tr><td>추가확인</td><td>SBF 알고리즘의 정정성능이 Prime ECC의 min-sum 대비 실제로 우위인지 별도 비교 필요</td></tr></tbody></table>
+<blockquote><p>총평: high-weight regular LDPC(PG-LDPC) 전용 bit-flipping 계열 HW 최적화로, NAND용 저weight QC-LDPC엔 구조적 이식성이 제한적이나 HW 면적절감 기법(SNPU, pipelining)은 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>(1057, 813) cyclic PG-LDPC 부호(row/column weight 33)를 AWGN+BPSK 채널에서 4-bit 양자화로 복호.</li><li>SPA는 고weight 부호에서 연결 복잡도가 급증해 구현이 사실상 불가능하고, BF는 구현은 쉽지만 정정성능이 SPA 대비 크게 열화됨.</li><li>각 variable/check node는 <code>b</code>-bit 양자화, sign-magnitude 표현, 세 개의 flipping threshold(<code>δ1f, δ2f, δ3f</code>)로 flip 강도를 4단계(strong flip/weak flip/maintain/strengthen)로 결정.</li><li>핵심 기법은 SBF(Soft Bit-Flipping): syndrome 계산 후 각 check node weight <code>α_m = Σ|y_n|</code>를 구하고, 각 variable node의 flipping function <code>f_n = Σ sgn(...)·α_m - |y_n|</code>을 계산해 threshold와 비교.</li><li>flip 강도별 update 식(<code>sgn(y_n)·(2.5·max(1,|y_n|)-2)</code> 등)은 SPA의 reliability 전파를 근사하면서 BF 수준의 단순 연산만 사용.</li><li>HW 구조로 VPU(variable node processing unit, 33-input XOR+adder)와 CPU(check node processing unit)를 결합, 이후 SNPU(Shared Node Processing Unit)로 두 유닛의 modulo-2/ordinary summation 하드웨어를 공유해 면적 절감.</li><li>2-stage pipelining을 SNPU의 Wallace tree-CLA adder 중간에 삽입해 critical path(7.97ns→최적화) 단축, threshold adaptation 모듈도 병렬 factor에 맞춰 pipeline.</li><li>별도 학습/최적화 절차는 없음(고정 threshold, 구조적 HW 최적화만).</li><li>결과: parallel factor 64에서 SPA 대비 0.6dB 열화(FER 10^-4), 면적 2.5mm2, 처리량 6.5Gbps(직렬 대비 87배), SNPU로 면적 9.1% 절감.</li><li>한계: FPGA/실측 아님(ASIC합성/시뮬 결과), 고weight 정규 PG-LDPC 특화 구조로 NAND용 irregular QC-LDPC로 일반화 어려움.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SBF 알고리즘 전체(iterative flipping)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>min-sum이 아닌 대안 반복복호 알고리즘, 참고용</td></tr><tr><td>VPU/CPU node processing(변형 min-sum 유사 연산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>33-input 고weight 연산이라 z=32 lifting 구조와 직접 대응 어려움</td></tr><tr><td>SNPU 공유 하드웨어(면적절감)</td><td>대응 없음</td><td>Prime ECC엔 노드 유닛 공유 개념 없음, 참고 가치만</td></tr><tr><td>threshold adaptation</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>LLR/threshold 테이블 개념과 유사하나 알고리즘 상이</td></tr><tr><td>pipelining 2-stage</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>Prime ECC도 6-stage pipeline 보유, 설계사상 유사</td></tr></tbody></table>
+<p>적용 가치: 낮음 — high-weight regular PG-LDPC 전용 bit-flipping 변형으로 Prime ECC의 QC-LDPC min-sum 구조와 부호/알고리즘 모두 이질적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5117904",
+  "title": "VLSI Implementation of a Soft Bit-Flipping Decoder for PG-LDPC Codes",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.769,
+  "code_length": 1057,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "high-weight PG-LDPC를 위해 SPA 대신 soft bit-flipping(SBF) 알고리즘을 제안, SPA 대비 0.6dB 열화로 6.5Gbps VLSI 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.5mm2 (p=64 pipelined SNPU)@0.18um",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 6.5,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "projective-geometry LDPC(row/column weight 33)라는 고weight 정규 부호 전용 최적화로 NAND용 QC-LDPC(irregular, 저weight)와 구조가 다름",
+  "todo_check": "SBF 알고리즘의 정정성능이 Prime ECC의 min-sum 대비 실제로 우위인지 별도 비교 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5117904---vlsi-implementation-of-a-soft-bit-flipping-decoder-for-pg-ldpc-codes-2009-ieee">ieee:5117904 - VLSI Implementation of a Soft Bit-Flipping Decoder for PG-LDPC Codes (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

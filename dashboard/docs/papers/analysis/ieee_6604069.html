@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6604069</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6604069---a-high-throughput-configurable-parallel-encoder-architecture-for-qc-ldpc-codes-2013-ieee-iolts">ieee:6604069 - A High Throughput Configurable Parallel Encoder Architecture for QC-LDPC Codes (2013, IEEE IOLTS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.778~0.833</td></tr><tr><td>부호length</td><td>16200~64800</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>dual-diagonal Hp 순환 Hd 구조에 폭 w 계산창을 슬라이드시켜 rate/블록길이 configurable한 부분병렬 고속 인코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>32734 logic elements @Altera Stratix II FPGA</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>28.9Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>dual-diagonal 인코딩은 Prime ECC 이미 보유, DVB용 FPGA 구현이라 ASIC·NAND 고정 부호와 정합 재검증 필요</td></tr><tr><td>추가확인</td><td>계산창 w 부분병렬 구조가 Prime ECC 인코더 throughput/area에 이점 주는지, ASIC 환산 면적</td></tr></tbody></table>
+<blockquote><p>총평: configurable 부분병렬 QC-LDPC 인코더 HW이나 핵심 dual-diagonal 인코딩은 Prime ECC가 이미 보유해 신규 이식 가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: DVB-S2/T2용 systematic QC-LDPC 인코더, <code>H=[Hd Hp]</code>, codeword <code>V=[D P]</code> (D=정보 k bit, P=parity n-k bit).</li><li>문제: 일반 LDPC 인코딩은 Gaussian elimination으로 <code>O(n^2)</code>·대용량 메모리 필요, 다중 표준·가변 rate/길이 지원 어려움.</li><li>구조: <code>Hp</code>는 dual-diagonal(trivial), <code>Hd</code>는 순환행렬 <code>A_{i,j}</code> 집합이라 H 저장 불필요(<code>A_{i,j}=A_{i,0}+j</code> 규칙 생성).</li><li>핵심 인코딩: parity를 <code>p0=Σ hd0,j·dj</code>, <code>Pi=p_{i-1}+Σ hdi,j·dj</code>(식4,5) 재귀로 계산 → 복잡도 <code>O(n^2)→O(n)</code>, AND+XOR+FF로 구현.</li><li>아키텍처 3부: 계산창(calculation window, 길이 <code>i</code>=서브행렬 A 크기, 폭 <code>w</code>, <code>i mod w=0</code>), controller, memory.</li><li>계산창은 XOR·shift register로 <code>Σ hdi,j·dj</code> 계산하며 H 전체를 슬라이드, <code>w</code>로 병렬도 조절(configurable rate/A크기/블록길이).</li><li>controller가 rate·A크기·창폭·shift량(1~다중 bit)·메모리 R/W 제어, 메모리는 블록길이 2배 버퍼(parity 서브행렬 미저장).</li><li>구현: Altera Stratix II FPGA, VHDL, DVB-S2(64800, 5/6)·DVB-T2(16200, 7/9).</li><li>결과: <code>w=120</code>에서 28.9Gbps·32,734 LE, <code>w=90</code>이 area/throughput 최적(19.35Gbps, ~18,200 LE), 선행 대비 3~20배 speedup.</li><li>한계: 인코더 전용(디코더·정정성능 무관), FPGA 검증만, ASIC 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dual-diagonal Hp + 순환 Hd 인코딩</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC 인코더가 이미 dual-diagonal 채택, 개념 중복</td></tr><tr><td>부호 PCM/circulant 구성</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>QC circulant + dual-diag 재배치와 유사</td></tr><tr><td>계산창 w 부분병렬 HW</td><td>대응 없음</td><td>Prime ECC 인코더 병렬화 구조에 표에 정의된 대응 함수 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — dual-diagonal QC-LDPC 인코딩은 Prime ECC가 이미 구현했고, 논문 기여의 configurable 부분병렬 FPGA 아키텍처는 통신 표준용이라 NAND 고정 부호 인코더에 신규로 떼어 쓸 접점이 적다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6604069",
+  "title": "A High Throughput Configurable Parallel Encoder Architecture for Quasi-Cyclic Low-Density Parity-Check Codes",
+  "year": 2013,
+  "venue": "IEEE IOLTS",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.778~0.833",
+  "code_length": "16200~64800",
+  "soft_quant": "무관",
+  "key_contribution": "dual-diagonal Hp 순환 Hd 구조에 폭 w 계산창을 슬라이드시켜 rate/블록길이 configurable한 부분병렬 고속 인코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "32734 logic elements @Altera Stratix II FPGA",
+  "parallelism": "부분",
+  "throughput_gbps": 28.9,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "dual-diagonal 인코딩은 Prime ECC 이미 보유, DVB용 FPGA 구현이라 ASIC·NAND 고정 부호와 정합 재검증 필요",
+  "todo_check": "계산창 w 부분병렬 구조가 Prime ECC 인코더 throughput/area에 이점 주는지, ASIC 환산 면적"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6604069---a-high-throughput-configurable-parallel-encoder-architecture-for-qc-ldpc-codes-2013-ieee-iolts">ieee:6604069 - A High Throughput Configurable Parallel Encoder Architecture for QC-LDPC Codes (2013, IEEE IOLTS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

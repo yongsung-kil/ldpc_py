@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9839215</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9839215---productae-toward-training-larger-channel-codes-based-on-neural-product-codes-2022-ieee-icc-2022">ieee:9839215 - ProductAE: Toward Training Larger Channel Codes based on Neural Product Codes (2022, IEEE ICC 2022)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.444</td></tr><tr><td>부호length</td><td>225</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>product code 구조로 소형 신경 부호성분(NN enc/dec)을 조합해 대형 채널부호를 학습 가능케 한 neural product autoencoder</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>FCNN 기반 비선형·비이진(non-binary) 신경부호로 binary QC-LDPC min-sum 파이프라인에 이식 불가, k&lt;200 소규모만 검증</td></tr><tr><td>추가확인</td><td>학습된 실수값 코드워드의 양자화·HW 비용 및 NAND read soft-info 정합성(현재 무관)</td></tr></tbody></table>
+<blockquote><p>총평: 신경망 encoder/decoder 쌍을 product 구조로 학습해 polar/TurboAE를 능가하는 pioneering 연구지만, 비이진 비선형 NN 부호라 고전 binary QC-LDPC NAND ECC에 떼어낼 요소가 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN 채널, rate 4/9 부호. 대형 <code>(n,k)</code> 부호를 소형 성분 <code>(n1,k1),(n2,k2)</code>로 분해(<code>n=n1n2</code>, <code>k=k1k2</code>), 예 <code>(15,10)²→(225,100)</code>, <code>(21,14)²→(441,196)</code>.</li><li>문제: 채널부호의 차원 문제(<code>2^k</code> 코드워드)로 <code>k&gt;100</code> 대형 신경부호는 직접 학습이 사실상 불가.</li><li>모델: 실수값 코드워드, 전력정규화 <code>c=√n·c/||c||₂</code>로 평균전력 1, <code>SNR=1/σ²</code>.</li><li>핵심 기법: 2D product code의 각 행/열 encoder를 별개 FCNN <code>E1(Φ1),E2(Φ2)</code>로, <code>I</code>회 반복 복호의 각 pair를 별개 FCNN 쌍으로 대체해 총 <code>2I</code>개 NN 디코더 구성.</li><li>핵심 식: 성분 파라미터의 곱 <code>X=∏Xm (X∈{n,k,d,R})</code>, <code>G=G1⊗G2⊗…</code> — 작은 부호로 큰 부호를 얻는 product 구조가 학습 복잡도를 관리 가능하게 함.</li><li>확장: 임의 <code>M</code>차원 product로 일반화(2D는 복잡도-성능 절충).</li><li>구현 트릭: 채널출력 injection, feature size <code>F</code>(다중 soft-info 추정), soft-info 차분 입력 — 세 가지 병용이 학습 성능 크게 개선.</li><li>학습: encoder/decoder 교대 스케줄(<code>Tenc=100</code>, <code>Tdec=500</code>), Adam, SELU, BCEWithLogitsLoss, 대형 배치(<code>B≥5000</code>)+gradient accumulation, decoder는 SNR 범위 <code>[γ-2.5,γ+1]</code>.</li><li>결과: <code>(15,10)²</code> 및 <code>(21,14)²</code>가 동일 길이 polar(SC)를 전 SNR에서 BER로 능가, TurboAE(600,200) 대비 BER 10⁻⁶에서 0.5dB 이득, 고전 LDPC/TBCC/polar도 상회.</li><li>한계: HW 미설계, 시뮬만, <code>k≤196</code> 규모만 검증, 비이진 비선형 실수 부호.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| FCNN 신경 encoder/decoder 전체 | 대응 없음 | NN 디코더는 Prime의 min-sum 파이프라인 밖 (프로파일 §6 "대응 없음") |
+| product code(Kronecker) 부호구조 | 대응 없음 | Prime은 단일 QC-LDPC, non-binary 실수부호와 무관 |
+| 반복 복호 스케줄(2I NN 반복) | decoder.cpp LDPC_Decoder() 이터레이션 루프 | 반복 개념만 유사, 알고리즘 실체 상이 |
+| soft-info 차분/feature 처리 | decoder.cpp C2V_Cal() (메시지 패싱) | 개념적 유사, NN 가중치라 이식 불가 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — 비이진 비선형 FCNN 부호로 min-sum 기반 binary QC-LDPC NAND ECC(부호설계→디코더→HW)와 근본적으로 이질적이며, HW·양자화도 미설계다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9839215",
+  "title": "ProductAE: Toward Training Larger Channel Codes based on Neural Product Codes",
+  "year": 2022,
+  "venue": "IEEE ICC 2022",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.444,
+  "code_length": "225",
+  "soft_quant": "무관",
+  "key_contribution": "product code 구조로 소형 신경 부호성분(NN enc/dec)을 조합해 대형 채널부호를 학습 가능케 한 neural product autoencoder",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "FCNN 기반 비선형·비이진(non-binary) 신경부호로 binary QC-LDPC min-sum 파이프라인에 이식 불가, k&lt;200 소규모만 검증",
+  "todo_check": "학습된 실수값 코드워드의 양자화·HW 비용 및 NAND read soft-info 정합성(현재 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9839215---productae-toward-training-larger-channel-codes-based-on-neural-product-codes-2022-ieee-icc-2022">ieee:9839215 - ProductAE: Toward Training Larger Channel Codes based on Neural Product Codes (2022, IEEE ICC 2022)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7872452</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7872452---an-efficient-construction-method-for-quasi-cyclic-low-density-parity-check-codes-2017-ieee-access">ieee:7872452 - An Efficient Construction Method for Quasi-Cyclic Low Density Parity Check Codes (2017, IEEE Access)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>960~64800</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>check node를 순차 추가하는 OBP-PEG PEG 변형 + 3개 제약(RCC/BPC/WCC)으로 LBP 수렴 가속·CNP 입력포트 축소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>부호구성법이라 우리 고정 PCM 교체·재검증 부담, BER은 표준부호와 동등(0.2~0.5dB 수준) - 정정능력 자체는 미개선</td></tr><tr><td>추가확인</td><td>Tqef/CNP포트 수치는 Table 1/2에만 있어 미상, sum-product(tanh φ) 기반 GA 분석이라 min-sum 이식 시 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: check-node 순차추가 PEG로 layered BP 평균 iteration을 최대 11.7% 줄이고 CN degree 균일화로 CNP 입력포트를 25% 축소하는 부호구성법으로, 수렴/HW 이점은 매력적이나 부호 재설계·재검증 부담이 크다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: <code>(n,k)</code> QC-LDPC, prototype matrix <code>HP</code>의 각 원소가 <code>p×p</code> CPM 또는 zero. LBP(layered BP) 디코딩 가정, 메시지는 LLR <code>L[·]</code>.</li><li>문제: 표준 PEG는 variable node를 순차 추가 → CN degree <code>dci</code>가 들쭉날쭉해 CNP(=CFU) 입력포트 최대치가 커지고, VN belief 갱신이 느려 iteration이 많다.</li><li>핵심 전환: OBP-PEG는 Tanner graph를 <strong>check node를 순차 추가</strong>하며 build → 각 CN에 붙는 VN 수(=<code>dci</code>)를 고정값으로 만들어 CNP 입력포트를 잘 제어(최대 25% 감소).</li><li>BPC(belief propagation condition): Gaussian approx로 오류확률 <code>Pe = ½erfc(√(E(L[Qj])/2))</code> 유도 → <code>Pe</code>는 <code>E(L[Qj])</code>에 반비례. <code>E(L[Qj])</code> 낮은 VN을 골라 belief 강화, 수렴 가속.</li><li><code>E(L[qji])</code>, <code>E(L[rij])</code>는 φ 함수(식4, tanh 기반 sum-product 규칙)로 iterative 계산 → BPC의 근거식.</li><li>RCC(relaxant constraint): VN degree ratio <code>γj = d̃vj/dvj</code>에 대해 <code>γĵ &lt; α·min(γj)</code>(α=1.5) 만족하는 VN만 후보로 선택 → degree 분포 균형.</li><li>WCC(weight constraint): QC 확장 시 path weight <code>wp(i,j)=Σ(−1)^s[HP]is,js</code>에 대해 <code>(wp+[HP]i,j) mod p = 0</code>으로 circulant 값 결정 → girth≥6 (4-cycle 제거).</li><li>절차: VN 먼저 배치→<code>dvj</code>를 DE/EXIT로 초기화→CN <code>i</code>마다 depth <code>l</code> 서브그래프 확장→RCC로 <code>Sc1</code>, BPC로 <code>Sc2</code> 후보→WCC 만족 circulant로 edge 연결.</li><li>결과: <code>(960,480)</code> 등에서 PEG 대비 <code>Tqef</code> 최대 11.7%↓, fast-convergence 부호 구성 성공률 최대 10배↑, CNP 입력포트 최대 25%↓ (SNR 3.0dB, rate 0.5). BER은 WiMAX/DVB-S2 표준부호와 유사(약간 우위).</li><li>한계: 순수 부호구성+시뮬만, HW 미설계. sum-product/GA 기반 분석이며 정정능력(BER) 자체는 표준부호와 동등 수준 - 이득은 iteration/CNP 복잡도.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OBP-PEG로 QC-LDPC HP 구성 (RCC/BPC/WCC)</td><td>ecc_top.cpp <code>Load_PCM()</code> + H-matrix</td><td>부호설계 레이어 - 우리 QC-LDPC 고정, 교체 시 재검증 부담 높음</td></tr><tr><td>CN degree 균일화 → CNP 입력포트 축소</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 이미 HCU로 비대칭 degree col 처리 - degree 균일 부호면 HCU 단순화 여지, 참고가치 있음</td></tr><tr><td>layered BP 수렴 가속 (avg iteration↓)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>avg iteration 감소는 관심 항목이나, 부호 자체를 바꿔야 얻어지는 이득이라 이식 난이도 있음</td></tr><tr><td>WCC girth≥6 (4-cycle 제거)</td><td>대응 없음</td><td>우리 PCM은 고정 girth - 교과서 수준 조건</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - avg iteration·CNP 복잡도 감소라는 관심 항목을 건드리나, 그 이득이 QC-LDPC 부호 재설계에 종속돼 우리 고정 PCM 대비 재검증 부담이 크다. sum-product 기반이라 min-sum 환경 이식 시 추가 검증 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7872452",
+  "title": "An Efficient Construction Method for Quasi-Cyclic Low Density Parity Check Codes",
+  "year": 2017,
+  "venue": "IEEE Access",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "960~64800",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "check node를 순차 추가하는 OBP-PEG PEG 변형 + 3개 제약(RCC/BPC/WCC)으로 LBP 수렴 가속·CNP 입력포트 축소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "부호구성법이라 우리 고정 PCM 교체·재검증 부담, BER은 표준부호와 동등(0.2~0.5dB 수준) - 정정능력 자체는 미개선",
+  "todo_check": "Tqef/CNP포트 수치는 Table 1/2에만 있어 미상, sum-product(tanh φ) 기반 GA 분석이라 min-sum 이식 시 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7872452---an-efficient-construction-method-for-quasi-cyclic-low-density-parity-check-codes-2017-ieee-access">ieee:7872452 - An Efficient Construction Method for Quasi-Cyclic Low Density Parity Check Codes (2017, IEEE Access)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

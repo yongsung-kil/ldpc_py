@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1544068</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1544068---construction-of-low-density-parity-check-codes-using-quadratic-congruential-sequences-2005-ieee-conf">ieee:1544068 - Construction of Low Density Parity Check Codes Using Quadratic Congruential Sequences (2005, IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>432~2048</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>quadratic congruential 재귀로 regular LDPC의 H를 key(k,v)만으로 on-the-fly 생성해 그래프 lookup 테이블 제거(HW 메모리 절감)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>성능은 random 구성 대비 comparable(정정이득 없음), regular rate 0.5 비-QC, HW 미설계</td></tr><tr><td>추가확인</td><td>quadratic congruential on-the-fly H 생성이 QC circulant(이미 compact) 대비 이점/고rate 확장 가능성</td></tr></tbody></table>
+<blockquote><p>총평: H를 대수적 재귀로 on-the-fly 생성해 메모리를 줄이는 regular LDPC 구성법이나, 이미 QC circulant로 compact H를 쓰는 Prime ECC엔 신규 이점이 없고 정정이득도 없어 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular <code>(3,ρ)</code> LDPC 부호 구성(λ=3), 예 <code>(2048,1024)</code>·<code>(432,216)</code>, rate 0.5, AWGN 채널.</li><li>문제: 랜덤 구성 H는 그래프 연결을 lookup 테이블로 저장해야 해 메모리 부담 큼 → HW 실장 어려움.</li><li>아이디어: H를 key 정수 <code>k,v</code>로 정의하고 순열 벡터를 재귀로 생성, 디코더/인코더에서 on-the-fly로 H 재생성.</li><li>핵심 재귀: <code>A(i) = k·i(i+1)/2 + v (mod M)</code>, <code>0≤i≤M-1</code> (식1)로 i번째 bit connection이 붙을 check connection A(i) 결정.</li><li>조건: <code>0&lt;k&lt;M</code>, <code>v</code> coprime M, <code>M=2^n</code>, <code>k</code> 홀수·coprime M → 0..M-1 최대길이 수열 보장([2]).</li><li>bit connection {iλ..iλ+λ-1}=i번째 bit node, check connection {jρ..jρ+ρ-1}=j번째 check node로 매핑, one-to-one.</li><li>shortened sequence: 길이 S(2의 거듭제곱 아님)를 위해 swap 기반 알고리즘(x=c_{i+1}, y=c_i+N/2 mod N)으로 테이블 없이 생성.</li><li>복호: 표준 message-passing, 최대 50 iteration.</li><li>결과: (2048,1024)·(432,216) BER이 cycle-4 회피 constrained-random 구성과 comparable, 이점은 k,v만 저장하면 되는 메모리 절감.</li><li>한계: 성능 이득 없음(comparable), regular rate 0.5 비-QC, HW 실장은 언급뿐(미설계), 저rate.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>H를 key(k,v) 재귀로 on-the-fly 생성(부호설계)</td><td>ecc_top.cpp <code>Load_PCM()</code> + H-matrix</td><td>Prime ECC는 base+circulant shift QC-LDPC로 이미 compact·on-the-fly, 별도 이점 없음</td></tr><tr><td>표준 message-passing 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>논문 기여 아님(구성법만), 중복</td></tr><tr><td>그래프 lookup 테이블 제거(메모리 절감)</td><td>대응 없음 (QC circulant가 동일 목적 이미 달성)</td><td>신규 이식 요소 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — on-the-fly H 생성이라는 핵심 이점은 QC-LDPC circulant 표현이 이미 제공하며, 정정능력 이득이 없고 rate 0.5 regular 비-QC 구성이라 고rate QC-LDPC인 Prime ECC에 이식 가치 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1544068",
+  "title": "Construction of Low Density Parity Check Codes Using Quadratic Congruential Sequences",
+  "year": 2005,
+  "venue": "IEEE Conf.",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "432~2048",
+  "soft_quant": "미상",
+  "key_contribution": "quadratic congruential 재귀로 regular LDPC의 H를 key(k,v)만으로 on-the-fly 생성해 그래프 lookup 테이블 제거",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "성능은 random 구성 대비 comparable(정정이득 없음), regular rate 0.5 비-QC, HW 미설계",
+  "todo_check": "quadratic congruential on-the-fly H 생성의 QC circulant 대비 이점 및 고rate 확장 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1544068---construction-of-low-density-parity-check-codes-using-quadratic-congruential-sequences-2005-ieee-conf">ieee:1544068 - Construction of Low Density Parity Check Codes Using Quadratic Congruential Sequences (2005, IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5198625</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5198625---a-low-complexity-iterative-technique-for-soft-decision-decoding-of-reed-solomon-codes-2009-ieee-icc-2009">ieee:5198625 - A Low Complexity Iterative Technique for Soft Decision Decoding of Reed-Solomon Codes (2009, IEEE ICC 2009)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.73~0.87</td></tr><tr><td>부호length</td><td>15~63</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Reed-Solomon 코드의 이진 확장 저밀도 parity check matrix에 belief propagation을 적용하고, 순환 성질을 이용해 수신 신뢰도를 매 outer round마다 순환 시프트해 pseudo-equilibrium point를 회피하는 반복 soft decoding 기법 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 Reed-Solomon(비-LDPC)이며 짧은 길이(N≤63) 코드로만 검증, LDPC decoder(대상=decoder)이지만 Prime ECC는 binary QC-LDPC 전용이라 RS BP decoding 자체는 이식 불가</td></tr><tr><td>추가확인</td><td>순환 시프트로 pseudo-equilibrium(local minimum) 회피 아이디어가 LDPC min-sum 디코더의 정체(stall) 상황에도 유사하게 적용 가능한지 별도 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: Reed-Solomon 코드를 이진 BP로 반복 복호하는 기법으로 LDPC ECC와 부호체계 자체가 다르며, NAND binary QC-LDPC 이식 관점에서는 직접 대응이 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: systematic (N,K) Reed-Solomon 코드를 GF(2^m) 원소의 이진 표현으로 확장한 binary parity check matrix <code>H_b</code> ((N-K)m x Nm)에 BP(belief propagation)를 적용, BPSK+AWGN 채널 가정.</li><li>문제: RS 코드의 원래 이진 parity check matrix는 밀도가 약 50%로 높아 factor graph에 4-cycle이 많고 표준 BP가 correlation/error propagation으로 성능이 나쁨.</li><li>핵심 가정: 대칭군(GF 원소의 companion matrix 기반 field isomorphism)으로 만든 이진 <code>H_b</code>를 저밀도화(듀얼코드의 저가중치 codeword 탐색)하고, 다시 row/column을 추가로 확장해 4-cycle을 제거(밀도 15%까지 감소).</li><li>핵심 기법1: RS 코드의 순환성(cyclic property)을 이용해 수신 LLR을 <code>φ</code> 심볼만큼 순환 시프트한 뒤 동일한 <code>H</code> 행렬로 BP를 수행 - outer round마다 다른 <code>φ</code>로 factor graph의 형상을 바꿔 결정론적 오류(에러 정체)를 회피.</li><li>핵심 식: potential function <code>J(H_b,T) = -Σγ_j</code> (식 13)이 checks 만족 시 최소화(<code>J_min=-(n-k)</code>)되며, <code>H_b</code>가 고정이어도 <code>T</code>(bit reliability 배열)의 시프트가 다르면 <code>J</code>가 다른 궤적을 그려 pseudo-equilibrium point를 벗어남.</li><li>알고리즘 구조: outer round(순환 시프트 변경)와 inner round(BP iteration)의 이중 루프, 매 BP iteration 후 하드결정 결과를 Berlekamp-Massey(BM) 디코더에도 입력해 성공 시 후보로 저장, 최종적으로 수신벡터와 유클리드 거리 최소인 후보를 선택.</li><li>부수 트릭: damping coefficient <code>θ</code>(0&lt;θ≤1)로 LLR 업데이트를 완화, extra stopping criterion(<code>d≤r</code>, <code>r=√(Nm)σ²</code>)으로 BM 성공 시 거리 조건 만족하면 조기 종료해 평균 iteration 수 감소(0.2dB 성능 손실과 trade-off).</li><li>학습/최적화 절차 없음 - 결정론적 BP+BM 결합 반복 알고리즘.</li><li>결과: RS(15,11)에서 KV(algebraic soft decision) 대비 1.5dB, BM(hard decision) 대비 2.7dB coding gain, ADP 방법 대비도 0.5dB 우위. SNR 증가 시 평균 BP iteration 수 대폭 감소(예: RS(15,11) Eb/N0=2dB에서 253회 → 5dB에서 5회).</li><li>한계: 순수 시뮬레이션(HW 미설계), 대상이 Reed-Solomon(비-LDPC, GF(2^m) 기반)이라 LDPC ECC와 부호 구조가 근본적으로 다르고, 짧은 코드(N≤63)로만 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>RS 코드의 이진 확장 parity check matrix + BP 디코딩 전체</td><td>대응 없음</td><td>Prime ECC는 binary QC-LDPC 전용이며 RS(비-LDPC) 부호 자체를 다루지 않음</td></tr><tr><td>순환 시프트로 pseudo-equilibrium 회피(outer round)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> (개념적 유사성만)</td><td>LDPC min-sum이 stall/oscillation에 빠질 때 메시지 재배열로 탈출하는 아이디어와 개념적으로 유사하나 RS 순환성에 의존하는 기법이라 QC-LDPC에 직접 이식 불가</td></tr><tr><td>Berlekamp-Massey 병행 디코딩</td><td>대응 없음</td><td>대수적 디코더로 Prime ECC의 min-sum 구조와 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — Reed-Solomon 코드 전용 BP 기법으로 Prime ECC의 binary QC-LDPC 부호·디코더 구조와 근본적으로 대응되지 않으며, 이식 가능한 아이디어(순환 재배열을 통한 정체 회피)도 RS의 순환군 구조에 강하게 의존.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5198625",
+  "title": "A Low Complexity Iterative Technique for Soft Decision Decoding of Reed-Solomon Codes",
+  "year": 2009,
+  "venue": "IEEE ICC 2009",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.73~0.87",
+  "code_length": "15~63",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Reed-Solomon 코드의 이진 확장 저밀도 parity check matrix에 belief propagation을 적용하고, 순환 성질을 이용해 수신 신뢰도를 매 outer round마다 순환 시프트해 pseudo-equilibrium point를 회피하는 반복 soft decoding 기법 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상 부호가 Reed-Solomon(비-LDPC)이며 짧은 길이(N&lt;=63) 코드로만 검증, LDPC decoder(대상=decoder)이지만 Prime ECC는 binary QC-LDPC 전용이라 RS BP decoding 자체는 이식 불가",
+  "todo_check": "순환 시프트로 pseudo-equilibrium(local minimum) 회피 아이디어가 LDPC min-sum 디코더의 정체(stall) 상황에도 유사하게 적용 가능한지 별도 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5198625---a-low-complexity-iterative-technique-for-soft-decision-decoding-of-reed-solomon-codes-2009-ieee-icc-2009">ieee:5198625 - A Low Complexity Iterative Technique for Soft Decision Decoding of Reed-Solomon Codes (2009, IEEE ICC 2009)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

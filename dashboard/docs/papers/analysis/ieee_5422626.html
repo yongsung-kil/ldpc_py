@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5422626</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5422626---an-improved-belief-propagation-decoder-for-ldpc-coded-partial-response-channels-2010-ieee-trans-magnetics">ieee:5422626 - An Improved Belief-Propagation Decoder for LDPC-Coded Partial-Response Channels (2010, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4551</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>PR채널 채널메시지 상관을 subblock 결합분포로 bit-to-check에 반영하는 IBP 복호(BCJR/OBBD 연동)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>PR/자기기록 채널(ISI) 전용, OBBD subblock 분포 복잡도가 길이 p에 지수증가, turbo eq시 이득 소멸</td></tr><tr><td>추가확인</td><td>NAND는 셀간 ISI가 아닌 독립 LLR 근사라 상관모델 자체가 부적합한지 재검토</td></tr></tbody></table>
+<blockquote><p>총평: PR(자기기록) 채널의 LLR 상관을 subblock 결합분포로 활용하는 채널특화 IBP 복호. NAND는 채널메시지 독립 근사가 유효한 memoryless 계열이라 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: PR(partial-response) 채널 + high-rate LDPC. binary는 PEG로 만든 (4551,4096) col-weight 4, rate≈0.9; nonbinary는 GF(16) (1138,1024) col-weight 3(4096 user bits).</li><li>문제: BP 최적성은 채널 intrinsic 정보 독립 가정이 필요한데 PR 채널의 BCJR 검출기 출력 LLR은 서로 상관돼 첫 iteration부터 BP가 suboptimal.</li><li>모델: 채널메시지 상관은 인접 소범위에서만 유의하고 lag 증가 시 소멸(autocorrelation으로 검증), 상관을 <code>p</code>개 연속비트 subblock의 결합분포로 표현(causal <code>c</code> + anti-causal <code>ac</code>).</li><li>핵심기법(IBP): 관심 비트 APP를 subblock <code>Sk</code> 내 결합분포 <code>P(Sk)</code>로 확장(식1), check-to-bit는 기존 BP와 동일하되 bit-to-check 메시지에 상관항을 추가 반영(식2/5). 모든 LLR 독립이면 첫 항이 0이 되어 표준 BP로 환원.</li><li>수식 의미: BP가 무시하던 채널메시지 간 종속성을 subblock joint distribution으로 주입해 coding gain 확보.</li><li>확장(IQBP): nonbinary(GF(q)) BP로 확장, code symbol 단위 상관을 overlapped subblock 분포로 반영, row-step은 FFT 구현.</li><li>구현 디테일(OBBD): BCJR 확장인 OBBD로 overlapped subblock 분포 <code>P(Sk)</code>를 검출기가 1회(또는 global iter마다) 생성, IBP 내부에서는 갱신 안 함; 경계는 짧아진 subblock으로 boundary management.</li><li>채널: EPR4(정수계수, AWGN)와 equalized GPR PMRC(hyperbolic tangent transition, 90% jitter+10% 전자잡음), 사용자밀도 저(0.87)/고(1.22).</li><li>결과: turbo eq 없이 IBP가 BP 대비 최대 0.7 dB(EPR4)/0.6 dB(고밀도 PMRC) SER 이득; 상관 약한 채널선 이득 작음; IQBP는 QBP 대비 0.1 dB 초과. binary+IBP가 nonbinary+QBP에 근접.</li><li>한계: turbo equalization 도입 시 IBP 이득이 BP와 동등해져 소멸; OBBD의 subblock 분포 계산이 subblock 길이 <code>p</code>에 시간·공간 복잡도 지수증가; HW 미설계, 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 복호 루프(check-to-bit)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>check-step은 유사하나 IBP의 상관 bit-to-check는 대응 없음</td></tr><tr><td>채널 LLR/soft-info 생성</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>Prime ECC는 독립 LLR 양자화, subblock 결합분포 미대응</td></tr><tr><td>nonbinary IQBP (GF(16))</td><td>대응 없음</td><td>Prime ECC는 binary 전용, non-binary 이식성 하</td></tr><tr><td>BCJR/OBBD 채널검출기</td><td>대응 없음</td><td>NAND ECC는 별도 채널 detector trellis 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — PR/자기기록 채널의 ISI로 생긴 LLR 상관을 subblock 분포로 활용하는 채널특화 기법. NAND는 memoryless 근사(독립 LLR)가 유효하고 binary min-sum 구조라 IBP/IQBP 이식 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5422626",
+  "title": "An Improved Belief-Propagation Decoder for LDPC-Coded Partial-Response Channels",
+  "year": 2010,
+  "venue": "IEEE Transactions on Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.9,
+  "code_length": "4551",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "PR채널 채널메시지 상관을 subblock 결합분포로 bit-to-check에 반영하는 IBP 복호(BCJR/OBBD 연동)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "PR/자기기록 채널(ISI) 전용, OBBD subblock 분포 복잡도가 길이 p에 지수증가, turbo eq시 이득 소멸",
+  "todo_check": "NAND는 셀간 ISI가 아닌 독립 LLR 근사라 상관모델 자체가 부적합한지 재검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5422626---an-improved-belief-propagation-decoder-for-ldpc-coded-partial-response-channels-2010-ieee-trans-magnetics">ieee:5422626 - An Improved Belief-Propagation Decoder for LDPC-Coded Partial-Response Channels (2010, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10305442</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10305442---low-power-ldpc-decoding-by-reliable-voltage-down-scaling-2023-ieee-norcas">ieee:10305442 - Low Power LDPC Decoding by Reliable Voltage Down-Scaling (2023, IEEE NorCAS)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>CRC 검출로 LDPC 디코더 전압을 PoFF 직상단까지 안전하게 내려 40% 전력 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>알고리즘/부호 무관 전압스케일링 기법 - LDPC 정정성능·부호설계에 기여 전무, 채널정보(SNR) 의존</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코더 HW의 전압 down-scaling(DVFS+CRC) 전력절감 기법으로 NAND ECC 부호/디코더 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 무선(5G/LTE) baseband의 LDPC 디코더 HW로, 부호 rate/length는 본문에 명시 없음(<code>미상</code>).</li><li>문제: LDPC 디코더는 전력 소모가 큰 블록이며, near-threshold(NT) 저전압 운용 시 PVT 변동으로 최적 무오류 동작점 튜닝이 어렵다.</li><li>가정: telecom 표준에서 FEC(LDPC) 후 CRC 오류검출이 항상 수행되고, 고SNR에서는 디코딩 후 블록오류율이 낮다는 점을 활용.</li><li>핵심 기법: CRC 검출 결과로 DVFS를 유도 - 성공 시 전압을 계속 낮추고, 실패 시 전압을 올려 재디코딩하여 전압관련 실패와 채널관련 실패를 구분.</li><li>의미: CRC가 저비용 정답 검증기 역할을 하여 Point of First Failure(PoFF) 직상단 전압을 안전하게 추종.</li><li>확장: 급속 전압 상승이 필요할 때 클록 주파수도 함께 낮춰 저전압에서 성능을 확보하고, 목표 전압 도달 후 주파수 복원.</li><li>구현: Zynq XC7Z020 SoC에서 PL측에 single-precision float LDPC 디코더 합성, PS측이 모니터링, PMBUS/I2C로 VCCINT/VCCBRAM 전압 레일 독립 조정(PL 100MHz).</li><li>학습/최적화: 별도 학습 없음 - 이전 실패 전압을 추적해 임계 threshold를 적응적으로 갱신하는 정책 기반.</li><li>결과: 임계점 0.7V까지 하강, 0.6V 미만 시 크래시, 처리량 저하 무시 가능 수준으로 약 40% 전력 절감.</li><li>한계: 순수 저전압/DVFS 기법으로 LDPC 부호설계·정정능력·복호 알고리즘에는 기여 없음. 채널 SNR 정보 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CRC 기반 디코딩 성공 검증</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>Prime ECC도 CRC 조기종료 보유하나, 본 논문은 CRC를 전압스케일링 트리거로만 사용해 알고리즘적 대응 아님</td></tr><tr><td>전압/주파수 스케일링(DVFS)</td><td>대응 없음</td><td>Prime ECC는 bit-exact 알고리즘 시뮬레이터로 전압/클록 도메인 모델 없음</td></tr><tr><td>SNR 기반 동작점 결정</td><td>대응 없음</td><td>채널 SNR을 전압정책에 쓰는 부분은 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 부호/디코더 알고리즘 무관한 HW 전력관리(DVFS) 기법이라 bit-exact 알고리즘 시뮬레이터인 Prime ECC에 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10305442",
+  "title": "Low Power LDPC Decoding by Reliable Voltage Down-Scaling",
+  "year": 2023,
+  "venue": "IEEE NorCAS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "CRC 검출로 LDPC 디코더 전압을 PoFF 직상단까지 안전하게 내려 40% 전력 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "알고리즘/부호 무관 전압스케일링 기법 - LDPC 정정성능·부호설계에 기여 전무, 채널정보(SNR) 의존",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10305442---low-power-ldpc-decoding-by-reliable-voltage-down-scaling-2023-ieee-norcas">ieee:10305442 - Low Power LDPC Decoding by Reliable Voltage Down-Scaling (2023, IEEE NorCAS)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

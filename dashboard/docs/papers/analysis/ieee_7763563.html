@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7763563</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7763563---decoding-ldpc-codes-with-binary-perturbation-2016-ictc">ieee:7763563 - Decoding LDPC Codes with Binary Perturbation (2016, ICTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>192~384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP 실패 시 m-sequence 이진잡음으로 LLR을 섭동(perturbation)해 재복호, Gaussian 섭동 대비 구현 단순화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>짧은 코드(192~384) 전용 기법이며 CRC 연접·최대 100라운드 재복호로 latency·복잡도 크게 증가</td></tr><tr><td>추가확인</td><td>고rate(~0.9) 장부호 QC-LDPC에서 이득 유무, LFSR 이진잡음 진폭·섭동비트수 최적화 이식 여부</td></tr></tbody></table>
+<blockquote><p>총평: BP 실패 codeword를 이진잡음 섭동+재복호로 구제하는 저비용 기법이나, 짧은 코드·다회 재복호 전제라 NAND 고rate QC-LDPC 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 짧은 LDPC 코드(길이 192/288/384, rate 1/2·2/3·3/4)를 8-bit CRC와 연접하여 BP로 복호.</li><li>문제: 짧은 코드는 Tanner graph의 short cycle 때문에 BP 성능이 열화됨.</li><li>기존 섭동법[4]: BP 실패 시, LLR 절댓값이 작고 check 위배가 많은 비트 집합 <code>I_L</code>을 골라 Gaussian noise를 더해 복호 시작점을 이동시키고 재복호.</li><li>핵심 기법: Gaussian 잡음 대신 이진잡음 <code>n_i''</code>(균등확률 <code>{±δ}</code>)을 선택 비트에 더함 — 식 (2) <code>y_i = y_i + n_i''</code> (i∈I_L).</li><li>이진잡음은 LFSR로 생성하는 m-sequence로 구현: degree 15 primitive polynomial <code>x^15+x+1</code> 사용, 주기 <code>2^m-1</code>.</li><li>복호 절차는 기존 섭동법 flowchart(Fig.1)와 동일 — valid codeword 얻거나 최대 섭동 라운드(100) 도달까지 반복.</li><li>구현 이점: 정밀 Gaussian 잡음 생성기(Box-Muller HW) 대비 LFSR 이진잡음 생성기가 훨씬 단순.</li><li>파라미터: 코드별 섭동비트수(48/60/72)와 잡음진폭 δ(0.4/0.35/0.3)를 경험적 최적화. CRC 생성다항식 <code>x^8+x^2+x+1</code> 계열.</li><li>결과: BLER=10^-4에서 BP 대비 약 1.75/1.9/2.0 dB 이득(각 192/288/384), Gaussian 섭동법[4]과 성능·복잡도 거의 동일.</li><li>복잡도: codeword당 평균 BP iteration 수로 측정, 저 Eb/N0에서 높고 고 Eb/N0(~3.75dB)에서 세 방식 차이 소멸. HW 미설계, 시뮬뿐.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 실패 후 재복호 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>섭동 재시작을 감쌀 외부 루프로 접목 가능하나 Prime은 min-sum 기반</td></tr><tr><td>LLR 섭동(선택비트 잡음 주입)</td><td>channel.cpp <code>Set_LLR_Th()</code> / LLR 테이블 <code>PARAM_LLR</code></td><td>초기 LLR/soft-info 조작 지점, NAND read 비용 고려 필요</td></tr><tr><td>CRC 조기종료/검출</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code> / full_CRC</td><td>Prime은 이미 partial+full CRC 보유(중복)</td></tr><tr><td>m-sequence 이진잡음 생성(LFSR)</td><td>대응 없음</td><td>Prime에 섭동잡음 생성기 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 짧은 코드·다회 재복호 latency 전제라 고rate QC-LDPC NAND ECC와 정합성이 낮고, CRC 조기종료는 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7763563",
+  "title": "Decoding LDPC Codes with Binary Perturbation",
+  "year": 2016,
+  "venue": "ICTC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "0.5~0.75",
+  "code_length": "192~384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP 실패 시 m-sequence 이진잡음으로 LLR을 섭동해 재복호, Gaussian 섭동 대비 구현 단순화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "짧은 코드(192~384) 전용 기법이며 CRC 연접·최대 100라운드 재복호로 latency·복잡도 크게 증가",
+  "todo_check": "고rate(~0.9) 장부호 QC-LDPC에서 이득 유무, LFSR 이진잡음 진폭·섭동비트수 최적화 이식 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7763563---decoding-ldpc-codes-with-binary-perturbation-2016-ictc">ieee:7763563 - Decoding LDPC Codes with Binary Perturbation (2016, ICTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

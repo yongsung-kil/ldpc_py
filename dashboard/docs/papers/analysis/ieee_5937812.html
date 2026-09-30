@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5937812</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5937812---a-high-throughput-ldpc-decoder-architecture-for-high-rate-wpan-systems-2011-ieee-iscasapccas-계열-conference">ieee:5937812 - A High-Throughput LDPC Decoder Architecture for High-Rate WPAN Systems (2011, IEEE (ISCAS/APCCAS 계열 conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>4-병렬 block layered 복호 + 고정배선 SN + 2단 파이프라인으로 고throughput 저라우팅 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>759K gates@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.45Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate-1/2 WPAN 저rate·짧은 부호(672bit) 전용, NAND 고rate와 불일치; soft-read 미고려</td></tr><tr><td>추가확인</td><td>고정배선 SN이 우리 QC 구조(z=32, N_b=129)에서도 성립하는지, 근사 layered의 BER 손실폭</td></tr></tbody></table>
+<blockquote><p>총평: layered 복호의 라우팅/파이프라인 병목을 고정배선+근사 스케줄로 푼 HW 아키텍처 논문. 기법 자체(고정배선 SN, 2단 파이프라인 layered)는 이식 가치 있으나 부호는 NAND용 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.15.3c mmWave WPAN용 672-bit, rate-1/2 QC-LDPC (336×672 H, base matrix 16×32, sub-matrix <code>z=21</code>).</li><li>문제: 기존 layered 복호는 shuffling/reshuffling용 양방향 crossbar SN이 필요해 HW·라우팅 복잡도가 크고, 행간 데이터 의존성으로 파이프라인·병렬화가 직접 적용 불가.</li><li>핵심기법 1단: 4-parallel block layered decoding architecture(4-PBLDA) — 선택 부호의 4개 block row가 재정렬 없이 column weight ≤1이라 4개 CNBPs로 1 클록에 동시 처리, iteration당 클록 75% 감소·throughput 약 4배.</li><li>핵심기법 2단(라우팅): 각 CNBPs가 담당하는 4개 block row가 동일 순서·동일 permutation 값을 공유 → SN의 sub-switch가 항상 같은 cyclic shift 수행 → 12개 SN 전부를 crossbar 대신 fixed wire network로 대체.</li><li>핵심식(1)~(4): Min-Sum 기반 layered 갱신. <code>L[k]=y[k]-R[k-1]</code>(V2C), <code>R[k]=S·min(|L|)</code>(C2V), <code>S=∏sign</code>, 그리고 파이프라인용 latest variable message 재계산식(4).</li><li>부수 트릭: approximate layered decoding으로 2단 파이프라인 — 최신 variable message를 즉시 사용해 파이프라인 지연으로 인한 BER 손실 최소화(파라미터 <code>p=2</code>).</li><li>양자화: 내재 메시지 <code>(q,f)=(6,2)</code>, extrinsic 7bit, CNBP 내부 9bit. Min-Sum block은 비교 트리 구조.</li><li>결과: 90nm CMOS, 285MHz, 정보 throughput 1.45Gbps(16 iter), gate 759K. 파이프라인 유무 비교시 throughput 13%↑ / gate 24%↑.</li><li>성능: 근사 layered 16 iter가 표준 layered 8 iter와 유사 BER(Fig.4) — iter 늘지만 클록 상승으로 순 throughput 이득.</li><li>한계: rate-1/2 짧은 부호 전용, NAND 고rate 아님. soft-read/양자화 세부는 통신 채널 기준, HW는 합성 단계까지만(실측 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-Sum layered 복호 갱신식 (1)~(4)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Min-Sum 자체는 이미 보유, layered 스케줄은 참고</td></tr><tr><td>CN min 연산 / sign</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>동일 min-sum 연산 대응</td></tr><tr><td>고정배선 SN / block-parallel 라우팅</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>edge/MUX 축소와 유사 목적, HW 라우팅 최적화 참고</td></tr><tr><td>block-parallel HW 아키텍처(z 단위)</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>z-block 병렬은 우리 구조와 결이 같음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Min-Sum·block 병렬·layered는 이미 보유 기법과 중복이 크고, 고정배선 SN은 rate-1/2·특정 permutation 공유 조건에 의존해 우리 고rate QC 부호에 그대로 이식되지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5937812",
+  "title": "A High-Throughput LDPC Decoder Architecture for High-Rate WPAN Systems",
+  "year": 2011,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "672",
+  "soft_quant": "무관",
+  "key_contribution": "4-병렬 block layered 복호 + 고정배선 SN + 2단 파이프라인으로 고throughput 저라우팅 달성",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "759K@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 1.45,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "rate-1/2 WPAN 저rate·짧은 부호(672bit) 전용, NAND 고rate와 불일치; soft-read 미고려",
+  "todo_check": "고정배선 SN이 우리 QC 구조(z=32, N_b=129)에서도 성립하는지, 근사 layered의 BER 손실폭"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5937812---a-high-throughput-ldpc-decoder-architecture-for-high-rate-wpan-systems-2011-ieee-iscasapccas-계열-conference">ieee:5937812 - A High-Throughput LDPC Decoder Architecture for High-Rate WPAN Systems (2011, IEEE (ISCAS/APCCAS 계열 conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6882148</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6882148---overclocking-nand-flash-memory-io-link-in-ldpc-based-ssds-2014-ieee-tcas-ii">ieee:6882148 - Overclocking NAND Flash Memory I/O Link in LDPC-Based SSDs (2014, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>1kB</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>오버클록 I/O link 오류(BAC, plane·라인별 비대칭)를 반영한 overclocking-aware LLR 계산 + interplane codeword interleaving</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>I/O overclocking이라는 특수 오류원 전제(우리 채널모델은 cell RBER 중심), HW 미설계·시뮬 수준, BAC 파라미터가 chip/plane 측정 종속</td></tr><tr><td>추가확인</td><td>BAC(1→0/0→1 비대칭·라인별) LLR 테이블을 우리 channel.cpp LLR 양자화에 매핑 가능 여부, cell-only 채널에서의 이득</td></tr></tbody></table>
+<blockquote><p>총평: rate-8/9·1kB QC-LDPC라 우리 부호와 정합적이나, 개선의 원천이 I/O link 오버클록 오류(BAC)라는 특수 시나리오라 cell RBER 중심 채널엔 직접 이식 이득이 제한적. LLR을 채널 비대칭성에 맞춰 조정하는 원리는 채널 모듈에 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC 기반 SSD, rate-8/9·length-1kB QC-LDPC(column weight 4), 20nm MLC NAND, ONFI 2.2(정상 166MB/s).</li><li>문제: worst-case 지향 ECC redundancy가 수명 대부분 미사용 → 잉여 정정력으로 I/O link를 오버클록해 속도 향상, 단 유발되는 link 오류를 복호가 잘 처리해야 함.</li><li>채널 모델: cell 저장은 BSC, I/O link는 plane·8-bit 라인별로 다른 <code>parallel binary asymmetric channel(BAC)</code> (die당 2~4 plane, 16 신호경로, 1→0/0→1 비대칭).</li><li>기법 1단(overclocking-aware LLR): <code>LLR(xk)=log p(xk=0|yk)/p(xk=1|yk)</code>를 전확률 전개해 link 조건확률 <code>pm(l)(yk|vk=i)</code>(라인 l, plane m)와 P/E-종속 cell 확률 <code>p(vk=i|xk=j,c)</code>를 명시적으로 반영.</li><li>식 의미: link 오류(라인/plane별 비대칭)와 cell 오류(P/E cycle c 종속)를 분리 결합해 정확한 LLR 산출 → 복호 성능 향상.</li><li>기법 2단(interplane codeword interleaving): 각 codeword를 n plane의 n physical page에 균등 분산 → plane별 상이한 link BER를 codeword 간 균일화(통신 인터리빙 유사).</li><li>구현 디테일: on-chip randomizer로 cell의 1→0/0→1 등화 가정, BAC 파라미터는 측정으로 설정.</li><li>(학습절차 없음 — 측정 기반 파라미터화 + 시뮬)</li><li>결과: 275MB/s 오버클록(I/O throughput +60%)에서 link BER&gt;10^-3; 두 기법 병용 시 복호 power 60% 절감, decoding failure(retransfer) rate 2 orders(초기수명 최대 114.7배) 감소. 후기수명엔 이득 5.8배로 축소.</li><li>한계: HW 미설계(FPGA는 측정 플랫폼), 시뮬 평가, 이득이 I/O overclocking 특수 오류원에 종속(late-life엔 미미).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>overclocking-aware LLR 계산(BAC 비대칭 반영)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read LLR/threshold 산출부에 라인·plane별 비대칭 확률을 반영하는 확장 지점</td></tr><tr><td>P/E-종속 LLR 테이블 조정</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>iteration/조건별 LLR 테이블 구조와 유사, cycle-dependent 파라미터 추가 여지</td></tr><tr><td>interplane codeword interleaving</td><td>대응 없음</td><td>코드워드-plane 배치는 컨트롤러/시스템 레벨, 디코더 시뮬 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — LLR을 채널 비대칭(라인·plane)에 맞춰 재산출하는 원리는 우리 channel.cpp LLR 설계에 참고 가치가 있으나, 오류원이 I/O overclocking이라는 특수 시나리오이고 cell RBER 중심 모델과는 결이 달라 직접 이식 이득은 제한적.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6882148",
+  "title": "Overclocking NAND Flash Memory I/O Link in LDPC-Based SSDs",
+  "year": 2014,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.889,
+  "code_length": "1kB",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "오버클록 I/O link 오류(BAC, plane·라인별 비대칭)를 반영한 overclocking-aware LLR 계산 + interplane codeword interleaving",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "I/O overclocking 특수 오류원 전제(우리 채널은 cell RBER 중심), HW 미설계·시뮬 수준, BAC 파라미터가 chip/plane 측정 종속",
+  "todo_check": "BAC 비대칭 LLR을 channel.cpp LLR 양자화에 매핑 가능 여부, cell-only 채널에서의 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6882148---overclocking-nand-flash-memory-io-link-in-ldpc-based-ssds-2014-ieee-tcas-ii">ieee:6882148 - Overclocking NAND Flash Memory I/O Link in LDPC-Based SSDs (2014, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6865484</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6865484---hybrid-dfsf-bp-equalization-for-atsc-dtv-receivers-2014-ieee">ieee:6865484 - Hybrid DFSF-BP Equalization for ATSC DTV Receivers (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>DFSF(적응형 sparsening 피드백 필터)로 긴 ISI 채널을 D개 tap의 sparse 채널로 만든 뒤 BP equalizer로 잔여 ISI를 정정, DFE 대비 SER ~1dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 복호가 아니라 ATSC 8-VSB 채널의 ISI equalization에 BP를 적용 - NAND/부호 무관, 시뮬만</td></tr><tr><td>추가확인</td><td>없음 (NAND binary LDPC ECC와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: ATSC DTV용 sparse-channel BP equalizer. BP는 채널 등화 용도이며 LDPC 부호·NAND와 무관해 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: ATSC DTV 수신기, 8-VSB(±1,±3,±5,±7) 심볼, symbol rate <code>10.76MHz</code>, SRRC 송신필터·matched filter·심볼레이트 샘플링. 데이터는 RS+trellis 부호화됨(등화 대상은 채널 ISI).</li><li>문제: 지상파 다중경로로 CIR이 수백 심볼에 달하는 강한 ISI. 기존 DFE는 slicer 오판정 시 feedback filter가 오히려 unintended ISI를 주입해 error propagation(bursty error) 발생.</li><li>모델: 시변 CIR <code>hk</code> + AWGN <code>w[k]</code>, Doppler fading. <code>y[k]=Σ hk[i]x[k-i]+w[k]</code>.</li><li>핵심 기법 1(DFSF): DFE의 feedback filter <code>gk</code>에서 가장 큰 <code>(D-1)</code>개 tap을 0으로 만든 modified filter <code>g̃k</code>를 써서, 지배적 ISI tap은 일부러 남긴다. 결과적으로 결합응답 <code>ck</code>가 D개 nonzero tap의 sparse 채널이 됨.</li><li>의미: 큰 tap을 feedback에서 제거하면 오판정 시 주입되는 unintended ISI가 줄어 error propagation이 완화됨. D는 성능/복잡도 trade-off(D=1이면 순수 DFE).</li><li>핵심 기법 2(적응): startup은 MMSE-DFE 해(식 (2),(3))로 <code>f0,g0</code> 초기화; tracking은 결합응답을 초기값 <code>c0</code>에 고정하도록 DD-LMS로 <code>fk,gk,g̃k</code>를 갱신(Algorithm 1). → BP detector가 static 채널로 인식해 구현 대폭 단순화.</li><li>구현 디테일: 채널이 크게 drift해 <code>g̃k</code> tap이 커지면 startup 재실행(주기적 reset).</li><li>최적화: decision-directed LMS(step <code>µf=µg=µg̃=10^-5</code>), 오차항 <code>e[k]</code>(DFE 기준)·<code>ẽ[k]</code>(<code>c0</code> 기준)로 각각 갱신.</li><li>결과: BP iteration 5회, <code>Lf=Lg=Lg̃=400</code>, <code>D=3</code>. Brazil A(정적)·CRC #4(fd=5Hz 동적) 채널에서 SER 10^-5 기준 기존 DFE 대비 약 1dB 이득.</li><li>한계: BP는 LDPC 복호가 아니라 sparse ISI 채널 등화에 쓰임. HW 미설계(시뮬만), NAND·binary LDPC 부호와 직접 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(belief propagation) equalizer</td><td>대응 없음</td><td>Prime ECC의 BP는 LDPC 부호 복호용, 본 논문은 채널 ISI 등화용으로 목적이 다름</td></tr><tr><td>DFSF/DD-LMS 채널 적응</td><td>대응 없음</td><td>NAND ECC에 채널 등화 개념 없음</td></tr><tr><td>8-VSB/ATSC 채널 모델</td><td>대응 없음</td><td>Prime ECC 채널은 AWGN/RBER/fixed-error (NAND)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BP를 LDPC 복호가 아닌 방송 채널 등화에 적용한 논문으로, NAND binary LDPC ECC와 대응 모듈이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6865484",
+  "title": "Hybrid DFSF-BP Equalization for ATSC DTV Receivers",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "DFSF(적응형 sparsening 피드백 필터)로 긴 ISI 채널을 D개 tap의 sparse 채널로 만든 뒤 BP equalizer로 잔여 ISI를 정정, DFE 대비 SER ~1dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 복호가 아니라 ATSC 8-VSB 채널의 ISI equalization에 BP를 적용 - NAND/부호 무관, 시뮬만",
+  "todo_check": "없음 (NAND binary LDPC ECC와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6865484---hybrid-dfsf-bp-equalization-for-atsc-dtv-receivers-2014-ieee">ieee:6865484 - Hybrid DFSF-BP Equalization for ATSC DTV Receivers (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

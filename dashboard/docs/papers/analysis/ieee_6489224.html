@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6489224</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6489224---quantization-absorbing-regions-and-practical-message-passing-decoders-2012-asilomar">ieee:6489224 - Quantization, Absorbing Regions and Practical Message Passing Decoders (2012, Asilomar)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.916</td></tr><tr><td>부호length</td><td>2209</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>메시지 양자화(Qa.b)별 지배 absorbing set이 달라짐을 보이고, 오류 프로파일이 disjoint한 두 양자화 디코더를 직렬 연결해 error-floor 1자릿수+ 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>soft-xor(SP) 디코더 기준이라 min-sum 재현 필요, 직렬 2단 복호로 실패분에 한해 재복호(평균복잡도는 낮지만 최악 latency 악화)</td></tr><tr><td>추가확인</td><td>Prime ECC min-sum 양자화 테이블에서 error-profile disjoint성 재현 여부, Q4.2→Q6.0류 2단 스케줄의 HW 비용</td></tr></tbody></table>
+<blockquote><p>총평: array-based QC-LDPC(스토리지, WD 공저)에서 메시지 양자화 선택이 지배 absorbing set을 바꾼다는 통찰로, disjoint 양자화 디코더 직렬화로 error-floor를 값싸게 낮춘 실용 논문. NAND 고rate QC-LDPC와 도메인 일치해 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: array-based(QC) binary LDPC, <code>(2209,2024)</code> γ=4·<code>(2209,1978)</code> γ=5(고rate ~0.89~0.92), AWGN 채널, 실용적 유한정밀 message passing(soft-xor) 디코더.</li><li>문제: 고신뢰(저FER) 영역 성능은 non-codeword 오류(trapping/absorbing set)가 지배하며, 이는 메시지 양자화 선택에 강하게 의존.</li><li>표기: <code>Qa.b</code> = 정수부 <code>a</code>비트·소수부 <code>b</code>비트·부호 1비트, 총 <code>a+b+1</code>비트 메시지 양자화(<code>Q0.0</code>=bit-flipping).</li><li>핵심 관찰: <code>a≥4</code>면 <code>b</code>는 성능 영향 미미, <code>a+b</code> 고정 시 전체 FER는 비슷하나 <strong>지배 absorbing set이 양자화별로 바뀜</strong>(예 γ=4: Q4.2→(6,4), Q5.1→(8,2)).</li><li>absorbing region: 특정 noise가 어느 absorbing set으로 수렴하는지가 부호+디코더(양자화)의 함수 — 양자화가 all-zero 수렴영역/각 absorbing region의 넓이를 재편.</li><li>핵심 통찰: <code>a+b</code> 동일해도 오류를 유발하는 noise 실현 집합이 <code>a</code>값에 따라 <strong>disjoint</strong> — Q4.2에서 실패한 시퀀스가 Q5.1/Q6.0에서 정상 복호 가능(토폴로지 overlap, Fig.6).</li><li>제안: 오류 프로파일이 disjoint한 두 양자화 디코더의 <strong>직렬 구성</strong> — decoder1로 전량 복호, 실패분만 decoder2로 재복호(예 Q4.2→Q6.0).</li><li>복잡도: 실패 시퀀스는 극소수라 decoder2(복잡·고반복 Q6.0) 추가에도 평균 복잡도 거의 불변, Q6.0은 dynamic range가 커 반복 늘리면 이득.</li><li>결과: 직렬 디코더가 구성 디코더 대비 <strong>최소 1자릿수</strong> FER 개선, boosting[11]·backtracking[7] 계열도 소폭 상회.</li><li>한계: HW 미설계, 시뮬만(6개월 클러스터), soft-xor(SP) 디코더 기준, gatecount/throughput 등 HW 수치 없음, 부호 최적화는 향후과제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>메시지 양자화 Qa.b (정수/소수 비트배분)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, ecc_data.h <code>PARAM_LLR</code></td><td>Prime ECC는 magnitude 양자화 테이블 사용, 비트배분-오류프로파일 연구 직접 접목 가능</td></tr><tr><td>지배 absorbing set / error-floor 분석</td><td>corner.cpp (수렴실패 추적)</td><td>error-floor·수렴실패 추적 목적과 부합</td></tr><tr><td>disjoint 양자화 디코더 직렬 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>2nd-pass 재복호를 iteration 스케줄에 추가하는 형태로 이식 여지</td></tr><tr><td>soft-xor(SP) CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>Prime ECC는 min-sum이라 CN 계열 상이(양자화 통찰은 재사용 가능)</td></tr><tr><td>array-based QC-LDPC 구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>둘 다 binary QC-LDPC로 부호 로드 계층 대응</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 스토리지용 binary QC-LDPC의 error-floor를 값싸게 낮추는 "양자화 다양성 직렬 복호" 통찰이 min-sum Prime ECC에도 개념 이식 가능하나, soft-xor 기준·HW 수치 부재로 재현·검증 부담 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6489224",
+  "title": "Quantization, Absorbing Regions and Practical Message Passing Decoders",
+  "year": 2012,
+  "venue": "Asilomar",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.916,
+  "code_length": "2209",
+  "soft_quant": "미상",
+  "key_contribution": "메시지 양자화(Qa.b)별 지배 absorbing set이 달라짐을 보이고, 오류 프로파일이 disjoint한 두 양자화 디코더를 직렬 연결해 error-floor 1자릿수+ 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "soft-xor(SP) 디코더 기준이라 min-sum 재현 필요, 직렬 2단 복호로 실패분에 한해 재복호(평균복잡도는 낮지만 최악 latency 악화)",
+  "todo_check": "Prime ECC min-sum 양자화 테이블에서 error-profile disjoint성 재현 여부, Q4.2→Q6.0류 2단 스케줄의 HW 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6489224---quantization-absorbing-regions-and-practical-message-passing-decoders-2012-asilomar">ieee:6489224 - Quantization, Absorbing Regions and Practical Message Passing Decoders (2012, Asilomar)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

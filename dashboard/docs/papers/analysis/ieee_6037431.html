@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6037431</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6037431---a-novel-architecture-for-scalable-high-throughput-multi-standard-ldpc-decoder-2011-euromicro-dsd">ieee:6037431 - A Novel Architecture for Scalable, High Throughput, Multi-Standard LDPC Decoder (2011, Euromicro DSD)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>가변 CN degree(dc≤32) 지원하는 완전병렬 "Tree-way" check node + block-level Channel Memory로 layered min-sum 고throughput·스케일러블 IP</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.764mm2@130nm (WiMAX, gatecount 미상)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.074~0.24Gbps (P=96 시 1.7Gbps)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMAX/WiFi 다표준 유연성이 목적이라 area overhead 큼(50%가 CN logic), 특정 부호 고정 시 이득 감소; error 성능 개선은 아님</td></tr><tr><td>추가확인</td><td>Tree-way CN(dc/2 comparator)이 Prime ECC의 min1/min2 CNU 및 z=32 병렬구조와 정합되는지, dc≤32 일반화 로직의 실제 gatecount 확인</td></tr></tbody></table>
+<blockquote><p>총평: dc 가변 완전병렬 check node + 충돌회피 memory 조직화라는 HW 기법은 Prime ECC 디코더 병렬화/라우팅에 참고가치 있으나, 다표준 유연성 지향이라 고정 QC-LDPC 대비 오버헤드가 크다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 WiMAX(802.16e)/WiFi(802.11n)의 구조적 QC-LDPC(base matrix HBASE + Z×Z circulant, rate 1/2~5/6, length 576~2304, Z=24~96)를 하나의 IP로 복호.</li><li>문제: min-sum 직렬 check node는 read/write latency가 <code>dc</code> clock이라 layered 스케줄·고throughput 실현이 어려움. 기존 병렬 CN([8][9])은 dc=6/8 고정.</li><li>복호는 layered(TDMP) min-sum: VN update를 <code>αij=αj-βij</code>로 합쳐 horizontal/vertical scan을 단일 scan으로, iteration 약 50%↓(throughput 2배).</li><li>핵심기법: "Tree-way" 완전병렬 CN — VN(leaf)에서 tree 순회로 min/second-min 계산, DVC(Direct VN Comparison)→MSC(Multiple Shuffled Comparison, 순환shift ACS network)→EC(Extrinsic Calc, shift 1/2) 3종 스테이지로 dc≤32까지 일반화.</li><li>CN 복잡도 <code>dc/2</code> comparator(기존 [8] <code>dc(1+0.5(log2 dc-1))</code>, [9] <code>dc+log2 dc-2</code> 대비 소형), sign product도 tree-way(XOR) 구조.</li><li>Table II로 각 dc별 clock cycle 수 <code>Ncc</code>·permutation 규정, SM(switch matrix) memory에 중간결과 저장·binary label 주소로 재활용.</li><li>Block-level Channel Memory: 단일 bank를 Nb circulant 그룹 병렬 bank로 분할, 같은 sub-iteration에서 충돌 최소로 접근(데이터 독립 열 판별 절차), WiMAX rate 전체를 8 bank 고정으로 지원(3/4-B는 4 clock 페널티).</li><li>Sub-block level memory로 스케일러블성 확보: <code>Z mod P=0</code>인 P에 대해 두 인접 VN을 <code>Z/P</code> 거리로 배치, circulant shift와 무관하게 P개 VN을 1 clock에 접근(Z=32,P=4 예시 검증).</li><li>결과(130nm ASIC 합성, 300MHz, 15 iter, 7-bit 양자화): throughput WiMAX 74~240Mbps / WiFi 141~249Mbps, area 2.76/2.74 mm2, TAR·DE 지표에서 다수 기존 대비 우수, P=96 시 1.7Gbps@4.5mm2.</li><li>한계: error 정정성능 개선이 아니라 HW throughput/flexibility 최적화, 다표준 유연성 비용으로 CN이 area의 ~50%, 실측(silicon) 아닌 합성 수준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Tree-way 완전병렬 CN(min1/min2)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum CN 연산부에 대응; dc 가변 병렬화 아이디어 참고 가능</td></tr><tr><td>layered(TDMP) min-sum 스케줄</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC의 Dual-Update(parity even/odd) 교대 스케줄과 유사 목적</td></tr><tr><td>block/sub-block Channel Memory 조직</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>z=32 병렬단위·라우팅 정합 검토 대상(중 난이도)</td></tr><tr><td>ACS 순환 permutation network</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>edge/MUX 선택 그래프 씨닝과 개념적으로 유사</td></tr><tr><td>soft LLR(7-bit) 양자화</td><td><code>channel.cpp</code> + <code>PARAM_LLR</code></td><td>Prime ECC는 hard/2SD/3SD, 7-bit soft는 미지원(정합 낮음)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — dc 가변 완전병렬 check node와 충돌회피 sub-block memory 조직화는 Prime ECC 디코더 병렬화/메모리 라우팅에 참고가치가 있으나, 다표준 유연성을 위한 오버헤드가 크고 error 성능 개선은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6037431",
+  "title": "A Novel Architecture for Scalable, High Throughput, Multi-Standard LDPC Decoder",
+  "year": 2011,
+  "venue": "Euromicro Conference on Digital System Design (DSD)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "가변 CN degree(dc&lt;=32) 지원 완전병렬 Tree-way check node + block-level Channel Memory로 layered min-sum 고throughput·스케일러블 IP",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.764mm2@130nm (gatecount 미상)",
+  "parallelism": "부분",
+  "throughput_gbps": 0.24,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiMAX/WiFi 다표준 유연성이 목적이라 area overhead 큼(50%가 CN logic), error 성능 개선은 아님",
+  "todo_check": "Tree-way CN(dc/2 comparator)이 Prime ECC min1/min2 CNU·z=32 구조와 정합되는지, dc&lt;=32 일반화 로직 실제 gatecount 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6037431---a-novel-architecture-for-scalable-high-throughput-multi-standard-ldpc-decoder-2011-euromicro-dsd">ieee:6037431 - A Novel Architecture for Scalable, High Throughput, Multi-Standard LDPC Decoder (2011, Euromicro DSD)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

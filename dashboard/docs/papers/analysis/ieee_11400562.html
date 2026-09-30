@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11400562</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11400562---restart-belief-a-general-quantum-ldpc-decoder-2026-ieee-communications-letters">ieee:11400562 - Restart Belief: A General Quantum LDPC Decoder (2026, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>48~144</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP가 수렴 실패 시 가장 신뢰도 낮은 LLR 큐비트에 에러를 강제 인가해 재시작하는 branch-and-bound식 QLDPC 디코더(RB) 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Quantum stabilizer(CSS) 코드와 depolarizing 채널 전용 설계로, classical binary NAND LDPC의 채널/신드롬 구조와 근본적으로 다름</td></tr><tr><td>추가확인</td><td>restart 시 최저-LLR 큐비트에 강제 에러를 주입하는 branch 탐색 아이디어가 classical min-sum의 stuck/oscillation 탈출 기법으로 일반화 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 양자 오류정정(QLDPC/CSS) 전용 BP 변형 디코더로, NAND classical binary LDPC와는 부호·채널·신드롬 구조가 이질적이라 직접 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 CSS 양자 QLDPC 코드([[n,k,d]] stabilizer code, 예: bivariate bicycle, surface, hypergraph product, generalized bicycle), depolarizing channel에서 X/Z 오류를 독립적으로 신드롬 기반 디코딩.</li><li>문제: quantum degeneracy(여러 오류 패턴이 동일 신드롬을 유발) 때문에 표준 BP(scaled min-sum)가 수렴 실패하는 경우가 많음.</li><li>채널 모델은 물리적 오류율 <code>p</code>의 depolarizing channel, 입력 LLR <code>p_in = log((1-p)/p)</code>.</li><li>핵심 기법(RB): 첫 root BP(<code>T_root</code> 반복) 실패 시, 출력 LLR을 오름차순 정렬하여 가장 낮은(불확실한) LLR 큐비트부터 순서대로 에러를 강제 인가(<code>e_bar</code>)하고 신드롬·입력LLR을 갱신 후 branch BP(<code>T_branch</code> 반복)를 재실행하는 branch-and-bound 방식.</li><li>핵심 식은 조기종료 조건: distance-specific(<code>w(ê) ≤ t</code>이면 최소가중치 해 확정)과 defect-specific(<code>w(s)/ξ &gt; t</code>이면 최소가중치 해 자동 인정) — 왜 필요한가: OSD 없이도 최소가중치 보장 및 불필요한 branch 탐색 생략.</li><li>확장: branch 개수 <code>η</code>(성능-지연 trade-off 파라미터)를 코드별로 exhaustive search로 튜닝해 코드 거리 <code>t</code>까지의 오류 패턴을 항상 정정하도록 보장(결정론적, RelayBP의 확률적 방식과 대비).</li><li>구현 디테일: 각 branch는 최대 <code>t-1</code>번의 BP 인스턴스로 구성되며, η개 branch는 서로 독립적이라 병렬 HW 매핑 가능(worst-case 복잡도 <code>O((tT_branch+T_root)n)</code>로 병렬화 시 감소).</li><li>별도 학습/최적화 절차 없음 — η는 코드별 exhaustive search로 사전 결정.</li><li>결과: bivariate bicycle([[144,12,12]] gross code), surface([[85,1,7]]), hypergraph product([[145,5,6]]), generalized bicycle([[48,6,8]]) 코드에서 BP/BPGD/RelayBP 대비 codeword error rate 개선, 대부분 코드에서 RelayBP보다 평균 BP iteration 수 감소(Table I).</li><li>한계: depolarizing channel 시뮬레이션만 수행(회로 레벨 노이즈 미반영), HW 미설계, quantum stabilizer 코드 전용이라 classical binary LDPC와 신드롬/오류모델 구조가 다름.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(scaled min-sum) 반복 디코딩 전체</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>알고리즘 골격(check-to-variable min-sum)은 유사하나 quantum 신드롬 기반 오류 추정이라 직접 대응 아님</td></tr><tr><td>restart 시 최저-LLR 큐비트 강제 에러 인가 및 branch 재실행</td><td>대응 없음</td><td>Prime ECC는 stuck 상황에서 branch-and-bound식 재시작 로직이 없음(현재는 Partial/Full CRC 조기종료만 존재)</td></tr><tr><td>distance/defect-specific 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료라는 목적은 유사하나, 판정 기준(코드 거리 기반 weight bound)이 CRC와 무관해 개념적 유사성만 있음</td></tr><tr><td>non-binary/quantum stabilizer 부호구조</td><td>대응 없음</td><td>Prime ECC는 binary QC-LDPC 전용, quantum CSS 부호 개념 자체가 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — quantum LDPC 전용 디코더로 부호·채널 모델이 Prime ECC(binary classical QC-LDPC)와 근본적으로 다르며, branch-and-bound 재시작 아이디어도 신드롬 기반 quantum 오류정정에 특화되어 있어 직접 이식보다는 개념적 참고 수준.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11400562",
+  "title": "Restart Belief: A General Quantum LDPC Decoder",
+  "year": 2026,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "48~144",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP가 수렴 실패 시 가장 신뢰도 낮은 LLR 큐비트에 에러를 강제 인가해 재시작하는 branch-and-bound식 QLDPC 디코더(RB) 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "Quantum stabilizer(CSS) 코드와 depolarizing 채널 전용 설계로, classical binary NAND LDPC의 채널/신드롬 구조와 근본적으로 다름",
+  "todo_check": "restart 시 최저-LLR 큐비트에 강제 에러를 주입하는 branch 탐색 아이디어가 classical min-sum의 stuck/oscillation 탈출 기법으로 일반화 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11400562---restart-belief-a-general-quantum-ldpc-decoder-2026-ieee-communications-letters">ieee:11400562 - Restart Belief: A General Quantum LDPC Decoder (2026, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7946147</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7946147---useful-mathematical-tools-for-capacity-approaching-codes-design-2017-ieee-communications-letters">ieee:7946147 - Useful Mathematical Tools for Capacity Approaching Codes Design (2017, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Gaussian approximation DE 임계값을 quadratic degeneracy로 "정적" 방정식화(2.6ms) + 가역 binary-input soft-output capacity 근사식</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>N/A</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 이론(부호설계 오프라인 도구), degree distribution 최적화만·실제 코드/HW/디코더 성능 무관</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: sum-product DE 임계값을 빠르게 계산하는 수학적 오프라인 설계도구 - 디코더/HW/NAND와 무관하고 이미 보유한 min-sum과도 접점 없어 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: memoryless binary-input continuous-output AWGN 채널 + sum-product 복호, regular/irregular LDPC의 noise threshold 추정(부호설계 이론).</li><li>문제: Chung et al.[2]의 Gaussian approximation DE는 임계값을 "수열 수렴 마지막 값"으로 정의하나 이를 구하는 방법은 경험적 trial-and-error뿐.</li><li>모델: DE 메시지 밀도를 Gaussian(regular)/Gaussian mixture(irregular)로 근사, 채널 LLR <code>u0</code> 평균 <code>2/σn^2</code>, 분산 <code>4/σn^2</code>.</li><li>핵심 기법: 임계값을 재귀 <code>t_l=g_s(t_{l-1})</code>의 수렴 경계로 보는 대신, <code>g_s(t)=t</code> and <code>g_s'(t)=1</code>(고정점 + <code>y=t</code>에 접함) 연립을 푸는 <strong>정적(static) quadratic degeneracy</strong> 문제로 변환.</li><li>핵심 식: <code>g_s(t)=φ^{-1}(1-(1-φ(s+(dv-1)t))^{dc-1})</code>(regular), irregular는 <code>λ,ρ</code> 차수분포로 일반화 - 접점 조건이 임계값 <code>s*</code>를 준다.</li><li>확장: <code>φ(x)=e^{αx^γ+β}</code> (<code>α=-0.4527,β=0.0218,γ=0.86</code>) 지수근사로 <code>φ^{-1}</code> 폐형 계산.</li><li>구현: Mathematica FindRoot로 연립 풀이, 코드당 2.6ms(기존 [2] 대비 최소 10배 빠름).</li><li>부가: binary-input soft-output AWGN capacity <code>C(γ)</code>의 가역 근사 <code>C1(γ)=1-e^{uγ^w+v}</code> (<code>u=-1.286,v=0.01022,w=0.9308</code>), 오차 &lt;0.008.</li><li>결과: rate-1/2 irregular(<code>dl=20,dr=9</code>)에서 <code>σ=0.9473</code>로 [2]와 일치, Shannon gap을 SNRgap(dB)로 재현.</li><li>한계: 순수 수학 도구·이론 검증만, 실제 디코더/HW/NAND 무관, degree distribution 최적화 보조 목적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| DE 임계값 계산 / degree distribution 설계 | 대응 없음 | 오프라인 부호설계 이론, 런타임 디코더/인코더 코드와 무관 |
+| sum-product(full-tanh) DE 분석 | 대응 없음 | Prime ECC는 min-sum 기반, full-tanh Sum-Product 미사용 |
+| binary-input soft-output capacity 근사 | 대응 없음 | LLR 양자화/threshold 테이블과 개념 층위 다름(채널 용량 이론) |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - sum-product DE 임계값을 빠르게 구하는 오프라인 수학 도구일 뿐 디코더/HW/NAND 어디에도 이식할 코드 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7946147",
+  "title": "Useful Mathematical Tools for Capacity Approaching Codes Design",
+  "year": 2017,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "Gaussian approximation DE 임계값을 quadratic degeneracy로 정적 방정식화(2.6ms) + 가역 binary-input soft-output capacity 근사식",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "N/A",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 이론(부호설계 오프라인 도구), degree distribution 최적화만·실제 코드/HW/디코더 성능 무관",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7946147---useful-mathematical-tools-for-capacity-approaching-codes-design-2017-ieee-communications-letters">ieee:7946147 - Useful Mathematical Tools for Capacity Approaching Codes Design (2017, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

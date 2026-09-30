@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5336268</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5336268---massively-parallel-implementation-of-cyclic-ldpc-codes-on-a-general-purpose-graphics-processing-unit-2009-ieee-sips">ieee:5336268 - Massively Parallel Implementation of Cyclic LDPC Codes on a General Purpose Graphics Processing Unit (2009, IEEE SiPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.87</td></tr><tr><td>부호length</td><td>1057~16513</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>cyclic/QC-LDPC H를 첫 행·열 인덱스만 저장해 GPU constant cache에 적재, SPA/MSA 복호 시뮬을 2배+ 가속</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GPU 부동소수점 시뮬 가속 툴로 복호알고리즘·부호설계·HW 개선 없음, BER는 CPU와 동일; Prime ECC(bit-exact C++ HW 시뮬)와 목적·플랫폼 상이</td></tr><tr><td>추가확인</td><td>대규모 BER 시뮬이 필요할 때 QC 순환 인덱스 압축 GPU 가속을 별도 툴로 활용 가능한지 정도(Prime ECC 본체와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: cyclic/QC-LDPC의 순환성으로 H를 극압축해 GPU on-chip 메모리에 넣어 복호 시뮬을 2배 이상 가속한 시뮬레이션 툴 논문, NAND ECC 알고리즘/HW 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (1057,813)·(4161,3431) PG-LDPC(projective geometry, cyclic·regular, (y,p)=(33,33)/(65,65)) 및 (1944,972) 802.11n QC-LDPC(irregular), BPSK+AWGN.</li><li>문제: LDPC BER 시뮬이 수일 소요, GPGPU가 유망하나 긴 부호/고weight면 H가 GPU on-chip 메모리(constant cache 64KB)를 초과해 느린 global memory 접근으로 성능 저하.</li><li>핵심 기법: cyclic 부호는 첫 행/열 인덱스 <code>r[y]</code>만 저장하고 <code>(r[k]+n) mod N</code>으로 전체 H 재구성 → 필요 인덱스가 <code>2Nγ</code>에서 <code>p+γ</code>로 급감, constant cache에 상주.</li><li>QC 확장: H가 <code>δ×δ</code> permutation(순환 shift) submatrix로 구성 → submatrix당 2 인덱스면 충분, 메모리 <code>2δpγ→2pγ</code>로 δ배 절감.</li><li>복호: 표준 SPA(식(1)-(3), <code>2·tanh⁻¹(∏tanh(|z|/2))</code>)와 normalized MSA(식(4)-(5), min 근사 + 밀도진화로 정한 정규화 계수 α).</li><li>CUDA 매핑: frame-by-frame + node별 병렬(check update M threads, bit update N threads), Z/L 메시지는 shared/global memory, 프레임 LLR·H는 constant cache broadcast.</li><li>multi-frame 대신 frame-by-frame 선택 이유: 분기·load imbalance·프레임 간 iteration 불균형 대기 회피.</li><li>warp(32 thread) 정렬 접근: 순환 인덱스 산술로 warp 내 동일 주소 접근 → constant memory 읽기가 register만큼 빨라짐(비순환이면 직렬화).</li><li>결과: GTX 285에서 CPU 대비 SPA 30~40배, MSA 23~25배 speedup; 순환압축 미사용 대비 SPA 2배+(&gt;200%), QC 1.5배(150%); (1057,813) FER 10⁻⁶ 추정에 CPU 60일→GPU 2일.</li><li>한계: 부동소수점 시뮬 가속 툴로 BER는 CPU와 동일, 복호 성능·부호설계·ECC HW 개선 없음, normalized MSA는 SPA보다 iteration 더 많음((4161,3431) 2964 vs 1491).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA/normalized MSA 복호</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>표준 min-sum 계열, Prime ECC가 이미 보유(중복)</td></tr><tr><td>cyclic/QC H 순환 인덱스 압축 저장</td><td>ecc_data.h <code>PCM_b</code>(base+shift), ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 이미 base+shift(circulant)로 QC를 압축 보유 → 새 이득 없음</td></tr><tr><td>GPU thread/메모리(constant cache·warp) 병렬화</td><td>대응 없음</td><td>Prime ECC는 bit-exact HW 클록모델(C++), GPGPU 시뮬 최적화와 무관</td></tr><tr><td>BER 시뮬 가속(수일→수시간)</td><td>대응 없음</td><td>Prime ECC는 HW 정합 시뮬 목적, Monte-Carlo GPU 가속 툴과 목적 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — GPGPU 부동소수점 시뮬 가속이 핵심으로 Prime ECC(NAND binary QC-LDPC의 bit-exact HW 시뮬)와 목적·플랫폼이 다르고, QC 순환압축은 이미 base+shift로 보유해 이식할 신규 기법이 사실상 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:5336268",
+  "title": "Massively Parallel Implementation of Cyclic LDPC Codes on a General Purpose Graphics Processing Unit",
+  "year": 2009,
+  "venue": "IEEE SiPS",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1057~16513",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "cyclic/QC-LDPC H를 첫 행·열 인덱스만 저장해 GPU constant cache에 적재, SPA/MSA 복호 시뮬을 2배+ 가속",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "GPU 부동소수점 시뮬 가속 툴로 복호알고리즘·부호설계·HW 개선 없음, BER는 CPU와 동일; Prime ECC(bit-exact C++ HW 시뮬)와 목적·플랫폼 상이",
+  "todo_check": "대규모 BER 시뮬 필요 시 QC 순환 인덱스 압축 GPU 가속을 별도 툴로 활용 가능한지 정도(Prime ECC 본체와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5336268---massively-parallel-implementation-of-cyclic-ldpc-codes-on-a-general-purpose-graphics-processing-unit-2009-ieee-sips">ieee:5336268 - Massively Parallel Implementation of Cyclic LDPC Codes on a General Purpose Graphics Processing Unit (2009, IEEE SiPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9336038</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9336038---a-miniaturized-ldpc-encoder-two-layer-architecture-for-ccsds-near-earth-standard-2021-ieee-tcas-ii">ieee:9336038 - A Miniaturized LDPC Encoder: Two-Layer Architecture for CCSDS Near-Earth Standard (2021, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>공통 부분식(CS) 그룹핑+2계층(common/private) 구조와 동기입력 합산순서 재배열로 인코더 레지스터/LUT 대폭 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>1658 LUT / 1038 FF @Virtex-5</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>4.69Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CCSDS C2 (8176,7154) 특정 부호의 생성행렬 B에 결속된 CS 그룹핑, 우리 dual-diagonal 인코더와 구조 상이</td></tr><tr><td>추가확인</td><td>CS 그룹핑 최적화가 Prime ECC 부호(z=32, dual-diagonal) 생성행렬에서 동일 이득을 주는지 불확실</td></tr></tbody></table>
+<blockquote><p>총평: C2 특정 부호 생성행렬 곱셈 회로의 자원 최적화(공통식 공유) 논문으로, 복호·정정능력과 무관하고 우리 dual-diagonal 인코더와 구조가 달라 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 CCSDS Near-Earth C2 QC-LDPC <code>(8176,7154)</code>, rate 0.875, H는 2×16개 <code>511×511</code> 순환 부행렬로 구성.</li><li>문제: 기존 C2 인코더가 고throughput에서 논리자원·레지스터를 과다 사용 — 면적 효율 개선 필요.</li><li>인코딩은 direct method: 패리티 <code>p = sB</code> (<code>p</code> 1022bit, <code>B</code>는 14×2개 <code>511×511</code> 순환 부행렬), 14블록 병렬 곱셈.</li><li>기본 구조: 부행렬 첫 행 <code>bi</code>만 저장하고 순환 우시프트를 shift register의 좌시프트로 모사, 첫 행 원소가 1이면 XOR로 합산.</li><li>레지스터 최적화: 동기 입력 시 합산 순서를 재배열(식 12) — 14블록을 먼저 합하고 511 순환시프트 → 임시저장 레지스터 대량 절감, 대형 가산기 제거.</li><li>논리 최적화: 출력 <code>Om,On</code>이 공유하는 공통 부분식(CS) <code>bi,m×si,f</code>를 추출, 회로를 common network + private network 2계층으로 분리해 중복 제거.</li><li>그룹핑 알고리즘(Alg.1): 1022개 출력을 CS 최대 쌍으로 511그룹화, CS&lt;10인 4그룹은 3-출력 그룹으로 재편해 CS&gt;10 보장.</li><li>전처리/제어: 병렬도 14가 2의 거듭제곱이 아닌 문제를, 2bit 제어명령(C0,C1)을 14bit 입력에 삽입해 16bit화, counter/FSM 대신 configuration register로 제어.</li><li>결과: Virtex-5 FPGA 구현, 1658 LUT / 1038 FF, 335MHz, 4.69Gbps, 인코딩 511 clock; [8] 대비 논리 76%↓, [13] 대비 FF 87%↓.</li><li>한계: C2 특정 부호에 결속, 복호/정정능력 무관, 부호설계 기여 없음, ASIC 아닌 FPGA 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<p>대상이 encoder이므로 디코더 성능 섹션(C 표 성능 항목)은 N/A. 인코더 관점 모듈 매핑만 참고:</p>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>인코딩 회로(생성행렬 곱, 순환 시프트)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>우리는 dual-diagonal 인코딩이라 direct-method CS 공유와 구조 상이</td></tr><tr><td>부호 PCM/생성행렬 구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code>, <code>encoder.h</code></td><td>C2 (511×511) 순환구조 vs 우리 z=32 base+shift — 부호 자체가 다름</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 특정 CCSDS 부호 생성행렬의 FPGA 자원 최적화 기법으로, 복호 성능·정정능력과 무관하고 Prime ECC의 dual-diagonal 인코더와 구조가 달라 직접 이식 이득이 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9336038",
+  "title": "A Miniaturized LDPC Encoder: Two-Layer Architecture for CCSDS Near-Earth Standard",
+  "year": 2021,
+  "venue": "IEEE TCAS-II",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": "8176",
+  "soft_quant": "무관",
+  "key_contribution": "공통 부분식(CS) 그룹핑+2계층(common/private) 구조와 동기입력 합산순서 재배열로 인코더 레지스터/LUT 대폭 절감",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "1658 LUT / 1038 FF @Virtex-5",
+  "parallelism": "부분",
+  "throughput_gbps": 4.69,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CCSDS C2 (8176,7154) 특정 부호의 생성행렬 B에 결속된 CS 그룹핑, 우리 dual-diagonal 인코더와 구조 상이",
+  "todo_check": "CS 그룹핑 최적화가 Prime ECC 부호(z=32, dual-diagonal) 생성행렬에서 동일 이득을 주는지 불확실"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9336038---a-miniaturized-ldpc-encoder-two-layer-architecture-for-ccsds-near-earth-standard-2021-ieee-tcas-ii">ieee:9336038 - A Miniaturized LDPC Encoder: Two-Layer Architecture for CCSDS Near-Earth Standard (2021, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6275451</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6275451---deeply-pipelined-digit-serial-ldpc-decoding-2012-ieee-tcas-i">ieee:6275451 - Deeply Pipelined Digit-Serial LDPC Decoding (2012, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.841</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>signed-binary redundant 표기 기반 digit-online 산술로 MSD-first 직렬 offset min-sum을 완전병렬·deep pipeline 구현, 배선혼잡 완화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>10.89mm2@65nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>41.8 (2x4bit) / 20.9 (10bit)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>10GBASE-T 이더넷 특화·soft 4~10bit 정밀도 전제라 NAND hard/2~3bit 저정밀·QC-LDPC와 부정합, 배선완화용 산술표기 변경은 알고리즘 성능 이득 없음</td></tr><tr><td>추가확인</td><td>Prime ECC의 z=32 부분병렬 pipeline과 완전병렬 digit-serial가 면적/throughput에서 실이득 교차점 있는지</td></tr></tbody></table>
+<blockquote><p>총평: offset min-sum을 signed-binary digit-online 산술로 재구현해 배선혼잡을 완화하는 회로설계 논문으로, 알고리즘·부호 자체 이득이 없고 soft 다bit·10GBASE-T 전제라 NAND용 QC-LDPC 코드베이스에 이식가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: (2048,1723) 10GBASE-T RS-LDPC(rate≈0.841), 65nm ASIC post-layout, 완전병렬 message-passing 디코더.</li><li>문제: 완전병렬 LDPC 디코더는 배선혼잡(wiring congestion)이 면적·타이밍을 지배 → logic density 저하. bit-serial은 배선은 줄이나 pipeline 잠재력 미실현.</li><li>핵심 아이디어: <code>digit-online</code> 산술 — signed-binary(redundant) 표기로 carry 전파를 제한해 MSD→LSD 방향 직렬 처리, 메시지 병렬 저장 불필요.</li><li>복호 알고리즘: <code>offset min-sum</code>(식 3), CN은 min1/min2 selection network + offset 감산, 출력 sign은 입력 sign XOR.</li><li>핵심 표기: signed-binary digit를 (음/양) 2비트로 인코딩(식 4), 절대값·부호곱은 digit 부정으로 단순 처리, saturation은 CN 정렬망 출력에서 2개 값만.</li><li>VN 설계: signed-binary adder로 채널값+타 CN 입력 합산(식 1), degree별 adder 재사용, 동기화 FF 최소화로 초기지연 균형.</li><li>CN 설계: sign/magnitude FSM 분리 → offset → 61비교/8레벨 selection network(degree-32)로 min1/min2, first-min 표시 신호로 MUX 선택.</li><li>정밀도 확장: bit-parallel과 달리 pipeline stage만 늘리면 정밀도 증가, throughput/area가 <code>O(1/p)</code>로 우수(다bit일수록 유리).</li><li>결과: 65nm 10.89mm2, 980MHz, 12-stage pipeline으로 1x10bit(20.9Gb/s) 또는 2x4bit(41.8Gb/s), 80% 밀도에서 배선혼잡 없음, 10bit는 4bit 대비 0.1dB 이득뿐, early termination으로 5.5dB에서 2x speedup.</li><li>한계: 특수 부호설계·특수 알고리즘 불요라 함(범용성)이나 실제로는 10GBASE-T·soft 다bit 전제, 정정성능 개선은 없고 배선/면적 효율만 기여.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset min-sum CN(min1/min2, sign XOR)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>알고리즘은 동일 계열이나 Prime ECC는 이미 min-sum 보유, 신규성 없음</td></tr><tr><td>VN 가산 / 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>VN_Cal_HD()</code></td><td>개념 대응만, digit-serial 산술은 bit-exact SW 시뮬과 무관</td></tr><tr><td>early termination(check 만족 AND)</td><td>full_CRC.cpp, partial_CRC.cpp</td><td>조기종료 목적 유사하나 Prime ECC는 CRC 기반, syndrome-AND는 별개 방식</td></tr><tr><td>LLR 정밀도/양자화</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>논문은 4~10bit soft 전제로 Prime ECC의 hard/2~3bit과 부정합</td></tr><tr><td>digit-online signed-binary 산술회로</td><td>대응 없음</td><td>HW 수치표기 최적화로 SW bit-exact 시뮬 대응 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 기여가 signed-binary digit-online 산술이라는 HW 배선완화 기법에 국한되고 알고리즘·부호 자체 이득이 없으며, 10GBASE-T·soft 4~10bit 전제가 NAND용 hard/저정밀 QC-LDPC와 맞지 않는다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6275451",
+  "title": "Deeply Pipelined Digit-Serial LDPC Decoding",
+  "year": 2012,
+  "venue": "IEEE TCAS-I",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.841,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "signed-binary redundant 표기 기반 digit-online 산술로 MSD-first 직렬 offset min-sum을 완전병렬 deep pipeline 구현, 배선혼잡 완화",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "10.89mm2@65nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 41.8,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "10GBASE-T 이더넷 특화·soft 4~10bit 정밀도 전제라 NAND hard/2~3bit 저정밀·QC-LDPC와 부정합, 배선완화용 산술표기 변경은 알고리즘 성능 이득 없음",
+  "todo_check": "Prime ECC의 z=32 부분병렬 pipeline과 완전병렬 digit-serial가 면적/throughput에서 실이득 교차점 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6275451---deeply-pipelined-digit-serial-ldpc-decoding-2012-ieee-tcas-i">ieee:6275451 - Deeply Pipelined Digit-Serial LDPC Decoding (2012, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

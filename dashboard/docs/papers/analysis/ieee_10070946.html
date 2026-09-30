@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10070946</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10070946---mgc-multiple-gray-code-for-3d-nand-flash-based-high-density-ssds-2023-ieee-hpca">ieee:10070946 - MGC: Multiple-Gray-Code for 3D NAND Flash based High-Density SSDs (2023, IEEE HPCA)</h3>
+<h2 id="a-분류표">A. 분류표</h2>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>QLC 3D NAND용 다중 gray-code(UGC/BGC)+TSP를 FTL에서 워크로드·신뢰도단계별 런타임 중재</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 고정 블랙박스(72bit/1KiB 정정, tLDPC=20us, soft-decision 언급뿐), 부호/디코더 기여 전무</td></tr><tr><td>추가확인</td><td>gray-code별 nSENSE·retry-RBER 모델(식3,4)이 우리 soft-read/LLR 스케줄 튜닝 입력으로 참고될지</td></tr></tbody></table>
+<blockquote><p>총평: NAND 스토리지 시스템/FTL 최적화 논문으로 LDPC ECC를 소비만 하며, 부호설계·디코더·HW 이식 대상이 없어 이식성 하.</p></blockquote>
+<h2 id="b-알고리즘-요약">B. 알고리즘 요약</h2>
+<ol><li>시스템: QLC(4bit/cell) 3D NAND SSD, WL당 LSB/CSB/MSB/TSB 4페이지, gray-code GC(A,B,C,D)로 16레벨 매핑(A+B+C+D=15), LDPC ECC는 페이지당 72bit/1KiB 정정.</li><li>문제: 고정 gray-code는 read/write 성능·신뢰도 요구를 동시에 못 맞춤(UGC=빠른 쓰기·느린 읽기, BGC=반대).</li><li>모델: 페이지 read latency <code>tR = nSENSE * tSENSE</code>, 총 read <code>tREAD=(1+nRETRY)*(tR+tDMA+tLDPC)</code>; TSP(2m,2n)-GC 호환조건 A+B&lt;2m 등.</li><li>핵심기법1: MGC — 컨트롤러에 다중 encoding table + 다중 TSP(4,16)/(16,16)를 넣고 블록단위로 UGC/BGC 선택, GCB 비트맵으로 추적.</li><li>의미: 빠른 프로그래밍(UGC+TSP4,16)과 좋은 읽기·신뢰도(BGC+TSP16,16) 장점을 상황별로 취함.</li><li>핵심기법2: MGC-FTL — (a) 접근특성 기반 중재(read-only→BGC, write-only→UGC, hot-read 데이터 변환), (b) 신뢰도단계(Young/Middle/Old) 인지 중재.</li><li>구현: encoding table 16엔트리, mapping table 오버헤드 flash면적 0.07% 미만, GC 전환 비용 대비 read 이득 휴리스틱으로 threshold 결정.</li><li>신뢰도모델: 실측 RBER 기반 retry 모델(식3,4), 재시도마다 RBER δ=20% 감소, 초과 시 LDPC soft-decision 활성.</li><li>결과: SSDsim(3D QLC 확장)에서 MGC/MGC_Stage가 UGC/BGC/UGC_RLV 대비 read/write·lifetime 개선(정확 수치는 그림, 본문 확정치 미상).</li><li>한계: LDPC는 파라미터(정정능력·지연)만 가진 고정 블록으로, 부호설계·디코더 알고리즘·HW 기여 없음; 순수 시뮬(SSDsim), RTL/ASIC 없음.</li></ol>
+<h2 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h2>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>gray-code별 nSENSE→RBER→retry 모델(식3,4)</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read/에러주입 파라미터의 시스템측 근거로 간접 참고만 가능</td></tr><tr><td>LDPC soft-decision 재시도 트리거</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>LDPC를 호출만, 디코더 내부 개선 없음</td></tr><tr><td>다중 gray-code/TSP FTL 중재</td><td>대응 없음</td><td>FTL/스토리지 계층으로 ECC 코드베이스 밖</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND 신뢰도·읽기비용 맥락(nSENSE↔RBER↔retry)은 배경으로 유용하나, Prime ECC의 부호설계/디코더/HW에 떼어 이식할 알고리즘 요소가 없음.</p>
+<h2 id="d-json-블록">D. JSON 블록</h2>
+<pre><code>{
+  "id": "ieee:10070946",
+  "title": "MGC: Multiple-Gray-Code for 3D NAND Flash based High-Density SSDs",
+  "year": 2023,
+  "venue": "IEEE HPCA",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "QLC 3D NAND용 다중 gray-code(UGC/BGC)+TSP를 FTL에서 워크로드·신뢰도단계별 런타임 중재",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 고정 블랙박스(72bit/1KiB 정정, tLDPC=20us, soft-decision 언급뿐), 부호/디코더 기여 전무",
+  "todo_check": "gray-code별 nSENSE·retry-RBER 모델(식3,4)이 우리 soft-read/LLR 스케줄 튜닝 입력으로 참고될지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10070946---mgc-multiple-gray-code-for-3d-nand-flash-based-high-density-ssds-2023-ieee-hpca">ieee:10070946 - MGC: Multiple-Gray-Code for 3D NAND Flash based High-Density SSDs (2023, IEEE HPCA)</a></li><li class="h2"><a href="#a-분류표">A. 분류표</a></li><li class="h2"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h2"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h2"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

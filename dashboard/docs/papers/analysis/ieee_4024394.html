@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4024394</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4024394---a-structured-ldpc-code-construction-for-efficient-encoder-design-2006-ieee-icc">ieee:4024394 - A Structured LDPC Code Construction for Efficient Encoder Design (2006, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>384~960</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>두 개의 eIRA(dual-diagonal) constituent 코드를 link matrix로 병렬 연결한 구조로, parity 계산을 두 블록에서 동시 처리해 인코딩 latency를 절반으로 줄이거나 throughput을 2배로 높이는 구조 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>AWGN 채널·무선(802.16e급) 코드 길이(수백~1천 bit) 대상 시뮬레이션뿐이며 HW 합성·실측 없음, dual-diagonal 자체는 Prime ECC가 이미 보유해 신규성은 "병렬 2-block 구조"와 "4-cycle 제거+거리 프로파일 최적화" 부분에 한정</td></tr><tr><td>추가확인</td><td>link matrix(A1/A2) 및 짧은 사이클 제거 알고리즘이 대용량 NAND rate(~0.9)/length(수 KB)에서도 유효한지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: dual-diagonal 인코더를 병렬화하여 latency/throughput을 개선한 구조 논문으로, Prime ECC가 이미 dual-diagonal 인코더를 보유한 만큼 부분적 참고 가치(병렬 2-way 구조, 짧은 사이클 제거법)가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>목표는 medium-size(수 kb) LDPC 코드의 HW 효율적 인코더 설계이며, <code>H=[Hs Hp]</code> 구조(<code>Hp</code>는 dual-diagonal 삼각행렬)로 parity를 <code>p^T = Hp^-1 v^T</code>(선형 시간)로 계산.</li><li>기존 dual-diagonal(eIRA) 인코더는 parity bit를 순차(serial) 계산해 latency가 parity bit 수 <code>M</code>에 비례하는 문제가 있음.</li><li>채널모델은 AWGN(QPSK), rate 1/2 및 punctured rate 3/5, 2/3 코드로 시뮬레이션.</li><li>핵심 기법은 두 개의 eIRA 코드를 결합한 신규 parity check 행렬 <code>H=[[H1,A1,Hp,0],[A2,H2,0,Hp]]</code>(<code>A1,A2</code>는 link matrix)로, 정보워드를 <code>c1,c2</code> 두 블록으로 나눠 parity <code>p1,p2</code>를 동시(병렬) 계산.</li><li><code>p1^T = Hp^-1(H1c1^T + A1c2^T)</code>, <code>p2^T = Hp^-1(H2c2^T + A2c1^T)</code> — link matrix가 두 블록 간 정보를 교환해 concatenation 성능 저하를 방지.</li><li>확장 기법으로 puncturing 규칙(<code>Rc ≤ R ≤ 2Rc/(Rc+1)</code>, parity bit를 alternate 패턴으로 천공)을 제시, 인접한 두 parity bit가 동시에 천공되지 않도록 제약.</li><li>부수 트릭: 길이-4 사이클을 완전탐색으로 제거하는 2단계 알고리즘(전체 파라미터 집합에서 4-cycle 없는 <code>Hi</code> 선택 → link matrix 포함 global graph에서도 4-cycle 없는 조합 선택), Pi-rotation 행렬을 constituent code 예시로 사용.</li><li>최적화 절차는 error impulse method 기반 weight distribution 계산(<code>Aw,h</code> 조합식)으로 최소거리(distance profile) 극대화 파라미터 탐색.</li><li>결과: K=60byte rate 1/2 코드에서 제안 구조가 표준 Pi-rotation 코드와 유사한 BER 성능을 유지하면서 인코딩 latency를 2배 절감(throughput 2배 개선 가능).</li><li>한계는 AWGN·무선 통신(수백~1천 bit) 대상 시뮬레이션뿐이며 HW 합성/게이트카운트 등 실제 구현 검증이 없고, 디코더 측 이점은 "향후 과제"로만 언급.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Dual-diagonal parity 계산 구조(<code>Hp</code>, 미분인코더)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 인코더 보유(§3) — 본 논문의 병렬 2-block 구조는 인코더 latency 개선 아이디어로 참고 가능</td></tr><tr><td>Link matrix 기반 병렬 인코딩(2-way 분할)</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>dual-update column 재배치와 유사 개념(병렬 처리 단위 분할)이나 정확한 대응은 불명확</td></tr><tr><td>짧은 사이클(length-4) 제거 알고리즘</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 구성 시 사이클 제거는 표준 설계 규칙과 유사, 특별한 신규 이식 요소는 적음</td></tr><tr><td>Puncturing 패턴 설계</td><td>대응 없음</td><td>Prime ECC는 고정 rate QC-LDPC로 puncturing 스킴 미보유</td></tr></tbody></table>
+<p>적용 가치: 중간 — dual-diagonal 인코더를 이미 보유한 Prime ECC 입장에서 병렬 2-block latency 개선 구조는 참고할 만하나, 검증 수준이 시뮬뿐이고 코드 길이/rate가 NAND ECC와 상당히 다름.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4024394",
+  "title": "A Structured LDPC Code Construction for Efficient Encoder Design",
+  "year": 2006,
+  "venue": "IEEE ICC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "384~960",
+  "soft_quant": "무관",
+  "key_contribution": "두 개의 eIRA(dual-diagonal) constituent 코드를 link matrix로 병렬 연결해 parity 계산을 동시 처리, 인코딩 latency를 절반으로 절감하는 구조",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "AWGN 채널·무선급 코드 길이(수백~1천 bit) 시뮬레이션뿐이며 HW 합성·실측 없음, dual-diagonal 자체는 Prime ECC가 이미 보유",
+  "todo_check": "link matrix 및 짧은 사이클 제거 알고리즘이 대용량 NAND rate(~0.9)/length(수 KB)에서도 유효한지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4024394---a-structured-ldpc-code-construction-for-efficient-encoder-design-2006-ieee-icc">ieee:4024394 - A Structured LDPC Code Construction for Efficient Encoder Design (2006, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

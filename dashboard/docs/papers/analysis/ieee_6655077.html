@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6655077</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6655077---spatially-coupled-streaming-modulation-2013-ieee-icc">ieee:6655077 - Spatially Coupled Streaming Modulation (2013, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>LDPCCC permutor 기반 spatially coupled 변조 포맷으로 AWGN 용량 근접(PAM 초과)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC 디코더/부호설계가 아닌 실수영역 변조(modulation) 포맷; AWGN 통신 특화, NAND 무관</td></tr><tr><td>추가확인</td><td>threshold saturation 개념 외 NAND ECC에 재사용할 요소는 사실상 없음</td></tr></tbody></table>
+<blockquote><p>총평: LDPCCC permutor를 실수영역 합으로 쓰는 spatially-coupled 변조 이론(AWGN 용량 근접)으로, NAND binary LDPC ECC와 무관해 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 실수 AWGN 채널, streaming 데이터 전송용 신규 변조 포맷(FEC 부호는 별도, LDPCCC 권장).</li><li>문제: 기존 PAM/QAM·multi-level coding은 용량 근접에 다중 rate 최적화·interleaver·turbo 피드백 필요 → 단순하며 용량달성하는 변조를 원함.</li><li>핵심 구성: 이진 부호화열 <code>v ∈ {−1,1}</code>을 multiple convolutional permutor(LDPCCC의 semi-infinite H, 행 M개·열 L개 ones)로 복제·치환.</li><li>변조신호 <code>x = vH</code>를 실수영역(모듈로-2 아님) 합으로 계산 → L개 데이터 스트림이 offset을 두고 superposition(=spatial coupling).</li><li>각 bit <code>v_j</code>는 M번 복제되어 <code>T(j)</code> 위치에 퍼지고, 수신 <code>y = sqrt(P/L)x + n</code>.</li><li>복호는 2단계: (1)반복 bit 추정 + 병렬 간섭제거, (2)FEC 디코딩(피드백 루프 불필요).</li><li>추정: 잡음+간섭 벡터 <code>ξ_j</code>를 CLT로 Gaussian 근사, MMSE 필터 <code>w_j=(I+h*R_j^-1 h)^-1 h*R_j^-1</code>로 <code>z_j</code> 산출, <code>v̂_j = tanh(z_j γ_j)</code>.</li><li>성능분석: SNR 재귀 <code>γ_{i,t}=(P/L)Σ 1/σ^2</code>, 간섭전력 <code>σ^2_{i,t}=α(P/L)Σg(γ_{i-1})+1</code>(<code>g</code>=MMSE 함수), 디코딩 성공조건 <code>γ_{I,t}&gt;θ</code>(FEC threshold), threshold saturation 성립.</li><li>결과: modulation load α∈[2,6]에서 통신 rate가 2^M-PAM 용량 초과, SNR 커질수록 AWGN 용량과의 gap 소멸(Thm.1, <code>α*≈C_AWGN</code>, 이진부호 rate≈1).</li><li>한계: 순수 이론(시뮬 곡선만), HW 미설계; ECC 디코더/부호설계가 아니라 변조 포맷이며 NAND와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<p>대상이 other(변조 포맷)이므로 C섹션 전부 N/A.</p>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>spatially coupled 변조 / MMSE 간섭제거</td><td>대응 없음</td><td>실수영역 변조·통신 채널 기법으로 binary LDPC 복호와 무관</td></tr><tr><td>LDPCCC permutor(H) 구조</td><td>대응 없음</td><td>QC-LDPC block 부호(Prime ECC)와 다른 convolutional 구조</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — AWGN 통신용 변조 이론으로, NAND binary QC-LDPC ECC 디코더/부호설계에 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6655077",
+  "title": "Spatially Coupled Streaming Modulation",
+  "year": 2013,
+  "venue": "IEEE ICC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "SC-LDPC",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "LDPCCC permutor 기반 spatially coupled 변조 포맷으로 AWGN 용량 근접(PAM 초과)",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC 디코더/부호설계가 아닌 실수영역 변조(modulation) 포맷; AWGN 통신 특화, NAND 무관",
+  "todo_check": "threshold saturation 개념 외 NAND ECC에 재사용할 요소는 사실상 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6655077---spatially-coupled-streaming-modulation-2013-ieee-icc">ieee:6655077 - Spatially Coupled Streaming Modulation (2013, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8530965</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8530965---a-new-efficient-adaptive-normalized-min-sum-decoder-for-irregular-ldpc-codes-in-ofdm-2018-ieee">ieee:8530965 - A New Efficient Adaptive Normalized Min-Sum Decoder for Irregular LDPC Codes in OFDM (2018, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1612</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ANMS + joint row-column을 결합(JANMS): 수직위상을 수평위상에 병합하고 message suppression으로 waterfall·error-floor 동시 개선, 수렴 iteration 절반</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>joint row-column은 순차 행처리라 Prime ECC의 z=32 row-병렬 파이프라인과 스케줄이 충돌, HW 미설계</td></tr><tr><td>추가확인</td><td>joint 병합 스케줄을 병렬 min-sum HW에 태울 때 수렴이득이 유지되는지</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 성능·iteration 개선(waterfall+error-floor)이라 관심 영역이지만 순차 joint row-column 스케줄이 Prime ECC 병렬 구조와 정합되기 어려워 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>code rate <code>1/2</code>, 길이 <code>1612</code> PEG 생성 irregular LDPC (VN 분포 <code>λ(x)=0.3524x+0.2665x²+0.3812x⁷</code>, CN 분포 <code>ρ(x)=0.5673x⁵+0.4327x⁶</code>), OFDM(128-pt IFFT, CP 32) 시스템.</li><li>문제: NMS/ANMS는 irregular code에서 error-floor가 높고 수렴이 느림. FER 성능도 저조.</li><li>채널: BPSK + OFDM 멀티캐리어, ISI 방지용 cyclic prefix. 명시적 noise 모델은 AWGN 가정.</li><li>핵심 기법: ANMS의 message suppression(<code>if hᵀx≡1 mod2 then β=η·β</code>)에 joint row-column 스케줄을 결합. 각 행 처리 직후 곧바로 VN LLR과 extrinsic을 갱신(수직위상을 수평위상에 병합).</li><li>갱신식 (9)~(12): <code>α=γ-β</code>, 정규화 min-sum <code>β=μ·∏sgn·min</code>, suppression, <code>γ=α+β</code>를 M개 행에 대해 순차 수행. 곧바로 정보가 전파돼 수렴 가속.</li><li>확장: 두 개의 정규화 인자(<code>μ=0.85</code>, <code>η=0.88</code>) 사용. QC-LDPC의 자연스러운 degree-decreasing 행순서 활용을 제안.</li><li>구현 트릭: H 행을 가중치 내림차순으로 재배열 → 고가중 check node 먼저 처리해 저가중 노드에 신뢰정보 제공. 인코딩은 Gaussian elimination(행 가중 보존).</li><li>학습/최적화: 별도 학습 없음, 정규화·suppression 인자는 수동 설정.</li><li>결과: <code>Eb/N0=2.75dB</code>에서 BER&lt;10⁻⁵ 도달에 JANMS 8 iter vs ANMS 16 iter (절반). error-floor에서 FER이 sum-product와 근사, 재배열 후 추가 개선.</li><li>한계: HW 미설계, 순차 행처리 기반이라 병렬화 언급 없음, OFDM 단일 채널·단일 code 검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>정규화 min-sum CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC의 min-sum과 직접 대응, 정규화 인자만 추가</td></tr><tr><td>message suppression / adaptive 정규화</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration별 LLR 테이블에 정규화·suppression 인자 결합 가능</td></tr><tr><td>joint row-column(수직↔수평 병합) 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>Prime ECC의 dual-update/row-병렬 스케줄과 충돌 가능, 재설계 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 정규화·suppression은 쉽게 얹을 수 있으나 핵심인 순차 joint row-column 스케줄이 z=32 row-병렬 파이프라인과 정합되지 않아 이득 유지가 불확실.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8530965",
+  "title": "A New Efficient Adaptive Normalized Min-Sum Decoder for Irregular LDPC Codes in OFDM",
+  "year": 2018,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1612",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ANMS + joint row-column 결합(JANMS): 수직위상을 수평위상에 병합, message suppression으로 waterfall·error-floor 동시 개선, 수렴 iteration 절반",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "joint row-column은 순차 행처리라 z=32 row-병렬 파이프라인과 스케줄 충돌, HW 미설계",
+  "todo_check": "joint 병합 스케줄을 병렬 min-sum HW에 태울 때 수렴이득이 유지되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8530965---a-new-efficient-adaptive-normalized-min-sum-decoder-for-irregular-ldpc-codes-in-ofdm-2018-ieee">ieee:8530965 - A New Efficient Adaptive Normalized Min-Sum Decoder for Irregular LDPC Codes in OFDM (2018, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

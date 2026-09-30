@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8508405</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8508405---application-of-sc-ldpc-codes-for-magnetic-recording-systems-dynamic-shifting-window-decoding-2018-ieee-intermag">ieee:8508405 - Application of SC-LDPC codes for magnetic recording systems (Dynamic Shifting Window Decoding) (2018, IEEE INTERMAG)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>soft-BER 추정 기반 window를 여러 code-block 동시 shift(DSWD/DSNWD)해 SC-LDPC window 복호 복잡도 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>SC-LDPC + 자기기록(BPMR) 채널 + 슬라이딩윈도우/turbo equalization 전제 - NAND binary QC-LDPC와 부호·복호 구조 상이</td></tr><tr><td>추가확인</td><td>DSWD의 soft-BER shift 기준이 blockwise QC-LDPC 단일 window(비-SC)에서 의미가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: MR용 SC-LDPC 슬라이딩윈도우 복잡도 감소 기법으로, NAND binary QC-LDPC(비-SC, 단일 코드워드)에는 구조적으로 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 자기기록(MR)용 <code>SC-LDPC</code>(=LDPC convolutional) 부호, protograph base matrix <code>B</code>를 <code>K</code>회 복제·edge spreading으로 유도, code rate <code>0.8</code>, PEG로 <code>H</code> 생성.</li><li>문제: 섹터 크기 증가(&gt;4KB)로 SC-LDPC가 유망하나 sliding-window decoding(UWD)의 복잡도가 큼 - VN 업데이트 수를 줄여야 함.</li><li>모델: turbo equalization - <code>BCJR</code> detector가 ISI(intersymbol interference)를 처리하고 LLR을 window 크기 <code>W=t·M</code>의 SC-LDPC 복호기에 전달, 각 decoding position이 code block <code>y_q</code> 담당.</li><li>핵심기법 1 (DSWD): 각 code block의 추정 soft-BER가 유사하면 여러 block을 동시에 shift. shift factor <code>p_t</code>를 <code>1</code>~<code>K_dd</code> 범위에서 선택.</li><li>핵심식: <code>c_t·log P(t) - log P(t) &lt; ... </code> (soft-BER 로그값 조건) 만족 시 block <code>t</code>를 shift, <code>c_t</code>는 Monte-Carlo로 결정.</li><li>핵심기법 2 (DSNWD): NWD(non-uniform WD)를 수정해 DSWD를 강화 - window 내 일부 VN 업데이트를 조기 중단, shift된 block 수 <code>p_t</code>에 맞춰 update schedule 조정.</li><li>구현: soft-BER는 복호 종료 시 <code>log P(t)</code> 항으로 추정, position별로 계산.</li><li>최적화: shift factor <code>c_t</code>를 Monte-Carlo 시뮬로 튜닝.</li><li>결과: BPMR 채널, <code>F_LDPC</code>/<code>F_Turbo</code> iteration 설정에서 DSWD가 UWD/NWD 대비 각각 복잡도 감소, DSNWD 적용 시 최대 감소 - 성능 손실 없이 평균 VN 업데이트 수 <code>R_avg</code> 감소.</li><li>한계: HW 미설계, 시뮬만, SC-LDPC + 자기기록 turbo equalization 전제 (NAND와 무관), 정확한 복잡도 수치는 그림에만 존재해 본문 확정 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SC-LDPC sliding-window 복호 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>낮음 - Prime ECC는 단일 코드워드 blockwise, window/SC 구조 없음</td></tr><tr><td>soft-BER 추정 기반 조기중단(DSNWD)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>낮음 - 조기종료는 이미 CRC 기반으로 보유, soft-BER shift 개념 상이</td></tr><tr><td>protograph/edge-spreading 부호구조</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>낮음 - QC-LDPC 고정, SC 구조 아님</td></tr><tr><td>BCJR + turbo equalization</td><td>대응 없음</td><td>ISI 채널 검출기, NAND에 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - SC-LDPC + 자기기록 채널 특화 window 복호 기법이라 NAND binary QC-LDPC(비-SC) 코드베이스에 떼어낼 구조적 접점이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8508405",
+  "title": "Application of SC-LDPC codes for magnetic recording systems (Dynamic Shifting Window Decoding)",
+  "year": 2018,
+  "venue": "IEEE INTERMAG",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.8,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "soft-BER 추정 기반 window를 여러 code-block 동시 shift(DSWD/DSNWD)해 SC-LDPC window 복호 복잡도 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "SC-LDPC + 자기기록(BPMR) 채널 + 슬라이딩윈도우/turbo equalization 전제 - NAND binary QC-LDPC와 부호·복호 구조 상이",
+  "todo_check": "DSWD의 soft-BER shift 기준이 blockwise QC-LDPC 단일 window(비-SC)에서 의미가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8508405---application-of-sc-ldpc-codes-for-magnetic-recording-systems-dynamic-shifting-window-decoding-2018-ieee-intermag">ieee:8508405 - Application of SC-LDPC codes for magnetic recording systems (Dynamic Shifting Window Decoding) (2018, IEEE INTERMAG)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

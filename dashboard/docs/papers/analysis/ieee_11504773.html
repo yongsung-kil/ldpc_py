@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11504773</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11504773---conditional-neural-decoding-for-multi-snr-scenarios-a-lightweight-framework-with-parity-check-consistency-regularization-2026-cisce">ieee:11504773 - Conditional Neural Decoding for Multi-SNR Scenarios: A Lightweight Framework with Parity-Check Consistency Regularization (2026, CISCE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.571</td></tr><tr><td>부호length</td><td>7</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Hamming(7,4) 짧은 선형블록코드에 FiLM 기반 SNR 조건화 + parity-check 일관성 정규화를 적용한 경량 신경망 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Hamming(7,4) 초단코드·완전 신경망 전면 대체 방식이며 QC-LDPC/반복복호 구조와 무관</td></tr><tr><td>추가확인</td><td>코드 길이·rate 확장 시(긴 QC-LDPC) FiLM/parity-loss 아이디어가 유효한지는 본문에 언급 없음</td></tr></tbody></table>
+<blockquote><p>총평: 초단 Hamming 코드용 신경망 전면 대체 디코더로, NAND용 QC-LDPC 반복복호 구조와 접점이 없어 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: Hamming(7,4) 선형블록코드, BPSK 변조, AWGN 채널(<code>y = x + n</code>), Eb/N0 범위 [-1, 6] dB.</li><li>문제: 기존 학습 기반 디코더는 특정 SNR에 고정 학습되어 다중 SNR 환경에서 성능이 불안정하고 모델을 SNR별로 별도 학습해야 함.</li><li>채널 모델: AWGN, 노이즈 <code>n ~ N(0, σ²I)</code>, soft 심볼을 직접 디코더 입력으로 사용.</li><li>핵심 기법 1: FiLM(Feature-wise Linear Modulation)으로 SNR을 조건 변수로 주입, <code>h' = γ(SNR) ⊙ h + β(SNR)</code>.</li><li>식의 의미: γ, β는 학습 가능한 소형 네트워크가 SNR에 따라 생성하여 은닉층 특징 분포를 채널 조건에 맞게 동적으로 조정.</li><li>핵심 기법 2: parity-check 일관성 정규화 손실 <code>L = L_BCE + λL_parity</code> (λ=0.2)로 출력이 유효 코드워드 공간에 가깝도록 유도.</li><li>구현 디테일: 2층 완전연결망, hidden dim=64, 파라미터 1,184개, logits 직접 BCE 계산(sigmoid 미사용, 수치안정).</li><li>학습: Adam, lr=0.001, batch=512, 100 epoch, 2×10⁶ 샘플, SNR ∈ [-1,6]dB 균일 샘플링, validation BER 기준 early stopping.</li><li>결과: BER@2dB 1.10×10⁻² (vanilla MLP 1.45×10⁻², ECCT 8.5×10⁻³), 파라미터는 ECCT(19,328) 대비 1/16 수준.</li><li>한계: 코드 길이 7(초단)·시뮬만 수행, HW 미설계, 긴 코드/QC-LDPC로의 확장성은 검증되지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FiLM 기반 SNR 조건화 신경망 디코더</td><td>대응 없음</td><td>NN 전면 대체 디코더로 min-sum 기반 <code>decoder.cpp</code>와 알고리즘 층위가 다름</td></tr><tr><td>parity-check 일관성 정규화 손실</td><td>대응 없음</td><td>학습 손실 설계로, HW bit-exact 시뮬레이터에 대응 개념 없음</td></tr><tr><td>soft 심볼 직접 입력(양자화 미언급)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>개념적으로만 LLR/soft-read와 유사하나 양자화 비트수 등 실질 대응 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — Hamming(7,4) 초단 코드용 NN 전면 대체 디코더로, binary QC-LDPC min-sum 반복복호 구조와 근본적으로 다른 접근이며 이식 가능한 요소가 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11504773",
+  "title": "Conditional Neural Decoding for Multi-SNR Scenarios: A Lightweight Framework with Parity-Check Consistency Regularization",
+  "year": 2026,
+  "venue": "CISCE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.571,
+  "code_length": "7",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Hamming(7,4)에 FiLM SNR 조건화 + parity-check 일관성 정규화를 적용한 경량 신경망 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Hamming(7,4) 초단코드·완전 신경망 전면 대체 방식이며 QC-LDPC/반복복호 구조와 무관",
+  "todo_check": "코드 길이·rate 확장 시(긴 QC-LDPC) FiLM/parity-loss 아이디어가 유효한지는 본문에 언급 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11504773---conditional-neural-decoding-for-multi-snr-scenarios-a-lightweight-framework-with-parity-check-consistency-regularization-2026-cisce">ieee:11504773 - Conditional Neural Decoding for Multi-SNR Scenarios: A Lightweight Framework with Parity-Check Consistency Regularization (2026, CISCE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

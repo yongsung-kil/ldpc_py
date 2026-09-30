@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1399191</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1399191---efficient-high-speed-quasi-cyclic-ldpc-decoder-architecture-2004-ieee">ieee:1399191 - Efficient High-Speed Quasi-Cyclic LDPC Decoder Architecture (2004, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.587</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>BP 두 단계(CNFU/VNFU) 간 연산부하·포맷변환 재분배 + 통합 LUT + adder tree 재구성으로 critical path 41% 단축, CNFU/VNFU를 동일 HW로 remap해 면적 10.2% 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>5758gates@0.35um</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>tanh/Φ-LUT 기반(SPA)이라 min-sum 채택한 Prime ECC와 연산모델 상이, 5bit LLR·작은 (155,64) 예제로 NAND 고rate 대형 부호와 스케일 차이</td></tr><tr><td>추가확인</td><td>LUT-A/B 배증·remap가 우리 min-sum·HCU pipeline에 실제 critical-path/면적 이득으로 이어지는지, 5bit 양자화 성능 검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC BP 디코더의 CNFU/VNFU 부하 재분배·LUT 통합·유닛 remap으로 critical path 41%·면적 10% 절감한 HW 최적화 논문으로, SPA/LUT 기반이라 min-sum 코드베이스엔 부분적이나 부하균형·유닛공유 아이디어는 참고 가치가 있다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular quasi-cyclic LDPC((155,64,31), rate≈0.587)를 partly-parallel BP 디코더로 고속 저면적 구현.</li><li>문제: 기존 BP 디코더는 CNFU가 VNFU보다 훨씬 복잡해 두 단계 부하 불균형(critical path 편중)이고, 두 단계가 번갈아 동작해 HUE(하드웨어 이용률)가 50%에 그침.</li><li>모델: 표준 BP — CNFU가 <code>Φ(x)=-log(tanh(x/2))</code> LUT로 check-to-variable(<code>R</code>) 계산, VNFU가 채널 <code>2r/σ²</code> + check 메시지 합으로 variable-to-check(<code>L</code>) 계산.</li><li>핵심 기법 1단(부하 재분배): CNFU의 두 번째 LUT와 SM↔2's 포맷변환 블록을 VNFU로, VNFU의 2's→SM 변환을 CNFU로 옮겨 각 유닛이 critical path에 LUT 1개만 갖도록 균형화(식 5-8).</li><li>의미: 재정식화로 CNFU/VNFU 각각 LUT 연산이 1개씩만 임계경로에 남아 지연 편중 해소.</li><li>핵심 기법 2단(LUT 통합): LUT-A(2's→SM 변환 흡수), LUT-B(SM→2's 변환 흡수) 신설 — sign 비트를 입력에 추가해 LUT 크기는 2배지만 변환블록 제거.</li><li>부수 트릭: CNFU/VNFU adder tree 재구성으로 critical path 내 덧셈 수를 4→2로 축소.</li><li>유닛 remap: CNFU/VNFU가 클록당 처리하는 입력 수(블록행렬 non-zero 수=15)가 동일함을 이용, 제어신호로 한 HW를 CN(=0)/VN(=1) 모드로 겸용 → HUE 100%.</li><li>결과: 0.35um Synopsys 합성, load-balance로 지연 45.17→26.64ns(-41.0%, 면적 +8.8%), remap으로 면적 6413→5758 gates(-16.2%, 지연 -10.2%, 37.87ns).</li><li>한계: SPA/Φ-LUT 기반이라 min-sum 아님, 작은 예제 부호((155,64))·5bit LLR, 정정성능(BER) 개선 없이 순수 HW 지연/면적 최적화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CNFU check-to-variable(Φ-LUT) 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리는 min-sum(min1/min2)이라 Φ-LUT 자체는 미사용, sign XOR 부분만 유사</td></tr><tr><td>VNFU variable-to-check 처리/양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>VNU 연산·양자화에 대응, 포맷변환 최적화 아이디어 참고 가능</td></tr><tr><td>CNFU/VNFU 유닛 remap(동일 HW 겸용)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> pipeline(col_M1/Z/P1~P4)</td><td>우리는 6-stage pipeline·GT로 자원공유, remap 개념은 참고 수준</td></tr><tr><td>QC-LDPC circulant H 구성/로드</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>circulant-shift QC 구조로 우리와 정합, 부호구성 자체 신규성은 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CNFU/VNFU 부하 재분배·유닛 겸용으로 critical path/면적을 줄이는 HW 발상은 참고 가치가 있으나, Φ-LUT(SPA) 기반이고 우리는 min-sum·전용 pipeline이라 직접 이식 이득은 제한적이다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1399191",
+  "title": "Efficient High-Speed Quasi-Cyclic LDPC Decoder Architecture",
+  "year": 2004,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.587,
+  "code_length": "155",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "BP 두 단계(CNFU/VNFU) 간 연산부하·포맷변환 재분배 + 통합 LUT + adder tree 재구성으로 critical path 41% 단축, CNFU/VNFU를 동일 HW로 remap해 면적 10.2% 감소",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "5758gates@0.35um",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "tanh/Φ-LUT 기반(SPA)이라 min-sum 채택한 Prime ECC와 연산모델 상이, 5bit LLR·작은 (155,64) 예제로 NAND 고rate 대형 부호와 스케일 차이",
+  "todo_check": "LUT-A/B 배증·remap가 우리 min-sum·HCU pipeline에 실제 critical-path/면적 이득으로 이어지는지, 5bit 양자화 성능 검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1399191---efficient-high-speed-quasi-cyclic-ldpc-decoder-architecture-2004-ieee">ieee:1399191 - Efficient High-Speed Quasi-Cyclic LDPC Decoder Architecture (2004, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

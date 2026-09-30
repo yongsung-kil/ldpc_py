@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4753231</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4753231---efficient-quantization-schemes-for-ldpc-decoders-2008-ieee">ieee:4753231 - Efficient Quantization Schemes for LDPC Decoders (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008~1200</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC SPA 디코더의 채널·메시지 양자화(3/4/5-bit)를 density evolution으로 설계하고, 0을 포함하는 비대칭 양자화기와 CNP φ-LUT로 4-bit에서 부동소수 대비 0.1dB 손실만 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>SPA(φ/φ^-1 LUT) 기반이라 min-sum의 CNP엔 LUT 부분 직접 이식 불가, rate-1/2 短블록 regular/irregular(非QC)만 검증, 합성/gate count 없음</td></tr><tr><td>추가확인</td><td>min-sum 디코더에서 채널/메시지 양자화 최적 bit-width(3 vs 4bit)와 고rate QC-LDPC·NAND soft-read에서 동일 0.1dB 손실 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: SPA 디코더 양자화(채널 LLR + 메시지 bit-width) 설계 가이드로, zero 포함 비대칭 양자화기·bit-width별 penalty(3bit 0.25dB, 4bit 0.1dB, 5bit≈float)는 Prime ECC의 채널·LLR 양자화 설계에 참고 가치. 단 CNP는 SPA φ-LUT라 min-sum과 상이.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK/AWGN, rate-1/2 부호(regular (3,6) blocklength-1200, irregular PEG blocklength-1008)를 fixed-point SPA로 복호할 때 양자화 효과를 분석.</li><li>문제: 시뮬은 부동소수지만 실제 ASIC/FPGA는 fixed-point → 3/4/5-bit 저정밀도로 속도↑·자원↓ 하되 성능 손실을 최소화해야 함.</li><li>채널 양자화: 채널 LLR <code>L(Vi)=2Yi/σ²</code>의 pdf(두 Gaussian 합)를 임계값 집합으로 비교. rate-1/2 capacity 달성 SNR을 최소화하는 최적 임계값(3-bit 비균일: <code>τ=±5.61,±3.17,±1.4,0 ·Es/No</code>).</li><li>핵심 트릭(비대칭 양자화기): 균일 양자화 후 중점값을 <code>Ai</code>로 쓰되, 덧셈 시 두 메시지 합이 0이 될 수 있으므로 <strong>메시지 집합에 0을 포함</strong>해야 함 → 비대칭 임계값(<code>-3.5Δv..2.5Δv</code>)과 2's complement 사용.</li><li>VNP: 단순 가산기(2's complement)에 saturation. 메시지는 <code>bv</code> bit, 최소 <code>-(2^(bv-1))Δv</code>~최대 <code>(2^(bv-1)-1)Δv</code>.</li><li>CNP: <code>φ(x)=-log(tanh(x/2))</code> 와 <code>φ^-1</code>을 table lookup(입력 <code>bv</code>bit, 출력 <code>be</code>bit, step <code>Δe</code>)으로 구현, <code>φ(0)=(2^dc -1)Δe</code>로 처리, C개 여분 bit로 합 표현.</li><li>최적화: exhaustive 대신 density evolution으로 (bv,be,Δv,Δe,C) 조합의 threshold를 계산해 최저 SNR threshold 테이블 선정. 성능이 테이블 엔트리에 민감(1단위 변경도 큰 penalty).</li><li>파라미터: bv=3(be=4,ψ=1.429dB), bv=4(be=3~5,ψ≈1.23dB), bv=5(be=5~6,ψ≈1.01~1.04dB). Δv/Δe는 시뮬로 결정.</li><li>결과: 3-bit 0.25dB, 4-bit &lt;0.1dB, 5-bit ≈ 부동소수 penalty. regular(3,6)·irregular PEG 모두 유사한 손실.</li><li>한계: 합성/gate count 없음, SPA φ-LUT 기반(min-sum 아님), degree-2 많은 irregular는 coarse 양자화 시 error floor 상승(scale 증가로 완화, future work).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 채널 LLR 양자화(비대칭 임계값, zero 포함) | channel.cpp Set_R_Offset(), Set_LLR_Th() | soft-read threshold/양자화 설계에 직접 참고 |
+| 메시지 bit-width / LLR 테이블 선정 | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | 3/4/5-bit별 penalty·step size 설계 참고 |
+| VNP 가산기 + saturation | decoder.cpp VN_Cal_HD() 등 (HD/2SD/3SD) | 메시지 양자화·포화 처리 참고 |
+| CNP φ(x)/φ^-1(x) LUT (SPA) | decoder.cpp CNU_Update_New_Mag() | Prime ECC는 min-sum(φ-LUT 없음) → 알고리즘 상이, 직접 대응 없음 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 채널/메시지 양자화 bit-width 설계와 0을 포함하는 비대칭 양자화기 원칙은 Prime ECC의 channel.cpp·LLR 테이블에 참고 가치가 크나, CNP의 φ-LUT는 SPA 전용이라 min-sum 기반 Prime ECC엔 직접 이식되지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4753231",
+  "title": "Efficient Quantization Schemes for LDPC Decoders",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1008~1200",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC SPA 디코더의 채널·메시지 양자화(3/4/5-bit)를 density evolution으로 설계하고, 0을 포함하는 비대칭 양자화기와 CNP φ-LUT로 4-bit에서 부동소수 대비 0.1dB 손실만 달성",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "SPA(φ/φ^-1 LUT) 기반이라 min-sum의 CNP엔 LUT 부분 직접 이식 불가, rate-1/2 短블록 regular/irregular(非QC)만 검증, 합성/gate count 없음",
+  "todo_check": "min-sum 디코더에서 채널/메시지 양자화 최적 bit-width(3 vs 4bit)와 고rate QC-LDPC·NAND soft-read에서 동일 0.1dB 손실 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4753231---efficient-quantization-schemes-for-ldpc-decoders-2008-ieee">ieee:4753231 - Efficient Quantization Schemes for LDPC Decoders (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8852203</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8852203---guessing-the-code-learning-encoding-mappings-using-the-back-propagation-algorithm-2019-ijcnn">ieee:8852203 - Guessing the Code: Learning Encoding Mappings Using the Back Propagation Algorithm (2019, IJCNN)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.625</td></tr><tr><td>부호length</td><td>7~8</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Tanner graph를 모르는 상태에서 MLP를 backprop으로 학습시켜 encoder 매핑 <code>P:m→p</code>와 패리티검사식을 역추정</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>노이즈 없는 합성데이터의 toy code(Hamming(7,4)/n≤8)에서 encoder 식 역추정만 다룸, 오류정정·디코딩·성능 전무</td></tr><tr><td>추가확인</td><td>실제 고rate QC-LDPC 규모·noisy 데이터로 확장 가능성(본문 future work로만 언급)</td></tr></tbody></table>
+<blockquote><p>총평: covert communication용 encoder 매핑 역추정 NN 연구 - LDPC 오류정정·디코더·HW와 무관, Prime ECC 이식 대상 아님.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 GF(2)의 systematic 선형블록부호로, 송신단이 <code>c=[p m]</code>을 쓰지만 수신단은 Tanner graph/H를 모른다고 가정(covert communication 시나리오).</li><li>문제: 부호구조를 모른 채 일부 인코딩 매핑만 관측될 때 전체 encoder 매핑 <code>P:m→p</code>를 학습하고 패리티검사식을 추출할 수 있는가.</li><li>핵심 기법: 입력=메시지 <code>m</code>(k bit), 출력=패리티 <code>p</code>(n-k bit)인 1-hidden-layer MLP(<code>N_h</code> neuron, ReLU)를 backpropagation으로 학습해 Boolean 매핑 <code>P</code>를 근사.</li><li>비용함수 두 종류(MSE <code>E_m</code>, cross-entropy <code>E_c</code>)를 비교하며 gradient descent로 가중치 <code>w_pq</code>, <code>w_qr</code>를 갱신, 학습률은 epoch마다 <code>η_e=η_init(η_final/η_init)^{e/e_max}</code>로 감소.</li><li>학습 후 표준기저 입력 <code>e_i</code>를 넣어 출력이 1인 위치로 각 입력이 어느 패리티식에 등장하는지 판정(Procedure 2), threshold <code>τ</code>로 양자화해 <code>P</code> 재구성.</li><li>재구성한 <code>P</code>로 <code>G=[P I]</code> 및 <code>H</code>를 복원하고, 수신 codeword의 <code>m</code>을 넣어 예측 패리티와 비교해 codeword 유효성(오류검출)을 판정.</li><li>구현 디테일: hidden neuron 수 <code>N_h</code>가 표현력 결정 - XOR 예제 및 check node 수 <code>N_c</code>가 커질수록 필요한 <code>N_h</code> 증가(Table III).</li><li>결과: Hamming(7,4)에서 CE loss가 400 epoch에 ~100% 정확도(MSE는 ~70%), invalid codeword 식별은 <code>N_h=40</code>에서 100% 근접(Table IV).</li><li>검증: noise 없는 합성데이터 시뮬레이션만, 실제 채널·오류 없음.</li><li>한계: toy 규모(n≤8), 오류정정/디코딩/BER 없음, noisy 데이터 확장·NN 저장용량 해석은 future work.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| encoder 매핑 P:m→p NN 학습 | 대응 없음 | NN 기반 encoder 역추정, dual-diagonal 고정 encoder.cpp와 접근 상이 |
+| 학습된 P로 G/H 복원 | 대응 없음 (참고: ecc_top.cpp Load_PCM) | Prime ECC는 QC-LDPC H를 고정 로드, 부호 역추정 불필요 |
+| codeword 유효성(오류검출) | 대응 없음 | full_CRC.cpp/partial_CRC.cpp는 CRC 조기종료용, NN 검출과 무관 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — Tanner graph 미지 상황의 encoder 역추정 NN 연구로, NAND용 고정 QC-LDPC의 부호설계·디코더·HW 어느 레이어와도 접점이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8852203",
+  "title": "Guessing the Code: Learning Encoding Mappings Using the Back Propagation Algorithm",
+  "year": 2019,
+  "venue": "IJCNN",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "7~8",
+  "soft_quant": "무관",
+  "key_contribution": "Tanner graph를 모르는 상태에서 MLP를 backprop으로 학습시켜 encoder 매핑 P:m→p와 패리티검사식을 역추정",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "노이즈 없는 합성데이터의 toy code(Hamming(7,4)/n&lt;=8)에서 encoder 식 역추정만 다룸, 오류정정·디코딩·성능 전무",
+  "todo_check": "실제 고rate QC-LDPC 규모·noisy 데이터로 확장 가능성(본문 future work로만 언급)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8852203---guessing-the-code-learning-encoding-mappings-using-the-back-propagation-algorithm-2019-ijcnn">ieee:8852203 - Guessing the Code: Learning Encoding Mappings Using the Back Propagation Algorithm (2019, IJCNN)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

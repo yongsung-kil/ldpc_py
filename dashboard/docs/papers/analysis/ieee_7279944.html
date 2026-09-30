@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7279944</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7279944---design-and-implementation-of-low-bit-error-rate-of-ldpc-decoder-2015-csnt">ieee:7279944 - Design and Implementation of Low Bit Error Rate of LDPC Decoder (2015, CSNT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4000~5000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>SPA와 correction-term 부착 min-sum을 error-floor/저BER 관점에서 시뮬 비교</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>교과서 수준 SPA/min-sum 재기술, 신규 기법·HW·수치 근거 부재(그림에만 BER)</td></tr><tr><td>추가확인</td><td>참조[1] Zhang 원논문(양자화·알고리즘 선택)이 실제 기여체, 본 논문 아님</td></tr></tbody></table>
+<blockquote><p>총평: 표준 SPA/correction-term min-sum을 (4000,2000)/(5000,2500)로 재시뮬한 학부 수준 논문 - Prime ECC가 이미 보유한 min-sum과 중복, 이식가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널: BPSK+AWGN, LLR 초기화 <code>Lpr(xi)=2·yi/σ²</code> (식1), M×N sparse H로 정의되는 일반 LDPC.</li><li>문제: LDPC error-floor 영역(저BER에서 기울기 완만)의 실용 디코더 설계를 시뮬로 탐구.</li><li>SPA(BP): V2C <code>L(qij)=Σ L(rij')+Lpr</code>, C2V <code>L(rij)=Φ⁻¹(ΣΦ(|Lqi'j|))·Π sgn</code>, <code>Φ(x)=-log(tanh(x/2))</code> (식2~4).</li><li>posterior <code>Lps=Lext+Lpr</code>로 경판정 (식5~7); Φ는 자기역함수라 Φ1=Φ2로 동일 하드웨어 재사용.</li><li>min-sum: C2V의 Φ-합을 <code>min|L(qi'j)|·Π sgn</code>으로 근사 (식8), 수치 saturation/양자화 효과 제거.</li><li>correction term: 정규화계수 <code>α</code> (식9) 및 offset <code>β</code>로 <code>max{min|·|-β,0}</code> (식10) 근사오차 보정.</li><li>디코더 아키텍처는 factor graph 기반 Φ1/Φ2 블록도(그림2/3)로만 서술, RTL/게이트 없음.</li><li>채널출력은 prior LLR 저장 전 saturate+quantize (양자화가 지배 absorbing set에 영향 언급).</li><li>결과: (4000,2000)/(5000,2500)에서 BER 10⁻¹³~10⁻¹⁴ 도달(그림4/5, emulation), SNR↑ 시 BER↓, min-sum이 SPA보다 우수 주장.</li><li>한계: 신규 알고리즘 없음, HW 미설계, 정량 수치는 그림에만 존재, 부호 구조(QC 여부) 불명.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA/min-sum CN 업데이트</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 동일, 신규성 없음</td></tr><tr><td>correction term(α/β)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>normalized/offset min-sum은 표준, 프로파일상 미확인이나 교과서 수준</td></tr><tr><td>양자화/LLR</td><td>ecc_data.h <code>PARAM_LLR</code></td><td>언급뿐, 구체 테이블·비트폭 없음</td></tr><tr><td>full-tanh Φ 함수</td><td>대응 없음</td><td>Prime ECC는 min 근사 채택, tanh 미사용</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 표준 SPA/min-sum의 교과서적 재기술로 Prime ECC가 이미 보유한 기법과 중복이며 신규 기여·HW·정량 근거가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7279944",
+  "title": "Design and Implementation of Low Bit Error Rate of LDPC Decoder",
+  "year": 2015,
+  "venue": "CSNT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.5,
+  "code_length": "4000~5000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "SPA와 correction-term 부착 min-sum을 error-floor/저BER 관점에서 시뮬 비교",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "교과서 수준 SPA/min-sum 재기술, 신규 기법·HW·수치 근거 부재(그림에만 BER)",
+  "todo_check": "참조[1] Zhang 원논문(양자화·알고리즘 선택)이 실제 기여체, 본 논문 아님"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7279944---design-and-implementation-of-low-bit-error-rate-of-ldpc-decoder-2015-csnt">ieee:7279944 - Design and Implementation of Low Bit Error Rate of LDPC Decoder (2015, CSNT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

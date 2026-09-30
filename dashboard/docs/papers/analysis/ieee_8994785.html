@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8994785</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8994785---design-of-high-throughput-fpga-based-testbed-for-accelerating-error-characterization-of-ldpc-codes-2019-ieee">ieee:8994785 - Design of High Throughput FPGA-based Testbed for Accelerating Error Characterization of LDPC Codes (2019, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1296</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>hard-decision LDPC 디코더(GaB/PGaB) 시뮬 전체를 FPGA에 올린 모듈형 테스트베드로 오류특성 분석 시간을 수년→수시간으로 단축</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>9.17</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>디코더 알고리즘 개선이 아닌 시뮬 가속 인프라, 대상 알고리즘이 hard-decision bit-flipping(GaB/PGaB)이라 min-sum과 무관</td></tr><tr><td>추가확인</td><td>오픈소스 프레임워크가 min-sum/soft-decision 디코더 특성분석에 재사용 가능한지 (본문상 hard-decision 전용)</td></tr></tbody></table>
+<blockquote><p>총평: FPGA로 LDPC 오류특성 분석을 가속하는 테스트베드로, 디코더 자체 개선이 아니라 검증 인프라이며 대상이 hard-decision bit-flipping이라 Prime ECC 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: <code>n=1296</code>, <code>dv=4</code>, <code>dc=8</code>, rate <code>0.5</code> QC-LDPC code를 대상으로 코드워드 생성·노이즈 주입·복호·통계까지 전 시뮬 흐름을 FPGA(Xilinx Zynq XC7Z020)에 구현.</li><li>문제: LDPC 오류특성/error-floor 분석은 <code>10^-12</code> 수준까지 <code>10^14</code> 코드워드 처리가 필요해 CPU/GPU로 수년~수십년 소요.</li><li>대상 알고리즘: hard-decision bit-flipping류 — Gallager B(<code>GaB</code>)와 Probabilistic Gallager B(<code>PGaB</code>), CNU는 xor, VNU는 majority vote.</li><li>핵심 기법: controller/codeword gen/noise gen/RNG/decoder/statistic의 7모듈 파라미터화 테스트베드, 디코더 모듈만 교체 가능(HDL instantiation).</li><li><code>PGaB</code>: 비수렴 cyclic 상태에서 1-bit RNG값 <code>P=1</code>일 때 채널입력 <code>rn</code>을 반전시켜 trapping set 탈출 시도.</li><li>파라미터: <code>Alpha</code>(crossover prob), <code>max_iter</code>, <code>max_cwf</code>(=100 기본)로 사용자가 해상도 설정.</li><li>GPU 베이스라인: Tesla K40 CUDA, stream 24·batch 16에서 백만 코드워드당 6.5분(비교 기준용).</li><li>결과(throughput): FPGA 테스트베드 9172 Mb/s, GPU 3608 Kb/s, CPU 219 Kb/s (standalone PGaB는 15.69 Gb/s).</li><li>결과(시간): <code>Alpha=0.005</code>에서 FER <code>0.917×10^-11</code>를 24시간에 도달(GPU 12년, CPU 199년 추정); GaB 4-error 패턴 전수탐색(117B 코드워드)을 4.5시간에 완료.</li><li>한계: 디코더 알고리즘 개선이 아니라 시뮬 가속 프레임워크, hard-decision류 전용, soft-decision/min-sum은 미대상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>FPGA 시뮬 테스트베드 전체</td><td>대응 없음</td><td>Prime ECC는 C++ bit-exact 시뮬레이터, FPGA 검증 인프라와 층위 다름</td></tr><tr><td>trapping set / 4-error 패턴 탐색</td><td><code>corner.cpp</code> (수렴실패 추적)</td><td>개념적 유사 — 수렴실패 코드워드 추적 기능과 목적 겹침</td></tr><tr><td>GaB/PGaB hard-decision 디코더</td><td>대응 없음 (min-sum 기반이 아님)</td><td>Prime ECC는 min-sum, bit-flipping류 아님</td></tr><tr><td>LFSR 기반 노이즈/RNG</td><td><code>channel.cpp</code>, <code>random.cpp</code> (XOR25 난수)</td><td>에러 주입 개념은 유사하나 알고리즘 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 디코더 알고리즘이 아니라 오류특성 분석용 FPGA 인프라이고 대상이 hard-decision bit-flipping이라, Prime ECC의 min-sum QC-LDPC 파이프라인에 떼어 쓸 요소가 없음(방법론적 참고만 가능).</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8994785",
+  "title": "Design of High Throughput FPGA-based Testbed for Accelerating Error Characterization of LDPC Codes",
+  "year": 2019,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "other",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "1296",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "hard-decision LDPC 디코더(GaB/PGaB) 시뮬 전체를 FPGA에 올린 모듈형 테스트베드로 오류특성 분석 시간을 수년→수시간으로 단축",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 9.17,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "디코더 알고리즘 개선이 아닌 시뮬 가속 인프라, 대상 알고리즘이 hard-decision bit-flipping(GaB/PGaB)이라 min-sum과 무관",
+  "todo_check": "오픈소스 프레임워크가 min-sum/soft-decision 디코더 특성분석에 재사용 가능한지 (본문상 hard-decision 전용)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8994785---design-of-high-throughput-fpga-based-testbed-for-accelerating-error-characterization-of-ldpc-codes-2019-ieee">ieee:8994785 - Design of High Throughput FPGA-based Testbed for Accelerating Error Characterization of LDPC Codes (2019, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

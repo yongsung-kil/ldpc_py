@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9456076</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9456076---boost-sum-product-performance-for-multiuser-detection-in-mmtc-at-millimeter-wave-2023-ieee-tmc">ieee:9456076 - Boost Sum-Product Performance for Multiuser Detection in mMTC at Millimeter Wave (2023, IEEE TMC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>648</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>mmWave MUD factor-graph를 angular-domain node-split/node-contraction으로 short cycle(len4/8) 제거 + Gaussian-integer 양자화 기반 dynamic-programming PMF 근사로 sum-product MUD 정확도 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 고정 코드북(802.11ax)일 뿐 대상은 다중사용자 검출(MUD)이며, node-contraction NP-hard·휴리스틱, HW 미설계·시뮬만</td></tr><tr><td>추가확인</td><td>없음 (NAND binary LDPC 복호/부호설계와 무관)</td></tr></tbody></table>
+<blockquote><p>총평: mmWave mMTC 상향링크 다중사용자 검출용 sum-product factor-graph 최적화 논문 — LDPC는 검출 대상 코드북일 뿐이고 NAND용 binary QC-LDPC 복호/부호설계와 무관하여 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 mmWave mMTC 상향링크(BS 64 antenna ULA, UE 64명, 각 8 TX-elem), 각 UE는 IEEE802.11ax LDPC 코드북(n=648, k=324, rate 1/2, BPSK)으로 부호화 후 동일 PRB에서 충돌 전송.</li><li>문제: mMTC UE가 동일 코드북을 공유하고 mmWave 산란이 제한적이라 MUD 채널 gain matrix가 ill-conditioned가 되고 factor-graph에 short cycle(len4/8)이 대량 발생 → sum-product 및 변형(GM-IC/LMMSE-IC)이 발산·성능 열화.</li><li>모델: TCSL 기반 NYUSIM 채널(28GHz, 5/20/80MHz), <code>H_{v,R,j}=Σ a_p b_p aR_p aT_p^T</code>, 노이즈 <code>CN(0,2σ²)</code>.</li><li>핵심 기법: IDFT <code>F</code>로 spatial→angular-domain 변환해 채널 matrix를 sparse화하고, collision-graph 기반 node-split(단일 local function을 다수로 분해)으로 정보손실 없이 short cycle 제거.</li><li>의미: angular-domain에서 <code>FaR_p</code>가 sparse해 대부분 entry가 0 → 검출 factor-graph가 단순화되고 잔여 edge에 연산력 집중 가능.</li><li>확장: 동일 코드북에서 생기는 len-8 cycle을 node-contraction(여러 UE 변수를 고차 단일 변수로 병합)으로 제거, 이를 constrained optimization(NCON)으로 정식화하고 NP-hard 증명 후 greedy heuristic(Algorithm 1)으로 해결.</li><li>트릭: angular-domain channel gain을 Gaussian integer로 양자화(level 32)해 복소평면상 제한된 점만 traverse.</li><li>최적화/근사: 관측노드에서 전파되는 PMF를 dynamic-programming(Eq.14~16 재귀식)으로 다항시간 근사, 전체 복잡도 <code>O(|V|^4|U|n + ...)</code>.</li><li>결과: GM-IC 대비 throughput 최대 59.5%↑, LMMSE-IC 대비 최대 24.1%↑ (2000 MUD 문제, 여러 대역폭/모드), BER도 수 dB 개선.</li><li>한계: LDPC는 고정 검출 대상 코드북일 뿐 부호설계·복호 개선 아님, HW 미구현(시뮬만), MUD 검출기 전용.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MUD sum-product 검출(node-split/contraction)</td><td>대응 없음</td><td>Prime은 단일사용자 NAND LDPC 복호기, 다중사용자 검출 factor-graph 최적화와 무관</td></tr><tr><td>angular-domain IDFT 채널 sparse화</td><td>대응 없음</td><td>무선 MIMO 채널 전용, NAND 채널 모델과 무관</td></tr><tr><td>dynamic-programming PMF 근사</td><td>대응 없음</td><td>full-PMF 전파 방식으로 Prime의 min-sum 근사와 상이(교체 대상 아님)</td></tr><tr><td>Gaussian-integer 채널 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>양자화라는 개념만 유사, 대상(복소 채널 gain)이 달라 직접 대응 아님</td></tr><tr><td>LDPC 코드북(802.11ax, n=648 rate1/2)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호를 검출 대상으로 쓸 뿐 부호설계 기여 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 논문 기여는 mmWave 다중사용자 검출용 factor-graph 최적화 및 sum-product 근사로, NAND용 binary QC-LDPC의 복호기/부호설계/HW 어느 레이어에도 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9456076",
+  "title": "Boost Sum-Product Performance for Multiuser Detection in mMTC at Millimeter Wave",
+  "year": 2023,
+  "venue": "IEEE TMC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "648",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "mmWave MUD factor-graph를 angular-domain node-split/node-contraction으로 short cycle 제거 + Gaussian-integer 양자화 dynamic-programming PMF 근사로 sum-product MUD 정확도 향상",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 고정 코드북일 뿐 대상은 다중사용자 검출(MUD), node-contraction NP-hard 휴리스틱, HW 미설계 시뮬만",
+  "todo_check": "없음 (NAND binary LDPC 복호/부호설계와 무관)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9456076---boost-sum-product-performance-for-multiuser-detection-in-mmtc-at-millimeter-wave-2023-ieee-tmc">ieee:9456076 - Boost Sum-Product Performance for Multiuser Detection in mMTC at Millimeter Wave (2023, IEEE TMC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

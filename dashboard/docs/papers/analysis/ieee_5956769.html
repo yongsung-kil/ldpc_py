@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5956769</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5956769---decoder-optimised-progressive-edge-growth-algorithm-2011-ieee">ieee:5956769 - Decoder Optimised Progressive Edge Growth Algorithm (2011, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>250</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>PEG/IPEG 에지 배치에서 동점 CN 후보를 SPA 복호 시뮬로 실측 비교해 error-floor 개선 코드 구성(DOPEG/DOIPEG)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>short/medium irregular 부호 대상, HW/고rate/QC 구조 미검증이고 구성비용 큼 — Prime ECC 고정 QC-LDPC와 정합 안 됨</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC·긴 블록에서 DO 이득 유지 여부, HCU 등 punctured 구조와의 호환성</td></tr></tbody></table>
+<blockquote><p>총평: PEG 계열 부호 구성 시 지역 girth 동점 후보를 SPA 실측 metric으로 선별해 error-floor를 낮추는 code-design 기법으로, error-floor에 기여하나 Prime ECC의 고정 QC-LDPC(고rate·특정 lifting)와 정합되지 않아 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: short~medium 길이 irregular LDPC, 예제 rate-1/2, length 250, DE 최적 VN degree 분포 <code>λ(x)=.30013x+.28395x^2+.41592x^7</code>(max degree 8).</li><li>문제: 유한 길이에서 DE의 tree-like 가정이 깨져 short cycle이 성능(특히 error-floor)을 악화시킴.</li><li>모델: AWGN + BPSK, PCM <code>H=[I_{n-k} P]</code>, 생성행렬 <code>G=[P' I_k]</code>.</li><li>핵심 기법: PEG 에지 배치에서 지역 girth가 동일한 후보 CN들에 대해 각 후보로 임시 <code>Htest</code>를 만들고, 실제 SPA 복호를 돌려 최적 후보를 선택(Decoder Optimisation, DO 단계).</li><li>핵심 식/metric: 각 출력 LLR 부호를 정답 수렴이면 +1, 아니면 -1로 곱해 합산·SNR별 정규화, 최대 metric 후보 선택.</li><li>확장: IPEG의 ACE metric로 후보를 먼저 가지치기한 뒤 남은 동점 후보에 DO 적용 → DOIPEG.</li><li>구현 디테일: DO 단계에서 SNR range [1:.05:2], SNR당 message vector 5개, SPA 최대 50 iteration으로 후보 평가.</li><li>절차: VN degree sequence 비내림차순 배치, weight-2 VN 수 &lt; CN 수 제약(damaging cycle 방지).</li><li>결과: length 250 rate-1/2에서 DOPEG가 PEG 대비 error-floor 영역 유의미 이득, DOIPEG가 IPEG 대비 error-floor 개선(ACE 사전선별로 이득폭은 작음).</li><li>한계: HW 미설계·시뮬만, 구성 계산비용 큼(단 구성 단계 한정, 전송 시 추가비용 없음), short/medium irregular 부호 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PEG/DO 기반 H-matrix 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 특정 QC-LDPC H-matrix 고정, 구성법 교체는 재검증 부담 큰 최고난도 레이어</td></tr><tr><td>SPA 기반 후보 평가 metric</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>구성 단계 도구로서의 full SPA로, Prime ECC의 런타임 min-sum 디코더와 목적 다름</td></tr><tr><td>irregular/ACE 부호 구조</td><td>대응 없음</td><td>Prime ECC는 binary QC-LDPC(base+circulant) 고정, unstructured irregular PEG 부호는 이식 대상 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — error-floor를 개선하는 code-design 기법이라 관심 영역과 겹치나, unstructured short irregular 부호 대상이고 Prime ECC의 고정 고rate QC-LDPC(lifting z=32, HCU punctured 구조)와 정합되지 않아 떼어 쓰기 어려움.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5956769",
+  "title": "Decoder Optimised Progressive Edge Growth Algorithm",
+  "year": 2011,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "250",
+  "soft_quant": "무관",
+  "key_contribution": "PEG/IPEG 에지 배치에서 동점 CN 후보를 SPA 복호 시뮬로 실측 비교해 error-floor 개선 코드 구성(DOPEG/DOIPEG)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "short/medium irregular 부호 대상, HW/고rate/QC 구조 미검증이고 구성비용 큼 — Prime ECC 고정 QC-LDPC와 정합 안 됨",
+  "todo_check": "고rate QC-LDPC·긴 블록에서 DO 이득 유지 여부, HCU 등 punctured 구조와의 호환성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5956769---decoder-optimised-progressive-edge-growth-algorithm-2011-ieee">ieee:5956769 - Decoder Optimised Progressive Edge Growth Algorithm (2011, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

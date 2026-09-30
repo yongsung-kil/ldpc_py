@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6483282</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6483282---how-far-are-ldpc-codes-from-fundamental-limits-on-total-power-consumption-2012-allerton-conf">ieee:6483282 - How far are LDPC codes from fundamental limits on total power consumption? (2012, Allerton Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>regular LDPC + Gallager-A/B의 총전력(송신+복호)을 Node/Wire 두 모델로 점근 분석, 배선전력이 노드전력을 점근적으로 지배함을 보임</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상 (VN Θ(dv²)·CN Θ(dc²) 트랜지스터 order 추정만, gatecount 실측 없음)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>순수 big-O 점근 전력분석. hard-decision Gallager-A/B 전제로 soft min-sum과 무관, wire-length·activity factor 등 단순화 가정 다수</td></tr><tr><td>추가확인</td><td>배선복잡도(wiring-aware) 관점은 통찰이나, 실제 이식하려면 QC-LDPC/min-sum 대상 정량 전력·면적 모델 별도 필요</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 복호기의 총전력을 배선 vs 노드 관점에서 점근 분석한 이론 논문으로, "배선전력이 노드전력을 지배"라는 통찰은 흥미로우나 NAND용 soft min-sum QC-LDPC에 이식할 구체 기법은 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: AWGN+flat-fading, BPSK, <code>(dv,dc)</code>-regular LDPC(<code>R=1-dv/dc</code>, <code>dv≥4</code>), 수신 후 hard-decision으로 BSC(<code>p0=Q(SNR)</code>) 변환 뒤 복호.</li><li>문제: 용량 근접이 송신전력은 최소화하나 복호 복잡도↑로 <strong>총전력</strong>(송신 <code>PT</code>+복호 <code>Pdec</code>)은 최적 아님 — LDPC가 총전력 하한에 얼마나 근접하는지 규명.</li><li>복호 모델: 1비트 message-passing <strong>Gallager-A/B</strong>, fully-parallel 구현(노드=Tanner 노드, 배선=edge, 폭 <code>λ</code>).</li><li>전력 두 모델: <strong>Node Model</strong>(에너지 모두 노드, <code>Pdec=ξnode·Niter</code>) vs <strong>Wire Model</strong>(에너지 모두 배선, <code>Pdec=ξtech·Awires</code>, <code>Awires=lwires·λ</code>).</li><li>반복 수: Gallager-A <code>Niter=Θ(log(1/Pe)/PT)</code>, Gallager-B(<code>dv≥4</code>) <code>Niter=Θ(log log(1/Pe)/PT / log((dv-1)/2))</code> — B가 이중지수로 더 빠름.</li><li>Node Model 결과: Gallager-B는 <code>PT</code> 유계로도 총전력 <code>Θ(log log 1/Pe)</code>로 유계이고 fundamental 하한과 일치; Gallager-A는 <code>PT</code> 유계면 uncoded보다 비효율.</li><li>핵심 식(Lemma 4): 배선길이 하한 <code>l̄wire=Ω(n)</code>, 배선면적 <code>Awires=Ω(n²)</code>로 노드면적 <code>Θ(n)</code>을 점근적으로 지배 → "연산수만 세는 건 불충분".</li><li>Wire Model 결과(Thm 2,3): Gallager-A 총전력 <code>Ω(log^{1-δ}1/Pe)</code>, Gallager-B <code>Ω(log^{2/3}1/Pe)</code>; <code>PT</code> 유계면 각각 발산하여 uncoded보다 나쁠 수 있음.</li><li>fundamental 비교: [19]의 wire-model 하한 <code>log^{1/3}1/Pe</code> 대비 regular LDPC은 <code>log^{2/3}1/Pe</code>로 갭 존재; 배선효율 부호설계 필요성 제기.</li><li>한계: 순수 점근(big-O) 분석. wire-length·activity factor 단순화 가정, 실제 BER/gate/전력 실측 없음, girth-limit iteration 가정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 배선면적/라우팅 전력 지배(Wire Model) | GT.cpp Make_GT_HW() | 개념적 정합 — GT는 edge/MUX로 배선복잡도 축소, 논문은 배선전력 지배를 이론 뒷받침 |
+| Gallager-A/B 1비트 복호 | decoder.cpp LDPC_Decoder() | 알고리즘 상이 (Prime ECC는 min-sum soft, hard 1비트 아님) |
+| Node/Wire 전력 점근 모델 | 대응 없음 | big-O 전력분석 도구, bit-exact 시뮬에 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — "배선전력이 노드를 지배"라는 통찰은 Prime ECC의 Graph Thinning 동기와 개념적으로 맞물리나, hard-decision Gallager 점근분석이라 min-sum QC-LDPC에 이식할 정량 기법은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6483282",
+  "title": "How far are LDPC codes from fundamental limits on total power consumption?",
+  "year": 2012,
+  "venue": "Allerton Conf. on Communication, Control, and Computing",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "hard-1bit",
+  "key_contribution": "regular LDPC + Gallager-A/B 총전력을 Node/Wire 모델로 점근 분석, 배선전력이 노드전력을 점근적으로 지배함을 규명",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "순수 big-O 점근 전력분석. hard-decision Gallager-A/B 전제로 soft min-sum과 무관, wire-length·activity factor 단순화 가정 다수",
+  "todo_check": "wiring-aware 관점은 통찰이나 QC-LDPC/min-sum 대상 정량 전력·면적 모델 별도 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6483282---how-far-are-ldpc-codes-from-fundamental-limits-on-total-power-consumption-2012-allerton-conf">ieee:6483282 - How far are LDPC codes from fundamental limits on total power consumption? (2012, Allerton Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

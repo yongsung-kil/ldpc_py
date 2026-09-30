@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5303564</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5303564---design-of-bp-based-decoding-for-short-ldpc-codes-using-mmse-criterion-2009-ieee">ieee:5303564 - Design of BP-Based Decoding for Short LDPC Codes Using MMSE Criterion (2009, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504~1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>scaled/offset min-sum(BP-based) 디코더의 스케일·오프셋 계수를 MMSE 기준(EMM 대비 우수)으로 이론 유도·계산해 UMP-BP 대비 성능을 BP에 근접시킴</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>(3,6) regular 짧은 코드(504/1008)만 검증, 계수는 모든 iteration/SNR에 대해 상수로 고정(적응형 아님), 최대 iteration 1000으로 매우 큼</td></tr><tr><td>추가확인</td><td>Prime ECC 실제 rate/length·양자화 비트폭 조건에서 동일 MMSE 유도식이 유효한지, iteration-dependent 적응형 LLR 테이블과 결합 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: Prime ECC의 min-sum scaling/offset factor가 코드상 명시적으로 미확인 상태이므로, 이 논문의 MMSE 기반 factor 설계는 바로 대입 검증 가능한 낮은 난이도의 성능 개선 기법으로 이식 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 rate-1/2 (3,6) regular short LDPC(length 504, 1008), BPSK 변조, AWGN 및 Rayleigh fading(완전 side-information) 채널.</li><li>UMP(min-sum) BP-based 알고리즘은 곱셈 없이 저복잡도이나 BP 대비 성능 열화가 발생, 이를 보정하는 scaled/offset 계수의 최적 설계가 필요.</li><li>채널모델: 표준 AWGN(noise variance <code>σn²</code>) 및 uncorrelated flat Rayleigh fading with SI, 두 채널별로 각각 계수 유도.</li><li>핵심 기법: check-node 출력 메시지 <code>u1 = sgn(Πv(j))·min|v(j)|</code> (min-sum)에 scaled <code>u2=α·u1</code> 또는 offset <code>u3=sgn(u1)·max{|u1|-β,0}</code>을 적용, 계수 α,β를 MMSE 기준(EMM 대비 개선)으로 결정.</li><li>핵심 식: <code>α = E[u·u1]/E[|u1|²]</code>, <code>β = E[|u1|]-E[|u|]</code> — 실제 BP 메시지 <code>u</code>와 min-sum 근사 <code>u1</code>의 평균제곱오차를 최소화하는 최적 계수를 이론적으로 도출.</li><li>확장: <code>E[|u1|]</code>, <code>E[|u1|²]</code>는 채널별 PDF(AWGN <code>h1(x)</code>, Rayleigh-SI <code>h2(x)</code>)의 닫힌형 적분식으로 계산, <code>E[|u·u1|]</code>은 몬테카를로로 계산.</li><li>부수 트릭: 계수는 BER≈2×10⁻⁴가 되는 특정 SNR(critical range) 한 점에서 결정 후 전체 SNR·iteration에 고정 적용(적응형 아님).</li><li>학습/최적화 절차: 채널별 PDF 적분(이론) + 특정 SNR point에서 Monte Carlo 시뮬레이션으로 factor 확정 (Table I: 예 length 504 AWGN에서 α=0.76, β=0.36).</li><li>결과: length 504 AWGN, BER=10⁻⁵에서 MMSE scaled/offset이 UMP 대비 0.2dB, EMM scaled 대비 0.1dB 우수하며 BP와 거의 동등하거나 근소하게 우세; Rayleigh-SI에서는 UMP 대비 0.45~0.5dB 개선.</li><li>한계: (3,6) regular 짧은 코드 2종만 검증, HW/파이프라인 설계 없음, 최대 iteration 1000(비현실적으로 큼)으로 실제 latency/throughput 영향은 미평가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| scaled/offset min-sum 계수(α, β) MMSE 설계 | `decoder.cpp` `CNU_Update_New_Mag()` | 프로파일에 "scaling/normalized factor는 코드상 명시 미확인"이라 한 지점 — 본 논문의 MMSE 유도식을 대입해 factor 재설계 가능 |
+| CN min-sum 근사(u1) | `decoder.cpp` `C2V_Cal_New_Sgn()`, `CNU_Update_New_Mag()` | 동일한 min-sum 구조(부호+최소값)이므로 offset/scale 보정 적용 지점 일치 |
+| iteration별 LLR 양자화 테이블 | `ecc_data.h` `PARAM_LLR`, `decoder.cpp` `Get_VNU_Table_Idx()` | MMSE 계수를 iteration-dependent 테이블로 확장 시 연계 가능 |</code></pre>
+<p>적용 가치: 높음 — Prime ECC가 이미 min-sum(scale/offset factor 미확정) 구조이므로, 낮은 이식 난이도로 waterfall 영역 정정능력 개선을 기대할 수 있는 직결 기법.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5303564",
+  "title": "Design of BP-Based Decoding for Short LDPC Codes Using MMSE Criterion",
+  "year": 2009,
+  "venue": "IEEE",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "504~1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "scaled/offset min-sum 계수를 MMSE 기준으로 이론 유도해 UMP-BP 대비 성능을 BP에 근접시킴",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "상",
+  "caveat": "(3,6) regular 짧은 코드만 검증, 계수는 iteration/SNR 전역 고정(비적응형), 최대 iteration 1000으로 과다",
+  "todo_check": "Prime ECC 실제 rate/length·양자화 비트폭 조건에서 동일 MMSE 유도식 유효성 및 iteration-dependent LLR 테이블과 결합 가능성 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5303564---design-of-bp-based-decoding-for-short-ldpc-codes-using-mmse-criterion-2009-ieee">ieee:5303564 - Design of BP-Based Decoding for Short LDPC Codes Using MMSE Criterion (2009, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

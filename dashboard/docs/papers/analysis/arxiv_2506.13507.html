@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2506.13507</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv250613507v1---dynamic-layered-decoding-scheduling-for-ldpc-codes-aided-by-check-node-error-probabilities-2025-arxiv">arxiv:2506.13507v1 - Dynamic Layered Decoding Scheduling for LDPC Codes Aided by Check Node Error Probabilities (2025, arXiv)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.386~0.4681</td></tr><tr><td>부호length</td><td>1170~2640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>체크노드 error probability 오름차순 우선 업데이트 동적 LBP 스케줄(Dyn-EBP/PEBP), penalty로 중복업데이트 억제</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Fibonacci heap 기반 동적 재정렬은 HW 병렬 layered 파이프라인과 정합 어려움, BP(tanh)/full precision 가정이라 min-sum·양자화 재검증 필요</td></tr><tr><td>추가확인</td><td>fixed 5-iter BLER만 그림 제공(수치 게인은 본문 서술 없음), min-sum·QC layer 실HW 스케줄에서의 이득 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: error probability 기반 동적 layered 스케줄로 고정 iteration에서 수렴 효율을 높이나 BP 기반·동적 heap 재정렬로 HW 정합 부담이 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BI-AWGN 채널, 5G NR LDPC BG1 QC-LDPC, 블록길이 <code>1170~2640</code>, rate <code>0.386~0.4681</code>, iteration 5 고정.</li><li>문제: flooding BP는 수렴 느리고 기존 동적 스케줄(residual/syndrome 기반)은 heuristic이라 이득 제한적.</li><li>통찰: 효율적 스케줄은 error probability 낮은 체크노드를 우선 업데이트해야 함([11] 근거).</li><li>핵심식: 체크노드 error prob <code>p^ci_ε = (1/2)(1 - ∏_{j∈N(ci)}(1 - 2/(1+e^|Lj|)))</code> (Lemma 2, λ=1), VN error prob은 <code>1/(1+e^|Lj|)</code>.</li><li>의미: 체크노드가 이웃 VN들의 오류를 정정할 가능성을 LLR 크기로 정량화, 낮을수록 신뢰도 높음.</li><li>Dyn-EBP: 우선순위집합 <code>P</code>를 error prob 오름차순 유지, 각 iteration마다 체크노드를 정확히 1회씩 업데이트(업데이트 후 즉시 제거).</li><li>Dyn-PEBP: 1회 제약을 완화, penalty <code>p̃ = p^ci_ε + γ·li</code>(업데이트 횟수 li, γ∈[0,1])로 중복 업데이트 억제, γ=1이면 Dyn-EBP와 동일.</li><li>구현: Fibonacci heap(INSERT/MINIMUM/DECREASE-KEY 상수시간)으로 재정렬 비용 절감, 반복당 복잡도 <code>O(E·d̄v·d̄c)</code>.</li><li>결과: 5G NR BG1, iter=5에서 Dyn-EBP/PEBP(γ=0.35)가 LBP·LPHD·RD-RBP·[11] 대비 BLER 우위(그림 3), QC layer 평균 error prob로 스케줄.</li><li>한계: HW 미설계·시뮬만, BP(tanh) full precision 가정, 정량 게인 수치는 본문 서술 없이 그림에만 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>동적 layered 스케줄(체크노드 업데이트 순서)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>dual-update(even/odd 교대) 스케줄 대체·보완 후보</td></tr><tr><td>error probability 계산(LLR 기반)</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>LLR 값에서 파생, 양자화 LLR 테이블과 연동 필요</td></tr><tr><td>QC layer 단위 스케줄</td><td>decoder.cpp <code>C2V_Cal()</code> (z=32 row 병렬)</td><td>QC 리프팅 layer 단위 처리와 개념 정합</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 알고리즘 레이어(스케줄) 변경으로 이식점은 명확하나, Fibonacci heap 동적 재정렬과 BP 가정이 Prime ECC의 고정 파이프라인·min-sum·양자화와 정합에 추가 작업이 필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2506.13507v1",
+  "title": "Dynamic Layered Decoding Scheduling for LDPC Codes Aided by Check Node Error Probabilities",
+  "year": 2025,
+  "venue": "arXiv",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.386~0.4681",
+  "code_length": "1170~2640",
+  "soft_quant": "무관",
+  "key_contribution": "체크노드 error probability 오름차순 우선 업데이트 동적 LBP 스케줄(Dyn-EBP/PEBP), penalty로 중복업데이트 억제",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "Fibonacci heap 기반 동적 재정렬은 HW 병렬 layered 파이프라인과 정합 어려움, BP(tanh)/full precision 가정이라 min-sum·양자화 재검증 필요",
+  "todo_check": "fixed 5-iter BLER만 그림 제공(수치 게인은 본문 서술 없음), min-sum·QC layer 실HW 스케줄에서의 이득 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv250613507v1---dynamic-layered-decoding-scheduling-for-ldpc-codes-aided-by-check-node-error-probabilities-2025-arxiv">arxiv:2506.13507v1 - Dynamic Layered Decoding Scheduling for LDPC Codes Aided by Check Node Error Probabilities (2025, arXiv)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

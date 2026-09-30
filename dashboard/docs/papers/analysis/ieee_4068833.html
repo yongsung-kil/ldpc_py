@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4068833</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4068833---a-novel-simple-stopping-criterion-for-the-pcgc-decoder-2006-ieee">ieee:4068833 - A novel simple stopping criterion for the PCGC decoder (2006, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1280</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>extrinsic information 크기의 평균(MEM) 변화를 추적해 PCGC 디코더의 super iteration을 조기종료하는 저복잡도 기준 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 PCGC(interleaver 없는 두 LDPC 서브코드 병렬연접, turbo-style super/local iteration 구조)로 Prime ECC의 단일 QC-LDPC min-sum 구조와 근본적으로 다름</td></tr><tr><td>추가확인</td><td>MEM 기준(연속 super iteration 간 extrinsic 평균값 감소폭 비교)을 Prime ECC의 단일 LDPC partial-CRC 조기종료 로직과 병행 적용 가능한지 검토</td></tr></tbody></table>
+<blockquote><p>총평: turbo-style PCGC(두 LDPC 서브코드 병렬연접)의 super iteration 조기종료 기준으로, 연산·저장 오버헤드가 낮으나(N개 연산, 2개 메모리) 대상 코드 구조 자체가 Prime ECC의 단일 QC-LDPC와 달라 이식 난이도가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>PCGC(Parallel Concatenated Gallager Codes): interleaver 없이 두 LDPC 서브코드(rate 1/2, <code>640x1280</code>, mean column weight 2와 2.667)를 병렬연접한 turbo-style 구조, SISO MAP 서브디코더 2개가 super iteration마다 extrinsic 정보 교환.</li><li>기존 FIXED 스킴은 모든 프레임이 preset MNSI(최대 super iteration)까지 반복해 계산 낭비가 발생하는 문제.</li><li>AWGN(<code>N(0,σ²)</code>) 채널, BPSK 변조 가정.</li><li>핵심 기법: 매 super iteration <code>i</code> 종료 시 extrinsic 정보 크기 평균 <code>EA(i) = (1/N) Σ|L_ext,j(a_k)|</code> 계산 - "good" 프레임은 EA가 단조증가, "bad" 프레임은 초반 증가 후 작은 범위에서 진동하는 경향 관찰.</li><li><code>EA(i)</code>가 이전 값보다 작고 그 감소폭이 <code>P x EA(i-1)</code>보다 작으면(즉 값이 threshold <code>T</code>, fall ratio <code>P</code> 조건 하에 정체) 카운터 C를 1 증가시키고, C=1이 되는 즉시 디코더 종료(MEM 규칙).</li><li>확장 없음 - 단일 규칙(MEM)만 제안, 기존 CE(Cross-Entropy)/SCR(Sign-Change-Ratio) 기준과 비교.</li><li>구현 디테일: MEM은 super iteration당 <code>N</code>회 실수 연산 + <code>EA(i)</code>, <code>EA(i-1)</code> 저장용 실수 메모리 2개만 필요 - CE(<code>5N-1</code>연산, <code>N+2</code>메모리), SCR(<code>3N-1</code>정수연산, <code>N+2</code>메모리) 대비 최소.</li><li>별도 학습 절차 없음 - 파라미터 <code>T</code>, <code>P</code>는 시뮬레이션 스윕으로 결정 (최적값 <code>T=2</code>, <code>P=0.05</code>).</li><li>결과: MEM 기준이 CE/SCR 대비 평균 super iteration 수를 더 많이 절감하면서 BER 성능 열화가 가장 적음(CE 대비 열화 큼, SCR도 최소 0.1dB 손실 대비 MEM은 무시할 수준).</li><li>한계: HW 미설계, 시뮬레이션(BER, 평균 iteration 수)만 제시. 대상이 PCGC(interleaver-free 병렬 LDPC turbo 구조)로 단일 QC-LDPC 코드와 다르며, iteration 절감 목적이지 정정능력 자체를 개선하진 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>extrinsic 정보 평균 기반 조기종료 (MEM)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>iteration별 조기종료 아이디어는 유사하나 대상이 partial-CRC와 다른 통계 기반 기준</td></tr><tr><td>조기종료 (기존 Partial CRC 대체/보완)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>이미 Partial CRC 4-termination point 조기종료를 보유해 중복 기여</td></tr><tr><td>PCGC 병렬연접 구조 (super/local iteration)</td><td>대응 없음</td><td>단일 QC-LDPC 구조인 Prime ECC에 두 서브코드 병렬연접 turbo 구조가 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 | Prime ECC는 이미 Partial CRC 기반 조기종료를 보유하고 있고, 본 논문의 MEM 기준은 PCGC(두 LDPC 서브코드 병렬연접, turbo-style)라는 이질적 코드 구조를 전제로 하여 단일 QC-LDPC 디코더에 그대로 이식하기 어려움.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4068833",
+  "title": "A novel simple stopping criterion for the PCGC decoder",
+  "year": 2006,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": 1280,
+  "soft_quant": "무관",
+  "key_contribution": "extrinsic information 크기의 평균(MEM) 변화를 추적해 PCGC 디코더의 super iteration을 조기종료하는 저복잡도 기준 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "대상 부호가 PCGC(interleaver 없는 두 LDPC 서브코드 병렬연접, turbo-style super/local iteration 구조)로 Prime ECC의 단일 QC-LDPC min-sum 구조와 근본적으로 다름",
+  "todo_check": "MEM 기준(연속 super iteration 간 extrinsic 평균값 감소폭 비교)을 Prime ECC의 단일 LDPC partial-CRC 조기종료 로직과 병행 적용 가능한지 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4068833---a-novel-simple-stopping-criterion-for-the-pcgc-decoder-2006-ieee">ieee:4068833 - A novel simple stopping criterion for the PCGC decoder (2006, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

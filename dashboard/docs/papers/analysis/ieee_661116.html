@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_661116</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee661116---on-iterative-soft-decision-decoding-of-linear-binary-block-codes-and-product-codes-1998-ieee-jsac">ieee:661116 - On Iterative Soft-Decision Decoding of Linear Binary Block Codes and Product Codes (1998, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.27~0.85</td></tr><tr><td>부호length</td><td>15~5329</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>이중부호 최소무게 parity check 벡터만으로 extrinsic 계산하는 반복 soft-decision 복호(IDA)를 weighted majority-logic·gradient 최적화로 해석, 최소 trellis로 효율 구현</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BCH/RM/QR/EG/DSC 등 대수적 블록부호 대상, min-weight dual 벡터 확보가 별도 난제이고 QC-LDPC min-sum과 부호·연산구조 상이</td></tr><tr><td>추가확인</td><td>tanh 기반 최소무게 dual-check 합산이 우리 min-sum 대비 이점 있는지, 그리고 결론에서 언급한 LDPC 매칭 부호설계 가능성</td></tr></tbody></table>
+<blockquote><p>총평: 오늘날 LDPC BP의 사촌격(Gallager/Battail 계열)인 대수적 블록부호용 반복 soft-decision 복호로 이론적 통찰은 크나, 특정 대수부호·tanh 합산·trellis 구현이라 binary QC-LDPC min-sum HW로의 이식성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BCH, Reed-Muller, quadratic residue(QR), double circulant(DC), 유클리드/사영 기하(EG/PG, DSC) 등 선형 binary 블록부호와 이들 기반 product/parallel-concatenated 부호, AWGN+BPSK.</li><li>문제: turbo류 iterative 복호의 이론이 불명확 → 블록부호 관점에서 symbol-by-symbol iterative 복호를 이해하고 SDML에 근접시키기.</li><li>핵심기법 IDA: 매 iteration에서 이중부호 codeword로 extrinsic <code>L_e</code>를 계산해 채널값에 더하고(<code>전체 시퀀스</code> 갱신, turbo는 정보심볼만), hard decision이 부호어면 종료.</li><li>핵심 근사: 최적 extrinsic(Hartmann-Rudolph (6))을 이중부호의 <code>최소무게 parity check 벡터</code> 집합만으로 근사, 저무게 벡터가 지배적 기여이므로 나머지는 무시.</li><li>계산식: <code>L_e(l) = ∏ tanh</code> 형태의 Gallager/Massey (11) 식을 비직교 집합에도 적용, <code>sign(근사)=sign(최적)</code> 일치율이 4dB에서 97%↑임을 표로 입증.</li><li>이론 연결: IDA는 weighted majority-logic 복호와 동치(Prop.1: MLG가 맞으면 IDA는 1 iteration에 정정), 채널값의 generalized syndrome weight <code>E(z)</code> 상승 gradient 최적화로 해석되며 parity check 집합이 decision region을 규정.</li><li>부수결과: MAP iterative ≠ SDML 반례 제시, 수렴 실패점 존재하나 확률 극소(예 (31,21)BCH에서 &lt;10^-? @2dB), 대체로 부호어로 수렴.</li><li>효율 구현: 최소무게 parity check 집합을 <code>minimal trellis</code>로 표현(mergeable vertex 병합 알고리즘 F/B), forward-backward로 extrinsic 계산 → straightforward 대비 최대 32.6배(64,42 RM) 연산 절감.</li><li>결과: (255,175)EG는 MLG 대비 2.1dB↑, (64,42)RM은 SDML 대비 0.1dB 열위·연산 9.7배 절감, 여러 부호에서 SDML 근접; product/PC 부호(최대 (5329,2025))도 justifiable 복잡도로 복호.</li><li>한계: 순수 알고리즘/시뮬(DSP 부동소수 연산량 기준), HW 미설계, 특정 대수부호의 최소무게 dual 벡터 확보가 별도 난제, 최적 step width·성능 bound는 미해결.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>최소무게 dual-check 기반 extrinsic 합산 (tanh)</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>full-tanh 합산은 우리가 쓰는 min-sum 근사와 계열은 같으나 연산·부호구조 상이 → 이식 이점 불명</td></tr><tr><td>CN 메시지 계산 (Gallager/Massey 식)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 tanh 대신 min1/min2 min-sum → 이미 보유, 중복</td></tr><tr><td>minimal trellis forward-backward 구현</td><td>대응 없음</td><td>Prime ECC는 QC-LDPC message passing, trellis 미사용</td></tr><tr><td>부호구조(EG/PG/DSC finite-geometry LDPC) 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리는 QC-LDPC 고정, finite-geometry 부호는 재검증 부담 큼</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC BP의 이론적 사촌이지만, 대상이 대수적 블록부호이고 tanh 합산·minimal-trellis 구현이라 binary QC-LDPC min-sum HW에 떼어 쓸 신규 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:661116",
+  "title": "On Iterative Soft-Decision Decoding of Linear Binary Block Codes and Product Codes",
+  "year": 1998,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.27~0.85",
+  "code_length": "15~5329",
+  "soft_quant": "무관",
+  "key_contribution": "이중부호 최소무게 parity check 벡터만으로 extrinsic 계산하는 반복 soft-decision 복호(IDA)를 weighted majority-logic·gradient 최적화로 해석, 최소 trellis로 효율 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BCH/RM/QR/EG/DSC 등 대수적 블록부호 대상, min-weight dual 벡터 확보가 별도 난제이고 QC-LDPC min-sum과 부호·연산구조 상이",
+  "todo_check": "tanh 기반 최소무게 dual-check 합산이 우리 min-sum 대비 이점 있는지, 그리고 결론에서 언급한 LDPC 매칭 부호설계 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee661116---on-iterative-soft-decision-decoding-of-linear-binary-block-codes-and-product-codes-1998-ieee-jsac">ieee:661116 - On Iterative Soft-Decision Decoding of Linear Binary Block Codes and Product Codes (1998, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

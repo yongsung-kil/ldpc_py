@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6273344</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6273344---design-and-research-of-improved-algorithm-decoder-of-ldpc-code-2012-mic">ieee:6273344 - Design and Research of Improved Algorithm Decoder of LDPC code (2012, MIC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>384</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>확장형 storage array + 카운터 기반 address generator + master-slave 상태기계로 코드길이 확장 용이한 저복잡 부분병렬 LDPC 디코더</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.01124 (11.24Mbit/s)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>정정성능 개선 아닌 HW 자원효율만 다룸(normalized BP μ=3/4는 표준기법), rate 1/2·384bit 짧은 부호로 NAND 고rate·장부호와 규모 부정합</td></tr><tr><td>추가확인</td><td>address generator의 카운터-기반 순환행렬 주소생성이 Prime ECC QC rotate 대비 실이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: normalized min-sum(μ=3/4) 자체는 표준이고 기여는 storage array·주소생성기·상태기계 등 범용 FPGA HW 자원효율에 국한되어, NAND 고rate QC-LDPC로의 알고리즘적 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 표준 circulant 구조 QC-LDPC 디코더, FPGA(Xilinx XC2VP30) 구현, code length 384bit, rate 1/2, iteration 15회.</li><li>문제: LDPC 디코더는 iteration 다수·변수 다량으로 HW 실현 복잡·자원 소모 큼 → 범용 칩화를 위한 저복잡·확장성 있는 디코더 필요.</li><li>H-matrix: <code>H=[Hs|Hp]</code>, sub-matrix는 zero / 단위행렬 / 단위행렬의 cyclic shift 3종, density evolution으로 shift량 최적화해 girth 최대화.</li><li>복호 알고리즘: normalized BP-Based(=normalized min-sum), CN 갱신에 정규화 계수 <code>μ</code>(&lt;1) 곱.</li><li>핵심 식: <code>μ=3/4</code>일 때 근사 복호 성능 유지 + 곱셈을 덧셈·shift로 완전 변환(HW 친화).</li><li>병렬화: 데이터 전송 없는 sub-matrix는 병렬, 그 외 직렬 → partial-parallel 구조.</li><li>Storage array: dual-port RAM으로 variable/check 노드 정보를 번갈아 저장, 코드길이 N을 n=N/w 분할 저장, 저장공간 재사용으로 자원효율↑.</li><li>Address generator: W진 카운터 배열로 순환행렬 shift량을 초기값으로 주소 생성, 비연속 nonzero 위치를 카운터로 기록해 주소 저장공간 축소.</li><li>제어: master-slave 상태기계(EN-INITIAL/EN-VNU/EN-CNU)로 순차제어 단순화, 코드길이 확장 시 RAM 모듈만 추가.</li><li>결과: 342MHz, throughput 11.24Mbit/s, FPGA 후 시뮬-실측 BER 곡선 일치로 정확성 검증(정정성능 개선은 없음).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>이터레이션 루프 / VNU·CNU 갱신</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>표준 message-passing 루프로 개념 대응만, 구조 재사용 이득 낮음</td></tr><tr><td>normalized min-sum(μ 정규화)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>Prime ECC min-sum과 계열 동일하나 μ=3/4는 표준, 신규성 없음</td></tr><tr><td>QC cyclic-shift 주소 생성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC circulant shift 로드와 겹치나 카운터-기반 주소기법은 HW 세부, SW 시뮬 무관</td></tr><tr><td>storage array / 메모리 재사용</td><td>대응 없음</td><td>Prime ECC는 z=32 병렬 HW 모델로 별도 storage array 개념 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — normalized min-sum·QC 순환구조는 이미 보유하거나 표준이고, 신규 기여는 범용 FPGA storage array·주소생성기·상태기계라 NAND용 고rate QC-LDPC 코드베이스에 알고리즘적 이득이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6273344",
+  "title": "Design and Research of Improved Algorithm Decoder of LDPC code",
+  "year": 2012,
+  "venue": "MIC",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "384",
+  "soft_quant": "무관",
+  "key_contribution": "확장형 storage array + 카운터 기반 address generator + master-slave 상태기계로 코드길이 확장 용이한 저복잡 부분병렬 LDPC 디코더",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.01124,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "정정성능 개선 아닌 HW 자원효율만 다룸(normalized BP μ=3/4는 표준기법), rate 1/2·384bit 짧은 부호로 NAND 고rate·장부호와 규모 부정합",
+  "todo_check": "address generator의 카운터-기반 순환행렬 주소생성이 Prime ECC QC rotate 대비 실이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6273344---design-and-research-of-improved-algorithm-decoder-of-ldpc-code-2012-mic">ieee:6273344 - Design and Research of Improved Algorithm Decoder of LDPC code (2012, MIC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

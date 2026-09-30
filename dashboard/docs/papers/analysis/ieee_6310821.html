@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6310821</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6310821---an-improved-ldpc-decoding-scheme-with-reverse-bit-order-mode-for-distributed-video-codec-2012-ieee-istc-2012">ieee:6310821 - An Improved LDPC Decoding Scheme with Reverse Bit Order Mode for Distributed Video Codec (2012, IEEE (ISTC 2012))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>DVC(Wyner-Ziv)에서 SI 품질 나쁜 블록에 reverse-bit-order 모드로 LLR 초기화를 개선(bitplane 상관 활용, PSNR 최대 2.4dB)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 디코더/부호 자체가 아닌 영상용 LLR 초기화 전략, rate-compatible LDPCA에 종속. NAND와 무관</td></tr><tr><td>추가확인</td><td>비디오 소스 상관에 특화된 LLR init이라 NAND read soft-info와 접점 없음 확인</td></tr></tbody></table>
+<blockquote><p>총평: 분산비디오코딩용 LLR 초기화(reverse bit order mode) 개선 응용 논문. LDPC 디코더/부호 자체 기여 아니고 비디오 소스 상관 특화라 NAND ECC 이식 가치 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 분산비디오코딩(DVC, GOP=2, Wyner-Ziv even frame), bitplane별로 rate-compatible LDPCA로 syndrome 인코딩·피드백 채널로 재요청하는 구조.</li><li>문제: bitplane joint 디코딩은 상위 bitplane을 prior로 쓰는데 side information(SI) 품질이 나쁜 블록에선 prior가 오히려 성능을 해친다.</li><li>모델: 인접 key frame으로 SI <code>Y</code>와 residual <code>R</code> 생성, 블록(16x16) 움직임 크기 <code>T</code>로 mode 분류.</li><li>핵심: 각 블록을 Reverse-bit-order Mode(RM)/Zero Mode(ZM)/Classical Mode(CM)로 분류(식 (3)(4), threshold <code>RMth/ZMth</code>), 모드별로 LLR 초기화 방식을 다르게 적용.</li><li>RM에선 이진표현을 LSB→MSB 역순으로 인·복호 → 덜 중요한 하위비트를 prior로 써 <code>bk</code>의 <code>P(bk=0)</code> 확률을 더 정확히 추정 (식 (5)).</li><li>CM은 기존대로 MSB→LSB, ZM은 이진표현을 0으로 두고 <code>P(bk=0)</code>를 1로 설정.</li><li>최종 LLR은 모드별 <code>P(bk=0|SI)</code>로 계산(식 (7)), ZM은 분모 0 회피용 고정값 <code>C=100</code> 사용.</li><li>이 LLR을 표준 LDPC 반복복호의 초기 입력으로 투입(디코더 알고리즘 자체는 표준 LDPCA).</li><li>결과(시뮬): Carphone/Foreman/Coastguard/Hall (QCIF, 15fps)에서 [5] 대비 PSNR 최대 2.4dB, RM 단독으로도 최대 1dB gain; RM 비율 클수록(움직임 복잡) 이득 큼.</li><li>한계: LDPC 부호/디코더 자체 개선 아니라 비디오 소스 상관 활용 LLR 초기화 응용, HW 없음, NAND와 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>모드별 LLR 초기화(reverse bit order)</td><td>channel.cpp <code>Set_LLR_Th()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>개념상 LLR 입력 레이어지만 비디오 bitplane 상관 특화라 NAND soft-read와 무관</td></tr><tr><td>LDPCA 반복복호</td><td>대응 없음</td><td>표준 LDPCA(rate-compatible)로 Prime ECC 고정 QC-LDPC와 다름, 디코더 기여 없음</td></tr><tr><td>DVC/Wyner-Ziv 아키텍처, mode decision</td><td>대응 없음</td><td>Prime ECC와 완전 무관한 영상 소스코딩 영역</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — LDPC 부호/디코더 자체가 아니라 분산비디오코딩 소스 상관에 특화된 LLR 초기화 응용이라 NAND binary QC-LDPC ECC(Prime ECC)에 떼어 쓸 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6310821",
+  "title": "An Improved LDPC Decoding Scheme with Reverse Bit Order Mode for Distributed Video Codec",
+  "year": 2012,
+  "venue": "IEEE (ISTC 2012)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "DVC(Wyner-Ziv)에서 SI 품질 나쁜 블록에 reverse-bit-order 모드로 LLR 초기화를 개선(bitplane 상관 활용, PSNR 최대 2.4dB)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC 디코더/부호 자체가 아닌 영상용 LLR 초기화 전략, rate-compatible LDPCA에 종속. NAND와 무관",
+  "todo_check": "비디오 소스 상관에 특화된 LLR init이라 NAND read soft-info와 접점 없음 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6310821---an-improved-ldpc-decoding-scheme-with-reverse-bit-order-mode-for-distributed-video-codec-2012-ieee-istc-2012">ieee:6310821 - An Improved LDPC Decoding Scheme with Reverse Bit Order Mode for Distributed Video Codec (2012, IEEE (ISTC 2012))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

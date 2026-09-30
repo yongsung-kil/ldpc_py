@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4638987</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4638987---parallel-architecture-for-decoding-ldpc-codes-on-high-speed-communication-systems-2008-eamta-2008">ieee:4638987 - Parallel Architecture for Decoding LDPC Codes on High Speed Communication Systems (2008, EAMTA 2008)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.9384</td></tr><tr><td>부호length</td><td>1024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>VPFCC 구조속성으로 메시지를 저장없이 on-demand 계산해 메모리·상호연결 절감, N개 BVC 블록(N^2 대신)으로 병렬 SISO 복호</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>16.9k reg + 14.4k LUT@Virtex5 XC5VLX330</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>VPFCC(TPC/SPC) 구조속성에 의존 - 일반 QC-LDPC엔 직접 미적용; throughput 미보고, 정정이득 없음, SPA(full-tanh) 기반</td></tr><tr><td>추가확인</td><td>QC-LDPC가 VPFCC 파티션을 만족하는지, on-demand 메시지 계산의 메모리 절감을 QC 구조에 적용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 고rate(0.94) 이진 LDPC의 메모리·라우팅 절감 HW 아이디어이나 VPFCC/TPC-SPC 구조에 종속돼 Prime ECC의 고정 QC-LDPC엔 그대로 이식 불가.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 고속 통신/자기기록용 SISO LDPC 복호기, 예제는 <code>2D-TPC/SPC(32,31)^2</code> (n=1024, k=961, d=4, rate 0.9384), 8bit 정밀도.</li><li>문제: SISO LDPC 검출기의 상호연결 복잡도·메모리 요구가 커서 고속 병렬 구현이 어려움.</li><li>핵심 구조가정: <strong>VPFCC</strong> (Variable-node Partition with Full Check-node Connectivity) - 변수노드를 파티션 <code>PV={Vq}</code>로 나눠 각 <code>Vq</code>가 (P1) 모든 체크노드에 연결되고 (P2) 같은 <code>Vq</code> 내 두 변수노드가 체크노드를 공유하지 않는 속성.</li><li>대상부호: VPFCC를 만족하는 부호(특히 <code>2D-TPC/SPC(N,N-1)^2</code> 곱부호), 파티션 <code>Vi</code>는 <code>N x N</code> 변수노드 배열의 modular-diagonal <code>Dk</code>로 구성.</li><li>복호: SPA로 <code>M(vi-&gt;cj)=AprLLR + sum M(ck-&gt;vi)</code>, <code>M(cj-&gt;vi)=phi^-1(sum phi(M(vk-&gt;cj)))</code>, <code>phi(x)=ln tanh(x/2)</code>; BCV(check)는 연산비중이 커 <code>min</code> 근사 <code>M* = min|M| * prod(sign)</code>(min-sum)도 제시.</li><li>아키텍처: BVC(변수-&gt;체크)는 병렬, BCV(체크-&gt;변수)는 recursive로 복잡도 최소화, BApoLLR는 사후 LLR 계산.</li><li>핵심 트릭: VPFCC 파티션으로 클록당 <code>N</code>개 변수노드만 갱신 - 메시지 <code>M(vi-&gt;cj)/M(cj-&gt;vi)</code>를 저장하지 않고 on-demand 계산·소비 → 메모리·MUX 상호연결 대폭 절감.</li><li>병렬도: full-parallel의 <code>N^2</code>개 대신 <strong>N개 BVC 블록만</strong> 구현, MUX로 파티션별 BVC-BCV 연결; iteration은 HW를 반복 인스턴스화(unroll)해 처리.</li><li>결과: Virtex5 XC5VLX330 FPGA 합성, <code>2D-TPC/SPC(32,31)^2</code> 기준 registers 16,952(8.18%)/LUT 14,402(6.95%) 사용. (throughput·클록수 미보고)</li><li>한계: 이득은 VPFCC 구조 속성에 종속 - 일반 QC-LDPC엔 직접 적용 불가; 정정성능 개선 주장 없음(정확 SPA 유지가 목적), throughput 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA/SISO 복호 전체</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime은 min-sum, 논문은 full-tanh SPA(+min-sum 근사) - 계열 일부만 겹침</td></tr><tr><td>BCV check node min-sum 근사</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min-sum 부분만 중복, 이미 보유</td></tr><tr><td>BVC/BApoLLR VN·사후LLR 처리</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>표준 VN 처리, 신규성 없음</td></tr><tr><td>VPFCC 파티션 기반 on-demand 메모리·라우팅 절감</td><td>대응 없음</td><td>Prime은 QC z=32 구조·GT 사용, VPFCC 파티션 트릭은 TPC/SPC 종속이라 이식 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 메모리·라우팅 절감이라는 방향은 NAND LDPC 병목과 맞닿지만, 절감 기법이 VPFCC/TPC-SPC 구조 속성에 종속돼 고정 QC-LDPC에 그대로 옮길 수 없음.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:4638987",
+  "title": "Parallel Architecture for Decoding LDPC Codes on High Speed Communication Systems",
+  "year": 2008,
+  "venue": "EAMTA 2008 (Argentine School of Micro-Nanoelectronics)",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.9384,
+  "code_length": "1024",
+  "soft_quant": "무관",
+  "key_contribution": "VPFCC 구조속성으로 메시지를 저장없이 on-demand 계산해 메모리·상호연결 절감, N개 BVC 블록으로 병렬 SISO 복호",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "16.9k reg + 14.4k LUT@Virtex5 XC5VLX330",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "VPFCC(TPC/SPC) 구조속성에 의존 - 일반 QC-LDPC엔 직접 미적용; throughput 미보고, 정정이득 없음",
+  "todo_check": "QC-LDPC가 VPFCC 파티션을 만족하는지, on-demand 메모리 절감을 QC 구조에 적용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4638987---parallel-architecture-for-decoding-ldpc-codes-on-high-speed-communication-systems-2008-eamta-2008">ieee:4638987 - Parallel Architecture for Decoding LDPC Codes on High Speed Communication Systems (2008, EAMTA 2008)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

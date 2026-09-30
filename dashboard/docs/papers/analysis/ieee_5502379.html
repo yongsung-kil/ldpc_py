@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5502379</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5502379---hybrid-decoding-of-ldpc-codes-based-on-interior-point-method-2010-ieee-icc">ieee:5502379 - Hybrid Decoding of LDPC Codes Based on Interior Point Method (2010, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.7~0.69</td></tr><tr><td>부호length</td><td>255~273</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>배리어함수 근사(체크노드당 1개 선형제약)로 IPD를 FG-LDPC에 적용가능하게 만들고 MBF와 결합한 2단 하이브리드 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>내부점법(Newton, gradient/Hessian) 기반이라 min-sum HW와 이질적, non-QC FG-LDPC 소블록 전용, HW 미설계</td></tr><tr><td>추가확인</td><td>Newton 반복당 실제 연산량과 short block에서만의 이득이 NAND 고rate·대블록에 적용될 여지가 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 소블록 FG-LDPC용 내부점(LP)+MBF 하이브리드 복호로 이론적 흥미는 있으나 min-sum 기반 NAND QC-LDPC와 알고리즘 이질성·HW 부재로 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 고rate FG-LDPC(EG-LDPC) 소블록, 예시 (255,175) Type-I 2-D EG-LDPC, BI-AWGN/BPSK 채널.</li><li>문제: IMP(BP)는 소블록·중고 SNR에서 성능 부족, 표준 내부점 복호(Wadayama [6])는 FG-LDPC의 무거운 행가중치(<code>wr</code>) 탓에 제약 수 <code>M·2^(wr-1)</code>로 계산 불가능.</li><li>LP 완화: ML 복호 <code>min γ^T c s.t. c∈C</code>를 fundamental polytope <code>P</code>(parity+box 제약)로 완화, LLR 벡터 <code>γ</code>가 목적함수.</li><li>핵심기법1: 로그배리어 <code>φ(x)</code>를 근사 <code>φ̃(x)</code>로 대체 — 체크노드 m마다 최대위반 제약 <code>σm</code>(식13) 하나만 남김(Corollary 4.3), 목적함수 평가를 <code>O(N·2^wr)</code>→<code>O(N·wr)</code>로 축소.</li><li>의미: 정리 4.1(한 parity 부등식 위반 시 나머지는 strict 만족)로 위반 후보 1개만 추적하면 충분 → 브루트포스 부분집합 열거 제거.</li><li>핵심기법2: gradient/Hessian도 각 m의 최대기여항만 포함해 근사(식14~18), 계산량 <code>O(N·wr)</code>로 축소; Newton centering(outer <code>t=μt</code>, inner Newton) 반복.</li><li>하이브리드: IPD로 search point 생성→양자화·syndrome 확인, 실패 시 LLR <code>γi=log((1-xi)/xi)</code> 계산 후 MBF(multiple bit flipping)로 복호 이어감(Algorithm 3), outer iteration 반복.</li><li>최적화: outer 최대 5, inner 최대 20, MBF 최대 20, IDBP 200 iteration으로 비교.</li><li>결과: 근사 IPD가 표준 IPD와 거의 동일 성능, 표준 대비 실행시간 약 1/10; 하이브리드는 BER 10^-6에서 IDBP 대비 약 0.2 dB 이득, 고SNR에서 평균 outer iteration 1회.</li><li>한계: 시뮬만(HW 미설계), 소블록 전용, Newton 기반이라 연산 무거움, FG-LDPC(non-QC) 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>IPD/하이브리드 복호 알고리즘 전체</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>이터레이션 루프 대응은 되나 내부점(Newton) 방식이라 min-sum 루프와 알고리즘 자체가 이질적</td></tr><tr><td>LLR/search point → soft 정보</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>search point를 LLR로 변환하는 부분만 개념적 접점, 직접 이식 어려움</td></tr><tr><td>syndrome 조기종료</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>논문은 syndrome <code>s=z·H^T</code> 기반 종료, Prime은 CRC 기반 — 개념 유사하나 구현 상이</td></tr><tr><td>내부점 Newton gradient/Hessian</td><td>대응 없음</td><td>Prime ECC에 내부점법 모듈 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 내부점(LP) 기반 복호는 min-sum HW 파이프라인의 Prime ECC 3.1과 연산 구조가 근본적으로 달라 이식 부담이 크고, 소블록 FG-LDPC 전용이라 고rate 대블록 NAND QC-LDPC에 실익이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5502379",
+  "title": "Hybrid Decoding of LDPC Codes Based on Interior Point Method",
+  "year": 2010,
+  "venue": "IEEE ICC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "255~273",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "배리어함수 근사(체크노드당 1개 선형제약)로 내부점 복호를 FG-LDPC에 적용가능하게 하고 MBF와 결합한 2단 하이브리드 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "내부점법(Newton, gradient/Hessian) 기반이라 min-sum HW와 이질적, non-QC FG-LDPC 소블록 전용, HW 미설계",
+  "todo_check": "Newton 반복당 실제 연산량과 short block 전용 이득이 NAND 고rate 대블록에 적용될 여지가 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5502379---hybrid-decoding-of-ldpc-codes-based-on-interior-point-method-2010-ieee-icc">ieee:5502379 - Hybrid Decoding of LDPC Codes Based on Interior Point Method (2010, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

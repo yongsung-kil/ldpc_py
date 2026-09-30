@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11017681</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11017681---iteration-and-sda-driven-ldpc-decoding-latency-reduction-for-3-d-tlc-nand-flash-memory-2025-ieee-tcas-i">ieee:11017681 - Iteration and SDA-Driven LDPC Decoding Latency Reduction for 3-D TLC NAND Flash Memory (2025, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.889</td></tr><tr><td>부호length</td><td>18432</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>iteration 수를 복호정답확률 지표로 사용, MSB 단방향 error model로 LSB/CSB LLR을 β배 증폭(IACPO) + SDA overlap 오프셋 read(ULDCO)로 iteration latency 최대 81.51% 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계(ZYNQ 테스트보드 실측), min-sum 자체 미개선이며 TLC MSB/CSB/LSB page 구조·특정 칩(Micron B16A) 특성에 의존</td></tr><tr><td>추가확인</td><td>iteration&lt;max일 때 LLR을 (1+β)배 증폭하는 규칙이 Prime ECC의 적응형 LLR 테이블/2SD·3SD와 충돌 없이 결합되는지, TLC page 종속성을 우리 부호 프레임에 매핑 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃의 디코더 LLR/iteration 최적화로 Prime ECC의 LLR 테이블 계층에 이식 여지가 있으나, TLC page 상관 error model과 칩별 SDA read table에 의존해 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 LDPC ECC를 쓰는 3-D TLC NAND flash(Micron B16A)로, code length <code>18432</code>, code rate <code>8/9</code>, min-sum 복호, 최대 iteration 40(page당 7 frame이라 page 최대 280).</li><li>문제: P/E·retention 증가로 RBER이 오르면 LDPC iteration·read-retry가 늘어 복호 latency가 급증한다.</li><li>관찰 1: 실측상 복호 성공 시 iteration은 항상 max 미만, 실패 시 max에 도달 → iteration 수를 복호 정답확률 지표로 사용 가능(Fig.3).</li><li>핵심 기법 IACPO: MSB page가 저RBER임을 이용해 MSB 복호결과로 CSB/LSB를 단방향 확정하는 error model 구축, MSB의 <code>IterMSBi &lt; IterMAX</code>이면 해당 page의 LLR을 <code>LLR' = LLR + β·LLR</code>로 증폭(식 3).</li><li>의미: MSB가 신뢰(조기수렴)될 때만 LSB/CSB LLR을 키워 iterative 수렴을 가속, 잘못된 MSB로 인한 오확정을 회피.</li><li>파라미터: <code>β=1.5</code>가 평균 iteration 최소(Fig.8)로 실험 전반에 채택.</li><li>관찰 2/기법 ULDCO: RBER이 LDPC 정정범위 내면 성공하는 read voltage 구간 SDA가 존재하고, 서로 다른 retention의 SDA가 겹치는 <code>SDAoverlap</code> 중앙값을 read offset으로 쓰면 hard-decision read만으로 저RBER 확보.</li><li>구현: offline에서 P/E·retention별 성공 offset을 측정해 Read Index Table(21bit) 구축, online은 host의 P/E·retention으로 테이블 lookup 후 MSB 복호→IACPO 실행(Algorithm 2).</li><li>결과: 실측(ZYNQ-7000 self-developed platform)에서 iteration latency IACPO 73.43%, ULDCO 81.51% 감소, EMAL 대비 약 20% 개선, 1400 P/E·270일에서 복호성공률 38.17%p 향상, 저장/연산 overhead 무시가능.</li><li>한계: HW 디코더 미설계(알고리즘·테이블만), min-sum 자체는 미개선, TLC page 구조·특정 칩 특성 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>iteration&lt;max 조건부 LLR β배 증폭</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블 계층과 직접 닿음 - iteration별 threshold와 결합 시 page 상관 증폭 규칙 실험 가능</td></tr><tr><td>iteration 수 기반 조기종료/성공판정</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, full_CRC.cpp</td><td>Prime ECC는 CRC로 성공판정, 논문은 iteration&lt;max로 대체 - 조기종료 지표 비교 참고</td></tr><tr><td>SDA overlap read voltage offset</td><td>channel.cpp <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>soft-read/offset 설정 계층에 닿으나 hard-decision read 전제로 채널 모델 재검증 필요</td></tr><tr><td>min-sum CN/VN 연산</td><td>대응 없음 (미변경)</td><td>논문은 min-sum 자체를 손대지 않음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 디코더 LLR 증폭·iteration 활용은 Prime ECC의 <code>PARAM_LLR</code>/VNU 테이블 계층에 이식 여지가 있으나, TLC MSB/CSB/LSB page 상관 error model과 칩별 SDA read table가 우리 부호/채널 구조에 그대로 매핑되지 않아 재검증 부담이 있다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11017681",
+  "title": "Iteration and SDA-Driven LDPC Decoding Latency Reduction for 3-D TLC NAND Flash Memory",
+  "year": 2025,
+  "venue": "IEEE Transactions on Circuits and Systems I: Regular Papers",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.889,
+  "code_length": "18432",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "iteration 수를 복호정답확률 지표로 사용, MSB 단방향 error model로 LSB/CSB LLR을 β배 증폭(IACPO) + SDA overlap 오프셋 read(ULDCO)로 iteration latency 최대 81.51% 감소",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "HW 미설계(ZYNQ 테스트보드 실측), min-sum 자체 미개선이며 TLC MSB/CSB/LSB page 구조·특정 칩(Micron B16A) 특성에 의존",
+  "todo_check": "iteration&lt;max일 때 LLR을 (1+β)배 증폭하는 규칙이 Prime ECC의 적응형 LLR 테이블/2SD·3SD와 충돌 없이 결합되는지, TLC page 종속성을 우리 부호 프레임에 매핑 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11017681---iteration-and-sda-driven-ldpc-decoding-latency-reduction-for-3-d-tlc-nand-flash-memory-2025-ieee-tcas-i">ieee:11017681 - Iteration and SDA-Driven LDPC Decoding Latency Reduction for 3-D TLC NAND Flash Memory (2025, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8351713</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8351713---probabilistic-gradient-descent-bit-flipping-decoders-for-flash-memory-channels-2018-ieee-iscasconf">ieee:8351713 - Probabilistic Gradient Descent Bit-Flipping Decoders for Flash Memory Channels (2018, IEEE (ISCAS/conf))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.868</td></tr><tr><td>부호length</td><td>155~9520</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>PGDBF의 런타임 max-finder를 오프라인 계산 에너지 임계값(FM-PGDBF)으로 대체해 복잡도↓·throughput↑, 예측 오차가 trapping-set 탈출 유도</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (레지스터/LUT 상대치만, gatecount@공정 없음)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>11.2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(대칭 crossover)만 가정, hard-decision BF라 soft-read 미활용; 임계값 오프라인 예측이 코드/dv·dc 종속</td></tr><tr><td>추가확인</td><td>FM-PGDBF 임계값 시퀀스 길이 l 캘리브레이션 절차와 비대칭 flip(1→0≠0→1) 확장 시 성능</td></tr></tbody></table>
+<blockquote><p>총평: NAND 직접 타깃 hard-decision BF 계열 저복잡도 디코더로, max-finder 제거 아이디어는 병렬 HW throughput 개선에 참고 가치가 있으나 Prime ECC의 min-sum/soft 경로와는 계열이 달라 부분 이식.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 NAND flash용 QC-LDPC(regular <code>dv=3,4</code>, 예: <code>dc=8</code>), rate 0.4~0.868, 길이 155~9520을 BSC(crossover <code>α</code>)로 모델링한 hard-decision 채널.</li><li>문제: 저정밀 BF 디코더는 복잡/저전력이나 error-floor·수렴 보장이 어렵고, PGDBF는 성능은 좋지만 확률 생성기와 global max-finder(MF) 때문에 면적↑·주파수↓.</li><li>기법 1단(PGDBF 복습): CN은 XOR 패리티, VN은 에너지 <code>Ev(n)=vn⊕(yn XOR Σ c_m)</code> (식 2, 정수 0~dvn+1)를 계산, 최대 에너지 VN 중 확률 <code>p0</code>로 무작위 부분집합만 flip.</li><li>기법 2단(제안 FM-PGDBF): 런타임 max 계산을 제거하고, Monte-Carlo로 오프라인 산출한 iteration별 에너지 임계값 <code>TH_n</code>을 사용 — <code>Ev(n) &gt;= TH_n AND R_n=1</code>이면 flip.</li><li>임계값 시퀀스는 길이 <code>l</code>로 짧게 저장하고 circular하게 재사용(메모리 절감), 코드·<code>dv,dc</code>에 맞춰 캘리브레이션.</li><li>핵심 통찰: 임계값 예측의 부정확성(imprecision)이 디코더를 "흔들어(shaking)" 대부분의 trapping set을 탈출시켜 오히려 성능 개선.</li><li>HW: flooding 스케줄, N개 VNU·M개 dc-XOR CNU 완전병렬; MF(compare-and-swap 이진트리, <code>tMF=tc·log2(N)</code>)를 VN별 단순 비교기로 대체해 critical path 단축.</li><li>검증: Xilinx Virtex-6, ISE 14.7, place&amp;route 후 레지스터/LUT 측정.</li><li>결과: FM-PGDBF는 GDBF 대비 LUT 약 40%만 사용(-60%), 처리율 <code>dv3R050N1296</code>에서 11.2Gbps(vs GDBF 6480Mbps, PGDBF 5355Mbps), GDBF 대비 FER 약 2dB 이득(α=0.02), waterfall 개선·조금 이른 error-floor.</li><li>한계: BSC 대칭 flip만 가정(비대칭은 future work), hard-1bit라 NAND soft-read LLR 미활용, gatecount@공정·평균 iteration 절대수치는 본문 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BF 에너지·flip 결정(디코딩 루프)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>VN 갱신 루프 대체는 가능하나 min-sum 계열이 아님 → 계열 상이</td></tr><tr><td>CN 패리티(XOR) 연산</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>BF는 순수 XOR 패리티, min-sum 연산(<code>CNU_Update_New_Mag()</code>)과는 성격 다름</td></tr><tr><td>iteration별 오프라인 임계값 테이블</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>iteration 구간별 테이블 참조 구조는 유사(적응형 LLR과 개념적 유비)</td></tr><tr><td>hard-decision 입력</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>HD 경로는 존재하나 BF는 LLR 미사용</td></tr><tr><td>완전병렬 VNU/CNU + max 제거</td><td>디코더 HW 모델(z=32, GT/HCU)</td><td>Prime ECC는 row 단위 z=32 부분병렬, 본 논문은 N 완전병렬 → 구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NAND 직접 타깃이지만 hard-decision BF 계열로 Prime ECC의 soft/min-sum QC-LDPC 파이프라인과 계열이 다르고, 오프라인 임계값·max-finder 제거 아이디어만 정성적으로 참고 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8351713",
+  "title": "Probabilistic Gradient Descent Bit-Flipping Decoders for Flash Memory Channels",
+  "year": 2018,
+  "venue": "IEEE (conference)",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "155~9520",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "PGDBF의 런타임 max-finder를 오프라인 에너지 임계값(FM-PGDBF)으로 대체, 복잡도 -60% LUT, throughput 2배, 예측오차가 trapping-set 탈출 유도",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 11.2,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC 대칭 crossover만 가정, hard-decision BF라 soft-read 미활용, 임계값 오프라인 예측이 코드/dv·dc 종속",
+  "todo_check": "임계값 시퀀스 길이 l 캘리브레이션 절차와 비대칭 flip(1→0≠0→1) 확장 시 성능"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8351713---probabilistic-gradient-descent-bit-flipping-decoders-for-flash-memory-channels-2018-ieee-iscasconf">ieee:8351713 - Probabilistic Gradient Descent Bit-Flipping Decoders for Flash Memory Channels (2018, IEEE (ISCAS/conf))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

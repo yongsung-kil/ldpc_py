@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5479633</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5479633---low-power-baseband-processing-for-wireless-multimedia-systems-using-unequal-error-protection-2010-ieee-wireless-telecom-conference">ieee:5479633 - Low-Power Baseband Processing for Wireless Multimedia Systems using Unequal Error Protection (2010, IEEE (wireless telecom conference))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>H.264 데이터 분할 우선순위 + check-error 레벨로 layered LDPC 반복 횟수를 가변 배정하고 clock/power gating으로 전력 절감(UEP)</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.001</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선 H.264 비디오 특화 조기종료+power gating으로 부호/복호 성능 개선이 아님; NAND는 프레임 우선순위 개념 없음</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 이미 보유한 조기종료(iteration 가변) 아이디어를 H.264 UEP·power gating에 접목한 저전력 무선 응용으로, NAND binary QC-LDPC ECC 성능에 새로 이식할 요소가 거의 없다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: H.264/AVC(QCIF 176x144, 30fps) 비디오를 layered LDPC로 부호화한 JSCD(joint source-channel) 저전력 디코더, AWGN+BPSK 채널, <code>dc=25, dv=5, p=67</code>, code rate 0.8.</li><li>문제: 고정 반복 LDPC 복호는 대부분 프레임을 필요 이상으로 오래 돌려 idle이 많고 전력 비효율.</li><li>핵심 아이디어(UEP): H.264 데이터 분할(NAL)로 프레임을 3개 우선순위(A/B/C)로 나누고 중요 데이터에 더 강한 보호(더 많은 반복) 배정.</li><li><code>uep_func(cErrLevel, Importance)</code>: 우선순위 × check-error 레벨(4단계) = 12개 반복값을 look-up table에서 선택.</li><li>check error <code>x̂H^T</code> 크기를 3개 임계값(<code>cErrThre1~3</code>)으로 4레벨 분류 — 에러 심할수록 반복↑.</li><li>복호는 layered LDPC(min-sum 기반 CNU, Final State 압축, cyclic shift <code>s(l,n)</code>)이며 inner/outer loop 반복 구조.</li><li>HW: clock gating(동적 전력) + power gating(MTCMOS sleep transistor, 누설 전력)로 프레임 간 idle 구간 deep sleep.</li><li>조기종료로 생긴 idle에서 sleep/wake 제어; sleep transistor의 wake latency는 critical path에 여유 cycle 부여로 보상.</li><li>결과: 0.13µm ASIC 합성, LDPC 1Mbps throughput, 전체 782.6µW; UEP가 EEP 대비 3.4dB에서 전력 25% 감소(case별 최대 38%), 저SNR에서 PSNR 개선.</li><li>한계: HW는 저전력 무선 비디오 특화(우선순위/전력관리 위주), 부호/복호 정정능력 자체 개선 없음; 순수 시뮬+합성 수준, 실측 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>check-error 기반 가변 반복(조기종료)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료 개념은 Prime ECC가 이미 CRC 기반으로 보유 — 중복</td></tr><tr><td>layered min-sum CNU/cyclic shift</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>min-sum 복호는 이미 보유, 신규성 없음</td></tr><tr><td>clock/power gating, H.264 UEP, NAL 우선순위</td><td>대응 없음</td><td>무선 비디오 전력관리·프레임 우선순위는 NAND ECC와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 조기종료/layered min-sum은 이미 보유하고, 나머지는 H.264 무선 비디오 전력관리 특화라 NAND binary QC-LDPC에 이식할 요소가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5479633",
+  "title": "Low-Power Baseband Processing for Wireless Multimedia Systems using Unequal Error Protection",
+  "year": 2010,
+  "venue": "IEEE (wireless telecommunications conference)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": 0.8,
+  "code_length": "미상",
+  "soft_quant": "미상",
+  "key_contribution": "H.264 데이터 분할 우선순위 + check-error 레벨로 layered LDPC 반복 횟수를 가변 배정하고 clock/power gating으로 전력 절감(UEP)",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.001,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무선 H.264 비디오 특화 조기종료+power gating으로 부호/복호 성능 개선이 아님; NAND는 프레임 우선순위 개념 없음",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5479633---low-power-baseband-processing-for-wireless-multimedia-systems-using-unequal-error-protection-2010-ieee-wireless-telecom-conference">ieee:5479633 - Low-Power Baseband Processing for Wireless Multimedia Systems using Unequal Error Protection (2010, IEEE (wireless telecom conference))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

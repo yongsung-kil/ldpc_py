@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9399161</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9399161---hardware-efficient-and-high-throughput-llrc-segregation-based-binary-qc-ldpc-decoding-algorithm-and-architecture-2021-ieee-tcas-ii">ieee:9399161 - Hardware-Efficient and High-Throughput LLRC Segregation Based Binary QC-LDPC Decoding Algorithm and Architecture (2021, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.33~0.89</td></tr><tr><td>부호length</td><td>10368</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>채널 LLR을 LLRC로 분리(segregation)해 data-congestion 완화, MUX 라우터 최적화로 HW효율·throughput 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>11.02Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>OMS 대비 0.041dB coding-loss(성능 소폭 열위), 5G-NR BG matrix·z=384에 특화되어 NAND 고정 QC 구조와 라우터 재설계 필요</td></tr><tr><td>추가확인</td><td>LLRC-segregation MSR/MWR 라우터가 Prime의 z=32·N_b=129 고정구조에서 GE 절감 재현되는지, extrinsic memory 압축(AE-LLR) 이식 여지</td></tr></tbody></table>
+<blockquote><p>총평: 5G-NR binary QC-LDPC의 layered OMS 디코더를 LLRC-segregation과 MUX 라우터 최적화로 HW효율·11Gbps throughput을 낸 논문으로, 알고리즘 계열(binary QC-LDPC/OMS)은 Prime ECC와 정합하나 라우팅 최적화가 5G-NR BG matrix 구조에 강결합되어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 5G-NR binary QC-LDPC로 codelength <code>26112~10368 bits</code>, rate <code>1/3~8/9</code>, expansion factor <code>z=a×2^j</code>(max 384), base graph <code>B46×68</code>.</li><li>풀려는 문제: 5G-NR 큰 BG matrix·긴 codelength에서 layered 디코더의 data-congestion과 MUX 라우팅이 HW효율·throughput을 악화시킨다.</li><li>채널/모델: AWGN 채널, quantized channel-LLR(내부 CN 5bit, AP-LLR 7bit) 고정소수점.</li><li>핵심 기법 <code>LLRC-segregation</code>: z개 LLR을 하나의 LLR-compound(LLRC)로 묶어 V/E 행렬 행 단위로 CN·VN 메시지를 행렬 형태로 처리, LLR 접근을 단순·고속화.</li><li>핵심 식: <code>mvc=S-e</code>(식6), OMS CN 갱신 <code>mcv=sign·max(min|mvc|-β,0)</code>(식7, β=1), <code>D=mvc+mcv</code>(식8)로 layered AP-LLRC 갱신.</li><li>확장: LLRC를 CN용 index-vector P로 선택(S matrix, 식5), weighted-vector W로 cyclic rotation, reverse-CR로 역회전.</li><li>구현 디테일: MSR(19 병렬 MUX로 68:1 대체, HW 90%↓), MWR(25 MUX+43 direct mapping), 5bit TC→SM 변환에 ConU(16 GE로 21 GE 대체), Min1/Min2-Streamer, extrinsic memory 압축(AE-LLR/CE-LLRC).</li><li>학습/최적화: 없음(고정소수점 하드웨어 최적화 위주), Monte-Carlo 10^6~10^8 bit 시뮬로 FER 검증.</li><li>결과: Xilinx Zynq-Ultrascale+ FPGA, 135MHz, peak 11.02Gbps(n=10368, rate 8/9, L=5), 기존 대비 throughput 2.2×·HW효율 8.3×, 디코더 전체 HW 54% 절감.</li><li>한계: OMS-FP 대비 0.041dB coding-loss(성능 소폭 열위), 정정능력 개선 아님, 5G-NR BG matrix·z=384 특화, gatecount/전력 정량 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>OMS layered CN 갱신 (식7 min1/min2)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime의 min-sum(min1/min2+sign XOR)과 동일 계열, OMS offset β 도입 여지</td></tr><tr><td>VN mvc 갱신 / AP-LLR 갱신</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>layered 스케줄·행렬 갱신, Prime 루프에 매핑 가능</td></tr><tr><td>LLR 양자화(5bit CN/7bit AP), TC→SM ConU</td><td>ecc_data.h <code>PARAM_LLR</code>, channel.cpp</td><td>양자화 포맷·offset 이식 검토 대상</td></tr><tr><td>LLRC-segregation MSR/MWR MUX 라우팅</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>Prime의 Graph Thinning(MUX edge 선택)과 목적 유사하나 5G-NR BG 구조 강결합</td></tr><tr><td>H-matrix / BG 로드(가변 z)</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime은 z=32 고정, 가변 z 라우터는 재설계 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — binary QC-LDPC OMS/min-sum이라는 알고리즘 계열은 Prime ECC와 정합하고 offset·extrinsic 압축 아이디어는 참고 가치가 있으나, 핵심 이득인 LLRC-segregation 라우터가 5G-NR BG matrix·가변 z에 강결합되어 Prime의 z=32 고정구조로 옮기려면 재설계 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9399161",
+  "title": "Hardware-Efficient and High-Throughput LLRC Segregation Based Binary QC-LDPC Decoding Algorithm and Architecture",
+  "year": 2021,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.33~0.89",
+  "code_length": "10368",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "채널 LLR을 LLRC로 분리(segregation)해 data-congestion 완화, MUX 라우터 최적화로 HW효율·throughput 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 11.02,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "OMS 대비 0.041dB coding-loss(성능 소폭 열위), 5G-NR BG matrix·z=384에 특화되어 NAND 고정 QC 구조와 라우터 재설계 필요",
+  "todo_check": "LLRC-segregation MSR/MWR 라우터가 Prime의 z=32·N_b=129 고정구조에서 GE 절감 재현되는지, extrinsic memory 압축(AE-LLR) 이식 여지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9399161---hardware-efficient-and-high-throughput-llrc-segregation-based-binary-qc-ldpc-decoding-algorithm-and-architecture-2021-ieee-tcas-ii">ieee:9399161 - Hardware-Efficient and High-Throughput LLRC Segregation Based Binary QC-LDPC Decoding Algorithm and Architecture (2021, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

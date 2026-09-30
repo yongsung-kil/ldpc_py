@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5529042</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5529042---a-low-power-layered-decoding-architecture-for-ldpc-decoder-implementation-for-ieee-80211n-ldpc-codes-2008-islped08">ieee:5529042 - A Low Power Layered Decoding Architecture for LDPC Decoder Implementation for IEEE 802.11n LDPC Codes (2008, ISLPED'08)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833 (1/2,2/3,3/4,5/6)</td></tr><tr><td>부호length</td><td>1944(size81), 648~1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>layered QC-LDPC 디코더에서 연속 layer의 column overlap로 Channel RAM 접근을 우회하고, 큰 magnitude를 threshold로 clip해 RAM1 접근을 줄인 저전력 기법</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>memory bypass가 horizontal layered 스케줄·특정 H overlap에 종속, thresholding은 정정성능 소폭 희생, gatecount/throughput 미제시(전력 중심)</td></tr><tr><td>추가확인</td><td>Prime ECC(dual-update, z=32) 구조에서 column-overlap 우회·magnitude clip 적용 가능성 및 전력 이득</td></tr></tbody></table>
+<blockquote><p>총평: 저전력 memory-access 축소(Channel RAM 53~72%↓, 총 11~24%↓) HW 기법으로 NAND 저전력에 유용하나, 핵심 bypass가 layered 스케줄·특정 부호 구조에 종속되어 Prime ECC 구조 정합이 필요하다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 IEEE 802.11n QC-LDPC(AA-LDPC), <code>rate 1/2·2/3·3/4·5/6</code>, sub-block 27/54/81, <code>Nb=24</code>(size81 기준 N=1944); AWGN 채널.</li><li>문제: layered(horizontal) 디코더는 수렴은 빠르나 Channel RAM·RAM1을 매 클록 read/write해 메모리 전력이 전체의 절반 이상을 차지.</li><li>배경: layered 스케줄은 posterior를 layer마다 갱신해 평균 iteration을 최대 <code>50%↓</code>, min-sum/two-output 근사로 CN 출력 저장을 2개로 축소.</li><li>기법1(memory bypassing): 연속 두 layer가 같은 column에 non-null이면(overlap) Add-array 결과를 Channel RAM에 쓰지 않고 다음 layer로 직접 전달.</li><li>핵심: 802.11n H는 overlap column이 많아 Channel RAM 접근을 <code>57%~82%</code> 절감 가능(디코딩 순서 최적화가 관건).</li><li>구현: overlap 최대화·idle cycle 최소화 위해 RAM1의 read/write 순서를 de-couple, update 순서용 ROM으로 SISO index 보정, mux·파이프 레지스터 추가.</li><li>기법2(thresholding): 중간 soft magnitude가 임계 <code>T</code> 이상이면 magnitude를 RAM1에 안 쓰고 1-bit <code>S</code>만 저장(2개 묶어 1비트), 갱신 시 최대 표현값 사용.</li><li>파라미터: bit-width 6bit(sign1+mag5), <code>T=21</code>을 시뮬로 결정, SNR 높을수록 saturate 값 많아 RAM1 접근 <code>5%~37%↓</code>.</li><li>결과(TSMC 0.18um, 200MHz, 1.8V, 합성): Channel RAM 전력 <code>53%~72%↓</code>, RAM1 <code>11%~27%↓</code>, 총 디코더 전력 <code>11%~24%↓</code>, 성능 열화 경미.</li><li>한계: throughput/gatecount 미제시(전력 중심), thresholding은 정정성능 소폭 희생, 기법이 layered 메모리 구조에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered 스케줄 + column-overlap memory bypass</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>스케줄·메모리 접근 루프 - Prime ECC dual-update와 정합 필요</td></tr><tr><td>min-sum 2-output SISO CN 연산</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2 2개 magnitude 저장은 이미 유사 보유</td></tr><tr><td>magnitude thresholding(soft 값 clip)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>큰 magnitude clip으로 메시지 메모리 접근 축소 아이디어 반영 가능</td></tr><tr><td>cyclic shifter / Channel RAM 라우팅</td><td>대응 없음</td><td>z=32 HW 모델 대응 영역이나 §6에 대응 함수명 없음</td></tr></tbody></table>
+<p>적용 가치: 중간 — NAND 컨트롤러도 저전력이 중요해 magnitude clip·메모리 접근 축소 아이디어는 유용하나, 핵심 memory-bypass가 horizontal layered 스케줄과 특정 H overlap에 종속되어 Prime ECC(dual-update, z=32) 구조에 그대로 이식하기는 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5529042",
+  "title": "A Low Power Layered Decoding Architecture for LDPC Decoder Implementation for IEEE 802.11n LDPC Codes",
+  "year": 2008,
+  "venue": "ISLPED'08",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1944(size81), 648~1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "layered QC-LDPC 디코더에서 연속 layer의 column overlap로 Channel RAM 접근을 우회하고 큰 magnitude를 threshold로 clip해 RAM1 접근을 줄인 저전력 기법",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "memory bypass가 horizontal layered 스케줄·특정 H overlap에 종속, thresholding은 정정성능 소폭 희생, gatecount/throughput 미제시(전력 중심)",
+  "todo_check": "Prime ECC(dual-update, z=32) 구조에서 column-overlap 우회·magnitude clip 적용 가능성 및 전력 이득"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5529042---a-low-power-layered-decoding-architecture-for-ldpc-decoder-implementation-for-ieee-80211n-ldpc-codes-2008-islped08">ieee:5529042 - A Low Power Layered Decoding Architecture for LDPC Decoder Implementation for IEEE 802.11n LDPC Codes (2008, ISLPED&#x27;08)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

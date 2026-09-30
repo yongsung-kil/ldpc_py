@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4594966</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4594966---a-feedback-belief-propagation-algorithm-for-ldpc-convolutional-codes-2008-isit">ieee:4594966 - A Feedback Belief Propagation Algorithm for LDPC Convolutional Codes (2008, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>같은 iteration의 과거 변수노드 메시지를 피드백 활용해 수렴속도 2배·복호지연 절반(저장량 동일)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC 컨볼루션 부호 + 슬라이딩윈도우 I-프로세서 파이프라인 전용, NAND 블록 QC-LDPC와 구조 상이</td></tr><tr><td>추가확인</td><td>같은-iteration 메시지 피드백이 블록 QC-LDPC의 layered/sequential 스케줄링으로 환원 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC-CC 전용 파이프라인 피드백 스케줄로 수렴 2배·지연 절반이나, 블록 QC-LDPC 기반 Prime ECC엔 직접 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: rate-1/2 <code>(M,J,K)=(513,3(2),5)</code> 시변 주기 LDPC 컨볼루션 부호(LDPC-CC), AWGN+BPSK, LLR 복호.</li><li>문제: 기존 BP/on-demand BP는 매 iteration에서 변수 메시지를 항상 이전 iteration 값으로만 갱신 → 수렴 느림·복호지연 큼.</li><li>구조: <code>I</code>개 프로세서가 <code>I</code>번의 iteration을 동시 수행하는 슬라이딩 윈도우 파이프라인(프로세서 간 <code>2(M+1)</code> 변수노드 간격), 초기지연 <code>I(M+1)-1</code>.</li><li>핵심 기법: 변수노드를 one-by-one 활성화하고, 현재 노드를 기준으로 과거/미래 변수노드로 분류.</li><li>핵심 식(11): <code>Z_j^(i)(n)</code>을 과거 변수노드는 같은 iteration <code>i</code> 메시지, 미래 변수노드는 이전 iteration <code>i-1</code> 메시지로 계산(부호=sgn 곱, 크기=min).</li><li>의미: 같은 iteration의 최신 과거 메시지를 즉시 재활용 → 메시지 갱신 속도 상승(on-demand 대비 유효 수렴 2배).</li><li>트릭: 가중치 <code>a (0&lt;a≤1, 최적 0.9)</code>를 LLR 크기에 곱해 cycle로 인한 입력 상관 저감(정규화 min-sum류).</li><li>복잡도: 프로세서당 add <code>2(J-1)</code>, mul <code>J(K-2)+2</code>, min <code>2J</code>, sign <code>2J</code> (on-demand와 유사), 단 레지스터 크기 <code>4(M+1)-2</code>로 약 2배.</li><li>결과: 20 iter feedback BP ≈ 40 iter on-demand BP 성능, 총 복호지연 절반(<code>I(M+1)-1</code>), 저장 총량 증가 없음.</li><li>한계: 순수 시뮬(BER 곡선)만, gatecount/HW 합성 없음, AWGN 가정, 블록부호가 아닌 컨볼루션 부호 구조 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>피드백 메시지 스케줄(iteration 루프)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>스케줄 개념 유사하나 CC 파이프라인 전용, 블록 QC-LDPC 루프와 구조 다름</td></tr><tr><td>min+sign 크기/부호 연산(식11)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum과 중복</td></tr><tr><td>가중치 <code>a</code> LLR 크기 축소</td><td>대응 없음 (Prime ECC는 magnitude 양자화 테이블 기반, 명시적 scaling 미확인)</td><td>정규화 min-sum류, 기여 제한적</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 컨볼루션 부호의 슬라이딩윈도우 프로세서 파이프라인에 종속된 스케줄링이라 블록 QC-LDPC 디코더에 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4594966",
+  "title": "A Feedback Belief Propagation Algorithm for LDPC Convolutional Codes",
+  "year": 2008,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "같은 iteration의 과거 변수노드 메시지를 피드백 활용해 수렴속도 2배·복호지연 절반(저장량 동일)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "LDPC 컨볼루션 부호 + 슬라이딩윈도우 I-프로세서 파이프라인 전용, NAND 블록 QC-LDPC와 구조 상이",
+  "todo_check": "같은-iteration 메시지 피드백이 블록 QC-LDPC의 layered/sequential 스케줄링으로 환원 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4594966---a-feedback-belief-propagation-algorithm-for-ldpc-convolutional-codes-2008-isit">ieee:4594966 - A Feedback Belief Propagation Algorithm for LDPC Convolutional Codes (2008, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

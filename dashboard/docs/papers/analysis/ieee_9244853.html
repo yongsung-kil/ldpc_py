@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9244853</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9244853---fpga-based-design-and-prototyping-of-efficient-5g-qc-ldpc-channel-decoding-2020-ieee">ieee:9244853 - FPGA based design and prototyping of efficient 5G QC-LDPC channel decoding (2020, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.324~0.815</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>프레임 레벨 병렬화로 짧은 프레임의 NPU 활용률을 높여 FPGA상 처리율을 Xilinx 상용 디코더 대비 2~3배 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>92664 LUT/49049 Registers/197 BRAM36k+51 BRAM18k@Kintex7 xc7k160t</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>1.196Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>5G 표준(non-binary 관점 아님, 다중 lifting size/BG 지원용) 유연성 위주 설계로 NAND 고정 rate/length 구조와 목적이 다름</td></tr><tr><td>추가확인</td><td>offset permutation 기법의 barrel shifter 대비 라우팅 복잡도가 실제 NAND 파이프라인 면적에 미치는 영향</td></tr></tbody></table>
+<blockquote><p>총평: HW 아키텍처 최적화(프레임 병렬화, 순열 네트워크)이나 5G 다중 lifting-size 유연성 대응이 핵심이라 고정 rate NAND ECC에는 이식 실익이 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>5G 표준 QC-LDPC 채널 디코더: 2개 Base-Graph(BG1 rate 1/3, BG2 rate 1/5), 51종 lifting size(Z, 최대 384)를 모두 지원하는 유연 구조.</li><li>문제: lifting size가 작은 짧은 프레임에서는 병렬 NPU(최대 384개) 활용률이 급감(예 Z=2일 때 0.52%)해 처리율이 크게 저하됨.</li><li>채널모델: BPSK + AWGN, <code>Li = 2yi/σ^2</code>로 채널 LLR 산출, 표준 레이어드 SPA/OMS 디코딩.</li><li>레이어드 디코딩에 Offset-Min-Sum(OMS) 적용: <code>Mc→v ≈ sign(...) * max(min|Mv→c| - α, 0)</code>로 <code>f(x)=-ln(tanh(x/2))</code> 연산을 근사.</li><li>핵심 트릭인 프레임 병렬화: 동일 rate/length/BG를 가진 프레임 <code>P = Zmax/Z</code>개를 동시에 처리해 하드웨어 효율 <code>η = P×Z/Zmax</code>을 평균 0.23→0.92로 4배 향상.</li><li>두 번째 순열 네트워크 대신 offset permutation(<code>Δr(i)=rnew(i)-rold(i)</code>) 기법으로 APP를 원위치로 되돌리는 연산 생략.</li><li>NPU를 2단 파이프라인(stage0: SUB/MR1/serial-sorting, stage1: MR2/ADD)으로 분리해 처리율을 약 2배로 향상, VN degree 편차 시 일부 idle 존재.</li><li>학습/최적화 절차 없음 (고정 하드웘어 아키텍처 설계).</li><li>결과: Kintex7 xc7k160t 기준 Fclk=160MHz, 처리율 CR=0.815에서 평균 1.196Gbps(Xilinx 0.596Gbps 대비 2배), CR=0.324에서 3배; LUT는 Xilinx 대비 69% 증가, BRAM 92% 증가.</li><li>한계: 5G 특유의 다중 BG/lifting-size 유연성 지원이 핵심이라 단일 고정 부호 NAND ECC에는 그대로 적용하기 어려우며 non-binary 관점 개선이나 error-floor 관련 데이터는 제공하지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Offset-Min-Sum 근사</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 min-sum 계열 보유, 중복 기여로 참고용</td></tr><tr><td>레이어드 디코딩 이터레이션 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>기본 구조 동일, 신규 기여 없음</td></tr><tr><td>offset permutation / barrel shifter 라우팅</td><td>대응 없음</td><td>Prime ECC는 z=32 고정 QC라 51종 lifting 지원용 순열망 설계는 불필요</td></tr><tr><td>프레임 레벨 병렬화(짧은 프레임 재사용)</td><td>대응 없음</td><td>Prime ECC는 단일 고정 코드 구조라 다중 lifting size 재사용 개념 자체가 없음</td></tr><tr><td>8bit APP / 6bit C2V 양자화</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>양자화 비트수 참고 가능하나 NAND soft-read 비용 관점과 무관</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 5G 표준의 다중 lifting-size/BG 유연성 대응과 프레임 병렬화가 핵심 기여인데, Prime ECC는 고정 z=32 QC-LDPC 구조라 해당 유연성 문제 자체가 존재하지 않음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9244853",
+  "title": "FPGA based design and prototyping of efficient 5G QC-LDPC channel decoding",
+  "year": 2020,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.324~0.815",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "프레임 레벨 병렬화로 짧은 프레임의 NPU 활용률을 높여 FPGA상 처리율을 Xilinx 상용 디코더 대비 2~3배 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "92664 LUT/49049 Registers/197 BRAM36k+51 BRAM18k@Kintex7 xc7k160t",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 1.196,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "5G 표준(다중 lifting size/BG 지원용) 유연성 위주 설계로 NAND 고정 rate/length 구조와 목적이 다름",
+  "todo_check": "offset permutation 기법의 barrel shifter 대비 라우팅 복잡도가 실제 NAND 파이프라인 면적에 미치는 영향"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9244853---fpga-based-design-and-prototyping-of-efficient-5g-qc-ldpc-channel-decoding-2020-ieee">ieee:9244853 - FPGA based design and prototyping of efficient 5G QC-LDPC channel decoding (2020, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

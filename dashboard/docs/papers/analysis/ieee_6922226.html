@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6922226</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6922226---design-and-implementation-of-multi-rate-ldpc-decoder-for-ieee-80216e-wireless-standard-2014-ieee">ieee:6922226 - Design and Implementation of Multi-Rate LDPC Decoder for IEEE 802.16e Wireless Standard (2014, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>576</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>two-min-sum column-layered 복호 + expansion factor 24 고정 6-rate 유연 병렬 아키텍처를 130nm ASIC 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.96mm2@130nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.0958~0.1596Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>WiMAX 소형부호(N=576, q=24) 고정, barrel/right-left shifter 임계경로로 clock 39.9MHz 저속, min-sum·layered는 기보유와 중복</td></tr><tr><td>추가확인</td><td>column-layered의 클록당 block-column 처리·shifter 라우팅이 우리 z=32·GT 구조에 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: binary QC-LDPC용 two-min-sum column-layered ASIC 디코더로, layered 스케줄·CNU 2-min 레지스터 구조·shifter 라우팅은 참고가치 있으나 min-sum/layered 자체는 기보유 중복이고 WiMAX 소형부호·저클록 한계.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary QC-LDPC (IEEE 802.16e WiMAX), 부호길이 <code>576</code>, block column = 24×24 (expansion factor <code>q=24</code>), 6개 rate(1/2, 2/3A/B, 3/4A/B, 5/6) 지원, BPSK/AWGN.</li><li>문제: 다중 rate를 단일 유연 아키텍처로 지원하면서 layered로 iteration을 줄여 표준 요구 throughput을 맞추는 것.</li><li>핵심 기법: min-sum 기반 <strong>column-layered decoding</strong> — parity check matrix를 B block column 그룹으로 나눠 그룹 단위(G0..G_{B-1}) 순차 CNU/VNU 갱신, block column을 그대로 그룹으로 사용.</li><li>VNU: <code>L(v→c) = Iv + α·Σ R(c→v)</code>, normalized min-sum scaling <code>α</code> 최적 0.8이나 HW 단순화 위해 <code>α=0.75</code> 사용.</li><li>CNU: <code>R = S × r</code>, <code>r = min(min_{va} L^{(k)}, min_{vb} L^{(k-1)})</code> — va는 이미 갱신된 그룹, vb는 이전 iteration 값 사용(column-layered 특성).</li><li>two-min-sum: 각 CNU가 최소 2개 <code>|Lcv|</code> (m1,m2)와 index (i1,i2, 각 5bit), sign 곱 Scn을 25bit 레지스터에 저장, CNU를 A(임시벡터 생성)/B(비교·갱신) 2단으로 분리.</li><li>채널 soft값은 sign-magnitude 8bit 양자화(MSB=sign); v→c 메시지는 저장 불필요(VNU에서 재생성)해 메모리 절감.</li><li>아키텍처: 96 CNU + 24 VNU 완전병렬, right/left barrel shifter로 sub-matrix shift index 라우팅, 단일 유연 controller가 iteration수·주소 관리, 음수 shift index 블록은 비활성.</li><li>결과: 130nm CMOS ASIC(SYNOPSYS/CADENCE), area 0.96mm², clock 39.9MHz(임계경로 ~35%가 shifter), info throughput 95.76~159.6Mbps(5/10 iter), block column당 1 클록.</li><li>한계: WiMAX 소형부호 고정, shifter 임계경로로 clock 저속·non-pipelined, 정정능력 자체 개선 아님(구현·convergence 위주).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>column-layered 복호 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 dual-update(row 교대) 스케줄과 대비되는 column-layered 참조</td></tr><tr><td>two-min-sum CNU (m1/m2, sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>min1/min2+sign XOR은 기보유, 중복성 큼</td></tr><tr><td>VNU normalized scaling α=0.75</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등</td><td>우리 min-sum scaling factor 미확인분에 참고 가능</td></tr><tr><td>8bit sign-magnitude 양자화 / LLR</td><td>ecc_data.h <code>PARAM_LLR</code>, channel.cpp <code>Set_LLR_Th()</code></td><td>양자화 폭·표현 참고</td></tr><tr><td>shifter 라우팅 / block-column 병렬</td><td>GT.cpp <code>Make_GT_HW()</code> (z=32, HCU)</td><td>우리는 z=32 row 병렬·GT MUX, shifter 라우팅과 구조 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — binary QC-LDPC HW 디코더로 column-layered 스케줄·CNU 2-min 레지스터·normalized α·양자화 폭은 참고가치 있으나, min-sum/layered 자체는 기보유 중복이고 WiMAX 소형부호·저클록·shifter 구조라 직접 이식보다 설계 레퍼런스 성격.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6922226",
+  "title": "Design and Implementation of Multi-Rate LDPC Decoder for IEEE 802.16e Wireless Standard",
+  "year": 2014,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.833",
+  "code_length": "576",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "two-min-sum column-layered 복호 + expansion factor 24 고정 6-rate 유연 병렬 아키텍처를 130nm ASIC 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.96mm2@130nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.1596,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "WiMAX 소형부호(N=576, q=24) 고정, barrel/right-left shifter 임계경로로 clock 39.9MHz 저속, min-sum·layered는 기보유와 중복",
+  "todo_check": "column-layered의 클록당 block-column 처리·shifter 라우팅이 우리 z=32·GT 구조에 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6922226---design-and-implementation-of-multi-rate-ldpc-decoder-for-ieee-80216e-wireless-standard-2014-ieee">ieee:6922226 - Design and Implementation of Multi-Rate LDPC Decoder for IEEE 802.16e Wireless Standard (2014, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

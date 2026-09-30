@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10510111</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10510111---non-iterative-msnn-decoder-for-image-transmission-over-awgn-channel-using-ldpc-2024-dspa">ieee:10510111 - Non-Iterative MSNN Decoder for Image Transmission over AWGN Channel using LDPC (2024, DSPA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>32</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Tanner 그래프 구조를 모사한 3-hidden-layer 신경망(MSNN)으로 반복 없이 LDPC를 1회 순전파로 디코딩</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>16x32 초소형 PCM, image transmission 실험 전용으로 NAND ECC 규모(수천~수만 bit)와 무관</td></tr><tr><td>추가확인</td><td>BER은 MSNN이 SPA/BP보다 오히려 열등(3dB에서 10^-3, 7dB에서 10^-1 배 열세)하다고 결론부에 명시, 초록의 "outperform" 주장과 상충</td></tr></tbody></table>
+<blockquote><p>총평: NN 전면 대체형 non-iterative 디코더로 Prime ECC의 min-sum 구조와 근본적으로 다르고, 코드 규모·채널·목적(이미지 전송) 모두 NAND ECC와 무관해 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>QC-LDPC(16×32 PCM, rate≈0.5, codeword 32-bit) 또는 MN-LDPC(비체계적)로 부호화한 128-bit 메시지를 BPSK 변조하여 AWGN 채널로 전송.</li><li>기존 반복 디코더(BF/BP/SPA)는 반복 횟수만큼 지연이 발생해 이미지 등 실시간 전송에 부적합하다는 문제의식.</li><li>채널은 단순 AWGN, SNR 0~9dB 구간에서 성능 비교.</li><li>핵심 기법은 Tanner 그래프 구조를 모사한 MSNN(Multilayer Shallow Neural Network): hidden layer1=check node 수(tansig), hidden layer2=variable node 수(logsig), hidden layer3=check node 수(tansig), 출력은 max-pooling.</li><li>수신 LLR <code>LLR(x) = log(P(x=0)/P(x=1))</code>을 입력으로, 학습된 가중치로 1회 순전파해 비트 확률을 직접 출력(반복 없음).</li><li>확장이 필요하면 MSNN 디코더를 cascade하여 메시지 길이를 늘리는 구조.</li><li>학습 데이터: 이미지 픽셀(0~255)을 8-bit화 후 16-bit로 패딩, SNR 0/2/5/7dB에서 생성한 데이터로 70/15/15% train/test/validation 분할.</li><li>학습 절차는 MATLAB 신경망 툴박스 기반 supervised 학습(구체적 옵티마이저 명시 없음).</li><li>결과: 디코딩 시간은 SPA(3dB) 28.5분→MSNN 3.92분으로 단축되었으나, BER은 3dB에서 10^-3배, 7dB에서 10^-1배 SPA보다 열등.</li><li>HW 미설계, 소규모(32-bit codeword) 시뮬레이션에 국한되며 대형 NAND급 코드로의 확장성·정정능력은 검증되지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MSNN 기반 non-iterative 디코더 전체</td><td>대응 없음</td><td>NN 전면 대체 디코더로 Prime ECC의 min-sum 이터레이션 구조(<code>decoder.cpp</code> <code>LDPC_Decoder()</code>)와 패러다임 자체가 다름</td></tr><tr><td>QC-LDPC 부호 구성(16×32)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>규모가 극히 작아(N=32) 참고용에 불과, 실질 이식 불가</td></tr><tr><td>LLR 계산(BPSK 복조)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>AWGN 전용 LLR 산출로 NAND soft-read 모델과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NN 전면 대체 디코더이며 코드 규모·채널·응용(이미지 전송)이 모두 NAND binary QC-LDPC ECC와 무관.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10510111",
+  "title": "Non-Iterative MSNN Decoder for Image Transmission over AWGN Channel using LDPC",
+  "year": 2024,
+  "venue": "DSPA",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 32,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Tanner 그래프 구조를 모사한 3-hidden-layer 신경망(MSNN)으로 반복 없이 LDPC를 1회 순전파로 디코딩",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "16x32 초소형 PCM, image transmission 실험 전용으로 NAND ECC 규모(수천~수만 bit)와 무관",
+  "todo_check": "BER은 MSNN이 SPA/BP보다 오히려 열등(3dB에서 10^-3, 7dB에서 10^-1 배 열세)하다고 결론부에 명시, 초록의 outperform 주장과 상충"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10510111---non-iterative-msnn-decoder-for-image-transmission-over-awgn-channel-using-ldpc-2024-dspa">ieee:10510111 - Non-Iterative MSNN Decoder for Image Transmission over AWGN Channel using LDPC (2024, DSPA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

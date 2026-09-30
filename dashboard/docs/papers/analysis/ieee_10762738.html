@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10762738</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10762738---a-cnn-aided-post-processing-scheme-for-channel-decoding-under-correlated-noise-2024-ieee-3rd-international-conference-on-electronics-and-information-technology-eit">ieee:10762738 - A CNN-Aided Post-Processing Scheme for Channel Decoding Under Correlated Noise (2024, IEEE 3rd International Conference on Electronics and Information Technology (EIT))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호length</td><td>576~1998</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>CNN으로 correlated noise를 추정해 error node를 식별하고, 해당 채널 LLR을 0으로 zeroing한 뒤 NMS로 1회 재디코딩하는 post-processing 기법</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>correlated Gaussian noise 채널 가정 + CNN 학습 필요(NAND 채널·HW soft-LLR 양자화와는 성격이 다름), HW 미설계</td></tr><tr><td>추가확인</td><td>CNN 추론을 NAND 컨트롤러 HW에서 저지연으로 수행 가능한지, NAND 고유 채널(AWGN이 아닌 retention/interference)에서도 동일 이득이 나는지</td></tr></tbody></table>
+<blockquote><p>총평: 통신용 correlated-noise 채널에서 CNN 기반 error-node 식별로 재디코딩 이득을 얻는 알고리즘 레벨 post-processing이며, NAND 채널·HW 관점 검증은 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK 변조 후 correlated Gaussian noise 채널(<code>n = R^{1/2} n_t</code>, 상관계수 <code>θ=0.65</code>)을 거쳐 (576,432) WiMAX LDPC, (1998,1512) QC-LDPC를 NMS(정규화 인자 0.75, 10회 반복)로 복호.</li><li>문제: 기존 denoiser(CNN 기반 노이즈 추정)는 error block 내 노드를 균일하게 처리해, 노이즈에 취약한 error node를 특별히 처리하지 못함.</li><li>채널 모델: correlation matrix <code>R_{i,j} = θ^{|i-j|}</code>로 정의된 상관 잡음.</li><li>핵심 기법: NMS 1차 복호 실패(<code>Hu^ ≠ 0</code>) 시, 추정 노이즈 <code>n^ = y - s^</code>를 CNN에 입력해 근사 노이즈 <code>n~</code>를 얻고 잔차 <code>r = n - n~</code>, 추정 오류패턴 <code>e^ = n^ - n~ = e + r</code>를 계산.</li><li>threshold discrimination: <code>|e^_i| ≥ T</code>이면 error node로 판정, 해당 노드의 채널 LLR을 0으로 zeroing(5G NR LDPC puncturing에서 착안); <code>|e^_i| &lt; T</code>인 correct node는 denoising 처리.</li><li>처리된 LLR을 입력으로 NMS 1회만 재디코딩(다회 반복 재디코딩 아님).</li><li>CNN 구조: 4-layer conv, filter <code>{10,4,4,16}</code>, feature map <code>{64,32,16,1}</code>, Xavier 초기화, MSE loss, Adam(lr=0.001), SNR 범위 [0, 3]dB에서 학습, 조기종료 적용.</li><li>학습: 5,140,800 샘플 학습/210,000 테스트, batch 2800, epoch 최대 30000(500 epoch loss 정체 시 조기종료).</li><li>결과: BLER=1e-1 기준 zeroing이 attenuation(0.9dB)·flipping(1dB) 대비 최대 1.3dB 이득; 기존 denoiser 대비 (576,432)에서 0.7dB, (1998,1512)에서 1.5dB 추가 이득, (1998,1512)에서 error floor(2e-2→BLER 1e-5까지 미관측)를 크게 낮춤. 연산 오버헤드는 subtraction/comparison/zeroing 각 1회뿐.</li><li>한계: correlated Gaussian noise 채널만 가정, HW 구현·복잡도(gatecount/throughput) 미제시, 재디코딩은 NMS 1회로 한정된 시뮬레이션 결과만 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CNN 기반 오류 노드 식별·zeroing post-processing</td><td>대응 없음</td><td>Prime ECC는 NN 기반 pre/post-processing 모듈 미보유</td></tr><tr><td>threshold discrimination 후 채널 LLR 0 처리(puncturing 유사)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>LLR threshold 개념은 유사하나 CNN 추정치 기반 zeroing은 새로운 로직 필요</td></tr><tr><td>NMS 재디코딩(1회)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>기존 min-sum 반복 루프 재사용 가능하나 외부 트리거(재디코딩 여부 판단) 별도 필요</td></tr><tr><td>correlated noise 채널 모델</td><td><code>channel.cpp</code></td><td>AWGN/RBER/fixed 패턴만 지원, correlated noise 모델 없음</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — CNN 학습·추론 인프라가 필요하고 correlated Gaussian noise 통신 채널 가정이라 NAND 채널 특성과 괴리가 크며, non-binary 구조 개선이 아닌 순수 알고리즘 wrapper라 이식 시 재검증 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10762738",
+  "title": "A CNN-Aided Post-Processing Scheme for Channel Decoding Under Correlated Noise",
+  "year": 2024,
+  "venue": "IEEE 3rd International Conference on Electronics and Information Technology (EIT)",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "576~1998",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "CNN으로 correlated noise를 추정해 error node를 식별하고, 해당 채널 LLR을 0으로 zeroing한 뒤 NMS로 1회 재디코딩하는 post-processing 기법",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "correlated Gaussian noise 채널 가정 + CNN 학습 필요(NAND 채널·HW soft-LLR 양자화와는 성격이 다름), HW 미설계",
+  "todo_check": "CNN 추론을 NAND 컨트롤러 HW에서 저지연으로 수행 가능한지, NAND 고유 채널(AWGN이 아닌 retention/interference)에서도 동일 이득이 나는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10762738---a-cnn-aided-post-processing-scheme-for-channel-decoding-under-correlated-noise-2024-ieee-3rd-international-conference-on-electronics-and-information-technology-eit">ieee:10762738 - A CNN-Aided Post-Processing Scheme for Channel Decoding Under Correlated Noise (2024, IEEE 3rd International Conference on Electronics and Information Technology (EIT))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

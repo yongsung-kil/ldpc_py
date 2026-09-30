@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4729490</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4729490---ldpc-codes-and-stochastic-decoding-for-beyond-100-gbs-optical-transmission-2008-ecoc">ieee:4729490 - LDPC Codes and Stochastic Decoding for Beyond 100 Gb/s Optical Transmission (2008, ECOC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.8</td></tr><tr><td>부호length</td><td>24015</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>SPA 곱/나눗셈을 Bernoulli 시퀀스 Boolean 회로로 구현하는 stochastic 디코딩을 arbitrary-degree 노드로 확장</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>광통신 100Gb/s 특화 + stochastic 패러다임은 min-sum과 별개, latency 증가</td></tr><tr><td>추가확인</td><td>stochastic 회로가 고rate NAND QC-LDPC에서 min-sum 대비 면적/전력 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 고정밀 ADC 부재를 우회하려는 광통신용 stochastic LDPC 디코더로, min-sum 기반 Prime ECC와 패러다임이 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 100Gb/s+ 광통신 FEC로 girth-10 QC-LDPC(24015,19212) <code>rate=0.8</code>, AWGN 채널에서 평가.</li><li>문제: 100Gb/s 이상에서 고정밀 A/D 컨버터가 존재하지 않아 soft-reliability 기반 SPA/TPC LDPC 디코딩을 그대로 구현 불가.</li><li>핵심 아이디어: 확률 <code>P</code>를 길이 <code>N</code> Bernoulli 시퀀스(1의 개수 <code>m</code>, <code>P=m/N</code>)로 표현하면 SPA의 곱/나눗셈을 hard-decision과 동일한 단순 Boolean 회로로 처리 가능.</li><li>절차: 0)초기화 <code>qi-&gt;j=Pi=[1+L(vi)]^-1</code>, 1)check node <code>rj-&gt;i=ql(1-qm)+(1-ql)qm</code>, 2)variable node <code>qi-&gt;j=rs·rt/[rs·rt+(1-rs)(1-rt)]</code>, 3)VN 업데이트 후 <code>vH^T=0</code> 또는 최대 iteration까지 반복.</li><li>degree-3 한계: 기존 방식은 hidden state를 넣어 bipartite graph를 degree-3으로 변형 → 그래프 복잡도 증가.</li><li>확장: step1)-2)를 step3)처럼 처리하여 hidden state 없이 arbitrary column/row-weight 노드에 적용, 그래프 변형 불필요.</li><li>latching(hold-state) 문제: 큰 girth 코드에서 노드가 고정 상태에 잠겨 성능 손실 발생.</li><li>해결: second half-iteration만 <code>3-bit</code> precision으로, 나머지 단계는 stochastic logic으로 구현.</li><li>부호설계: error floor 회피 위해 girth-10 QC-LDPC 설계(girth-10은 BER 10^-15까지 error floor 없음).</li><li>메모리: <code>rj-&gt;i</code>, <code>qi-&gt;j</code> 두 확률만 저장(표준 SPA는 4개 확률+정규화 필요) → 저장량 절감.</li><li>결과: BER 10^-7에서 RS(255,239) 대비 4.75dB, concat RS 대비 3.35dB 이득, net effective coding gain 10.95dB @ BER 10^-12 (30 iter, Bernoulli length 1000). 단 latency는 conventional SPA보다 증가, 시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>stochastic 디코딩 알고리즘(Bernoulli Boolean 연산)</td><td>대응 없음</td><td>min-sum 기반 <code>decoder.cpp</code>와 연산 패러다임 자체가 다름</td></tr><tr><td>이터레이션 루프 구조</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>루프 골격만 유사, CN/VN 연산은 미이식</td></tr><tr><td>girth-10 QC-LDPC 부호설계</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>고rate QC-LDPC이나 rate 0.8/길이 24015로 NAND ECC와 규격 상이</td></tr><tr><td>LLR 초기화 / 3-bit precision</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft 입력 양자화 관점만 부분 참조</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 광통신 고속용 stochastic 디코딩은 min-sum 기반 Prime ECC와 HW 패러다임이 다르고 latency도 악화되어 떼어 쓸 부분이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4729490",
+  "title": "LDPC Codes and Stochastic Decoding for Beyond 100 Gb/s Optical Transmission",
+  "year": 2008,
+  "venue": "ECOC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.8,
+  "code_length": "24015",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "SPA 곱/나눗셈을 Bernoulli 시퀀스 Boolean 회로로 구현하는 stochastic 디코딩을 arbitrary-degree 노드로 확장",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "광통신 100Gb/s 특화 + stochastic 패러다임은 min-sum과 별개, latency 증가",
+  "todo_check": "stochastic 회로가 고rate NAND QC-LDPC에서 min-sum 대비 면적/전력 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4729490---ldpc-codes-and-stochastic-decoding-for-beyond-100-gbs-optical-transmission-2008-ecoc">ieee:4729490 - LDPC Codes and Stochastic Decoding for Beyond 100 Gb/s Optical Transmission (2008, ECOC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

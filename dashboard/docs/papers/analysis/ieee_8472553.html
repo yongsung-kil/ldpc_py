@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8472553</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8472553---low-decoding-complexity-of-ldpc-codes-over-the-binary-erasure-channel-2018-icee2018">ieee:8472553 - Low decoding complexity of LDPC Codes over the Binary Erasure Channel (2018, ICEE2018)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1000~2000</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>BP 실패 시 변수노드 대신 체크노드 집합을 골라 가정 → 이진체 특성으로 경우의 수 절반 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC 전용 (지우기 채널) — NAND의 AWGN/soft-read LLR 모델과 무관, guessing 계열 복잡도 리스크</td></tr><tr><td>추가확인</td><td>없음 (BEC 한정 기법이라 이식 가치 낮음)</td></tr></tbody></table>
+<blockquote><p>총평: BEC 지우기 채널 전용 guessing 개선으로 NAND soft-decision LDPC와 채널 모델이 달라 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: regular <code>(3,6)</code> half-rate LDPC (<code>rate=0.5</code>), 길이 <code>1000</code>, <code>2000</code>, BEC(이진 지우기 채널)에서 복호.</li><li>문제: BP는 짧은 사이클/유한 길이 때문에 이론 threshold <code>0.429</code>에 못 미쳐 지운 비트를 다 못 푼다 (stuck).</li><li>채널 모델: BEC — 비트가 확률 <code>ε</code>로 지워지고 나머지는 오류 없이 수신 (연판정 LLR 개념 없음).</li><li>핵심 기법: BP가 멈추면 변수노드 값을 추측하는 기존 guessing 대신, 체크노드 집합 <code>{c0..ck}</code>를 선택해 그에 연결된 변수노드에 가정을 건다.</li><li>핵심 식: <code>N' = Σ max(b_ij)</code>, 경우의 수 <code>2^(N'-k)</code> — 독립 선형방정식 <code>k</code>개가 해공간을 <code>2^-k</code>로 줄이므로 가정 경우의 수가 절반씩 감소.</li><li>의미: 체크노드 하나를 가정에 포함시킬 때마다 이진 방정식 1개가 추가되어 탐색 공간이 반감 (<code>degree-2</code> 체크노드 예시 Table 1).</li><li>확장: 최대 경우의 수를 2로 설정 (<code>x=1</code> 상당)해 복잡도 억제.</li><li>학습/최적화: 없음 (구조적 방정식 선택만).</li><li>결과: 길이 2000, 채널 threshold <code>0.43</code>에서 BP 후 잔여 지우기 확률 <code>0.7</code> → 제안 기법 후 <code>0.23</code>; 실제 threshold를 <code>0.43</code>으로 개선(이론 <code>0.429</code> 상회 서술).</li><li>한계: BEC 전용, HW 미설계, 시뮬만, 복잡도/gate/throughput 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 실패 후 체크노드 기반 guessing 후처리</td><td>대응 없음</td><td>BEC 지우기 전용 후처리, min-sum soft-decision 루프와 무관</td></tr><tr><td>BP 반복 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적 대응이나 채널(BEC vs AWGN/RBER) 불일치로 실질 이식 불가</td></tr></tbody></table>
+<p>적용 가치: 낮음 — BEC 지우기 채널 전용 guessing 기법으로, NAND soft-read/AWGN 기반 Prime ECC의 min-sum 파이프라인과 채널 모델이 근본적으로 달라 이식할 부분이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8472553",
+  "title": "Low decoding complexity of LDPC Codes over the Binary Erasure Channel",
+  "year": 2018,
+  "venue": "ICEE2018",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1000~2000",
+  "soft_quant": "무관",
+  "key_contribution": "BP 실패 시 변수노드 대신 체크노드 집합에 가정을 걸어 이진체 특성으로 경우의 수를 절반 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BEC 전용 지우기 채널 기법으로 NAND soft-read LLR 모델과 무관, guessing 계열 복잡도 리스크",
+  "todo_check": "없음 (BEC 한정이라 이식 가치 낮음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8472553---low-decoding-complexity-of-ldpc-codes-over-the-binary-erasure-channel-2018-icee2018">ieee:8472553 - Low decoding complexity of LDPC Codes over the Binary Erasure Channel (2018, ICEE2018)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

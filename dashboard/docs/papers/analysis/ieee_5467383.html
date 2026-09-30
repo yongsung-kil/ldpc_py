@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5467383</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5467383---signal-processing-for-near-10-tbitin2-density-in-two-dimensional-magnetic-recording-tdmr-2010-ieee-trans-magnetics">ieee:5467383 - Signal Processing for Near 10 Tbit/in2 Density in Two-Dimensional Magnetic Recording (TDMR) (2010, IEEE Trans. Magnetics)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>0.42~0.70</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>TDMR용 2-D LMMSE 등화 + Gaussian-mixture 잔차모델로 LLR 추출해 soft-input LDPC 복호에 공급</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>TDMR(자기기록) 채널 특화, write-error/2-D ISI 전제; LDPC 디코더는 기성 SW(Neal) 재사용이라 부호·복호 신규성 없음</td></tr><tr><td>추가확인</td><td>GM 잔차→LLR 매핑이 NAND soft-read LLR 산출에 응용 가능한지(채널 상이로 직접성 낮음)</td></tr></tbody></table>
+<blockquote><p>총평: TDMR 자기기록 채널의 2-D 등화+GM 노이즈 모델로 soft-LDPC LLR을 얻는 채널신호처리 논문으로, LDPC 자체는 기성 재사용이고 NAND binary QC-LDPC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 2-D 자기기록(TDMR), grain 1~수개에 1 채널비트 기록해 ~10 Tbit/in^2 목표, page 256x256 bit cell, LDPC rate <code>R</code>=27/64~45/64.</li><li>문제: grain 랜덤성으로 일부 비트가 아예 기록 안 됨(write error) + spatially-varying 2-D 간섭(ISI/ITI)을 강력 ECC로 극복.</li><li>채널모델: random Voronoi grain 모델을 랜덤 offset/jitter로 확장, 출력 <code>r_k = sum h*a + n</code> (spatially-varying PSF, AWGN, position jitter 포함).</li><li>핵심기법1: 2-D LMMSE equalizer <code>(5)</code>로 bit cell-grain 랜덤 offset을 반영해 등화 MSE 최소화(기존 2-D ZFE 개선).</li><li>핵심식: 등화 잔차 <code>e = z - a</code>를 written/unwritten 비트로 나눠 Gaussian-mixture(GM)로 근사 — unwritten은 평균 0, written은 평균 유의.</li><li>핵심기법2: GM 조건부 pdf <code>f(z|a)</code>에서 LLR <code>(8)</code>을 산출, 이를 soft-input LDPC 복호 입력으로 사용(단일 Gaussian보다 실측 pdf에 근접).</li><li>복호: LDPC는 기성 소프트웨어([7] R. Neal) 사용 — 부호구성·복호 알고리즘 자체는 논문 신규 기여 아님.</li><li>파라미터: grain/bit 밀도 <code>lambda</code>=1.0~1.5, write error rate 0.16~0.025, 등화 후 BER 0.117~0.0525.</li><li>결과: <code>lambda</code>=1.3 + rate 41/64에서 BER~10^-? 달성, 0.493 user bits/grain = 9.86 Tbit/in^2; noise/jitter 포함 시 0.45 bits/grain(~9 Tbit/in^2).</li><li>한계: 실HW·gate 설계 없음(시뮬만), read/write head 한계 등 추가 impairment는 미반영; 자기기록 특화 채널.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>soft-input LDPC 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>기성 SW LDPC 재사용, 알고리즘 신규성 없어 이식 요소 아님</td></tr><tr><td>GM 잔차→LLR 산출</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>soft LLR 추출 개념은 유사하나 TDMR write-error/2-D 채널 전제라 직접 재사용 불가</td></tr><tr><td>2-D LMMSE 등화</td><td>대응 없음</td><td>자기기록 채널 등화, NAND에 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — TDMR 자기기록 채널 특화 신호처리로, LDPC는 기성 재사용이라 Prime ECC 부호/디코더에 떼어 쓸 신규 요소가 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5467383",
+  "title": "Signal Processing for Near 10 Tbit/in2 Density in Two-Dimensional Magnetic Recording (TDMR)",
+  "year": 2010,
+  "venue": "IEEE Transactions on Magnetics",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "TDMR용 2-D LMMSE 등화 + Gaussian-mixture 잔차모델로 LLR 추출해 soft-input LDPC 복호에 공급",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "TDMR(자기기록) 채널 특화, write-error/2-D ISI 전제; LDPC 디코더는 기성 SW(Neal) 재사용이라 부호·복호 신규성 없음",
+  "todo_check": "GM 잔차→LLR 매핑이 NAND soft-read LLR 산출에 응용 가능한지(채널 상이로 직접성 낮음)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5467383---signal-processing-for-near-10-tbitin2-density-in-two-dimensional-magnetic-recording-tdmr-2010-ieee-trans-magnetics">ieee:5467383 - Signal Processing for Near 10 Tbit/in2 Density in Two-Dimensional Magnetic Recording (TDMR) (2010, IEEE Trans. Magnetics)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

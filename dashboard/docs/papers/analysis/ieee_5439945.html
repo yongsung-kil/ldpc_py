@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5439945</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5439945---a-reduced-complexity-architecture-for-ldpc-layered-decoding-schemes-2011-ieee-tvlsi">ieee:5439945 - A Reduced-Complexity Architecture for LDPC Layered Decoding Schemes (2011, IEEE TVLSI)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>offset permutation으로 layered 디코더의 shuffle network 2개를 1개(SN1)로 축소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.822Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 라우팅/면적 최적화(9.3% slice 감소)에 국한, 정정능력 개선 없음</td></tr><tr><td>추가확인</td><td>z=32, HCU/GT 구조와 정합되는지, offset 생성 알고리즘의 QC-LDPC 일반성</td></tr></tbody></table>
+<blockquote><p>총평: layered 디코더의 shuffle network를 offset permutation으로 절반 제거한 HW 면적 절감 기법 — 성능이 아닌 라우팅 최적화라 이식 가치는 중간.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 672-bit rate-1/2 irregular LDPC(IEEE 802.15 표준, base matrix 16×32, <code>z=21</code> 예시 및 구현은 <code>z=32</code>) layered 디코더.</li><li>문제: 기존 layered 디코더는 shuffle/reshuffle을 위해 SN1, SN2 두 개의 switch network가 필요해 라우팅 HW 복잡도가 큼.</li><li>핵심 관찰: 한 sub-iteration 내에서 reshuffling(SN2)과 다음 constituent code의 shuffling(SN1)이 시간적으로 중첩되므로 두 연산을 하나로 합칠 수 있음.</li><li>핵심 기법: offset shifting value <code>s_{m,n}</code>를 사전계산해 SN1 하나만으로 처리 — <code>s_{m,n} = a_{m,n} ⊟ b_{l,n}</code>(⊟는 mod-z 뺄셈, null 처리 포함), Algorithm 1로 생성.</li><li>의미: SN1의 누적 offset이 SN2의 역permutation을 흡수 → 중복 shift 연산 제거.</li><li>출력 정렬 정보 <code>y = E·x</code>(Algorithm 2의 <code>d_n</code>)로 하드디시전을 추가 HW 없이 출력 포트에 매핑, 별도 unshuffle 불필요.</li><li>구현 디테일: <code>(q,f)=(6,2)</code> 양자화, CNBP는 min-sun(Log-BP 근사) 4 pipeline stage, SN은 불필요 switch 제거한 Benes network(3 pipeline stage).</li><li>block parallel: C2V 메모리 뱅크 수를 row weight에 맞춰 constituent code의 모든 메시지를 1 clock에 처리.</li><li>결과: Virtex-4 FPGA, 335MHz, 822Mb/s(8 iter), 표준 layered 대비 slice 9.3% 감소, SNR 3dB에서 약 3 iteration 수렴.</li><li>한계: 정정능력/BER 개선 없음(동등 성능 유지), gate count는 오히려 [9]보다 높음, 특정 QC 구조·pipeline 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset permutation / SN1 단일화</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>라우팅 edge/MUX 선택 최적화 관점에서 유사, 다만 GT는 edge 축소 목적</td></tr><tr><td>layered CNBP(min-sum 처리)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>layered 스케줄·CN 연산 대응</td></tr><tr><td>(6,2) 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>양자화 테이블 대응</td></tr><tr><td>출력 정렬(y=E·x) 매핑</td><td>대응 없음</td><td>Prime ECC는 별도 unshuffle-free 매핑 구조 미기재</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 순수 shuffle network 라우팅 HW 최적화이며 min-sum/양자화는 이미 보유, Prime ECC의 z=32·HCU·GT 구조와 정합해도 성능 이득 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5439945",
+  "title": "A Reduced-Complexity Architecture for LDPC Layered Decoding Schemes",
+  "year": 2011,
+  "venue": "IEEE TVLSI",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "672",
+  "soft_quant": "무관",
+  "key_contribution": "offset permutation으로 layered 디코더의 shuffle network 2개를 1개로 축소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.822,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HW 라우팅/면적 최적화에 국한, 정정능력 개선 없음",
+  "todo_check": "z=32/HCU/GT 정합 여부, offset 생성 알고리즘의 QC-LDPC 일반성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5439945---a-reduced-complexity-architecture-for-ldpc-layered-decoding-schemes-2011-ieee-tvlsi">ieee:5439945 - A Reduced-Complexity Architecture for LDPC Layered Decoding Schemes (2011, IEEE TVLSI)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

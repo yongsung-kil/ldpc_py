@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4024296</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4024296---construction-of-irregular-ldpc-convolutional-codes-with-fast-encoding-2006-ieee-icc">ieee:4024296 - Construction of Irregular LDPC Convolutional Codes with Fast Encoding (2006, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>irregular LDPC block code를 잘라 이어붙이는 방식으로 shift-register 기반 고속 인코딩이 가능한 irregular LDPC convolutional code(SC-LDPC 전신)를 구성, 동일 프로세서 복잡도의 block code 대비 BER 성능 우위를 입증</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계(시뮬레이션만), 초기 decoding delay(I·(ms+1) 타임유닛)가 존재해 latency에 불리, 매우 큰 ms(=1199)로 실질적으로 긴 유효 코드길이 필요</td></tr><tr><td>추가확인</td><td>NAND ECC에서 요구하는 blockwise(4KB/1페이지) 고정길이 프레이밍과 continuous convolutional 구조 간 정합성 검토 필요</td></tr></tbody></table>
+<blockquote><p>총평: irregular LDPC convolutional(SC-LDPC) 부호를 shift-register로 고속 인코딩 가능하게 구성하고 동일 하드웨어 복잡도에서 block code 대비 waterfall 성능(~0.8dB) 개선을 보이나, 파이프라인 슬라이딩 윈도우 디코더 구조와 초기 지연이 NAND 블록 단위 ECC와는 정합성 이슈가 있어 이식성은 중간 수준.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate <code>R=b/c</code> LDPC convolutional code, 준무한(semi-infinite) syndrome former 행렬 <code>H^T</code>로 정의, syndrome former memory <code>m_s</code> (구속장 <code>ν_s=(m_s+1)c</code>).</li><li>문제: 기존 LDPC convolutional code 구성법([12])은 weight-1 순열행렬 타일링으로 regular 부호만 가능, irregular degree distribution 미지원.</li><li>핵심 가정: AWGN 채널, syndrome former는 주기 <code>T=m_s</code>로 periodic.</li><li>핵심 기법: 원하는 edge-perspective degree distribution <code>(λ_e^C, ρ_e^C)</code>으로부터 node-perspective를 구하고, 이를 <code>X</code>, <code>X^2</code>로 나눠 축소한 <code>(λ_n^B, ρ_n^B)</code>을 갖는 길이 <code>m_s·c</code>의 LDPC block code를 먼저 구성(PEG 알고리즘으로 girth 확보).</li><li>핵심 식 의미: block code의 syndrome former 행렬을 대각선 방향으로 <code>c×(c-b)</code> 단위로 잘라 우측에 이어붙이고, 각 행 쌍 좌측에 <code>[1 1]^T</code> 서브블록을 추가해 <code>H_0^T(t)</code>가 항상 풀랭크가 되도록 함 -&gt; fast encoding(shift-register) 성질 보장.</li><li>확장: rate <code>R=b/c=1/2</code>, 주기 <code>T=m_s</code>인 경우로 구체 예시(m_s=4)를 통해 구성 절차 시연.</li><li>부수 트릭: 인코딩 복잡도는 코드워드 길이/<code>m_s</code>에 무관하게 <code>(K-1)</code>에 비례(block code는 길이 N에 비례) -&gt; 저복잡도 실시간 인코더.</li><li>복호: sliding window pipeline decoder(I개 독립 프로세서, on-demand 스케줄), 최대 100 iteration.</li><li>결과: <code>m_s=1199</code> convolutional code가 동일 프로세서 복잡도의 block code(N=2400) 대비 BER=10^-5에서 0.80dB 이득; N=240000 block code보다는 0.30dB 열세.</li><li>한계: 시뮬레이션만(HW 미설계), 초기 디코딩 지연 <code>I·(m_s+1)</code> 타임유닛 존재, 매우 큰 <code>m_s</code>로 인해 사실상 긴 유효 프레임 필요, block 단위 프레이밍이 아닌 continuous transmission 지향.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Irregular SC-LDPC 구성(H-matrix, degree distribution)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 고정 block QC-LDPC 구조로, convolutional(semi-infinite) 부호 구조 자체가 대응 없음</td></tr><tr><td>Shift-register 기반 고속 인코더</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>dual-diagonal 인코더와 유사한 목적(저복잡도 실시간 인코딩)이나 convolutional 구조 특화 기법이라 직접 이식 어려움</td></tr><tr><td>Sliding window pipeline 복호(I개 병렬 프로세서)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>반복 message-passing 복호라는 점은 공통이나, Prime ECC는 고정 block 파이프라인(z=32 등)이라 convolutional sliding window 구조와는 상이</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — SC-LDPC(convolutional) 고유의 continuous 프레이밍/sliding window 복호 구조가 Prime ECC의 고정 block QC-LDPC 구조와 근본적으로 달라 직접 이식은 어려우나, waterfall 성능 개선 기법(irregular degree 최적화) 자체는 참고 가치가 있음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4024296",
+  "title": "Construction of Irregular LDPC Convolutional Codes with Fast Encoding",
+  "year": 2006,
+  "venue": "IEEE ICC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "irregular LDPC block code를 잘라 이어붙이는 방식으로 shift-register 기반 고속 인코딩이 가능한 irregular LDPC convolutional code(SC-LDPC 전신)를 구성, 동일 프로세서 복잡도의 block code 대비 BER 성능 우위를 입증",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "HW 미설계(시뮬레이션만), 초기 decoding delay(I·(ms+1) 타임유닛)가 존재해 latency에 불리, 매우 큰 ms(=1199)로 실질적으로 긴 유효 코드길이 필요",
+  "todo_check": "NAND ECC에서 요구하는 blockwise(4KB/1페이지) 고정길이 프레이밍과 continuous convolutional 구조 간 정합성 검토 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4024296---construction-of-irregular-ldpc-convolutional-codes-with-fast-encoding-2006-ieee-icc">ieee:4024296 - Construction of Irregular LDPC Convolutional Codes with Fast Encoding (2006, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

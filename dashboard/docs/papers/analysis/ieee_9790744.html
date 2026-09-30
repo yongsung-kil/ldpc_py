@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9790744</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9790744---high-throughput-fpga-implementation-of-min-sum-ldpc-decoder-architecture-for-wireless-communication-standards-2022-dspa">ieee:9790744 - High throughput FPGA implementation of Min-Sum LDPC Decoder Architecture for Wireless Communication Standards (2022, DSPA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>미상</td></tr><tr><td>핵심기여</td><td>row-layered 디코더에서 독립 레이어 재배열로 처리량 배증 + APP 시프트 연산 감소 + 코어 파이프라인화</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>LUT 39536(len576,R1/2)/147952(len2304,R2/3)@Xilinx Zynq-7000 XC7Z100</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1Gbps(len576,5decoder)/0.56Gbps(len2304), 반복당 최대 5.6Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>표준(WiMAX/WiFi) 행렬 대상 HW 처리량 최적화이며 정정성능·error-floor 개선 없음, min-sum α=0.75는 이미 보유</td></tr><tr><td>추가확인</td><td>독립 레이어 재배열/오프셋 수정 기법이 Prime ECC의 고정 QC-LDPC(z=32) 레이어 스케줄에 실제 적용 시 이득 유무</td></tr></tbody></table>
+<blockquote><p>총평: 표준 min-sum QC-LDPC 디코더의 FPGA 처리량 최적화(독립 레이어 재배열·APP 시프트 절감·코어 파이프라인)로, 알고리즘 정정성능 기여는 없으나 HW 스케줄링 트릭은 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 WiMAX(802.16e)/WiFi(802.11n) 표준의 QC-LDPC(circulant 크기 <code>z</code>)이며, <code>N=576~2304</code>, rate <code>1/2</code>,<code>2/3</code> 등 가변 rate/length 지원.</li><li>풀려는 문제: 기존 row-layered 디코더에서 레이어를 순차 처리해야 해 처리량이 낮고, circulant 크기 증가 시 코어(자원) 소모가 급증.</li><li>채널 입력은 복조기의 soft decision을 받아 채널 신뢰도 <code>pn = log(P(yn|cn=0)/P(yn|cn=1))</code>로 초기화.</li><li>핵심 기법(디코딩): normalized min-sum. <code>qmn = pn + Σ rm'n</code>(VTC), CTV <code>rmn = Πsign(qmn') × α × min|qmn'|</code>, APP <code>Λn = pn + Σ rm'n</code>.</li><li><code>α=0.75</code> normalized 계수로 BP 대비 성능 손실 보상 (min-sum HW 복잡도 절감 목적).</li><li>HW 최적화 1 — 독립 레이어 처리: 802.16e 행렬의 상호 독립 레이어를 찾아 순서 재배열(예 1-3-5-9-7-12-8-6-11-2-4-10)해 이전 레이어 완료 대기 없이 다음 레이어 시작 → 처리량 거의 2배, BER 불변.</li><li>HW 최적화 2 — 코어 파이프라인: min/submin 블록을 파이프라인화해 매 클록마다 코어에 데이터 투입 가능(기존엔 min/submin 완료까지 코어 정지).</li><li>HW 최적화 3 — APP 시프트 감소: 처리 후 역시프트를 생략하고 오프셋을 <code>NewSh=(OldSh-PrevSh+MaxSh) mod MaxSh</code>로 갱신해 메모리 시프트 연산 축소.</li><li>결과(Zyng-7000 XC7Z100): len576 5개 디코더로 1Gb/s, len2304 1개로 0.56Gb/s(10 iter), 반복당 최대 ~5.6Gbps; len2304/R2/3에서 LUT 147952(53%), FF 147409(6%), BRAM 3.</li><li>한계: 표준 무선용 처리량·자원 최적화이며 정정능력/error-floor 개선 없음, 연판정 비트폭 미명시, NAND 특화 아님.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>normalized min-sum CN 연산 (min/submin, sign XOR)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유(min1/min2+sign XOR)와 중복, 신규성 낮음</td></tr><tr><td>VTC/APP 갱신 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>동일 message-passing 구조, 참고용</td></tr><tr><td>독립 레이어 재배열/파이프라인/APP 시프트 오프셋 갱신</td><td>decoder.cpp 디코더 HW 모델(z=32, pipeline)</td><td>HW 스케줄/메모리 라우팅 최적화 아이디어로 참고 가능</td></tr><tr><td>소프트 입력 LLR 초기화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>표준적, 신규성 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — min-sum 코어는 이미 보유하고 정정성능 기여가 없으며, HW 스케줄링 트릭도 Prime ECC의 고정 z=32/HCU 구조와 정합 검증 부담이 커 순수 참고 수준.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9790744",
+  "title": "High throughput FPGA implementation of Min-Sum LDPC Decoder Architecture for Wireless Communication Standards",
+  "year": 2022,
+  "venue": "DSPA",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "576~2304",
+  "soft_quant": "미상",
+  "key_contribution": "row-layered 디코더에서 독립 레이어 재배열로 처리량 배증 + APP 시프트 연산 감소 + 코어 파이프라인화",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "LUT 39536(len576,R1/2)/147952(len2304,R2/3)@Xilinx Zynq-7000 XC7Z100",
+  "parallelism": "부분",
+  "throughput_gbps": 1.0,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "표준(WiMAX/WiFi) 행렬 대상 HW 처리량 최적화이며 정정성능·error-floor 개선 없음, min-sum α=0.75는 이미 보유",
+  "todo_check": "독립 레이어 재배열/오프셋 수정 기법이 Prime ECC의 고정 QC-LDPC(z=32) 레이어 스케줄에 실제 적용 시 이득 유무"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9790744---high-throughput-fpga-implementation-of-min-sum-ldpc-decoder-architecture-for-wireless-communication-standards-2022-dspa">ieee:9790744 - High throughput FPGA implementation of Min-Sum LDPC Decoder Architecture for Wireless Communication Standards (2022, DSPA)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

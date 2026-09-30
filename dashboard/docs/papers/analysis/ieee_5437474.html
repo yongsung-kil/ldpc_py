@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5437474</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5437474---an-efficient-10gbase-t-ethernet-ldpc-decoder-design-with-low-error-floors-2010-ieee-j-solid-state-circuits">ieee:5437474 - An Efficient 10GBASE-T Ethernet LDPC Decoder Design With Low Error Floors (2010, IEEE J. Solid-State Circuits)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.841</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>absorbing-set 유발 error-floor를 2-step(정규 복호 후 message-biasing post-processing)으로 제거해 4bit wordlength로 BER&lt;10^-14 달성, VN 내장형 post-processor로 배선 오버헤드 1.7%만 추가</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>5.05mm^2 core@65nm (gatecount 본문 미기재)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>47.7Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>(6,32)-regular RS-LDPC 특정 부호·(8,8) absorbing-set 타깃이라 Prime ECC의 QC-LDPC trapping-set 구조와 다를 수 있고, 4bit는 AWGN 기준(NAND soft-read 비용 별도)</td></tr><tr><td>추가확인</td><td>Prime ECC H-matrix의 dominant absorbing/trapping set에 대해 동일 biasing 규칙이 유효한지, unsatisfied-check tag 로직의 min-sum 파이프라인 통합 비용</td></tr></tbody></table>
+<blockquote><p>총평: offset min-sum + error-floor용 message-biasing post-processing을 4bit로 구현한 실측 ASIC. Prime ECC 디코더 루프에 post-processing 후처리 단계로 이식 가치가 높음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: 10GBASE-T(IEEE 802.3an) (6,32)-regular RS-LDPC <code>(2048,1723)</code>, rate≈0.84, <code>H</code>는 384x2048을 6x32개 64x64 순환 permutation 블록으로 구성.</li><li>문제: 정규 message-passing 디코더는 (8,8) absorbing set(fully absorbing set) 때문에 BER≈10^-10 부근에서 error-floor 발생, 10GBASE-T의 &lt;10^-12 요구 미충족.</li><li>채널/모델: AWGN, LLR <code>(1)</code>로 초기화. sum-product는 유한 wordlength에서 tanh 근사 포화로 majority decoding화 → absorbing set 악화.</li><li>핵심 기법 1(디코더): offset min-sum <code>(5)</code> 채택 — magnitude를 min1으로 근사 후 offset 보정, 6bit로 sum-product 대비 0.5dB SNR 이득, CN 동적전력 절감.</li><li>reordered schedule <code>(6)(7)</code>: V2C를 posterior LLR - C2V로, posterior를 이전값+C2V로 갱신해 메모리·연산 재사용.</li><li>핵심 기법 2(post-processing): 2-step. 정규 복호 실패 시 unsatisfied check의 edge를 tag → biasing 단계에서 tagged VN이 satisfied check로 보내는 message magnitude를 약화(absorbing set 내 상호 강화 차단) → follow-up 정규 iteration으로 정리. VN 내장(pre-biasing/biasing/follow-up 3-phase)이라 외부 배선 추가 없음.</li><li>HW 디테일: wordlength 6→4bit 축소로 wire length 41.2%·core area 37.9% 감소; post-processor 추가는 area +13.7%, 전체 배선 +1.7%뿐. 4bit+post-proc가 6bit 디코더 성능 상회.</li><li>아키텍처: 그룹화(32VNG-1CNG)로 irregular local wire를 국소화하고 global wire를 정규화, AEF(area expansion factor) 지표로 병렬도 선택; 7-stage pipeline, iteration간 6-cycle stall.</li><li>결과(실측 65nm ASIC, 5.35mm^2): 47.7Gb/s@5.5dB, early termination 시 평균 1.5~2.6 iter로 수렴; V/F 스케일링으로 6.67Gb/s@144mW. 측정 BER&lt;10^-14에서 error-floor 미관측, 최소거리 14 undetected error가 남는 near-ML 성능.</li><li>한계: 특정 (6,32)-regular RS-LDPC·(8,8) absorbing set 대상, AWGN 채널(4bit는 통신 SNR 기준), all-zero/all-one codeword 테스트.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>offset min-sum CN 연산(min1/min2+sign, offset)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>높음: 이미 min-sum 보유. offset 보정항 유무 대조 가치</td></tr><tr><td>reordered schedule(posterior=이전+C2V)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>중: Dual-Update 스케줄과 비교 가능</td></tr><tr><td>message-biasing post-processing(error-floor)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> + <code>corner.cpp</code>(수렴실패 추적)</td><td>높음: 조기종료 후 실패 case에 후처리 단계 삽입 가능, 신규 기법</td></tr><tr><td>unsatisfied check tag / parity</td><td><code>partial_CRC.cpp</code>/<code>full_CRC.cpp</code>(조기종료 판정)</td><td>중: check 만족 판정 인프라 재사용 가능</td></tr><tr><td>VN 4bit 양자화 / 마진</td><td><code>decoder.cpp</code> <code>VN_Cal_HD/2SD/3SD</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>중: wordlength 축소 아이디어, 단 NAND soft-read 비용은 별도</td></tr><tr><td>그룹화/pipeline/wiring HW arch</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>중: 배선 국소화 전략 참고, 구조 정합 필요</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — offset min-sum 자체는 이미 보유(중복)이나, absorbing-set용 message-biasing post-processing은 조기종료 후 실패 프레임에 붙일 수 있는 error-floor 저감 후처리로 신규 이식 가치가 높음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5437474",
+  "title": "An Efficient 10GBASE-T Ethernet LDPC Decoder Design With Low Error Floors",
+  "year": 2010,
+  "venue": "IEEE J. Solid-State Circuits",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.841,
+  "code_length": "2048",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "absorbing-set error-floor를 message-biasing post-processing으로 제거해 4bit로 BER&lt;10^-14 달성, VN 내장으로 배선 +1.7%만 추가",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "5.05mm^2 core@65nm",
+  "parallelism": "부분",
+  "throughput_gbps": 47.7,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "특정 (6,32)-regular RS-LDPC·(8,8) absorbing set 대상, 4bit는 AWGN 기준(NAND soft-read 비용 별도)",
+  "todo_check": "Prime ECC H-matrix의 dominant trapping/absorbing set에 동일 biasing 규칙 유효성, min-sum 파이프라인 통합 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5437474---an-efficient-10gbase-t-ethernet-ldpc-decoder-design-with-low-error-floors-2010-ieee-j-solid-state-circuits">ieee:5437474 - An Efficient 10GBASE-T Ethernet LDPC Decoder Design With Low Error Floors (2010, IEEE J. Solid-State Circuits)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

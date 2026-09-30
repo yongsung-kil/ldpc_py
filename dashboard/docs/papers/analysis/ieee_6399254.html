@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6399254</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6399254---a-new-genetics-aided-message-passing-decoding-algorithm-for-ldpc-codes-2012-ieee">ieee:6399254 - A New Genetics-Aided Message Passing Decoding Algorithm for LDPC Codes (2012, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>155~576</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>MP 복호 위에 유전 알고리즘(적합도=유클리드거리+신드롬무게)을 얹어 채널값을 갱신하며 ML에 근접한 성능 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>세대당 반복이 곱연산으로 늘어(예 40100 iter) latency·연산량 폭증, 파라미터 15개 튜닝 필요, HW 미설계</td></tr><tr><td>추가확인</td><td>soft LLR 폭이 큰 GA 채널값 갱신을 NAND 저비트 read 환경에서 유지 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: MP+유전알고리즘으로 ML에 근접하지만 반복수가 수만으로 폭증하고 파라미터 튜닝 부담이 커 NAND 실시간 ECC 이식성은 하이다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 binary LDPC(802.16e (576,288), Tanner (155,64)) 복호로, rate-1/2, SPA/MSA/NMSA 위에서 동작한다.</li><li>문제: MP 복호는 신뢰도(MBR)가 큰데도 부호가 틀린 critical bit node 때문에 ML 대비 성능 열화가 있다.</li><li>핵심 가정: 각 MP iteration의 belief reliability 집합을 "개체(individual)"로 보고 유전 알고리즘으로 진화시키면 ML에 근접할 수 있다.</li><li>핵심 기법 1단: 적합도 함수 <code>fitness = a*D + b*S</code> (D=유클리드거리, S=신드롬무게, 예 {a,b}={1,8})로 최적 개체(ancestry)를 선택한다.</li><li>핵심 식 의미: <code>S</code> 작을수록 유효 부호어에 가깝고 <code>D</code> 최소가 ML 해이므로 두 지표 결합이 ML 근사 방향을 준다.</li><li>핵심 기법 2단: belief-reliability mutation — 같은 체크노드에 연결된 DCBS 단위로 의심 비트를 골라 부호비트를 뒤집고 신뢰도 상수(RLH/RLL)·상한(RBH/RBL)·스케일(SR)을 적용, HSW/LSW 두 경우로 분기한다.</li><li>부수 트릭: elite descendant의 MBR이 임계 <code>TC</code> 초과인 trustful 비트만 채널값을 갱신, 신드롬무게가 정체하면 stalemate breaker(<code>SB</code> 스케일)로 다양성 확보.</li><li>최적화 절차: 세대 반복(GA) — 세대 수 <code>NG</code> 또는 유효부호어 수 <code>NVC</code> 도달까지 반복, 최종은 수집 부호어 중 최소 유클리드거리 선택.</li><li>결과: (155,64)에서 MP 대비 약 0.5 dB 개선, ML에 근접하며 [10] 대비 메모리(3배 soft값만 저장) 유리, 총 반복수 <code>Ltotal=L0+(N+L)*NG</code>(예 40100).</li><li>한계: HW 미설계, 반복수·연산량 폭증, 파라미터 15개 튜닝 필요, 짧은 부호에서 이득이 크고 긴 부호에서 감소.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MP 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>GA를 감싸는 base MP로 대응되나 세대 반복 오버레이는 우리 구조에 없음</td></tr><tr><td>신드롬무게/유효부호어 판정</td><td>full_CRC.cpp <code>full_CRC</code></td><td>조기종료는 CRC 기반, 논문의 신드롬무게 적합도와 별개</td></tr><tr><td>채널값/신뢰도 갱신</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>LLR 임계 테이블은 있으나 GA식 채널값 재기입은 대응 없음</td></tr><tr><td>유전 알고리즘 진화(mutation/fitness)</td><td>대응 없음</td><td>GA 오버레이 자체가 코드베이스에 없음</td></tr></tbody></table>
+<p>적용 가치: 낮음 — ML 근접 성능은 매력적이나 세대 반복으로 latency가 폭증하고 GA 오버레이·파라미터 튜닝을 NAND 실시간 디코더에 얹기 어렵다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6399254",
+  "title": "A New Genetics-Aided Message Passing Decoding Algorithm for LDPC Codes",
+  "year": 2012,
+  "venue": "IEEE",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "155~576",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "MP 복호 위에 유전 알고리즘(적합도=유클리드거리+신드롬무게)을 얹어 채널값을 갱신하며 ML에 근접한 성능 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "세대당 반복이 곱연산으로 늘어(예 40100 iter) latency·연산량 폭증, 파라미터 15개 튜닝 필요, HW 미설계",
+  "todo_check": "soft LLR 폭이 큰 GA 채널값 갱신을 NAND 저비트 read 환경에서 유지 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6399254---a-new-genetics-aided-message-passing-decoding-algorithm-for-ldpc-codes-2012-ieee">ieee:6399254 - A New Genetics-Aided Message Passing Decoding Algorithm for LDPC Codes (2012, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

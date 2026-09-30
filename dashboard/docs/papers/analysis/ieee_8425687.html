@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8425687</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8425687---an-optimization-approach-for-an-rll-constrained-ldpc-coded-recording-system-using-deliberate-flipping-2018-ieee-communications-letters">ieee:8425687 - An Optimization Approach for an RLL-Constrained LDPC Coded Recording System Using Deliberate Flipping (2018, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.65</td></tr><tr><td>부호length</td><td>4608~11520</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>RLL flipped 시스템용 min-sum DE + differential evolution으로 UEP LDPC degree 분포 최적화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>광학 recording + RLL flipping 채널 특화, NAND 무관, HW 미설계, 논문 수식 손상 심함</td></tr><tr><td>추가확인</td><td>Fig.2 BER 개선폭 원문 확인, [6] SoC 컨퍼런스 원 시스템 정의 확인</td></tr></tbody></table>
+<blockquote><p>총평: 광 recording RLL flipped 채널 전용 UEP-LDPC degree 분포 최적화 논문으로 NAND binary QC-LDPC 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 광 optical recording 채널 + RLL(0,3) 제약, PEG-LDPC rate <code>0.65</code>, 길이 <code>4608/11520/10240</code>, MAP equalizer + LDPC iterative decoding(<code>Uo=5</code>, <code>Ui=3~5</code>).</li><li>문제: RLL encoder의 rate loss를 피하려 codeword 일부 bit를 deliberate flipping으로 강제, read 측에서 LDPC 정정력으로 flip 제거해야 하나 최적 code 미상.</li><li>모델: write측 flipping error가 랜덤 codeword에 의존(symbol-dependent 채널) → all-zero codeword 가정 불가, Monte Carlo로 첫 iteration pdf 측정.</li><li>핵심기법1: min-sum 기반 DE 유도. flip error 존재/비존재 메시지를 <code>Vf</code>/<code>Vnf</code>로 분리해 <code>φ+f</code>, <code>φ-f</code>, <code>φ+nf</code>, <code>φ-nf</code> 정의.</li><li>핵심식: check node pdf <code>QL(u)(l)</code>을 negative value의 홀/짝수 조합으로 계산(식3,4) — flip/non-flip 혼재 채널에서 CN 출력 분포 근사.</li><li>확장: 2nd iteration 이후 flip/non-flip 부분 병합, 동일 min-sum DE로 단일화(식7,8).</li><li>구현 디테일: variable node는 FFT/IFFT로 수치 계산(식5), CN은 lookup 대신 min-sum으로 단순화.</li><li>최적화: differential evolution(Storn-Price)로 degree 분포 global 최적 탐색, 2-level UEP(<code>Ivweak=[2,3]</code>, <code>Ivstrong=[4,5,6,7,...]</code>, α=0.5, X=50).</li><li>결과: <code>VND=[2,5,7]</code> δ=[0.5,0.499,0.001](Code 6)가 <code>[2,5]</code>(Code 2)보다 우수, check weight-10 유지 + weight-7 추가로 high-SNR BER 개선, error floor 제거.</li><li>한계: 광 recording/RLL flipping 특화 채널, HW 미설계, 시뮬/이론뿐, .txt 수식 손상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>min-sum DE 기반 code 성능 평가</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>min-sum CN 자체는 이미 보유, DE 최적화는 코드 대응 없음</td></tr><tr><td>UEP degree 분포 / PEG 부호구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 고정된 우리 구조와 상충, 이식 부담 큼</td></tr><tr><td>MAP equalizer + iterative decoding</td><td>대응 없음</td><td>ISI equalizer는 NAND에 없음</td></tr><tr><td>differential evolution 최적화</td><td>대응 없음</td><td>오프라인 code 설계 도구, 런타임 코드 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 광 recording RLL flipped 채널 특화 UEP degree 분포 최적화라 NAND binary QC-LDPC 고정 구조에 재사용 여지 거의 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8425687",
+  "title": "An Optimization Approach for an RLL-Constrained LDPC Coded Recording System Using Deliberate Flipping",
+  "year": 2018,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.65,
+  "code_length": "4608~11520",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "RLL flipped 시스템용 min-sum DE + differential evolution으로 UEP LDPC degree 분포 최적화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "광학 recording + RLL flipping 채널 특화, NAND 무관, HW 미설계, 논문 수식 손상 심함",
+  "todo_check": "Fig.2 BER 개선폭 원문 확인, [6] SoC 컨퍼런스 원 시스템 정의 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8425687---an-optimization-approach-for-an-rll-constrained-ldpc-coded-recording-system-using-deliberate-flipping-2018-ieee-communications-letters">ieee:8425687 - An Optimization Approach for an RLL-Constrained LDPC Coded Recording System Using Deliberate Flipping (2018, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

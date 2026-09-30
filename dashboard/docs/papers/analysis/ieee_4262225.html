@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4262225</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4262225---fpga-based-ldpc-code-evaluation-using-an-advanced-magnetic-recording-channel-model-2006-intermag">ieee:4262225 - FPGA-based LDPC Code Evaluation using an Advanced Magnetic Recording Channel Model (2006, INTERMAG)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SOVA+QC-LDPC 복호 시스템을 FPGA(Virtex II 8000)로 구현하고, ISI/transition noise/media nonlinearity를 포함한 고급 자기기록 채널 모델로 BER 10^-11까지 평가</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>0.037Gbps</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>자기기록 채널(ISI, transition noise, partial erasure, NLTS) 전용 평가 플랫폼이며 SOVA와 channel iteration 결합이 NAND에는 없는 구조</td></tr><tr><td>추가확인</td><td>inner iteration 25→5 축소 시 처리량 5배 증가·성능손실 1dB의 iteration-throughput trade-off가 NAND 디코더 조기종료 설계에 참고될 수 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 자기기록 채널 전용 SOVA+QC-LDPC FPGA 평가 시스템으로 채널 모델과 검출 구조가 NAND와 이질적이라 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 longitudinal/perpendicular 자기기록 채널로, ISI·transition noise·electronic noise·media nonlinearity(partial erasure, NLTS)를 포함한 advanced channel model 위에서 QC-LDPC(column weight 3) 부호를 평가.</li><li>기존에는 AWGN 채널에서 LDPC의 near-capacity 성능만 검증되었으나, 실제 자기기록 readback 신호는 ISI·transition noise·매체 비선형성 등 복합 손상을 겪으므로 이를 반영한 평가가 필요하다는 문제의식.</li><li>채널 모델: 고립 전이 응답을 Lorentzian pulse(PW50, 진폭)로 특성화하고, jitter noise·width variation·AWGN을 포함한 SNR 정의, PE ratio <code>r</code>로 partial erasure, NLTS factor <code>ε</code>로 전이 이동을 모델링.</li><li>핵심 구조는 SOVA(soft-output Viterbi algorithm) 기반 PR(EPR4) 검출기와 QC-LDPC 복호기 사이의 channel iteration(외부 반복)과 LDPC 내부 iteration(inner iteration)을 결합한 2단 반복 복호 시스템.</li><li>시스템 전체(SOVA+LDPC+channel model)를 VHDL로 작성해 Xilinx Virtex II 8000 FPGA에 구현, PR target으로 EPR4 사용.</li><li>별도의 확장 기법 없음(SOVA+LDPC iterative decoding 구조 자체가 핵심).</li><li>구현 디테일: 40MHz 클록으로 동작, HW 특화 최적화(양자화 등)는 본문에 상세 기술 없음.</li><li>학습/최적화 절차 없음(고정 QC-LDPC 부호 + 채널 모델 파라미터 스윕으로 평가).</li><li>결과: 25 inner iteration + 2 channel iteration 시 정규화 기록밀도 2에서 SNR 17.5dB에 BER 10^-8 도달(BER 10^-11, FER 10^-8까지 평가), throughput 약 37Mbit/sec; inner iteration을 25→5로 줄이면 throughput 5배 증가하지만 BER 성능은 약 1dB 손실.</li><li>한계: 자기기록 채널(ISI, transition noise, PE, NLTS) 전용 평가이며 부호율/길이 등 구체 스펙 본문 미기재, NAND 채널·플래시 오류 모델과 무관, 순수 평가/구현 보고로 새로운 디코딩 알고리즘 제안은 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>QC-LDPC inner iteration 복호</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>QC-LDPC라는 점에서만 접점, 구체 알고리즘(min-sum 등) 기술 없음</td></tr><tr><td>SOVA 기반 channel iteration(외부 검출-복호 반복)</td><td>대응 없음</td><td>NAND ECC는 별도 채널 검출기(Viterbi)와 결합되지 않음</td></tr><tr><td>자기기록 채널 모델(ISI, PE, NLTS)</td><td><code>channel.cpp</code></td><td>AWGN/RBER/fixed-error 모델과 근본적으로 다른 채널 특성으로 직접 대응 불가</td></tr><tr><td>iteration 수 축소에 따른 throughput-BER trade-off</td><td><code>decoder.cpp</code> (iteration 루프)</td><td>조기종료/iteration 감소 설계 시 참고 가능한 정성적 트렌드 정도</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 자기기록 채널 전용 SOVA+QC-LDPC FPGA 평가 시스템으로 새로운 디코딩 알고리즘 제안 없이 채널 모델과 검출 구조가 NAND와 이질적임.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4262225",
+  "title": "FPGA-based LDPC Code Evaluation using an Advanced Magnetic Recording Channel Model",
+  "year": 2006,
+  "venue": "INTERMAG",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SOVA+QC-LDPC 복호 시스템을 FPGA(Virtex II 8000)로 구현하고, ISI/transition noise/media nonlinearity를 포함한 고급 자기기록 채널 모델로 BER 10^-11까지 평가",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": 0.037,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "자기기록 채널(ISI, transition noise, partial erasure, NLTS) 전용 평가 플랫폼이며 SOVA와 channel iteration 결합이 NAND에는 없는 구조",
+  "todo_check": "inner iteration 25→5 축소 시 처리량 5배 증가·성능손실 1dB의 iteration-throughput trade-off가 NAND 디코더 조기종료 설계에 참고될 수 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4262225---fpga-based-ldpc-code-evaluation-using-an-advanced-magnetic-recording-channel-model-2006-intermag">ieee:4262225 - FPGA-based LDPC Code Evaluation using an Advanced Magnetic Recording Channel Model (2006, INTERMAG)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

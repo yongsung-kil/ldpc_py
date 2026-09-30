@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7251868</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7251868---an-area-efficient-architecture-for-stochastic-ldpc-decoder-2015-ieee-conference">ieee:7251868 - An Area-Efficient Architecture for Stochastic LDPC Decoder (2015, IEEE conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.841</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>stochastic LDPC 디코더의 edge memory(EM)를 saturated up/down counter로 대체해 VN 면적을 대폭 절감</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>2.2mm²@65nm(전체 디코더, EM 대비 15.3%)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>10.2Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>알고리즘이 stochastic computing(확률 도메인, Bernoulli sequence) 기반이라 Prime ECC의 min-sum 아키텍처와 근본적으로 이질적</td></tr><tr><td>추가확인</td><td>counter saturation 값(64/127/255)별 BER-면적 트레이드오프의 정량적 근거가 그림(Fig.6)에만 있어 본문 수치만으론 성능열화 정도 확인 불가</td></tr></tbody></table>
+<blockquote><p>총평: stochastic decoding 고유의 HW 면적 절감 기법으로 Prime ECC(min-sum 기반)와 알고리즘 패러다임이 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드는 IEEE 802.3an(10GBASE-T)의 (2048,1723) regular LDPC, CN degree 32, VN degree 6.</li><li>Stochastic LDPC 디코더는 SPA를 확률 도메인에서 계산하며 메시지를 Bernoulli sequence의 비트열로 표현, 배선 혼잡을 줄이지만 Tanner graph의 girth로 인해 출력이 고정 상태에 머무르는 latching 문제가 있음.</li><li>기존 해법인 edge memory(EM, <code>[4]</code>)는 각 edge마다 shift register+MUX를 두어 unhold state 확률을 추적하나, VN 면적의 약 80%(디코더 전체의 약 60%)를 차지해 면적/동적전력 낭비가 큼.</li><li>본 논문은 EM을 saturated up/down counter로 대체: unhold 입력이 1이면 counter+1, 0이면 -1, hold state에서는 counter 값과 LFSR 난수를 비교해 출력 결정.</li><li>64-bit EM(레지스터 64개) 대비 counter는 saturation value 128에서 7-bit(레지스터 7개)만 필요 — 면적 절감의 핵심 근거.</li><li>추가로 VN 내 6개 sub-unit이 원래 개별 EM(probability tracer)을 가졌으나, 6개의 확률이 유사함을 이용해 counter 1개를 공유(1-counter VN)하도록 재설계.</li><li>6-input sub-unit 내부에서 12개의 3-input 그룹 중 실제로는 7종류만 서로 다름을 확인, 동일 그룹 로직을 재사용해 sub-unit 구조를 축소(Table I).</li><li>채널 LLR→확률 변환은 <code>Pi = e^Li/(e^Li+1)</code> 식과 LUT, NDS(noise dependent scaling)로 처리, 채널 입력은 6-bit(부호1+정수2+소수3) 양자화.</li><li>결과: SMIC 65nm 1.0V 500MHz 합성 시 전체 디코더 면적 2.2mm²(EM 기반 14.4mm² 대비 15.3%), throughput 10.2Gb/s, SNR 5.5dB에서 평균 100.4 DC(termination 700 DC 상한)로 수렴, BER은 counter 기반이 64-bit EM보다 우수.</li><li>한계: stochastic computing 고유 아키텍처(확률 비트스트림, LFSR 난수 비교)에 특화된 개선이라 결정론적 min-sum 계열 디코더에는 개념 이식이 어렵고, VN 면적 비교는 시뮬레이션이 아닌 합성 결과에 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Stochastic 디코딩(확률 비트스트림, VN counter/EM)</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 결정론적 디코더로 확률 비트스트림 방식과 아키텍처 자체가 다름</td></tr><tr><td>CN XOR 연산(패리티 체크)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code></td><td>개념적으로만 유사(패리티 체크 자체는 공통), 구현 방식은 완전히 다름</td></tr><tr><td>조기종료(termination, DC count)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료라는 목적은 유사하나 본 논문은 CRC가 아닌 자체 Check block 기반</td></tr><tr><td>채널 LLR→확률 변환, 양자화</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>소프트 양자화라는 점만 유사, 확률 표현 방식이 달라 직접 이식 불가</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — stochastic computing 패러다임 자체가 Prime ECC의 min-sum HW 구조와 근본적으로 다르고, 다룬 개선(EM→counter)도 stochastic 디코더에만 유효한 면적 최적화라 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7251868",
+  "title": "An Area-Efficient Architecture for Stochastic LDPC Decoder",
+  "year": 2015,
+  "venue": "IEEE conference",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.841,
+  "code_length": 2048,
+  "soft_quant": "무관",
+  "key_contribution": "stochastic LDPC 디코더의 edge memory(EM)를 saturated up/down counter로 대체해 VN 면적을 대폭 절감",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "2.2mm²@65nm(전체 디코더, EM 대비 15.3%)",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 10.2,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "알고리즘이 stochastic computing(확률 도메인, Bernoulli sequence) 기반이라 Prime ECC의 min-sum 아키텍처와 근본적으로 이질적",
+  "todo_check": "counter saturation 값(64/127/255)별 BER-면적 트레이드오프의 정량적 근거가 그림(Fig.6)에만 있어 본문 수치만으론 성능열화 정도 확인 불가"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7251868---an-area-efficient-architecture-for-stochastic-ldpc-decoder-2015-ieee-conference">ieee:7251868 - An Area-Efficient Architecture for Stochastic LDPC Decoder (2015, IEEE conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

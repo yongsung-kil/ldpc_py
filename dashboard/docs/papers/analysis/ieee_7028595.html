@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7028595</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7028595---uniformly-reweighted-app-decoder-for-memory-efficient-decoding-of-ldpc-codes-2014-allerton-conference">ieee:7028595 - Uniformly reweighted APP Decoder for memory efficient decoding of LDPC Codes (2014, Allerton Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>155</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>APP 디코더에 reweighting 파라미터 α 도입 + edge가 아닌 node 수 비례 메모리 구현</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BSC + (3,5) length-155 소형 부호 시뮬만, BP 대비 여전히 suboptimal, HW 미설계</td></tr><tr><td>추가확인</td><td>AWGN/soft-read 채널 및 고rate QC-LDPC로 확장 시 α 최적값·이득 유지 여부</td></tr></tbody></table>
+<blockquote><p>총평: BSC 전용 APP 디코더의 소폭 성능개선 + 메모리 절감 아이디어로, NAND soft-read QC-LDPC와 채널·부호가 어긋나 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BSC 상에서 regular LDPC (<code>(3,5)</code> Tanner code, length <code>N=155</code>) 복호. 목표는 BP의 edge 비례 메모리를 줄이는 것.</li><li>문제: BP는 error correction은 좋으나 Tanner graph edge 수에 비례하는 메모리가 필요해 HW 제약 환경에 부적합. APP 디코더[1]는 메모리는 적으나 suboptimal.</li><li>모델: BSC 확률모델 <code>Pr(y,x|C)</code>, cross-over probability <code>Pe</code>. APP는 VN이 intrinsic message만 보내 이웃 check constraint만 반영하는 근사.</li><li>핵심기법: APP를 Bayesian inference로 유도하고, check likelihood <code>p̂_mn</code>을 α-escort 분포 <code>p̂_mn^α / Σ p̂_mn^α</code>로 대체 (URAPP). <code>α∈[0,1]</code>.</li><li>식 의미: log-ratio 도메인에서 posterior update <code>γ̃_n = γ_n + α·Σ μ_{m→n}</code> (식 12). α가 작을수록 check likelihood가 smoothing되어 channel likelihood 지배.</li><li>확장: α=1이면 원래 APP, α=0이면 uniform. 최적 α는 0~1 사이로 brute-force 시뮬로 결정.</li><li>구현 디테일: check→variable 메시지는 box-sum <code>⊞</code>과 그 역연산 minus-box <code>⊟</code>로 <code>Ψ_m = ⊞ γ̂_k</code> 를 iteration당 1회만 계산 후 각 n에 대해 <code>μ_{m→n}=Ψ_m ⊟ γ̂_n</code> 재사용.</li><li>메모리 구현: 메시지 대신 VN당 <code>Ψ_m</code> 값만 저장하는 semi-parallel 알고리즘(Algorithm 1) → 메모리가 node 수 비례(edge 비례 아님).</li><li>결과: (3,5) length-155에서 최적 α는 iter수에만 의존(K=5→0.8, K=10→0.6, K=20→0.5), Pe와 무관. K가 클수록 표준 APP 대비 BER gain 명확.</li><li>한계: BSC·소형 regular 부호 시뮬만, BP 대비 여전히 suboptimal, HW/throughput/gatecount 미제시, α가 수렴을 늦춤.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>URAPP 반복 복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>APP류 message-passing이라 개념적으로만 닿음, min-sum 구조와 상이</td></tr><tr><td>box-sum/minus-box CN 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>우리는 min-sum(min1/min2), 논문은 log-domain box-sum → 대체·이식 부담</td></tr><tr><td>α posterior update</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>VN 업데이트에 스칼라 가중 추가 가능하나 이득 불확실</td></tr><tr><td>BSC hard-input</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>우리는 AWGN/RBER 기반 soft-read, BSC 전제 불일치</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BSC 전용 소형 regular 부호에 대한 APP suboptimal 개선이라 NAND soft-read 고rate QC-LDPC min-sum 파이프라인과 채널·부호·연산이 모두 어긋난다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7028595",
+  "title": "Uniformly reweighted APP Decoder for memory efficient decoding of LDPC Codes",
+  "year": 2014,
+  "venue": "Allerton Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "155",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "APP 디코더에 reweighting 파라미터 α 도입 + edge가 아닌 node 수 비례 메모리 구현",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "BSC + (3,5) length-155 소형 부호 시뮬만, BP 대비 여전히 suboptimal, HW 미설계",
+  "todo_check": "AWGN/soft-read 채널 및 고rate QC-LDPC로 확장 시 α 최적값·이득 유지 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7028595---uniformly-reweighted-app-decoder-for-memory-efficient-decoding-of-ldpc-codes-2014-allerton-conference">ieee:7028595 - Uniformly reweighted APP Decoder for memory efficient decoding of LDPC Codes (2014, Allerton Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5613841</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5613841---a-density-based-progressive-edge-growth-matrix-creation-technique-for-ldpc-codes-2010-istc">ieee:5613841 - A Density-Based Progressive Edge-Growth Matrix Creation Technique for LDPC Codes (2010, ISTC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>504~2024</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>기존 distance metric 대신 subgraph "density" metric으로 노드 선택하는 PEG 변형(DPEG)으로 고rate·저error-floor 부호 구성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>비구조(비QC) 그래프 구성법이라 circulant 구조 미보장, HW 미설계·컴퓨팅 제약으로 일부 결과 누락</td></tr><tr><td>추가확인</td><td>density metric을 QC base matrix lifting 단계에 접목 가능한지(구조 제약 하 girth 균형) 확인</td></tr></tbody></table>
+<blockquote><p>총평: distance 대신 density metric을 쓰는 오프라인 PEG 부호 구성법으로, 비구조 그래프라 NAND QC-LDPC 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 일반 (n,k) LDPC 부호의 <strong>오프라인 H-matrix 구성</strong>(고rate 지향), AWGN에서 sum-product 복호, 예제 (504,252)/(1008,504)/(1913,·) rate ~0.5 및 고rate.</li><li>문제: 기존 PEG/bit-filling은 최종 후보 노드 간 변별이 약해(least-degree 등) 고rate 확장이 조기에 막힌다.</li><li>핵심 기법: 후보 check node <code>fj</code>의 depth-<code>l</code>까지 이웃 노드 수를 합한 **density <code>D_l(fj)=Σ|N_d(fj)|</code>** (식1)을 정의하고, length-4 cycle 회피 후보(<code>V1</code>) 중 **density 최소 노드(<code>V2</code>)**를 선택.</li><li>depth는 <code>D5</code>(depth 5) 사용 — length-6 cycle이 tree 구조를 깨기 직전 값이라 metric이 tree-like로 유지됨.</li><li>edge 추가 시 양쪽 subgraph의 depth-5까지 모든 노드 연결정보를 갱신(Algorithm 2), window 크기 <code>2l</code>, 연산량은 density depth에만 의존해 상한 고정.</li><li>girth 최대화 변형(Section IV): <code>gmax</code>/<code>gmin</code> 지정 후 <code>gmin+2</code> girth로 초기 그래프 구성→pruning→<code>gmin</code>으로 재개(Algorithm 3/4), quasi-regular·고정 rate 부호에 적용.</li><li>distance metric(개별 노드 girth만 이기적 최적화) 대비 density metric은 subgraph 무게를 균형화해 trapping-set류가 이웃에서 유효 metric을 받도록 유도.</li><li>Richardson-Urbanke 하삼각화[20]로 near-linear time encoding 가능하다고 언급(구현은 안 함).</li><li>결과: 같은 m에서 열 수(=rate)가 MacKay/E-bit-filling/E-PEG보다 큼(예 m=111에서 1913열); (504,252) girth-8 부호가 PEG 대비 3.8 dB에서 8.42e-7 vs 2.02e-6로 우세; (1008,504)는 순수 girth-10 달성.</li><li>한계: 비구조(비QC) 그래프 구성이라 HW 정렬성 없음, 컴퓨팅 제약으로 (1008,504) 성능곡선 미제공, HW 미설계·시뮬만.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DPEG density-metric H-matrix 구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>비구조 그래프 산출물이라 고정 QC-LDPC(base+shift, z=32) 로더와 정합 안 됨</td></tr><tr><td>length-4/girth 회피 부호설계</td><td>대응 없음</td><td>오프라인 그래프 구성 이론, 코드에 대응 모듈 없음</td></tr><tr><td>sum-product 복호 (성능 비교용)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 사용, 논문은 full sum-product 가정으로 직접 대응 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 비구조 LDPC 그래프의 오프라인 구성 휴리스틱으로, base matrix+circulant shift로 고정된 NAND QC-LDPC에는 그대로 적용 불가하며 부호 재설계·재검증 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5613841",
+  "title": "A Density-Based Progressive Edge-Growth Matrix Creation Technique for LDPC Codes",
+  "year": 2010,
+  "venue": "ISTC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "504~2024",
+  "soft_quant": "무관",
+  "key_contribution": "기존 distance metric 대신 subgraph density metric으로 노드 선택하는 PEG 변형(DPEG)으로 고rate·저error-floor 부호 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "비구조(비QC) 그래프 구성법이라 circulant 구조 미보장, HW 미설계·컴퓨팅 제약으로 일부 결과 누락",
+  "todo_check": "density metric을 QC base matrix lifting 단계에 접목 가능한지(구조 제약 하 girth 균형) 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5613841---a-density-based-progressive-edge-growth-matrix-creation-technique-for-ldpc-codes-2010-istc">ieee:5613841 - A Density-Based Progressive Edge-Growth Matrix Creation Technique for LDPC Codes (2010, ISTC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

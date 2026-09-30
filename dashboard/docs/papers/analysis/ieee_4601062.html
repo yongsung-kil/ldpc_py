@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4601062</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4601062---ldpc-decoder-strategies-for-achieving-low-error-floors-2008-ieee">ieee:4601062 - LDPC Decoder Strategies for Achieving Low Error Floors (2008, IEEE)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.3~0.5</td></tr><tr><td>부호length</td><td>640~2640</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>코드의 dominant trapping set을 식별해 SPA 복호기를 맞춤 설계(bi-mode erasure post-processing / bit-pinning+outer BCH / G-LDPC BCJR 3종)로 error floor를 수 자릿수 낮춤</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>SPA·AWGN 베이스라인이라 min-sum/양자화 시 trapping set이 달라짐, 코드별 trapping set 사전 enumerate 필요, bit-pinning은 rate loss·G-LDPC는 BCJR로 복잡도↑</td></tr><tr><td>추가확인</td><td>Prime ECC의 특정 QC-LDPC+min-sum에서 dominant trapping set 목록 확보 후 bi-mode erasure post-processing 이식 가능성·HW 비용</td></tr></tbody></table>
+<blockquote><p>총평: rate loss 없는 저복잡도 bi-mode trapping-set post-processing으로 QC-LDPC error floor를 orders-of-magnitude 낮추는, NAND용 정독 가치 높은 복호 전략.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BI-AWGN 채널 + SPA(sum-product) 복호를 baseline으로, 대상 부호는 rate-1/2 <code>(2640,1320)</code> Margulis 코드와 rate-0.3 <code>(640,192)</code> 짧은 QC 코드(circulant <code>Q=64</code>, col-weight 5).</li><li>문제: LDPC error floor는 low-weight codeword가 아니라 <code>(w,v)</code> trapping set(부분그래프)에서 발생하며 storage/광통신처럼 극저 error rate 요구 시 핵심 장애.</li><li>모델: 시뮬레이션으로 dominant trapping set을 열거(Margulis: <code>(12,4)</code>가 floor의 75%, <code>(14,4)</code>가 23%; QC: <code>(5,5)</code>가 90%+), Richardson의 semi-analytic + importance sampling으로 FER floor 예측.</li><li>기법1 bi-mode(PP): SPA 수렴 후 syndrome weight가 target trapping set의 것과 일치하면 2모드 진입 → unsatisfied CN 이웃 VN들을 tree로 erasure flag 후 그래프 기반 erasure 복호(이진 XOR)로 trapping set 오류 정정.</li><li>핵심 아이디어: erasure set이 stopping set만 포함하지 않으면 BEC 반복복호로 trapping set VN을 모두 복구 — 오류 bit LLR이 최소가 아닐 수 있어 unsatisfied CN의 <code>dc</code> 이웃 전부를 erasure 처리.</li><li>기법2 bit-pinning+outer: 고rate outer BCH를 concat해 trapping set의 systematic bit 하나를 정정, 그 sign을 LDPC로 feedback해 해당 LLR을 max로 pin; overlap 활용해 t=1 BCH 4개로 rate loss를 0.5→0.49(0.086dB)까지 축소.</li><li>기법3 G-LDPC(DM): trapping set의 unsatisfied SPC들을 묶어 generalized constraint processor(GCP)로 만들고 BCJR로 처리(SPA-GCP) — I/II/III로 GCP 그룹핑을 확장해 trapping set 제거.</li><li>trapping set 탐색: two-step importance sampling(bias -2 후 stable pattern 기록 → Gaussian RV로 실제 AWGN trapping set 확정)으로 G-LDPC trapping set을 효율 열거.</li><li>결과: bi-mode는 Margulis FER floor를 <code>~10^-8</code>까지 소거·QC는 2자릿수↓, bit-pinning은 시뮬 한계 이하로 소거, G-LDPC III는 Margulis/QC 모두 floor 미관측(<code>~10^-8</code>).</li><li>한계: HW 미설계·floating point SPA 시뮬, 기법이 baseline 복호기(SPA/양자화)에 따라 trapping set이 달라짐, G-LDPC는 BCJR로 복잡도 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SPA/반복복호 이터레이션 루프</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>baseline은 SPA, 우리는 min-sum — 루프 위에 post-processing 훅 삽입 지점</td></tr><tr><td>CN 연산(우리 min-sum)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>논문 baseline과 알고리즘 상이(SPA/BCJR), min-sum trapping set 재특성화 필요</td></tr><tr><td>bit-pinning LLR max 고정</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>pin된 bit LLR을 max로 설정하는 것과 대응</td></tr><tr><td>trapping set 수렴실패 추적</td><td><code>corner.cpp</code></td><td>수렴실패 프레임을 잡아 trapping set 후보화하는 데 활용 가능</td></tr><tr><td>bi-mode erasure post-processing / G-LDPC BCJR</td><td>대응 없음</td><td>Prime ECC에 error-floor용 post-processing·GCP/BCJR 모듈 미보유</td></tr></tbody></table>
+<p>적용 가치: <strong>높음</strong> — error-floor는 고rate NAND QC-LDPC의 핵심 병목이고 bi-mode post-processing은 rate loss 없이 XOR 기반 저복잡도라 이식 후보. 단 min-sum/양자화 하에서 dominant trapping set 재특성화가 선행돼야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4601062",
+  "title": "LDPC Decoder Strategies for Achieving Low Error Floors",
+  "year": 2008,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "640~2640",
+  "soft_quant": "무관",
+  "key_contribution": "dominant trapping set을 식별해 bi-mode erasure post-processing/bit-pinning+outer BCH/G-LDPC BCJR로 error floor를 수 자릿수 저감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "상",
+  "caveat": "SPA·AWGN 베이스라인이라 min-sum/양자화 시 trapping set 상이, 코드별 사전 enumerate 필요, bit-pinning은 rate loss·G-LDPC는 BCJR 복잡도",
+  "todo_check": "Prime ECC의 QC-LDPC+min-sum dominant trapping set 목록 확보 후 bi-mode erasure post-processing 이식·HW 비용"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4601062---ldpc-decoder-strategies-for-achieving-low-error-floors-2008-ieee">ieee:4601062 - LDPC Decoder Strategies for Achieving Low Error Floors (2008, IEEE)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

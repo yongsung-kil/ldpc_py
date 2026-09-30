@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1208803</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1208803---multi-rate-parity-accumulator-accumulator-codes-2003-isitieee-conf">ieee:1208803 - Multi-Rate Parity Accumulator Accumulator Codes (2003, ISIT/IEEE Conf.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>code-design</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.53~0.89</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>단일 패리티체크를 multi-rate cycle-free 부호로 치환해 다중 rate PAA 부호 구성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>PAA(직렬연접 RA류) 계열이라 QC-LDPC 구조와 무관, sum-product 전체(tanh) 가정으로 HW 미설계</td></tr><tr><td>추가확인</td><td>없음 (구성법이 Prime ECC의 binary QC-LDPC와 정합 불가)</td></tr></tbody></table>
+<blockquote><p>총평: RA 계열 PAA 부호의 다중 rate 구성 + Gaussian approximation threshold 분석 논문으로, NAND용 binary QC-LDPC ECC와 부호구조/디코더 모두 무관해 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: PAA(Parity Accumulator Accumulator) — 외부 부호=단일 패리티체크(SPC), 내부=두 개의 accumulator를 직렬 연접한 고rate 부호(RA 유사, storage device 겨냥).</li><li>문제: 기존 PAA는 rate가 SPC로 고정되어 다양한 rate 시스템에 부적합.</li><li>제안: SPC를 Etzion의 multi-rate cycle-free 부호(예 [10,8], [11,8])로 치환해 다중 rate PAA 부호를 구성.</li><li>복호: factor graph에 sum-product 알고리즘 적용, tree representation으로 정보/패리티 노드 메시지 갱신(<code>M(0)=a+b+y(0)</code> 등).</li><li>CN 갱신은 표준 <code>tanh(u/2)=∏tanh(u_j/2)</code> 사용, VN 갱신은 incoming LLR 합.</li><li>분석: Gaussian approximation으로 AWGN 채널에서 noise threshold 계산 (변수/체크 노드 차수분포 λ,ρ,γ 유도).</li><li>대칭 Gaussian 가정(<code>σ²=2m</code>)으로 평균 m만 추적, <code>φ(m)</code> 함수로 accumulator별 평균 갱신식 유도.</li><li>threshold = iteration→∞일 때 bit error 확률이 0으로 가는 최대 noise level.</li><li>결과: 정보 블록 길이 4096, iteration 10/20 BPSK 시뮬에서 rate 8/9~8/15 PAA가 Shannon limit에 근접.</li><li>한계: HW 미설계, 순수 부호구성+threshold 이론, non-QC 구조라 NAND ECC 이식 부적합.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| PAA/cycle-free 부호구성 | 대응 없음 | QC-LDPC(base+shift) 구조와 무관, RA 계열 |
+| sum-product(tanh) CN 갱신 | 대응 없음 | Prime ECC는 min-sum 근사, full-tanh 미사용 |
+| Gaussian approximation threshold | 대응 없음 | 부호설계 이론 분석, 코드 대응 모듈 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — RA/PAA 직렬연접 부호 구성법+threshold 이론으로 binary QC-LDPC 디코더/HW/부호설계 어느 레이어에도 이식 대상 대응이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1208803",
+  "title": "Multi-Rate Parity Accumulator Accumulator Codes",
+  "year": 2003,
+  "venue": "IEEE Conference (ISIT)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "code-design",
+  "code_type": "기타",
+  "code_rate": "0.53~0.89",
+  "code_length": "4096(info)",
+  "soft_quant": "무관",
+  "key_contribution": "단일 패리티체크를 multi-rate cycle-free 부호로 치환해 다중 rate PAA 부호 구성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "PAA(직렬연접 RA류) 계열이라 QC-LDPC 구조와 무관, sum-product 전체(tanh) 가정으로 HW 미설계",
+  "todo_check": "없음 (구성법이 Prime ECC의 binary QC-LDPC와 정합 불가)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1208803---multi-rate-parity-accumulator-accumulator-codes-2003-isitieee-conf">ieee:1208803 - Multi-Rate Parity Accumulator Accumulator Codes (2003, ISIT/IEEE Conf.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

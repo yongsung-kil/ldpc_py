@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7858383</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7858383---improving-ldpc-performance-via-asymmetric-sensing-level-placement-on-flash-memory-2017-asp-dac">ieee:7858383 - Improving LDPC Performance Via Asymmetric Sensing Level Placement on Flash Memory (2017, ASP-DAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>flash의 inter-state/intra-state 비대칭 에러 특성을 활용해 sensing level을 비대칭 배치, 정정능력 유지하며 read latency 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>정정능력은 "유지"일 뿐 향상 없음, LDPC 부호/디코더 자체 미변경, MLC(2bit/cell) 특화이며 error model 기반 시뮬</td></tr><tr><td>추가확인</td><td>Prime ECC의 soft-read threshold 테이블(2SD/3SD)에 비대칭 배치 적용 가능한지, TLC 등 다치셀 확장성과 P/E 임계값 튜닝 필요</td></tr></tbody></table>
+<blockquote><p>총평: MLC flash의 상태별/방향별 비대칭 에러를 활용해 sensing level을 비대칭 배치, LDPC read latency를 평균 54% 줄이는 soft-read 최적화. NAND 직접 타깃이나 LDPC 부호·디코더 자체는 손대지 않는 채널/센싱 레이어 기법.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: MLC(2bit/cell, 4-state) NAND flash + soft-decision LDPC, 인접 상태쌍당 최대 7 sensing level(총 21), soft 정보 log(N+1) bit.</li><li>문제: 고RBER 데이터는 fine-grained soft sensing이 필요해 sensing latency + flash→controller 전송 latency가 큼 → LDPC 디코딩 지연.</li><li>핵심 관찰: flash 에러는 두 비대칭 특성 — inter-state(상태쌍별 RBER 상이, S2/S3 &gt;&gt; S0/S1), intra-state(한 상태의 left-shift(retention 누설) vs right-shift(P/E·셀간간섭) 비대칭).</li><li>기법1 inter-state: RBER 높은 쌍에 sensing level 더 배치. 관계식 <code>if e_k &lt; e_{k+1} then N_k ≤ N_{k+1}</code> (1) — 고에러 영역 우선.</li><li>기법2 intra-state: <code>N_k = N_kl + 1 + N_kr</code> (2), hard level 1개 기준 좌/우 비대칭 분배. <code>e_kl &gt; e_kr → N_kl ≥ N_kr</code> (left-shift aware), 반대는 right-shift aware.</li><li>의미: 같은 총 sensing level로 에러 많은 쪽에 집중 배치 → 동일 정정능력을 더 적은 level로 달성 → level·정보bit 감소.</li><li>구현: 디코딩 실패 시 level을 반복 증가시키되 비대칭 순서로(Table I: N2→N1→N0 우선). 좌/우 방향은 P/E cycle 임계값 <code>T_PE</code>로 판정(초과 시 right 우선).</li><li>결과 예: P/E 5K·retention 3년에서 대칭 21 level(5bit) → 비대칭 14 level(4bit)로 감소.</li><li>성능: DiskSim SSD 모듈 + MSR trace 시뮬에서 read latency 평균 54% 감소(retention 길수록·read-intensive일수록 효과 큼).</li><li>한계: LDPC 부호/디코더 미변경(순수 sensing 배치), 정정능력 향상 아닌 "유지", HW 미설계, error model 기반 시뮬, MLC 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>비대칭 sensing level 배치 / soft-read threshold</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code>, <code>Set_LLR_Th()</code></td><td>상태별·방향별 비대칭 threshold로 확장 가능(soft-read 비용 절감 핵심)</td></tr><tr><td>level→LLR 양자화 (log(N+1) bit)</td><td><code>channel.cpp</code> + <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>비대칭 배치에 맞춘 LLR 테이블 조정 필요</td></tr><tr><td>iteration별 progressive sensing 추가</td><td><code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code>, 적응형 LLR 테이블</td><td>실패 시 level 증가 로직과 iteration 구간 LLR 연동</td></tr><tr><td>P/E cycle 기반 좌/우 우선순위 결정</td><td>대응 없음</td><td>컨트롤러 정책 레이어(코드베이스 외부)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — NAND 직접 타깃이고 Prime ECC의 soft-read threshold(2SD/3SD)에 상태별·방향별 비대칭 배치를 얹어 read latency를 줄일 여지가 크나, Prime ECC는 soft-4bit+를 미지원하고 이 기법은 LDPC 부호/디코더 자체를 개선하지 않아 정정능력 이득은 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7858383",
+  "title": "Improving LDPC Performance Via Asymmetric Sensing Level Placement on Flash Memory",
+  "year": 2017,
+  "venue": "ASP-DAC",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "미상",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "flash의 inter-state/intra-state 비대칭 에러 특성을 활용해 sensing level을 비대칭 배치, 정정능력 유지하며 read latency 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "정정능력은 유지일 뿐 향상 없음, LDPC 부호/디코더 자체 미변경, MLC(2bit/cell) 특화이며 error model 기반 시뮬",
+  "todo_check": "Prime ECC의 soft-read threshold 테이블(2SD/3SD)에 비대칭 배치 적용 가능한지, TLC 등 다치셀 확장성과 P/E 임계값 튜닝 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7858383---improving-ldpc-performance-via-asymmetric-sensing-level-placement-on-flash-memory-2017-asp-dac">ieee:7858383 - Improving LDPC Performance Via Asymmetric Sensing Level Placement on Flash Memory (2017, ASP-DAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

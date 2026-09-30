@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1494672</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1494672---a-scalable-decoder-architecture-for-linear-congruential-ldpc-codes-2005-ieee-conf">ieee:1494672 - A Scalable Decoder Architecture for Linear Congruential LDPC Codes (2005, IEEE conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>3072</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>MLLCS 재귀로 PCM을 수신단 생성(저장 불필요) + sub-grouping으로 partly-parallel scalable 디코더, 고정 router</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>MLLCS 부호구조 종속(QC 아님), Prime ECC의 고정 QC-LDPC와 정합 안 됨, gatecount/throughput 미제시</td></tr><tr><td>추가확인</td><td>sub-grouping 메모리뱅킹 착상이 z=32 QC lifting 병렬화와 겹치는지</td></tr></tbody></table>
+<blockquote><p>총평: MLLCS 코드 전용의 저장없는 PCM 생성+partly-parallel 아키텍처로, QC-LDPC 고정 Prime ECC엔 부호구조가 달라 이식가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: BPSK+AWGN, (λ=3, ρ=6) regular LDPC. 예제부호 rate-1/2, N=3072, K=1536, 엣지수 M=9216, girth 6.</li><li>문제: 랜덤 LDPC는 PCM 저장 필요(다중 rate/length 시 메모리 폭증), 완전병렬은 HW 과다·직렬은 latency 과다.</li><li>핵심 구성: PCM 연결을 MLLCS 재귀 <code>A_{n+1}=(a·A_n+b) mod M</code>으로 생성 → 수신단이 (a,b,A0) 3값만으로 그래프 재생성, 저장 불필요.</li><li>조건 D1~D8: maximal-length 시퀀스 보장(D1~D4) + length-4 cycle 회피(D5~D8, λ=3 전용).</li><li>정리1(핵심): X를 나누고 ρ로 나눠지는 M1에 대해 <code>C_n=(C_{n-1}a+b) mod M1</code>도 MLLCS → 원 시퀀스 mod M1이 길이 M1 주기로 반복 → check connection을 M1개 subgroup으로 분할 가능.</li><li>아키텍처: extrinsic 메모리를 M2행 x M1열 블록 배열로, 열=subgroup. M1개 메시지 병렬 read → M1/ρ개 CNU, M1/3개 BNU 동시 처리.</li><li>라우터: subgroup 순서가 일정하게 반복 → 시간불변 고정 라우팅(단일 부호는 hardwire 가능). [5]의 매 클록 스위칭 대비 이점.</li><li>복호: SPA(<code>ψ(x)=log tanh(|x|/2)</code>), CN update식(9)(10), BN update식(11), 채널 LLR <code>Lch=-2r/σ²</code>.</li><li>결과: iteration당 <code>M/(M1·M2)+N/(M1/3)</code> 클록. 동일 PCM으로 M1/M2 조절해 병렬도 스케일 → BER 불변. MLLCS 부호가 랜덤(no len-4) 대비 성능 손실 없음(Fig4).</li><li>한계: HW 아키텍처 제안이나 gatecount/throughput 수치 없음, 시뮬만, MLLCS 부호구조에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MLLCS PCM 생성/로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC(base+shift) — MLLCS 생성식과 부호구조 상이</td></tr><tr><td>sub-grouping 병렬 메모리·라우팅</td><td>디코더 HW 모델 (z=32 병렬, GT.cpp <code>Make_GT_HW()</code>)</td><td>병렬화 착상은 유사하나 QC lifting 기반 병렬과 매핑 다름</td></tr><tr><td>SPA CN/BN update</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 full-tanh 대신 Min-Sum 사용 — SPA는 미채택</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 저장없는 PCM 생성은 MLLCS 특유 구조에 종속되어 고정 QC-LDPC Prime ECC에 부적합하고, 병렬 메모리 착상도 QC lifting 병렬과 정합 부담 크며 SPA·수치 부재.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1494672",
+  "title": "A Scalable Decoder Architecture for Linear Congruential LDPC Codes",
+  "year": 2005,
+  "venue": "IEEE conference",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "3072",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "MLLCS 재귀로 PCM 수신단 생성(저장불필요) + sub-grouping partly-parallel scalable 디코더, 고정 router",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "MLLCS 부호구조 종속(QC 아님), Prime ECC 고정 QC-LDPC와 정합 안 됨, gatecount/throughput 미제시",
+  "todo_check": "sub-grouping 메모리뱅킹 착상이 z=32 QC lifting 병렬화와 겹치는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1494672---a-scalable-decoder-architecture-for-linear-congruential-ldpc-codes-2005-ieee-conf">ieee:1494672 - A Scalable Decoder Architecture for Linear Congruential LDPC Codes (2005, IEEE conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8388829</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8388829---error-characterization-and-ecc-usage-relaxation-beyond-20nm-floating-gate-nand-flash-memory-2018-ieee-irps">ieee:8388829 - Error Characterization and ECC Usage Relaxation beyond 20nm Floating Gate NAND Flash Memory (2018, IEEE IRPS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>RTN tail 비대칭 spread 특성화 + MTV/Read-Retry(MTVR2)로 Vt margin 확보해 ECC bit 부담 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>ECC 알고리즘/부호설계가 아닌 소자·프로그램 스킴 논문 — 디코더 이식 대상 없음</td></tr><tr><td>추가확인</td><td>MTVR2가 낮추는 RBER 곡선을 LLR/양자화 재설계 관점에서 재활용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 19nm FG NAND의 RTN 오류 특성화와 program-verify/read-retry로 ECC 부담을 줄이는 소자 레벨 논문 — NAND 직접 연관이나 LDPC 디코더/부호 이식 요소 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 19nm 32Gb MLC/TLC FG NAND, 자체 제작 Budget Product Tester(BPT)로 chip-level Vt 실측.</li><li>문제: 20nm 이하에서 RTN이 read margin을 tail로 갉아먹어 BCH로 억제 불가, LDPC는 soft-read·연산 비용 과다.</li><li>관찰: 경stress에서 RTN tail이 대칭 Gaussian화, heavy stress(#P/E=3k) 후 lower tail만 추가 확산·upper tail은 유지 → stress-induced hole trap 생성으로 설명.</li><li>핵심 기법: Multi-Times-Verify(MTV) — 추가 program-verify로 tail cell 재프로그램, ISPP step을 키워 #shot을 줄여 throughput 보상.</li><li>지표: 프로그램 throughput <code>PTP = Page/[(tpgm+tPV×level)#shot + (tpgm+tPV×#MTV)level]</code>, 초기 #MTV 구간에서 동등/개선.</li><li>확장: MTVR2 = MTV 후 Read-Retry로 VREF→VREF' 이동, min FBC 되는 기준전압 탐색.</li><li>구현 디테일: 재프로그램 bias ΔVp를 적절히 잡아 tail cell을 원 분포 넘어 재배치(two-hump), FBC1을 bathtub 곡선 최소점에서 65~70% 제거. 과한 ΔVp는 C-state 상향·overdrive 문제.</li><li>(학습/최적화 절차 없음 — 실측 파라미터 스윕.)</li><li>결과: 3k P/E 블록에서 BER 최소 60% 감소, reserved margin 확대로 ECC bit(/1KB) 요구 완화, TLC에서도 Vt 패킷 압축·BER 개선.</li><li>한계: ECC 코드/디코더 미설계, 소자·프로그램 스킴 논문이라 이식할 알고리즘 없음, gate/throughput(Gbps) 수치 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| RTN/Vt 분포·RBER 특성화 | channel.cpp Set_R_Offset(), Set_LLR_Th() | 실측 RBER 곡선은 채널모델 파라미터 참고용, 알고리즘 이식은 아님 |
+| MTV/Read-Retry program 스킴 | 대응 없음 | 프로그램-verify는 소자·컨트롤러 영역, ECC 코드베이스 밖 |
+| ECC bit usage 완화 | 대응 없음 | 부호 rate/redundancy는 소자 margin으로 완화, 디코더 무관 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — NAND 오류 물리·프로그램 스킴 논문으로 LDPC 부호설계·디코더·HW에 떼어낼 알고리즘 요소가 없음. RBER 특성 데이터만 채널모델 참고로 간접 활용 가능.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8388829",
+  "title": "Error Characterization and ECC Usage Relaxation beyond 20nm Floating Gate NAND Flash Memory",
+  "year": 2018,
+  "venue": "IEEE IRPS",
+  "portability": "하",
+  "nand_relevance": "직접",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "RTN tail 비대칭 spread 특성화 + MTV/Read-Retry(MTVR2)로 Vt margin 확보해 ECC bit 부담 완화",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "ECC 알고리즘/부호설계가 아닌 소자·프로그램 스킴 논문 — 디코더 이식 대상 없음",
+  "todo_check": "MTVR2가 낮추는 RBER 곡선을 LLR/양자화 재설계 관점에서 재활용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8388829---error-characterization-and-ecc-usage-relaxation-beyond-20nm-floating-gate-nand-flash-memory-2018-ieee-irps">ieee:8388829 - Error Characterization and ECC Usage Relaxation beyond 20nm Floating Gate NAND Flash Memory (2018, IEEE IRPS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

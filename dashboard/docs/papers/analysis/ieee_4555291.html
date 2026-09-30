@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4555291</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4555291---a-high-performance-architecture-for-irregular-ldpc-decoding-algorithm-using-input-multiplexing-method-2007-unknown-venue">ieee:4555291 - A High-Performance Architecture for Irregular LDPC Decoding Algorithm Using Input-Multiplexing Method (2007, unknown venue)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>irregular LDPC 비트/체크 프로세서의 가변길이 FIFO delay-line에서 출력단 대신 입력단에 2x1 멀티플렉서를 분산 배치하는 input-multiplexing 구조로 조합회로 지연을 줄여 최대 동작 주파수를 높임</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상(Virtex2 slice/LUT 수치는 표로만 제공, 공정 gate환산 없음)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>sum-product(tanh 기반 φ함수) 알고리즘 기준 설계로 Prime ECC의 min-sum과 연산 코어 자체는 다르나, FIFO 멀티플렉서 재배치라는 타이밍 최적화 기법 자체는 알고리즘 무관하게 적용 가능성 있음. degree diversity(D)가 클수록 효과가 커지는 기법이라 Prime ECC의 실제 VN degree 분포(17, HCU 예외 2열)에서 이득 재검증 필요</td></tr><tr><td>추가확인</td><td>저복잡도(D=4) 대비 고복잡도(D=9) 그래프에서 combinational delay 감소율이 21%-&gt;27.8%로 커짐 - Prime ECC의 비대칭 degree 구조(HCU 처리 열)에 유사 이득이 있는지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 정정성능과 무관한 순수 타이밍/면적 최적화용 FIFO 멀티플렉서 재배치 기법으로, degree diversity가 큰 irregular 코드의 조합지연을 28%까지 줄이는 실용적 HW 트릭.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: irregular binary LDPC의 iterative message-passing 복호(LLR 도메인), bit node/check node degree가 서로 다른 값을 가짐(irregular).</li><li>문제: 기존 conventional output-multiplexing 방식은 가변길이 FIFO delay-line 출력단에 <code>D×1</code> 멀티플렉서를 두는데, 이 큰 LUT와 감산기(subtractor)가 직렬 연결되어 조합지연 <code>T_COMB = T_SUB + T_MUX</code>가 커져 최대 동작 주파수를 제한.</li><li>핵심 가정: 비트/체크 프로세서는 파이프라인 FIFO 구조를 사용하며, degree가 다양할수록(D가 클수록) 멀티플렉서 병목이 커짐.</li><li>핵심 기법: 제안하는 input-multiplexing은 출력단이 아닌 FIFO의 D개 레지스터 입력단 각각에 <code>k</code>-bit 2x1 멀티플렉서를 분산 배치, 사전정의된 D-bit circular shift-register("100...0"로 초기화)가 선택 신호를 순환시켜 매 사이클 하나의 레지스터만 갱신.</li><li>핵심 식, 의미: 이 구조는 감산기와 멀티플렉서 간 직렬 경로를 제거해 <code>T_COMB ≈ T_SUB</code>로 감소(식 7) - 즉 출력 병목 LUT를 없애 최대 주파수를 감산기 지연 수준까지 끌어올림.</li><li>확장: degree-counter로 타이밍 제어신호를 생성하며, 이 구조는 직렬(serial) 및 pipeline-parallel LDPC 디코더 구현에도 일반화 가능하다고 언급.</li><li>부수 구현 디테일: LLR 메시지는 4~6bit 해상도로 충분하다고 가정, 실험은 accumulator/subtractor 9bit(D=4, 저복잡도) 및 17bit(D=9, [16]의 복잡한 차수분포 기반 고복잡도) 두 케이스로 진행.</li><li>검증: Active-HDL 6.2로 기술, Xilinx ISE-6로 Virtex-2(speed grade -6)에 합성.</li><li>결과: 저복잡도(D=4)에서 조합지연 21% 감소(8.4ns→6.65ns, 119MHz→150.4MHz), 고복잡도(D=9)에서 27.8% 감소(9.62ns→6.95ns, 103.9MHz→143.8MHz); slice/LUT/flip-flop 수는 소폭 증가하나 무시 가능한 수준.</li><li>한계: 정정성능(BER/error-floor)에 대한 언급이나 시뮬레이션 전혀 없음(순수 타이밍/면적 트레이드오프), throughput 수치 미제시, ASIC 공정 gatecount 미제시(FPGA slice 단위만), 알고리즘은 sum-product(tanh 기반) 기준.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>bit/check 프로세서 FIFO 및 멀티플렉서 타이밍 구조</td><td><code>decoder.cpp/.h</code> LDPC 복호 파이프라인, <code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>조합지연 감소 목적의 FIFO-MUX 재배치는 Prime ECC pipeline 6-stage 설계와 유사 레이어(타이밍 최적화)이나 sum-product 기반 φ함수 연산이라 min-sum 코어와는 직접 대응 안 됨</td></tr><tr><td>irregular degree 분포(D=9) 처리 구조</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, HCU 비대칭 degree 처리</td><td>Prime ECC는 VN degree 17(HCU 2열만 예외)로 diversity가 이 논문의 D=9보다 낮아 이득 폭 재검증 필요</td></tr><tr><td>soft LLR 양자화(4~6bit)</td><td><code>channel.cpp</code> LLR 양자화 테이블</td><td>Prime ECC의 soft-2~3bit 지원과 정합 범위 밖(4~6bit), 참고 수준</td></tr></tbody></table>
+<p>적용 가치: 중간 - 정정성능과 무관한 순수 HW 타이밍 최적화(FIFO MUX 재배치)이나 알고리즘 독립적이라 Prime ECC decoder pipeline의 조합지연 감소에 참고 가능성 있음. 다만 검증이 오래된 FPGA(Virtex-2)에 국한되고 Prime ECC의 낮은 degree diversity에서 실이득이 작을 수 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4555291",
+  "title": "A High-Performance Architecture for Irregular LDPC Decoding Algorithm Using Input-Multiplexing Method",
+  "year": 2007,
+  "venue": "unknown",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": null,
+  "code_length": null,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "irregular LDPC 비트/체크 프로세서의 가변길이 FIFO delay-line에서 출력단 대신 입력단에 2x1 멀티플렉서를 분산 배치하는 input-multiplexing 구조로 조합회로 지연을 줄여 최대 동작 주파수를 높임",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "sum-product(tanh 기반 φ함수) 알고리즘 기준 설계로 Prime ECC의 min-sum과 연산 코어 자체는 다르나, FIFO 멀티플렉서 재배치라는 타이밍 최적화 기법 자체는 알고리즘 무관하게 적용 가능성 있음. degree diversity(D)가 클수록 효과가 커지는 기법이라 Prime ECC의 실제 VN degree 분포(17, HCU 예외 2열)에서 이득 재검증 필요",
+  "todo_check": "저복잡도(D=4) 대비 고복잡도(D=9) 그래프에서 combinational delay 감소율이 21%-&gt;27.8%로 커짐 - Prime ECC의 비대칭 degree 구조(HCU 처리 열)에 유사 이득이 있는지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4555291---a-high-performance-architecture-for-irregular-ldpc-decoding-algorithm-using-input-multiplexing-method-2007-unknown-venue">ieee:4555291 - A High-Performance Architecture for Irregular LDPC Decoding Algorithm Using Input-Multiplexing Method (2007, unknown venue)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

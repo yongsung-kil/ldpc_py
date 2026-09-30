@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6934013</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6934013---an-encoderdecoder-with-throughput-over-gigabitssec-for-rate-compatible-ldpc-codes-with-wide-code-rates-2014-ieee-newcas">ieee:6934013 - An Encoder/Decoder with Throughput over Gigabits/sec for Rate-compatible LDPC Codes with Wide Code Rates (2014, IEEE NEWCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.96</td></tr><tr><td>부호length</td><td>1800</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>shifted-identity 기반 dual-diagonal RC-LDPC로 puncturing 시 degree분포 불변(zero-filling 복호)해 rate 상한 0.96까지 확장</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>7.2Gbps(인코더)/1.8Gbps(디코더)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>ARQ/무선·우주방사선 대상 RC 코드, φ(x)=log[(e^x+1)/(e^x-1)] LUT는 SPA 기반(Prime ECC min-sum과 다름), NAND read 비용 미고려</td></tr><tr><td>추가확인</td><td>zero-filling 복호(미전송 비트에 큰 양수 LLR)와 rate 0.96 puncturing이 Prime ECC 고정 QC-LDPC/min-sum에서 재현·성능유지 되는지</td></tr></tbody></table>
+<blockquote><p>총평: dual-diagonal + shifted-identity로 고rate(0.96)까지 degree분포 보존하는 RC-LDPC 부호설계이나 SPA-LUT 복호·ARQ/방사선 대상이라 NAND min-sum 파이프라인 이식엔 부분 재검증 필요.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>rate 0.5~0.96의 넓은 범위를 갖는 rate-compatible(RC) LDPC 부호를 제안, 인코더/디코더 모두 Gbps급 병렬구현.</li><li>문제: 기존 puncturing 기반 RC 코드는 parity 천공 시 degree distribution이 바뀌어 고rate daughter 코드 성능이 capacity에서 멀어짐.</li><li>mother matrix <code>H</code>를 J×(K+J) 서브행렬 배열로 구성, 각 <code>h_{j,k}=I(C_{j,k})</code>는 q×q 항등행렬을 우측 순환시프트한 것(short/medium cycle 회피 shift 선택), parity부는 dual-diagonal 형태로 선형시간 인코딩 보장.</li><li>parity <code>p1=Σh_{1,k}s_k</code>, <code>p_j=Σh_{j,k}s_k+p_{j-1}</code> (식3,4); 최저 rate <code>R_L=K/(K+J)</code>, parity 벡터 <code>p_J</code> 하나만 전송하면 최고 rate <code>R_H=K/(K+1)</code>.</li><li>핵심 통찰(식11): <code>p_j</code>는 H의 상위 j block-row <code>H_j</code>로 부호화되며, <code>p_J</code>를 전송해야 optimal degree distribution이 유지되어 성능 최적 → 그래서 <code>p_J</code>(예: p24)를 먼저 전송.</li><li>ARQ 전송 순서를 p_{J/2},p_{J/4},p_{3J/4},짝수,홀수 순으로 정의해 daughter code들을 점진 제공.</li><li>Zero-filling 복호: 미전송 parity 비트는 0으로 간주하여 해당 <code>U_n</code>에 큰 양의 상수를 할당, 단일 encoder/decoder pair로 전 rate 처리; joint row-column processor로 최하단→최상단 행 처리.</li><li>복호는 sum-product 기반 joint row-column, sign은 15 XOR gate, magnitude는 <code>y_k=φ[Σx_j]</code>, <code>φ(x)=log[(e^x+1)/(e^x-1)]</code>를 7-bit LUT(소수 4bit)로 구현(row degree 최대 8).</li><li>결과: 길이 1800·rate 0.96, q=72, Xilinx Virtex-5 XC5VFX200T에서 24-parallel 인코더 7.2Gbps(0.3%자원, 416 slice)·36-parallel 디코더 1.8Gbps(12%자원, 250MHz, 6 iter), rate 0.96가 RC-LDPC 세계 최고 주장, WiMax 802.16e 대비 비교.</li><li>한계: BPSK/AWGN 시뮬 + FPGA, ARQ·무선·우주방사선(ADS) 응용 지향, SPA-LUT 복호로 NAND min-sum과 상이하며 soft-read 비용 미고려.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dual-diagonal parity 선형 인코딩 (shifted-identity)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 인코딩이라 구조 정합성 높음, RC 확장(puncturing)은 추가 필요</td></tr><tr><td>shifted-identity mother matrix 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>QC(circulant shift) 구조 로드 대응, base+shift 방식과 동형</td></tr><tr><td>joint row-column SPA / φ-LUT magnitude 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>CN 연산 위치는 대응하나 Prime ECC는 min-sum, 본 논문은 full-SPA φ-LUT라 알고리즘 상이</td></tr><tr><td>zero-filling(미전송 비트 큰 LLR) / soft LLR</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>puncture 비트 LLR 처리 대응 가능하나 Prime ECC는 puncturing punct_col 2개 고정</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — dual-diagonal·QC 구조가 Prime ECC와 정합적이고 고rate(0.96) RC 설계·degree분포 보존 아이디어는 참고가치 있으나, 복호가 min-sum이 아닌 full-SPA LUT이고 NAND가 아닌 ARQ/방사선 대상이라 부호설계 부분만 선별 이식 검토 대상.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6934013",
+  "title": "An Encoder/Decoder with Throughput over Gigabits/sec for Rate-compatible LDPC Codes with Wide Code Rates",
+  "year": 2014,
+  "venue": "IEEE NEWCAS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.96",
+  "code_length": "1800",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "shifted-identity 기반 dual-diagonal RC-LDPC로 puncturing 시 degree분포 불변(zero-filling 복호)해 rate 상한 0.96까지 확장",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 1.8,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "ARQ/무선·우주방사선 대상 RC 코드, φ(x) LUT는 full-SPA 기반(Prime ECC min-sum과 다름), NAND read 비용 미고려",
+  "todo_check": "zero-filling 복호와 rate 0.96 puncturing이 Prime ECC 고정 QC-LDPC/min-sum에서 재현·성능유지 되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6934013---an-encoderdecoder-with-throughput-over-gigabitssec-for-rate-compatible-ldpc-codes-with-wide-code-rates-2014-ieee-newcas">ieee:6934013 - An Encoder/Decoder with Throughput over Gigabits/sec for Rate-compatible LDPC Codes with Wide Code Rates (2014, IEEE NEWCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6466152</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6466152---a-novel-fault-detection-and-correction-technique-for-memory-applications-2013-iccci-2013">ieee:6466152 - A novel fault detection and correction technique for memory applications (2013, ICCCI 2013)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.47</td></tr><tr><td>부호length</td><td>15</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>one-step majority logic decoding 기반 EG-LDPC(15,7,5)에서 error-free 코드워드를 3사이클 내 조기 판정하는 fault detector/decoder(MLDD) 구조 제안</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>매우 작은 code length(15), serial shift-register 기반 1-bit hard-decision majority-logic 디코더로 min-sum/iterative BP와 근본적으로 다른 구조, NAND용 대용량 QC-LDPC와 무관</td></tr><tr><td>추가확인</td><td>논문 목적이 SRAM/nanoscale memory soft-error(SEU) 대응이며 flash/NAND read 관련 언급은 참고문헌([15])에만 등장, 실제 NAND 타깃 실험은 없음을 재확인</td></tr></tbody></table>
+<blockquote><p>총평: one-step majority-logic decoding의 조기종료(early termination) 아이디어는 Prime ECC의 partial CRC 조기종료와 개념적으로 유사하나, 코드 구조(EG-LDPC, N=15, serial shift-register, hard-1bit)와 정정 알고리즘(majority-logic vs min-sum) 자체가 근본적으로 달라 직접 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: (15, 7, 5) EG-LDPC 코드(rate <code>7/15≈0.47</code>)를 이용한 memory(SRAM 등) soft-error/SEU 대응 ECC, systematic generator matrix <code>G=[I:X]</code>.</li><li>문제: 기존 one-step majority-logic decoder(MLD)는 error 유무와 무관하게 항상 <code>N+2</code> 사이클(코드 길이만큼) 소요되어 error-free 워드에서도 메모리 read latency가 큼.</li><li>핵심 모델: cyclic shift register + XOR 행렬로 계산한 parity check sum <code>{Bj}</code>의 다수결(majority) 값으로 각 비트 정정 여부를 결정하는 Type-II one-step ML decoding.</li><li>핵심 기법: 제안하는 MLDD는 기존 MLD와 동일한 알고리즘을 쓰되, 처음 3사이클 동안의 <code>{Bj}</code> 결과가 모두 0이면(휴리스틱 근거: "최대 4비트 오류는 3사이클 내 검출된다"는 가정 [12]) 즉시 error-free로 판정해 조기 종료.</li><li>핵심 회로: control logic unit(2개 shift register + OR게이트 2단으로 3사이클 결과 결합)과 output tri-state buffer로 조기종료 시 디코딩을 건너뛰고 바로 출력.</li><li>오류 있는 경우: 기존과 동일하게 전체 <code>N+2</code> 사이클 디코딩을 수행(조기종료 실패 시 페널티는 3사이클 추가에 불과, <code>N+5</code>).</li><li>부수 구현: 인코더는 (15,7,5) EG-LDPC의 정보비트 복사 + XOR parity 계산 구조(Fig. 5, 6)로 별도 설계.</li><li>학습/최적화 절차 없음(고정 구조 설계, exhaustive/random 오류 조합 시뮬레이션으로 3사이클 검출 가설만 검증).</li><li>결과: Xilinx Spartan 3E-XC3S500E FPGA 합성, error-free 코드워드에서 기존 MLD(3033ns) 대비 MLDD(1934ns)로 약 1100ns speedup, 총 delay 12.578ns vs 14.006ns, 전력소모 47mW vs 49mW(약 4% 절감).</li><li>한계: code length 15로 매우 작음, hard-1bit majority-logic decoding으로 NAND용 min-sum 기반 QC-LDPC와 알고리즘·구조 모두 상이, SRAM/nanoscale memory SEU 대응이 목적이며 NAND flash 실험/타깃 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>조기종료(3사이클 내 error-free 판정)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>개념적으로 조기종료 아이디어 유사(Partial CRC의 termination point와 유사한 목적) — 단 majority-logic 기반이라 실 구현 이식은 불가</td></tr><tr><td>One-step majority-logic decoding (XOR 행렬 + 다수결)</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 iterative message passing이며 majority-logic 디코더 구조 자체가 없음</td></tr><tr><td>EG-LDPC 부호/인코더 구조</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code></td><td>대응 없음에 가까움 — EG-LDPC(15,7,5)는 Prime ECC의 QC-LDPC dual-diagonal 인코딩과 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 조기종료 개념 자체는 Prime ECC에 이미 Partial CRC로 구현되어 있고, 코드 구조(EG-LDPC, 극소 length, majority-logic hard decision)가 NAND용 QC-LDPC min-sum 디코더와 근본적으로 달라 이식 실익이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6466152",
+  "title": "A novel fault detection and correction technique for memory applications",
+  "year": 2013,
+  "venue": "ICCCI 2013",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.47,
+  "code_length": 15,
+  "soft_quant": "hard-1bit",
+  "key_contribution": "one-step majority logic decoding 기반 EG-LDPC(15,7,5)에서 error-free 코드워드를 3사이클 내 조기 판정하는 fault detector/decoder(MLDD) 구조 제안",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "매우 작은 code length(15), serial shift-register 기반 1-bit hard-decision majority-logic 디코더로 min-sum/iterative BP와 근본적으로 다른 구조, NAND용 대용량 QC-LDPC와 무관",
+  "todo_check": "논문 목적이 SRAM/nanoscale memory soft-error(SEU) 대응이며 flash/NAND read 관련 언급은 참고문헌([15])에만 등장, 실제 NAND 타깃 실험은 없음을 재확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6466152---a-novel-fault-detection-and-correction-technique-for-memory-applications-2013-iccci-2013">ieee:6466152 - A novel fault detection and correction technique for memory applications (2013, ICCCI 2013)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11195381</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11195381---protograph-based-ldpc-codes-with-local-irregularity-2025-isit">ieee:11195381 - Protograph-Based LDPC Codes with Local Irregularity (2025, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>protograph</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>400000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>protograph 내 edge별 local VN degree를 불규칙화(PLI)하고 PLI-EXIT로 최적화해 AR4JA 대비 decoding threshold를 0.3~0.4dB 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>degree-2 VN이 늘어나 error floor 악화(C2는 waterfall 개선되나 error floor 더 높아짐), rate-1/2·length 400k(광통신/CV-QKD 타깃)로 NAND 고rate·short/medium length와 거리 있음</td></tr><tr><td>추가확인</td><td>HW 미설계, sum-product(soft) 1000회 반복 기준이라 NAND read 비용·복잡도 관점 검증 없음</td></tr></tbody></table>
+<blockquote><p>총평: protograph LDPC의 부호 구성법(local irregularity) 최적화 논문으로 waterfall 성능은 개선되나 error floor가 악화되고, rate/length/채널이 NAND ECC와 달라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 채널은 BI-AWGN, rate-1/2 AR4JA protograph(광통신/연속변수 양자키분배용 rate·length 대역)를 베이스로 사용, lifting factor <code>S=100000</code>(length 400,000)로 구성.</li><li>풀려는 문제: 기존 protograph 코드(AR4JA 등)는 capacity 대비 gap(예: rate-1/2 AR4JA는 0.4dB gap)이 남아있고, 더 일반적인 MET-LDPC는 파라미터가 많아 최적화가 복잡함.</li><li>핵심 가정: 기존 protograph는 서브그래프(<code>H_i,j</code>)가 regular(모든 VN degree 동일)라는 제약 → 이를 완화.</li><li>핵심 기법: PLI(Protograph with Local Irregularity)는 base matrix의 각 (i,j) 항목을 local CN degree <code>d^C_{i,j}</code>로 두고, 서브그래프 내 VN들의 local degree를 분포 <code>L_{i,j}(k)</code>로 불규칙화(local VN degree distribution, <code>k∈Ω={1,...,20}</code>).</li><li>핵심 식: <code>λ_{i,j}(k) = kL_{i,j}(k)/d^C_{i,j}</code> (edge-perspective degree distribution, 식 11) — PLI-EXIT의 메시지 가중평균에 필요.</li><li>확장: PEXIT을 확장한 PLI-EXIT(식 13~15)은 VN→CN 갱신 시 joint local VN degree distribution <code>L_{M≠i,j}(K≠i,j)</code>로 가중평균하여 MI를 계산.</li><li>구현 디테일: 단일 edge 먼저 최적화(C1) 후 element-wise로 여러 edge((2,2),(3,3),(3,4))를 순차 최적화(C2); lifting 후 4-cycle 제거, sum-product 1000회 반복으로 시뮬.</li><li>최적화 절차: MATLAB 제공 유전 알고리즘(GA)으로 local VN degree distribution <code>L(·)</code>을 제약 (8)(9) 하에 최적화, cost function은 PLI-EXIT 500회 반복 기준 decoding threshold.</li><li>결과: 단일 edge 최적화(C1)는 threshold 0.36dB(capacity 대비 0.16dB 차), 다중 edge(C2)는 0.23dB(capacity 대비 0.04dB 차)로 conventional AR4JA(0.63dB) 대비 각각 0.3dB, 0.4dB 개선.</li><li>한계: degree-2 VN이 늘어나면서 C2는 error floor가 conventional보다 높아짐(문헌상 degree-2 VN 과다는 error floor·minimum Hamming distance 성장에 불리), HW 미설계·순수 시뮬, rate/length가 NAND ECC와 다른 응용(광통신, CV-QKD) 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>protograph base matrix / local irregularity 부호구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 특정 QC-LDPC H-matrix 고정 구조라 protograph 기반 재설계는 이식 난이도 높음(§4 "높음")</td></tr><tr><td>PLI-EXIT (decoding threshold 최적화 도구)</td><td>대응 없음</td><td>Prime ECC는 min-sum bit-exact 시뮬레이터이며 EXIT 기반 부호설계 도구 자체가 없음</td></tr><tr><td>sum-product 디코딩(soft, 4bit+)</td><td>대응 없음</td><td>Prime ECC는 min-sum 기반 hard/2SD/3SD만 지원, soft-4bit+ full sum-product 미지원</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — protograph 재구성 기반 부호설계 기법으로 이식 난이도가 높고(§4 표), rate-1/2·length 400k·soft-4bit+ full sum-product 전제가 Prime ECC(고rate QC-LDPC, min-sum, hard~3bit soft)와 정합하지 않으며 error floor 악화라는 명확한 단점이 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11195381",
+  "title": "Protograph-Based LDPC Codes with Local Irregularity",
+  "year": 2025,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "protograph",
+  "code_rate": 0.5,
+  "code_length": "400000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "protograph 내 edge별 local VN degree를 불규칙화(PLI)하고 PLI-EXIT로 최적화해 AR4JA 대비 decoding threshold를 0.3~0.4dB 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "degree-2 VN이 늘어나 error floor 악화(C2는 waterfall 개선되나 error floor 더 높아짐), rate-1/2·length 400k(광통신/CV-QKD 타깃)로 NAND 고rate·short/medium length와 거리 있음",
+  "todo_check": "HW 미설계, sum-product(soft) 1000회 반복 기준이라 NAND read 비용·복잡도 관점 검증 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11195381---protograph-based-ldpc-codes-with-local-irregularity-2025-isit">ieee:11195381 - Protograph-Based LDPC Codes with Local Irregularity (2025, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

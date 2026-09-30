@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9909148</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9909148---configurable-universal-qc-ldpc-encoder-architecture-design-2022-ieee-iceict">ieee:9909148 - Configurable Universal QC-LDPC Encoder Architecture Design (2022, IEEE ICEICT)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>부호타입·블록길이·rate·병렬도를 hot-switching하는 configurable QC-LDPC 인코더 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>32708 LUT / 15541 FF / 102 BRAM @ xc7z100 FPGA</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.6Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>CCSDS AR4JA/C2 전용 G행렬 인코더로, Prime ECC의 고정 dual-diagonal 인코더와 부호구조 자체가 다름</td></tr><tr><td>추가확인</td><td>boot-area/shift-area ROM 분할 기법이 Prime ECC dual-diagonal 인코딩 대비 이점 있는지</td></tr></tbody></table>
+<blockquote><p>총평: CCSDS 우주통신용 configurable QC-LDPC 인코더 FPGA 설계로, 부호 구성과 인코딩 방식이 Prime ECC 고정 dual-diagonal과 상이하고 복호/정정능력과 무관 → NAND 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 CCSDS 131.0-B-4 표준의 AR4JA(rate 1/2, 2/3, 4/5, 블록 1024) 및 C2(rate 7/8, <code>(8176,7154)</code>) QC-LDPC 부호를 하나의 인코더로 처리하는 것.</li><li>문제는 기존 인코더가 부호타입·rate 고정이라 서비스/채널마다 여러 인코더가 필요해 자원 낭비.</li><li>제안: 부호타입·정보블록길이·coding rate·병렬도(P=1~8)를 제어 명령으로 hot-switching하는 universal 인코더 아키텍처.</li><li>인코딩은 생성행렬 <code>G=[I_ML, W]</code>로 <code>codeword = k·G</code>를 GF(2)에서 계산(곱=AND, 합=XOR), 정보비트 0이면 연산 생략.</li><li>G행렬은 P행렬(H 마지막 3M열), Q행렬로부터 <code>W=(P^-1·Q)^T</code>를 GF(2)에서 풀어 얻고 마지막 M열 puncture.</li><li>병렬 인코딩 시 circulant 서브행렬 경계를 넘을 때 crossover 발생 → coding 구간을 boot-area/shift-area로 분할, boot-area 데이터는 ROM 저장.</li><li>boot-area 시작/끝 인덱스 <code>Bs(j)</code>, <code>Be(j)</code>를 <code>(M·j) mod P</code>로 계산, no-crossover 시 P개, crossover 시 2P개 행벡터 저장.</li><li>아키텍처는 SCHEDULER(FSM: IDLE/IF/CONFIG/ENCODE), CONFIGURATOR, INDICATOR(IDLE/GUID/CNVT/PRE_CMPL/CMPL), CODE_CORE 모듈로 구성.</li><li>결과: xc7z100 FPGA에서 rate 7/8 <code>(8176,7154)</code>, 병렬도 8, 220MHz로 throughput 약 1.6Gbps, LUT 32708/FF 15541/BRAM 102 사용.</li><li>한계: 인코더 전용(복호·정정능력 무관), 부호타입 늘수록 ROM 소비 증가, CCSDS 특정 부호계열 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>G행렬 기반 인코딩 (<code>k·G</code>)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC는 dual-diagonal 인코딩으로 방식 상이</td></tr><tr><td>병렬 인코딩 boot/shift-area ROM</td><td>대응 없음</td><td>Prime ECC 인코더는 이 crossover 처리 구조 미보유</td></tr><tr><td>configurable 부호타입/rate 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 단일 QC-LDPC 고정, hot-switching 미지원</td></tr><tr><td>dual-update column 재배치</td><td>encoder.cpp <code>Column_Reordering_Dual_Update()</code></td><td>개념적 연관뿐, 직접 대응 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 단일 고정 QC-LDPC의 dual-diagonal 인코더를 쓰므로, CCSDS 다중부호 G행렬 인코더의 configurable 구조·boot-area ROM 기법은 이식 필요성이 낮고 복호/정정능력과 무관하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9909148",
+  "title": "Configurable Universal QC-LDPC Encoder Architecture Design",
+  "year": 2022,
+  "venue": "IEEE ICEICT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.875",
+  "code_length": "8176",
+  "soft_quant": "무관",
+  "key_contribution": "부호타입·블록길이·rate·병렬도를 hot-switching하는 configurable QC-LDPC 인코더 아키텍처",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "32708 LUT / 15541 FF / 102 BRAM @ xc7z100 FPGA",
+  "parallelism": "부분",
+  "throughput_gbps": 1.6,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "CCSDS AR4JA/C2 전용 G행렬 인코더로, Prime ECC의 고정 dual-diagonal 인코더와 부호구조 자체가 다름",
+  "todo_check": "boot-area/shift-area ROM 분할 기법이 Prime ECC dual-diagonal 인코딩 대비 이점 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9909148---configurable-universal-qc-ldpc-encoder-architecture-design-2022-ieee-iceict">ieee:9909148 - Configurable Universal QC-LDPC Encoder Architecture Design (2022, IEEE ICEICT)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8219416</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8219416---variable-node-shift-based-architecture-for-probabilistic-gradient-descent-bit-flipping-on-qc-ldpc-codes-2018-ieee-tcas-i">ieee:8219416 - Variable-Node-Shift Based Architecture for Probabilistic Gradient Descent Bit Flipping on QC-LDPC Codes (2018, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.88</td></tr><tr><td>부호length</td><td>1296~9520</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>QC 순환구조로 VN 메모리를 iteration마다 shift(VNSA)하여 난수생성기 없이 PGDBF 구현, 복잡도를 GDBF보다 낮춤</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC/hard-decision 전용, dv4·고rate(R=0.88)에서 VNSA-IM은 error floor 발생</td></tr><tr><td>추가확인</td><td>Prime ECC의 min-sum(soft) 파이프라인과 BF 계열 hard-decision 통합 가치가 있는지, z=32 lifting에 VNSA 매핑 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 난수생성기 제거+VNU 단순화로 저복잡도 hard-decision 디코더를 구현한 QC-LDPC HW 논문. Prime ECC의 soft min-sum과 계열이 달라 직접 이식보다 저전력 백업 디코더 아이디어로 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 정규 QC-LDPC 코드 (<code>(dv,dc)=(3,6)</code> R=0.5 N=1296, <code>(4,8)</code> R=0.5, <code>(4,34)</code> R=0.88 N=9520), 채널은 BSC (crossover α), hard-decision 디코딩.</li><li>문제: PGDBF는 GDBF 대비 큰 성능이득(soft-decision 근접)을 주지만, 확률적 신호 생성기(random generator)가 필수라 HW 오버헤드(레지스터 8배, LUT 1.64배)가 발생.</li><li>핵심식: 각 VN은 에너지 <code>E_ij = (v_ij ⊕ y_ij) + Σ c_ab</code>를 계산, 최대에너지(<code>E_max</code>)이고 난수 <code>R_ij=1</code>일 때만 flip. <code>R</code>은 <code>Pr(R=1)=p0</code>.</li><li>핵심기법(VNSA): QC 순환구조를 이용해 iteration마다 VN 메시지 메모리 B와 채널값 C를 base column 내에서 1칸 cyclic shift(<code>B_{i,(j%Z+1)} = Bu_{i,j}</code>). 결과 디코딩은 generic 구조와 동일하나 한 VN이 매 iteration 다른 VNU에서 처리됨.</li><li>의미: 서로 다른 동작(f1=flip, f2=hold)을 한 VNU에 다 넣는 대신, type-1 VNU(p0 비율)와 type-2 VNU(1-p0 비율)로 물리적 분산 → 난수생성기 불필요.</li><li>VNSA-PGDBF: type-1은 conventional VNU에서 AND게이트 제거(=GDBF VNU), type-2는 XOR2 제거하고 현재값 그대로 전달. <code>S=Z</code>인 CSTS-PGDBF와 동등 동작.</li><li>VNSA-IM-PGDBF(imprecise): type-2를 type-3(에너지 계산·회로 전부 제거)로 대체, Maximum Finder가 <code>p0·N</code>개 후보만 탐색 → MF도 단순화. "부정확한 최대값"이 오히려 성능 향상.</li><li>복잡도 효율 <code>ξ = (p0·C1+(1-p0)·C2)/C12</code>, p0=0.7에서 ξ≥0.7 → VNU 자원 최대 30% 절감.</li><li>결과(ASIC, SAED 90nm): VNSA-PGDBF는 GDBF보다 약 6.68~11% 낮음, VNSA-IM-PGDBF는 GDBF보다 15~18% 낮은 복잡도, fmax 400MHz(GDBF 385, CSTS 357), 1 iter=1 clock. dv3R050N1296에서 FER 1e-8까지 이론 PGDBF에 근접. MS 대비 면적 4.7배 작음.</li><li>한계: BSC hard-decision 전용, gate count/throughput 절대수치는 표에만 있어 본문 미상. dv4 및 R=0.88 고rate에서 VNSA-IM은 error floor 발생, 전력은 GDBF보다 높음(76~82mW).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>PGDBF 디코딩 루프 (에너지·flip)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>BF 계열은 min-sum과 알고리즘 상이, 이터레이션 루프 골격만 대응</td></tr><tr><td>VN flip / hard-decision 처리</td><td>decoder.cpp <code>VN_Cal_HD()</code></td><td>HD 경로에 BF flip 로직 삽입 관점 대응</td></tr><tr><td>VNSA 메시지 cyclic shift (z 단위)</td><td>대응 없음</td><td>Prime ECC는 z=32 shift가 CN연산용, VNSA식 iteration별 VN 메모리 shift 개념 없음</td></tr><tr><td>확률적 flip 대체(난수생성기 제거)</td><td>대응 없음</td><td>Prime ECC min-sum에는 확률적 요소 자체가 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — hard-decision BF 계열로 Prime ECC의 soft min-sum과 알고리즘 축이 다르고, VNSA는 BSC·정규코드 특화라 고rate soft NAND 파이프라인에 직접 이식하기 어렵다(저전력 백업 디코더 컨셉으로만 참고).</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:8219416",
+  "title": "Variable-Node-Shift Based Architecture for Probabilistic Gradient Descent Bit Flipping on QC-LDPC Codes",
+  "year": 2018,
+  "venue": "IEEE TCAS-I",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1296~9520",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "QC 순환구조로 VN 메모리를 iteration마다 shift(VNSA)하여 난수생성기 없이 PGDBF를 GDBF보다 낮은 복잡도로 구현",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC/hard-decision 전용, dv4·R=0.88 고rate에서 VNSA-IM은 error floor 발생",
+  "todo_check": "Prime ECC soft min-sum과 hard-decision BF 통합 가치, z=32 lifting에 VNSA 매핑 가능성"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8219416---variable-node-shift-based-architecture-for-probabilistic-gradient-descent-bit-flipping-on-qc-ldpc-codes-2018-ieee-tcas-i">ieee:8219416 - Variable-Node-Shift Based Architecture for Probabilistic Gradient Descent Bit Flipping on QC-LDPC Codes (2018, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

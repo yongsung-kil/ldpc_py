@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6675862</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6675862---high-throughput-energy-efficient-ldpc-decoders-using-differential-binary-message-passing-2014-ieee-trans-signal-processing">ieee:6675862 - High-Throughput Energy-Efficient LDPC Decoders Using Differential Binary Message Passing (2014, IEEE Trans. Signal Processing)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.70~0.84</td></tr><tr><td>부호length</td><td>273~4095</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>이진 메시지 차분복호(DD-BMP/MDD-BMP)와 trapping-set 대책(degeneration+relaunching)의 IDB로 저면적·고throughput·error-floor 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>(273,191)0.28mm²/(1023,781)1.38mm²/(4095,3367)15.37mm²/(2048,1723)IDB 1.44mm² @65nm</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>37~172Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>degree-2 VN 많은 QC-LDPC(Wi-Fi)에선 성능 저조, IDB는 최대 315 iter로 worst-case latency 큼, 6b LLR 필요</td></tr><tr><td>추가확인</td><td>Prime ECC의 고rate QC-LDPC(punct col, VN degree 17)에서 IDB degeneration+relaunching가 min-sum 대비 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: 이진 메시지 min-sum 대안 디코더로 면적/전력/throughput이 뛰어나고 error-floor 대책도 참신하나, 고degree/FG 부호에 특화돼 Prime ECC 구조에 맞추려면 재검증 부담이 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: FG-LDPC (273,191)/(1023,781)/(4095,3367)와 RS 기반 (2048,1723) 802.3an 부호, BPSK/AWGN, 6b LLR 양자화(<code>q=6</code>), 완전병렬 65nm ASIC.</li><li>문제: 완전병렬 LDPC는 계산·라우팅 혼잡이 심하고, min-sum류는 고degree 노드에서 면적·전력 과다.</li><li>핵심 기법 DD-BMP: 채널 LLR을 초기화한 뒤 VN 메모리 <code>m_ij</code> 부호로 1비트 V2C 메시지, CN은 XOR(부호곱)만 수행, VN은 들어온 1비트 메시지 합을 누산기에 차분 갱신(scaling <code>w</code>).</li><li>핵심 식: <code>m_ij &lt;- m_ij + w * sum(u_ji)</code> 차분 누산 후 부호로 결정, CN이 XOR뿐이라 min 탐색 불필요 - 게이트/배선 급감.</li><li>MDD-BMP: VN당 메모리 1개(글로벌 메시지)로 단순화·broadcast 적용, BER 소폭 손실 대신 면적 대폭 절감.</li><li>문제점: 비-FG 부호(802.3an)에서 (4,12) 등 "weak absorbing set"에 갇혀 심한 error-floor 발생(이진 메시지가 강한 extrinsic로도 못 깸).</li><li>IDB 대책1 degeneration: 매 iteration 오프셋 <code>d</code>를 차분값에서 빼 0으로 수렴시켜 weak absorbing set을 흔들어 붕괴.</li><li>IDB 대책2 relaunching: 수렴 실패 시 결정적 오프셋을 초기 채널값에 더해 여러 phase로 재시작(Table II 스케줄, 최대 315 iter).</li><li>결과: FG부호 37~141Gbps·4.9~37.9pJ/bit·MSA 대비 최대 0.5dB 우위·error-floor 없음; IDB (2048,1723) 172Gbps·2.8pJ/bit·면적 48%↓·OMS 대비 0.25dB 이내, error-floor 2자릿수 개선.</li><li>한계: degree-2 VN 많은 Wi-Fi QC-LDPC엔 부적합, IDB worst-case latency 큼(평균 iter는 &lt;7), 고degree/FG 부호에 최적.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DD-BMP/MDD-BMP 차분 이진복호 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>min-sum 대체 복호 알고리즘이라 이터레이션 루프 교체 지점에 대응</td></tr><tr><td>CN XOR(부호) 연산</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum sign XOR와 유사, 단 magnitude 미사용</td></tr><tr><td>VN 차분 누산 / 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>누산 기반 갱신은 우리 VNU와 대응하나 이진 메시지로 구조 상이</td></tr><tr><td>degeneration/relaunching(error-floor 대책)</td><td>decoder.cpp <code>LDPC_Decoder()</code> iteration 루프 + LLR 오프셋</td><td>trapping-set 회피 post-processing 성격, corner 추적과 연계 가능</td></tr><tr><td>조기종료(parity check)</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>우리는 CRC 조기종료, 논문은 parity check</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> - 이진 메시지 차분복호와 degeneration/relaunching는 min-sum 대비 면적/전력 이점과 error-floor 대책 아이디어를 주나, Prime ECC의 고rate QC-LDPC(low-degree/punctured) 구조엔 그대로 맞지 않아 재검증이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6675862",
+  "title": "High-Throughput Energy-Efficient LDPC Decoders Using Differential Binary Message Passing",
+  "year": 2014,
+  "venue": "IEEE Transactions on Signal Processing",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.70~0.84",
+  "code_length": "273~4095",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "이진 메시지 차분복호(DD-BMP/MDD-BMP)와 trapping-set 대책(degeneration+relaunching)의 IDB로 저면적·고throughput·error-floor 개선",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "(273,191)0.28mm²/(1023,781)1.38mm²/(4095,3367)15.37mm²/(2048,1723)IDB 1.44mm² @65nm",
+  "parallelism": "완전병렬",
+  "throughput_gbps": "37~172",
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "degree-2 VN 많은 QC-LDPC(Wi-Fi)에선 성능 저조, IDB는 최대 315 iter로 worst-case latency 큼, 6b LLR 필요",
+  "todo_check": "Prime ECC의 고rate QC-LDPC(punct col, VN degree 17)에서 IDB degeneration+relaunching가 min-sum 대비 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6675862---high-throughput-energy-efficient-ldpc-decoders-using-differential-binary-message-passing-2014-ieee-trans-signal-processing">ieee:6675862 - High-Throughput Energy-Efficient LDPC Decoders Using Differential Binary Message Passing (2014, IEEE Trans. Signal Processing)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

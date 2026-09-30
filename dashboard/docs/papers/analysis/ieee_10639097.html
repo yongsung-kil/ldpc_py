@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10639097</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10639097---weighted-residual-layered-belief-propagation-for-ldpc-decoding-2024-iswcs">ieee:10639097 - Weighted Residual Layered Belief Propagation for LDPC Decoding (2024, ISWCS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>512</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>RBP의 residual 개념을 layered BP 구조에 결합해 layer weight로 가중치를 부여하는 WR-LBP 스케줄링 알고리즘 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AWGN·소프트 실수 LLR 기반 flooding/RBP 계열 IDS 스케줄링이며 HW 미설계, regular LDPC(256,512) 소규모 검증뿐</td></tr><tr><td>추가확인</td><td>논문 자체에 gate/throughput/양자화 비트수 정보 없음, NAND용 QC-LDPC·저비트 양자화 환경에서 재현성 미상</td></tr></tbody></table>
+<blockquote><p>총평: 통신용 소프트 IDS 스케줄링 알고리즘으로 NAND binary QC-LDPC HW 이식과는 거리가 있는 이론/시뮬 수준 연구.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>AWGN 채널, BPSK 변조, regular LDPC(k=256, n=512, R=1/2)를 대상으로 한 소프트 LLR 기반 반복 BP 디코딩.</li><li>기존 flooding BP는 수렴에 iteration이 많이 필요하고, RBP류 IDS는 residual 기반 선택으로 개선하지만 여전히 계산 비용이 큼.</li><li>채널 모델은 AWGN, noise는 zero-mean Gaussian(<code>n</code>), 메시지는 실수 LLR로 표현.</li><li>핵심 기법은 WR-LBP: 각 행에 layer assignment <code>ML = max(L(µ_ci→vj), l)</code> 를 부여하고, RBP residual <code>r(µ) = µ_new - µ_old</code> 에 layer weight <code>α(ML)=1/2^(l-ML+1)</code> 를 곱해 <code>r_WR-LBP = α(ML)×µ_new - µ_old</code> 로 갱신.</li><li>이 가중 residual 값이 큰 메시지를 우선 갱신함으로써, 레이어 구조상 신뢰도가 높은 메시지를 먼저 전파해 수렴을 가속하려는 의도.</li><li><code>L(µ)</code>는 sign 함수 기반으로 [0,1] 범위로 truncate된 recoverability level이며, <code>l</code>은 경험적으로 정한 상수(0.9 사용).</li><li>별도의 양자화·HW 친화 변형은 기술되어 있지 않고 실수 연산 시뮬레이션 수준.</li><li>학습/최적화 절차 없음(<code>l</code> 값은 경험적 시뮬레이션으로 선택).</li><li>3~5 iteration, 5000 blocks 조건에서 RD RBP 0.9 대비 BER 개선(예: Eb/N0=4dB에서 BER 9.765e-4 vs 1.48e-4, 초기 15 iteration까지는 수렴이 느림).</li><li>HW 설계 없이 순수 시뮬레이션뿐이며, 소규모 regular LDPC(512bit)로만 검증되어 QC-LDPC/대용량 NAND 부호로의 일반화는 미검증.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>WR-LBP 스케줄링(residual+layer weight)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>실수 LLR·IDS 동적 스케줄링으로 min-sum/HD·2SD·3SD 고정 스케줄과 상이, 이식 시 재설계 필요</td></tr><tr><td>C2V 메시지 갱신(tanh 기반 SPA)</td><td><code>decoder.cpp</code> <code>C2V_Cal()</code>, <code>CNU_Update_New_Mag()</code></td><td>Sum-Product(tanh) 방식으로 Prime ECC의 min-sum 근사와 다름</td></tr><tr><td>조기종료(syndrome check)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>유사 개념이나 논문은 syndrome 기반, Prime ECC는 CRC 기반으로 대응 느슨함</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 — 소프트 실수 LLR·Sum-Product 기반 IDS 스케줄링으로 Prime ECC의 min-sum/HD·soft 양자화 구조와 이질적이며, HW 미설계·소규모 시뮬 검증뿐이라 이식 근거가 약함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10639097",
+  "title": "Weighted Residual Layered Belief Propagation for LDPC Decoding",
+  "year": 2024,
+  "venue": "ISWCS",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": 512,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "RBP의 residual 개념을 layered BP 구조에 결합해 layer weight로 가중치를 부여하는 WR-LBP 스케줄링 알고리즘 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AWGN·소프트 실수 LLR 기반 flooding/RBP 계열 IDS 스케줄링이며 HW 미설계, regular LDPC(256,512) 소규모 검증뿐",
+  "todo_check": "논문 자체에 gate/throughput/양자화 비트수 정보 없음, NAND용 QC-LDPC·저비트 양자화 환경에서 재현성 미상"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10639097---weighted-residual-layered-belief-propagation-for-ldpc-decoding-2024-iswcs">ieee:10639097 - Weighted Residual Layered Belief Propagation for LDPC Decoding (2024, ISWCS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

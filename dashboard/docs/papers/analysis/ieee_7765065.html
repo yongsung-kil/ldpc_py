@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7765065</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7765065---a-528-gbs-ldpc-decoder-with-time-domain-signal-processing-for-ieee-802153c-applications-2017-ieee-j-solid-state-circuits">ieee:7765065 - A 5.28-Gb/s LDPC Decoder With Time-Domain Signal Processing for IEEE 802.15.3c Applications (2017, IEEE J. Solid-State Circuits)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.875</td></tr><tr><td>부호length</td><td>672</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>arbiter 기반 TD MVIG로 min1/min2/index를 1사이클에 찾고, Q-기반 layered 아키텍처+불균형 M1/M2 양자화로 CN 저장 메모리 축소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>495k@90nm</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>5.28Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>핵심 신설계(TD-MVIG)는 arbiter/DTC 아날로그성 타이밍 회로라 bit-exact C++ 시뮬(Prime ECC)엔 이식 불가, 이식 가능한 건 layered 메모리축소·불균형 양자화 뿐</td></tr><tr><td>추가확인</td><td>Q-기반 layered로 CN 저장 1 layer 절감 기법이 Prime의 pipeline/HCU 구조와 정합되는지, α=0.75 불균형 M1/M2 양자화의 BER 손실 정도</td></tr></tbody></table>
+<blockquote><p>총평: 802.15.3c용 binary QC-LDPC layered NMS 디코더 실측칩. TD-MVIG 자체는 아날로그성이라 이식불가지만, Q-기반 layered 메모리축소·불균형 M1/M2 양자화는 아이디어 참고 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 부호: IEEE 802.15.3c binary QC-LDPC, <code>N=672</code>, 4가지 rate(<code>1/2, 5/8, 3/4, 7/8</code>), circulant <code>z=21</code>, <code>dc=32</code>, base matrix 간 구조관계로 멀티모드 지원.</li><li>문제: multi-Gb/s NMS 디코더의 critical path가 CN의 min1/min2/index 생성(MVIG)에 몰림 → 이를 빠르고 작게 만들면서 긴 부호까지 scalable하게 해야 함.</li><li>복호 알고리즘: normalized min-sum(NMS), <code>R = α·S·min</code>, <code>α=0.75</code>, block-row layered scheduling(레이어당 1사이클 갱신), layered 기반 조기종료(syndrome check).</li><li>핵심기법1(TD-MVIG): DTC로 값을 시간영역 지연으로 변환하고 arbiter로 "먼저 도착=최소" index를 병렬 검출, M1/Idx1을 AND-mask 후 2차 arbiter로 M2/Idx2까지 1사이클에 산출. TDC 불필요 → DTC-TDC 매칭문제 제거.</li><li>의미: min1/min2/index를 짧은 latency·작은 면적으로 뽑아 [19]의 short-code 한계(scalability)를 극복하고 긴 실용 부호 지원.</li><li>핵심기법2(면적효율): <code>(k-1)</code>-b DTC array로 MSB 최대지연 셀 제거(dc=32에서 면적 18.9%↓, latency 52%↓), 불균형 양자화(M1은 M2의 절반 clipping → M1 양자화비트 1b 절감).</li><li>구현 디테일: APP/Q magnitude는 <code>(4,1)</code> 양자화, M1=<code>(2,1)</code>, M2=<code>(3,1)</code>; 불균형 양자화로 약 50k gate 절감(BER 열화 미미).</li><li>Q-기반 layered 아키텍처: <code>Λ</code> 대신 V2C(<code>Q</code>)를 저장, Q-value/Λ-value를 인터리브로 갱신해 압축 C2V를 4 layer 대신 3 layer만 저장 → [3] 대비 메모리 약 40%로 축소.</li><li>결과(실측): 90nm CMOS, 495k gate, 2.25mm², 157MHz, 5.28Gb/s(5 iter), 조기종료 시 BER=1e-5에서 30.08Gb/s, 182mW, 34.47pJ/b — 긴 부호 지원 TD/analog 디코더 중 최고 HW효율.</li><li>한계: 정정능력 개선이 아닌 HW 효율·면적·throughput 개선, TD-MVIG는 공정변이·metastability 대응이 필요한 아날로그성 회로, 무선표준(802.15.3c) 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| NMS CN min1/min2·sign | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 중: Prime도 min1/min2 min-sum 보유, α=0.75 및 M1/M2 불균형 양자화 아이디어 참고 가능 |
+| VN 처리·LLR 양자화((4,1) 등) | decoder.cpp VN_Cal_HD() 등, ecc_data.h PARAM_LLR | 중: 양자화비트 절감(불균형 M1/M2) 개념이 magnitude 양자화 테이블에 응용 여지 |
+| layered 조기종료(syndrome) | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 낮음: Prime은 partial/full CRC 조기종료 이미 보유, 방식 상이 |
+| TD-MVIG(arbiter/DTC 타이밍 회로) | 대응 없음 | 아날로그성 회로라 bit-exact C++ 시뮬로 모사 불가 |
+| QC-LDPC PCM/circulant 로드 | ecc_top.cpp Load_PCM() | 낮음: 부호구조는 802.15.3c 고정, Prime과 별개 |</code></pre>
+<p>적용 가치: 중간 — binary QC-LDPC layered NMS라는 공통점 덕에 불균형 M1/M2 양자화와 Q-기반 layered 메모리 축소는 알고리즘/HW 아이디어로 참고 가치가 있으나, 핵심 신규성인 TD-MVIG는 아날로그성 회로라 Prime ECC의 디지털 bit-exact 모델에 직접 이식할 수 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7765065",
+  "title": "A 5.28-Gb/s LDPC Decoder With Time-Domain Signal Processing for IEEE 802.15.3c Applications",
+  "year": 2017,
+  "venue": "IEEE Journal of Solid-State Circuits",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "672",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "arbiter 기반 TD MVIG로 min1/min2/index를 1사이클에 찾고 Q-기반 layered 아키텍처와 불균형 M1/M2 양자화로 CN 저장 메모리를 축소한 5.28Gb/s 실측 QC-LDPC 디코더",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "495k@90nm",
+  "parallelism": "부분",
+  "throughput_gbps": 5.28,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "핵심 신설계 TD-MVIG는 arbiter/DTC 아날로그성 타이밍 회로라 bit-exact C++ 시뮬(Prime ECC)엔 이식 불가, 이식 가능한 건 layered 메모리축소·불균형 양자화뿐",
+  "todo_check": "Q-기반 layered로 CN 저장 1 layer 절감 기법이 Prime의 pipeline/HCU 구조와 정합되는지, α=0.75 불균형 M1/M2 양자화의 BER 손실 정도"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7765065---a-528-gbs-ldpc-decoder-with-time-domain-signal-processing-for-ieee-802153c-applications-2017-ieee-j-solid-state-circuits">ieee:7765065 - A 5.28-Gb/s LDPC Decoder With Time-Domain Signal Processing for IEEE 802.15.3c Applications (2017, IEEE J. Solid-State Circuits)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

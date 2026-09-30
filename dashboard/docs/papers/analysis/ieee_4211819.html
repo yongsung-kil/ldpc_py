@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4211819</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4211819---non-fractional-parallelism-in-ldpc-decoder-implementations-2007-date07">ieee:4211819 - Non-fractional parallelism in LDPC Decoder implementations (2007, DATE'07)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.4~0.8</td></tr><tr><td>부호length</td><td>7493</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>연속 sub-circulant가 메모리 한 행을 공유하는 성질을 이용해 circulant 크기(소수 포함)의 약수가 아닌 임의 병렬화 인자(D)를 지원하는 메모리 매핑/FIFO 기법을 제시</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>0.90~3.00mm2@90nm(D=22~127)</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>CDVB-T(z=127, 소수)라는 단일 diagonal QC 구조 전제, Prime ECC는 z_sb=32 고정이라 fractional divider 필요성 자체가 낮을 수 있어 적용 범위 재검토 필요</td></tr><tr><td>추가확인</td><td>Prime ECC의 base matrix가 multiple-diagonal per circulant를 갖는지(본 기법은 single-diagonal 전제로 이 경우 미적용)</td></tr></tbody></table>
+<blockquote><p>총평: circulant 크기가 소수라 병렬화 인자 선택이 제한되는 문제를 sub-circulant 간 메모리 행 공유 성질로 해결해 면적을 3배 절감한 QC-LDPC 디코더 HW 아키텍처/메모리 매핑 논문으로, 병렬화·메모리 라우팅 최적화 관점에서 이식 참고 가치가 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 중국 지상파 DVB 표준(CDVB-T)의 QC-LDPC 코드: circulant 크기 <code>z=127</code>(메르센 소수), rate 0.4/0.6/0.8, codeword length 7493bit(=59×127), single-diagonal per circulant 구조.</li><li>문제: circulant 크기가 소수이면 기존 sub-group parallel 아키텍처([4])는 병렬화 인자 D가 z의 약수여야 하므로 D=127(전체 병렬)만 가능해, 필요 throughput(45Mbps) 대비 실제 처리능력이 6.6배 과설계되고 λ-메모리 효율(23%)이 낮아 면적 낭비(3mm²@90nm)가 발생.</li><li>채널/디코딩 알고리즘은 min-sum 기반이며 Gauss-Seidel(layered/shuffled/staggered) 방식 반복을 사용, check-node centric 처리로 <code>λ_n^i(m) = L_n + Σ_{U(n,m)}Λ + Σ_{R(n,m)}Λ</code>(식 5)를 갱신.</li><li>핵심 기법 1단: circulant를 r개 sub-circulant로 나눠 D=⌈z/r⌉ data path만 사용하는 sub-group parallelism을 일반화하여, D가 z의 약수가 아니어도(fractional divider) 동작하게 하는 메모리 매핑 방법 제안.</li><li>핵심 식/원리: 연속 sub-circulant가 회전각과 무관하게 메모리 한 행(row)을 공유한다는 성질(<code>consecutive rows modulo ⌈z/D⌉</code>)을 이용 — 이전 sub-circulant 처리 시 읽은 행을 FIFO에 저장해 다음 sub-circulant가 재사용, 새로 필요한 행 1개만 추가로 읽어 throughput 효율 <code>r/(r+1)</code>을 달성.</li><li>핵심 기법 2단: 경계 조건에서 발생하는 "4-row-conflict"(m=z mod r, 충돌 각도 개수 <code>(m-1)(r-m-1)</code>)를 분석하고, 무충돌 조건(<code>m=r-1</code>, 즉 <code>r·D=z+1</code>)을 만족하는 D 후보(예: D=32, D=26)를 도출하거나 컴파일타임 스케줄링으로 우회.</li><li>부수 트릭: 그룹 간 초기화 겹침(다음 그룹 초기화가 이전 그룹 출력 완료 전에 시작)으로 인한 메모리 충돌도 조기/후기 스케줄링으로 회피 가능함을 CDVB-T rate 0.8 사례(27개 중 15개 중첩)로 분석.</li><li>별도 학습/최적화 절차 없음 — 모든 회전각(angle) 조합을 시뮬레이션해 충돌 패턴을 도출하는 설계공간 탐색.</li><li>결과: D=127(전체병렬) 3.00mm² 대비 D=32는 1.12mm², D=26은 1.03mm²(충돌 없음 확인, 스케줄링으로 해결)로 약 3배 면적 절감(90nm 기준).</li><li>한계: single-diagonal per circulant 구조에만 적용(DVB-S2처럼 circulant당 다중 diagonal이면 미적용), throughput 수치 및 정정성능은 다루지 않고 순수 면적/메모리 매핑 최적화에 국한되며 실제 throughput 실측치는 미제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>circulant/sub-circulant 병렬화 인자 선택</td><td>디코더 HW 모델 (z=32, HCU, GT)</td><td>Prime ECC는 z_sb=32 고정 row 단위 병렬이라 fractional divider 개념 자체는 직접 필요하지 않으나, 소수 크기 lifting을 쓰는 변형 부호 설계 시 참고 가능</td></tr><tr><td>λ-메모리/Λ-메모리 매핑, barrel shifter 기반 permutation</td><td>디코더 HW 모델 (메모리 라우팅)</td><td>메모리 행 공유·FIFO 재사용 아이디어는 Prime ECC의 메모리 라우팅 최적화에 참고 가능(대응 코드 파일 미특정)</td></tr><tr><td>4-row-conflict 스케줄링 회피</td><td><code>GT.cpp</code> <code>Make_GT_HW()</code></td><td>엣지/메모리 충돌 회피라는 목적은 유사하나 구체 기법(Graph Thinning MUX)과는 결이 다름</td></tr><tr><td>min-sum + Gauss-Seidel(layered) 반복</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC의 Dual-Update 스케줄과 유사 계열(이미 보유, 중복)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 부호 자체(CDVB-T)는 NAND와 무관하지만, circulant 기반 QC-LDPC HW의 메모리/병렬화 면적 최적화 기법은 Prime ECC의 lifting/메모리 구조 재설계 시 참고할 만함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4211819",
+  "title": "Non-fractional parallelism in LDPC Decoder implementations",
+  "year": 2007,
+  "venue": "DATE'07",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.4~0.8",
+  "code_length": 7493,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "연속 sub-circulant가 메모리 한 행을 공유하는 성질을 이용해 circulant 크기(소수 포함)의 약수가 아닌 임의 병렬화 인자(D)를 지원하는 메모리 매핑/FIFO 기법을 제시",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "0.90~3.00mm2@90nm(D=22~127)",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "CDVB-T(z=127, 소수)라는 단일 diagonal QC 구조 전제, Prime ECC는 z_sb=32 고정이라 fractional divider 필요성 자체가 낮을 수 있어 적용 범위 재검토 필요",
+  "todo_check": "Prime ECC의 base matrix가 multiple-diagonal per circulant를 갖는지(본 기법은 single-diagonal 전제로 이 경우 미적용)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4211819---non-fractional-parallelism-in-ldpc-decoder-implementations-2007-date07">ieee:4211819 - Non-fractional parallelism in LDPC Decoder implementations (2007, DATE&#x27;07)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

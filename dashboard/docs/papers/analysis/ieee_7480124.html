@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7480124</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7480124---improved-ldpc-decoding-algorithms-based-on-min-sum-algorithm-2016-ieee-iciis-계열-학회">ieee:7480124 - Improved LDPC Decoding Algorithms based on Min-Sum Algorithm (2016, IEEE (ICIIS 계열 학회))</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>MSA/SPA 차이의 원인(β&lt;0.89 critical region)을 분석하고, min1/min2 기반 Alternative와 부분φ-sum Hybrid 두 개선안 제시</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Alternative는 min1/min2+offset 계열로 Prime ECC 기보유 min-sum과 근접 - 신규성 제한적, HW 미설계·시뮬만</td></tr><tr><td>추가확인</td><td><code>k=0.15</code>, <code>1.2</code> 임계 등 부호별 시뮬 튜닝값이며 고rate NAND QC-LDPC(rate~0.9)에서 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: min-sum 성능(waterfall)을 SPA에 근접시키는 CN 보정 기법으로 Prime ECC 대상 레이어(decoder.cpp)에 직접 닿지만, Alternative가 offset/2-min 계열이라 기보유 min-sum과 중복성 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>부호: regular (3,6) LDPC, rate-1/2, <code>1008×504</code>(및 <code>4000×2000</code>), AWGN+BPSK, 최대반복 10.</li><li>문제: HW에서 널리 쓰는 MSA는 SPA(sum-product) 대비 정확도 손실이 있는데, 기존 연구들이 그 저하 "원인"을 이론 분석하지 않고 경험적 보정만 함.</li><li>모델: CN 갱신을 <code>φ(x)=-log tanh(x/2)</code>로 표현, SPA는 <code>φ(Σφ(β))</code>, MSA는 <code>min(β)</code>로 근사(<code>φ(φ(x))=x</code>).</li><li>핵심 분석: <code>β&lt;0.89</code>이면 <code>φ(β)</code>가 지수적으로 급증(gradient&gt;45°)하는 'critical region' - 이 구간 샘플이 많을수록 Σφ와 minφ의 차이(=MSA 오차)가 커짐. 실측 β 분포로 상당수가 critical region에 있음을 확인.</li><li>즉 MSA는 minφ(β)만 취하는데, critical region 다수 진입 시 sum과 min 괴리가 성능손실의 직접 원인.</li><li>Hybrid: critical region 진입 LLR이 0~1개면 MSA, 2개 이상이면 그들의 <code>Σφ</code>만 계산(부분 φ 테이블) → SPA에 근접, BER 10⁻³서 ~0.8dB 개선.</li><li>Alternative: 최소 두 값 <code>LLR1,LLR2</code>만 사용. <code>minφ&lt;1.2</code>면 <code>min(β)/2</code>, 아니면 <code>min(β)/2 + k(LLR2−LLR1)</code> 증분(식14,15) - φ 테이블 불필요, HW 친화.</li><li>최적화: rate <code>k</code>를 0~1 스윕해 총 비트오류 최소인 <code>k=0.15</code> 선택(시뮬), 임계 <code>1.2</code>도 시뮬로 결정.</li><li>결과: Alternative는 BER 10⁻³서 MSA 대비 ~0.7dB 개선, throughput은 MSA와 동등(SPA보다 우수), 추가 복잡도 거의 없음(min1/min2는 MSA서 이미 계산).</li><li>한계: HW 미설계(시뮬만), 부호 무관 주장하나 rate-1/2 regular 소형부호에서만 검증, 임계·<code>k</code>가 튜닝 상수.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum 갱신 (min1/min2)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Alternative의 min1/min2+offset 보정이 우리 CN 연산에 직접 대응</td></tr><tr><td>Alternative 증분 보정 <code>k(LLR2-LLR1)</code></td><td>decoder.cpp <code>CNU_Update_New_Mag()</code></td><td>offset/normalized 계열 - 우리 magnitude 양자화 테이블에 반영 가능하나 기보유 min-sum과 중복</td></tr><tr><td>Hybrid 부분 φ-sum</td><td>대응 없음</td><td>Prime ECC는 full-tanh/φ 테이블 미보유(min 근사 채택) - φ 테이블 도입은 면적 역행</td></tr><tr><td>critical region(β&lt;0.89) 분석</td><td>대응 없음 (설계 인사이트)</td><td>코드 대응은 없으나 offset/scaling factor 튜닝 근거로 참고 가능</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — Alternative가 우리 <code>CNU_Update_New_Mag()</code>에 바로 얹을 수 있는 min1/min2 보정이지만 offset/normalized min-sum 계열이라 기보유 기법과 겹치고, Hybrid의 φ-테이블은 HW 면적상 부적합.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7480124",
+  "title": "Improved LDPC Decoding Algorithms based on Min-Sum Algorithm",
+  "year": 2016,
+  "venue": "IEEE",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "MSA/SPA 차이 원인(β&lt;0.89 critical region) 분석, min1/min2 기반 Alternative와 부분φ-sum Hybrid 개선안 제시",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "Alternative는 min1/min2+offset 계열로 Prime ECC 기보유 min-sum과 중복성 있음, HW 미설계·시뮬만",
+  "todo_check": "k=0.15, 1.2 임계 등 부호별 시뮬 튜닝값 - 고rate NAND QC-LDPC(rate~0.9)에서 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7480124---improved-ldpc-decoding-algorithms-based-on-min-sum-algorithm-2016-ieee-iciis-계열-학회">ieee:7480124 - Improved LDPC Decoding Algorithms based on Min-Sum Algorithm (2016, IEEE (ICIIS 계열 학회))</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

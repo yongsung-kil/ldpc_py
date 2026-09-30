@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8631719</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8631719---design-and-evaluation-of-information-bottleneck-ldpc-decoders-for-software-defined-radios-2018-ieee-icspcs">ieee:8631719 - Design and Evaluation of Information Bottleneck LDPC Decoders for Software Defined Radios (2018, IEEE ICSPCS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2640,8000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Information Bottleneck으로 설계한 LUT가 min-sum/box-plus 노드연산을 대체, 4bit 정수만으로 BP급 BER + throughput 향상</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>q=4bit 양자화라 우리 HD/2SD/3SD(≤3bit)엔 read비용 증가; iteration별·design-Eb/N0별 정적 LUT 세트를 DE로 사전설계·저장 필요, HW(RTL) 미설계</td></tr><tr><td>추가확인</td><td>3bit(2SD/3SD)로 축소 시 BP 대비 손실 및 LUT 세트 메모리량, NAND RBER 채널에서의 error-floor 거동</td></tr></tbody></table>
+<blockquote><p>총평: LLR 산술을 iteration별 mutual-info 최대화 LUT로 대체해 min-sum보다 ~0.4dB 우수하면서 정수연산만 쓰는 디코더 — 개념 이식가치 높으나 4bit 양자화·정적 LUT 저장 부담이 NAND soft-read(≤3bit) 정책과 충돌.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: AWGN+BPSK, 4bit 채널 양자화 인덱스로 복호하는 <code>(dv,dc)=(3,6)</code> regular binary LDPC(code a=Margulis 2640, code b=8000, 둘 다 rate 1/2).</li><li>문제: BP는 고정밀 LLR·비선형 함수로 복잡하고, min-sum/저정밀 양자화는 BER 손실 → BP급 성능의 저복잡 디코더 필요.</li><li>핵심 아이디어: 변수·검사노드의 box-plus/합 연산을 실수 LLR 없이 <strong>부호없는 정수 인덱스만 처리하는 LUT</strong>로 대체.</li><li>설계: Tishby Information Bottleneck으로 입력 <code>y</code>를 압축변수 <code>T</code>(|T|=<code>2^q</code>, <code>q=4</code>)로 매핑하되 관련정보 <code>I(T;X)</code> 최대화; 2-input LUT <code>t0=f(y0,y1)</code>가 box-plus의 정보최적 등가.</li><li>핵심식: <code>w = LUT[ptr(i,m)+idx(u,v)]</code>, <code>ptr(i,m)=iM·2^{2q}+m·2^{2q}</code> — iteration <code>i</code>·LUT종류 <code>m</code>별 서브벡터 오프셋 주소계산만으로 노드연산 수행(정수산술).</li><li>LUT 구성: 고차 노드는 2-input LUT 분해(concatenation)로 구현, <code>dc=6</code>에서 서로 다른 LUT 3종(f0/f1/f2)만 필요.</li><li>HW 트릭: 중간결과 재사용으로 <code>dc=6</code> 전 출력 12연산(재사용 없으면 24연산); LUT reduction(4bit 2개를 uint8에 packing→메모리 절반) vs LUT expansion(주소 일부 사전계산→접근당 정수덧셈 1회, 메모리 4배).</li><li>설계절차: discretized density evolution으로 iteration별 <code>p(x,y)</code> 추적 → IB로 최적 매핑 도출 → design-Eb/N0별 정적 LUT 세트 생성(별도 preliminary work [8]).</li><li>결과: DSP(TI C6474) 실측 — IB가 Jacobian log 대비 BER 손실 &lt;0.1dB이면서 throughput 26~52% 향상, min-sum 대비 BER ~0.4dB 우수; imax=50, parity-check 조기종료.</li><li>한계: HW(RTL)·ASIC 미설계(DSP 소프트 구현), design-Eb/N0 고정 정적 LUT, q=4bit라 우리 ≤3bit 정책과 불일치, error-floor 미분석.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN/VN LUT 노드연산(box-plus 대체)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>VN_Cal_HD()</code> 등</td><td>높음 — min-sum CN·VN 연산 자리를 IB LUT로 치환하는 구조적 대체 대상</td></tr><tr><td>iteration별 LUT 세트</td><td>decoder.cpp <code>Get_VNU_Table_Idx()</code>, ecc_data.h <code>PARAM_LLR</code></td><td>높음 — 이미 iteration 구간별 LLR 테이블 인프라 존재, LUT 세트로 확장 가능</td></tr><tr><td>채널 4bit 양자화/soft-read</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>중 — 우리는 ≤3bit(2SD/3SD)라 q=4 그대로는 불가, 양자화 인덱스 매핑 재설계 필요</td></tr><tr><td>DE 기반 LUT 사전설계</td><td>대응 없음</td><td>Prime ECC엔 discretized DE 설계 파이프라인 없음(테이블은 local_opt.cpp 자동최적화 별개)</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — min-sum 노드연산을 정보최적 LUT로 바꾸는 접근은 decoder.cpp에 직접 대응되고 BER/throughput 이득이 실측되어 매력적이나, q=4bit·design-Eb/N0별 정적 LUT 세트 저장이 NAND의 저bit soft-read·다양한 RBER 조건과 충돌해 3bit 재설계·오프라인 DE 파이프라인 구축이 선행돼야 함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8631719",
+  "title": "Design and Evaluation of Information Bottleneck LDPC Decoders for Software Defined Radios",
+  "year": 2018,
+  "venue": "IEEE ICSPCS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "2640,8000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Information Bottleneck으로 설계한 LUT가 min-sum/box-plus 노드연산을 대체, 4bit 정수만으로 BP급 BER + throughput 향상",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "q=4bit 양자화라 우리 HD/2SD/3SD(≤3bit)엔 read비용 증가; iteration별·design-Eb/N0별 정적 LUT 세트를 DE로 사전설계·저장 필요, HW(RTL) 미설계",
+  "todo_check": "3bit(2SD/3SD)로 축소 시 BP 대비 손실 및 LUT 세트 메모리량, NAND RBER 채널에서의 error-floor 거동"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8631719---design-and-evaluation-of-information-bottleneck-ldpc-decoders-for-software-defined-radios-2018-ieee-icspcs">ieee:8631719 - Design and Evaluation of Information Bottleneck LDPC Decoders for Software Defined Radios (2018, IEEE ICSPCS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

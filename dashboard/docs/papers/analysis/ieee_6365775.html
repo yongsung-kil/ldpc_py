@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6365775</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6365775---vlsi-implementation-of-a-multi-mode-turboldpc-decoder-architecture-2013-ieee-tcas-i">ieee:6365775 - VLSI Implementation of a Multi-Mode Turbo/LDPC Decoder Architecture (2013, IEEE TCAS-I)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>NoC 기반 재구성 가능 turbo/LDPC 통합 디코더로 복호 중단 없는 동적 표준전환</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선 다표준(WiMAX/WiFi/LTE) turbo+LDPC 겸용 유연 아키텍처라 NAND 전용 QC-LDPC 파이프라인과 정합 낮음</td></tr><tr><td>추가확인</td><td>6-bit min-sum 메모리 절감(21.2% addressing) 기법이 z=32 병렬 QC-LDPC에 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: 무선 다표준 turbo/LDPC 겸용 NoC 재구성 디코더로 정정성능 개선 없이 유연성·면적 최적화가 핵심이라 NAND QC-LDPC 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: turbo(double/single binary)와 LDPC를 겸용하는 재구성 가능 디코더, WiMAX/WiFi/CMMB/DTMB/HPAV/LTE/DVB-RCS 등 다표준 지원, BPSK/AWGN.</li><li>문제: 표준 간·내 코드 전환 시 복호를 멈춰야 하는 reconfiguration 문제를 최초로 정형화하고 중단 없는 전환 기법 제시.</li><li>모델: LDPC는 layered normalized min-sum(6), turbo는 BCJR(Max-Log-MAP), 둘 다 LLR 기반 반복복호이며 PE(processing element)에 작업 분할.</li><li>핵심기법 1단(NoC): 각 노드에 PE+RE(routing element, 4×4 crossbar), Kautz 22-node topology, SSP-FL 결정적 라우팅(Floyd-Warshall off-line 사전계산).</li><li>핵심식 의미: 한 iteration의 clock cycle 수가 PE가 읽는 memory location 수에 비례 → reconfiguration memory 크기가 전환 시간 결정.</li><li>핵심기법 2단(reconfiguration): reconfiguration memory를 circular buffer(SCC/ECC/SFC/EFC 포인터)로 관리, 5단계 phase로 현재/차기 코드 복호와 설정 로딩을 overlap, 소/대 코드 case 분리.</li><li>구현 디테일: min-sum은 CN당 2개 magnitude + 2-bit index만 저장해 필요 bit 21.2% 절감; LDPC 채널 LLR 양자화 7→6bit로 축소(성능손실 &lt;0.05dB).</li><li>최적화 절차: METIS graph coloring으로 H-matrix를 topology에 분할, mesh/toroidal/spidergon/Kautz 등 비교해 Kautz 선정.</li><li>결과: TSMC 90nm post-layout, 구현 A는 WiMAX/HPAV/DVB-RCS 지원 2.75mm², 87.8mW(WiMAX LDPC)~101.5mW(turbo); reconfiguration 확률 0.25~0.3%에서 BER 손실 무시가능.</li><li>한계: 정정성능 개선 없음(유연성·면적 최적화 목적), 무선 다표준 특화, NAND read 비용/soft-2~3bit 고려 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered normalized min-sum 복호</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>우리도 min-sum 보유(중복 기여), scaling만 다름</td></tr><tr><td>min1/min2 + 부호 XOR MEU</td><td>decoder.cpp <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유 기법과 동일 구조</td></tr><tr><td>LLR 양자화 축소(7→6bit)</td><td>channel.cpp <code>Set_LLR_Th()</code> + LLR 테이블</td><td>양자화 최적화 참고 여지, NAND soft-read와 목적 다름</td></tr><tr><td>NoC 라우팅/PE 분할·재구성</td><td>대응 없음</td><td>Prime ECC는 고정 z=32 QC-LDPC HW, 다표준 재구성 구조 없음</td></tr><tr><td>turbo/BCJR SISO</td><td>대응 없음</td><td>LDPC 전용, turbo 미지원</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 이미 보유한 min-sum과 중복되고 핵심은 무선 다표준 turbo/LDPC 겸용 NoC 재구성이라 NAND 전용 QC-LDPC 엔진에 떼어 쓸 요소가 거의 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6365775",
+  "title": "VLSI Implementation of a Multi-Mode Turbo/LDPC Decoder Architecture",
+  "year": 2013,
+  "venue": "IEEE TCAS-I",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "NoC 기반 재구성 가능 turbo/LDPC 통합 디코더로 복호 중단 없는 동적 표준전환",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "무선 다표준(WiMAX/WiFi/LTE) turbo+LDPC 겸용 유연 아키텍처라 NAND 전용 QC-LDPC 파이프라인과 정합 낮음",
+  "todo_check": "6-bit min-sum 메모리 절감(21.2% addressing) 기법이 z=32 병렬 QC-LDPC에 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6365775---vlsi-implementation-of-a-multi-mode-turboldpc-decoder-architecture-2013-ieee-tcas-i">ieee:6365775 - VLSI Implementation of a Multi-Mode Turbo/LDPC Decoder Architecture (2013, IEEE TCAS-I)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

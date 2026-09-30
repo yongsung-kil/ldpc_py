@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10285934</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10285934---reliable-belief-propagation-recent-theoretical-and-practical-advances-2023-mlsp">ieee:10285934 - Reliable Belief Propagation: Recent Theoretical and Practical Advances (2023, MLSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>미상</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>loopy graph에서 BP 수렴성 개선(초기화·informed scheduling(WDBP)·marginal averaging·early stopping)을 MIMO 신호검출에 적용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상이 MIMO 신호검출용 일반 pairwise BP(sum-product)이며 LDPC 부호·NAND와 무관, HW 없음</td></tr><tr><td>추가확인</td><td>WDBP/marginal averaging 스케줄링 아이디어가 LDPC min-sum 복호의 수렴/iteration 감소에 응용 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: MIMO 신호검출용 loopy BP 수렴 개선 리뷰로 LDPC ECC/NAND 이식 대상이 아님(스케줄링 아이디어만 참고 여지).</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: pairwise graphical model에서의 Belief Propagation(sum-product) 추론, 테스트베드는 4×8/8×16 MIMO(4-QAM) 신호검출.</li><li>문제: loopy graph에서 BP는 수렴 보장이 없고 marginal이 근사에 그침, 특히 밀집 채널행렬(MIMO)에서 성능 저조.</li><li>모델: <code>y=Hx+n</code>(복소 AWGN)을 factorized 우도 <code>Φ(x_i)</code>, <code>Φ(x_i,x_j)</code>로 표현해 BP로 ML 근사(식7,8).</li><li>개선 1(초기화): local potential 정합 초기화 등 검토하나 실험상 효과 미미.</li><li>개선 2(update rule): damping <code>µ=(1-ε)µ_new+ε µ_old</code>, residual BP(RBP)는 잔차 최대 메시지 우선 갱신.</li><li>개선 3(informed scheduling): WDBP는 RBP 잔차를 해당 edge 선택횟수로 나눠 진동 완화, priority-sorted 상위 1/3 메시지 병렬 갱신.</li><li>개선 4(evaluation): marginal averaging으로 진동하는 추정을 시간평균해 damping 튜닝 부담·runtime 감소.</li><li>early stopping: WDBP가 <code>ns=100</code> iteration 내 수렴 여부로 hard instance 판별, 저SNR 진동/고SNR catastrophic 실패 구분.</li><li>결과: MIMO SER-SNR에서 marginal averaging·WDBP·early stopping이 표준 BP 대비 일관 개선, 저SNR에선 MMSE 상회(계산부담 소폭 증가).</li><li>한계: 순수 알고리즘/시뮬 리뷰(HW 없음), LDPC 부호설계·NAND와 무관, 구체 부호 스펙 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(sum-product) 메시지 갱신</td><td>대응 없음</td><td>Prime은 min-sum 근사 사용, full sum-product BP 아님</td></tr><tr><td>informed scheduling(WDBP)/message scheduling</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄 개념만 유사, MIMO 밀집그래프 대상이라 sparse LDPC와 직결성 낮음</td></tr><tr><td>MIMO 신호검출</td><td>대응 없음</td><td>Prime ECC는 NAND 채널복호, MIMO 검출 아님</td></tr></tbody></table>
+<p>적용 가치: 낮음 — MIMO 신호검출용 loopy BP 수렴 리뷰로 NAND binary LDPC ECC(min-sum) 대상이 아니며 HW·부호설계 기여가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10285934",
+  "title": "Reliable Belief Propagation: Recent Theoretical and Practical Advances",
+  "year": 2023,
+  "venue": "MLSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "미상",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "loopy graph에서 BP 수렴성 개선(초기화·informed scheduling(WDBP)·marginal averaging·early stopping)을 MIMO 신호검출에 적용",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상이 MIMO 신호검출용 일반 pairwise BP(sum-product)이며 LDPC 부호·NAND와 무관, HW 없음",
+  "todo_check": "WDBP/marginal averaging 스케줄링 아이디어가 LDPC min-sum 복호의 수렴/iteration 감소에 응용 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10285934---reliable-belief-propagation-recent-theoretical-and-practical-advances-2023-mlsp">ieee:10285934 - Reliable Belief Propagation: Recent Theoretical and Practical Advances (2023, MLSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9281328</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9281328---pruning-and-quantizing-neural-belief-propagation-decoders-2021-ieee-jsac-vol39-no7">ieee:9281328 - Pruning and Quantizing Neural Belief Propagation Decoders (2021, IEEE JSAC vol.39 no.7)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>overcomplete H의 NBP 가중치로 CN을 pruning해 iter마다 다른 H 사용, near-ML 저복잡도 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN 학습형 디코더(대응 없음), iter마다 다른 overcomplete H 저장 필요 - 고정 QC-LDPC HW pipeline과 비정합, 단블록·비QC 대상</td></tr><tr><td>추가확인</td><td>CCSDS n=128 rate½ 단블록 결과가 고rate 장블록 NAND QC-LDPC로 일반화되는지 불명</td></tr></tbody></table>
+<blockquote><p>총평: 단블록 선형부호용 NN(NBP/NOMS) 학습 디코더 + pruning/양자화 - NN·비QC·단블록이라 고전 QC-LDPC HW ECC(Prime ECC) 이식성 거의 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 짧은 선형블록부호(RM(2,5) n=32, RM(3,7) n=128, CCSDS LDPC n=128 rate0.5, polar n=128)를 AWGN에서 near-ML 복호.</li><li>문제: NBP/NOMS는 고정 H에 종속돼 성능 한계, overcomplete H는 near-ML이나 CN 평가수가 폭증해 복잡도 과다.</li><li>모델: unrolled Tanner 그래프에 edge/CN 가중치를 두고, overcomplete <code>Hoc</code>에서 시작해 학습된 가중치를 CN 중요도 지표로 해석.</li><li>핵심기법(PB-NBP): CN별로 가중치를 tie(<code>w_cj</code>)한 뒤(식 7), 저가중치 CN을 순차 pruning - 결과적으로 iteration마다 서로 다른 부분 H 사용.</li><li>핵심 식: 복잡도를 <code>Σ dc·|Vc|</code>(식 10, CN 평가수)로 정의, pruning으로 이 값을 대폭 축소하는 것이 목표.</li><li>핵심기법 2단(PB-NOMS): pruning 개념을 offset min-sum(식 6, ReLU+edge별 offset)으로 확장, NBP로 최적화한 H를 NOMS에도 재사용.</li><li>양자화: mid-tread 대칭 양자화기 + STE(<code>∂Q/∂x=1</code>)로 gradient 통과, 채널/메시지/가중치/offset을 joint 학습·양자화(<code>qch,qm,qw</code>).</li><li>학습절차: Adam + multiloss(soft-BER, 식 9, <code>η</code>로 중간층 기여 조절), 수렴 후 최소 가중치 CN 1개 제거→재학습 반복(Algorithm 1).</li><li>결과: RM(3,7)에서 NBP 대비 0.28dB 개선하며 CN 3.49%·weight 21%만 사용, CCSDS LDPC는 conventional BP(25 iter) 대비 약 0.6dB 개선(6 iter), 5-bit 양자화로 ML 0.5dB 이내(RM).</li><li>한계: 순수 시뮬(HW 미설계), NN 학습 오프라인 필요, iter마다 다른 overcomplete H 저장, 단블록·비QC 부호 대상.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| NBP/NOMS NN 학습 디코더 전체 | 대응 없음 | 프로파일 §6에서 NN/딥러닝 디코더 = 대응 없음 명시 |
+| offset min-sum CN 업데이트 | decoder.cpp CNU_Update_New_Mag() (개념 유사) | Prime ECC도 min-sum이나 edge별 학습 offset은 미보유·이식부담 큼 |
+| iter마다 다른 overcomplete H (pruning) | ecc_top.cpp Load_PCM() | 고정 QC-LDPC H 로드 구조와 근본 비정합(다중 H 저장 필요) |
+| 메시지/가중치 양자화(STE) | ecc_data.h PARAM_LLR / decoder.cpp VN_Cal_HD() | LLR 양자화 개념만 유사, NN 학습 양자화기는 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> - NN 학습형 NBP/NOMS 디코더로 프로파일상 "대응 없음" 범주이며, iteration마다 다른 overcomplete·비QC H 구조가 고정 QC-LDPC HW pipeline과 근본적으로 맞지 않아 이식성이 낮다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9281328",
+  "title": "Pruning and Quantizing Neural Belief Propagation Decoders",
+  "year": 2021,
+  "venue": "IEEE Journal on Selected Areas in Communications, vol.39 no.7",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "overcomplete H의 NBP 가중치로 CN을 pruning해 iter마다 다른 H 사용, near-ML 저복잡도 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "NN 학습형 디코더(대응 없음), iter마다 다른 overcomplete H 저장 필요 - 고정 QC-LDPC HW pipeline과 비정합, 단블록·비QC 대상",
+  "todo_check": "CCSDS n=128 rate½ 단블록 결과가 고rate 장블록 NAND QC-LDPC로 일반화되는지 불명"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9281328---pruning-and-quantizing-neural-belief-propagation-decoders-2021-ieee-jsac-vol39-no7">ieee:9281328 - Pruning and Quantizing Neural Belief Propagation Decoders (2021, IEEE JSAC vol.39 no.7)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

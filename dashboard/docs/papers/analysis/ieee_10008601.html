@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10008601</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10008601---graph-neural-networks-for-channel-decoding-2022-ieee-globecom-workshops---channel-coding-beyond-5g">ieee:10008601 - Graph Neural Networks for Channel Decoding (2022, IEEE Globecom Workshops - Channel Coding beyond 5G)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.32~0.71</td></tr><tr><td>부호length</td><td>100~1000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>BP의 노드/엣지 메시지 업데이트를 학습형 MLP로 대체한 완전 미분가능 GNN 디코더</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>NN 전면 대체·AWGN 전용·복잡도 높음(MLP 매 엣지 실행)·5G/BCH 타깃, binary QC-LDPC HW 이식 부적합</td></tr><tr><td>추가확인</td><td>없음 (프로파일 §5: NN 디코더 = 대응 없음/낮음, 추가 확인 불요)</td></tr></tbody></table>
+<blockquote><p>총평: 완전 학습형 GNN 디코더로 min-sum HW 파이프라인 구조와 정합 불가, NAND ECC 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: binary linear block code(BCH (63,45), regular (3,6) LDPC n=100~1000, 5G NR LDPC), AWGN+BPSK, LLR <code>ℓch,i = 2yi/σ²</code>.</li><li>문제: 단/중길이에서 BP가 ML 대비 성능 갭, 기존 딥러닝 디코더는 curse of dimensionality로 스케일 불가·수백만 파라미터.</li><li>모델: 파리티체크 행렬 H를 bipartite factor graph로 보고 VN/FN 노드에서 메시지 전달(BP와 동형 그래프).</li><li>핵심기법: VN↔FN 엣지 메시지와 노드 값을 학습형 함수 <code>f^F(x,θ)</code>(공유 MLP)로 업데이트, 식(1)~(4). 모든 엣지/노드가 동일 가중치 공유 → 임의 블록길이 확장.</li><li>입력 임베딩 <code>hvi = ℓch,i·w</code>(스칼라→F차원 투영), 출력 <code>ℓi = qᵀhvi</code>. 고차원 투영으로 메시지 처리 단순화.</li><li>확장: 노드/엣지 attribute(<code>gvi</code>,<code>gmvi→uj</code>)로 그래프별 특성(짧은 사이클) 학습 가능하나 실험에서는 0으로 비활성.</li><li>구현 디테일: flooding 스케줄, mean/sum 집계(mean이 우수), LLR clipping ∞, punctured node용 bias 비활성.</li><li>학습: iterative loop-unrolling, 전 iteration multi-loss BCE(식5), Adam SGD, 랜덤 코드워드(all-zero 학습 불가), 436개 모델 하이퍼서치.</li><li>결과: (63,45) BCH에서 weighted BP 대비 약 0.4dB 개선·iteration 3회로 BP 20회 수준, BCH 디코더 9640 weights. 5G NR LDPC는 BP와 동등(약간 이득).</li><li>한계: HW 미설계·시뮬만·AWGN 전용·MLP 매 엣지 실행으로 복잡도 BP보다 높음·코드별 재학습 필요(비universal).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GNN 학습형 메시지 업데이트(MLP)</td><td>대응 없음 (NN/딥러닝 디코더)</td><td>min-sum 대체 불가, HW 파이프라인과 무관</td></tr><tr><td>노드/엣지 iterative message passing 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>개념적 대응만, 연산 내용은 학습형이라 이식 불가</td></tr><tr><td>loop-unrolling/early stopping</td><td>partial_CRC.cpp <code>partial_crc_HW_T4()</code></td><td>조기종료는 이미 보유, GNN 방식과 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 완전 학습형 GNN은 min-sum 기반 HW bit-exact 디코더에 이식 불가하고 NAND/binary QC-LDPC 타깃도 아님.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10008601",
+  "title": "Graph Neural Networks for Channel Decoding",
+  "year": 2022,
+  "venue": "IEEE Globecom Workshops (Channel Coding beyond 5G)",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "100~1000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "BP의 노드/엣지 메시지 업데이트를 학습형 MLP로 대체한 완전 미분가능 GNN 디코더",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "NN 전면 대체·AWGN 전용·복잡도 높음·5G/BCH 타깃, binary QC-LDPC HW 이식 부적합",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10008601---graph-neural-networks-for-channel-decoding-2022-ieee-globecom-workshops---channel-coding-beyond-5g">ieee:10008601 - Graph Neural Networks for Channel Decoding (2022, IEEE Globecom Workshops - Channel Coding beyond 5G)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

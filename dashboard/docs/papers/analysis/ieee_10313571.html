@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10313571</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10313571---gradient-descent-iterative-correction-unit-for-fixed-point-parity-based-codes-2023-ieee-dft">ieee:10313571 - Gradient Descent Iterative Correction Unit for Fixed Point Parity Based Codes (2023, IEEE DFT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.615</td></tr><tr><td>부호length</td><td>26</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>실수(analog) 패리티 부호를 위한 gradient-descent symbol-update 반복복호(ML+경사하강)와 FPGA 아키텍처</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>실수(real-number/analog) 부호 대상 - binary LDPC가 아니며 (26,16) BCH 소규모 부호, 대규모 확장은 미완(향후 과제)</td></tr><tr><td>추가확인</td><td>GDBF 원본[13]이 이미 binary LDPC용이므로 실수 확장분이 아닌 원본 GDBF의 min-sum 대체 가능성만 별도 검토</td></tr></tbody></table>
+<blockquote><p>총평: ABFT/신호처리용 실수 패리티 부호에 경사하강 symbol-update를 적용한 논문으로, binary QC-LDPC NAND ECC와는 부호 도메인 자체가 달라 이식성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 실수(analog) 패리티 부호(ABFT/신호처리용), 사례연구는 patiy 기반 BCH <code>(26,16)</code> (source 16, redundant 10, <code>H = [C | I10]</code>), 열 degree 4~5, 행 degree 5~8.</li><li>문제: 실수 부호의 다중오류 정정 시 테이블 복호는 오류 수에 지수적으로 커짐, Kalman/turbo 기반 반복복호는 복잡 - 단순 반복복호 필요.</li><li>핵심가정: 고정소수점 양자화/반올림 오차를 마진 <code>ε</code>로 흡수, syndrome이 <code>|s|&gt;=ε</code>면 만족(+1)으로 간주.</li><li>핵심기법1: Wadayama의 gradient descent bit-flip(GDBF)[13]을 실수 부호로 확장 - 국소 에너지 <code>Δ^GDR_k = zero(yk-xk) + Σ zero(sm)</code>로 각 심볼 에너지 병렬 계산.</li><li>핵심식 의미: 에너지가 최대인 심볼이 오류일 가능성 최대 - ML 상관항 + 만족 syndrome 수의 합을 최소화하는 목적함수의 경사 방향.</li><li>핵심기법2(update): 이진 bit-flip과 달리 방향은 부호일치 함수 <code>sgnS(Γk)</code>(모두 동부호면 ±1, 불일치면 0), 크기는 <code>min|sm|</code> - 다중비트 변화라 보수적 갱신.</li><li>부수 트릭: 반복당 에너지 최대 심볼 1개만 갱신, sign agree가 threshold 미만이면 다음 후보로, syndrome이 threshold 이하로 근접하면 종료.</li><li>학습/최적화: Matlab 부동소수점 모델로 성능 평가 후 Fixed Point Converter로 16-bit(소수 10bit) 양자화, DPI-C SystemVerilog로 HW 검증.</li><li>결과: (26,16)은 2심볼 보장 정정이나 일부 3오류 패턴도 정정, SER&lt;=10^-4에서 iteration&lt;10, Xilinx Virtex-7에서 4706 LUT + 1179 FF @ 100 MHz.</li><li>한계: 소규모 부호(수십 심볼)만 검증, 대규모(수백~수천 심볼) 확장은 향후 과제, 소규모라 girth/사이클 등 부호특성이 약함.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>gradient-descent symbol-update 반복복호(에너지→최대→갱신)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>반복 message-passing과 다른 GDBF 계열 복호 - Prime ECC의 min-sum 루프와 계열 상이</td></tr><tr><td>실수 심볼 syndrome/에너지 계산</td><td>대응 없음</td><td>Prime ECC는 binary min-sum 전용, 실수(analog) 부호 처리 모듈 없음</td></tr><tr><td>(26,16) BCH 실수 부호 구조</td><td>대응 없음</td><td>binary QC-LDPC가 아님, 부호구조 로드(<code>Load_PCM()</code>)와 무관</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> - 실수(real-number) 패리티 부호와 소규모 BCH 대상이라 NAND용 binary QC-LDPC Prime ECC와 부호 도메인/디코더 계열이 모두 달라 직접 이식 불가.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10313571",
+  "title": "Gradient Descent Iterative Correction Unit for Fixed Point Parity Based Codes",
+  "year": 2023,
+  "venue": "IEEE DFT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.615,
+  "code_length": "26",
+  "soft_quant": "무관",
+  "key_contribution": "실수(analog) 패리티 부호를 위한 gradient-descent symbol-update 반복복호(ML+경사하강)와 FPGA 아키텍처",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "실수(real-number/analog) 부호 대상 - binary LDPC가 아니며 (26,16) BCH 소규모 부호, 대규모 확장은 미완(향후 과제)",
+  "todo_check": "GDBF 원본[13]이 이미 binary LDPC용이므로 실수 확장분이 아닌 원본 GDBF의 min-sum 대체 가능성만 별도 검토"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10313571---gradient-descent-iterative-correction-unit-for-fixed-point-parity-based-codes-2023-ieee-dft">ieee:10313571 - Gradient Descent Iterative Correction Unit for Fixed Point Parity Based Codes (2023, IEEE DFT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

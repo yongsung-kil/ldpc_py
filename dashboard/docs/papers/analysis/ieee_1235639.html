@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1235639</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1235639---a-novel-design-methodology-for-high-performance-programmable-decoder-cores-for-aa-ldpc-codes-2003-islpeddac">ieee:1235639 - A Novel Design Methodology for High-Performance Programmable Decoder Cores for AA-LDPC Codes (2003, ISLPED/DAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>2048</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>AA-LDPC(permutation-block 구조)+TDMP turbo-decoding으로 메시지 메모리 75% 절감·iteration 20~50% 감소, shuffle-exchange 라우팅 기반 programmable 디코더 코어</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>ASIC합성</td></tr><tr><td>복잡도</td><td>14mm2@0.18um</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>1.6</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>4비트 datapath·0.18um 구세대, error-floor/정정능력 개선 아닌 아키텍처·수렴속도 개선, rate-1/2 저rate 예제</td></tr><tr><td>추가확인</td><td>AA-LDPC 구조가 우리 z=32 base+circulant와 정합되는지, max-quartet가 min-sum 대비 면적/성능 이득인지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC 디코더의 메모리·interconnect 병목을 code-design/알고리즘/아키텍처/레이아웃 4계층에서 공동 최적화한 landmark HW 방법론으로, TDMP의 iteration 감소·메시지 메모리 절감은 NAND QC-LDPC 디코더에 참고가치 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>문제: 기존 LDPC 디코더는 random H의 interconnect 랜덤성 때문에 parallel 구현은 wire·area가 code length에 불리하게 스케일(<code>N(n)=24n</code>), serial 구현은 edge 4배 메모리·throughput 병목.</li><li>목표: code-design/디코딩 알고리즘/디코더 아키텍처/물리 레이아웃 4계층 공동 최적화로 memory overhead·interconnect 복잡도 해소, code-programmable 코어 생성.</li><li>AA-LDPC 부호: 길이 <code>n=BS</code>, block PCM을 <code>S×S</code> all-zero 또는 permutation 행렬 블록으로 구성 → <code>[D,B,S,c,r]-AA-LDPC</code>. 블록행 내 1들이 non-overlap이라 독립 처리 가능, rate <code>R≥1-D/B</code>.</li><li>구조적 이점: 인접 블록행 간에만 메시지 전달 → interconnect가 <code>rSlog(S)</code> (2:1)-MUX로 축소(랜덤 대비 <code>O(n)</code>→<code>O(log n)</code> 제어 오버헤드).</li><li>TDMP 알고리즘: 각 블록행을 constituent code로 보고 <code>S</code>개 MPU가 병렬로 SISO 복호하는 turbo-decoding message-passing, 블록행별 sub-iteration 순차 진행 후 posterior <code>γ</code>로 hard decision.</li><li>TDMP 이점: check-to-bit 다중 메시지 저장을 최신 1개로 대체(<code>75%</code> 메모리 절감), 수렴이 빨라 동일 SNR에서 TPMP 대비 iteration <code>20~50%</code> 감소.</li><li>저복잡도 메시지 연산: Gallager 식 대신 syndrome-trellis BCJR를 근사한 "max-quartet" 이변수 함수 <code>Q(x,y)=max(x,y)-max(x+y,0)</code>로 LUT 제거, 양자화 잡음 내성.</li><li>디코더 아키텍처: <code>S</code> MPU + 분산 메모리(λ/γ/H/π-Memory) + shuffle-exchange(Omega) 라우팅 <code>R,R^-1</code> (<code>S/2·log(S)</code> 2×2 switch), sub-iteration당 <code>(r+4)</code> cycle, iteration당 <code>(r+4)D</code> cycle.</li><li>레이아웃: parameterized macro-cell(PMC/PLC) 라이브러리로 transistor sizing·power-rail scaling을 파라미터로 core-optimizer가 power-delay-area 최적화.</li><li>구현 결과: rate-1/2, length 2048, <code>[16,32,64,6]-AA-LDPC</code>, 4-bit datapath, 0.18µm 1.8V CMOS → 14mm² (기존 [5] 대비 3.75배 소형), 1.6 Gb/s @125MHz, 760mW; 전력 memory 53.9%/MPU 37.7%/R-net 8.4%.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>TDMP turbo-decoding 이터레이션 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>블록행 순차 스케줄·layered update가 우리 Dual-Update(parity even/odd 교대)와 유사 개념, 수렴 가속 참고</td></tr><tr><td>max-quartet <code>Q(x,y)</code> 메시지 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>min-sum 대체 후보, LUT 제거·양자화 내성 관점에서 min1/min2와 면적 비교 필요</td></tr><tr><td>AA-LDPC permutation-block PCM</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>우리 base+circulant QC-LDPC와 구조 유사(둘 다 permutation/shift block), 정합성 검토 대상</td></tr><tr><td>shuffle-exchange 메시지 라우팅 R/R^-1</td><td>GT.cpp <code>Make_GT_HW()</code> (MUX edge 선택)</td><td>라우팅·MUX 축소라는 목적은 겹치나 우리는 GT/z=32 고정 병렬, 아키텍처 상이</td></tr><tr><td>분산 메모리·라우팅 병목 분석</td><td>디코더 HW 모델(z=32, HCU, GT)</td><td>LDPC HW 실병목(메모리·interconnect) 정량화가 우리 HW 정합 판단에 유용</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — 디코더 아키텍처·수렴 가속(iteration 20~50% 감소)·메시지 메모리 절감은 NAND QC-LDPC 디코더에 참고가치가 크나, AA-LDPC 부호구조·max-quartet·Omega 라우팅을 우리 z=32 min-sum/HCU/GT 구조에 그대로 이식하려면 재검증 부담이 있고 정정능력 자체 개선은 아님.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1235639",
+  "title": "A Novel Design Methodology for High-Performance Programmable Decoder Cores for AA-LDPC Codes",
+  "year": 2003,
+  "venue": "ISLPED/DAC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": 2048,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "AA-LDPC(permutation-block 구조)+TDMP turbo-decoding으로 메시지 메모리 75% 절감·iteration 20~50% 감소, shuffle-exchange 라우팅 기반 programmable 디코더 코어",
+  "hw_designed": "O",
+  "verification": "ASIC합성",
+  "complexity": "14mm2@0.18um",
+  "parallelism": "부분",
+  "throughput_gbps": 1.6,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "4비트 datapath·0.18um 구세대, error-floor/정정능력 개선 아닌 아키텍처·수렴속도 개선, rate-1/2 저rate 예제",
+  "todo_check": "AA-LDPC 구조가 우리 z=32 base+circulant와 정합되는지, max-quartet가 min-sum 대비 면적/성능 이득인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1235639---a-novel-design-methodology-for-high-performance-programmable-decoder-cores-for-aa-ldpc-codes-2003-islpeddac">ieee:1235639 - A Novel Design Methodology for High-Performance Programmable Decoder Cores for AA-LDPC Codes (2003, ISLPED/DAC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

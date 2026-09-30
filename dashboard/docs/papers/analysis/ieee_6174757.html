@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6174757</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6174757---intensity-reflection-coefficient-based-min-sum-decoding-for-low-density-parity-check-codes-2012-icact2012">ieee:6174757 - Intensity Reflection Coefficient based Min-Sum Decoding for Low Density Parity Check Codes (2012, ICACT2012)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1944</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>반복 간 syndrome 변화율 기반 IRC 계수를 MS의 CN→VN 갱신에 곱해 부호 급변 억제로 저SNR BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>802.16e wireless 코드 시뮬만, IRC 이론적 근거(음파 impedance 유추)가 약함·저SNR(1~1.5dB)에서만 이득</td></tr><tr><td>추가확인</td><td>soft LLR 정밀도(4bit+ 가정)에서 계산된 IRC가 NAND 2~3bit 양자화에서도 유효한지, iteration별 IRC 계산 지연</td></tr></tbody></table>
+<blockquote><p>총평: MS의 CN→VN 갱신에 스칼라 계수 하나 곱하는 저비용 변형으로 이식은 쉬우나, 이득이 저SNR 소폭이고 wireless 코드 시뮬뿐이며 이론적 근거가 약해 추천도 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: 802.16e regular LDPC (<code>N=1944</code>, <code>K=972</code>, rate 1/2; 추가로 2/3·3/4·5/6), AWGN 및 Rayleigh/Weibull/Log-Normal 페이딩, soft LLR 복호, 최대 20 iteration.</li><li>문제: BP는 성능 좋으나 CN의 <code>tanh</code>/<code>φ</code> 연산으로 HW 부담 큼, MS는 저복잡도지만 성능 손실 — 최소 복잡도 추가로 MS 성능을 끌어올리려 함.</li><li>핵심 기법: MS의 check→bit 노드 갱신(step b)에 IRC 계수 <code>ζ</code>를 곱함. <code>ζ = (ζ_prev - ζ_pres)^2 / (ζ_prev + ζ_pres)^2</code> 형태로, 인접 iteration의 syndrome check 값 차/합 비의 제곱.</li><li>의미: 음파가 밀도 다른 매질 경계에서 반사되는 intensity reflection coefficient를 유추 — iteration을 매질로 보고 반복 간 오차 변화를 반영, 후반 iteration에서 부호(sign) 급변 확률을 억제.</li><li><code>ζ=0</code>이면 오차 없음, <code>ζ=1</code>이면 표준 MS와 동일; VN 갱신·메시지 계산·검증은 MS와 동일.</li><li>변형: IRC-MS(iteration마다 벡터로 갱신) vs IRC-MS-Constant(상수 0.0125 고정, 복잡도 더 낮음).</li><li>복잡도(Table I): MS 상대복잡도 1 기준, IRC-MS≈1.003, IRC-MS-Constant≈1.001, BP≈7578.92 — 즉 MS 대비 거의 무시할 추가 비용.</li><li>결과: rate 1/2에서 BER≈3.7e-3 지점 MS 대비 약 0.4dB 개선 (SNR 1~1.5dB 구간); rate 2/3에서도 MS 상회하며 BP에 근접.</li><li>채널별: AWGN 최선, Weibull 페이딩 최악; 저rate(1/2)일수록 제안 알고리즘 이득 최대.</li><li>한계: 시뮬레이션만, HW/gate count 없음, 이득이 저~중 SNR 소폭, IRC의 물리 유추 근거가 약함, 비정규·non-binary는 향후 과제.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>MS check→bit 노드 갱신에 IRC 계수 곱</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal()</code></td><td>CN magnitude 산출부에 스칼라 계수 곱하는 형태로 삽입 가능</td></tr><tr><td>syndrome 기반 IRC 계산</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>반복 간 syndrome 추적 로직 추가 필요</td></tr><tr><td>iteration별 스칼라 적용</td><td>ecc_data.h <code>PARAM_LLR</code> (iteration별 테이블)</td><td>Prime의 iteration별 LLR threshold 테이블과 개념적 유사</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — CN 갱신에 계수 하나 곱하는 삽입은 쉽지만, Prime ECC의 min-sum은 이미 magnitude 양자화 테이블/적응형 LLR을 보유해 유사 효과가 있고, 논문 이득이 저SNR 소폭·wireless 코드 시뮬뿐이라 재검증 대비 이득이 불확실.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6174757",
+  "title": "Intensity Reflection Coefficient based Min-Sum Decoding for Low Density Parity Check Codes",
+  "year": 2012,
+  "venue": "ICACT2012",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "1944",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "반복 간 syndrome 변화율 기반 IRC 계수를 MS의 CN→VN 갱신에 곱해 부호 급변 억제로 저SNR BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "부분",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "802.16e wireless 코드 시뮬만, IRC 이론적 근거(음파 impedance 유추)가 약함·저SNR(1~1.5dB)에서만 이득",
+  "todo_check": "soft LLR 정밀도(4bit+ 가정)에서 계산된 IRC가 NAND 2~3bit 양자화에서도 유효한지, iteration별 IRC 계산 지연"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6174757---intensity-reflection-coefficient-based-min-sum-decoding-for-low-density-parity-check-codes-2012-icact2012">ieee:6174757 - Intensity Reflection Coefficient based Min-Sum Decoding for Low Density Parity Check Codes (2012, ICACT2012)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

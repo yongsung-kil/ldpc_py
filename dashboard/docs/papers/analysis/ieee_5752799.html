@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5752799</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee5752799---eira-ldpc-codes-on-fpga-2011-ieee-communications-letters">ieee:5752799 - eIRA LDPC Codes on FPGA (2011, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>4550</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>semi-random eIRA(dual-diagonal H2 + 비구조 H1) 부호로 BER 10^-12까지 error-floor 제거, TDMP min-sum FPGA 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.166Gbps</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>H1 랜덤 위치 저장 LUT 필요, 구조화 부호 대비 병렬도 5로 낮아 throughput 제약</td></tr><tr><td>추가확인</td><td>semi-random H1 설계기법(short-cycle 제거)이 Prime ECC의 고정 QC 구조에 이식 가능한지</td></tr></tbody></table>
+<blockquote><p>총평: dual-diagonal 인코딩 + semi-random H1로 error-floor를 BER 10^-12까지 낮춘 고rate eIRA 부호의 FPGA 실증 — 부호설계 아이디어(error-floor 대책)는 관심 대상이나 비구조 H1이라 QC 고정 코드베이스 이식 부담.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: rate-0.9 (4550,4095) 및 rate-0.84 (2043,1718) semi-random eIRA(extended IRA) LDPC, AWGN 채널, FPGA(Altera Stratix IV) 실증.</li><li>문제: 완전 구조화(QC/standard) 부호는 HW 친화적이나 정정능력 제약 + 이른 error-floor(BER~10^-7); 자기·위성·광통신 등은 낮은 floor 요구.</li><li>인코더: <code>H=[H1|H2]</code>에서 <code>H2</code>는 마지막 열 제외 weight-2인 dual-diagonal 정방행렬 → linear-time 인코딩, degree-2 노드가 자기들끼리 cycle 형성 안 함.</li><li>핵심 부호설계: 비구조 sparse <code>H1</code>의 밀도 조절 + short cycle 제거 + trapping set/near-codeword 제거 기법으로 floor 억제(cycle-free <code>H2</code>가 기반).</li><li>의미: <code>H1</code>을 자유롭게 설계할 수 있어 floor-lowering 기술을 dual-diagonal 제약 하에 적용 가능.</li><li>디코더: Mansour의 TDMP(turbo decoding message passing) 부분병렬 구현, normalized min-sum 프로세서 다수가 CN 계산 공유, pipeline register로 throughput↑.</li><li>구현 디테일: 7-bit 정밀도(HW7)/8-bit(HW8) 양자화, RAM에 채널 입력 저장(부호비트=RAM 부호), FIFO로 중간데이터 보관, <code>H1</code> 랜덤 위치용 추가 LUT.</li><li>결과(예1): max 7 iter·7bit에서 floating point 대비 &lt;0.2dB 열화, floor 없음(~10^-12), 166Mbps@129MHz, parallelism=5; 5dB 부근 평균 1.2 iter로 instant throughput 968Mbps.</li><li>결과(예2): (2043,1718) rate-0.84, 4.92dB에서 256억 코드워드 중 15 error-event로 floor 부재 확인, 75Mbps@141MHz.</li><li>한계: 병렬도 5로 낮아 throughput이 구조화 부호[9](640Mbps, parallelism 64) 대비 열세, 부호별 H1 LUT 필요, floor 수치는 Fig에만 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dual-diagonal 인코딩(H2)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 인코딩 보유 — 개념 일치</td></tr><tr><td>semi-random H1 부호설계(floor 억제)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 로드 대응, 단 Prime ECC는 QC 고정이라 비구조 H1 이식 부담 큼</td></tr><tr><td>normalized min-sum(TDMP)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>CNU_Update_New_Mag()</code></td><td>min-sum CN 연산 대응(이미 보유)</td></tr><tr><td>7-bit 양자화</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>양자화 테이블 대응</td></tr><tr><td>trapping-set/near-codeword 제거</td><td>대응 없음</td><td>Prime ECC에 명시적 post-processing 미기재</td></tr></tbody></table>
+<p>적용 가치: 중간 — error-floor를 BER 10^-12까지 낮춘 고rate 부호설계 목표는 NAND ECC와 부합하나, 핵심인 semi-random 비구조 H1이 Prime ECC의 고정 QC-LDPC 구조와 상충해 이식 부담이 크고 min-sum/dual-diagonal은 이미 보유.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5752799",
+  "title": "eIRA LDPC Codes on FPGA",
+  "year": 2011,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.9,
+  "code_length": "4550",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "semi-random eIRA(dual-diagonal H2+비구조 H1)로 BER 10^-12까지 error-floor 제거, TDMP min-sum FPGA 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.166,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "H1 랜덤 위치 저장 LUT 필요, 병렬도 5로 throughput 제약",
+  "todo_check": "semi-random H1 설계(short-cycle 제거)가 고정 QC 구조에 이식 가능한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee5752799---eira-ldpc-codes-on-fpga-2011-ieee-communications-letters">ieee:5752799 - eIRA LDPC Codes on FPGA (2011, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

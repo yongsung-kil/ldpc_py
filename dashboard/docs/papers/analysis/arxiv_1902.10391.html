@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_1902.10391</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv190210391v3---one-and-two-bit-message-passing-for-sc-ldpc-codes-with-higher-order-modulation-2019-arxiv-csit">arxiv:1902.10391v3 - One and Two Bit Message Passing for SC-LDPC Codes with Higher-Order Modulation (2019, arXiv cs.IT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>60000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>CN&lt;-&gt;VN 교환 메시지를 1~2비트로 양자화하되 4진(QMP: ±L/±H 신뢰도 구분) min-sum + DE 최적 가중치로 내부 data flow를 줄여 라우팅 혼잡 완화</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬만, AWGN+고차변조(ASK/PAS) 광통신 타깃이라 NAND 채널·라벨링과 직접 정합 안됨, 4진 메시지 가중치 2세트 DE 의존</td></tr><tr><td>추가확인</td><td>NAND RBER/hard-soft read 채널에서 QMP 임계 이득 유지 여부, block-based(비-SC) 고rate QC-LDPC에 4진 메시지 적용 시 이득과 gate/라우팅 절감 실측</td></tr></tbody></table>
+<blockquote><p>총평: 메시지 비트폭을 1~2비트로 줄여 디코더 data flow/라우팅 혼잡을 완화하는 디코더 알고리즘으로 개념적으로 min-sum과 정합하나, 광통신 고차변조/SC-LDPC 세팅이라 NAND 고rate QC-LDPC 이식엔 재정합이 필요하다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: protograph 기반 SC-LDPC(regular <code>dv=4/6</code>, rate 2/3~5/6), 고차변조(M-ASK/QAM)+확률적 진폭성형(PAS), AWGN 광링크, SE 1.0~1.5 bpcu.</li><li>문제: &gt;1Tbps 디코더는 내부 data flow <code>F=2·nc·q·d̄v</code>가 라우팅 혼잡을 유발 -&gt; 메시지 비트수 <code>q</code>를 줄여야 하지만 성능 손실 최소화 필요.</li><li>핵심 가정: BMD 비트채널은 고차변조에서 비대칭 -&gt; scrambling으로 <code>L̃k=Lk(1-2Bk)</code> 대칭화(channel adapter)해 all-zero 가정 DE 적용.</li><li>핵심 기법 1단(QMP): CN&lt;-&gt;VN 메시지를 4진 <code>{-H,-L,+L,+H}</code>(저/고 신뢰도 구분)로 양자화, CN에서 min-sum(<code>min|m|·∏sign</code>) 규칙 적용.</li><li>식 의미: 양자화 함수 <code>Ψ</code>가 threshold <code>T</code>로 부호와 신뢰도(L/H)를 동시 표현 -&gt; 같은 2비트로 TMP보다 세분화된 신뢰도 전달.</li><li>핵심 기법 2단: VN update에서 채널 LLR <code>ldec</code>에 신뢰도별 가중치 2세트(<code>w_L</code>, <code>w_H</code>)를 곱해 CN 메시지 결합, <code>w</code>는 외재채널 LLR <code>|l2(y)|</code>로 정의.</li><li>부수 트릭: 단일 상수 <code>T=1.3</code>을 전 iteration 공유해도 성능 손실 거의 없음; 가중치 양자화/공유도 미미한 손실.</li><li>학습/최적화: protograph DE로 window decoding(<code>W=15</code>) 임계 계산 및 최적 가중치 도출, MC 대신 surrogate AWGN 채널 근사(<code>H(B̆k|Y̆)=H(Bk|Y)</code>)로 초기화 간소화.</li><li>결과: SE 1.5 bpcu에서 QMP가 BMP 대비 ~0.7dB, TMP 대비 ~0.1dB(저rate 4U-0.50은 0.24dB) 이득, unquantized BP와의 gap ~0.75dB; nc=60000 유한길이서 DE 예측과 일치.</li><li>한계: HW 미설계, 시뮬만, 광통신 고차변조/PAS 전용 세팅, SC-LDPC 중심(block QC-LDPC 직접 대상 아님).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>1~2비트 양자화 메시지 passing / VN 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>decoder.h</code> <code>Get_VNU_*</code></td><td>메시지 비트폭 축소(4진)는 VN 처리/양자화부와 개념적으로 대응</td></tr><tr><td>CN min-sum 연산</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>QMP CN이 min·sign-XOR으로 이미 보유 min-sum과 동일 골격 (중복)</td></tr><tr><td>iteration별/신뢰도별 가중치 테이블</td><td>ecc_data.h <code>PARAM_LLR</code>, <code>decoder.cpp</code> <code>Get_VNU_Table_Idx()</code></td><td>DE 도출 <code>w_L</code>/<code>w_H</code> 가중치가 iteration별 LLR 테이블 구조에 대응</td></tr><tr><td>채널 soft-info / LLR 초기화</td><td>channel.cpp <code>Set_LLR_Th()</code></td><td>BMD 비트채널 대칭화·surrogate 초기화가 채널 LLR threshold 설정과 관련</td></tr><tr><td>data flow/라우팅 혼잡 완화 (HW 동기)</td><td>대응 없음(정량 HW 미설계)</td><td>라우팅 혼잡 개선을 알고리즘 동기로만 언급, RTL/gatecount 대응 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> -- 메시지 비트폭을 줄여 라우팅/data flow를 완화하는 방향은 NAND HW 디코더에 매력적이고 VN/LLR 테이블 모듈과 정합하나, min-sum CN은 이미 보유 기법이며 광통신 고차변조/SC-LDPC/PAS 세팅이라 NAND 고rate QC-LDPC·hard/soft-read 채널로의 재정합과 HW 실증이 선행되어야 한다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:1902.10391v3",
+  "title": "One and Two Bit Message Passing for SC-LDPC Codes with Higher-Order Modulation",
+  "year": 2019,
+  "venue": "arXiv cs.IT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "SC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "60000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "CN&lt;-&gt;VN 교환 메시지를 1~2비트로 양자화하되 4진(QMP: ±L/±H 신뢰도 구분) min-sum + DE 최적 가중치로 내부 data flow를 줄여 라우팅 혼잡 완화",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "HW 미설계·시뮬만, AWGN+고차변조(ASK/PAS) 광통신 타깃이라 NAND 채널·라벨링과 직접 정합 안됨, 4진 메시지 가중치 2세트 DE 의존",
+  "todo_check": "NAND RBER/hard-soft read 채널에서 QMP 임계 이득 유지 여부, block-based(비-SC) 고rate QC-LDPC에 4진 메시지 적용 시 이득과 gate/라우팅 절감 실측"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv190210391v3---one-and-two-bit-message-passing-for-sc-ldpc-codes-with-higher-order-modulation-2019-arxiv-csit">arxiv:1902.10391v3 - One and Two Bit Message Passing for SC-LDPC Codes with Higher-Order Modulation (2019, arXiv cs.IT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

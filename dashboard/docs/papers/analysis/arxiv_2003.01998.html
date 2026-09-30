@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>arxiv_2003.01998</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="arxiv200301998v5---neural-enhanced-belief-propagation-on-factor-graphs-2020-arxivaistats-2021">arxiv:2003.01998v5 - Neural Enhanced Belief Propagation on Factor Graphs (2020, arXiv/AISTATS 2021)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>96</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Graph Neural Network(FG-GNN)를 매 BP 반복마다 결합해 메시지를 보정하는 하이브리드 디코더(NEBP)로 non-Gaussian(bursty) 채널에서 표준 sum-product BP 대비 BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>GNN(MLP+GRU) 전면 결합형 sum-product 디코더로 학습 파라미터·부동소수 연산 다수 필요, NAND ASIC HW 이식에 부적합하며 부호도 (96,48) 소형 예시로 실용 rate/length 검증 없음</td></tr><tr><td>추가확인</td><td>bursty 채널 가정이 NAND read-noise(retention/read-disturb 등)와 통계적으로 부합하는지 미검증, 표준 AWGN에서는 성능 이득이 사실상 없음(σb=0에서 BP와 유사)</td></tr></tbody></table>
+<blockquote><p>총평: GNN을 결합한 신경망 강화 BP 디코더로 non-Gaussian 채널 강건성을 목표로 한 순수 알고리즘/이론 논문. binary min-sum 계열이 아닌 학습 기반 접근으로 Prime ECC(bit-exact HW min-sum 시뮬레이터)와 구조적 이질성이 커 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC 부호는 factor graph 상 belief propagation(BP, sum-product)의 특수 사례로 다뤄지며, 실험에서는 David MacKay의 "96.3.963" 코드(<code>n=96</code>, <code>k=48</code>)를 사용.</li><li>문제: 표준 BP/LDPC는 채널이 정확히 알려진(주로 Gaussian) 경우에만 최적이며, 실제로는 채널 분포가 불확실하거나 non-Gaussian(bursty noise)일 때 성능이 저하됨.</li><li>채널 모델: <code>r_i = x_i + z_i + p_i*w_i</code> (기본 AWGN <code>z_i~N(0,σc²)</code>에 확률 <code>ρ=0.05</code>로 큰 노이즈 <code>w_i~N(0,σb²)</code>가 추가되는 bursty channel, Gilbert 1960/Kim et al. 2018 기반).</li><li>핵심 기법: Graph Neural Network를 factor graph용으로 확장한 FG-GNN을 정의, 매 BP 반복 후 BP 메시지(<code>µ̃_f→x</code>, <code>µ̃_x→f</code>)를 FG-GNN 입력으로 넣어 2회 GNN 반복 후 메시지를 보정하는 하이브리드 알고리즘 NEBP(Neural Enhanced BP) 제안.</li><li>핵심 식: <code>µ_f→x^(t+1) = µ̃_f→x^t · f_s(M_f→x^t) + f_u(M_f→x^t)</code> — GNN 임베딩 <code>M_f→x</code>로부터 스칼라 배율(<code>f_s</code>)과 가산 보정(<code>f_u</code>)을 학습해 BP 메시지를 보정, <code>f_u=0</code>이면 순수 BP와 동일.</li><li>확장/보조: singleton factor(채널 사전확률)로 가는 메시지와 일반 factor 메시지를 별도 MLP로 처리, 학습은 <code>Loss = L(x_gt, p̂(x)) + R</code>로 binary cross-entropy + <code>f_u</code> 정규화 항(BP에 가깝게 유도).</li><li>구현 디테일: 전 과정 20 iteration, Adam optimizer(lr=2e-4), hidden feature 32, 활성함수 SeLU, node update는 2-layer MLP + GRU. NAND HW 친화적 양자화/근사 없음(부동소수 학습망 그대로).</li><li>학습 절차: SNR={0,1,2,3,4}dB, <code>σb~U(0,5)</code>에서 다양한 조합으로 데이터 생성해 지도학습, 검증 정확도로 조기종료.</li><li>결과: bursty noise가 커질수록(σb&gt;0) NEBP가 표준 LDPC/FG-GNN/LDPC-bursty 대비 가장 낮은 BER 달성, σb=0(순수 AWGN)에서는 표준 LDPC와 유사한 성능으로 수렴(큰 개선 없음).</li><li>한계: 소형 부호(96,48) 시뮬레이션만 수행, HW 구현·게이트카운트·throughput 전무. 통신 채널(bursty interference) 대상이며 NAND 특유의 read-noise/retention 모델과 직접 연결되지 않음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP(sum-product) 메시지 업데이트</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>Prime ECC는 min-sum(HW 근사)만 사용, full sum-product는 미지원이라 개념적 대응만 가능</td></tr><tr><td>GNN(FG-GNN) 기반 메시지 보정</td><td>대응 없음</td><td>NN/딥러닝 디코더는 프로파일 §6에서 "대응 없음"으로 명시된 항목, ASIC bit-exact 시뮬레이터와 이질적</td></tr><tr><td>VN/CN 반복 스케줄(iteration 구조)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>반복 구조 자체는 유사하나 신경망 결합 로직은 이식 불가</td></tr><tr><td>bursty 채널 모델(가우시안+간헐적 큰 노이즈)</td><td><code>channel.cpp</code></td><td>NAND의 AWGN/RBER/fixed-error 모델과 다른 통신 특화 노이즈 모델, 직접 대응 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — NN 전면 결합형 BP 디코더로 프로파일의 "NN/딥러닝 디코더는 대응 없음" 판정 기준에 정확히 해당하며, 검증도 소형 통신 부호의 시뮬레이션에 그침.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "arxiv:2003.01998v5",
+  "title": "Neural Enhanced Belief Propagation on Factor Graphs",
+  "year": 2020,
+  "venue": "arXiv/AISTATS 2021",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "96",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Graph Neural Network(FG-GNN)를 매 BP 반복마다 결합해 메시지를 보정하는 하이브리드 디코더(NEBP)로 non-Gaussian(bursty) 채널에서 표준 sum-product BP 대비 BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "GNN(MLP+GRU) 전면 결합형 sum-product 디코더로 학습 파라미터·부동소수 연산 다수 필요, NAND ASIC HW 이식에 부적합하며 부호도 (96,48) 소형 예시로 실용 rate/length 검증 없음",
+  "todo_check": "bursty 채널 가정이 NAND read-noise(retention/read-disturb 등)와 통계적으로 부합하는지 미검증, 표준 AWGN에서는 성능 이득이 사실상 없음(σb=0에서 BP와 유사)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#arxiv200301998v5---neural-enhanced-belief-propagation-on-factor-graphs-2020-arxivaistats-2021">arxiv:2003.01998v5 - Neural Enhanced Belief Propagation on Factor Graphs (2020, arXiv/AISTATS 2021)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

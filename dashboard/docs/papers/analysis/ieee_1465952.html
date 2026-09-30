@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1465952</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1465952---quantized-ldpc-decoder-design-for-binary-symmetric-channels-2005-iscas">ieee:1465952 - Quantized LDPC Decoder Design for Binary Symmetric Channels (2005, ISCAS)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>LLR 균일 양자화 + iteration별 가변 워드폭(variable quantization)으로 성능 저하 없이 VN/CN FPGA 크기 축소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상 (LUT 단위: CN 767→24 LUT, gatecount/공정 미기재)</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>BSC(bit-flip) 대상이고 히스토그램 기반 워드폭이 채널/코드 종속 → NAND soft-read LLR 분포로 재도출 필요</td></tr><tr><td>추가확인</td><td>iteration별 LLR 히스토그램 워드폭 축소가 Prime ECC 적응형 LLR 테이블(HD/2SD/3SD)과 결합해 추가 면적 이득 있는지</td></tr></tbody></table>
+<blockquote><p>총평: iteration 진행에 따라 LLR 값 분포가 좁아지는 관찰로 CN 입출력 워드폭을 반복별로 줄이는 가변 양자화 아이디어가 Prime ECC 적응형 LLR·양자화 테이블과 개념적으로 접점 있어 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: BSC(inter/intra-chip bus, SoC 배선 crosstalk) FEC용 (n,3,6)-regular LDPC(rate 1/2), LLR 기반 message passing, fully-parallel FPGA(Xilinx Virtex) 구현.</li><li>문제: 저지연 요구로 재전송 불가 → fully-parallel 디코더 필요하나 VN/CN·버스 폭이 LLR 정밀도에 비례해 HW 자원이 과다 → 성능 유지하며 정밀도 최소화가 목표.</li><li>모델: BSC(bit-flip), LLR <code>F = log P(x=+1|r)/P(x=-1|r)</code>, VNU는 입력 LLR 합, CNU는 sign 곱 + magnitude 최소연산(min-sum류 근사) 형태.</li><li>핵심기법1 (Uniform quantization): VN/CN의 LLR을 각각 스텝 <code>ε</code>, <code>ε_h</code>의 정수배로 매핑하고 정수 인덱스만 메시지로 전달 → <code>ε</code> 클수록 메시지 종류↓·HW↓; 최대 <code>ε</code>, <code>ε_h</code> 탐색.</li><li>결과 관찰: 채널 BER 조건에서 <code>ε</code>을 2까지 키워도 성능저하 미미(그 이상은 손실), <code>ε_h</code> 상한도 존재 → "near floating-point" 성능 유지하는 최대 스텝 선택.</li><li>핵심기법2 (Variable quantization): CN LLR 정수값 <code>k</code>의 히스토그램이 iteration 진행에 따라 좁아짐(1st iter 넓고 후반 협소)을 관찰 → 반복별로 CN 입출력 워드폭을 다르게 설계(수학적 정밀도는 uniform과 동일 → 무손실).</li><li>구현 디테일: CN을 반복별 워드폭 (Input 1/2/4bit, Output 1/6/8bit)으로 축소, HW 제약 시 최고정밀도 기준 단일 VN+CN loop-back 구성 가능.</li><li>학습절차: 없음(경험적 히스토그램·BER 시뮬 기반 파라미터 선택).</li><li>결과: uniform 양자화로 CN LUT 767→601 수준, variable 양자화로 CN을 iter1 24 LUT / iter2 193 / iter3 388 LUT로 대폭 축소; floating-point 대비 FER 근사 유지(최대 LLR 7 가정).</li><li>한계: 텍스트 추출본에서 수식·수치 다수 손상, code length·throughput 미보고, BSC(hard bit-flip) 특화라 NAND soft-read 분포로 재검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>LLR 균일 양자화 (VN/CN 스텝 <code>ε</code>)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등 양자화, channel.cpp <code>Set_LLR_Th()</code></td><td>양자화 magnitude 테이블 관점에서 접점, 다만 우리는 이미 HD/2SD/3SD 테이블 보유</td></tr><tr><td>iteration별 가변 워드폭 (variable quant)</td><td>ecc_data.h <code>PARAM_LLR</code>, decoder.cpp <code>Get_VNU_Table_Idx()</code></td><td>반복 구간별 LLR 테이블 개념과 유사, 워드폭 축소 아이디어는 추가 이득 여지</td></tr><tr><td>CN sign 곱 + magnitude min</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>이미 보유한 min-sum류, 신규성 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — iteration 경과에 따른 LLR 분포 축소를 이용한 반복별 워드폭 축소 아이디어가 Prime ECC의 적응형 LLR 테이블(구간별 threshold)과 결합해 면적 이득 여지가 있으나, BSC hard-flip 채널 기반이라 NAND soft-read LLR 분포로 재도출이 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1465952",
+  "title": "Quantized LDPC Decoder Design for Binary Symmetric Channels",
+  "year": 2005,
+  "venue": "ISCAS",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "LLR 균일 양자화 + iteration별 가변 워드폭(variable quantization)으로 성능 저하 없이 VN/CN FPGA 크기 축소",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "BSC(bit-flip) 대상이고 히스토그램 기반 워드폭이 채널/코드 종속 → NAND soft-read LLR 분포로 재도출 필요",
+  "todo_check": "iteration별 LLR 히스토그램 워드폭 축소가 Prime ECC 적응형 LLR 테이블(HD/2SD/3SD)과 결합해 추가 면적 이득 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1465952---quantized-ldpc-decoder-design-for-binary-symmetric-channels-2005-iscas">ieee:1465952 - Quantized LDPC Decoder Design for Binary Symmetric Channels (2005, ISCAS)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

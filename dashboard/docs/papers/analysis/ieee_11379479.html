@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11379479</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11379479---vlsi-architecture-for-high-speed-soft-decision-decoding-using-orbgrand-2025-ieee-iceconf">ieee:11379479 - VLSI Architecture for High-Speed Soft-Decision Decoding Using ORBGRAND (2025, IEEE ICECONF)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ORBGRAND(codebook-agnostic 노이즈 추측 기반 soft-decision decoding)를 파이프라인·병렬 노이즈추측 엔진, 경량 신뢰도 정렬 하드웨어, 최적화된 메모리 계층으로 VLSI 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>ORBGRAND는 min-sum 기반 message-passing LDPC 디코더와 근본적으로 다른 codebook-agnostic guessing 알고리즘으로, 부호구조(H-matrix) 자체보다 신뢰도 정렬·에러패턴 생성 방식에 의존해 이식 시 알고리즘 전면 대체 필요</td></tr><tr><td>추가확인</td><td>본문에 gatecount·구체 throughput 수치가 없어(그림에만 존재) 실제 HW 이득 규모를 정량 비교할 수 없음, LDPC 대상 실험이 특정 QC 구조인지 불명확</td></tr></tbody></table>
+<blockquote><p>총평: GRAND 계열 codebook-agnostic 디코더의 VLSI 아키텍처(파이프라인·병렬 엔진·경량 정렬) 논문으로, 알고리즘 자체는 Prime ECC의 min-sum LDPC와 이질적이나 병렬화·메모리 계층 설계 아이디어는 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC(<code>H·c^T=0</code>) 및 Polar(<code>x=u·G_N</code>) 코드 모두에 적용 가능한 codebook-agnostic soft-decision 디코더, AWGN/Rayleigh 채널, LLR <code>= 2y_i/σ²</code> 기반.</li><li>문제: 기존 soft-decision 디코더(LDPC belief propagation, Polar SCL)는 계산 복잡도·메모리 사용량이 크고 HW 처리량이 낮아 multi-Gbps 5G/6G 요구를 못 맞춤; 기존 ORBGRAND HW도 완전 병렬화 부재로 순차적 노이즈패턴 생성·정렬이 병목.</li><li>가정: 수신 LLR 벡터의 절댓값 크기로 비트 신뢰도를 정렬하고, 신뢰도가 낮은 비트부터 우선적으로 flip하는 에러패턴을 논리적 무게(logistic weight, LW) 순으로 탐색.</li><li>핵심 기법: ORBGRAND - LLR 절댓값 정렬로 permutation vector <code>ind</code>를 만들고, 각 <code>LW ≤ LW_max</code>에 대해 정수 분할(integer partition) <code>λ=(λ1,...,λP)</code>로 에러패턴 <code>e</code>를 생성.</li><li>핵심 식: 후보 코드워드는 <code>y_test = ŷ ⊕ e</code>, 유효성은 <code>H·y_test^T=0</code>(식 11)으로 검사하고 통과 시 <code>u = y_test·G^-1</code>로 메시지 복원 - 파티션 순회로 최소 무게 에러패턴부터 탐색해 ML에 근접.</li><li>확장: 파라미터 <code>LW_max</code>와 파티션 최대원소수 <code>P</code>로 탐색 복잡도-FER 트레이드오프 조절(예: 128-length polar에서 <code>LW_max=64, P≤6</code>).</li><li>HW 구현 디테일: 병렬 노이즈추측 엔진 E개로 클록당 여러 에러패턴을 동시 검사(<code>Throughput ∝ E·f_clk</code>), <code>O(log n)</code> 지연의 하드웨어 정렬기(병렬 비교기 네트워크)로 소프트웨어 정렬(<code>O(n log n)</code>) 대체, 엔진 간 파이프라이닝(한 엔진이 <code>LW_i</code> 생성 중 다른 엔진은 <code>LW_i-1</code> 검증).</li><li>학습/최적화 절차 없음(알고리즘·파라미터 선택 + HDL 아키텍처 설계).</li><li>결과: FER &lt; 10^-7(단·중간 길이 LDPC/Polar, 중간 SNR), Hard-decision GRAND 대비 최소 2dB FER 이득, 기존 GRAND 기반/전통 soft-decision 디코더 대비 복잡도 최소 한 자릿수 감소(구체 수치는 그림에만 존재).</li><li>한계: FPGA/ASIC 합성을 언급하나 본문 서술에 gatecount·정확 throughput·clock 수치가 없음(그림 4,5에만 존재해 <code>미상</code> 처리), 짧고 중간 길이 코드 대상이며 긴 블록길이·MIMO 페이딩은 future work로 남김.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>ORBGRAND 에러패턴 탐색(정수분할, 신뢰도 정렬)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Min-Sum message-passing과 전혀 다른 codebook-agnostic guessing 방식이라 이터레이션 루프 대체 불가, 대응 없음에 가까움</td></tr><tr><td>병렬 노이즈추측 엔진 / 파이프라이닝 구조</td><td>디코더 HW 모델 (z=32, pipeline 6-stage)</td><td>병렬화·파이프라인 설계 철학은 Prime ECC의 pipeline 구조와 유사하나 알고리즘 단위가 달라 직접 대응 불가</td></tr><tr><td>경량 하드웨어 신뢰도 정렬기 (<code>O(log n)</code>)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>Prime ECC는 LLR threshold 테이블 기반, 정렬 자체를 HW로 구현하지 않아 대응 없음</td></tr><tr><td>조기종료(패리티체크 통과 시 stop)</td><td><code>partial_CRC.cpp</code> <code>full_CRC.cpp</code></td><td>개념적으로 유사(유효 코드워드 발견 시 종료)하나 CRC가 아닌 parity-check 직접 검사 방식</td></tr></tbody></table>
+<blockquote><p>적용 가치: 낮음 - ORBGRAND는 min-sum message-passing과 근본이 다른 codebook-agnostic 알고리즘이라 Prime ECC 디코더 루프에 직접 이식 불가하며, 참고 가치는 병렬 엔진·경량 정렬 등 HW 설계 철학 수준에 그침.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11379479",
+  "title": "VLSI Architecture for High-Speed Soft-Decision Decoding Using ORBGRAND",
+  "year": 2025,
+  "venue": "IEEE ICECONF",
+  "portability": "하",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ORBGRAND(codebook-agnostic 노이즈 추측 기반 soft-decision decoding)를 파이프라인·병렬 노이즈추측 엔진, 경량 신뢰도 정렬 하드웨어, 최적화된 메모리 계층으로 VLSI 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "ORBGRAND는 min-sum 기반 message-passing LDPC 디코더와 근본적으로 다른 codebook-agnostic guessing 알고리즘으로, 부호구조(H-matrix) 자체보다 신뢰도 정렬·에러패턴 생성 방식에 의존해 이식 시 알고리즘 전면 대체 필요",
+  "todo_check": "본문에 gatecount·구체 throughput 수치가 없어(그림에만 존재) 실제 HW 이득 규모를 정량 비교할 수 없음, LDPC 대상 실험이 특정 QC 구조인지 불명확"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11379479---vlsi-architecture-for-high-speed-soft-decision-decoding-using-orbgrand-2025-ieee-iceconf">ieee:11379479 - VLSI Architecture for High-Speed Soft-Decision Decoding Using ORBGRAND (2025, IEEE ICECONF)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

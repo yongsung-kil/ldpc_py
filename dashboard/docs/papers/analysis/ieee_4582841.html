@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4582841</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4582841---tpcspc-decoding-over-coded-partial-response-channels-2008-ieee-conf">ieee:4582841 - TPCSPC Decoding over Coded Partial-Response Channels (2008, IEEE conf)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.89</td></tr><tr><td>부호length</td><td>289</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>TPCSPC를 col-weight-2 regular LDPC로 보고 serial bit-updating 스케줄 + MacLaurin 급수로 tanh-rule 근사(LUT 없이 adder/comparator 구현)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>자성기록 PR채널·TPCSPC(col-weight-2 SPC) 특화, HW 미합성, 고rate QC-LDPC 아님</td></tr><tr><td>추가확인</td><td>MacLaurin max* 근사가 NAND 고rate QC-LDPC min-sum 대비 이득/HW 비용, serial 스케줄 iteration당 latency</td></tr></tbody></table>
+<blockquote><p>총평: 자성기록용 TPCSPC 복호 스케줄 연구지만, serial(layered) 스케줄과 LUT-free MacLaurin check 근사는 일반 binary LDPC min-sum 대체 후보로 이식 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 자성기록 turbo equalization — 내부 PR 채널(BCJR 검출) + 외부 TPCSPC. rate-0.89 <code>(17,16)^2</code> TPCSPC, 16개 묶어 4K 데이터블록.</li><li>문제: 자성기록에서 turbo code는 복잡도 과다, 일반 LDPC는 조밀 생성행렬·대용량 LLR 메모리 부담. TPCSPC는 고rate·선형 복잡도·병렬 구조로 대안.</li><li>핵심 관점: TPCSPC를 <strong>column weight 2인 regular LDPC</strong>로 보고 SPA 복호 적용(각 행/열이 하나의 check), <code>H</code>는 (2t+2)×(t+1)^2.</li><li>스케줄 1: fully parallel — 표준 flooding SPA(단, 조기수렴 방지 위해 syndrome check 비활성).</li><li>스케줄 2: serial check-updating — check 단위 순차 갱신, 문헌의 row-column 복호와 동치임을 규명.</li><li>스케줄 3(제안): serial bit-updating — bit node의 모든 check-to-bit 메시지를 동시 생성 후 <code>z_n</code> 갱신, 다음 bit에 즉시 반영. 병렬 대비 빠른 수렴(특히 I=2).</li><li>check 근사(제안): tanh-rule을 <code>max*(0,a+b) − max*(a,b)</code>로 쓰고 보정항 <code>log(1+exp(-|a-b|))</code>을 MacLaurin 급수 <code>max{0, log2 − 0.5|a-b|}</code>로 근사 → LUT 불필요, comparator/adder/shift로 구현.</li><li>대비: 종래 min-sum은 보정항 무시로 0.2~1dB 손실, MacLaurin은 정확대비 0.1dB 손실로 min-sum보다 0.2dB 우수.</li><li>결과: serial이 parallel 대비 AWGN 1dB(@1e-4)·PR 0.5dB(@1e-5) 이득, precoder로 4.2dB 개선, ME2PR4에서 TPCSPC+MacLaurin이 length-4096 rate-8/9 random LDPC보다 0.2dB 우수.</li><li>한계: HW 미합성(정성적 구현 주장만), 자성기록 PR채널·col-weight-2 SPC 특화, gate count·throughput 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| serial bit-updating(layered) 스케줄 | decoder.cpp LDPC_Decoder() 이터레이션 루프 | 스케줄만 교체로 수렴 가속 이식 가능 |
+| MacLaurin 급수 check 근사(max*) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | min-sum CN을 LUT-free max* 근사로 교체 후보(0.2dB 개선 주장) |
+| 정확 tanh-rule / Sum-Product | 대응 없음 | Prime ECC는 min-sum, full-tanh SPA 미보유 |
+| TPCSPC(col-weight-2) 부호구조 | 대응 없음 | 고rate QC-LDPC와 부호구조 상이 |</code></pre>
+<p>적용 가치: 중간 — layered 스케줄과 LUT-free MacLaurin check 근사는 min-sum 성능 개선 후보이나, 부호구조(col-weight-2 SPC)와 채널(자성 PR)이 NAND와 달라 근사식만 발췌 이식 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4582841",
+  "title": "TPCSPC Decoding over Coded Partial-Response Channels",
+  "year": 2008,
+  "venue": "IEEE conf",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.89,
+  "code_length": "289",
+  "soft_quant": "무관",
+  "key_contribution": "TPCSPC를 col-weight-2 regular LDPC로 보고 serial bit-updating 스케줄 + MacLaurin 급수로 tanh-rule 근사(LUT 없이 adder/comparator 구현)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "자성기록 PR채널·TPCSPC(col-weight-2 SPC) 특화, HW 미합성, 고rate QC-LDPC 아님",
+  "todo_check": "MacLaurin max* 근사가 NAND 고rate QC-LDPC min-sum 대비 이득/HW 비용, serial 스케줄 iteration당 latency"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4582841---tpcspc-decoding-over-coded-partial-response-channels-2008-ieee-conf">ieee:4582841 - TPCSPC Decoding over Coded Partial-Response Channels (2008, IEEE conf)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6620707</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6620707---combinatorial-optimization-for-improving-qc-ldpc-codes-performance-2013-ieee-isit">ieee:6620707 - Combinatorial Optimization for Improving QC LDPC Codes Performance (2013, IEEE ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>1/2~3/4</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>QC-LDPC PCM을 base matrix(CDD·상관도)와 labeling(girth profile·sliding-window girth) 2단계 조합최적화로 탐색해 동일 복잡도 대비 FER/BER 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>AWGN+BPSK·무선(WiMAX 802.16) 타깃, short/moderate 길이(576~2304)로 NAND ECC급 고rate·장블록과 다름, HW 미설계</td></tr><tr><td>추가확인</td><td>탐색된 CDD/girth profile 기준이 고rate(~0.9)·bi-diagonal QC-LDPC로 확장 시에도 waterfall 이득 유지되는지, error-floor 영향</td></tr></tbody></table>
+<blockquote><p>총평: bi-diagonal(저인코딩복잡도) binary QC-LDPC의 부호설계 조합최적화 기법으로 소프트 BP FER/BER를 개선하며, 부호구성 절차 자체는 Prime ECC H-matrix 설계에 참고 가치가 있으나 무선·단블록 타깃이라 고rate NAND용 재검증 부담이 커 이식성 중.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 tailbiting(TB) 부모 convolutional 부호로 표현되는 binary QC-LDPC block code <code>(Mc, Mb)</code>이며, polynomial PCM <code>H(D)</code>의 각 원소는 monomial <code>D^wij</code>(degree matrix <code>W</code>)로 표기된다.</li><li>문제: 유한 길이(short/moderate)에서 점근 최적 degree distribution이 최적이 아니며, 무선용으로 turbo 대비 저rate·단블록에서 열세라 더 좋은 QC-LDPC가 필요하다.</li><li>모델: BPSK+AWGN(SNR/bit)에서 <code>H* = argmin FER(H,SNR)</code>을 목표로 하되 인코딩/디코딩 복잡도 제약을 둔다.</li><li>핵심 기법: 탐색을 (1) base matrix <code>B</code> + column degree distribution(CDD) <code>λs</code> 선택, (2) 선택된 <code>B</code>의 최적 labeling(degree matrix <code>W</code>) 선택의 두 독립 단계로 분리한다.</li><li>저인코딩 복잡도를 위해 <code>H(D) = [Hbd(D) | h0(D) | H(c-b)×b(D)]</code> 형태로 parity부를 bi-diagonal + 3-nonzero column <code>h0</code>로 고정 → <code>n2 ≥ c-b-1</code> 등 CDD 일부 고정.</li><li>base matrix 선택 기준: 열 간 공통위치 <code>C1</code>, 3-중복 triple <code>C2</code>, 부분그래프 girth <code>C3</code>, 최단사이클 참여열 가중치합(ACE 유사) <code>C4</code>, 최소 ACE 사이클 다중도 <code>C5</code>를 순차 적용.</li><li>degree matrix <code>W</code>(labeling) 선택 기준: Tanner graph girth <code>g ≥ gt</code>, sliding-window girth <code>gw ≥ gwt</code>를 만족하도록 열별 무작위 원소 <code>{1..M}</code> 선택.</li><li>최적화 절차: CDD → base matrix → column → labeling을 중첩 루프(Fig.1)로 탐색, 후보 <code>W</code> 약 1000개에 대해 목표 SNR FER를 몬테카를로 추정해 최종 승자 선택.</li><li>결과: <code>R=1/2,3/4</code>, <code>n=576/2304</code>, <code>c=24/32/48</code>에서 50-iter BP로 WiMAX 802.16 QC-LDPC 대비 FER/BER 유의 개선, base 16×32 부호가 [5] 및 turbo 대비 우세(짧은 길이·저rate에서 이득 큼). 최적 labeling은 girth profile이 같으면 FER 분산이 거의 없음을 histogram으로 확인.</li><li>한계: HW 미설계, 시뮬(AWGN)뿐이며 gate count/throughput 없음. 무선(WiMAX) 단블록·중저rate 타깃.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>base matrix + labeling(monomial shift) QC-LDPC PCM 구성</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC의 base+circulant shift(<code>PCM_b</code>) 구조와 개념 정합, H-matrix 설계 참고</td></tr><tr><td>bi-diagonal parity부(저인코딩 복잡도)</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code>, <code>LDPC_encoder_4KB()</code></td><td>Prime ECC 인코더가 dual-diagonal이라 bi-diagonal 구성 아이디어와 유사</td></tr><tr><td>girth/girth-profile/sliding-window girth 기반 사이클 회피</td><td>대응 없음</td><td>Prime ECC 프로파일에 부호설계 사이클 최적화 모듈 명시 없음</td></tr><tr><td>FER/BER 몬테카를로 평가 (BP 50-iter)</td><td><code>channel.cpp</code>(AWGN), <code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>성능 평가 파이프라인은 대응되나 알고리즘 자체는 부호설계</td></tr></tbody></table>
+<p>적용 가치: 중간 — bi-diagonal binary QC-LDPC의 base+labeling 조합최적화 절차는 Prime ECC의 H-matrix 설계(<code>Load_PCM</code>)·인코더(dual-diagonal)에 개념적으로 이식 가능하나, 무선 단블록·중저rate 타깃이라 고rate NAND ECC용 재탐색·재검증 부담이 크다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6620707",
+  "title": "Combinatorial Optimization for Improving QC LDPC Codes Performance",
+  "year": 2013,
+  "venue": "IEEE ISIT",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "1/2~3/4",
+  "code_length": "576~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "QC-LDPC PCM을 base matrix(CDD·상관도)와 labeling(girth profile·sliding-window girth) 2단계 조합최적화로 탐색해 동일 복잡도 대비 FER/BER 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "AWGN+BPSK·무선(WiMAX 802.16) 타깃, short/moderate 길이(576~2304)로 NAND ECC급 고rate·장블록과 다름, HW 미설계",
+  "todo_check": "탐색된 CDD/girth profile 기준이 고rate(~0.9)·bi-diagonal QC-LDPC로 확장 시에도 waterfall 이득 유지되는지, error-floor 영향"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6620707---combinatorial-optimization-for-improving-qc-ldpc-codes-performance-2013-ieee-isit">ieee:6620707 - Combinatorial Optimization for Improving QC LDPC Codes Performance (2013, IEEE ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9685732</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9685732---fpga-implementations-of-layered-minsum-ldpc-decoders-using-rcq-message-passing-2021-globecom-2021">ieee:9685732 - FPGA Implementations of Layered MinSum LDPC Decoders Using RCQ Message Passing (2021, GLOBECOM 2021)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>16384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Layered MinSum에 비균일 3/4-bit RCQ 양자화 적용, Lookup/Broadcast/Dribble 3가지 FPGA 구현법 비교</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>0.534</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>rate 0.5 PBRL(비QC-LDPC급 고rate 아님), RCQ 파라미터가 iteration/layer별 오프라인 최적화 필요</td></tr><tr><td>추가확인</td><td>3-bit RCQ가 OMS(5,7)의 error-floor 회피하는 원리, NAND hard/soft-2~3bit read와 4bit LLR 정합 여부</td></tr></tbody></table>
+<blockquote><p>총평: layered OMS 대비 3/4-bit 비균일 양자화(RCQ)로 자원↓ 성능 유지의 FPGA 실증, decoder 레이어 이식성은 있으나 rate 0.5·PBRL·오프라인 양자화 설계라 Prime ECC 고rate/hard·2~3SD 환경엔 부분 적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>부호: QC-LDPC (PBRL, protograph-based raptor-like), 길이 16384, rate 0.5. <code>L×L</code> circulant, <code>L</code>개 CN을 한 layer로 묶어 순차 처리.</li><li>문제: LDPC HW는 메시지 폭 5~7bit로 성능 희생. 3~4bit로 줄이면서 성능 유지하려 비균일 양자화 필요, 특히 irregular·layered 구조에 적용.</li><li>기법 핵심: RCQ = Reconstruction-Computation-Quantization. 양자화 <code>Q(i,l)</code>가 <code>bv</code>-bit <code>Vmn</code>을 <code>bc</code>-bit로 압축, 복원 <code>R(i,l)</code>가 역변환. <code>(i,l)</code>=iteration·layer별 동적 매핑.</li><li>CN 연산: MinSum(식3) 사용(MIN1/MIN2 + sign XOR), OMS의 offset은 RCQ에선 미포함. <code>(bc,bv)</code> 쌍으로 비트폭 표기.</li><li>의미: 비균일 threshold <code>th</code>·reconstruction <code>re</code> 테이블로 양자기 dynamic range 확장 → 3~4bit로 full-precision BP급 성능.</li><li>HW 구현 3법: Lookup(각 VN BRAM ROM), Broadcast(중앙 ROM→VN에 파라미터 배선+소형 LUT), Dribble(현재 layer 파라미터를 VN 레지스터에 저장).</li><li>구현 디테일: layered 파이프라인으로 인접 layer 중첩 처리 → RAW hazard 발생, circulant 읽기 순서 수동 조정으로 회피. AP-LLR 성장 위해 <code>Vn</code> RAM은 <code>bc+2</code> bit 저장.</li><li>최적화: RCQ 파라미터(threshold/reconstruction)는 오프라인 설계([10] 참조), iteration·layer specific.</li><li>결과: Xilinx Zynq UltraScale+, 500MHz, 6bit OMS 534Mbps@1.53dB/FER 3.67e-8/평균 7.87 iter. Broadcast RCQ(4,8): OMS(6,8) 대비 +0.03dB, 레지스터 -12%. RCQ(3,8): -0.09dB지만 LUT -15%/레지스터 -18%/routed net -13%. 3-bit RCQ는 OMS(5,7)의 FER 1e-5 위 error-floor 회피.</li><li>한계: rate 0.5 PBRL 단일 부호, gate count(ASIC)·latency 수치 없음(FPGA 자원만), iteration 감소는 없음(양자화가 목적).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Layered MinSum CN 연산(MIN1/MIN2/sign)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 min-sum과 동일 계열, layered 스케줄은 우리 Dual-Update와 비교 대상</td></tr><tr><td>RCQ 비균일 양자화 Q/R (iteration·layer별)</td><td>decoder.cpp <code>VN_Cal_HD()</code> 등, <code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>Get_VNU_Table_Idx()</code></td><td>우리 적응형 LLR 테이블과 유사 개념, 비균일 threshold/reconstruction 도입 여지</td></tr><tr><td>Broadcast/Dribble 파라미터 배선 방식</td><td>디코더 HW 모델(z=32)</td><td>메모리/라우팅 트레이드오프 참고, 우리 GT/HCU 구조와 정합 필요</td></tr><tr><td>PBRL 부호구조</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호 자체는 rate 0.5로 상이, 이식 대상 아님</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — RCQ 비균일 양자화 아이디어는 우리 적응형 LLR 테이블을 3~4bit soft로 확장할 실마리이나, rate 0.5·PBRL·오프라인 최적화 의존이라 NAND 고rate·hard/2~3SD 환경엔 재설계 필요.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9685732",
+  "title": "FPGA Implementations of Layered MinSum LDPC Decoders Using RCQ Message Passing",
+  "year": 2021,
+  "venue": "GLOBECOM 2021",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.5,
+  "code_length": "16384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Layered MinSum에 비균일 3/4-bit RCQ 양자화 적용, Lookup/Broadcast/Dribble 3가지 FPGA 구현법 비교",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": 0.534,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "rate 0.5 PBRL(NAND 고rate 아님), RCQ 파라미터가 iteration/layer별 오프라인 최적화 필요",
+  "todo_check": "3-bit RCQ가 OMS(5,7) error-floor 회피하는 원리, NAND hard/soft-2~3bit read와 4bit LLR 정합 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9685732---fpga-implementations-of-layered-minsum-ldpc-decoders-using-rcq-message-passing-2021-globecom-2021">ieee:9685732 - FPGA Implementations of Layered MinSum LDPC Decoders Using RCQ Message Passing (2021, GLOBECOM 2021)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

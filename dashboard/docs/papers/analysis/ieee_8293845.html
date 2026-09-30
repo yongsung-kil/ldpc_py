@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8293845</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8293845---hardware-efficient-node-processing-unit-architectures-for-flexible-ldpc-decoder-implementations-2018-ieee-tcas-ii">ieee:8293845 - Hardware-Efficient Node Processing Unit Architectures for Flexible LDPC Decoder Implementations (2018, IEEE TCAS-II)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>non-invertible subnode(min)용 flexible dual-tree NPU 구조: <code>3I-6</code> subnode + <code>2(I-2)</code> MUX로 forwards-backwards 대비 짧은 critical path, 802.11n에서 HW효율 122% 향상</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>다중PCM 지원 run-time 가변degree용 flexible NPU라, 단일 고정 PCM인 Prime ECC엔 flexibility 이득이 적고 4-bit MSA·FPGA만 검증</td></tr><tr><td>추가확인</td><td>우리 z=32/HCU/GT 파이프라인의 CN min-sum 유닛에 dual-tree 배치를 적용 시 실제 gate/critical-path 이득, ASIC 공정 결과</td></tr></tbody></table>
+<blockquote><p>총평: min-sum CNPU의 subnode 배치를 최적화한 순수 HW 구조 논문으로, degree 가변 flexibility가 핵심이라 고정 PCM NAND ECC엔 이득이 제한적이나 CN min-sum 유닛 최적화 아이디어는 참고 가치 있음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 하드웨어 LDPC 디코더의 Node Processing Unit(NPU) 내부 구조. NPU는 2입력-1출력 subnode 블록들의 배치로 구성. 대상 부호는 IEEE 802.11n QC-LDPC 등 다중 PCM(rate/length는 표준 참조, 본문 미명시).</li><li>문제: partially-parallel 디코더는 하나의 NPU가 여러 CN/VN을 시분할 처리 → irregular/다중PCM 지원 시 입출력 수 <code>I</code>가 run-time 가변, 이를 지원하면 HW 자원·critical path가 급증.</li><li>모델: CNPU는 <code>I=dc</code> 입출력, VNPU는 <code>I=dv+1</code>(채널 intrinsic + a posteriori 출력). 각 출력은 자신 대응 입력 제외 나머지 입력의 조합. subnode 연산은 알고리즘별로 다름(본 논문은 연산 종류에 무관한 배치 최적화).</li><li>핵심기법: 일반화된 flexible <code>dual-tree</code> NPU 구조. summing 섹션(binary tree로 전 입력 결합)과 combining 섹션(각 stage 신호 <code>Tst</code>를 이전 stage와 <code>2S-s</code> stage 신호로 결합)으로 각 출력이 <code>I-1</code> 입력 조합을 갖게 함.</li><li>핵심 식: subnode 지연 <code>D = max(2, 2⌈log2(I-1)⌉ + ...) ≈ 2⌈log2(I-1)⌉</code> → forwards-backwards의 <code>I-2</code> 대비 크게 짧은 critical path.</li><li>확장/flexibility: bypass MUX를 key subnode 출력에 배치, 활성 입력 <code>i≤b</code>(bypass threshold)면 subnode 우회 → null 입력 없이 run-time 가변 degree 지원(stochastic처럼 null 없는 연산에도 적용). clock/power-gating으로 미사용 subnode 절전.</li><li>구현 디테일: full flexibility엔 <code>2(I-2)</code> MUX만 추가. relevance 파라미터 <code>r</code>로 실제 필요한 degree 집합 <code>isup</code>만 지원하도록 불필요 MUX 제거(예: 802.11n VNPU I=13, isup={3,4,5,7,8,9,12,13}, 9 subnode 제거).</li><li>subnode 수: 제안 구조 <code>3I-6</code>(forwards-backwards와 동일)이나 critical path는 더 짧음. multi-tree(<code>~I(I-2)</code>)보다 subnode 훨씬 적음.</li><li>결과: Altera Stratix IV FPGA 합성. 4-bit unsigned min subnode(MSA CNPU) 기준, 802.11n(I=DC=22) CNPU에서 HW효율(fmax/ELB)이 multi-tree 대비 122%, forwards-backwards 대비 248% 향상. dual-tree만 inherent flexibility 보유.</li><li>한계: 순수 HW 배치 최적화(정정능력/BER 무관), FPGA 합성만(ASIC/gatecount 미제시), 이득의 상당부분이 다중PCM run-time flexibility에서 옴, 4-bit MSA 예시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>CN min-sum(min1/min2) subnode 배치</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>우리 CN min-sum 연산 유닛의 subnode 트리 배치 최적화에 참고 가능</td></tr><tr><td>dual-tree NPU 전체 / bypass MUX flexibility</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>디코더 HW 모델(z=32) CN/VN 유닛에 닿으나, 우리는 고정 PCM이라 run-time degree flexibility 이득 작음</td></tr><tr><td>MUX 기반 edge 선택(bypass)</td><td>GT.cpp <code>Make_GT_HW()</code></td><td>우리 Graph Thinning도 MUX 기반 edge 선택, 개념 유사하나 목적(축소 vs degree 가변) 상이</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — CN min-sum 유닛의 subnode 배치를 짧은 critical path로 최적화하는 아이디어는 우리 min-sum HW에 참고 가치가 있으나, 논문 이득의 핵심인 다중PCM run-time flexibility는 고정 고rate 단일 PCM을 쓰는 Prime ECC에서 대부분 불필요하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8293845",
+  "title": "Hardware-Efficient Node Processing Unit Architectures for Flexible LDPC Decoder Implementations",
+  "year": 2018,
+  "venue": "IEEE TCAS-II",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "미상",
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "non-invertible subnode(min)용 flexible dual-tree NPU 구조: 3I-6 subnode + 2(I-2) MUX로 forwards-backwards 대비 짧은 critical path, 802.11n에서 HW효율 122% 향상",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "다중PCM 지원 run-time 가변degree용 flexible NPU라, 단일 고정 PCM인 Prime ECC엔 flexibility 이득이 적고 4-bit MSA·FPGA만 검증",
+  "todo_check": "우리 z=32/HCU/GT 파이프라인의 CN min-sum 유닛에 dual-tree 배치를 적용 시 실제 gate/critical-path 이득, ASIC 공정 결과"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8293845---hardware-efficient-node-processing-unit-architectures-for-flexible-ldpc-decoder-implementations-2018-ieee-tcas-ii">ieee:8293845 - Hardware-Efficient Node Processing Unit Architectures for Flexible LDPC Decoder Implementations (2018, IEEE TCAS-II)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11539179</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11539179---ssaldpc-a-syndrome-sum-based-adaptive-ldpc-decoding-scheme-for-nand-flash-memory-2026-date-2026">ieee:11539179 - SSALDPC: A Syndrome-Sum Based Adaptive LDPC Decoding Scheme for NAND Flash Memory (2026, DATE 2026)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>직접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.9</td></tr><tr><td>부호length</td><td>18656</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>초기 하드디코딩 실패 후 syndrome sum(불만족 parity-check 수)을 RBER 대리지표로 삼아 E/B/P 3모드(추가 하드 재시도 vs 소프트 디코딩)를 적응적으로 선택해 불필요한 read-retry를 줄임</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>Min-sum 자체는 변경 없이 표준 알고리즘 사용, 기여는 상위 read-retry/모드 선택 제어 로직에 국한</td></tr><tr><td>추가확인</td><td>TL/TH 임계값은 실험 의존적(오프라인 통계 결정)이라 Prime ECC의 실제 SS-RBER 분포에서 재보정 필요</td></tr></tbody></table>
+<blockquote><p>총평: 새 디코더 알고리즘이 아니라 syndrome sum 기반 read-retry 제어 로직이며, Prime ECC의 CRC 조기종료·적응형 LLR 테이블과 유사한 레이어에 이식 가능하나 새로운 정정능력 개선은 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>3D NAND 채널, QC-LDPC 코드 <code>n=18656, R=0.9</code>, min-sum 알고리즘(MSA), 최대 반복 30회, 최대 9회 read-retry로 소프트 LLR 획득.</li><li>문제: 기존 "1회 하드 디코딩 + 다수 소프트 재시도" 고정 파이프라인은 저/중 RBER 상황에서도 불필요한 read-retry를 유발해 latency를 악화시킴.</li><li>채널모델: Gaussian Mixture Model 기반 임계전압 분포, P/E cycle(1k/3k/5k)·retention(6/9개월) 별 RBER 10⁻⁴~2×10⁻² 시뮬레이션.</li><li>핵심 기법: 첫 하드디코딩 직후 계산되는 syndrome sum <code>SS = wh(HyT mod 2)</code> (Hamming weight)를 채널 상태(RBER) 대리지표로 사용.</li><li><code>SS ≤ TL</code>이면 E-Mode(하드 디코딩만), <code>TL &lt; SS ≤ TH</code>이면 B-Mode(2차 하드 디코딩 재시도), <code>SS &gt; TH</code>이면 곧바로 P-Mode(소프트 디코딩)로 진입 — 불필요한 중간 단계 생략.</li><li>임계값 <code>TL=280, TH=350</code>은 오프라인 실측(2300 프레임)으로 SS-RBER 상관곡선을 얻어 결정 (RBER 5.61×10⁻³/7.67×10⁻³ 지점 대응).</li><li>HW 오버헤드 최소화: SS는 기존 디코더의 조기종료 검사용 Hamming weight adder-tree를 재사용, 추가로 TL/TH 저장 레지스터 2개와 소규모 제어 로직만 필요.</li><li>별도 학습/최적화 절차 없음 (임계값은 통계적 오프라인 튜닝).</li><li>결과: RBER&lt;1.4×10⁻²에서 기존 대비 read-retry 33.3% 감소, 고RBER에서 11.1~20% 감소, 기존 방식 대비 24.4%, DHD 대비 16.1% retry 감소.</li><li>한계: 순수 시뮬레이션(FPGA/ASIC 미검증), 정정능력(에러플로어/waterfall) 자체 개선은 없고 read-retry 스케줄링 최적화에 국한.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Syndrome sum 기반 모드 선택(E/B/P-Mode)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>조기종료용 syndrome/CRC 계산 로직과 유사 레이어, read-retry 제어 확장으로 이식 가능</td></tr><tr><td>Hamming weight adder-tree (SS 계산)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code> 반복 루프 내 종료판정</td><td>기존 조기종료 판정 로직에 부가 가능</td></tr><tr><td>적응형 LLR/재시도 임계값(TL, TH)</td><td><code>ecc_data.h</code> <code>PARAM_LLR</code>, <code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>iteration별 LLR threshold 테이블과 유사한 적응형 임계값 설계</td></tr><tr><td>소프트 디코딩 read-retry 트리거 로직</td><td><code>channel.cpp</code> <code>Set_R_Offset()</code></td><td>soft-read 전환 시점 결정 로직에 대응</td></tr><tr><td>Min-sum 알고리즘 자체</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>표준 MSA 그대로 사용, 변형 없음(중복 기여, 이식 가치 낮음)</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 — read-retry/모드 선택 제어 로직은 Prime ECC의 조기종료·적응형 LLR 레이어에 낮은 난이도로 이식 가능하나, 디코더 자체 성능(정정능력) 개선은 없어 가치가 제한적임.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11539179",
+  "title": "SSALDPC: A Syndrome-Sum Based Adaptive LDPC Decoding Scheme for NAND Flash Memory",
+  "year": 2026,
+  "venue": "DATE 2026",
+  "portability": "중",
+  "nand_relevance": "직접",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.9,
+  "code_length": "18656",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "초기 하드디코딩 실패 후 syndrome sum을 RBER 대리지표로 삼아 E/B/P 3모드를 적응적으로 선택해 불필요한 read-retry를 줄임",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "Min-sum 자체는 변경 없이 표준 알고리즘 사용, 기여는 상위 read-retry/모드 선택 제어 로직에 국한",
+  "todo_check": "TL/TH 임계값은 실험 의존적(오프라인 통계 결정)이라 Prime ECC의 실제 SS-RBER 분포에서 재보정 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11539179---ssaldpc-a-syndrome-sum-based-adaptive-ldpc-decoding-scheme-for-nand-flash-memory-2026-date-2026">ieee:11539179 - SSALDPC: A Syndrome-Sum Based Adaptive LDPC Decoding Scheme for NAND Flash Memory (2026, DATE 2026)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

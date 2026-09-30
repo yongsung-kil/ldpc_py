@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_6468978</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee6468978---breaking-cycles-with-dummy-bits-improved-rate-compatible-ldpc-codes-with-short-block-lengths-2013-vtc-spring">ieee:6468978 - Breaking Cycles with Dummy Bits: Improved Rate-Compatible LDPC Codes with Short Block Lengths (2013, VTC Spring)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.1~0.5</td></tr><tr><td>부호length</td><td>2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>short cycle을 많이 지나는 정보노드를 우선 선택해 dummy bit(shortening)로 제거함으로써 rate-compatible LDPC의 waterfall/error-floor 성능을 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>무선통신 rate-matching(RC 부호) 시나리오 전용이며, 단일 고정 rate NAND ECC와는 목적이 다름</td></tr><tr><td>추가확인</td><td>dummy bit 위치 선택 알고리즘(O(N^3))이 대형 block length에서 실용적인지</td></tr></tbody></table>
+<blockquote><p>총평: rate-compatible LDPC를 위한 dummy bit(shortening) 위치 최적화 기법으로 NAND 고정rate ECC와는 목적이 상이해 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate <code>R=2/3</code> 등 고정 rate mother LDPC code에 <code>Kd</code>개 dummy bit(값 0으로 고정, 송신 전 puncture)를 삽입해 다양한 effective rate <code>Reff = Keff/(Keff+M)</code>를 얻는 rate-compatible 방식.</li><li>문제: 짧은/중간 블록길이에서 Tanner graph의 short cycle이 message-passing 성능 저하의 주요 원인이며, 기존 dummy bit 삽입 방식([10],[11])은 cycle을 크게 줄이지 못함.</li><li>채널/모델: AWGN + BPSK + Belief Propagation(BP) 디코딩, dummy bit는 수신측에서 완전히 알려진 값(LLR=+∞)으로 취급.</li><li>핵심 기법: 각 정보노드 <code>i</code>를 지나는 길이 <code>l</code>의 cycle 수 <code>C_i^l</code>을 계산해, 현재 최단 girth <code>g_I</code>를 지나는 cycle 수가 가장 많은 노드부터 순서대로 dummy bit 위치로 선택(Algorithm 1, Breaking Cycles).</li><li>의미: dummy 노드는 디코더 관점에서 그래프에서 완전히 제거되는 것과 동일(관련 edge 모두 제거)하므로, cycle을 가장 많이 지나는 노드를 없애면 effective graph의 short cycle이 크게 줄어 성능이 개선됨.</li><li>확장: 계산복잡도 <code>O(N^3)</code> 문제를 해결하기 위해 cycle 수를 1회만 계산 후 선택하는 단순화 버전 Algorithm 2 제안.</li><li>구현 디테일: [18]의 message-passing 기반 cycle counting 알고리즘(<code>O(gE^2)</code>)을 노드별 cycle count로 변형해 재사용.</li><li>최적화 절차 없음(별도 학습/DE 없음, PEG mother code는 기존 구성 그대로 사용).</li><li>결과: rate 1/2 PEG(N=2304) mother code에서 <code>Kd=768</code>(Reff=1/4) 시 길이-6 cycle을 기존 대비 약 90% 감소, FER 기준 기존 방법 대비 최대 1.5dB 이득, error rate 10^-4에서 최적화 PEG 코드 대비도 waterfall 구간 근접.</li><li>한계: 이론/시뮬레이션만(HW 미설계), 무선통신 RC(rate-compatible ARQ) 시나리오 전용 설계로 고정 rate NAND ECC 맥락과는 목적이 다르며 error floor가 남음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Dummy bit insertion에 의한 rate-matching (multi-rate 지원)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 단일 고rate QC-LDPC 고정 설계로 다중 rate 지원 목적이 없어 관련성 낮음</td></tr><tr><td>Short cycle 카운팅 기반 열 선택 알고리즘</td><td>대응 없음</td><td>부호구성 알고리즘으로 코드 자체가 특정 QC-LDPC 고정이라 이식 난이도 높음</td></tr><tr><td>BP(sum-product) 디코딩</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 기반이라 BP 자체는 대응 없음, 단 이터레이션 루프 구조만 유사</td></tr></tbody></table>
+<p>적용 가치: 낮음 — 무선통신 rate-compatible 시나리오를 위한 부호구성 최적화로, 단일 고정 rate NAND binary QC-LDPC 구조와 목적/전제가 달라 이식 실익이 적음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:6468978",
+  "title": "Breaking Cycles with Dummy Bits: Improved Rate-Compatible LDPC Codes with Short Block Lengths",
+  "year": 2013,
+  "venue": "VTC Spring",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "0.1~0.5",
+  "code_length": 2304,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "short cycle을 많이 지나는 정보노드를 우선 선택해 dummy bit(shortening)로 제거함으로써 rate-compatible LDPC의 waterfall/error-floor 성능을 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "무선통신 rate-matching(RC 부호) 시나리오 전용이며, 단일 고정 rate NAND ECC와는 목적이 다름",
+  "todo_check": "dummy bit 위치 선택 알고리즘(O(N^3))이 대형 block length에서 실용적인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee6468978---breaking-cycles-with-dummy-bits-improved-rate-compatible-ldpc-codes-with-short-block-lengths-2013-vtc-spring">ieee:6468978 - Breaking Cycles with Dummy Bits: Improved Rate-Compatible LDPC Codes with Short Block Lengths (2013, VTC Spring)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

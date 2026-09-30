@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10001452</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10001452---uniform-vs-non-uniform-coarse-quantization-in-mutual-information-maximizing-ldpc-decoding-2022-globecom">ieee:10001452 - Uniform vs. Non-Uniform Coarse Quantization in Mutual Information Maximizing LDPC Decoding (2022, GLOBECOM)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>상</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.841</td></tr><tr><td>부호length</td><td>2048~8000</td></tr><tr><td>연판정</td><td>soft-2~3bit</td></tr><tr><td>핵심기여</td><td>MIM 디코더의 비균일 임계 양자화를 균일 양자화(bit-shift+clipping)로 대체해 노드 연산 복잡도 절반·지연 단축, MI 손실 0.0003 수준</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>균일CN 비교 2dc-2(비균일 (w+1)dc-2 대비), 게이트수 (wy-w-r)+(w-1) OR (절대 gatecount 미상)</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>상</td></tr><tr><td>한계,주의</td><td>성능은 비균일 대비 동등(개선 아님), 목적은 HW 복잡도 절감, HW는 게이트/비교 카운트 수준 FPGA/ASIC 미검증, non-QC regular 코드</td></tr><tr><td>추가확인</td><td>균일양자화 bit-shift 구조를 Prime ECC 3/4bit soft LLR 테이블에 적용 시 면적 절감 실측, min-approx CN과의 조합 손실(0.015~0.025dB)</td></tr></tbody></table>
+<blockquote><p>총평: 비균일 MIM 양자화를 균일(bit-shift) 양자화로 대체해 성능 손실 0.01dB 미만으로 노드 복잡도 절반 절감 — 3-bit로 4-bit OMSQ 대체 가능, Prime ECC 양자화/LLR 테이블 단순화에 바로 참조 가능.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: binary LDPC(BPSK+AWGN), flooding schedule, regular 코드 2종(R=0.841 N=2048 dc32/dv6, R=0.5 N=8000 dc6/dv3), 채널·메시지 3/4bit, 내부해상도 wφ=8.</li><li>문제: MIM(상호정보 최대) 디코더의 비균일 임계 양자화는 고해상도 비교기·임계값 메모리를 요구해 HW 복잡도가 기존 min-sum보다 큼.</li><li>접근: computational domain 방식(translation table→가감산→단일 양자화)을 유지하되 비균일 양자화를 대칭 균일 양자화로 교체.</li><li>핵심기법: 균일양자화 <code>Q(y)=sgn(y)·min(|y|/2^r+1, 2^(w-1))</code> <code>(6)</code> — r-bit right shift + clipping만으로 구현, 비교기·임계 메모리 제거.</li><li>스케일링: translation table을 <code>φ∆(t)≈(1/∆)φ(t)</code>로 정수화 <code>(3)</code>, (∆,r) grid search로 <code>max I(X;T)</code>, 경계간격 ∆2^r 조정.</li><li>VN 대칭화: 두 종류 VN(음/양 LLR 합산)으로 <code>p(xv,y)</code> 대칭 강제 <code>(4)</code> → magnitude만 양자화·translation 테이블 메모리 절반.</li><li>CN 옵션: computational-domain <code>(1)</code> 또는 최소근사 <code>(7)</code> <code>tc=∏sgn·min|tv|</code>(translation table 불필요, 최저 복잡도).</li><li>분석: 이산 density evolution으로 균일 vs 비균일 MI 비교 — CN 손실 0.0443→0.0441(0.0003), min-approx는 0.0407로 더 큰 손실.</li><li>결과: 균일이 비균일 대비 FER 손실 &lt;0.01dB, 3-bit 균일이 4-bit OMSQ와 유사 성능, min-approx CN은 comp-domain 대비 0.015~0.025dB 손실.</li><li>한계: 정정능력 개선이 아니라 동일 성능에서 HW 복잡도 절감이 목적, HW는 비교/게이트 카운트 수준(FPGA/ASIC 미검증), &lt;10^-5에서 cycle 효과는 DE 미반영.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| 균일양자화 Q(y)=bit-shift+clipping, VN 양자화 | decoder.cpp VN_Cal_HD() 등, decoder.h Get_VNU_* | VN magnitude 양자화를 shift 기반으로 단순화 |
+| translation table φ 정수 스케일링, iteration별 LLR | ecc_data.h PARAM_LLR, decoder.cpp Get_VNU_Table_Idx() | LLR 테이블 정수화·대칭화 방식 참조 |
+| CN 최소근사 (min1/min2) | decoder.cpp CNU_Update_New_Mag(), C2V_Cal_New_Sgn() | 이미 보유 min-sum과 동일 — 균일양자화만 신규 |
+| 채널 양자화 소프트리드 | channel.cpp Set_LLR_Th(), Set_R_Offset() | 3/4bit soft-read 양자화 경계 설계 |</code></pre>
+<p>적용 가치: <strong>중간</strong> — 성능 개선이 아니라 동일 성능에서 양자화 HW 복잡도를 절반 줄이는 기법이라, Prime ECC가 이미 magnitude 양자화 테이블·min-sum을 보유한 점을 고려하면 순수 신규 이득은 제한적이나 3/4bit soft LLR 테이블 단순화(면적·라우팅) 참조로는 유용하다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10001452",
+  "title": "Uniform vs. Non-Uniform Coarse Quantization in Mutual Information Maximizing LDPC Decoding",
+  "year": 2022,
+  "venue": "GLOBECOM",
+  "portability": "상",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "2048~8000",
+  "soft_quant": "soft-2~3bit",
+  "key_contribution": "MIM 디코더의 비균일 임계 양자화를 균일 양자화(bit-shift+clipping)로 대체해 노드 복잡도 절반·지연 단축, MI 손실 0.0003",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "균일CN 비교 2dc-2(비균일 (w+1)dc-2), 게이트 (wy-w-r)+(w-1) OR (절대 gatecount 미상)",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "개선",
+  "recommend": "상",
+  "caveat": "성능은 비균일 대비 동등(개선 아님), 목적은 HW 복잡도 절감, HW는 카운트 수준 FPGA/ASIC 미검증, non-QC regular",
+  "todo_check": "균일 bit-shift 양자화를 Prime ECC 3/4bit soft LLR 테이블에 적용 시 면적 절감 실측, min-approx CN 조합 손실(0.015~0.025dB)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10001452---uniform-vs-non-uniform-coarse-quantization-in-mutual-information-maximizing-ldpc-decoding-2022-globecom">ieee:10001452 - Uniform vs. Non-Uniform Coarse Quantization in Mutual Information Maximizing LDPC Decoding (2022, GLOBECOM)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

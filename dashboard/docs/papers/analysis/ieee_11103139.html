@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11103139</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11103139---hardware-acceleration-of-ldpc-encoding-based-on-cgra-2025-iccea">ieee:11103139 - Hardware Acceleration of LDPC Encoding Based on CGRA (2025, ICCEA)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호length</td><td>1000x400(row1000,col400), row weight 5, col weight 2</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>5G NR LDPC 인코딩을 CGRA(5x5 PEA)로 가속하기 위해 C-DMA(sparse→dense 압축 DMA), Branch-preprocessing(조건분기 제거), Loop Fusion-Reordering(레이어 간 루프 병합), 이종 메모리 구조(SPM+Cache)를 결합해 데이터 접근 지연 80%, 연산시간 43% 감소</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>인코더(encoder) 전용 HW 가속 아키텍처이며 복호성능(BER/error-floor) 개선과 무관, 검증도 C++ 시뮬 수준(FPGA/ASIC 합성 없음), CGRA라는 범용 재구성 아키텍처 기반이라 Prime ECC의 고정 파이프라인 HW(z=32 등)와 구조적 이질성 큼</td></tr><tr><td>추가확인</td><td>C-DMA의 sparse-to-dense 압축 방식과 이종 메모리(SPM/Cache) 분리 아이디어가 Prime ECC 인코더의 dual-diagonal PCM 로드/컬럼재배치 메모리 접근 패턴에도 적용 가능한지 확인 필요</td></tr></tbody></table>
+<blockquote><p>총평: 5G NR LDPC 인코딩의 CGRA 기반 HW 가속 아키텍처 논문으로 부호설계/복호성능과 무관한 순수 메모리·데이터플로우 최적화이며, sparse matrix 압축 및 조건분기 제거 아이디어는 인코더 메모리 라우팅 관점에서 참고 가치가 있으나 재구성형 아키텍처(CGRA) 특유의 기법이라 고정 파이프라인 HW로의 직접 이식은 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>5G NR 3GPP 표준 LDPC(QC-LDPC 계열) 인코딩을 대상으로, sparse parity-check 행렬(1000x400, sparsity 0.25%, row weight 5, col weight 2) 기반 인코딩 프로그램을 CGRA(5x5 Processing Element Array)에서 가속.</li><li>기존 FPGA 기반 LDPC 인코딩 가속기는 자원 활용률·컴파일 효율·동작주파수가 낮고, CGRA는 고주파수·저컴파일시간의 장점이 있으나 sparse matrix의 온칩 메모리 낭비, 조건분기의 정적 스케줄링 비효율, 간접주소지정으로 인한 메모리 접근 충돌 문제로 LDPC 인코딩에 그대로 적용하기 어려움.</li><li>원본 인코딩 프로그램은 4-layer 구조이며 Layer1/3에 조건분기(컬럼 인덱스 범위 판정)와 간접주소지정(주소를 먼저 읽고 그 주소로 데이터 접근)이 존재한다는 것이 핵심 가정.</li><li>핵심 기법 1: <strong>C-DMA</strong>(Compactor Embedded DMA) — DMA 모듈에 Compactor를 내장해 데이터 전송 중 sparse matrix를 (행 인덱스, 비영 열 인덱스들, end flag)의 1차원 dense 표현으로 압축, CGRA 온칩 메모리 낭비를 원천 차단.</li><li>C-DMA는 유효(비영) 데이터만 필터링해 전달하므로 대역폭 활용률이 향상되고, read port를 입력 행렬 특성에 맞춰 동적으로 확장 가능(scalable read ports).</li><li>핵심 기법 2: <strong>Branch-preprocessing</strong> — 조건분기 조건(컬럼 인덱스 &lt;K, 또는 K≤인덱스&lt;K+Z)별로 데이터를 미리 그룹화해 온칩 메모리 내 해당 위치로 전송, 연산 루프 내 조건분기 자체를 제거.</li><li>부수 기법: <strong>Loop Fusion-Reordering</strong> — Layer1 출력 순서와 Layer2 입력 순서가 불일치해 루프 병합이 불가능했던 문제를, Layer1 출력 순서를 재정렬해 Layer2가 부분 결과만으로 연산을 시작할 수 있게 하여 두 루프를 융합(반복적 메모리 load/store 제거). <strong>이종 메모리 구조</strong>로 SRAM(다중 뱅크, 순차적 주소 스트리밍)과 Cache(간접주소·랜덤 접근용, 3-way 분리)를 access 패턴별로 분리해 충돌 최소화.</li><li>학습/최적화 절차 없음(구조적 컴파일러/데이터플로우 최적화 기법).</li><li>결과: baseline(단순 Cache, 조건분기·비병합 루프) 대비 데이터 전송시간 80% 이상 감소, 구성(configuration) 시간 28.6% 감소, 연산(computation) 시간 43% 감소; 메모리 miss rate가 medium→low로 개선(메모리 크기는 512k→128k로 오히려 축소).</li><li>한계: C++ 기반 시뮬레이션 수준 검증(FPGA/ASIC 합성 미실시), 인코더 전용이며 디코더/복호성능과 무관, gatecount/throughput(Gbps) 등 정량 HW 수치 본문 미기재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>C-DMA (sparse→dense 압축 전송)</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code></td><td>인코더의 부호 PCM(<code>PCM_b_enc</code>) 로드/전개 시 sparse 표현을 압축 전송하는 아이디어는 메모리 라우팅 관점에서 참고 가능하나 CGRA 특유의 DMA 구조 전제</td></tr><tr><td>Branch-preprocessing (조건분기 제거)</td><td><code>encoder.cpp</code> <code>Column_Reordering_Dual_Update()</code></td><td>컬럼 조건별 데이터 사전 그룹화 아이디어는 dual-update 컬럼 재배치 로직과 개념적으로 유사하나 CGRA 정적 스케줄링 특유의 문제 해결책이라 고정 파이프라인 HW엔 직접 대응 낮음</td></tr><tr><td>이종 메모리 구조(SPM+Cache)</td><td><code>decoder.cpp</code>/<code>encoder.cpp</code> HW 구조(z=32, 파이프라인) 전반</td><td>순차 주소접근/랜덤 데이터접근을 분리하는 메모리 설계 원칙은 HW arch 이식 난이도 "중"에 해당(§4 표), 참고 가치 있음</td></tr><tr><td>Loop Fusion-Reordering</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix 로드 오케스트레이션과 관련 있으나 CGRA 레이어 융합은 Prime ECC의 고정 pipeline 구조와 매핑이 다름, 대응 제한적</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>중간</strong> — 복호성능 개선은 없지만 인코더의 sparse PCM 메모리 접근·압축·이종 메모리 분리 아이디어는 Prime ECC 인코더 HW 메모리 라우팅 설계에 참고할 만함.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11103139",
+  "title": "Hardware Acceleration of LDPC Encoding Based on CGRA",
+  "year": 2025,
+  "venue": "ICCEA",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "1000x400 (row weight 5, col weight 2)",
+  "soft_quant": "무관",
+  "key_contribution": "5G NR LDPC 인코딩을 CGRA(5x5 PEA)로 가속하기 위해 C-DMA(sparse→dense 압축 DMA), Branch-preprocessing(조건분기 제거), Loop Fusion-Reordering(레이어 간 루프 병합), 이종 메모리 구조(SPM+Cache)를 결합해 데이터 접근 지연 80%, 연산시간 43% 감소",
+  "hw_designed": "O",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "인코더(encoder) 전용 HW 가속 아키텍처이며 복호성능(BER/error-floor) 개선과 무관, 검증도 C++ 시뮬 수준(FPGA/ASIC 합성 없음), CGRA라는 범용 재구성 아키텍처 기반이라 Prime ECC의 고정 파이프라인 HW(z=32 등)와 구조적 이질성 큼",
+  "todo_check": "C-DMA의 sparse-to-dense 압축 방식과 이종 메모리(SPM/Cache) 분리 아이디어가 Prime ECC 인코더의 dual-diagonal PCM 로드/컬럼재배치 메모리 접근 패턴에도 적용 가능한지 확인 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11103139---hardware-acceleration-of-ldpc-encoding-based-on-cgra-2025-iccea">ieee:11103139 - Hardware Acceleration of LDPC Encoding Based on CGRA (2025, ICCEA)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

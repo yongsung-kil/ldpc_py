@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10892258</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10892258---long-haul-optical-eigenvalue-transmission-using-a-neural-network-demodulator-and-sd-fec-2025-ieee-jsac">ieee:10892258 - Long-Haul Optical-Eigenvalue Transmission Using a Neural Network Demodulator and SD-FEC (2025, IEEE JSAC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>other</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>비-가우시안 통계를 갖는 광통신 eigenvalue(NFT) 신호에서 multilabel NN이 L-value(LLR)를 계산해 표준 DVB-S2 LDPC의 SD-FEC 입력으로 사용</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>LDPC는 DVB-S2 기존 표준 그대로 사용, 부호설계·디코더 개선 없이 채널단(NN demodulator)만 기여</td></tr><tr><td>추가확인</td><td>없음</td></tr></tbody></table>
+<blockquote><p>총평: 광섬유 비선형 채널(NFT/IST) 전용 NN 복조기 연구로, LDPC는 표준(DVB-S2) 블랙박스로만 사용되어 NAND binary LDPC ECC 이식과 무관.</p></blockquote>
+<h3 id="b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</h3>
+<ol><li>시스템: inverse scattering transform(IST) 기반 optical eigenvalue 변조, on-off encoding으로 N개 eigenvalue(4개=16진, 12개=4096진)에 비트 매핑, 각 심볼이 N비트 전달.</li><li>문제: eigenvalue 검출값의 잡음 분포가 non-Gaussian이고 다중 eigenvalue 간 상관을 가져 SD-FEC용 L-value(LLR) 계산이 어려움.</li><li>모델: EDFA 증폭기의 ASE 잡음이 시간영역에서 가우시안이어도 NFT(비선형 변환) 후 eigenvalue 영역에서는 non-i.i.d./non-Gaussian 분포로 왜곡.</li><li>핵심 기법: multilabel NN(4-layer perceptron, ReLU)이 검출된 전체 eigenvalue(ζr) 실수부·허수부를 입력받아 각 비트의 사후확률 <code>p(bj=1|ζr)</code>을 sigmoid 출력으로 산출.</li><li>핵심 식: <code>Lj = log(p(bj=1|ζr)/(1-p(bj=1|ζr)))</code> — NN 출력 확률로부터 직접 LLR을 계산해 SD-FEC 디코더 입력으로 사용(<code>(14)</code>).</li><li>확장: 4096진 신호(12 eigenvalue, triangular lattice 배치)로 확장, 입출력 유닛 128/12, hidden 2층×512.</li><li>부수 트릭: eigenvalue를 실수부 기준 오름차순 정렬 후 NN 입력(순서 민감성 대응), pre-propagation 파라미터 <code>Zp=-8</code>로 스펙트럼/PAPR 압축.</li><li>학습: Adam optimizer, 조건(ii) 채택 — SD-FEC 한계 부근 OSNR(3.4dB) 데이터로 단일 NN을 학습해 전 OSNR 대역에 재사용(재학습 불필요).</li><li>결과: DVB-S2 LDPC(OH 20%) 적용 시 16진 신호는 OSNR 3.7dB 이상에서 에러-프리(NN 없는 Gaussian근사 대비 0.9dB 이득), 4096진 신호는 전송거리 600km→1200km로 확장.</li><li>한계: LDPC 자체는 표준 코드를 그대로 사용(부호설계·디코더 알고리즘 개선 없음), 오프라인 DSP 실험뿐 실시간 HW 미구현, 광섬유 비선형 채널 특화 모델로 NAND 채널과 무관.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>DVB-S2 LDPC(SD-FEC)</td><td>대응 없음</td><td>표준 LDPC를 블랙박스로만 사용, 부호구조/디코더 알고리즘 개선 없음</td></tr><tr><td>NN 기반 L-value(LLR) 계산</td><td>대응 없음</td><td>광섬유 NFT 채널 전용 demodulator, NAND read 채널과 무관</td></tr><tr><td>eigenvalue 검출/noise 모델</td><td>대응 없음</td><td>광통신 물리계층 고유 현상, NAND soft-read 양자화와 무관</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — LDPC는 기존 표준 그대로 사용되고, 논문 기여 전체가 광섬유 비선형 채널의 물리계층 복조(NN demodulator)에 국한되어 NAND binary LDPC ECC의 부호설계·디코더·HW 어느 레이어와도 접점이 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10892258",
+  "title": "Long-Haul Optical-Eigenvalue Transmission Using a Neural Network Demodulator and SD-FEC",
+  "year": 2025,
+  "venue": "IEEE JSAC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "other",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "미상",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "비-가우시안 통계를 갖는 광통신 eigenvalue(NFT) 신호에서 multilabel NN이 L-value(LLR)를 계산해 표준 DVB-S2 LDPC의 SD-FEC 입력으로 사용",
+  "hw_designed": "X",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "LDPC는 DVB-S2 기존 표준 그대로 사용, 부호설계·디코더 개선 없이 채널단(NN demodulator)만 기여",
+  "todo_check": "없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10892258---long-haul-optical-eigenvalue-transmission-using-a-neural-network-demodulator-and-sd-fec-2025-ieee-jsac">ieee:10892258 - Long-Haul Optical-Eigenvalue Transmission Using a Neural Network Demodulator and SD-FEC (2025, IEEE JSAC)</a></li><li class="h3"><a href="#b-알고리즘-요약-10줄-내외">B. 알고리즘 요약 (10줄 내외)</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

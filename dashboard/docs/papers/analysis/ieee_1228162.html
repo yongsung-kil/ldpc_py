@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1228162</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1228162---on-a-decoding-algorithm-for-ldpc-codes-based-on-the-concave-convex-procedure-2003-isit">ieee:1228162 - On a decoding algorithm for LDPC codes based on the concave-convex procedure (2003, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.504</td></tr><tr><td>부호length</td><td>486</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>Bethe free energy를 CCCP double-loop로 최소화해 BP보다 나은 오류성능의 복호</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>미상</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>double-loop(내부루프 T_in회)로 계산량 급증, HW 미설계·소규모 시뮬(n=486)뿐</td></tr><tr><td>추가확인</td><td>내부루프 반복수 T_in에 따른 오류성능·연산량 tradeoff 상세</td></tr></tbody></table>
+<blockquote><p>총평: CCCP 이중루프 복호는 계산량이 커 HW 미설계이며 min-sum 기반 Prime ECC에 이식 부적합.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 길이 <code>n=486</code>, rate 0.504의 (3,6)-regular LDPC(및 length 127 cyclic 부호), 연판정 채널에서 BP 대안 복호.</li><li>문제: BP는 수렴 보장이 없고 Bethe free energy의 정류점에 대응하나, 더 나은 오류성능의 수렴 복호가 필요.</li><li>배경: Yedidia et al.은 BP 고정점 ↔ Bethe free energy 정류점 일대일 대응을, Yuille은 이를 최소화하는 수렴 알고리즘 CCCP(concave-convex procedure)를 제시.</li><li>핵심: 이진 선형부호의 비트별 MAP 복호를 결합분포 <code>q_ij(u_Ai, x_j)</code>에 대한 Bethe free energy <code>F(q)</code> 최소화로 근사 실현.</li><li>제약: <code>Σ q_ij = q_j(x_j)</code>, <code>q_i(u_Ai)</code> 정합, 정규화(<code>Σ q=1</code>) 조건 하에서 <code>F(q)</code> 최소화.</li><li>CCCP는 outer/inner 이중 루프: outer 루프가 <code>F(q)</code>를 국소최소로 단조 감소, inner 루프가 <code>q_i, q_j, q_ij</code>의 제약 만족 보장.</li><li>절차: inner 루프를 <code>T_in</code>회 반복 → outer 루프 1회 갱신 후 <code>q_j(x_j=0)≥q_j(x_j=1)</code>로 경판정 → <code>Hx̂=0</code> 또는 outer 반복이 <code>I_out</code>(=500) 도달 시 종료.</li><li>실험: (3,6)-regular(n=486) 및 cyclic(n=127)에서 <code>T_in=3, I_out=500</code>으로 BER 측정, CCCP가 BP보다 우수.</li><li>cyclic 부호에서 <code>T_in≥3</code>이면 성능 개선 없이 평균 연산량만 단조 증가 → <code>T_in</code> 조정으로 성능 저하 없이 계산량 절감 가능.</li><li>한계: HW 미설계, 소규모 시뮬만, 이중루프로 연산량이 BP 대비 크게 증가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| CCCP 이중루프 복호 (Bethe free energy 최소화) | 대응 없음 | Prime ECC는 min-sum 반복복호; full-tanh/free-energy 최적화 방식과 무관 |
+| 비트별 MAP 근사 / q_ij 갱신 | decoder.cpp LDPC_Decoder() | 반복복호 루프라는 점만 유사, 내부 연산 구조 상이해 이식 부담 큼 |
+| 경판정 결정 규칙 | decoder.cpp VN_Cal_HD() | 최종 hard decision만 대응, 알고리즘 본체는 대응 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — Bethe free energy를 CCCP 이중루프로 최소화하는 방식은 min-sum HW 디코더인 Prime ECC와 연산구조가 근본적으로 달라 이식 부담이 크고, 계산량 급증·HW 미설계로 NAND ECC 이식 가치가 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:1228162",
+  "title": "On a decoding algorithm for LDPC codes based on the concave-convex procedure",
+  "year": 2003,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.504,
+  "code_length": "486",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "Bethe free energy를 CCCP double-loop로 최소화해 BP보다 나은 오류성능의 복호",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "미상",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "double-loop(내부루프 T_in회)로 계산량 급증, HW 미설계·소규모 시뮬(n=486)뿐",
+  "todo_check": "내부루프 반복수 T_in에 따른 오류성능·연산량 tradeoff 상세"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1228162---on-a-decoding-algorithm-for-ldpc-codes-based-on-the-concave-convex-procedure-2003-isit">ieee:1228162 - On a decoding algorithm for LDPC codes based on the concave-convex procedure (2003, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

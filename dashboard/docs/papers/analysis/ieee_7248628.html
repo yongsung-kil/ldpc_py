@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7248628</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7248628---ldpc-code-design-for-noncoherent-physical-layer-network-coding-2015-ieee-icc">ieee:7248628 - LDPC Code Design for Noncoherent Physical Layer Network Coding (2015, IEEE ICC)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>3/5, 2/3</td></tr><tr><td>부호length</td><td>64800, 2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>EXIT 차트 기반 variable-node degree distribution 최적화로 DVB-S2/WiMAX 부호를 PNC 릴레이 수신에 맞춰 재설계(eIRA·check-regular 제약 유지, 0.3~1.2dB 이득)</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>noncoherent M-FSK PNC 양방향 릴레이·Rayleigh fading 특화, detector(SOMAP) EXIT 특성에 최적화가 종속되어 NAND 채널로 이전 불가</td></tr><tr><td>추가확인</td><td>EXIT degree 최적화 방법론 자체는 일반적이나 우리 고정 QC-LDPC(dv 17, z=32) 구조·NAND LLR에 재적용 시 이득 재검증 필요</td></tr></tbody></table>
+<blockquote><p>총평: 무선 PNC 양방향 릴레이의 SOMAP detector에 맞춘 EXIT 기반 degree distribution 최적화로, 채널·복조기가 NAND와 전혀 달라 부호설계 이식가치가 낮다.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템은 noncoherent M-FSK(<code>M=4,8</code>) 물리계층 network coding(PNC) 양방향 릴레이(TWRC)의 multiple-access phase, DVB-S2(<code>N=64800, R=3/5</code>)·WiMAX(<code>N=2304, R=2/3</code>) LDPC 부호 사용.</li><li>문제: 표준 LDPC는 이 릴레이 수신(두 소스 신호의 전자기 합 + Rayleigh fading + noncoherent 복조) 조건에 최적화되어 있지 않아 error-rate 개선 여지가 있음.</li><li>채널/모델: flat Rayleigh fading <code>Y = X1H1 + X2H2 + N</code>, 복조는 super-symbol probability mapper + DNC-SOMAP, 디코더와 반복적으로 extrinsic 교환(BICM-ID), CSI(full/partial/no) 케이스 구분.</li><li>핵심 기법: Tanner graph variable-node degree distribution <code>V={dv,i:oi}</code>를 EXIT 차트 curve-fit으로 최적화 — VND/CND 전달특성이 최저 SNR에서 맞닿는 분포 선택.</li><li>핵심 식: VND 곡선 <code>IE,VND = Σ bi·J(√((dv,i-1)J^-1(IA,VND)^2 + [J^-1(IE,DET)]^2))</code> (식 (16)-(17)), CND는 <code>IE,CND = 1 - J(√(dc-1)·J^-1(1-IA,CND))</code> — 두 곡선의 EXIT threshold(맞닿는 최고 SNR)를 최소화.</li><li>제약: eIRA 부호 클래스 유지(systematic encoding 보장) — <code>H=[H1|H2]</code>에서 eIRA인 <code>H2</code>는 표준 그대로 두고 <code>H1</code>의 VN degree만 최적화, check-regular(<code>dc=11</code> DVB-S2, <code>dc=10</code> WiMAX) 유지.</li><li>detector 특성: DNC-SOMAP 출력과 network-coded bit 간 mutual info <code>IE,DET</code>를 Monte Carlo로 구해 3차 다항식 <code>fDET(x)</code>로 fit, VND 결합특성 계산에 사용.</li><li>절차: <code>M</code>·CSI 4개 구성마다 dv 조합 전수 탐색(dv2∈{3..100} 등)으로 EXIT threshold 최소 분포 선정, 해당 degree로 PCM 랜덤 생성.</li><li>결과: DVB-S2는 <code>M=8</code> partial CSI에서 약 1.2dB, WiMAX는 최대 0.4dB 개선(표준 대비 0.3~1.2dB), iteration은 100회 고정.</li><li>한계: HW 미설계·시뮬만, noncoherent FSK PNC/Rayleigh 채널 특화라 최적 degree가 SOMAP detector 특성에 종속되어 다른 채널로 이전 불가.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>VN degree distribution / PCM 재설계</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>부호구조에 닿으나 우리는 고정 QC-LDPC(VN degree 17)이며 EXIT 최적화 대상 아님</td></tr><tr><td>반복 디코딩/extrinsic 교환 루프</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>메시지패싱 구조 유사하나 detector-decoder 반복은 무선 복조기 전용</td></tr><tr><td>SOMAP detector / M-FSK 복조 EXIT 특성</td><td>대응 없음</td><td>NAND는 hard/soft-read이며 M-FSK noncoherent 복조기 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — EXIT 기반 degree 최적화 방법론 자체는 일반적이나 최적해가 무선 noncoherent FSK PNC detector에 종속되고 우리는 고정 QC-LDPC라 이식 대상이 사실상 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7248628",
+  "title": "LDPC Code Design for Noncoherent Physical Layer Network Coding",
+  "year": 2015,
+  "venue": "IEEE ICC",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": "3/5,2/3",
+  "code_length": "64800,2304",
+  "soft_quant": "무관",
+  "key_contribution": "EXIT 기반 VN degree distribution 최적화로 DVB-S2/WiMAX 부호를 PNC 릴레이 수신에 재설계(eIRA·check-regular 유지, 0.3~1.2dB 이득)",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "noncoherent M-FSK PNC 양방향 릴레이·Rayleigh fading 특화, 최적 degree가 SOMAP detector 특성에 종속되어 NAND 채널로 이전 불가",
+  "todo_check": "EXIT degree 최적화 방법론은 일반적이나 고정 QC-LDPC(dv 17, z=32)·NAND LLR에 재적용 시 이득 재검증 필요"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7248628---ldpc-code-design-for-noncoherent-physical-layer-network-coding-2015-ieee-icc">ieee:7248628 - LDPC Code Design for Noncoherent Physical Layer Network Coding (2015, IEEE ICC)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

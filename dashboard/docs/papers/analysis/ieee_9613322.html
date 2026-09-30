@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9613322</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9613322---adjustable-ordered-statistic-decoder-for-short-block-length-code-towards-urllc-2021-wcsp">ieee:9613322 - Adjustable Ordered Statistic Decoder for Short Block Length Code towards URLLC (2021, WCSP)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>OSD의 TEP likelihood·WHD 임계값 닫힌형 유도로 조기중단, full OSD 대비 재부호화 최대 80% 감소</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>OSD는 Gaussian소거+재부호화 기반 유니버설 복호기로 QC-LDPC 반복 message-passing/min-sum과 계열이 다름; 단블록(n=128)·URLLC 특화</td></tr><tr><td>추가확인</td><td>없음 (message-passing 디코더 아님, HW 미설계)</td></tr></tbody></table>
+<blockquote><p>총평: 짧은 블록코드용 OSD 조기중단 임계값 유도 논문으로, NAND QC-LDPC의 min-sum 반복 복호와 알고리즘 계열이 달라 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: 5G URLLC 단블록 부호(수십~수백 bit)를 AWGN·BPSK에서 복호. 예제 부호는 <code>C(128, 64)</code> (rate 0.5), OSD order <code>m=3</code>. LDPC/BCH 등 임의 선형블록부호에 적용.</li><li>문제: 단블록에서 MLD급 성능을 내는 OSD는 order <code>m</code>이 커질수록 검사할 test error pattern(TEP) 수 <code>Ω=Σ C(k,i)</code>가 폭증 → 실용 복잡도 확보가 과제.</li><li>모델: 수신 <code>r_i=s_i+w_i</code>, LLR <code>δ=4r_i/N0</code>, 신뢰도 <code>α_i=|r_i|</code>. 두 번의 열치환(<code>Π1</code> 신뢰도 내림차순, <code>Π2</code> Gaussian소거로 systematic화) 후 MRB(상위 k)/LRB로 분리.</li><li>핵심 기법: MRB에 대해 Hamming weight i인 TEP <code>e</code>로 재부호화 <code>c_e=(y_B⊕e)G</code> 하며, TEP likelihood <code>L_e=Σα_i</code>와 후보와 수신의 weighted Hamming distance <code>WHD D_e=Σα_i</code>를 계산.</li><li>핵심 아이디어: 정확한 TEP의 likelihood/WHD 분포가 나머지 후보들과 통계적으로 분리됨을 이용 → 임계값 <code>τ_TEP</code>, <code>τ_WHD</code>로 불필요한 재부호화·조기중단.</li><li>이론 확장: 정확·전체 TEP의 likelihood pdf(Theorem 1,2)와 정확·전체 codeword의 WHD pdf(Theorem 3,4)를 Gaussian(혼합)으로 닫힌형 유도 (compound RV / random sum Lemma 활용).</li><li>파라미터화: 요구 BLER·SNR별로 <code>θ_TEP=99%</code>, <code>θ_WHD=0.5%</code> CDF 지점에서 <code>τ_TEP</code>,<code>τ_WHD</code>를 산출해 adjustable-OSD 파라미터표 구성.</li><li>알고리즘: Algorithm 1 — 재부호화 전 <code>L(e_i)&lt;τ_TEP</code> 필터, <code>D_e≤τ_WHD</code>면 즉시 반환.</li><li>결과: Monte Carlo가 유도식과 일치; <code>C(128,64)</code>에서 4dB에 BLER <code>10^-5</code> 달성, 재부호화 연산 full OSD 대비 최대 80% 감소 (4dB: 43745→173). PPV meta-converse bound에 근접.</li><li>한계: HW 미설계, 시뮬만; 저SNR에서는 SDD가 더 우수; OSD 자체가 큰 order에서 재부호화 부담 큼.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| OSD 복호(Gaussian소거+TEP 재부호화+WHD) | 대응 없음 | Prime ECC는 min-sum 반복 message-passing 디코더로 OSD와 알고리즘 계열이 다름 |
+| soft 신뢰도 α=|r| / LLR 사용 | channel.cpp Set_LLR_Th() | LLR/soft 개념만 공유, OSD reliability 정렬은 우리 구조에 없음 |
+| WHD/likelihood 임계 조기중단 | partial_CRC.cpp partial_crc_HW_T4(), full_CRC.cpp | 조기종료 목적은 유사하나 우리는 CRC 기반, OSD 통계임계와 무관 |
+| 재부호화 c_e=(y_B⊕e)G | encoder.cpp | OSD의 systematic G 재부호화는 dual-diagonal 인코더와 목적·구조 상이 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — OSD는 QC-LDPC min-sum 반복 복호와 근본적으로 다른 유니버설 블록복호기이고 HW도 미설계라, Prime ECC 3.1에 떼어 쓸 요소가 사실상 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9613322",
+  "title": "Adjustable Ordered Statistic Decoder for Short Block Length Code towards URLLC",
+  "year": 2021,
+  "venue": "WCSP",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": 0.5,
+  "code_length": "128",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "OSD의 TEP likelihood·WHD 임계값 닫힌형 유도로 조기중단, full OSD 대비 재부호화 최대 80% 감소",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "OSD는 Gaussian소거+재부호화 기반 유니버설 복호기로 QC-LDPC 반복 message-passing/min-sum과 계열이 다름; 단블록(n=128)·URLLC 특화",
+  "todo_check": "없음 (message-passing 디코더 아님, HW 미설계)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9613322---adjustable-ordered-statistic-decoder-for-short-block-length-code-towards-urllc-2021-wcsp">ieee:9613322 - Adjustable Ordered Statistic Decoder for Short Block Length Code towards URLLC (2021, WCSP)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

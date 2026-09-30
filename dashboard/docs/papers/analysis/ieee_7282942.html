@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7282942</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7282942---asynchronous-decoding-of-ldpc-codes-over-bec-2015-isit-2015">ieee:7282942 - Asynchronous Decoding of LDPC Codes over BEC (2015, ISIT 2015)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>128</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>엣지별 랜덤 전파지연을 부여한 비동기 message passing 스케줄을 BEC에서 정의하고, 그 점근 성능이 시공간 특징을 반영한 fixed-point 적분방정식(비동기 DE)으로 완전 특성화됨을 최초 증명</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>BEC 전용·erasure 소거 스케줄 이론이라 NAND(AWGN/RBER, LLR) binary QC-LDPC의 min-sum 복호에 직접 이식 불가</td></tr><tr><td>추가확인</td><td>AWGN/BSC·soft-LLR 채널에서 비동기 스케줄이 유효한지, error-floor 영향 여부</td></tr></tbody></table>
+<blockquote><p>총평: 비동기 스케줄로 BEC 복호 시간을 줄이는 이론 결과이나 채널이 BEC로 한정되고 HW 미설계라 NAND binary QC-LDPC 이식성/추천도 모두 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널은 BEC(ε), 부호는 LDPC(Λ,P) 앙상블(시뮬은 (4,8)-regular, n=128, m=64) — Tanner graph의 spatial 특징 위에 temporal 특징 추가.</li><li>풀려는 문제: 표준 BP는 모든 메시지가 동시에 오가는 synchronous 가정을 두는데, VLSI/FPGA/뉴럴넷 등에서는 엣지 전파지연 때문에 비현실적이다.</li><li>핵심 모델: 각 엣지에 분포 <code>p_d</code>(R+ 지원, <code>p_d({0})=0</code>)에서 i.i.d. 추출한 랜덤 지연을 부여한 asynchronous 앙상블 <code>ALDPC(Λ,P,p_d)</code>.</li><li>핵심 기법: 노드가 모든 입력을 기다리지 않고 메시지 도착 즉시 (수신 엣지 제외) 나머지 출력 메시지를 갱신·전파하는 비동기 flooding 유사 스케줄.</li><li>핵심 식: 평균 erasure 함수 <code>f_ℓ(ε,t)</code>에 대해 유한깊이 DE <code>f_ℓ(ε,t)=ε·λ(1-ρ(1-f_{ℓ-1}(ε,t)))</code> (지연평균 오버바 포함) — 시간축을 가진 DE.</li><li>무한깊이(Theorem 2): fixed-point 적분방정식 <code>f_∞(ε,t)=ε·λ(1-ρ(1-f_∞(ε,t)))</code>, 초기값 t&lt;0에서 1.</li><li>Theorem 3: 최종 erasure <code>f_∞(ε)=lim_t f_∞(ε,t)</code>가 synchronous DE의 최대 fixed point와 동일 → 점근 성능은 동기 BP와 같은 임계값(ε_BP).</li><li>특수화: <code>p_d</code>가 반단위 결정론적 지연이면 식이 표준 DE(라운드당 1시간단위)로 환원됨을 보임.</li><li>결과: (4,8)-regular ε_BP≈0.38. 동기 대비 비동기가 임계값 이하(ε=0.3,0.37)에서 디코딩(가상)시간이 더 빠르게 0으로 수렴, 유한길이 BER은 동기와 근접.</li><li>한계: BEC 전용 점근 이론·시뮬만 있고 실제 HW 미설계, iteration 수치개선 명시 없음(동기가 오히려 iteration 적을 수 있음).</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>비동기 message passing 스케줄 (엣지 도착 즉시 갱신)</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>스케줄링 계층이나 BEC-erasure 전제라 min-sum LLR 루프에 그대로 이식 불가</td></tr><tr><td>비동기 DE fixed-point 적분방정식</td><td>대응 없음</td><td>BEC 전용 점근 성능 해석, HW 스케줄 설계 지표 아님</td></tr><tr><td>랜덤 전파지연 모델 (VLSI 배선 지연)</td><td>대응 없음</td><td>Prime ECC는 클록기반 pipeline(z=32)로 지연이 결정론적, 랜덤지연 가정과 불일치</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — BEC 소거 채널의 비동기 스케줄 이론으로, NAND AWGN/RBER용 binary QC-LDPC min-sum 디코더(soft-LLR)에 이식할 구체 알고리즘·HW 구조가 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7282942",
+  "title": "Asynchronous Decoding of LDPC Codes over BEC",
+  "year": 2015,
+  "venue": "ISIT 2015",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": 0.5,
+  "code_length": "128",
+  "soft_quant": "무관",
+  "key_contribution": "엣지별 랜덤 전파지연 기반 비동기 message passing 스케줄을 BEC에서 정의, 점근 성능이 시공간 특징 반영 fixed-point 적분방정식으로 완전 특성화됨을 최초 증명",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "개선",
+  "recommend": "하",
+  "caveat": "BEC 전용·erasure 소거 스케줄 이론이라 NAND(AWGN/RBER, LLR) binary QC-LDPC의 min-sum 복호에 직접 이식 불가",
+  "todo_check": "AWGN/BSC·soft-LLR 채널에서 비동기 스케줄이 유효한지, error-floor 영향 여부"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7282942---asynchronous-decoding-of-ldpc-codes-over-bec-2015-isit-2015">ieee:7282942 - Asynchronous Decoding of LDPC Codes over BEC (2015, ISIT 2015)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

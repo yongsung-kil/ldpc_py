@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8473793</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8473793---ldpc-codes-derived-from-quasi-cyclic-code-design-suitable-for-optical-communications-2018-icton">ieee:8473793 - LDPC Codes Derived from Quasi-cyclic Code Design Suitable for Optical Communications (2018, ICTON)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>SC-LDPC</td></tr><tr><td>부호rate</td><td>0.706~0.76</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>large-girth QC-LDPC를 copy-and-shift로 SC-LDPC화, coupling으로 coding gain 0.3~0.6dB·error-floor 개선</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>광통신 타깃·rate loss 존재, coupling으로 girth 감소 위험, Imax 36→108로 iteration/latency 증가</td></tr><tr><td>추가확인</td><td>SC 구조가 NAND 고rate·저latency 요구와 상충하는지, base QC 부호length(Kb) 실제값</td></tr></tbody></table>
+<blockquote><p>총평: 광통신용 SC-LDPC copy-and-shift 구성법으로 coding gain은 얻으나 rate loss·iteration 3배 증가로 NAND ECC 이식가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: binary AWGN + BPSK 채널에서 rate-adaptive FEC를 목표로 SC-LDPC를 QC-LDPC 기반으로 구성, FPGA(Kintex UltraScale kcu105) 에뮬레이션.</li><li>문제: 단일 QC-LDPC block code는 rate 고정·coding gain 한계 → threshold saturation을 활용한 SC로 gain 확보하되 HW 복잡도를 base와 비슷하게 유지하려 함.</li><li>base 부호: permutation matrix 기반 large-girth QC-LDPC <code>(J=3, K=15, b=1129)</code>, girth-8, rate <code>R ≥ 1 − J/K</code>, codeword length <code>Kb</code>.</li><li>핵심 기법: SC 구성은 base QC block을 <code>copy-and-shift</code>로 c번 복사·대각 배치. sub-block 단위 coupling으로 regular 부호에 irregularity(높은 column weight) 도입.</li><li>핵심 식: SC codeword length <code>[(c×K) − m×(c−1)]×b</code>, c=coupled base 수, m=coupling length. coupling으로 rate가 감소(gain의 대가).</li><li>확장: 동일 base를 재사용하므로 H-matrix MEM은 그대로, coupling length만 파라미터화 → 여러 rate 부호를 단일 아키텍처로 지원.</li><li>디코더 트릭: layered scaled min-sum(scale 0.75), CNP는 tree 구조 min 탐색, VNP는 sum. 8-bit uniform 양자화로 정밀도 error-floor 방지.</li><li>HW: SC 디코더는 APP MEM이 c배 필요하나 layer index를 CNP/VNP에 추가해 empty sub-matrix 공간 미할당 → 메모리가 coupling length m과 독립인 unified 구조.</li><li>결과: SC gain 0.3~0.6dB, error floor 미관측(≤1E-14). effective rate c=3,m=3/5/7 → 0.76/0.733/0.706. Imax QC=36, SC=108, 각 layer 12회 갱신.</li><li>한계: rate loss, coupling length↑ 시 girth 감소로 cycle 유입 위험, iteration/latency 대폭 증가, 광통신 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>layered scaled min-sum(scale 0.75), CNP tree min</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum 보유(중복), scaling factor 참고 정도</td></tr><tr><td>8-bit uniform LLR 양자화</td><td>decoder.cpp <code>VN_Cal_HD()</code>, <code>ecc_data.h</code> <code>PARAM_LLR</code></td><td>양자화 개념 겹침, hard/soft-2~3bit 대비 8bit는 과다</td></tr><tr><td>QC base → SC copy-and-shift 부호구성</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>H-matrix 재설계 영역, 고정 QC 부호에 SC 도입은 재검증 부담 큼(이식난이도 높음)</td></tr><tr><td>layer-index 기반 APP MEM 절약 HW</td><td>대응 없음</td><td>SC 특유 메모리 구조, Prime ECC(z=32, HCU/GT)와 정합 안됨</td></tr></tbody></table>
+<p><strong>적용 가치</strong>: 낮음 — 광통신용 SC-LDPC로 rate loss·iteration 3배·latency 악화가 NAND 고rate 저latency 요구와 상충하고, min-sum/양자화는 이미 보유해 신규 이식 이득이 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8473793",
+  "title": "LDPC Codes Derived from Quasi-cyclic Code Design Suitable for Optical Communications",
+  "year": 2018,
+  "venue": "ICTON",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "SC-LDPC",
+  "code_rate": "0.706~0.76",
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "large-girth QC-LDPC를 copy-and-shift로 SC-LDPC화, coupling으로 coding gain 0.3~0.6dB·error-floor 개선",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "X",
+  "latency": "악화",
+  "recommend": "하",
+  "caveat": "광통신 타깃·rate loss 존재, coupling으로 girth 감소 위험, Imax 36→108로 iteration/latency 증가",
+  "todo_check": "SC 구조가 NAND 고rate·저latency 요구와 상충하는지, base QC 부호length(Kb) 실제값"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8473793---ldpc-codes-derived-from-quasi-cyclic-code-design-suitable-for-optical-communications-2018-icton">ieee:8473793 - LDPC Codes Derived from Quasi-cyclic Code Design Suitable for Optical Communications (2018, ICTON)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

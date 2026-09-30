@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4313268</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4313268---implementation-of-a-flexible-encoder-for-structured-low-density-parity-check-codes-2007-pacrim07">ieee_4313268 - Implementation of a Flexible Encoder for Structured Low-Density Parity-Check Codes (2007, PACRIM'07)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>encoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.83</td></tr><tr><td>부호length</td><td>576~2304</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>IEEE 802.16e 구조화 QC-LDPC용 코드rate/length 가변 인코더를 dual-diagonal 근사(H_b2a/H_b2b 분해) 기반으로 FPGA에 파이프라인 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>FPGA</td></tr><tr><td>복잡도</td><td>3391~12727 LE@Stratix EP1S25/80</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>3~6 (I/O serialization 고려 시 0.422)</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>N/A</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>Richardson-Urbanke 근사 상삼각화 기반 dual-diagonal 인코딩으로 Prime ECC의 인코더 구조와 개념적으로 유사(이미 보유), rate/length 가변성만 차별점</td></tr><tr><td>추가확인</td><td>IEEE 802.16e 표준 H-matrix 고정 구조 의존이라 임의 QC-LDPC로 일반화되는지 불명확</td></tr></tbody></table>
+<blockquote><p>총평: 표준(802.16e) QC-LDPC의 rate/length 가변 인코더를 FPGA에 파이프라인 구현한 것으로, 인코딩 알고리즘 자체는 Richardson-Urbanke류 dual-diagonal 근사이며 Prime ECC가 이미 채택한 접근과 유사해 신규성 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: IEEE 802.16e 표준 QC-LDPC, base matrix <code>H_b</code>(m_b×n_b, n_b=24) 확장 factor <code>z=n/24</code>, code rate 1/2, 2/3, 3/4, 5/6, code length 576~2304.</li><li>문제: 표준 LDPC 인코딩(<code>P = H_b2^-1 H_b1 S</code>)은 quadratic 복잡도 및 H_b2^-1의 dense화 문제로 하드웨어 구현이 비효율적.</li><li>핵심 가정: base matrix <code>H_b</code>를 <code>H_b1</code>(systematic, size m_b×k_b)과 <code>H_b2</code>(parity, size m_b×m_b)로 분할, <code>H_b2</code>를 다시 <code>H_b2a</code>(홀수 weight 3-column, 상하단 동일 shift) + <code>H_b2b</code>(dual-diagonal 구조)로 분해.</li><li>핵심 기법: <code>V = H_b1·S</code> 벡터 계산 후 <code>H_b2·P = V</code>를 순차적으로 풀어 parity bit 계산 (<code>p0 = v0+v1+...+v_{mb-1}</code> XOR, 이후 <code>p1=v0-c(0,0)p0</code> 등 재귀식).</li><li>핵심 식 의미: dual-diagonal 구조 덕분에 <code>H_b2</code> 역행렬 계산 없이 XOR·circular shift 연산만으로 parity를 순차 도출 가능 → HW 면적 절감.</li><li>확장: 두 단계(V 계산, P 계산)를 2-stage 파이프라인으로 겹쳐 처리해 처리량 향상 (첫 블록 P 계산 중 다음 블록 V 계산 동시 수행).</li><li>부수 트릭: shift 값이 z/2보다 크면 우측, 작으면 좌측 circular shift로 최소 클록수 사용(z/2 클록/스텝); rate/length에 따라 base matrix shift 값을 스케일링(수식 9,10)해 재사용.</li><li>학습/최적화 절차 없음(고정 표준 구조 기반 설계).</li><li>결과: Stratix FPGA(EP1S25/80) 합성 결과 LE 3391~12727, throughput 3~6Gbps(I/O 직렬화 미고려), I/O 직렬화 고려 시 상수 422Mbps(선행연구 2.6Mbps 대비 개선).</li><li>한계: FPGA 합성 결과만 제시(ASIC 미검증), 인코더만 다루며 디코더/정정능력 관련 내용 없음, IEEE 802.16e 고정 표준 구조 의존.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>dual-diagonal 기반 parity 계산 (H_b2a/H_b2b 분해)</td><td><code>encoder.cpp</code> <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal(shuffled 옵션 포함) 인코딩을 이미 채택 — 개념적으로 중복</td></tr><tr><td>V=H_b1·S 벡터-벡터 곱 (circular shift 기반)</td><td><code>encoder.cpp</code> <code>Generate_PCM_encoding()</code></td><td>QC circulant shift 곱 연산으로 유사한 부호 PCM 처리 로직에 대응</td></tr><tr><td>rate/length 가변(base matrix scaling) 설계</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 특정 QC-LDPC(H-matrix) 고정 — 가변 rate/length 지원은 별도 재검증 필요</td></tr><tr><td>2-stage 인코딩 파이프라인</td><td><code>encoder.cpp</code></td><td>파이프라인 개념은 이미 pipeline 6-stage 구조로 반영됨</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — dual-diagonal 인코딩 자체는 Prime ECC가 이미 보유한 기법이며, 이 논문의 주된 기여(802.16e 표준 rate/length 가변성)는 Prime ECC의 특정 QC-LDPC 고정 구조와 맞지 않아 재검증 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4313268",
+  "title": "Implementation of a Flexible Encoder for Structured Low-Density Parity-Check Codes",
+  "year": 2007,
+  "venue": "PACRIM'07",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "encoder",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.83",
+  "code_length": "576~2304",
+  "soft_quant": "무관",
+  "key_contribution": "IEEE 802.16e 구조화 QC-LDPC용 코드rate/length 가변 인코더를 dual-diagonal 근사 기반으로 FPGA에 파이프라인 구현",
+  "hw_designed": "O",
+  "verification": "FPGA",
+  "complexity": "3391~12727 LE@Stratix EP1S25/80",
+  "parallelism": "부분",
+  "throughput_gbps": 6,
+  "mem_routing": "언급",
+  "correction_gain": "N/A",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "Richardson-Urbanke 근사 상삼각화 기반 dual-diagonal 인코딩으로 Prime ECC의 인코더 구조와 개념적으로 유사(이미 보유), rate/length 가변성만 차별점",
+  "todo_check": "IEEE 802.16e 표준 H-matrix 고정 구조 의존이라 임의 QC-LDPC로 일반화되는지 불명확"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4313268---implementation-of-a-flexible-encoder-for-structured-low-density-parity-check-codes-2007-pacrim07">ieee_4313268 - Implementation of a Flexible Encoder for Structured Low-Density Parity-Check Codes (2007, PACRIM&#x27;07)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

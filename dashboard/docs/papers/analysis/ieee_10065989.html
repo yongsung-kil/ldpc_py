@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10065989</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10065989---sign-aided-adaptive-noisy-gradient-descent-bit-flipping-algorithm-for-ldpc-codes-2022-ieee-iccc">ieee:10065989 - Sign Aided Adaptive Noisy Gradient Descent Bit-Flipping Algorithm for LDPC Codes (2022, IEEE ICCC)</h3>
+<h3 id="a-분류표">A. 분류표</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>1008</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>반복 플립 이력(χ 카운터)에 따라 잡음섭동 평균을 적응 조정 + correlation항 부호로 미플립 오류비트에 플립 기회 부여</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>개선</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>soft-info aided BF는 채널 LLR(soft-read) 의존 — Prime ECC의 min-sum과 계열 상이, HW 미합성</td></tr><tr><td>추가확인</td><td>비트별 l-bit 카운터·2^(l+1) 잡음 평균 테이블의 HW 오버헤드가 QC-LDPC(z=32) 병렬 구조에서 감당되는지</td></tr></tbody></table>
+<blockquote><p>총평: BP/MS에 못 미치는 BF 계열 내 개선으로 정정능력·수렴 향상은 명확하나, Prime ECC가 이미 쓰는 min-sum 대비 성능 열위이고 별도 BF 파이프라인이 필요해 이식 실익이 제한적.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: binary LDPC, BPSK, AWGN. rate 1/2, N=1008 (PEGReg504×1008 / PEGirReg504×1008, dv=3 dc=6), Tmax=100~150.</li><li>문제: GDBF 계열은 국소최대에 갇혀 오류 코드워드로 수렴, 특히 soft-info-aided GDBF는 반복 플립(repeated flip)으로 복호 실패.</li><li>모델: bipolar syndrome <code>s_i=∏ x_j</code>, 반전함수(energy) <code>E_j = x_j y_j + Σ a_ji s_i + q_j</code>, 잡음 <code>q_j~R(η_k,σ²)</code>.</li><li>핵심 기법 1: 마지막 플립 이후 경과 iteration을 세는 l-bit 카운터 <code>χ_j</code>로 잡음 평균을 적응 선택 (<code>η_0≥η_1≥…≥η_{2^l-1}=0</code>), 최근 플립 비트엔 큰 평균 → 재플립 억제.</li><li>식 의미: 국소최대 탈출용 랜덤섭동을 "무표적"에서 플립 이력 기반 "표적"으로 바꿔 진동을 줄임.</li><li>핵심 기법 2: correlation항 부호 <code>sign(x_j y_j)</code>로 VN을 2클래스 분할, class1(대부분 미플립)엔 평균에서 상수 <code>δ</code>를 빼 더 작은 평균 부여 → 미플립 오류비트에 플립 기회.</li><li>구현 디테일: ANGDBF는 l=0,δ=0인 특수 경우. 복잡도표(Table I): ANGDBF 대비 N-1 logical add, N(2^l-1) selection 추가뿐.</li><li>최적화: λ1=-0.3, λ2=1, θ=0 고정, η={1.5,1,0.5,0}, δ=0.3, l=2를 Monte Carlo로 선정.</li><li>결과: ANGDBF 대비 BER=10^-6에서 약 0.5dB 이득, 평균 iteration 감소(Table II), 동일 BER 도달에 Tmax 150→85로 단축, f(x) 전역최대 도달 65 iter(ANGDBF는 150내 실패).</li><li>한계: HW 미설계(gate count/throughput/합성 없음), MS/BP 대비 여전히 성능 열위, AWGN·rate1/2 시뮬 한정.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>반전함수·플립 결정 루프 (GDBF)</td><td>decoder.cpp <code>LDPC_Decoder()</code></td><td>Prime ECC는 min-sum 메시지 패싱, BF 계열이 아니라 이터레이션 루프 전면 교체 필요</td></tr><tr><td>syndrome/에너지 계산</td><td>decoder.cpp <code>C2V_Cal()</code></td><td>CN 연산 재사용 불가 — BF는 syndrome sign만 사용</td></tr><tr><td>채널 soft-info(y) / LLR</td><td>channel.cpp <code>Set_LLR_Th()</code>, <code>Set_R_Offset()</code></td><td>soft-info-aided BF의 y 입력에 대응, soft-read 양자화 공유 가능</td></tr><tr><td>NN/BF 대체 디코더</td><td>대응 없음</td><td>GDBF 파이프라인은 Prime ECC에 없음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — Prime ECC는 이미 min-sum(BP 근사) 기반이라 BF 계열보다 우수하며, SANGDBF 도입은 별도 BF 엔진과 비트별 카운터 HW를 새로 요구해 실익이 적다. 저복잡도 hard-ish 디코더가 필요한 특수 경우에만 참고.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10065989",
+  "title": "Sign Aided Adaptive Noisy Gradient Descent Bit-Flipping Algorithm for LDPC Codes",
+  "year": 2022,
+  "venue": "IEEE ICCC",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "1008",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "반복 플립 이력(χ 카운터)에 따라 잡음섭동 평균을 적응 조정 + correlation항 부호로 미플립 오류비트에 플립 기회 부여",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "O",
+  "latency": "개선",
+  "recommend": "중",
+  "caveat": "soft-info aided BF는 채널 LLR(soft-read) 의존 — Prime ECC의 min-sum과 계열 상이, HW 미합성",
+  "todo_check": "비트별 l-bit 카운터·2^(l+1) 잡음 평균 테이블의 HW 오버헤드가 QC-LDPC(z=32) 병렬 구조에서 감당되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10065989---sign-aided-adaptive-noisy-gradient-descent-bit-flipping-algorithm-for-ldpc-codes-2022-ieee-iccc">ieee:10065989 - Sign Aided Adaptive Noisy Gradient Descent Bit-Flipping Algorithm for LDPC Codes (2022, IEEE ICCC)</a></li><li class="h3"><a href="#a-분류표">A. 분류표</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

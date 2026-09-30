@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_10418118</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee10418118---efficient-construction-of-quasi-cyclic-ldpc-codes-with-multiple-lifting-sizes-2024-ieee-communications-letters">ieee:10418118 - Efficient Construction of Quasi-Cyclic LDPC Codes With Multiple Lifting Sizes (2024, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.67</td></tr><tr><td>부호length</td><td>2048~16384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>하나의 exponent matrix로 여러 lifting size(작은 것부터 큰 것 순)를 지원하며 girth가 비감소하도록 QC-LDPC 부호를 구성하는 방법 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>short cycle 비증가는 보장 못함(정리2), CCSDS/5G 표준 부호 대체용 구성법이라 Prime ECC의 특정 QC-LDPC H-matrix에 직접 적용 시 재검증 부담 큼</td></tr><tr><td>추가확인</td><td>offset min-sum(OMSA, correction factor 0.5, max 50 iteration) 디코더의 gatecount/throughput 등 HW 수치는 본문에 없음</td></tr></tbody></table>
+<blockquote><p>총평: exponent matrix 하나로 다중 lifting size를 지원하는 QC-LDPC 구성법으로 저장복잡도 절감에 유용하나 부호설계 영역이라 Prime ECC 고정 H-matrix 대체는 재검증 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: QC-LDPC 코드, superposition(SP) construction 기반 exponent matrix <code>P=[p_i,j]</code>, CPM(circulant permutation matrix) 크기 <code>L</code>(lifting size)로 base matrix <code>B</code>를 확장.</li><li>문제: 기존 QC-LDPC는 하나의 exponent matrix가 단일 lifting size만 지원(5G만 예외적으로 5~8개 지원), 5G 방식은 large-lifting-size-first라 확장이 어려움.</li><li>핵심 가정: L2=aL1(a는 양의 정수)일 때 작은 lifting size L1의 exponent matrix P1으로부터 큰 lifting size L2의 P2를 유도하는 small-lifting-size-first 전략.</li><li>핵심 기법: <code>P2 = P1 + L1·W</code> (식 7), W는 weight coefficient matrix(<code>w_i,j∈Z_a</code>)로 P1과 동일한 base matrix를 공유해 동일한 반복복호 threshold를 가짐.</li><li>핵심 식 의미: 정리1(Proposition 1)은 이 구성법이 girth를 비감소(<code>g2≥g1</code>)시킴을 증명; 정리2는 short cycle 개수의 비증가는 보장 못함을 보여 별도로 cycle distribution 최적화가 필요.</li><li>부수 트릭: Algorithm 1은 W를 무작위로 갱신하며 cycle distribution <code>C(X)</code>가 개선될 때만 채택하는 탐색(<code>N_search</code>회 반복), 완전탐색 대신 무작위 탐색으로 축소.</li><li>트레이드오프: 작은 base matrix+큰 lifting size는 부호가 지나치게 구조화되어 성능 저하 우려 → 짧은/중간 길이 부호의 우수한 threshold를 기반으로 긴 부호를 확장하는 실용적 접근.</li><li>검증: CCSDS(R=1/2, K∈{1024,4096,16384}, L∈{128,512,2048})와 5G(R=2/3, K∈{1920,3840}, L∈{192,384}) 표준 부호를 대상으로 예제 설계.</li><li>결과: 구성된 부호가 표준 CCSDS 대비 BLER≈10⁻⁶, BER≈10⁻⁸까지 유사 성능, 5G 대비는 더 낮은 error-floor 성능을 보임; 디코딩은 offset min-sum(OMSA, correction factor 0.5, 최대 50 iteration).</li><li>한계: 이론/시뮬레이션 수준(HW 미설계), short cycle 비증가는 보장되지 않아 별도 metric 필요, 표준 부호(CCSDS/5G) 대체 목적의 구성법이라 특정 응용 H-matrix에 직접 대입 시 재설계·재검증 필요.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>exponent matrix 다중 lifting size 구성법 (<code>P2=P1+L1W</code>)</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>H-matrix/부호구조 설계 영역과 직결되나 Prime ECC는 특정 QC-LDPC(z_sb=32) 고정이라 이식 시 새 H-matrix 재검증 필요(이식 난이도 높음)</td></tr><tr><td>girth/cycle distribution 최적화</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>부호 구조 품질 지표로 동일 모듈 범주지만 코드 자체는 Prime ECC 자체 최적화 로직 없음</td></tr><tr><td>OMSA(offset min-sum) 디코딩</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>Prime ECC의 min-sum(min1/min2+sign XOR) 구조와 원리 유사(min-sum 계열), correction factor 0.5는 이미 보유한 min-sum 변형과 중복 기여 가능성</td></tr><tr><td>다중 lifting size로 저장복잡도 절감</td><td><code>ecc_data.h</code> (PCM 구조체)</td><td>여러 code length용 PCM을 하나의 exponent matrix로 저장하는 아이디어로 메모리 라우팅과 연관</td></tr></tbody></table>
+<p>적용 가치: 중간 — QC-LDPC exponent matrix 다중 lifting size 구성법은 부호설계 레이어(이식 난이도 높음)에 속하나, 저장복잡도 절감 아이디어와 OMSA 디코딩이 Prime ECC의 QC-LDPC/min-sum 구조와 원리적으로 정합되어 있어 참고 가치는 있음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:10418118",
+  "title": "Efficient Construction of Quasi-Cyclic LDPC Codes With Multiple Lifting Sizes",
+  "year": 2024,
+  "venue": "IEEE Communications Letters",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": null,
+  "code_length": "2048~16384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "하나의 exponent matrix로 여러 lifting size(작은 것부터 큰 것 순)를 지원하며 girth가 비감소하도록 QC-LDPC 부호를 구성하는 방법 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "short cycle 비증가는 보장 못함(정리2), CCSDS/5G 표준 부호 대체용 구성법이라 Prime ECC의 특정 QC-LDPC H-matrix에 직접 적용 시 재검증 부담 큼",
+  "todo_check": "offset min-sum(OMSA, correction factor 0.5, max 50 iteration) 디코더의 gatecount/throughput 등 HW 수치는 본문에 없음"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee10418118---efficient-construction-of-quasi-cyclic-ldpc-codes-with-multiple-lifting-sizes-2024-ieee-communications-letters">ieee:10418118 - Efficient Construction of Quasi-Cyclic LDPC Codes With Multiple Lifting Sizes (2024, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

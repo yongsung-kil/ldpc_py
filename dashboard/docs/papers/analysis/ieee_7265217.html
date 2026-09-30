@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_7265217</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee7265217---new-decoding-scheme-for-ldpc-codes-based-on-simple-product-code-structure-2015-journal-of-communications-and-networks">ieee:7265217 - New Decoding Scheme for LDPC Codes Based on Simple Product Code Structure (2015, Journal of Communications and Networks)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.5~0.833</td></tr><tr><td>부호length</td><td>1152~2304</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>LDPC(수평코드)+SPC/Hamming(수직코드)의 simple product code 구조로, 디코딩 실패한 코드워드만 두 독립 soft LLR을 결합해 재복호하는 post-processing 스킴</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>both</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>악화</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 설계 없이 시뮬레이션만 제시, 저장시스템(storage) 코딩 문맥이 언급되나 NAND 채널 실험은 아님</td></tr><tr><td>추가확인</td><td>코드워드 스택 버퍼링(product 구조 재정렬)에 필요한 메모리/라우팅 오버헤드가 NAND 컨트롤러에서 어느 정도인지</td></tr></tbody></table>
+<blockquote><p>총평: 실패 코드워드만 골라 SPC/Hamming 수직코드로 두 개의 독립 soft LLR을 결합·재복호하는 post-processing으로 waterfall/error-floor를 함께 개선하는, HW 미설계·시뮬 수준 기법.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>LDPC(수평코드) n개를 쌓아 만든 codeword matrix에 SPC 또는 Hamming 코드를 수직코드로 추가한 simple product code 구조를 사용(<code>P=C⊗C1</code>, <code>H</code>: 수직코드의 parity-check).</li><li>문제: finite-length LDPC는 고SNR 영역에서 error-floor가 발생, 기존 post-processing 기법들은 알고리즘만 바꾸고 코드 구조는 그대로 둠.</li><li>채널모델: 표준 LDPC AWGN 채널, LLR <code>r_ij</code>를 사용하는 soft-decision 수신.</li><li>핵심 기법: 먼저 일반 LDPC 복호를 각 수평코드워드에 순서대로 적용, 그룹 내 word error 없으면 지연 없이 다음으로 진행. 실패(e개)가 있으면 수직코드의 확장 parity-check <code>H_E</code>(모든 nonzero 선형결합) 중 punctured <code>H_P</code>(실패 코드워드에 대응하는 열만 선택)에서 최소 weight <code>e_min</code> 행을 찾아 재복호 순서를 정함.</li><li>핵심 식: LLR 결합 연산 <code>r_ij ⊕ r_i'j = 2·tanh⁻¹(tanh(r_ij/2)·tanh(r_i'j/2))</code> — 동일 코드워드에 대해 독립적으로 두 번 받은 것처럼 취급해 soft 정보를 합성(H-ARQ type-I 유사, 약 3dB 이득).</li><li><code>e_min=1</code>이면 단순 XOR 정정, <code>e_min=2</code>이면 두 개의 독립 LLR을 합해 재복호(식(6)), <code>e_min≥3</code>이면 실패 코드워드를 두 그룹으로 나눠 같은 방식 반복 적용.</li><li>부수 기법: SPC/Hamming을 수직코드로 쓸 때 "combined-decodability"(ε-combinable, η combined-decodable) 개념을 정의·증명해 재복호 성공 가능 조건을 수학적으로 특성화(SPC=2, (7,4)Hamming=5).</li><li>별도 학습절차 없음(구성적/조합론적 분석).</li><li>결과: IEEE 802.16e LDPC(R=1/2, n=2304 및 R=5/6, n=1152)에 (24,23) SPC 수직코드(puncturing rate 1/24)를 적용해 고SNR 영역에서 기존 LDPC 대비 WER 대폭 개선(waterfall+error-floor 동시 개선), 저SNR에서는 추가 연산 부담이 있으나 고SNR에서는 무시 가능.</li><li>한계: HW 설계 없음(시뮬뿐), 재복호 시 지연(decoding delay) 및 추가 메모리/버퍼 필요, undetected error가 있으면 성능 저해, product decoding(turbo iteration) 대비 성능은 낮지만 메모리·연산·지연은 훨씬 적음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>실패 코드워드 재복호(soft LLR 결합, HARQ 유사)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code></td><td>조기종료 실패 시 후처리 단계로 이터레이션 루프 뒤에 추가 가능하나, 다중 코드워드 버퍼링이 필요해 구조 변경 폭이 큼</td></tr><tr><td>수직코드(SPC/Hamming) product 구조</td><td>대응 없음</td><td>Prime ECC는 단일 QC-LDPC PCM 구조이며 product code 개념 없음</td></tr><tr><td>조기종료 판정(word error 카운트)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code>, <code>full_CRC.cpp</code></td><td>그룹 단위 실패 판정 아이디어는 CRC 기반 조기종료와 개념적으로 유사하나 코드는 별개</td></tr><tr><td>LLR soft 결합 연산(<code>⊕</code>)</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>LLR 테이블/양자화 구조에 결합 연산을 추가하려면 별도 로직 필요, 대응 약함</td></tr></tbody></table>
+<blockquote><p>적용 가치: 중간 - error-floor 개선을 위한 post-processing 아이디어(실패 코드워드만 골라 soft 정보 재결합)는 개념적으로 유용하나, product code 구조·다중 코드워드 버퍼링이 Prime ECC의 단일 QC-LDPC 파이프라인과 맞지 않아 이식 시 구조 변경 부담이 큼.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:7265217",
+  "title": "New Decoding Scheme for LDPC Codes Based on Simple Product Code Structure",
+  "year": 2015,
+  "venue": "Journal of Communications and Networks",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "1152~2304",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "LDPC(수평코드)+SPC/Hamming(수직코드)의 simple product code 구조로, 디코딩 실패한 코드워드만 두 독립 soft LLR을 결합해 재복호하는 post-processing 스킴",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "both",
+  "iter_reduction": "N/A",
+  "latency": "악화",
+  "recommend": "중",
+  "caveat": "HW 설계 없이 시뮬레이션만 제시, 저장시스템(storage) 코딩 문맥이 언급되나 NAND 채널 실험은 아님",
+  "todo_check": "코드워드 스택 버퍼링(product 구조 재정렬)에 필요한 메모리/라우팅 오버헤드가 NAND 컨트롤러에서 어느 정도인지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee7265217---new-decoding-scheme-for-ldpc-codes-based-on-simple-product-code-structure-2015-journal-of-communications-and-networks">ieee:7265217 - New Decoding Scheme for LDPC Codes Based on Simple Product Code Structure (2015, Journal of Communications and Networks)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

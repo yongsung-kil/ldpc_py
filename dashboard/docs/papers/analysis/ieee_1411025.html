@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_1411025</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee1411025---simple-reconfigurable-low-density-parity-check-codes-2005-ieee-communications-letters">ieee:1411025 - Simple Reconfigurable Low-Density Parity-Check Codes (2005, IEEE Communications Letters)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>4000</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>IRA를 일반화한 GeIRA 부호: 다항식 g(z⁻¹) 1비트만 바꿔 인코더/디코더를 on-the-fly 재구성, 저복잡도 인코딩 유지</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>위성/무선 저rate 대상 IRA 구조, dual-diagonal 기반 재구성 → Prime ECC의 고정 QC-LDPC·dual-diag 인코더와 부호구조 상이. 고rate에선 g 변경 효과 미미</td></tr><tr><td>추가확인</td><td>재구성용 다항식 g 스위칭이 Prime ECC의 고rate QC-LDPC에서 error-floor 이득을 낼 수 있는지 (본문상 고rate에선 효과 감소)</td></tr></tbody></table>
+<blockquote><p>총평: g(z⁻¹) 1비트로 부호 재구성하는 IRA 계열 설계로 위성 시변채널 대상. Prime ECC는 고정 QC-LDPC + dual-diagonal 인코더라 부호구조가 달라 이식 부담 큼, 이식성 하.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>BI-AWGN 채널, 위성/우주통신용 고효율 LDPC. 예제 <code>(4000,2000)</code> GeIRA 코드(rate 0.5), BP 복호.</li><li>문제: 위성은 지상국 복잡도는 허용하나 온보드 인코딩은 저복잡도여야 하고 error-floor가 낮아야 함 — eIRA의 degree 분포 제약(weight-2 열 ≥ m−1)을 완화하려 함.</li><li>핵심: 패리티 검사행렬을 <code>H=[Hu|Hp]</code>로 분할, <code>Hp⁻ᵀ</code>가 rate-1 재귀 디지털 필터(전달함수 <code>F(z)=1/(1+Σ gj z⁻ʲ)</code>)에 대응.</li><li>인코딩: 정보 <code>u</code>에 저밀도 생성행렬 <code>HuᵀT</code> 곱해 <code>v</code> 생성 → rate-1 인코더(<code>pi = vi + Σ gj p_{i-j}</code>) 통과 → <code>x=[u|p]</code>. 복잡도 O(n)로 turbo급.</li><li>정리1: <code>Hp</code>는 <code>g1..gt</code>로 채워진 하삼각(대각 1) 구조 → 인코딩이 재귀 필터로 선형시간.</li><li>사이클 조건: <code>g(z⁻¹)=Σ gi z⁻ⁱ</code>의 비영 인덱스 집합 Ω에서 <code>i−j=η−ξ</code>가 성립 안 하도록 g 선택 → Hp 열만의 length-4 사이클 제거.</li><li>재구성: g(z⁻¹) 계수(단 g0 제외)를 바꿔 행·열 weight 분포를 변경. 디코더는 gi=1 경우로 edge를 미리 배선하고 비활성 edge 메시지를 0으로 강제 → 저복잡 재구성 디코더.</li><li>설계: Hu는 density evolution로 최적화한 degree 분포(<code>λ,ρ</code>)로 완성, Hp의 기존 1과 short cycle 회피.</li><li>결과: 같은 <code>(4000,2000)</code>에서 C1(g=1+z⁻¹) vs C2(g=1+z⁻¹+z⁻⁴) — C2는 min-distance↑로 error-floor를 6배 개선(0.4dB waterfall 희생), 설정비트 1개로 C1↔C2 스위칭. Imax=10일 때 C2 수렴 더 빠름.</li><li>한계: HW 미설계·BER 시뮬뿐, 저~중 rate에서만 재구성 이득 뚜렷(고rate에선 g 변경 효과 미미), 위성/시변채널 특화.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>GeIRA 부호구조(H=[Hu</td><td>Hp]) 로드</td><td>ecc_top.cpp <code>Load_PCM()</code></td><td>Prime ECC는 고정 QC-LDPC라 IRA/dual-diagonal 구조와 상이, 재검증 부담 큼</td></tr><tr><td>rate-1 재귀필터 인코딩(dual-diagonal 계열)</td><td>encoder.cpp <code>LDPC_encoder_4KB()</code>, <code>Generate_PCM_encoding()</code></td><td>Prime ECC도 dual-diagonal 인코더 보유하나 g 재구성 개념은 미보유</td></tr><tr><td>g(z⁻¹) 스위칭 재구성 디코더</td><td>대응 없음</td><td>Prime ECC는 단일 고정 H, 런타임 부호 재구성 미지원</td></tr><tr><td>error-floor용 min-distance 설계</td><td>대응 없음</td><td>부호설계 레이어(§4 표: 이식 난이도 높음)</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — IRA/dual-diagonal 재구성 부호로 Prime ECC의 고정 고rate QC-LDPC와 부호구조가 근본적으로 다르고, 재구성 이득도 저rate·시변채널에 국한.</p>
+<h3 id="d-json">D. JSON</h3>
+<pre><code>{
+  "id": "ieee:1411025",
+  "title": "Simple Reconfigurable Low-Density Parity-Check Codes",
+  "year": 2005,
+  "venue": "IEEE Communications Letters",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "4000",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "IRA 일반화 GeIRA: g(z⁻¹) 1비트로 인코더/디코더 on-the-fly 재구성, 저복잡 인코딩 유지",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "부분",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "위성/무선 저rate IRA 구조 → Prime ECC 고정 QC-LDPC와 상이, 고rate에선 재구성 효과 미미",
+  "todo_check": "g 스위칭 재구성이 고rate QC-LDPC error-floor에 유효한지 (본문상 고rate 효과 감소)"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee1411025---simple-reconfigurable-low-density-parity-check-codes-2005-ieee-communications-letters">ieee:1411025 - Simple Reconfigurable Low-Density Parity-Check Codes (2005, IEEE Communications Letters)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json">D. JSON</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

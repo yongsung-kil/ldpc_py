@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9366207</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9366207---an-iterative-bit-flipping-decoding-algorithm-for-binary-reed-muller-codes-2020-isita2020">ieee:9366207 - An Iterative Bit-Flipping Decoding Algorithm For Binary Reed-Muller Codes (2020, ISITA2020)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>미상</td></tr><tr><td>부호length</td><td>32~128</td></tr><tr><td>연판정</td><td>hard-1bit</td></tr><tr><td>핵심기여</td><td>Reed-Muller 코드의 conventional majority decoding을 LDPC의 min-sum·bit-flipping 개념으로 확장한 반복적 hard-decision 디코더 제안</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 코드가 QC-LDPC가 아닌 Reed-Muller 코드이며 majority-logic 구조(votes, 재귀적 degree 처리)에 특화되어 LDPC Tanner graph 디코더로 직접 이식 불가</td></tr><tr><td>추가확인</td><td>min-sum 기반 reliability measure를 다른 hard-decision bit-flipping LDPC 변형과 비교 시 이미 알려진 BF 기법 대비 추가 이득이 있는지</td></tr></tbody></table>
+<blockquote><p>총평: LDPC의 min-sum/bit-flipping 아이디어를 "차용"하지만 대상은 Reed-Muller 코드 고유 구조(majority vote, degree별 재귀 처리)이므로 NAND용 QC-LDPC 디코더에 직접 이식할 요소는 거의 없음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상 코드: <code>RM(r,m)</code> 이진 Reed-Muller 코드(길이 <code>n=2^m</code>, 차원 <code>K=Σ(m choose i), i=0..r</code>), 시뮬레이션은 RM(1,5), RM(1,6), RM(2,7) 사용(길이 32/64/128).</li><li>문제: 기존 majority-logic 디코딩은 hard-decision 방식이지만 성능이 제한적이고, 기존 soft-decision 디코더들은 복잡도가 높음 - 저복잡도 hard-decision 개선이 목표.</li><li>채널 모델: AWGN 채널의 soft 수신 시퀀스 <code>y</code>를 hard-decision <code>v</code>로 변환 후 처리(hard decoding 관점에서는 BSC로 간주).</li><li>핵심 기법: conventional majority decoding의 이진 덧셈(vote 합산)을 LDPC min-sum 연산으로 대체 - <code>û_{j,k} = sgn(φ_l) × min|φ_l|</code> (l∈S_k)로 각 정보비트의 vote 신뢰도 계산.</li><li>핵심 식: reliability measure <code>R_j = Σ_k û_{j,k}</code> (모든 vote의 합) - 다수결(majority) 대신 신뢰도 크기로 정보비트 판정, degree γ→γ-1로 내려가며 재귀적으로 φ_l 갱신.</li><li>확장(2단): 매 iteration마다 재구성된 codeword와 초기 hard-decision 시퀀스 간 차이 <code>D_l</code>을 계산해 가장 큰 차이를 갖는 위치 <code>l*</code>를 한 비트만 flip(iterative bit-flipping), 이를 반복.</li><li>부수 트릭: 조기 종료(termination) - 매 iteration마다 갱신된 시퀀스가 유효 codeword가 되면(<code>D_l=0</code> for all l) 즉시 종료해 복잡도 절감.</li><li>학습/최적화 절차: 없음(고정 알고리즘, 반복 횟수만 <code>I_max=100</code>로 설정).</li><li>결과: majority decoding 대비 BLER 10⁻⁶(RM(1,5))에서 0.34dB, 10⁻⁵(RM(1,6))에서 0.45dB, 10⁻⁴(RM(2,7))에서 0.55dB 이득; 복잡도는 majority decoding 대비 <code>I_max</code>배.</li><li>한계: HW 구현 없음, RM 코드 특화 구조(votes/degree 계층)로 일반 LDPC Tanner graph에 직접 적용 불가, 순수 시뮬레이션 결과만 제시.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>Min-sum 기반 reliability measure(vote 신뢰도 계산)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>Min-sum의 min 연산 아이디어는 유사하나 RM 코드의 vote 구조 전용이라 QC-LDPC C2V 갱신에 직접 대응 안 됨</td></tr><tr><td>Iterative bit-flipping(1비트씩 flip)</td><td>대응 없음</td><td>Prime ECC는 min-sum message-passing 디코더이며 단일비트 flip 방식의 BF 알고리즘이 프로파일에 없음</td></tr><tr><td>Hard-decision(BSC) 디코딩</td><td><code>decoder.cpp</code> <code>VN_Cal_HD()</code></td><td>Prime ECC도 HD 모드를 지원하나 본 논문은 RM 코드 전용 majority-vote 구조라 이식 난이도 높음</td></tr><tr><td>조기 종료(유효 codeword 시 stop)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>개념적으로 유사하나 본 논문은 CRC가 아닌 codeword 재구성 비교 방식으로 상이</td></tr></tbody></table>
+<p>적용 가치: <code>낮음</code> — Reed-Muller 코드 전용 majority-logic 구조에 기반한 디코더로, QC-LDPC 기반 Prime ECC의 Tanner graph 디코딩 구조와 근본적으로 다르며 이식 시 전면 재설계가 필요함.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9366207",
+  "title": "An Iterative Bit-Flipping Decoding Algorithm For Binary Reed-Muller Codes",
+  "year": 2020,
+  "venue": "ISITA2020",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": null,
+  "code_length": "32~128",
+  "soft_quant": "hard-1bit",
+  "key_contribution": "Reed-Muller 코드의 majority decoding을 LDPC min-sum·bit-flipping 개념으로 확장한 반복적 hard-decision 디코더 제안",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상 코드가 QC-LDPC가 아닌 Reed-Muller 코드이며 majority-logic 구조(votes, 재귀적 degree 처리)에 특화되어 LDPC Tanner graph 디코더로 직접 이식 불가",
+  "todo_check": "min-sum 기반 reliability measure를 다른 hard-decision bit-flipping LDPC 변형과 비교 시 이미 알려진 BF 기법 대비 추가 이득이 있는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9366207---an-iterative-bit-flipping-decoding-algorithm-for-binary-reed-muller-codes-2020-isita2020">ieee:9366207 - An Iterative Bit-Flipping Decoding Algorithm For Binary Reed-Muller Codes (2020, ISITA2020)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

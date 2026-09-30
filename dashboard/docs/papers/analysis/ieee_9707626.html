@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_9707626</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee9707626---a-code-rate-compatible-high-throughput-hardware-implementation-scheme-for-qkd-information-reconciliation-2022-j-lightwave-technol">ieee:9707626 - A Code Rate-Compatible High-Throughput Hardware Implementation Scheme for QKD Information Reconciliation (2022, J. Lightwave Technol.)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.89</td></tr><tr><td>부호length</td><td>1536</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>IEEE 802.16E 1/2·2/3A QC-LDPC 2개를 GS puncturing으로 rate 0.5~0.89 가변시켜 QKD 채널 BER 변화에 적응, NMSA를 HLS로 고throughput 구현</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>0.136</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>waterfall</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>QKD reconciliation(BSC 대칭채널·efficiency f 지표) 특화, puncturing rate 적응이 목표이지 NAND error-floor·정정능력 강화가 아님</td></tr><tr><td>추가확인</td><td>GS puncturing(J. Ha) rate-compatible 아이디어를 NAND용 고rate 부호에 재검증 가능한지, NMSA α=0.79/0.70 정규화가 Prime min-sum 양자화와 호환되는지</td></tr></tbody></table>
+<blockquote><p>총평: QKD 정보조정용 rate-compatible QC-LDPC + NMSA를 HLS로 FPGA 구현한 응용 논문 - 디코더는 표준 NMSA(Prime 보유)라 신규성 낮고, 유일한 이식 후보인 GS puncturing rate-compatibility도 QKD BSC 채널·efficiency 최적화 맥락이라 NAND 고전 LDPC 관련성은 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: IEEE 802.16E 표준 QC-LDPC (1/2, 2/3A rate) mother matrix, 코드길이 N=1536, sub-matrix z=64, BSC 채널(QKD reconciliation).</li><li>문제: QKD 채널 BER이 1.7%~10.6%로 시변 - 고정 rate LDPC는 좁은 BER 구간만 고효율, 다수 QC-LDPC 행렬 설계는 부담.</li><li>핵심 지표: reconciliation efficiency <code>f = h(e)/(1-R0) &gt; 1</code> (Shannon 이진엔트로피 대비 누설정보), f를 1에 근접시키는 게 목표.</li><li>핵심 기법: 단일 mother 부호에 GS(grouping-sorting) puncturing[J.Ha]으로 parity p개 삭제, rate를 k/(n-p)로 상향 - recovery tree로 VN 그룹화 후 생존 CN 많은 노드 우선 정렬.</li><li>식 의미: <code>rmax = 1 - r0/Σ|Gj|/n</code> - 0.5 부호는 0.78, 2/3 부호는 0.89까지 puncturing 가능 → 2개 행렬로 0.5~0.89 rate 커버, 8개 puncture 벡터 사전저장.</li><li>디코더: NMSA 5단계(초기화·CN update Eq.5 with α·VN update·posterior LLR·hard decision), 정규화 α=0.79(1/2), 0.70(2/3A), Imax=20으로 FER&lt;1e-3.</li><li>구현 디테일: 9-bit 고정소수(sign1+int3+dec5), HLS pragma(pipeline II=1, unroll, array partition)로 CN 병렬 m·VN 병렬 n, temporal 메시지를 t개 독립 RAM 분할.</li><li>최적화 절차: BSC 시뮬로 puncture 벡터·α·Imax 결정, Vivado HLS 2018.3 합성.</li><li>결과: Zynq UltraScale+ ZCU102 실측, throughput 136 Mbps(fclk 250MHz), efficiency f&lt;1.32 across 1.7~10.6% BER, FER&lt;1e-3 - 기존 reconciliation 대비 효율·throughput·자원 우위.</li><li>한계: QKD BSC 채널·efficiency 지표 특화(NAND soft-read/error-floor 무관), 표준 NMSA로 디코더 신규성 없음, throughput 136Mbps는 NAND ECC급 대비 낮음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>NMSA CN update(min + 정규화 α)</td><td>decoder.cpp <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime min-sum과 동일 계열 - normalized factor는 부분 중복, 신규성 없음</td></tr><tr><td>NMSA 전체 흐름 / 이터레이션</td><td>decoder.cpp <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code>, <code>VN_Cal_HD()</code></td><td>표준 min-sum 복호 - 이미 보유</td></tr><tr><td>GS puncturing rate-compatible 부호</td><td>ecc_top.cpp <code>Load_PCM()</code> (+ H-matrix)</td><td>rate 가변은 H-matrix/부호구조 레이어 - Prime는 고정 QC-LDPC라 재검증 부담 큼</td></tr><tr><td>9-bit LLR 양자화</td><td>channel.cpp <code>Set_LLR_Th()</code> + <code>PARAM_LLR</code></td><td>soft-4bit+ 양자화, Prime은 2~3bit 지원이라 직접 대응 아님</td></tr><tr><td>syndrome 기반 조기종료(YH^T=S)</td><td>full_CRC.cpp / <code>partial_CRC.cpp</code></td><td>조기종료 개념 인접하나 Prime는 CRC 기반, 신드롬 체크와 별개</td></tr></tbody></table>
+<p>적용 가치: 낮음 - 디코더는 Prime이 이미 보유한 NMSA이고, 관심 요소인 GS puncturing rate-compatibility도 QKD BSC·efficiency 최적화 맥락이라 NAND 고전 binary LDPC로의 이식 가치가 낮다. rate-compatible puncturing 개념만 참고 정도.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:9707626",
+  "title": "A Code Rate-Compatible High-Throughput Hardware Implementation Scheme for QKD Information Reconciliation",
+  "year": 2022,
+  "venue": "Journal of Lightwave Technology",
+  "portability": "중",
+  "nand_relevance": "낮음",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.89",
+  "code_length": "1536",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "IEEE 802.16E 1/2·2/3A QC-LDPC 2개를 GS puncturing으로 rate 0.5~0.89 가변시켜 QKD 채널 BER 변화에 적응, NMSA를 HLS로 고throughput 구현",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 0.136,
+  "mem_routing": "언급",
+  "correction_gain": "O",
+  "improve_region": "waterfall",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "QKD reconciliation(BSC 대칭채널·efficiency f 지표) 특화, puncturing rate 적응이 목표이지 NAND error-floor·정정능력 강화가 아님",
+  "todo_check": "GS puncturing(J. Ha) rate-compatible 아이디어를 NAND용 고rate 부호에 재검증 가능한지, NMSA α=0.79/0.70 정규화가 Prime min-sum 양자화와 호환되는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee9707626---a-code-rate-compatible-high-throughput-hardware-implementation-scheme-for-qkd-information-reconciliation-2022-j-lightwave-technol">ieee:9707626 - A Code Rate-Compatible High-Throughput Hardware Implementation Scheme for QKD Information Reconciliation (2022, J. Lightwave Technol.)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

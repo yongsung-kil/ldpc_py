@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_11520106</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee11520106---ldpc-decoding-acceleration-architecture-on-versal-ai-edge-for-space-platforms-2026-ieee-aerospace-conference">ieee:11520106 - LDPC Decoding Acceleration Architecture on Versal AI Edge for Space Platforms (2026, IEEE Aerospace Conference)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>7/8</td></tr><tr><td>부호length</td><td>8176</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>SMA-MSA(second-minimum-approximation min-sum) LDPC 디코더를 AMD Versal AIE-ML 타일 배열에 분산 매핑, tile-to-tile 통신 및 CSC 압축으로 고처리량 달성</td></tr><tr><td>HW설계</td><td>O</td></tr><tr><td>검증수준</td><td>실측</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>4.458</td></tr><tr><td>메모리라우팅</td><td>언급</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>N/A</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>AIE-ML(Versal SoC) 전용 아키텍처로 NAND 컨트롤러 ASIC/RTL 구조와 이질적, 부호도 위성통신 표준(CCSDS/GSFC) rate 7/8 고정</td></tr><tr><td>추가확인</td><td>INT8/INT16/FP32 양자화 시 BER 열화 정도가 NAND soft-read 비용 관점에서 유의미한지</td></tr></tbody></table>
+<blockquote><p>총평: 위성통신용 AIE-ML 하드웨어 가속 아키텍처 논문으로, 디코더 알고리즘 자체는 기존 SMA-MSA를 재사용하고 이식 관점의 혁신은 Versal 특화 tile 매핑/통신에 국한되어 NAND ASIC 이식 가치는 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>채널: BPSK 변조 + AWGN, CCSDS 131.0-B-3 / GSFC-STD-9100 rate 7/8 QC-LDPC (H: 1,022×8,176, 2×16 배열의 511×511 circulant, 열당 4개 non-zero, 행당 32개 non-zero).</li><li>문제: 위성 재생중계(regenerative relay) 시스템에서 ASIC은 비싸고 경직적, 전통 FPGA는 ASIC 대비 비효율적이라 우주용 고처리량 LDPC 디코더 아키텍처가 필요.</li><li>핵심 기법: MSA(min-sum) 기반이며 두 번째 최소값을 근사하는 SMA-MSA(second minimum approximation)[13]를 채택해 CN 업데이트 연산 복잡도 절감.</li><li>하드웨어 매핑: circulant 1개(511×511)를 AIE-ML 타일 1개에 1:1 할당, sparse 구조를 CSC(compressed sparse column, <code>2×511</code> 행렬)로 압축해 각 타일 로컬 메모리(64kB/256kB)에 저장.</li><li>타일 간 통신: 행 내 CN 최소값은 east-adjacent로 512-bit cascade 인터페이스를 통해 순차 전달 후 minimum tile이 브로드캐스트, 열 방향 VN 부분합은 상/하 tile 간 256-bit buffer read/write로 교환.</li><li>벡터화: 각 circulant의 cyclic shift 특성을 이용해 메모리 연속 접근을 가능케 하고, 256-bit 정렬 요구를 맞추기 위해 열에 zero-padding 추가.</li><li>데이터 양자화: INT4/INT8/INT16/FP32 비교, INT4는 프로그램 메모리(16kB) 초과로 미채택, INT8은 컬럼합 오버플로우로 BER 열화.</li><li>CU(compute unit) 병렬화: 최대 7개 CU 병렬 인스턴스화, CU당 34개 AIE-ML 타일 사용.</li><li>결과: VEK280(VE2802) 실측 기준 1 iteration에서 4.458 Gbps, 5 iteration 2.297 Gbps, 10 iteration 1.174 Gbps; INT8은 INT16 대비 1.730×, FP32 대비 3.841× 처리량 우위이나 BER 열화; 에너지효율 최대 268.2 Mbps/W(INT8, CU7).</li><li>한계: 부호 자체는 표준 고정(설계 기여 없음), 메모리 대역폭 한계로 CU 수 증가 시 처리량 이득이 선형 미만, tile 동기화/lock으로 인한 지연 존재.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>SMA-MSA(second minimum approximation) CN 업데이트</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code>, <code>C2V_Cal_New_Sgn()</code></td><td>Prime ECC도 min-sum 기반이나 논문 근사법은 Versal AIE 벡터 연산 특화라 알고리즘적 신규성 낮음</td></tr><tr><td>INT8/INT16/FP32 양자화 비교</td><td><code>channel.cpp</code> <code>Set_LLR_Th()</code></td><td>soft-read LLR 양자화 관점 참고 가능하나 NAND 4bit+ 미지원 조합과 무관</td></tr><tr><td>AIE-ML tile 분산 매핑/CSC 압축</td><td>대응 없음</td><td>Prime ECC는 z=32 lifting 기반 RTL 구조로 AIE 타일 아키텍처와 전혀 다른 플랫폼</td></tr><tr><td>병렬 CU(compute unit) 스케일링</td><td>대응 없음</td><td>GPU/DSP형 병렬화 개념으로 ASIC 고정 파이프라인 구조와 대응 안 됨</td></tr><tr><td>부호(H-matrix) 자체</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>CCSDS/GSFC 표준 고정 사용이라 부호설계 기여 없음, 참고 가치 낮음</td></tr></tbody></table>
+<p>적용 가치: <strong>낮음</strong> — 위성통신용 Versal AIE 플랫폼 특화 HW 매핑 논문으로 알고리즘·부호설계 신규성이 없고, 대상 하드웨어(AIE-ML 타일 mesh)가 Prime ECC의 ASIC/RTL 파이프라인 구조와 근본적으로 이질적이라 이식 가치가 낮음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:11520106",
+  "title": "LDPC Decoding Acceleration Architecture on Versal AI Edge for Space Platforms",
+  "year": 2026,
+  "venue": "IEEE Aerospace Conference",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "QC-LDPC",
+  "code_rate": 0.875,
+  "code_length": 8176,
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "SMA-MSA LDPC 디코더를 AMD Versal AIE-ML 타일 배열에 분산 매핑, tile-to-tile 통신 및 CSC 압축으로 고처리량 달성",
+  "hw_designed": "O",
+  "verification": "실측",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": 4.458,
+  "mem_routing": "언급",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "N/A",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "AIE-ML(Versal SoC) 전용 아키텍처로 NAND 컨트롤러 ASIC/RTL 구조와 이질적, 부호도 위성통신 표준(CCSDS/GSFC) rate 7/8 고정",
+  "todo_check": "INT8/INT16/FP32 양자화 시 BER 열화 정도가 NAND soft-read 비용 관점에서 유의미한지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee11520106---ldpc-decoding-acceleration-architecture-on-versal-ai-edge-for-space-platforms-2026-ieee-aerospace-conference">ieee:11520106 - LDPC Decoding Acceleration Architecture on Versal AI Edge for Space Platforms (2026, IEEE Aerospace Conference)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

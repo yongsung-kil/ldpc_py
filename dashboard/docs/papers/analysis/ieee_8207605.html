@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_8207605</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee8207605---design-of-binary-ldpc-codes-with-parallel-vector-message-passing-2018-ieee-trans-communications">ieee:8207605 - Design of Binary LDPC Codes With Parallel Vector Message Passing (2018, IEEE Trans. Communications)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>both</td></tr><tr><td>부호종류</td><td>QC-LDPC</td></tr><tr><td>부호rate</td><td>0.5~0.9</td></tr><tr><td>부호length</td><td>96~4032</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>Cycles Metric(CM)을 PMP로 계산, edge-exchange/base-matrix 원소조정으로 code 파라미터(rate/length/degree) 불변인 채 짧은 사이클 감소 → error-floor 개선</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>없음</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>O</td></tr><tr><td>개선영역</td><td>error-floor</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>SPA 디코딩·AWGN 시뮬만, HW 미설계, 짧은/중길이 코드 위주(우리 4KB급 아님), CM은 사이클 수 대리지표라 실제 TS/floor 보증 아님</td></tr><tr><td>추가확인</td><td>우리 고rate(~0.9) QC-LDPC base matrix에 QC-PMP 적용 시 min-sum(비-SPA) 하에서도 floor 이득 유지되는지, z=32/BDD 구조 제약과 정합</td></tr></tbody></table>
+<blockquote><p>총평: QC-LDPC base matrix를 offline 최적화해 error-floor를 낮추는 순수 code-design 도구. min-sum·HW 무관하게 우리 H-matrix에 적용 가능하나 재검증 부담이 큼.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상: graph-기반 binary LDPC(랜덤 MacKay/PEG 및 QC-LDPC), rate 0.5~0.9, <code>N</code>=96~4032, ZM/CPM(<code>L</code>=27~330) 구조.</li><li>문제: PEG 등 그리디 구성은 국소 girth만 최적화 → 전역 Tanner graph는 준최적, 고rate에서 짧은 사이클 다수 발생 → error floor.</li><li>핵심 지표 CM: 각 edge가 낀 길이 <code>2l</code> 사이클 수 <code>N^{2l}</code>에 가중 <code>β^{l-2}</code>(β=0.01) 합산, <code>M_T = Σ M_{v_j}</code>; CM↓이면 사이클 수↓/길이↑ → floor 개선.</li><li>PMP: MPA 변형으로 각 edge에 고유 벡터 <code>X_k(J,I)=[J I]</code> 초기화, C2V/V2C에서 서로 다른 벡터 개수만 기록해 사이클 수를 병렬 계산(복잡도 <code>O(l·Ne^2)</code>).</li><li>식 의미: edge <code>E_{j,i1}</code>의 초기벡터가 l회 후 <code>E_{j,i2}</code>의 C2V 메시지에 나타난 횟수 = 두 edge 공통 사이클 수 → 노드별 특정 없이 사이클 수 산출.</li><li>PMPE(랜덤 코드): CM 최대 edge들을 골라, UEP/IEP가 아닌 두 edge의 연결 CN을 교환(edge exchange)해 <code>M_T</code>가 줄면 수락, 줄지 않으면 undo — degree 분포 불변.</li><li>QC-PMP(QC 코드): base matrix <code>H_nb</code> 원소를 1~L 범위로 순환 조정(0으로는 안 바꿈 → degree 불변)하며 CPM 매핑 후 <code>M_T(H_bqc)</code> 감소 방향으로 최적화; 802.11ad는 BDD 유지 위해 일부 열 고정.</li><li>검증(간접): bit-reversing 기반 근사 최근접 codeword(ANC) 탐색으로 저Hamming-weight codeword 수 감소를 확인 → 최소거리 개선.</li><li>결과: PEG rate~0.9 (440,396)에서 0.5dB@BER1e-7; QC 예로 (3960,2640) floor 낮춤, (4032,3264) 0.15dB@8e-8, (2304,1920) 802.16e 대비 0.2dB@2e-7, 802.11ad (648,486) 0.2dB@3e-8 등 대부분 floor 영역 이득.</li><li>한계: SPA/AWGN 시뮬만, HW(인/디코더) 설계 없음, NAND 채널 미검증, throughput/gate 정보 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| QC base matrix 원소 조정(QC-PMP) | ecc_top.cpp Load_PCM() | 우리 H-matrix를 offline로 재최적화해 로드 — 재검증 부담 큼 |
+| PCM/부호구조 정의 | ecc_data.h PCM_b (base+shift) | base+circulant shift 표현과 직접 대응, shift 값 조정 대상 |
+| 인코딩용 부호 PCM(구조 보존) | encoder.cpp Generate_PCM_encoding() | dual-diagonal/BDD 유지 제약과 정합 필요 |
+| CM/사이클 카운트(PMP) | 대응 없음 | offline 설계 도구, 런타임 디코더에 없음 |
+| SPA 디코딩(성능 평가) | decoder.cpp LDPC_Decoder() | 우리는 min-sum — 평가 알고리즘 상이, floor 이득 재검증 필요 |
+| error-floor/trapping-set 개선 | 대응 없음 | 부호설계 단계 개선, 디코더 post-processing 아님 |</code></pre>
+<p>적용 가치: 중간 — code-design 단계 offline 최적화라 min-sum/HW와 무관하게 우리 QC base matrix에 적용해 error-floor를 낮출 잠재력은 있으나, 특정 QC-LDPC 고정·dual-diagonal/z=32 제약·min-sum 하 재검증 부담으로 즉시 이식은 어려움.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:8207605",
+  "title": "Design of Binary LDPC Codes With Parallel Vector Message Passing",
+  "year": 2018,
+  "venue": "IEEE Transactions on Communications",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "both",
+  "code_type": "QC-LDPC",
+  "code_rate": "0.5~0.9",
+  "code_length": "96~4032",
+  "soft_quant": "무관",
+  "key_contribution": "Cycles Metric(CM)을 PMP로 계산해 edge-exchange/base-matrix 원소조정으로 rate/length/degree 불변인 채 짧은 사이클 감소 → error-floor 개선",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "없음",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "O",
+  "improve_region": "error-floor",
+  "iter_reduction": "X",
+  "latency": "N/A",
+  "recommend": "중",
+  "caveat": "SPA 디코딩·AWGN 시뮬만, HW 미설계, 짧은/중길이 코드 위주, CM은 사이클 수 대리지표라 실제 TS/floor 보증 아님",
+  "todo_check": "우리 고rate(~0.9) QC-LDPC base matrix에 QC-PMP 적용 시 min-sum 하에서도 floor 이득 유지되는지, z=32/BDD 제약 정합"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee8207605---design-of-binary-ldpc-codes-with-parallel-vector-message-passing-2018-ieee-trans-communications">ieee:8207605 - Design of Binary LDPC Codes With Parallel Vector Message Passing (2018, IEEE Trans. Communications)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

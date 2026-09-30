@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_5426773</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_5426773---degree-dependent-decoding-of-ldpc-codes-2010-ausctw">ieee_5426773 - Degree-Dependent Decoding of LDPC Codes (2010, AusCTW)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>중</td></tr><tr><td>NAND관련성</td><td>간접</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>irregular</td></tr><tr><td>부호rate</td><td>0.5</td></tr><tr><td>부호length</td><td>미상</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>변수노드를 차수별로 그룹화해 iteration마다 일부만 갱신하는 스케줄을 DE로 최적화해 복호 복잡도 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>이론</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>부분</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>부분</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>중</td></tr><tr><td>한계,주의</td><td>HW 미설계·시뮬 없음(이론/DE만), rate 1/2·차수 2/3/20 특정 예제만, 정정능력 개선은 목표 아님(복잡도만)</td></tr><tr><td>추가확인</td><td>고rate QC-LDPC에서 차수분포가 좁을 때(우리 VN degree 17 고정) 실제 절감 폭, flooding 대비 latency 손실 여부</td></tr></tbody></table>
+<blockquote><p>총평: 차수 기반 부분 활성화로 iteration당 연산량을 줄이는 스케줄링 아이디어. 정정능력 향상은 없고 이론뿐이나, min-sum(cr&lt;1) 상황에서 절감이 크다는 점은 우리 디코더 스케줄에 참고 가치.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: rate <code>R=1/2</code> irregular LDPC, check 차수 <code>dc=8</code> 정규, VN 차수분포 <code>λ={2:0.13, 3:0.50, 20:0.37}</code>, AWGN+BPSK, SPA threshold 0.69 dB.</li><li>문제: LDPC 복호 복잡도가 고속 응용에는 여전히 부담. 알고리즘 단순화(min-sum)는 성능 손실 동반.</li><li>핵심 관찰: 고차수 VN은 저차수 VN보다 a-posteriori L값이 빨리 수렴하지만, VN 갱신 비용은 차수 <code>dv</code>에 비례(<code>dv·cv</code>).</li><li>핵심 기법: iteration <code>i</code>마다 갱신할 VN 차수 집합 <code>S(i)</code>만 갱신, 나머지는 이전 값 유지(degree-dependent flooding). 고차수 노드를 덜 자주 갱신.</li><li>비용 모델: VN 메시지 비용 <code>cv</code>, CN 비용 <code>cc</code>, 비율 <code>cr=cc/cv</code>. iteration 복잡도 <code>Ci=cv·d̄v·(cr + Σ_{k∈S(i)} λk)</code> (식 3).</li><li>확장: check-irregular 코드로 확장 가능하다고 언급.</li><li>디테일: DE를 수정해 갱신 안 된 차수는 이전 iteration pdf, 갱신된 차수는 현재 pdf로 혼합.</li><li>최적화: 디코더 상태를 syndrome L값 분포 <code>pS(L)</code>의 mutual information <code>IS</code>(식 8)로 정의 → trellis + Viterbi 변형으로 최소비용 활성화 시퀀스 탐색(gear-shift 방식).</li><li>결과: <code>cr</code> 작을수록(CN 갱신 저렴, 예: binary message passing) 절감 큼. <code>cr→0</code>이면 한 번에 한 차수 그룹만 활성화가 최적; <code>cr</code> 크면 flooding으로 수렴. threshold 근처일수록 총 비용 급증.</li><li>한계: HW 미설계, gate/throughput 수치 없음, 이론(DE)뿐. 특정 rate 1/2 예제 1개만. soft/hard read 논의 없음.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>차수 의존 VN 활성화 스케줄</td><td>decoder.cpp <code>LDPC_Decoder()</code> 이터레이션 루프</td><td>우리 dual-update(even/odd) 스케줄에 차수 기반 부분갱신 아이디어 접목 가능하나 VN degree 17 고정이라 이득 제한</td></tr><tr><td>디코더 상태(syndrome MI) 기반 종료/스케줄 판단</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>우리는 CRC 조기종료 보유 — syndrome 기반 상태는 대안이나 중복 성격</td></tr><tr><td>CN 비용 <code>cr</code> 모델(min-sum시 cr&lt;1)</td><td><code>decoder.cpp</code> <code>CNU_Update_New_Mag()</code></td><td>우리 min-sum과 정합, 스케줄 최적화 시 참고</td></tr></tbody></table>
+<p>적용 가치: <strong>중간</strong> — VN 차수 기반 부분 갱신으로 iteration당 연산 절감 아이디어는 우리 스케줄러에 참고 가능하나, Prime ECC의 VN degree가 사실상 단일(17)이라 차수 다양성에 기대는 이 기법의 이득이 작고 HW 검증도 없음.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:5426773",
+  "title": "Degree-Dependent Decoding of LDPC Codes",
+  "year": 2010,
+  "venue": "AusCTW",
+  "portability": "중",
+  "nand_relevance": "간접",
+  "target": "decoder",
+  "code_type": "irregular",
+  "code_rate": 0.5,
+  "code_length": "미상",
+  "soft_quant": "무관",
+  "key_contribution": "변수노드를 차수별로 그룹화해 iteration마다 일부만 갱신하는 스케줄을 DE로 최적화해 복호 복잡도 절감",
+  "hw_designed": "X",
+  "verification": "이론",
+  "complexity": "미상",
+  "parallelism": "부분",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "부분",
+  "latency": "동등",
+  "recommend": "중",
+  "caveat": "HW 미설계·이론(DE)만, rate 1/2 단일 예제, 정정능력 개선 목표 아님(복잡도만)",
+  "todo_check": "VN degree 단일(17)인 Prime ECC에서 차수 다양성 부족 시 실제 절감 폭 및 latency 손실 확인"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_5426773---degree-dependent-decoding-of-ldpc-codes-2010-ausctw">ieee_5426773 - Degree-Dependent Decoding of LDPC Codes (2010, AusCTW)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

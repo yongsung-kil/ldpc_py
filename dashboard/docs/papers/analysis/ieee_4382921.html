@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4382921</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee4382921---bypass-decoding-a-reduced-complexity-decoding-technique-for-ldpc-coded-mimo-ofdm-systems-2008-ieee-trans-vehicular-technology">ieee:4382921 - Bypass Decoding: A Reduced-Complexity Decoding Technique for LDPC-Coded MIMO-OFDM Systems (2008, IEEE Trans. Vehicular Technology)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>regular</td></tr><tr><td>부호rate</td><td>0.5~0.75</td></tr><tr><td>부호length</td><td>1920~2880</td></tr><tr><td>연판정</td><td>무관</td></tr><tr><td>핵심기여</td><td>고신뢰(LLR&gt;Lt) 비트를 조기 경판정 후 나머지만 SPA 반복복호하는 2단계 bypass 복호로 반복당 복잡도 절감</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>미상</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>X</td></tr><tr><td>latency</td><td>동등</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>코드워드마다 H 열 제거·합성으로 패리티행렬을 동적 재구성 → 고정 QC-LDPC HW에 부적합, MIMO-OFDM 소프트디맵퍼 전제</td></tr><tr><td>추가확인</td><td>반복횟수는 그대로이고 반복당 처리비트만 줄이는 방식이 z=32 행병렬 HW에서 실제 latency/면적 이득으로 이어지는지</td></tr></tbody></table>
+<blockquote><p>총평: MIMO-OFDM 수신기(디맵퍼↔LDPC 외부반복) 특화 복잡도 감소기법으로, 정정능력·반복수 이득 없이 채널 SNR 편차에 의존 — NAND binary QC-LDPC 이식 가치 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>시스템: LDPC-coded MIMO-OFDM (<code>Nt</code>×<code>Nr</code> 안테나, <code>Nc</code> 부반송파), rate 3/4·1/2, <code>N</code>=2880/1920, 열가중치 3 랜덤 LDPC.</li><li>문제: 소프트디맵퍼+LDPC 반복수신기의 복잡도가 컨볼루션(Viterbi) 대비 과도 → 성능 유지하며 복잡도 절감 필요.</li><li>모델: 지수감쇠 다중경로 Rayleigh 페이딩, 부반송파별 순시 SNR이 크게 변동한다는 관찰이 핵심 전제.</li><li>핵심기법 S1: 첫 외부반복에서 코드비트 LLR <code>L1(cl|y)</code> 크기가 임계 <code>Lt</code> 이상이면 경판정으로 확정(bypass), <code>-Lt~+Lt</code> 사이 비트만 S2로.</li><li>의미: 고순시SNR 부반송파의 비트는 hard-decision해도 성능저하 미미 → 반복 demapping/decoding 대상 비트 수 감소.</li><li>핵심기법 S2: 확정비트 열을 H에서 제거(<code>H̃</code>)하고 +1비트 열들의 이진합 열 <code>h</code>를 붙여 <code>Ĥ=[H̃ h]</code>로 수정한 LDPC 디코더를 SPA로 반복.</li><li>구현 트릭: 각 VN에 제어유닛을 두어 입력 LLR이 <code>[-Lt,Lt]</code> 범위인지에 따라 노드 on/off, 런타임 재구성 개념만 제시.</li><li>최적화: <code>Lt</code> 선택규칙 — FER 열화계수 <code>Fd≈1dB</code>(또는 <code>Fdappx</code>)가 되도록 임계 결정, 이론적 감소율 <code>Re/Rs</code>와 하한 <code>Phlow(e)</code>로 근사.</li><li>결과: <code>Ts</code> 기준 총복잡도 ≥50%(2×2 64QAM) 절감, FER 열화 ≤0.5dB, 반복수 <code>nI/nO</code>는 기존과 사실상 동일(99% 코드워드가 동일 반복수).</li><li>한계: HW 미설계(VLSI 재구성은 향후과제로 명시), 이득이 MIMO-OFDM 부반송파 SNR 편차·소프트디맵퍼 외부반복 구조에 종속.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<pre><code>| 논문 요소 | Prime ECC 모듈 | 관련성 |
+|---|---|---|
+| SPA 반복복호 루프 | decoder.cpp LDPC_Decoder(), C2V_Cal() | 우리는 min-sum, 논문은 tanh-SPA — 기반 다름 |
+| LLR 임계 기반 비트 확정 | channel.cpp Set_LLR_Th(), decoder.cpp Get_VNU_Table_Idx() | 우리 적응형 LLR과 목적 상이(반복별 threshold vs 조기 경판정) |
+| 코드워드별 H 열제거·h 합성(동적 PCM) | ecc_top.cpp Load_PCM() | 우리는 고정 QC-LDPC PCM_b — 동적 재구성 미지원, 이식 곤란 |
+| 소프트디맵퍼↔LDPC 외부반복(MIMO 검출) | 대응 없음 | NAND에 MIMO 검출기 없음 |</code></pre>
+<p>적용 가치: <strong>낮음</strong> — MIMO-OFDM 특유의 부반송파 SNR 편차·외부반복 구조에 종속되고 코드워드별 동적 H 수정이 고정 QC-LDPC HW와 상충하며 정정능력/반복수 이득이 없다.</p>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4382921",
+  "title": "Bypass Decoding: A Reduced-Complexity Decoding Technique for LDPC-Coded MIMO-OFDM Systems",
+  "year": 2008,
+  "venue": "IEEE Trans. Vehicular Technology",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "regular",
+  "code_rate": null,
+  "code_length": "1920~2880",
+  "soft_quant": "무관",
+  "key_contribution": "고신뢰(LLR&gt;Lt) 비트를 조기 경판정하고 나머지만 SPA 반복복호하는 2단계 bypass 복호로 반복당 복잡도 절감",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "미상",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "X",
+  "latency": "동등",
+  "recommend": "하",
+  "caveat": "코드워드마다 H 열 제거·합성으로 패리티행렬을 동적 재구성 → 고정 QC-LDPC HW에 부적합, MIMO-OFDM 소프트디맵퍼 전제",
+  "todo_check": "반복수는 그대로이고 반복당 처리비트만 줄이는 방식이 z=32 행병렬 HW에서 실제 latency/면적 이득으로 이어지는지"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee4382921---bypass-decoding-a-reduced-complexity-decoding-technique-for-ldpc-coded-mimo-ofdm-systems-2008-ieee-trans-vehicular-technology">ieee:4382921 - Bypass Decoding: A Reduced-Complexity Decoding Technique for LDPC-Coded MIMO-OFDM Systems (2008, IEEE Trans. Vehicular Technology)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>

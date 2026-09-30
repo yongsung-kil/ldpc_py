@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ieee_4557297</title>
+<link rel="stylesheet" href="../../../assets/style.css">
+<script>try { var t = localStorage.getItem("dash-theme"); if (t) document.documentElement.setAttribute("data-theme", t);
+if (localStorage.getItem("dash-nav") === "closed") document.documentElement.classList.add("nav-closed"); } catch (e) {}</script>
+</head>
+<body>
+<header class="top">
+<a class="brand" href="../../../index.html">ldpc_py</a>
+<a class="back" href="../../../papers.html">논문 탐색기로</a>
+<div id="theme-toggle" class="seg" title="테마">
+<button type="button" data-theme="" title="시스템 설정 따름"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="12" rx="2"/><line x1="8" y1="20" x2="16" y2="20"/><line x1="12" y1="16" x2="12" y2="20"/></svg></button><button type="button" data-theme="light" title="밝게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/><line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/><line x1="4.9" y1="4.9" x2="7" y2="7"/><line x1="17" y1="17" x2="19.1" y2="19.1"/><line x1="4.9" y1="19.1" x2="7" y2="17"/><line x1="17" y1="7" x2="19.1" y2="4.9"/></svg></button><button type="button" data-theme="dark" title="어둡게"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z"/></svg></button>
+</div>
+</header>
+<div class="layout light">
+<main class="content">
+<h3 id="ieee_4557297---turbo-decoding-of-product-codes-based-on-the-modified-adaptive-belief-propagation-algorithm-2007-isit">ieee_4557297 - Turbo Decoding of Product Codes based on the Modified Adaptive Belief Propagation Algorithm (2007, ISIT)</h3>
+<table><thead><tr><th>카테고리</th><th>값</th></tr></thead><tbody><tr><td>이식성</td><td>하</td></tr><tr><td>NAND관련성</td><td>낮음</td></tr><tr><td>대상</td><td>decoder</td></tr><tr><td>부호종류</td><td>기타</td></tr><tr><td>부호rate</td><td>0.68~0.88</td></tr><tr><td>부호length</td><td>256~16384</td></tr><tr><td>연판정</td><td>soft-4bit+</td></tr><tr><td>핵심기여</td><td>ABP 알고리즘의 PCM 적응(Gaussian elimination)을 반복루프 밖으로 빼내 초기화 단계에서만 1회 수행하는 m-ABP를 제안, Chase-Pyndiah와 유사 BER 성능을 낮은 복잡도로 달성</td></tr><tr><td>HW설계</td><td>X</td></tr><tr><td>검증수준</td><td>시뮬</td></tr><tr><td>복잡도</td><td>미상</td></tr><tr><td>병렬화</td><td>완전병렬</td></tr><tr><td>Throughput</td><td>미상</td></tr><tr><td>메모리라우팅</td><td>없음</td></tr><tr><td>정정능력향상</td><td>X</td></tr><tr><td>개선영역</td><td>N/A</td></tr><tr><td>iteration감소</td><td>O</td></tr><tr><td>latency</td><td>N/A</td></tr><tr><td>추천도</td><td>하</td></tr><tr><td>한계,주의</td><td>대상 부호가 BCH product code로 QC-LDPC와 무관, HW 미구현·복잡도 수치 없음, Chase-Pyndiah 대비 성능 우위 없음(유사 수준)</td></tr><tr><td>추가확인</td><td>Gaussian elimination 기반 PCM 적응 1회 비용이 실제 HW에서 어느 정도인지 본문에 미기재</td></tr></tbody></table>
+<blockquote><p>총평: BCH product code의 turbo 복호에서 ABP 알고리즘의 반복적 행렬 적응 비용을 없앤 개선안으로, LDPC/QC-LDPC 부호나 NAND ECC와 무관한 non-sparse PCM 부호 대상 기법이라 이식 가치가 낮음.</p></blockquote>
+<h3 id="b-알고리즘-요약">B. 알고리즘 요약</h3>
+<ol><li>대상은 BCH component code로 구성된 product code(예: (16,11)^2, (32,26)^2, (64,57)^2, (128,113)^2)이며, BPSK+Gaussian(AWGN) 채널을 가정.</li><li>문제: BCH/Reed-Solomon 등 전통적 선형블록코드는 PCM이 non-sparse해 표준 BP 복호가 부적합했고, 이를 해결한 기존 ABP(Adaptive BP)는 매 반복마다 Gaussian elimination으로 행렬을 재희소화해 HW 구현이 어려울 만큼 복잡.</li><li>채널/신뢰도 모델은 표준 turbo product code 구조를 따름: 행/열을 번갈아 SISO 복호(half-iteration)하며 외인정보 <code>W(it) = F(it) - R'(it)</code>를 다음 half-iteration에 반영(<code>R'(it+1) = R + α(it)W(it)</code>).</li><li>핵심 기법(m-ABP): 매 iteration마다 수행하던 PCM 적응을 초기화 단계 1회로 이동 — (1) 수신벡터 <code>R'(it)</code>를 신뢰도 절댓값 오름차순 정렬, (2) 최소신뢰도 <code>n-k</code>개 열에 대해 Gaussian elimination으로 단위행렬화(H 적응), (3) 적응된 고정 H로 표준 BP를 3~5회 local iteration만 수행, (4) hard decision 산출.</li><li>핵심 의미: 적응된 PCM이 모든 local iteration에서 동일하게 재사용되므로 매 반복 행렬갱신 비용이 사라지고, damping coefficient도 불필요해짐 — 이 점이 표준 ABP 대비 핵심 복잡도 절감 포인트.</li><li>확장 없음(단일 알고리즘, product code turbo 구조에 삽입되는 SISO 컴포넌트로 사용).</li><li>구현 디테일: local iteration(BP 내부, 3~5회)과 global iteration(turbo 반복, 6~8회)을 구분해 설계 — Chase-Pyndiah는 global 6~8회만 필요.</li><li>별도 학습/최적화 절차 없음(고정 알고리즘, 시뮬레이션 기반 파라미터 튜닝만).</li><li>결과: (16,11)^2 BCH product code에서 m-ABP는 3 local + 6 global iteration으로 표준 ABP(5 local + 10 global)보다 적은 반복으로 유사 성능; Chase-Pyndiah 대비 BER 10^-6에서 0.1dB 이내 차이(코드별로 ±0.13dB 수준의 우열 교차).</li><li>한계: BCH product code(비-LDPC, non-sparse PCM 기반) 전용이며 HW 구현·gatecount·throughput 수치 전무, 정정능력 자체의 개선이 아니라 ABP 대비 복잡도(iteration) 감소가 주된 기여.</li></ol>
+<h3 id="c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</h3>
+<table><thead><tr><th>논문 요소</th><th>Prime ECC 모듈</th><th>관련성</th></tr></thead><tbody><tr><td>BP 기반 반복 SISO 복호(local iteration)</td><td><code>decoder.cpp</code> <code>LDPC_Decoder()</code>, <code>C2V_Cal()</code></td><td>개념적 유사성(BP)은 있으나 대상이 BCH product code(non-sparse PCM)로 QC-LDPC와 무관</td></tr><tr><td>Gaussian elimination 기반 PCM 적응</td><td><code>ecc_top.cpp</code> <code>Load_PCM()</code></td><td>Prime ECC는 QC-LDPC H-matrix 고정 구조라 매 복호 시 행렬 재적응 개념 자체가 대응 없음</td></tr><tr><td>Turbo product code 행/열 반복 구조</td><td>대응 없음</td><td>Prime ECC는 단일 QC-LDPC 코드 구조로 product code concatenation 미보유</td></tr><tr><td>신뢰도 기반 정렬/조기종료(4-step 절차)</td><td><code>partial_CRC.cpp</code> <code>partial_crc_HW_T4()</code></td><td>조기종료 개념만 유사, 세부 메커니즘(정렬+Gaussian elimination)은 완전히 다름</td></tr></tbody></table>
+<blockquote><p>적용 가치: <strong>낮음</strong> — BCH product code(non-sparse PCM) 전용 turbo 복호 알고리즘으로 QC-LDPC 기반 Prime ECC 구조와 근본적으로 다르고 HW 검증도 없음.</p></blockquote>
+<h3 id="d-json-블록">D. JSON 블록</h3>
+<pre><code>{
+  "id": "ieee:4557297",
+  "title": "Turbo Decoding of Product Codes based on the Modified Adaptive Belief Propagation Algorithm",
+  "year": 2007,
+  "venue": "ISIT",
+  "portability": "하",
+  "nand_relevance": "낮음",
+  "target": "decoder",
+  "code_type": "기타",
+  "code_rate": "0.68~0.88",
+  "code_length": "256~16384",
+  "soft_quant": "soft-4bit+",
+  "key_contribution": "ABP 알고리즘의 PCM 적응(Gaussian elimination)을 반복루프 밖으로 빼내 초기화 단계에서만 1회 수행하는 m-ABP를 제안, Chase-Pyndiah와 유사 BER 성능을 낮은 복잡도로 달성",
+  "hw_designed": "X",
+  "verification": "시뮬",
+  "complexity": "미상",
+  "parallelism": "완전병렬",
+  "throughput_gbps": null,
+  "mem_routing": "없음",
+  "correction_gain": "X",
+  "improve_region": "N/A",
+  "iter_reduction": "O",
+  "latency": "N/A",
+  "recommend": "하",
+  "caveat": "대상 부호가 BCH product code로 QC-LDPC와 무관, HW 미구현·복잡도 수치 없음, Chase-Pyndiah 대비 성능 우위 없음(유사 수준)",
+  "todo_check": "Gaussian elimination 기반 PCM 적응 1회 비용이 실제 HW에서 어느 정도인지 본문에 미기재"
+}</code></pre>
+
+</main>
+<aside class="toc"><div class="toc-title">이 페이지의 차례</div>
+<ul><li class="h3"><a href="#ieee_4557297---turbo-decoding-of-product-codes-based-on-the-modified-adaptive-belief-propagation-algorithm-2007-isit">ieee_4557297 - Turbo Decoding of Product Codes based on the Modified Adaptive Belief Propagation Algorithm (2007, ISIT)</a></li><li class="h3"><a href="#b-알고리즘-요약">B. 알고리즘 요약</a></li><li class="h3"><a href="#c-prime-ecc-관련-모듈-핀포인트">C. Prime ECC 관련 모듈 핀포인트</a></li><li class="h3"><a href="#d-json-블록">D. JSON 블록</a></li></ul>
+</aside>
+</div>
+<footer class="foot">생성: 2026-09-30 14:12:26</footer>
+<script>window.DASH_PREFIX = "../../../";</script>
+<script src="../../../assets/search.js"></script>
+<script src="../../../assets/app.js"></script>
+</body>
+</html>
