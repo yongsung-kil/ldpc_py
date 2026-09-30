@@ -5,11 +5,11 @@ sources: [src/decoder.py:120-134, src/decoder.py:223-247, src/decoder.py:265-266
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 SD(soft decision, 연판정) 모드에서 HD(hard decision, 경판정)와 달라지는 것은 셋뿐이다. ㉮ 채널 항이 비트별 region 선택값이 된다 ㉯ iteration 0과 SD restart가 채널 magnitude를 CN(check node, 검사 노드)에 심는 Pre 단계가 된다 ㉰ Edge Clear 대상 iteration 집합. 판정식, C2V(check-to-variable) 합산, VNU(variable node unit) 양자화, CNU 갱신은 HD와 같다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - 1. 채널 dict 플래그 (`src/channel.py:9-11`): `hd`는 read bit, `sd`는 strong 플래그, `cc`는 3SD의 very 플래그. 3SD 조합은 sd=1,cc=1 very strong / 1,0 normal strong / 0,0 normal weak / 0,1 very weak
 - 2. region 매핑 `_read_channel_input` (`src/decoder.py:223-247`): 2SD `region = 1 - sd` (`:236`), 3SD `region = 2*(1 - sd) + (cc ^ sd)` (`:240`). 0이 가장 강한 신뢰. HD는 None. 채널 dict의 mode가 LLR(log-likelihood ratio) 매트릭스의 모드와 다르면 에러 (`:230-232`). signed LLR 배열 입력은 HD 전용 테스트 편의 (`:241-244`)

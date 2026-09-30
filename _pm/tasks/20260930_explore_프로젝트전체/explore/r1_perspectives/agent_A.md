@@ -21,7 +21,6 @@
 | `_pm/` | `TODO.md`, `DONE.md`, `tasks/`, `done/` | 작업 관리 (깊이 읽지 않음) |
 | `.gitignore` | **없음** (Read 실패로 확인) | README.md:104, 170은 `_generated/`와 `Sim_Output/`을 "git 무시 영역"이라 함. 이 사본에는 그 규칙 파일이 없음 |
 
-저장소 밖 참조 (이 사본에 없는 것): `3_LDPC_ideas/새논문적용규칙.md` (README.md:163, workspace/README.md:5, base_run/README.md:24), `4_H_matrix_tool/` (README.md:39), `0_LDPC_original`, `1_LDPC_revised` (docs/차이.md:6). 그리고 `src/decoder.py:46`은 같은 정본 문서를 `docs/새논문적용규칙.md`라고 다른 경로로 적고 있어 README와 서로 어긋난다. 두 경로 모두 존재하지 않는다.
 
 ### 2. src 모듈 8개: 역할, 공개 심볼, import 관계
 

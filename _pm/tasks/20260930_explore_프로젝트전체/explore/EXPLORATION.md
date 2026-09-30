@@ -145,7 +145,6 @@ main(argv, decoder_class)                                              src/run.p
 | Python | f-string, `subprocess.run(capture_output=, text=)` (:608-615), `raise ... from None` | 명시 없음. 3.7 이상 추정. [실행 확인] 3.11.7 |
 | 표준 라이브러리 | os, sys, json, shutil, subprocess, datetime, csv, re, warnings, numbers, time | |
 | git 실행 파일 | summary.txt 커밋 해시 (src/run.py:603-618) | 없으면 "(git 없음)" |
-| 형제 프로젝트 (저장소 밖) | `2_LDPC_base` 폴더 이름과 `LDPC_dev` 배치 (런처), `3_LDPC_ideas/새논문적용규칙.md`, `4_H_matrix_tool`, `0_LDPC_original`, `1_LDPC_revised`, DAO | 코드 import 0건. 파일 포맷, 폴더 이름, 문서 링크로만 묶임 |
 
 병렬화 라이브러리(mpi4py, numba, multiprocessing) import 0건. `README.md:221`의 mpi4py 방침과 mpi_runner 재설계는 계획만 있다.
 

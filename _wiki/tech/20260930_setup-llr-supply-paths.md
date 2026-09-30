@@ -5,12 +5,12 @@ sources: [src/run.py:20-45, src/run.py:322-339, src/run.py:393-446, src/run.py:4
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `setup(config, decoder_class)`가 H-matrix를 로드하고, LLR matrix를 준비하고, 디코더를 만든다 (`src/run.py:393-446`)
 - ㉯ LLR matrix 공급은 두 경로지만 읽는 곳은 `LLRMatrix.load` 한 곳이다. 균일 합성도 파일로 저장한 뒤 같은 로더로 읽는다
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ H-matrix: 파일이 없으면 `FileNotFoundError`. 이 함수는 생성하지 않는다 (`src/run.py:403-404`). `QCCode.load` (`:405`)
 - ㉯ 경로 1, 파일 로드 (`use_input_llr_matrix` true, `:406-411`): 지정 파일의 존재만 확인한다. 모드는 파일명이, max_iter는 파일의 마지막 iter_end가 정한다. config의 `mode`, `max_iter`는 읽지 않는다 (`:31-34`)

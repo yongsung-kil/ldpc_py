@@ -5,12 +5,12 @@ sources: [src/run.py:64-77, src/run.py:113-114, src/run.py:603-618, src/run.py:6
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ 실행마다 `{output.dir}/{YYMMDD_HHMMSS}_{label}/` 폴더 하나에 config 사본, summary.txt, FER CSV, 켠 로그 CSV, LLR 사본, 그림을 남긴다 (`src/run.py:71-77`)
 - ㉯ `create_run_dir`가 측정 전에 폴더와 summary 머리를 만들고, `run_experiment`가 측정 중 summary 꼬리를 갱신하며, `report`가 종료 후 나머지를 저장한다
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ `create_run_dir` (`src/run.py:715-733`): label은 `output.label`, 없으면 첫 채널 type (`:720`). `config.json` 사본 (`:725`). summary.txt 머리는 `run:`, `code commit:`, `start:`, 빈 줄, 실험 요약 불릿, 빈 줄 (`:726-732`)
 - ㉯ `code commit` (`:603-618`): `git rev-parse --short HEAD`. 미커밋 변경이 있으면 `+dirty`. git이 없거나 실패면 "(git 없음)"

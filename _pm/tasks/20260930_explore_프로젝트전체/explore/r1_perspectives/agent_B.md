@@ -176,6 +176,5 @@ report ─▶ fer_{label}.csv, log_iter_*.csv, log_iter_hist_*.csv, log_fail_*.c
 - ㉯ decoder.py:46이 참조하는 `docs/새논문적용규칙.md`는 docs/에 없음 (docs에는 차이.md, profile/, adr/만 존재). README.md:163은 외부 `3_LDPC_ideas/새논문적용규칙.md`를 가리키며 이 저장소 밖이라 미확인.
 - ㉰ `_pm/` 폴더는 지시대로 읽지 않았다. README.md:155의 "후순위 로그 7종 미구현" 목록은 미확인.
 - ㉱ `.gitignore` 존재 여부는 Glob으로 잡히지 않아 미확인 (`_generated/`와 `Sim_Output/`이 git 무시 대상이라는 것은 README 서술만 확인).
-- ㉲ `workspace/matrix_sel_1_HD/_probe.json`은 열지 않았다. `4_H_matrix_tool`, `0_LDPC_original`, `1_LDPC_revised`(C++ 원본)는 저장소 밖이라 차이.md의 대응 서술만 인용했다.
 - ㉳ docs/profile/ 다섯 문서는 모두 빈 템플릿임을 확인했다 (overview.md, structure.md, replacement_points.md, techniques.md, constraints.md). docs/adr/README.md도 목록이 비어 있다.
 - ㉴ 표면 탐색으로 남긴 부분: `_detect_uniform_edge_mag`의 th_len==1 분기(llr_matrix.py:102-105)와 `count_cycles4`(pcm.py:94-110)는 읽었으나 실제 입력으로 검증하지 않았다. `_plot_fer_curves`의 matplotlib 동작도 미실행.

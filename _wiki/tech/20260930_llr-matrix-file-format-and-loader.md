@@ -5,11 +5,11 @@ sources: [src/llr_matrix.py:11-48, src/llr_matrix.py:123-170, src/llr_matrix.py:
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 `src/llr_matrix.py`의 `LLRMatrix.load`가 DAO(decoder auto optimizer, LLR 테이블 최적화 외부 도구) 산출 텍스트 파일을 읽어 row 배열과 그룹 구조를 만들고, `_validate`가 DAO 규칙으로 형식을 검사한다. 균일 생성물도 같은 로더가 읽는다 (합성 문서 참조). LLR은 log-likelihood ratio(비트 신뢰도)다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - 1. 파일 형식 (`src/llr_matrix.py:11-15`): 빈 줄 무시, 정수만. 줄 순서는 아래 표
 

@@ -5,11 +5,11 @@ sources: [src/decoder.py:32-34, src/decoder.py:283-289, src/decoder.py:316-334, 
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 매 iteration 끝에 판정비트 배열을 훑어 정보 구간 (앞쪽 N_b - M_b개 column block)에 에러가 없는 프레임을 성공으로 확정하고 배치에서 뺀다. 정답은 all-zero codeword다. genie는 CRC 조기 종료의 이상화 (미스검출 없음)이고, 압축은 속도 최적화라 결과가 바뀌지 않는다 (`docs/차이.md:24, 45`).
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ `_collect_error_metrics(state)` (`src/decoder.py:316-334`): `num_info_col_blocks = N_b - M_b` (`:324`). `frame_err` = 정보 구간 `decision_bits.any()` (`:326`), `info_err_bits` = 정보 구간 합 (post_fec_ber 분자, `:327`), `err_bits` = codeword 전체 합 (`:328`). `err_by_dv`는 `need_by_dv` (bit_err_by_dv 또는 fail_detail 로그)일 때만 실제로 센다 (`:329-334`). 전부 int64
 - ㉯ column 루프 밖에서 센다 (`:317-319`): `_column_order`가 일부 column만 방문해도 미방문 column의 에러가 집계에 남아 성공 오판정이 없다. 호출은 `_run_iteration` 끝 (`:368`)과 SD restart (`:357`)

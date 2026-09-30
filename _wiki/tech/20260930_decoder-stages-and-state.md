@@ -5,11 +5,11 @@ sources: [src/decoder.py:7-15, src/decoder.py:54-96, src/decoder.py:100-118, src
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 `BaseDecoder.decoder_main`이 프레임 배치 하나를 복호하는 흐름이다. 진입 함수는 흐름만 갖고, 단계 함수 7개가 `_DecodeState` 객체 하나를 주고받으며 일한다. 이 문서는 그 순서와 상태 배열의 꼴을 적는다. 교체 지점 6개는 별도 문서다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 호출 순서 (`src/decoder.py:475-508`): log 항목이 `LOG_ITEMS` 밖이면 에러 (`:496-499`) → `_read_channel_input` → `_init_state` → iteration 1..max_iter 동안 `_run_iteration`, `_record_iteration`, `_check_errors` (True면 break) → `_build_result`. `_record_iteration`은 압축 전 인덱스를 쓰므로 `_check_errors`보다 먼저 부른다 (`:505`)
 - ㉯ 생성자 (`:100-118`): `llr_matrix` 필수, 모드는 HD, 2SD, 3SD만. `max_iter`는 `llr_matrix.max_iter`. `_col_dv_idx` (N_b,)는 column마다 dv 구간 인덱스, `_cols_by_dv`는 dv 구간별 column 목록, `_edge_mag`는 float32 내림차순 사본, `_uniform_levels`는 값 기반 균일 판정, `_seed_levels`는 SD Pre 단계 레벨 (HD는 None)

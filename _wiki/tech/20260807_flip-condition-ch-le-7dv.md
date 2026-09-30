@@ -5,11 +5,11 @@ sources: [src/decoder.py:21-22, src/decoder.py:116, src/decoder.py:155-157, src/
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 VN(variable node) 판정 `sum_t = ch + Σ C2V`에서 ch(채널 LLR 크기)는 항상 + 부호라, 한 column의 ch가 C2V(check-to-variable 메시지) 합의 최대치를 넘으면 그 column은 어떤 iteration에서도 반전되지 않는다 (trapping). 3-bit 기본에서 반전 가능 조건은 `ch <= 7*dv` (dv는 column degree)다. 이 문서는 조건의 유도, 클리핑 일반형, 스케일 인사이트, 위반 상태, 판단 절차를 모은다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 유도: `sum_t = ch + Σ vnu_in`이고 ch는 항상 + (`src/decoder.py:21-22`, `:382-388`), 반전은 `sum_t <= 0` (`:159-162`). C2V 크기 상한은 `edge_mag[0]` = top (`:116`, `:204`, 3-bit에서 7). dv개 C2V가 전부 반대 부호 최대여도 `sum_t >= ch - dv*top`이므로 `ch > dv*top`이면 반전이 없다. 경계는 초과다. `ch = dv*top`은 sum_t가 0에 닿을 수 있고 동점 반전으로 반전된다 (`team_a_verification.md:91-95`)
 - ㉯ 클리핑 일반형: `_c2v_reconstruct`가 min1 또는 min2를 돌려주므로 (`src/decoder.py:155-157`) min1 상한 P, min2 상한 Q로 클리핑하면 dv column의 최대 extrinsic은 edge 하나가 min2(Q), 나머지 dv-1개가 min1(P)인 `Q + (dv-1)*P`다. 이것이 ch보다 작으면 반전 불능 (`_pm/DONE.md:10-11`). 무클립은 P = Q = top이라 `dv*top`

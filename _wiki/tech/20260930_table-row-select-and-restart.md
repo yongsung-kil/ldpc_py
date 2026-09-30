@@ -5,11 +5,11 @@ sources: [src/llr_matrix.py:21-29, src/llr_matrix.py:46, src/llr_matrix.py:179-1
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 LLR 테이블은 row마다 dv별 (ch, th)와 CSW 임계, iteration 구간을 갖는다. 매 iteration 디코더가 `row_index(iteration, prev_csw)`로 프레임별 row 하나를 고른다. restart iteration은 CN 상태를 지우고 그 row의 -1 값을 그대로 써서 순수 syndrome bit-flip iteration이 된다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 그룹 결정 `_group_of_iter` (`src/llr_matrix.py:362-367`): `group_slices`를 정방향으로 돌며 `row_iter[row_start, 0] <= iteration <= row_iter[row_end - 1, 1]`인 첫 그룹. 없으면 ValueError
 - ㉯ `row_index(iteration, prev_csw)` (`:369-386`), 반환은 (F,) int64

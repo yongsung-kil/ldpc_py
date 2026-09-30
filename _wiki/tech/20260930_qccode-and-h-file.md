@@ -5,12 +5,12 @@ sources: [src/pcm.py:1-19, src/pcm.py:24-46, src/pcm.py:49-82, src/pcm.py:85-92,
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `QCCode`가 QC-LDPC 부호를 base matrix (M_b, N_b)와 lifting 크기 z로 표현한다. base 값 -1은 zero block, 그 외는 circulant shift s (0 <= s < z) (`src/pcm.py:3`)
 - ㉯ 파일은 Ref-C(원본 C++ `Load_PCM`) 포맷 하나만 읽고 쓴다 (`:7-8`)
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 파일 형식 (`src/pcm.py:7-18`)
   - ㉠ 줄 순서: `N_b M_b` / `J K` (최대 column degree, 최대 row degree) / `z` / 빈 줄 / M_b행 x N_b열 shift 행렬

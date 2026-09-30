@@ -5,11 +5,11 @@ sources: [docs/차이.md:1-50, src/decoder.py:17-36, src/decoder.py:137-144, src
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 정본 `docs/차이.md`(2026-08-06 작성, SD는 2026-08-09 반영)의 요지다. 비교 대상은 원본 C++의 DAO 연동 빌드(`__AUTO_LLR_OPT__`)이고, dual update, 파이프라인 2~3 column store 지연, CRC, HCU, 펑처링, 쇼트닝은 비교 제외다 (`docs/차이.md:8-9`). Python은 on/off 상대 비교 전용이라 절대 FER(frame error rate) 일치는 목표가 아니다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 차이 10행 (번호 1~9와 6b, `docs/차이.md:15-26`)
 

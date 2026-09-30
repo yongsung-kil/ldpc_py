@@ -1,7 +1,6 @@
 # C++ 원본의 2SD/3SD 디코딩 경로 분석
 
 - 작성: 2026-08-09 14:15:41
-- 대상: `0_LDPC_original/` (decoder.cpp, channel.cpp, common.h, ecc_data.h, ecc_top.cpp)
 - 목적: `2_LDPC_light/LDPC_base/decoder.py`에 2SD/3SD 산술을 이식하기 위한 사실 확정
 - 빌드 전제: 3-bit LLR (`__4_BIT_LLR__` 미정의), DAO 연동 빌드 (`__AUTO_LLR_OPT__` 정의).
   4-bit 경로는 사용자 확정(2026-08-06)에 따라 이식 범위 밖이므로 차이가 있는 곳만 각주로 남긴다
@@ -437,7 +436,6 @@ SD는 **`is_restart(iteration)`만** 이어야 한다 (3.1의 표).
 ## 10. 확인 불가 항목
 
 - ㉮ 비 AUTO 빌드가 쓰는 2SD, 3SD 기본 ch, th 테이블의 실제 값 (7.2 참조).
-  `decoder.cpp`의 해당 배열 초기화식이 소실되었다. 파일은 `0_LDPC_original/decoder.cpp`
 - ㉯ 원본 소스 전반에 한글 주석의 문자 인코딩이 깨진 구간이 있다
   (`channel.cpp:9, 31, 40, 48, 58, 70, 79`, `ecc_top.cpp:1792-1793, 1824-1825` 등).
   주석 내용은 읽을 수 없으나 코드 자체는 온전해 분석에 지장이 없었다

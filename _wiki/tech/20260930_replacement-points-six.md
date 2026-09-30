@@ -5,11 +5,11 @@ sources: [src/decoder.py:40-46, src/decoder.py:136-220, src/decoder.py:303, src/
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 본체 `src/decoder.py`가 원본 C++ 함수 경계를 따라 메서드 6개를 따로 떼어 두고, 논문 아이디어는 `BaseDecoder` 자식에서 그 메서드만 재정의한다. 본체는 고치지 않고 기준선 `workspace/base_run/`은 재정의 0개다. 정본은 `docs/profile/replacement_points.md`이며 여기서는 표와 경계를 요약한다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 표지와 주입: 각 메서드 docstring 첫 줄 `[교체 지점: C++ 함수 대응]` (`src/decoder.py:40-46, 136-220`). 실험 폴더 `run.py`의 `DECODER_CLASS` 한 곳 (`workspace/_template/run.py:24-28`) → `main(decoder_class=)` → `setup`의 `decoder_class(code, llr_matrix=)` (`src/run.py:443-445`)
 

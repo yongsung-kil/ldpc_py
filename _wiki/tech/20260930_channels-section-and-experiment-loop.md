@@ -5,12 +5,12 @@ sources: [src/run.py:158-180, src/run.py:183-247, src/run.py:515-545, src/run.py
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `_check_channels`가 channels 섹션을 `[{"type", "points", ...}]` 리스트로 정규화한다. `type`이 측정할 채널을 고르고 값 공간은 자리를 미리 만들어 둔다 (`src/run.py:183-247`)
 - ㉯ `run_experiment`가 채널마다, 포인트마다 `run_fer_point`를 불러 결과를 모은다. 난수는 seed 하나에서 포인트별로 파생한다 (`:548-600`)
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ channels 정규화 (`src/run.py:183-247`)
   - ㉠ `type`은 문자열 또는 문자열 리스트. 같은 type 중복 금지 (`:200-201`). `CHANNELS`에 등록된 이름만 허용 (`:202-206`)

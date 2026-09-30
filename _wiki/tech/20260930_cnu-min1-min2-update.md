@@ -5,11 +5,11 @@ sources: [src/decoder.py:150-157, src/decoder.py:197-220, src/decoder.py:271-275
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 CN (check node, 검사 노드)마다 들어온 메시지 전부를 저장하지 않고 최솟값 둘 (min1, min2)과 min1의 위치, 부호 합, edge별 부호만 둔다. 새 메시지가 오면 옛 기여를 빼고 (remove old) 새 값을 넣는다 (insert new). C2V (check to variable, 검사 노드에서 변수 노드로) 메시지는 이 상태에서 읽는 시점에 재구성한다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ CN 상태 5필드 (`src/decoder.py:271-275`)
 

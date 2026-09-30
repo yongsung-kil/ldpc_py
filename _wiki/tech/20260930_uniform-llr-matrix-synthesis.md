@@ -5,11 +5,11 @@ sources: [src/llr_matrix.py:51-57, src/llr_matrix.py:60-89, src/llr_matrix.py:92
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 `use_input_llr_matrix: false`일 때 `LLRMatrix.make_internal_uniform_matrix`가 균일 배치 레벨과 전 dv(column degree) 공통 ch(채널 LLR 크기)로 매트릭스를 만들고 DAO(decoder auto optimizer) 포맷으로 저장한 뒤 `load`로 읽는다. 디코더는 파일 로드 경로 하나만 탄다. 레벨 판별은 파일명이 아니라 th 값 패턴이다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - 1. 간격 1 레벨 `uniform_edge_mag(top) = [top, ..., 2, 1] + [1]` (`src/llr_matrix.py:51-57`). 최소 레벨 1 (C++가 C2V 크기 0을 내보내지 않는 방향). 마지막 두 항이 1인 이유는 레벨 수 = th 수 + 1 제약
 - 2. 레벨 배치 `edge_quantization_levels(bits, max)` (`:60-89`): 레벨 수 = `2^(bits-1)` (`:80`). max는 `2^n-1` 꼴 (`:78-79`), `max >= 레벨 수 - 1` (`:81-84`). `step = (max+1) // 레벨 수` (`:85`). step 1이면 (`uniform_edge_mag(max)`, th [max..1]) (`:86-87`). 아니면 `edge_mag = range(max, 0, -step)`, `th = edge_mag[:-1]` (`:88-89`). th = 레벨값 (사용자 결정 2026-08-13)

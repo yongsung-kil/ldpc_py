@@ -271,7 +271,6 @@ HD 전용이던 디코더를 2SD/3SD까지 확장. C++ 원본 정적 분석(파�
   - ㉮ 구 본체 삭제 — channel, decoder, encoder, pcm, run, sim, mpi_runner(재설계 예정), examples
   - ㉯ 개정본 이동 — LDPC_base/, Ideas/, Input/, Sim_Output/, config.json을 `2_LDPC_light/`
     바로 아래로 (sandbox 구조 그대로라 import·registry 무수정 동작). 차이.md는 docs/로
-  - ㉰ `.gitignore` — `H_Matrix/`를 `0_LDPC_original/` 한정으로 축소 (Input/H_matrix 추적
     가능해짐), `Sim_Output/` 무시 추가
   - ㉱ tools/H_mat_gen import 보정 (`...pcm` → `...LDPC_base.pcm`), select_irregular는
     실행 불가 상태 명시 (손질 TODO 잔류)

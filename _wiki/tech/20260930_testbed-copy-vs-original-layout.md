@@ -5,12 +5,12 @@ sources: [workspace/_template/run.py:9-33, workspace/README.md:1-13, src/run.py:
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ 이 저장소는 원본 `2_LDPC_base/`의 시험장 사본이고 폴더 이름이 `ldpc_py`다. 코드는 같지만 배치가 달라 실험 폴더 런처가 동작하지 않는다
 - ㉯ 이 사본에서 동작하는 실행 경로는 저장소 루트의 `python -m src.run <config>` 하나이고 디코더는 BaseDecoder 고정이다
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 원본 배치의 런처 (`workspace/_template/run.py`, 실험 폴더 5개 동일 33줄)
   - ㉠ 자기 폴더에서 부모로 올라가며 `{조상}/2_LDPC_base/src` 폴더가 있는지 본다 (`:11-12`)

@@ -75,7 +75,6 @@ class ReverseOrderDecoder(BaseDecoder):
   - 4. `_pm/done/20260806_review/r3_round3_lv2_verification/team_b_verification.md:41, 47, 106`, 같은 폴더 `worker_b_1.md:146-163, 387, 421, 465-466`: 벤더 3-bit 채널 테이블 실값 수록
   - 5. `_pm/done/20260809_2SD3SD구현/cpp_sd_analysis.md:313-321` "소실된 값 (소스 손상)" 절
   - 6. `workspace/matrix_sel_1_HD_fixed/README.md:7` "4_H_matrix_tool에서 선별"
-  - 7. 외부 도구와 형제 프로젝트 이름(DAO, Ref-C, 0_LDPC_original 등)은 코드 docstring과 README 전반에 있어, 2절 규칙을 "출처 기재 금지"로 쓰면 코드 주석까지 위반이 된다. 규칙 문구는 결정거리다
 - ㉰ 상위 CLAUDE.md ㉴(개인 절대 경로와 계정 정보 금지) 대조: 취합.md에는 0건. `agent_A.md`에 드라이브 문자만. 이력물에는 계정 이름이 든 실경로가 남아 있다: `_pm/done/20260806_review/r3_round3_lv2_verification/team_a_verification.md:190`, `worker_a_3.md:17, 44, 88`, `worker_b_2.md:337`, `worker_c_1.md:9`, `_pm/done/20260806_review/r4_round2_lv1_fix_review/agent_1.md:277`, `_pm/tasks/20260808_review/r3_round3_lv2_verification/worker_a_1.md:332`, `context.md:52`, `worker_c_1.md:144`, `_pm/tasks/20260808_review/r2_round2_lv2_analysis/worker_c_3.md:8, 11, 108, 121`, `worker_c_2.md:279`. "이력물 보존" 방침(`_pm/TODO.md:20`)과 충돌하므로 결정거리다
 - ㉱ 3절 용어: `README.md:43-55` 표에 더할 것: Ref-C, genie, restart와 edge clear, region, RESET, min1/min2/min1_pos, ch와 th, E와 SER/SCR, z lane
 - ㉲ 4절 실험과 검증 환경: base_run 설정 (`workspace/base_run/config.json:7-49`), test, matrix_sel_1_HD 두 폴더 (`_probe/` 결과 2건 커밋됨, E=380 128프레임 fer 0), 직접 실행 경로, 회귀 기준, git 무시 의도만 있음

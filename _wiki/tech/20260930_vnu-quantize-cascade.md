@@ -5,11 +5,11 @@ sources: [src/decoder.py:116-117, src/decoder.py:164-187, src/decoder.py:189-195
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 VNU (variable node unit, 변수 노드 연산부)가 낸 값 `raw = sum_t - vnu_in`을 임계값 th 목록과 견줘 edge_mag 레벨 (3-bit 기본 {7, 5, 3, 1}) 하나로 바꾼다. 레벨은 고정이고, iteration과 CSW에 따라 바뀌는 것은 th와 ch 값이다. 균일 레벨이면 같은 결과를 상수 시간 식으로 낸다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 입력 (`src/decoder.py:405-408`): raw는 float32이며 포화가 없다 (`:407`). vnu_in은 부호 결정용. th는 `cur_th[:, dv_idx, :]` (F, th_len)로 프레임별 현재 row의 dv별 값
 - ㉯ 캐스케이드 (`:173-181`): `mag_in = |raw|`. mag를 `edge_mag[-1]`로 시작해 k를 (len - 2)에서 0까지 내려가며 `mag_in >= th[:, k]`면 `edge_mag[k]`로 덮어쓴다. 결과는 가장 위 (작은 k)의 참 조건이 이긴다. C++ elif 체인과 같다: 3-bit에서 `>= th1 → 7`, 아니고 `>= th2 → 5`, 아니고 `>= th3 → 3`, 그 외 1 (`docs/차이.md:38`)

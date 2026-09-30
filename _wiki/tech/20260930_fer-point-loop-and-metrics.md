@@ -5,12 +5,12 @@ sources: [src/sim.py:21-26, src/sim.py:29-70, src/sim.py:86-92, src/sim.py:95-16
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `run_fer_point`가 한 채널 조건(한 포인트)의 FER를 잰다. 배치 단위로 채널 생성과 복호를 반복하고 프레임 에러 수 또는 프레임 수로 끝낸다 (`src/sim.py:29-167`)
 - ㉯ 결과는 dict 하나. `save_csv`가 포인트 결과 목록을 FER CSV로 쓴다 (`:170-182`)
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 시그니처 (`src/sim.py:29-32`): `run_fer_point(code, channel_fn, decoder, random_generator, max_frame_errors=50, max_frames=20000, frames_per_batch=128, print_progress=False, log=None, progress_label="", progress_interval_frames=100, summary_path=None)`
 - ㉯ 최소 가드 (`:58-70`): 정수 4개는 1 이상 (frames_per_batch가 0이면 무한 대기). log 항목은 `LOG_ITEMS` 부분집합 (오타 검출)

@@ -5,11 +5,11 @@ sources: [src/decoder.py:17-36, src/decoder.py:336-370, src/decoder.py:372-413, 
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 디코더의 메시지는 전부 초기 read bit 기준 상대값이다 (flip 도메인). read bit는 고정하고 syndrome을 한 번 계산해 유지하며, iteration마다 column block을 하나씩 돌며 판정과 CN 갱신을 한다. 이 문서는 그 규약과 `_run_iteration`, `_process_column`의 순서를 적는다.
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 도메인 규약 (`src/decoder.py:17-36`)
   - ㉠ read_bit 고정, `syndrome = H * read_bit`을 1회 계산 후 유지 (`:18-20`). C++ iteration 0 Pre-update와 등가

@@ -94,6 +94,5 @@ workspace/{실험}/run.py            (런처. 이 사본에서는 2_LDPC_base �
 | matplotlib | `_plot_fer_curves`에서만 지연 import, `Agg` 백엔드 (`src/run.py:694-696`) | 명시 없음. 미설치나 실패는 `report`가 흡수. 3.10.7에서 동작 확인 |
 | Python | f-string, `subprocess.run(capture_output=, text=)`, `raise ... from None` | 명시 없음. 3.7 이상 추정. 3.11.7에서 동작 확인 |
 | git 실행 파일 | summary.txt에 `git rev-parse --short HEAD`와 `+dirty` 기록 (`src/run.py:603-618`) | 없으면 "(git 없음)"으로 계속 |
-| 형제 프로젝트 (저장소 밖) | 런처가 찾는 `2_LDPC_base` 폴더 이름, 교체 지점 정본 `3_LDPC_ideas/새논문적용규칙.md`, H-matrix 생산 `4_H_matrix_tool`, C++ 원본 `0_LDPC_original`과 `1_LDPC_revised`, LLR 생산 DAO | 코드 import 없음. 파일 포맷, 폴더 이름, 문서 링크로만 묶임 (`workspace/base_run/run.py:11-17`, `README.md:39, 163`, `docs/차이.md:6`) |
 
 병렬화 라이브러리(mpi4py, numba, multiprocessing)는 import 0건이다. `README.md:221`의 mpi4py 방침과 `_pm/TODO.md`의 mpi_runner 재설계는 계획만 있다.

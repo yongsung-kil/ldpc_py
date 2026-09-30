@@ -5,12 +5,12 @@ sources: [src/run.py:1-15, src/run.py:393-446, src/run.py:458-493, src/run.py:50
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `src/run.py`는 config JSON 하나로 실험 전체를 도는 진입점이다. 파라미터(config)와 코드(디코더 클래스)를 분리한다 (`src/run.py:1-15`)
 - ㉯ `main(argv, decoder_class)`가 5단계를 순서대로 부른다. 디코더는 인자로 주입하고 config에는 디코더 선택 키가 없다
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 5단계와 요약 출력 한 번 (`src/run.py:780-791`)
   - ㉠ `load_config(argv[0])`: JSON 읽기와 검증 (키맵, 필수값, 값 제약) (`:785`)

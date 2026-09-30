@@ -51,7 +51,6 @@ Python 버전이나 라이브러리 버전을 요구하는 문구는 어느 파�
 - 3. `src/__init__.py:1, 3` "2_LDPC_base", "2_LDPC_base/README.md"
 - 4. `src/run.py:12` "2_LDPC_base/에서 python -m src.run"
 - 5. `src/decoder.py:46` `docs/새논문적용규칙.md` (저장소 안 경로로 적혀 있으나 `docs/`에 그 파일이 없음. README:15는 같은 문서가 `3_LDPC_ideas/`에 있다고 적어 두 곳이 어긋남)
-- 6. `docs/차이.md:6` `0_LDPC_original/src/decoder.cpp`, `1_LDPC_revised/decoder.cpp`
 - 7. `workspace/README.md:4-5` 3_LDPC_ideas
 - 8. `workspace/base_run/README.md:24-25` `../../../3_LDPC_ideas/새논문적용규칙.md`, `3_LDPC_ideas/_template/`
 - 9. `workspace/matrix_sel_1_HD_fixed/README.md:7` 4_H_matrix_tool
@@ -143,14 +142,12 @@ workspace/{실험}/run.py  (sys.path에 {조상}/2_LDPC_base 추가, 이름 하�
 - 1. `config.json` (상대경로는 config 위치 기준) → `Input/H_matrix/*.qc|txt` (Ref-C 포맷, 생산자는 저장소 밖 `4_H_matrix_tool`) → `pcm.QCCode`
 - 2. `Input/LLR/LLR_MATRIX_{HD|2SD|3SD}_*.txt` (DAO 포맷, 생산자는 저장소 밖 DAO) 또는 `output.dir/_generated/` 자체 생성물 → `llr_matrix.LLRMatrix` → 모드와 max_iter를 결정해 `BaseDecoder`에 주입
 - 3. `sim.run_fer_point` → `output.dir/YYMMDD_HHMMSS_{label}/` (config 사본, summary.txt에 git 해시, CSV, PNG, LLR 사본)
-- 4. 저장소 밖 소비자: `3_LDPC_ideas`가 같은 런처 패턴으로 src를 import (README:160, 미확인). 등가성 비교 대상 `0_LDPC_original`, `1_LDPC_revised` C++는 문서 인용으로만 연결
 
 이 저장소는 형제 프로젝트를 코드로 import하지 않고 ㉮ 파일 포맷(Ref-C, DAO) ㉯ 폴더 이름 규약(`2_LDPC_base`, `LDPC_dev`) ㉰ 문서 링크 세 가지로만 묶여 있다. 시험장 사본에서 실제로 끊어지는 것은 ㉯ 하나이며, 그 영향이 다섯 런처 전부다.
 
 ## 못 본 것과 추정
 
 - ㉮ 코드를 실행하지 않았다. Python 3.7, numpy 1.20 최소치와 numpy 2.x 호환은 API 사용처와 grep에서 추정한 값이다.
-- ㉯ 저장소 밖 `LDPC_dev/2_LDPC_base`, `3_LDPC_ideas`, `4_H_matrix_tool`, `0_LDPC_original`, `1_LDPC_revised`, DAO 도구는 존재 여부만 일부 확인(`LDPC_dev/2_LDPC_base/src/run.py` 존재)하고 내용은 보지 않았다. `3_LDPC_ideas`가 src를 import하는 실제 코드는 미확인이다.
 - ㉰ `example_18x147_z256.qc`에 행렬이 2벌 들어 있는지 미확인이다 (로더가 첫 벌만 읽는 것은 코드로 확인).
 - ㉱ `Sim_Output/`이 git에 추적되는지, `.gitignore` 부재가 사본 제작 시 누락인지 미확인이다 (git 명령을 돌리지 않음).
 - ㉲ 콘솔 인코딩 문제(한국어 print)는 가능성 지적이며 재현하지 않았다.

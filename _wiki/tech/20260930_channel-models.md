@@ -5,12 +5,12 @@ sources: [src/channel.py:1-21, src/channel.py:24-40, src/channel.py:43-68, src/c
 last_verified: 2026-09-30
 ---
 
-## 무엇을 하는가
+## 하는 일
 
 - ㉮ `src/channel.py`가 송신 codeword(all-zero)에 에러를 넣어 디코더 입력 dict를 만든다. C++ 원본의 채널 모드 3종에 대응한다 (`src/channel.py:1-7`)
 - ㉯ 출력은 `{"mode", "hd", "sd", "cc"}`. `hd`는 (B, N_b, z) uint8 read bit, `sd`는 2SD와 3SD의 strong 플래그, `cc`는 3SD의 very 플래그 (`:9-11`)
 
-## 어떻게 도는가
+## 동작 방식
 
 - ㉮ 레지스트리 `CHANNELS`와 지원 모드 `CHANNEL_MODES` (`src/channel.py:138-149`)
 
