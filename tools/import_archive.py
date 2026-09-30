@@ -1,6 +1,6 @@
 """논문 분석 아카이브(형제 저장소 LDPC_Paper_Analysis)의 탐색기 자료를 이 프로젝트의 papers/ 로 들여온다.
 
-사용: python tools/import_archive.py [--archive ../LDPC_Paper_Analysis] [--plugin ../AI_Assisted_Dev/plugin/scripts] [--limit N]
+사용: python tools/import_archive.py [--archive ../LDPC_Paper_Analysis] [--plugin ../AI_Dev_Assistant/plugin/scripts] [--limit N]
 들여오는 것: docs/papers.json 의 항목(탐색기에 보이는 논문) 전부. 논문마다 papers 표에 한 줄, analysis 표에 분류 JSON,
 papers/analysis/{id 안전화}.md 에 분석 문서 사본. 초록은 아카이브의 data/papers.db 에서 id 로 찾아 붙인다.
 다시 돌리면 이미 있는 논문은 건너뛴다 (중복은 셈만 한다).
@@ -108,7 +108,7 @@ def load_abstracts(archive):
 def main(argv=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("--archive", default=os.path.join("..", "LDPC_Paper_Analysis"))
-    ap.add_argument("--plugin", default=os.path.join("..", "AI_Assisted_Dev", "plugin", "scripts"))
+    ap.add_argument("--plugin", default=os.path.join("..", "AI_Dev_Assistant", "plugin", "scripts"))
     ap.add_argument("--root", default=".")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--fix-links", action="store_true", help="반입 없이 papers/analysis/*.md 의 바깥 링크만 글자로 바꾼다")

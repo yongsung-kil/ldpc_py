@@ -35,6 +35,6 @@ last_verified: 2026-09-30
 | C++ 원본과 다른 점 | `docs/차이.md` |
 | 코드가 어떻게 도는지 | 이 위키의 [기술 문서 목록](tech/MOC-tech.md) |
 | 시도했지만 반영하지 않은 것 | 이 위키의 [시도 목록](trials/MOC-trials.md) |
-| 다시 쓸 검증 방법과 점검 항목 | 이 위키의 [자산 목록](assets/MOC-assets.md) |
+| 다시 쓸 검증 방법과 점검 항목 | 이 위키의 [재사용 패턴 목록](assets/MOC-assets.md) |
 | 진행 중 작업과 완료 이력 | `_pm/TODO.md`, `_pm/DONE.md` |
 | 미결 판정 (status Proposed 3건) | [변형 디코더 실행 경로](decisions/20260930_variant-decoder-run-path.md), [이력 문서의 개인 경로](decisions/20260930_history-docs-personal-path.md), [입력 파일 출처 표기 규칙](decisions/20260930_input-source-notation-rule.md). 원문 경로는 각 문서의 `source` |
